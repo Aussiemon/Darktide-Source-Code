@@ -870,8 +870,6 @@ local blueprints = {
 					style.texture.material_values.main_texture = data.texture
 				end, function (error)
 					content.hotspot.disabled = false
-
-					Log.error("StoreView", "fetching item image", error)
 				end)
 			end
 

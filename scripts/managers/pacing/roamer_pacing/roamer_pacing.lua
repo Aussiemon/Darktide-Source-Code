@@ -17,6 +17,7 @@ RoamerPacing.init = function (self, nav_world, template, seed, sub_faction_types
 	self._original_seed = seed
 	self._seed = seed
 	self._roamer_template = template
+	self._patrol_settings = PatrolSettings[template.patrol_settings_name] or PatrolSettings.default_patrol_settings
 
 	local available_sub_faction_types = template.sub_faction_types
 	local roamer_sub_faction_types, num_roamer_sub_faction_types = {}, 0
@@ -96,9 +97,21 @@ local PATROL_NAV_TAG_LAYER_COSTS = {
 }
 
 RoamerPacing.on_gameplay_post_init = function (self, level)
-	if self._spawners_generated then
-		Log.error("RoamerPacing", "generate_roamers() called when already generated.")
+	self._level = level
 
+	self:generate_roamers()
+end
+
+RoamerPacing.generate_roamers = function (self)
+	local main_path_manager = Managers.state.main_path
+
+	if not main_path_manager:is_main_path_ready() then
+		return
+	end
+
+	local level = self._level
+
+	if self._spawners_generated then
 		return
 	end
 
@@ -118,7 +131,6 @@ RoamerPacing.on_gameplay_post_init = function (self, level)
 		end
 	end
 
-	local main_path_manager = Managers.state.main_path
 	local spawn_point_positions = main_path_manager:spawn_point_positions()
 
 	if spawn_point_positions then
@@ -178,7 +190,12 @@ RoamerPacing.on_gameplay_post_init = function (self, level)
 		local astar = GwNavAStar.create(nav_world)
 
 		patrol_data.astar = astar
+		self._spawners_generated = true
 	end
+end
+
+RoamerPacing.on_spawn_points_generated = function (self)
+	self:generate_roamers()
 end
 
 RoamerPacing.destroy = function (self)
@@ -267,13 +284,20 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 			local ambience_sfx = roamer_template.ambience_sfx[density_type]
 			local aggro_sfx = roamer_template.aggro_sfx[density_type]
 			local pause_spawn_type_when_aggroed = roamer_template.pause_spawn_type_when_aggroed[density_type]
+			local should_ignore_limits = Managers.state.mutator:mutator("mutator_ignore_roamer_limits")
+			local limit
+
+			if not should_ignore_limits then
+				limit = density_setting.limits
+			end
+
 			local zone = {
 				aggro_sfx = aggro_sfx,
 				ambience_sfx = ambience_sfx,
 				density_type = density_type,
 				faction = current_faction,
 				group_id = group_id,
-				limits = density_setting.limits,
+				limits = limit,
 				num_to_spawn = math.min(num_to_spawn, total_roamer_slots),
 				pause_spawn_type_when_aggroed = pause_spawn_type_when_aggroed,
 				roamer_packs = chosen_packs,
@@ -494,12 +518,19 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 	local current_density_type = self._current_density_type
 	local patrols = self._patrol_data.patrols
 	local num_patrols, min_members_in_patrol = PatrolSettings.num_patrols_per_zone, PatrolSettings.min_members_in_patrol
+	local num_patrols_override = roamer_template.use_num_patrols_override
+
+	if num_patrols_override then
+		num_patrols = num_patrols_override()
+	end
+
 	local main_path_manager = Managers.state.main_path
 	local spawn_point_positions = main_path_manager:spawn_point_positions()
 
 	for i = start_zone_index, num_zones do
 		repeat
 			local zone = zones[i]
+			local zone_index = i
 			local num_to_spawn = zone.num_to_spawn
 
 			if not num_to_spawn or num_to_spawn <= 0 then
@@ -548,8 +579,15 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 				local num_sub_zone_locations = #sub_zone
 
 				if num_sub_zone_locations > 0 then
-					local random_sub_zone_location_index = self:_random(1, num_sub_zone_locations)
-					local random_sub_zone_location = sub_zone[random_sub_zone_location_index]
+					local random_sub_zone_location_index, already_removed, random_sub_zone_location
+
+					if self._roamer_template.use_weighted_sub_zone_positions then
+						random_sub_zone_location, already_removed = self:_get_weighted_position_from_origin(zone, sub_zone, sub_zone_index, zone_index)
+					else
+						random_sub_zone_location_index = self:_random(1, num_sub_zone_locations)
+						random_sub_zone_location = sub_zone[random_sub_zone_location_index]
+					end
+
 					local shared_aggro_trigger = random_sub_zone_location.shared_aggro_trigger
 					local group_id = random_sub_zone_location.group_id
 
@@ -663,7 +701,9 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 						current_density_type = density_type
 					end
 
-					table.remove(sub_zone, random_sub_zone_location_index)
+					if not already_removed then
+						table.remove(sub_zone, random_sub_zone_location_index)
+					end
 				end
 
 				if roamers_per_sub_zone <= num_spawned or num_sub_zone_locations == 0 then
@@ -704,7 +744,7 @@ local function _roamer_is_aggroed(roamer_unit)
 end
 
 local ACTIVE_TARGET_POSITIONS = {}
-local NUM_ROAMERS_UPDATE_PER_FRAME = 1
+local MAX_NUM_ROAMERS_ACTIVATIONS_PER_FRAME = 1
 
 RoamerPacing.update = function (self, dt, t, side_id, target_side_id)
 	if self._disabled or not self._zones then
@@ -725,7 +765,7 @@ RoamerPacing.update = function (self, dt, t, side_id, target_side_id)
 	local roamer_template = self._roamer_template
 	local roamers = self._roamers
 	local spawn_distance = roamer_template.spawn_distance
-	local num_updates = math.min(NUM_ROAMERS_UPDATE_PER_FRAME, self._num_roamers)
+	local num_activations = 0
 	local roamers_allowed = Managers.state.pacing:spawn_type_enabled("roamers")
 
 	if main_path_manager:path_type() == "open" then
@@ -742,7 +782,7 @@ RoamerPacing.update = function (self, dt, t, side_id, target_side_id)
 			end
 		end
 
-		for i = 1, num_updates do
+		for i = 1, self._num_roamers do
 			local roamer_update_index = self._roamer_update_index
 			local roamer = roamers[roamer_update_index]
 			local roamer_got_removed = false
@@ -763,14 +803,28 @@ RoamerPacing.update = function (self, dt, t, side_id, target_side_id)
 
 				if should_activate and not is_active and not roamers_allowed then
 					roamer_got_removed = self:_deactivate_roamer(roamer)
+
+					if roamer_got_removed then
+						num_activations = num_activations + 1
+					end
 				elseif should_activate and not is_active then
 					local activated_roamer = self:_try_activate_roamer(roamer, roamer.side_id or side_id)
 
-					if not activated_roamer then
+					if activated_roamer then
+						num_activations = num_activations + 1
+					else
 						roamer_got_removed = self:_deactivate_roamer(roamer)
+
+						if roamer_got_removed then
+							num_activations = num_activations + 1
+						end
 					end
 				elseif not should_activate and is_active or is_active and not HEALTH_ALIVE[roamer.spawned_unit] then
 					roamer_got_removed = self:_deactivate_roamer(roamer)
+
+					if roamer_got_removed then
+						num_activations = num_activations + 1
+					end
 				end
 
 				if is_active and roamer.shared_aggro_trigger then
@@ -782,6 +836,8 @@ RoamerPacing.update = function (self, dt, t, side_id, target_side_id)
 						local target_unit = perception_component.target_unit
 
 						self:_alert_roamer_group(spawned_unit, target_unit, roamer, side_id, target_side_id)
+
+						num_activations = num_activations + 1
 					end
 				end
 			end
@@ -789,9 +845,13 @@ RoamerPacing.update = function (self, dt, t, side_id, target_side_id)
 			if not roamer_got_removed or roamer_update_index > self._num_roamers then
 				self._roamer_update_index = roamer_update_index % self._num_roamers + 1
 			end
+
+			if num_activations >= MAX_NUM_ROAMERS_ACTIVATIONS_PER_FRAME then
+				break
+			end
 		end
 	else
-		for i = 1, num_updates do
+		for i = 1, self._num_roamers do
 			local roamer_update_index = self._roamer_update_index
 			local roamer = roamers[roamer_update_index]
 			local roamer_got_removed = false
@@ -806,14 +866,28 @@ RoamerPacing.update = function (self, dt, t, side_id, target_side_id)
 
 				if should_activate and not is_active and not roamers_allowed then
 					roamer_got_removed = self:_deactivate_roamer(roamer)
+
+					if roamer_got_removed then
+						num_activations = num_activations + 1
+					end
 				elseif should_activate and not is_active then
 					local activated_roamer = self:_try_activate_roamer(roamer, roamer.side_id or side_id)
 
-					if not activated_roamer then
+					if activated_roamer then
+						num_activations = num_activations + 1
+					else
 						roamer_got_removed = self:_deactivate_roamer(roamer)
+
+						if roamer_got_removed then
+							num_activations = num_activations + 1
+						end
 					end
 				elseif not should_activate and is_active or is_active and not HEALTH_ALIVE[roamer.spawned_unit] then
 					roamer_got_removed = self:_deactivate_roamer(roamer)
+
+					if roamer_got_removed then
+						num_activations = num_activations + 1
+					end
 				end
 
 				if is_active and roamer.shared_aggro_trigger then
@@ -825,12 +899,18 @@ RoamerPacing.update = function (self, dt, t, side_id, target_side_id)
 						local target_unit = perception_component.target_unit
 
 						self:_alert_roamer_group(spawned_unit, target_unit, roamer, side_id, target_side_id)
+
+						num_activations = num_activations + 1
 					end
 				end
 			end
 
 			if not roamer_got_removed or roamer_update_index > self._num_roamers then
 				self._roamer_update_index = roamer_update_index % self._num_roamers + 1
+			end
+
+			if num_activations >= MAX_NUM_ROAMERS_ACTIVATIONS_PER_FRAME then
+				break
 			end
 		end
 	end
@@ -909,6 +989,85 @@ RoamerPacing._alert_roamer_group = function (self, aggroing_unit, target_unit, a
 
 		Managers.state.horde:horde(horde_template_name, horde_template_name, side_id, target_side_id, resistance_scaled_composition)
 	end
+end
+
+local SORTED_WEIGHTS, SORTED_KEYS, SORTED_VALUES = {
+	weight_lookup = {},
+	weights = {},
+}, {}, {}
+local CURRENT_SUB_ZONE_INDEX = 0
+local CURRENT_ZONE_INDEX = 0
+local WEIGHTED_PROBABILITES = {}
+local MAX_ATTEMPTS = 100
+
+RoamerPacing._get_weighted_position_from_origin = function (self, zone, sub_zone, sub_zone_index, zone_index)
+	if sub_zone_index ~= CURRENT_SUB_ZONE_INDEX or zone_index ~= CURRENT_ZONE_INDEX then
+		CURRENT_ZONE_INDEX = zone_index
+		CURRENT_SUB_ZONE_INDEX = sub_zone_index
+
+		table.clear(SORTED_VALUES)
+		table.clear(SORTED_KEYS)
+		table.clear(WEIGHTED_PROBABILITES)
+		table.clear(SORTED_WEIGHTS.weight_lookup)
+		table.clear(SORTED_WEIGHTS.weights)
+
+		local roamer_group_origins = Managers.state.main_path:get_group_origins()
+		local current_group_origin = roamer_group_origins[zone.spawn_point_index]
+		local current_origin_position = current_group_origin:unbox()
+		local num_sub_zone = #sub_zone
+
+		for i = 1, num_sub_zone do
+			local current_sub_zone = sub_zone[i]
+			local current_sub_zone_position = current_sub_zone.position:unbox()
+			local distance_to_origin_sq = math.round(Vector3.distance_squared(current_origin_position, current_sub_zone_position))
+
+			table.insert_sorted(SORTED_KEYS, distance_to_origin_sq)
+
+			SORTED_VALUES[distance_to_origin_sq] = current_sub_zone
+		end
+
+		for i = 1, #SORTED_KEYS do
+			local current_sub_zone_distance = SORTED_KEYS[i]
+			local sorted_current_sub_zone = SORTED_VALUES[current_sub_zone_distance]
+
+			SORTED_WEIGHTS.weight_lookup[i] = sorted_current_sub_zone
+			SORTED_WEIGHTS.weights[i] = num_sub_zone - i
+		end
+
+		local prob, alias = LoadedDice.create(SORTED_WEIGHTS.weights, false)
+
+		WEIGHTED_PROBABILITES = {
+			prob = prob,
+			alias = alias,
+		}
+	end
+
+	local selected_zone
+	local attempts = 0
+	local _, index
+
+	repeat
+		attempts = attempts + 1
+		_, index = LoadedDice.roll_seeded(WEIGHTED_PROBABILITES.prob, WEIGHTED_PROBABILITES.alias, self._seed)
+
+		if index and index <= #SORTED_WEIGHTS.weight_lookup then
+			selected_zone = SORTED_WEIGHTS.weight_lookup[index]
+		end
+	until selected_zone or attempts >= MAX_ATTEMPTS
+
+	if selected_zone then
+		table.swap_delete(SORTED_WEIGHTS.weight_lookup, index)
+		table.swap_delete(sub_zone, index)
+	elseif #sub_zone > 0 then
+		selected_zone = sub_zone[1]
+
+		table.remove(sub_zone, 1)
+		table.remove(SORTED_WEIGHTS.weight_lookup, 1)
+	else
+		Log.warning("RoamerPacing", "Failed to get a sub-zone picked using weight function, something has gone very wrong")
+	end
+
+	return selected_zone, true
 end
 
 local NAV_ABOVE, NAV_BELOW = 0.1, 0.1
@@ -1016,6 +1175,7 @@ RoamerPacing._spawn_roamer = function (self, breed_name, position, rotation, gro
 	local param_table = minion_spawn_manager:request_param_table()
 
 	param_table.optional_group_id = group_id
+	param_table.spawn_source = "roamer_pacing"
 
 	local unit = Managers.state.minion_spawn:spawn_minion(breed_name, position, rotation, side_id, param_table)
 

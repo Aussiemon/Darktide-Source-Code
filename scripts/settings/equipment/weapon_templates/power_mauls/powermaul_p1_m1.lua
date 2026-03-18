@@ -1265,10 +1265,10 @@ weapon_template.damage_window_end_sweep_trail_offset = 0.45
 weapon_template.ammo_template = "no_ammo"
 weapon_template.fx_sources = {
 	_block = "fx_block",
-	_melee_idling = "fx_special_active",
 	_special_active = "fx_special_active",
 	_sticky = "fx_special_active",
 	_sweep = "fx_sweep",
+	_wielded_idling = "fx_special_active",
 }
 weapon_template.crosshair = {
 	crosshair_type = "dot",

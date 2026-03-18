@@ -64,6 +64,18 @@ LuggableSocketExtension.update = function (self, unit, dt, t)
 	end
 end
 
+LuggableSocketExtension.destroy = function (self)
+	local luggable_unit = self._locked_luggable
+
+	if self._is_server and luggable_unit and ALIVE[luggable_unit] and not Managers.state.unit_spawner:is_marked_for_deletion(luggable_unit) then
+		local pickup_system = Managers.state.extension:system("pickup_system")
+
+		pickup_system:despawn_pickup(luggable_unit)
+	end
+
+	self._locked_luggable = nil
+end
+
 LuggableSocketExtension._retrieve_overlapping_with_luggables = function (self)
 	table.clear(self._overlapping_units)
 
@@ -117,7 +129,6 @@ LuggableSocketExtension.socket_luggable = function (self, luggable_unit, socket_
 
 	self:_lock_socket(luggable_unit)
 	Unit.flow_event(socket_unit, "lua_socketed")
-	Managers.state.extension:system("pickup_system"):dropped(luggable_unit)
 
 	local luggable_objective_target_ext = ScriptUnit.has_extension(luggable_unit, "mission_objective_target_system")
 

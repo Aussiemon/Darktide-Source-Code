@@ -63,6 +63,15 @@ EventSynchronizerBaseExtension.finished_event = function (self)
 	Unit.flow_event(self._unit, "lua_event_finished")
 end
 
+EventSynchronizerBaseExtension.stop = function (self)
+	self._mission_active = false
+end
+
+EventSynchronizerBaseExtension.reset = function (self)
+	self._mission_active = false
+	self._finished = false
+end
+
 EventSynchronizerBaseExtension.seeds = function (self)
 	return self._setup_seed, self._seed
 end

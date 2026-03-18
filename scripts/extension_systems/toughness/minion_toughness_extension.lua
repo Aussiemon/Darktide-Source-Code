@@ -2,6 +2,7 @@
 
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local Explosion = require("scripts/utilities/attack/explosion")
 local Stagger = require("scripts/utilities/attack/stagger")
 local MinionToughnessTemplates = require("scripts/settings/toughness/minion_toughness_templates")
@@ -94,7 +95,7 @@ MinionToughnessExtension.game_object_initialized = function (self, session, obje
 	self._game_object_id = object_id
 
 	local toughness_template = self._toughness_template
-	local effect_template = toughness_template.effect_template
+	local effect_template = toughness_template.effect_template_name and EffectTemplates[toughness_template.effect_template_name]
 
 	if effect_template then
 		local fx_system = self._fx_system

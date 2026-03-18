@@ -13,9 +13,18 @@ local icons = {
 	loot = "content/ui/materials/icons/generic/loot",
 }
 local quickplay_data = {
-	icon = "content/ui/materials/icons/mission_types/mission_type_quick",
-	mission_title = "loc_mission_board_quickplay_header",
-	mission_type = "loc_mission_board_view_header_tertium_hive",
+	default = {
+		icon = "content/ui/materials/icons/mission_types/mission_type_quick",
+		image = "content/ui/textures/icons/zones/zone_quickplay",
+		mission_title = "loc_mission_board_quickplay_header",
+		mission_type = "loc_mission_board_view_header_tertium_hive",
+	},
+	expedition = {
+		icon = "content/ui/materials/icons/mission_types/mission_type_quick",
+		image = "content/ui/textures/icons/zones/zone_deadside",
+		mission_title = "loc_mission_board_quickplay_header",
+		mission_type = "loc_mission_name_exp_wastes",
+	},
 }
 local button_strings = {
 	hide_details = "loc_mission_voting_view_hide_details",
@@ -408,7 +417,8 @@ details_widgets_blueprints.utility_functions.prepare_details_data = function (mi
 
 	do
 		local circumstance = mission_data.circumstance
-		local circumstance_ui_settings = CircumstanceTemplates[circumstance].ui
+		local circumstance_template = CircumstanceTemplates[circumstance]
+		local circumstance_ui_settings = circumstance_template and circumstance_template.ui
 
 		if circumstance and circumstance ~= "default" and circumstance_ui_settings then
 			details_data[#details_data + 1] = {

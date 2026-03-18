@@ -17,7 +17,9 @@ local ranged_base = {
 		combat_range_sticky_time = "number",
 		enter_combat_range_flag = "boolean",
 		lock_combat_range_switch = "boolean",
+		move_medium = "string",
 		move_state = "string",
+		restricted_combat_range = "string",
 	},
 	suppression = {
 		direction = "Vector3Box",
@@ -51,6 +53,13 @@ local ranged_base = {
 		is_disabled = "boolean",
 		type = "string",
 	},
+	vortex_grabbed = {
+		eject_height = "number",
+		ejected_from_vortex = "Vector3Box",
+		in_vortex = "boolean",
+		in_vortex_state = "string",
+		landing_finished = "boolean",
+	},
 }
 
 table.merge(ranged_base, base_template)
@@ -77,8 +86,10 @@ netgunner.behavior = {
 	hit_target = "boolean",
 	is_dragging = "boolean",
 	lock_combat_range_switch = "boolean",
+	move_medium = "string",
 	move_state = "string",
 	net_is_ready = "boolean",
+	restricted_combat_range = "string",
 	shoot_net_cooldown = "number",
 }
 netgunner.record_state = {
@@ -194,10 +205,12 @@ renegade_twin_captain.behavior = {
 	enter_combat_range_flag = "boolean",
 	has_move_to_position = "boolean",
 	lock_combat_range_switch = "boolean",
+	move_medium = "string",
 	move_state = "string",
 	move_to_position = "Vector3Box",
 	other_twin_unit = "Unit",
 	remove_toughness_clamp = "boolean",
+	restricted_combat_range = "string",
 	should_disappear = "boolean",
 	should_disappear_instant = "boolean",
 	toughness_broke = "boolean",
@@ -219,10 +232,12 @@ renegade_twin_captain_two.behavior = {
 	enter_combat_range_flag = "boolean",
 	has_move_to_position = "boolean",
 	lock_combat_range_switch = "boolean",
+	move_medium = "string",
 	move_state = "string",
 	move_to_position = "Vector3Box",
 	other_twin_unit = "Unit",
 	remove_toughness_clamp = "boolean",
+	restricted_combat_range = "string",
 	should_disappear = "boolean",
 	should_disappear_instant = "boolean",
 	toughness_broke = "boolean",

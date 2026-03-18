@@ -2,7 +2,7 @@
 
 local Breeds = require("scripts/settings/breed/breeds")
 local BreedQueries = require("scripts/utilities/breed_queries")
-local minion_breeds = BreedQueries.minion_breeds()
+local minion_breeds = BreedQueries.minion_breeds_by_name()
 local path = "content/ui/textures/icons/achievements/"
 local breed_kill_targets = {
 	elite = {
@@ -23,6 +23,7 @@ local breed_kill_targets = {
 local AchievementBreedGroups = {}
 
 AchievementBreedGroups.all = {
+	"chaos_armored_hound",
 	"chaos_armored_infected",
 	"chaos_beast_of_nurgle",
 	"chaos_daemonhost",
@@ -36,6 +37,7 @@ AchievementBreedGroups.all = {
 	"chaos_ogryn_bulwark",
 	"chaos_ogryn_executor",
 	"chaos_ogryn_gunner",
+	"chaos_ogryn_houndmaster",
 	"chaos_plague_ogryn",
 	"chaos_poxwalker_bomber",
 	"chaos_poxwalker",
@@ -276,6 +278,9 @@ AchievementBreedGroups.special_and_elite_breed_lookup = {
 }
 AchievementBreedGroups.companion = {
 	"companion_dog",
+}
+AchievementBreedGroups.none = {
+	"attack_valkyrie",
 }
 
 return AchievementBreedGroups

@@ -28,6 +28,32 @@ local COMBAT = {
 	condition = "is_aggroed",
 	name = "combat",
 }
+local DISABLE = {
+	"BtSelectorNode",
+	{
+		"BtMinionVortexGrabbedAction",
+		condition = "vortex_grabbed",
+		name = "vortex_grabbed",
+		action_data = action_data.vortex_grabbed,
+	},
+	{
+		"BtDisableAction",
+		condition = "is_minion_disabled",
+		name = "disable",
+		action_data = action_data.disable,
+	},
+	name = "disable_actions",
+}
+local WEAPON_MALFUNCTION = {
+	"BtConditionalSequenceNode",
+	{
+		"BtWeaponMalfunctionAction",
+		name = "weapon_malfunction_loop",
+		action_data = action_data.weapon_malfunction_loop,
+	},
+	condition = "has_weapon_malfunction",
+	name = "weapon_malfunction",
+}
 local behavior_tree = {
 	"BtSelectorNode",
 	{
@@ -45,12 +71,7 @@ local behavior_tree = {
 		condition = "is_dead",
 		name = "death_sequence",
 	},
-	{
-		"BtDisableAction",
-		condition = "is_minion_disabled",
-		name = "disable",
-		action_data = action_data.disable,
-	},
+	DISABLE,
 	{
 		"BtExitSpawnerAction",
 		condition = "is_exiting_spawner",
@@ -91,6 +112,7 @@ local behavior_tree = {
 		name = "stagger",
 		action_data = action_data.stagger,
 	},
+	WEAPON_MALFUNCTION,
 	MELEE_COMBAT,
 	COMBAT,
 	{

@@ -335,14 +335,14 @@ local formative_event_options = {
 		},
 	},
 }
-local formative_event_options_by_id = {}
+local formative_event = {}
 
-for i = 1, #formative_event_options do
-	local formative_event_option = formative_event_options[i]
-	local id = string.format("option_%d", i)
+for ii = 1, #formative_event_options do
+	local formative_event_option = formative_event_options[ii]
+	local id = string.format("option_%d", ii)
 
 	formative_event_option.id = id
-	formative_event_options_by_id[id] = formative_event_option
+	formative_event[id] = formative_event_option
 end
 
-return settings("FormativeEvent", formative_event_options_by_id)
+return settings("FormativeEvent", formative_event)

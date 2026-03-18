@@ -61,31 +61,31 @@ templates.weapon_trait_bespoke_lasgun_p1_first_shot_ammo_cost_reduction = {
 		},
 		ammo = {
 			format_type = "string",
-			value = "33%",
+			value = "66%",
 		},
 	},
 	buffs = {
 		weapon_trait_bespoke_lasgun_p1_first_shot_ammo_cost_reduction = {
 			{
-				cooldown_duration = 5.5,
+				cooldown_duration = 1.25,
 				proc_events = {
 					[proc_events.on_shoot] = 1,
 				},
 			},
 			{
-				cooldown_duration = 5,
+				cooldown_duration = 1,
 				proc_events = {
 					[proc_events.on_shoot] = 1,
 				},
 			},
 			{
-				cooldown_duration = 4.5,
+				cooldown_duration = 0.75,
 				proc_events = {
 					[proc_events.on_shoot] = 1,
 				},
 			},
 			{
-				cooldown_duration = 4,
+				cooldown_duration = 0.5,
 				proc_events = {
 					[proc_events.on_shoot] = 1,
 				},

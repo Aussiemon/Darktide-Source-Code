@@ -5,6 +5,7 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 local Animation = require("scripts/utilities/animation")
 local AttackIntensity = require("scripts/utilities/attack_intensity")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local MinionAttack = require("scripts/utilities/minion_attack")
 local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
 local MinionMovement = require("scripts/utilities/minion_movement")
@@ -194,7 +195,7 @@ BtShootPatternAction._shoot = function (self, unit, scratchpad, action_data)
 
 	if not scratchpad.global_effect_id then
 		local fx_system = scratchpad.fx_system
-		local effect_template = shoot_template.effect_template
+		local effect_template = shoot_template.effect_template_name and EffectTemplates[shoot_template.effect_template_name]
 		local global_effect_id = fx_system:start_template_effect(effect_template, unit)
 
 		scratchpad.global_effect_id = global_effect_id

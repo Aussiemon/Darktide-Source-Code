@@ -15,6 +15,14 @@ conditions.has_target_unit = function (unit, blackboard, scratchpad, condition_a
 	return HEALTH_ALIVE[target_unit]
 end
 
+conditions.has_or_had_target_unit = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	if is_running then
+		return true
+	end
+
+	return conditions.has_target_unit(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+end
+
 conditions.is_dead = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
 	local death_component = blackboard.death
 	local is_dead = death_component.is_dead
@@ -53,6 +61,13 @@ conditions.is_aggroed = function (unit, blackboard, scratchpad, condition_args, 
 	local is_aggroed = perception_component.aggro_state == "aggroed"
 
 	return is_aggroed
+end
+
+conditions.vortex_grabbed = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local vortex_grabbed_component = blackboard.vortex_grabbed
+	local in_vortex = vortex_grabbed_component.in_vortex
+
+	return in_vortex
 end
 
 conditions.has_cover = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
@@ -544,7 +559,19 @@ conditions.netgunner_hit_target = function (unit, blackboard, scratchpad, condit
 end
 
 conditions.netgunner_hit_target_with_alt_conditions = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-	return false
+	local behavior_component = blackboard.behavior
+	local hit_target = behavior_component.hit_target
+	local game_mode_manager = Managers.state.game_mode
+	local game_mode = game_mode_manager:game_mode()
+	local game_mode_name = game_mode:name()
+
+	if game_mode_name == "expedition" then
+		local minion_has_loot = game_mode:check_minion_loot(unit)
+
+		return hit_target and minion_has_loot
+	else
+		return false
+	end
 end
 
 conditions.daemonhost_can_warp_grab = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
@@ -986,7 +1013,7 @@ conditions.beast_of_nurgle_melee_tail_whip = function (unit, blackboard, scratch
 
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system.side_by_unit[unit]
-	local target_units = side.ai_target_units
+	local target_units = side.ai_ground_target_units
 	local num_valid_target_units = #target_units
 	local position = POSITION_LOOKUP[unit]
 	local fwd = Quaternion.forward(Unit.local_rotation(unit, 1))
@@ -1515,6 +1542,18 @@ conditions.is_minion_disabled = function (unit, blackboard, scratchpad, conditio
 	return disable_component.is_disabled
 end
 
+conditions.is_minion_disabled_with_type = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local disable_component = blackboard.disable
+
+	return disable_component.is_disabled and condition_args.disable_type == disable_component.type
+end
+
+conditions.has_weapon_malfunction = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local buff_extension = ScriptUnit.extension(unit, "buff_system")
+
+	return buff_extension and buff_extension:has_keyword("weapon_malfunction")
+end
+
 conditions.has_manual_teleport = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
 	local teleport_component = blackboard.teleport
 
@@ -1727,6 +1766,35 @@ end
 
 conditions.companion_has_owner_unit = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
 	return blackboard.behavior.is_owner_despawned
+end
+
+conditions.should_rendezvous = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local rendezvous_component = blackboard.rendezvous
+
+	if is_running then
+		return true
+	end
+
+	if not rendezvous_component.has_randezvous_position then
+		return true
+	end
+
+	local Utility = require("scripts/extension_systems/behavior/utilities/utility")
+	local current_reference = rendezvous_component.rendezvous_reference:unbox()
+	local _, rendezvous_reference = Utility.find_rendezvous_position(unit, action_data, blackboard)
+	local radius = action_data.rendezvous_radius
+
+	return rendezvous_reference and Vector3.distance_squared(current_reference, rendezvous_reference) > radius * radius
+end
+
+conditions.wants_flee = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	if is_running then
+		return true
+	end
+
+	local flee_component = blackboard.flee
+
+	return flee_component.wants_flee
 end
 
 return conditions

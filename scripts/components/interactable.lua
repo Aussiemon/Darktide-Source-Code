@@ -35,6 +35,12 @@ Interactable.init = function (self, unit, is_server)
 			description = nil
 		end
 
+		local extra_description = self:get_data(unit, "hud_extra_description")
+
+		if extra_description == "" then
+			extra_description = nil
+		end
+
 		local action_text = self:get_data(unit, "sub_description")
 
 		if action_text == "" then
@@ -58,6 +64,7 @@ Interactable.init = function (self, unit, is_server)
 		interaction_context.only_once = only_once
 		interaction_context.interactor_item_to_equip = interactor_item_to_equip
 		interaction_context.description = description
+		interaction_context.extra_description = extra_description
 		interaction_context.action_text = action_text
 		interaction_context.missing_players_text = missing_players_text
 		interaction_context.interaction_icon = interaction_icon ~= "use_template" and interaction_icon or nil
@@ -361,6 +368,8 @@ Interactable.component_data = {
 			"default",
 			"door_control_panel",
 			"equip_auspex",
+			"expedition_loot_converter",
+			"gamemode_expeditions",
 			"gamemode_havoc",
 			"health_station",
 			"health",
@@ -396,6 +405,8 @@ Interactable.component_data = {
 			"default",
 			"door_control_panel",
 			"equip_auspex",
+			"expedition_loot_converter",
+			"gamemode_expeditions",
 			"gamemode_havoc",
 			"health_station",
 			"health",
@@ -455,6 +466,7 @@ Interactable.component_data = {
 		value = "use_template",
 		options_keys = {
 			"ammunition",
+			"pocketable_ammo",
 			"default",
 			"environment_alert",
 			"environment_generic",
@@ -468,6 +480,7 @@ Interactable.component_data = {
 		},
 		options_values = {
 			"content/ui/materials/hud/interactions/icons/ammunition",
+			"content/ui/materials/hud/interactions/icons/pocketable_ammo",
 			"content/ui/materials/hud/interactions/icons/default",
 			"content/ui/materials/hud/interactions/icons/environment_alert",
 			"content/ui/materials/hud/interactions/icons/environment_generic",

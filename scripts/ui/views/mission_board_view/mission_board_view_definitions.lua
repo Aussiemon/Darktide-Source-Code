@@ -318,17 +318,6 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 			100,
 		},
 	},
-	difficulty_stepper_tooltip = {
-		horizontal_alignment = "center",
-		parent = "difficulty_stepper",
-		vertical_alignment = "top",
-		size = Dimensions.threat_tooltip_size,
-		position = {
-			0,
-			-120,
-			100,
-		},
-	},
 	difficulty_stepper_indicators = {
 		horizontal_alignment = "center",
 		parent = "difficulty_stepper",
@@ -340,18 +329,7 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		position = {
 			0,
 			0,
-			1,
-		},
-	},
-	difficulty_progress_bar = {
-		horizontal_alignment = "center",
-		parent = "difficulty_stepper",
-		vertical_alignment = "bottom",
-		size = Dimensions.threat_level_progress_bar_size,
-		position = {
-			0,
-			-10,
-			1,
+			40,
 		},
 	},
 }
@@ -496,7 +474,7 @@ widget_definitions.play_button_legend = UIWidget.create_definition({
 }, "play_button", nil, nil, {
 	text = {
 		font_size = 14,
-		font_type = "kode_mono_medium",
+		font_type = "mono_tide_medium",
 		text_horizontal_alignment = "center",
 		text_vertical_alignment = "center",
 		text_color = Styles.colors.default.text_body,
@@ -507,28 +485,6 @@ widget_definitions.play_button_legend = UIWidget.create_definition({
 		},
 	},
 })
-widget_definitions.difficulty_progress_tooltip = UIWidget.create_definition({
-	{
-		pass_type = "texture",
-		style_id = "frame",
-		value = "content/ui/materials/frames/frame_tile_2px",
-		style = Styles.difficulty_progress_tooltip.frame,
-	},
-	{
-		pass_type = "rect",
-		style_id = "background",
-		value_id = "background",
-		style = Styles.difficulty_progress_tooltip.background,
-	},
-	{
-		pass_type = "text",
-		style_id = "text",
-		value = "TOOLTIP TEXT",
-		value_id = "text",
-		style = Styles.difficulty_progress_tooltip.text,
-	},
-}, "difficulty_stepper_tooltip")
-widget_definitions.difficulty_stepper = UIWidget.create_definition(StepperPassTemplates.mission_board_stepper, "difficulty_stepper")
 widget_definitions.mission_board_screen_frame = UIWidget.create_definition({
 	{
 		pass_type = "texture",
@@ -599,35 +555,6 @@ local function _progress_bar_change_function(content, style, animations, dt)
 		ColorUtilities.color_lerp(from_color, to_color, 0.1, color, false)
 	end
 end
-
-widget_definitions.difficulty_progress_bar = UIWidget.create_definition({
-	{
-		pass_type = "texture",
-		style_id = "difficulty_progress_frame",
-		value = "content/ui/materials/frames/frame_tile_2px",
-		value_id = "difficulty_progress_frame",
-		style = Styles.difficulty_progress_bar.frame,
-		change_function = _progress_bar_change_function,
-		visibility_function = function (content, style)
-			return content.progress ~= 1
-		end,
-	},
-	{
-		pass_type = "rect",
-		style_id = "progress_bar",
-		style = Styles.difficulty_progress_bar.progress_bar,
-		change_function = function (content, style, animations, dt)
-			local progress = content.progress or 0.68
-
-			style.size[1] = style.default_size[1] * progress
-
-			_progress_bar_change_function(content, style, animations, dt)
-		end,
-		visibility_function = function (content, style)
-			return content.progress ~= 1
-		end,
-	},
-}, "difficulty_progress_bar")
 
 local play_button_content_overrides = {
 	gamepad_action = "confirm_pressed",

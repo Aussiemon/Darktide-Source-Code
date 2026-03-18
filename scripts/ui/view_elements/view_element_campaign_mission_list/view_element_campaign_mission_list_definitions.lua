@@ -9,6 +9,7 @@ local Text = require("scripts/utilities/ui/text")
 local InputDevice = require("scripts/managers/input/input_device")
 local InputUtils = require("scripts/managers/input/input_utils")
 local ColorUtilities = require("scripts/utilities/ui/colors")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local Definitions = {}
 local Dimensions = MissionBoardViewSettings.dimensions
 local top_buffer = Dimensions.top_buffer
@@ -324,20 +325,20 @@ local function create_scrollbar_widget(orientation)
 				color = {
 					255,
 					140.25,
-					110.55000000000001,
-					68.2,
+					48.400000000000006,
+					14.850000000000001,
 				},
 				default_color = {
 					255,
 					140.25,
-					110.55000000000001,
-					68.2,
+					48.400000000000006,
+					14.850000000000001,
 				},
 				hover_color = {
 					255,
 					255,
-					201,
-					124,
+					88,
+					27,
 				},
 			},
 			visibility_function = scrollbar_visibility_function,
@@ -511,7 +512,7 @@ local function create_scrollbar_widget(orientation)
 	return scrollbar_widget
 end
 
-local function _update_debrief_button_size_by_selection_state(content, style, animation, dt)
+local function _update_debrief_button_size_by_selection_state(content, style)
 	local hotspot = content.hotspot or content.parent.hotspot
 	local anim_hover_progress = hotspot.anim_hover_progress or 0
 
@@ -552,7 +553,31 @@ local function create_debrief_widget(scenegraph_id, is_locked)
 			pass_type = "hotspot",
 			style_id = "hotspot",
 			style = Styles.debrief_video.hotspot,
-			change_function = _update_debrief_button_size_by_selection_state,
+			change_function = function (content, style, animation, dt)
+				_update_debrief_button_size_by_selection_state(content, style, animation, dt)
+
+				local hotspot = content.hotspot or content.parent.hotspot
+				local on_hover_enter = hotspot.on_hover_enter
+				local on_hover_exit = hotspot.on_hover_exit
+
+				if on_hover_enter and not content.hover_sound_played then
+					if not is_locked then
+						content.hover_sound_id = Managers.ui:play_2d_sound(UISoundEvents.special_assignment_mission_board_vox_hover)
+					end
+
+					content.hover_sound_played = true
+				end
+
+				if on_hover_exit then
+					if content.hover_sound_id then
+						Managers.ui:stop_2d_sound(content.hover_sound_id)
+
+						content.hover_sound_id = nil
+					end
+
+					content.hover_sound_played = nil
+				end
+			end,
 		},
 		{
 			pass_type = "texture",
@@ -849,12 +874,17 @@ local widget_definitions = {
 					0,
 					0,
 				},
+				offset = {
+					0,
+					0,
+					-1,
+				},
 			},
 		},
 		{
-			pass_type = "rotated_texture",
+			pass_type = "texture",
 			style_id = "list_background_fade",
-			value = "content/ui/materials/hud/backgrounds/fade_horizontal",
+			value = "content/ui/materials/backgrounds/terminal_basic",
 			value_id = "list_background_fade",
 			style = Styles.list_background.list_background_fade,
 		},

@@ -26,6 +26,7 @@ WorldTestCases.load_mission = function (case_settings)
 		end
 
 		if num_peers == 0 then
+			TestifySnippets.skip_main_menu()
 			TestifySnippets.load_mission(mission_key)
 		end
 
@@ -41,18 +42,14 @@ WorldTestCases.load_mission = function (case_settings)
 		end
 
 		TestifySnippets.wait(2)
+		TestifySnippets.exit_to_main_menu_and_wait()
 	end)
 end
 
 WorldTestCases.load_mission_circumstances = function (case_settings)
 	Testify:run_case(function (dt, t)
 		local settings = cjson.decode(case_settings or "{}")
-
-		if settings.check_theme_loaded == false then
-			-- Nothing
-		end
-
-		local check_theme_loaded = true
+		local check_theme_loaded = settings.check_theme_loaded ~= false
 		local flags = settings.flags or {
 			"load_mission",
 			"circumstances",
@@ -265,6 +262,42 @@ WorldTestCases.test_triggers = function ()
 		return result
 	end)
 end
+
+local _fly_through_mission_by_mechanism = {
+	adventure = function (mission_key, speed)
+		Testify:make_request("free_flight_camera_follow_main_path", speed)
+
+		while not Testify:make_request("free_flight_camera_is_arrived_end_of_main_path") do
+			TestifySnippets.wait(1)
+		end
+	end,
+	expedition = function (mission_key, speed)
+		while true do
+			local expedition_coordinates = Testify:make_request("expedition_location_path")
+
+			TestifySnippets.free_flight_camera_follow_path(expedition_coordinates, speed)
+
+			if Testify:make_request("expedition_is_on_last_location") then
+				break
+			end
+
+			Testify:make_request("expedition_start_next_location")
+			Testify:make_request("expedition_wait_until_location_ready")
+
+			local expedition_store_path = Testify:make_request("expedition_store_path")
+
+			TestifySnippets.free_flight_camera_follow_path(expedition_store_path, speed)
+		end
+	end,
+	hub = function (mission_key, speed)
+		local coordinates = FlythroughCoordinates[mission_key]
+
+		Testify.expect:is_not_nil("fly_through_mission", coordinates, string.format("Mission %s does not have flythrough coordinates.", mission_key))
+		TestifySnippets.free_flight_camera_follow_path(coordinates, speed)
+	end,
+}
+
+_fly_through_mission_by_mechanism.prologue = _fly_through_mission_by_mechanism.hub
 
 WorldTestCases.check_isolated_islands = function (case_settings)
 	Testify:run_case(function (dt, t)

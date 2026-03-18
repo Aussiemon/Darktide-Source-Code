@@ -329,7 +329,7 @@ CraftingView._switch_tab_view = function (self, index)
 	local alpha = tab_params.background_alpha or 0
 
 	self._wanted_overlay_alpha = alpha
-	self._active_view_on_enter_callback = self._active_view and view_function and callback(function ()
+	self._active_view_on_enter_callback = self._active_view and view_function and function ()
 		if self._active_view == view then
 			local view_instance = ui_manager:view_instance(self._active_view)
 
@@ -341,7 +341,7 @@ CraftingView._switch_tab_view = function (self, index)
 		end
 
 		return false
-	end)
+	end
 
 	local story_name = tab_params.level_story_event
 

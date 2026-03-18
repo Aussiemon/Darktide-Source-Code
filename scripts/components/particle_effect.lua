@@ -148,6 +148,14 @@ ParticleEffect._create_particle = function (self)
 
 		return
 	end
+
+	local script_data_parameters = self:get_data(unit, "script_data_parameters")
+
+	success = self:_set_dynamic_parameters(unit, world, particle_id, script_data_parameters)
+
+	if not success then
+		self:_destroy_particle()
+	end
 end
 
 local function _check(world, particle_id, cloud_name, parameter_name, particle_name)
@@ -191,6 +199,49 @@ ParticleEffect._set_boxed_parameters = function (self, world, particle_id, param
 		end
 
 		set_material_function(world, particle_id, cloud_name, parameter_name, parameter_value)
+	end
+
+	return true
+end
+
+ParticleEffect._set_dynamic_parameters = function (self, unit, world, particle_id, parameters)
+	for i = 1, #parameters do
+		local parameter = parameters[i]
+		local cloud_name = parameter.cloud_name
+		local parameter_name = parameter.parameter_name
+
+		if not _check(world, particle_id, cloud_name, parameter_name, self._particle_name) then
+			return false
+		end
+
+		local script_data_name = parameter.script_data_name
+		local parameter_value = Unit.get_data(unit, script_data_name)
+
+		if parameter_value == nil then
+			Log.error("ParticleEffect", "[_set_dynamic_parameters] Parameter '%s' has not been initialized in unit '%s'.", script_data_name, unit)
+
+			return false
+		end
+
+		local value_type = type(parameter_value)
+
+		if value_type == "number" then
+			World.set_particles_material_scalar(world, particle_id, cloud_name, parameter_name, parameter_value)
+		elseif value_type == "table" then
+			local num_values = #parameter_value
+
+			if num_values == 2 then
+				World.set_particles_material_vector2(world, particle_id, cloud_name, parameter_name, Vector2(parameter_value[1], parameter_value[2]))
+			elseif num_values == 3 then
+				World.set_particles_material_vector3(world, particle_id, cloud_name, parameter_name, Vector3(parameter_value[1], parameter_value[2], parameter_value[3]))
+			elseif num_values == 4 then
+				World.set_particles_material_vector3(world, particle_id, cloud_name, parameter_name, Color(parameter_value[1], parameter_value[2], parameter_value[3], parameter_value[4]))
+			end
+		else
+			Log.error("ParticleEffect", "[_set_dynamic_parameters] Unexpected parameter type '%s' initialized for parameter '%s' in unit '%s'.", value_type, script_data_name, unit)
+
+			return false
+		end
 	end
 
 	return true
@@ -388,6 +439,32 @@ ParticleEffect.component_data = {
 			"cloud_name",
 			"parameter_name",
 			"parameter_value",
+		},
+	},
+	script_data_parameters = {
+		ui_name = "List of parameters (Script Data)",
+		ui_type = "struct_array",
+		definition = {
+			cloud_name = {
+				ui_name = "Particle Cloud Name",
+				ui_type = "text_box",
+				value = "",
+			},
+			parameter_name = {
+				ui_name = "Parameter Name",
+				ui_type = "text_box",
+				value = "",
+			},
+			script_data_name = {
+				ui_name = "Script Data Variable Name",
+				ui_type = "text_box",
+				value = "",
+			},
+		},
+		control_order = {
+			"cloud_name",
+			"parameter_name",
+			"script_data_name",
 		},
 	},
 	inputs = {

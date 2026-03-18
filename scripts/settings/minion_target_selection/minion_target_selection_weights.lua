@@ -60,6 +60,17 @@ minion_target_selection_weights.chaos_ogryn_executor = {
 	stickiness_duration = 8,
 	threat_multiplier = 0.75,
 }
+minion_target_selection_weights.chaos_ogryn_houndmaster = {
+	disabled = -80,
+	distance_to_target = 40,
+	ledge_hanging_weight = -20,
+	max_distance = 20,
+	occupied_slots = -2,
+	stickiness_bonus = 100,
+	stickiness_duration = 10,
+	taunt_weight_multiplier = 2,
+	threat_multiplier = 1.75,
+}
 minion_target_selection_weights.cultist_berzerker = {
 	disabled = -2,
 	distance_to_target = 3,
@@ -319,6 +330,18 @@ minion_target_selection_weights.companion_dog = {
 	max_distance = 50,
 	occupied_slots = -1,
 	threat_multiplier = 1.5,
+}
+minion_target_selection_weights.attack_valkyrie = {
+	attack_not_allowed = -40,
+	combat_vector_main_aggro_weight = 0,
+	disabled = -50,
+	distance_to_target = 60,
+	knocked_down_weight = -60,
+	line_of_sight_weight = 60,
+	max_distance = 150,
+	near_distance = 60,
+	near_distance_bonus = 90,
+	occupied_slots = -1,
 }
 
 return settings("MinionTargetSelectionWeights", minion_target_selection_weights)

@@ -50,9 +50,7 @@ function callback(...)
 		local num_args = select("#", ...) - 1
 
 		if num_args == 0 then
-			return function (...)
-				return func(...)
-			end
+			return func
 		elseif num_args == 1 then
 			local arg1 = select(2, ...)
 

@@ -384,7 +384,7 @@ local widget_definitions = {
 		{
 			pass_type = "texture",
 			style_id = "icon",
-			value = "content/ui/materials/icons/contracts/contracts_store/uknown_melee_weapon",
+			value = "content/ui/materials/icons/contracts/contracts_store/unknown_melee_weapon",
 			value_id = "icon",
 			style = {
 				horizontal_alignment = "center",

@@ -1,11 +1,11 @@
 ﻿-- chunkname: @scripts/settings/breed/breed_actions/cultist/cultist_ritualist_actions.lua
 
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local hit_zone_names = HitZone.hit_zone_names
 local action_data = {
 	name = "cultist_ritualist",
 	chanting = {
+		effect_template_name = "cultist_ritualist_chanting",
 		ignore_rotate_towards_target = true,
 		vo_event = "passive_idle",
 		anim_events = {
@@ -18,7 +18,6 @@ local action_data = {
 			chanting_02 = 2,
 			chanting_03 = 3,
 		},
-		effect_template = EffectTemplates.cultist_ritualist_chanting,
 	},
 	death = {
 		instant_ragdoll_chance = 0.5,

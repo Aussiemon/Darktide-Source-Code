@@ -3,13 +3,13 @@
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local HumanPlayer = class("HumanPlayer")
 
-HumanPlayer.init = function (self, unique_id, session_id, channel_id, peer_id, local_player_id, profile, slot, account_id, viewport_name, telemetry_game_session, last_mission_id)
+HumanPlayer.init = function (self, unique_id, session_id, channel_id, peer_id, local_player_id, profile, slot, account_id, viewport_name, telemetry_ids, last_mission_id)
 	self.player_unit = nil
 	self.viewport_name = viewport_name
 	self.owned_units = {}
 	self.sensitivity = 1
 	self.aim_assist_data = self:_create_aim_assist_data()
-	self._telemetry_game_session = telemetry_game_session
+	self._telemetry_ids = telemetry_ids
 
 	if self:type() == "HumanPlayer" then
 		self._debug_name = "Local #" .. peer_id:sub(-3, -1)
@@ -151,8 +151,20 @@ HumanPlayer.companion_name = function (self)
 	return companion_data and companion_data.name or nil
 end
 
+HumanPlayer.set_telemetry_instance = function (self, instance)
+	self._telemetry_ids.instance = instance
+end
+
 HumanPlayer.telemetry_game_session = function (self)
-	return self._telemetry_game_session
+	return self._telemetry_ids.session
+end
+
+HumanPlayer.telemetry_current_instance = function (self)
+	return self._telemetry_ids.instance
+end
+
+HumanPlayer.telemetry_subject = function (self)
+	return self._telemetry_subject
 end
 
 HumanPlayer.telemetry_subject = function (self)

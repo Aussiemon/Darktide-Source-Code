@@ -20,7 +20,7 @@ ToxicGasFog.set_volume_enabled = function (self, enabled)
 		self:enable(self.unit)
 
 		self._volume_enabled = true
-	elseif self._volume_enabled then
+	elseif self._volume_enabled and not enabled then
 		self:disable(self.unit)
 
 		self._volume_enabled = false
@@ -159,6 +159,10 @@ ToxicGasFog.disable = function (self, unit)
 	end
 end
 
+ToxicGasFog.low_gas_created = function (self)
+	return self._low_gas_created
+end
+
 ToxicGasFog.events.visibility_enable = function (self, unit)
 	self:set_volume_enabled(true)
 end
@@ -172,6 +176,12 @@ ToxicGasFog.events.create_low_gas = function (self)
 		Unit.flow_event(self.unit, "create_low_gas")
 
 		self._low_gas_created = true
+	end
+end
+
+ToxicGasFog.events.restart_low_gas = function (self)
+	if self._low_gas_created then
+		Unit.flow_event(self.unit, "restart_low_gas")
 	end
 end
 

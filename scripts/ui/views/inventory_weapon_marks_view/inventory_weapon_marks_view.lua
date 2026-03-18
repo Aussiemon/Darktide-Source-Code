@@ -186,6 +186,10 @@ InventoryWeaponMarksView.on_enter = function (self)
 
 	self:_register_button_callbacks()
 	self:_fetch_marks():next(function (result)
+		if self._destroyed then
+			return
+		end
+
 		local mastery_data = result and result.mastery_data
 		local marks = result and result.marks
 		local layout = {}
@@ -517,6 +521,10 @@ InventoryWeaponMarksView._fetch_marks = function (self)
 	local pattern_name = self._presentation_item.parent_pattern
 
 	return Managers.data_service.mastery:get_mastery_by_pattern(pattern_name):next(function (mastery_data)
+		if self._destroyed then
+			return
+		end
+
 		local mark_milestones = Mastery.get_all_mastery_marks(mastery_data)
 
 		return {

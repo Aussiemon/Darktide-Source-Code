@@ -24,9 +24,23 @@ local scenegraph_definition = {
 			0,
 		},
 	},
-	tutorial_window = {
+	pivot = {
 		horizontal_alignment = "center",
 		parent = "canvas",
+		vertical_alignment = "center",
+		size = {
+			0,
+			0,
+		},
+		position = {
+			0,
+			0,
+			0,
+		},
+	},
+	tutorial_window = {
+		horizontal_alignment = "center",
+		parent = "pivot",
 		vertical_alignment = "center",
 		size = tutorial_window_size,
 		position = {
@@ -36,13 +50,13 @@ local scenegraph_definition = {
 		},
 	},
 	tutorial_grid = {
-		horizontal_alignment = "right",
+		horizontal_alignment = "left",
 		parent = "tutorial_window",
-		vertical_alignment = "bottom",
-		size = tutorial_grid_size,
+		vertical_alignment = "top",
+		size = tutorial_window_size,
 		position = {
-			-60,
-			-120,
+			0,
+			0,
 			2,
 		},
 	},
@@ -280,62 +294,6 @@ local widget_definitions = {
 			},
 		},
 		{
-			pass_type = "text",
-			style_id = "title",
-			value_id = "title",
-			style = {
-				font_size = 28,
-				font_type = "proxima_nova_bold",
-				horizontal_alignment = "right",
-				text_horizontal_alignment = "left",
-				text_vertical_alignment = "top",
-				vertical_alignment = "top",
-				text_color = Color.terminal_text_header(255, true),
-				size = {
-					tutorial_grid_size[1],
-					0,
-				},
-				offset = {
-					-60,
-					35,
-					7,
-				},
-				size_addition = {
-					0,
-					0,
-				},
-			},
-			value = Localize("loc_alias_talent_builder_view_popup_title_summary"),
-		},
-		{
-			pass_type = "text",
-			style_id = "page_counter",
-			value = "0/0",
-			value_id = "page_counter",
-			style = {
-				font_size = 20,
-				font_type = "proxima_nova_bold",
-				horizontal_alignment = "right",
-				text_horizontal_alignment = "left",
-				text_vertical_alignment = "top",
-				vertical_alignment = "top",
-				text_color = Color.terminal_text_body_sub_header(255, true),
-				size = {
-					tutorial_grid_size[1],
-					0,
-				},
-				offset = {
-					-60,
-					70,
-					7,
-				},
-				size_addition = {
-					0,
-					0,
-				},
-			},
-		},
-		{
 			pass_type = "texture",
 			style_id = "edge_top",
 			value = "content/ui/materials/dividers/horizontal_dynamic_upper",
@@ -476,8 +434,6 @@ local animations = {
 				local alpha = 255 * anim_progress
 				local tutorial_window = widgets.tutorial_window
 
-				tutorial_window.style.title.text_color[1] = alpha
-				tutorial_window.style.page_counter.text_color[1] = alpha
 				tutorial_window.style.image.color[1] = alpha
 			end,
 		},

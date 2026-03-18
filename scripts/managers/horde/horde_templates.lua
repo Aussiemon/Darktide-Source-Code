@@ -11,6 +11,7 @@ end
 
 _create_horde_template_entry("scripts/managers/horde/templates/ambush_horde_template")
 _create_horde_template_entry("scripts/managers/horde/templates/far_vector_horde_template")
+_create_horde_template_entry("scripts/managers/horde/templates/far_distance_horde_template")
 _create_horde_template_entry("scripts/managers/horde/templates/flood_horde_template")
 _create_horde_template_entry("scripts/managers/horde/templates/trickle_horde_template")
 

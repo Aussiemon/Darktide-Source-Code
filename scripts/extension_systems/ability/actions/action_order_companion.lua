@@ -6,7 +6,7 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local Explosion = require("scripts/utilities/attack/explosion")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
-local ShoutAbilityImplementation = require("scripts/extension_systems/ability/utilities/shout_ability_implementation")
+local ShoutAbility = require("scripts/extension_systems/ability/utilities/shout_ability")
 local ActionOrderCompanion = class("ActionOrderCompanion", "ActionAbilityBase")
 
 ActionOrderCompanion.init = function (self, action_context, action_params, action_settings)
@@ -21,9 +21,9 @@ ActionOrderCompanion.init = function (self, action_context, action_params, actio
 
 	local player_unit = self._player_unit
 	local companion_spawner_extension = ScriptUnit.has_extension(player_unit, "companion_spawner_system")
-	local companion_unit = companion_spawner_extension and companion_spawner_extension:companion_unit()
+	local companion_units = companion_spawner_extension and companion_spawner_extension:companion_units()
 
-	self._companion_unit = companion_unit
+	self._companion_unit = companion_units and #companion_units > 0 and companion_units[1] or nil
 	self._fx_system = Managers.state.extension:system("fx_system")
 end
 
@@ -57,7 +57,7 @@ ActionOrderCompanion.fixed_update = function (self, dt, t, time_in_action)
 			local dog_rotation = Quaternion.identity()
 			local dog_forward = Vector3.normalize(Vector3.flat(Quaternion.forward(dog_rotation)))
 
-			ShoutAbilityImplementation.execute(radius, shout_target_template_name, player_unit, t, nil, dog_forward, dog_position, dog_rotation)
+			ShoutAbility.execute(radius, shout_target_template_name, player_unit, t, nil, dog_forward, dog_position, dog_rotation)
 
 			local vfx = "content/fx/particles/abilities/adamant/adamant_shout"
 			local vfx_pos = dog_position + Vector3.up()

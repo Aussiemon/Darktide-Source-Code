@@ -8,9 +8,11 @@ CommunicationWheelPlayerOrientation.pre_update = function (self, main_t, main_dt
 	local orientation = self._orientation
 	local position = self._first_person_component.position
 	local weapon_action_component = self._weapon_action_component
+	local combat_ability_action_component = self._combat_ability_action_component
+	local grenade_ability_action_component = self._grenade_ability_action_component
 	local aim_assist_ramp_component = self._aim_assist_ramp_component
 	local targeting_data = self._smart_targeting_extension:targeting_data()
-	local yaw, pitch = AimAssist.apply_aim_assist(main_t, main_dt, input, targeting_data, aim_assist_ramp_component, weapon_action_component, orientation.yaw, orientation.pitch, position)
+	local yaw, pitch = AimAssist.apply_aim_assist(main_t, main_dt, input, targeting_data, aim_assist_ramp_component, weapon_action_component, orientation.yaw, orientation.pitch, position, combat_ability_action_component, grenade_ability_action_component)
 
 	orientation.yaw = math.mod_two_pi(yaw)
 	orientation.pitch = math.mod_two_pi(pitch)

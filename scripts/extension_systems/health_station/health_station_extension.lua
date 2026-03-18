@@ -25,7 +25,6 @@ HealthStationExtension.init = function (self, extension_init_context, unit)
 end
 
 HealthStationExtension.destroy = function (self)
-	self:unspawn_battery()
 	self:_unspawn_socket()
 end
 

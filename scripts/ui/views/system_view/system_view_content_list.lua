@@ -38,6 +38,33 @@ local function validation_is_in_havoc_mission()
 	return mechanism_data and mechanism_data.havoc_data
 end
 
+local function validation_is_in_hub()
+	local game_mode_manager = Managers.state.game_mode
+
+	if not game_mode_manager then
+		return false
+	end
+
+	local game_mode_name = game_mode_manager:game_mode_name()
+	local is_in_hub = game_mode_name == "hub"
+
+	return is_in_hub
+end
+
+local function validation_is_in_hub_or_shooting_range()
+	local game_mode_manager = Managers.state.game_mode
+
+	if not game_mode_manager then
+		return false
+	end
+
+	local game_mode_name = game_mode_manager:game_mode_name()
+	local is_in_hub = game_mode_name == "hub"
+	local is_in_shooting_range = game_mode_name == "shooting_range"
+
+	return is_in_hub or is_in_shooting_range
+end
+
 local function _members_in_party()
 	local num_members = 0
 
@@ -147,11 +174,11 @@ local main_menu_list = {
 					{
 						close_on_pressed = true,
 						text = "loc_popup_button_leave_party",
-						callback = callback(function ()
+						callback = function ()
 							if GameParameters.prod_like_backend then
 								Managers.party_immaterium:leave_party()
 							end
-						end),
+						end,
 					},
 					{
 						close_on_pressed = true,
@@ -183,9 +210,9 @@ if PLATFORM == "win32" then
 					{
 						close_on_pressed = true,
 						text = "loc_popup_button_quit_game",
-						callback = callback(function ()
+						callback = function ()
 							Application.quit()
-						end),
+						end,
 					},
 					{
 						close_on_pressed = true,
@@ -202,6 +229,22 @@ if PLATFORM == "win32" then
 end
 
 local default_list = {
+	{
+		dev_text = "Expeditions",
+		icon = "content/ui/materials/icons/system/escape/leave_mission",
+		type = "button",
+		validation_function = function ()
+			return validation_is_in_hub() and DevParameters.ui_expedition_view_esc_menu
+		end,
+		trigger_function = function ()
+			local context = {
+				can_exit = true,
+			}
+			local view_name = "expedition_view"
+
+			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
+		end,
+	},
 	{
 		icon = "content/ui/materials/icons/system/escape/inventory",
 		text = "loc_character_view_display_name",
@@ -240,16 +283,7 @@ local default_list = {
 			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
 		end,
 		validation_function = function ()
-			local game_mode_manager = Managers.state.game_mode
-
-			if not game_mode_manager then
-				return false
-			end
-
-			local game_mode_name = game_mode_manager:game_mode_name()
-			local is_in_hub = game_mode_name == "hub" or game_mode_name == "shooting_range"
-
-			return is_in_hub
+			return validation_is_in_hub_or_shooting_range()
 		end,
 		has_highlight = function ()
 			return Managers.achievements:is_reward_to_claim()
@@ -311,18 +345,7 @@ local default_list = {
 
 			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
 		end,
-		validation_function = function ()
-			local game_mode_manager = Managers.state.game_mode
-
-			if not game_mode_manager then
-				return false
-			end
-
-			local game_mode_name = game_mode_manager:game_mode_name()
-			local is_in_hub = game_mode_name == "hub" or game_mode_name == "shooting_range"
-
-			return is_in_hub
-		end,
+		validation_function = validation_is_in_hub_or_shooting_range,
 		has_highlight = function ()
 			return Managers.data_service.store:has_new_feature_store()
 		end,
@@ -379,9 +402,9 @@ local default_list = {
 					{
 						close_on_pressed = true,
 						text = "loc_popup_button_leave_game",
-						callback = callback(function ()
+						callback = function ()
 							Managers.multiplayer_session:leave("exit_to_main_menu")
-						end),
+						end,
 					},
 					{
 						close_on_pressed = true,
@@ -408,9 +431,9 @@ local default_list = {
 					{
 						close_on_pressed = true,
 						text = "loc_popup_button_leave_mission",
-						callback = callback(function ()
+						callback = function ()
 							Managers.multiplayer_session:leave("leave_mission")
-						end),
+						end,
 					},
 					{
 						close_on_pressed = true,
@@ -437,9 +460,9 @@ local default_list = {
 					{
 						close_on_pressed = true,
 						text = "loc_popup_button_leave_mission",
-						callback = callback(function ()
+						callback = function ()
 							Managers.multiplayer_session:leave("leave_mission")
-						end),
+						end,
 					},
 					{
 						close_on_pressed = true,
@@ -491,10 +514,10 @@ local default_list = {
 					{
 						close_on_pressed = true,
 						text = "loc_confirm",
-						callback = callback(function ()
+						callback = function ()
 							Managers.narrative:skip_story(Managers.narrative.STORIES.onboarding)
 							Managers.state.game_mode:complete_game_mode()
-						end),
+						end,
 					},
 					{
 						close_on_pressed = true,
@@ -543,9 +566,9 @@ local default_list = {
 					{
 						close_on_pressed = true,
 						text = "loc_training_grounds_choice_quit",
-						callback = callback(function ()
+						callback = function ()
 							Managers.state.game_mode:complete_game_mode()
-						end),
+						end,
 					},
 					{
 						close_on_pressed = true,
@@ -578,11 +601,11 @@ local default_list = {
 					{
 						close_on_pressed = true,
 						text = "loc_popup_button_leave_party",
-						callback = callback(function ()
+						callback = function ()
 							if GameParameters.prod_like_backend then
 								Managers.party_immaterium:leave_party()
 							end
-						end),
+						end,
 					},
 					{
 						close_on_pressed = true,
@@ -611,9 +634,9 @@ local default_list = {
 					{
 						close_on_pressed = true,
 						text = "loc_popup_button_quit_game",
-						callback = callback(function ()
+						callback = function ()
 							Managers.multiplayer_session:leave("quit_game")
-						end),
+						end,
 					},
 					{
 						close_on_pressed = true,

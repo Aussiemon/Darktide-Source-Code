@@ -27,6 +27,10 @@ PlayerUnitMusicParameterExtension.init = function (self, extension_init_context,
 	self._next_aggroed_check = 0.123456
 	self._next_last_man_standing_check = 0.45678
 	self._next_boss_near_check = 1
+	self._current_heat_stage = "none"
+	self._is_expedition = false
+	self._heat_stage_check = 1
+	self._expedition_extraction_started = false
 	self._max_aggro_count = WwiseGameSyncSettings.minion_aggro_intensity_settings.num_threshold_high
 
 	local is_server = extension_init_context.is_server
@@ -46,15 +50,24 @@ end
 PlayerUnitMusicParameterExtension.game_object_initialized = function (self, game_session, game_object_id)
 	self._game_session, self._game_object_id = game_session, game_object_id
 
+	local game_mode_name = Managers.state.game_mode:game_mode_name()
+	local is_expedition = game_mode_name == "expedition"
+
+	self._is_expedition = is_expedition
+
+	local heat_stage = NetworkLookup.heat_stages.none
 	local go_data_table = {
 		ambush_horde_near = false,
 		boss_near = false,
+		exp_extraction_started = false,
 		intensity_percent = 0,
 		last_man_standing = false,
 		locked_in_melee = false,
 		vector_horde_near = false,
 		game_object_type = NetworkLookup.game_object_types.music_parameters,
 		unit_game_object_id = game_object_id,
+		is_expedition = is_expedition,
+		heat_stage = heat_stage,
 	}
 
 	self._music_parameters_game_object_id = GameSession.create_game_object(game_session, "music_parameters", go_data_table)
@@ -67,13 +80,16 @@ PlayerUnitMusicParameterExtension._check_is_boss_near = function (self, alive_mo
 
 	for i = 1, alive_monsters.size do
 		local monster_unit = alive_monsters[i]
-		local is_weakened = ScriptUnit.extension(monster_unit, "boss_system"):is_weakened()
 
-		if not is_weakened then
-			local distance_sq = Vector3.distance_squared(player_position, POSITION_LOOKUP[monster_unit])
+		if ScriptUnit.has_extension(monster_unit, "boss_system") then
+			local is_weakened = ScriptUnit.extension(monster_unit, "boss_system"):is_weakened()
 
-			if not alive_witches_lookup[monster_unit] and distance_sq <= boss_trigger_distance_sq then
-				return true
+			if not is_weakened then
+				local distance_sq = Vector3.distance_squared(player_position, POSITION_LOOKUP[monster_unit])
+
+				if not alive_witches_lookup[monster_unit] and distance_sq <= boss_trigger_distance_sq then
+					return true
+				end
 			end
 		end
 	end
@@ -240,6 +256,35 @@ PlayerUnitMusicParameterExtension.update = function (self, unit, dt, t)
 		self._next_aggroed_check = t + 1
 	end
 
+	if self._is_expedition and t > self._heat_stage_check then
+		local pacing_manger_running = Managers.state.pacing:is_enabled()
+		local new_heat_stage = Managers.state.pacing:current_stage_name()
+
+		if self._current_heat_stage ~= new_heat_stage or not pacing_manger_running then
+			local current_heat_stage_id
+
+			if pacing_manger_running then
+				current_heat_stage_id = NetworkLookup.heat_stages[new_heat_stage]
+				self._current_heat_stage = new_heat_stage
+			else
+				current_heat_stage_id = NetworkLookup.heat_stages.safe_room
+				self._current_heat_stage = "safe_room"
+			end
+
+			GameSession.set_game_object_field(game_session, game_object_id, "heat_stage", current_heat_stage_id)
+		end
+
+		local extraction_status = Managers.state.pacing:expedition_extraction_status()
+
+		if self._expedition_extraction_started ~= extraction_status then
+			self._expedition_extraction_started = extraction_status
+
+			GameSession.set_game_object_field(game_session, game_object_id, "exp_extraction_started", self._expedition_extraction_started)
+		end
+
+		self._heat_stage_check = t + 3
+	end
+
 	local health_percent = self._health_extension:current_health_percent()
 
 	self._health_percent = health_percent
@@ -291,6 +336,18 @@ end
 
 PlayerUnitMusicParameterExtension.ambush_horde_near = function (self)
 	return self._ambush_horde_near
+end
+
+PlayerUnitMusicParameterExtension.is_expedition = function (self)
+	return self._is_expedition
+end
+
+PlayerUnitMusicParameterExtension.current_heat_stage_name = function (self)
+	return self._current_heat_stage
+end
+
+PlayerUnitMusicParameterExtension.expedition_extraction_status = function (self)
+	return self._expedition_extraction_started
 end
 
 PlayerUnitMusicParameterExtension.last_man_standing = function (self)

@@ -247,7 +247,7 @@ end
 
 local _combine_item
 
-function _combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair, mask_hair, mask_hair_override, mask_face, mask_face_accessory)
+function _combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair_item, mask_hair_item, mask_hair_override, mask_face_item, mask_face_accessory_item)
 	for child_slot_name, child_entry in pairs(entry) do
 		if child_slot_name ~= "parent_slot_names" then
 			local child_attachments = {}
@@ -277,24 +277,24 @@ function _combine_item(slot_name, entry, attachments, visual_items, voice_fx_pre
 				stabilize_neck[1] = stabilize_neck[1] or data.item.stabilize_neck
 			end
 
-			if data.item.mask_facial_hair then
-				mask_facial_hair[1] = mask_facial_hair[1] or data.item.mask_facial_hair
+			if data.item.mask_facial_hair_item then
+				mask_facial_hair_item[1] = mask_facial_hair_item[1] or data.item.mask_facial_hair_item
 			end
 
-			if data.item.mask_hair then
-				mask_hair[1] = mask_hair[1] or data.item.mask_hair
+			if data.item.mask_hair_item then
+				mask_hair_item[1] = mask_hair_item[1] or data.item.mask_hair_item
 			end
 
 			if data.item.mask_hair_override then
 				mask_hair_override[1] = mask_hair_override[1] or data.item.mask_hair_override
 			end
 
-			if data.item.mask_face then
-				mask_face[1] = mask_face[1] or data.item.mask_face
+			if data.item.mask_face_item then
+				mask_face_item[1] = mask_face_item[1] or data.item.mask_face_item
 			end
 
-			if data.item.mask_face_accessory then
-				mask_face_accessory[1] = mask_face_accessory[1] or data.item.mask_face_accessory
+			if data.item.mask_face_accessory_item then
+				mask_face_accessory_item[1] = mask_face_accessory_item[1] or data.item.mask_face_accessory_item
 			end
 		end
 	end
@@ -353,13 +353,13 @@ local function _generate_visual_loadout(visual_items)
 				hide_eyebrows = false,
 			}
 			local stabilize_neck = {}
-			local mask_facial_hair = {}
-			local mask_hair = {}
+			local mask_facial_hair_item = {}
+			local mask_hair_item = {}
 			local mask_hair_override = {}
-			local mask_face = {}
-			local mask_face_accessory = {}
+			local mask_face_item = {}
+			local mask_face_accessory_item = {}
 
-			_combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair, mask_hair, mask_hair_override, mask_face, mask_face_accessory)
+			_combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair_item, mask_hair_item, mask_hair_override, mask_face_item, mask_face_accessory_item)
 
 			local data = visual_items[slot_name]
 			local gear = data.gear
@@ -395,14 +395,14 @@ local function _generate_visual_loadout(visual_items)
 				overrides.stabilize_neck = stabilize_neck[1]
 			end
 
-			if mask_facial_hair then
+			if mask_facial_hair_item then
 				overrides = overrides or {}
-				overrides.mask_facial_hair = mask_facial_hair[1]
+				overrides.mask_facial_hair_item = mask_facial_hair_item[1]
 			end
 
-			if mask_hair then
+			if mask_hair_item then
 				overrides = overrides or {}
-				overrides.mask_hair = mask_hair[1]
+				overrides.mask_hair_item = mask_hair_item[1]
 			end
 
 			if mask_hair_override then
@@ -410,14 +410,14 @@ local function _generate_visual_loadout(visual_items)
 				overrides.mask_hair_override = mask_hair_override[1]
 			end
 
-			if mask_face then
+			if mask_face_item then
 				overrides = overrides or {}
-				overrides.mask_face = mask_face[1]
+				overrides.mask_face_item = mask_face_item[1]
 			end
 
-			if mask_face_accessory then
+			if mask_face_accessory_item then
 				overrides = overrides or {}
-				overrides.mask_face_accessory = mask_face_accessory[1]
+				overrides.mask_face_accessory_item = mask_face_accessory_item[1]
 			end
 
 			gear.masterDataInstance.overrides = overrides
@@ -456,6 +456,18 @@ local function _generate_loadout_from_data(loadout_item_ids, loadout_item_data)
 	return loadout
 end
 
+local function _has_breed_base_unit(item)
+	if item.breed_base_unit then
+		for _, resource in pairs(item.breed_base_unit) do
+			if resource ~= "" then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
 local function _generate_visual_loadout_from_data(loadout_item_ids, loadout_item_data)
 	local visual_items = {}
 
@@ -474,7 +486,7 @@ local function _generate_visual_loadout_from_data(loadout_item_ids, loadout_item
 			}
 			local item = MasterItems.get_item_instance(gear, item_id)
 
-			if item and item.base_unit then
+			if item and (item.base_unit or _has_breed_base_unit(item)) then
 				visual_items[slot_name] = {
 					item = item,
 					gear = gear,
@@ -527,6 +539,9 @@ local function _convert_profile_from_lookups_to_data(profile)
 	profile.visual_loadout = visual_loadout
 
 	local talents = profile.talents
+	local active_layouts = TalentLayoutParser.archetype_layouts(archetype)
+
+	talents = TalentLayoutParser.validate_talent_layouts(talents, active_layouts, false)
 
 	_validate_talent_items(talents, archetype_name)
 end
@@ -1226,7 +1241,7 @@ ProfileUtils.generate_visual_item = function (item)
 		visual_item = item
 	end
 
-	if visual_item and visual_item.base_unit then
+	if visual_item and (visual_item.base_unit or _has_breed_base_unit(visual_item)) then
 		return {
 			item = visual_item,
 			gear = visual_item.gear,

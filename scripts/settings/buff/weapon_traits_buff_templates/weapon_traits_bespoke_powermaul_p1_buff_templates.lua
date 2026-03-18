@@ -6,9 +6,9 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
 local stagger_results = AttackSettings.stagger_results
 local damage_efficiencies = AttackSettings.damage_efficiencies
+local buff_keywords = BuffSettings.keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
-local buff_keywords = BuffSettings.keywords
 local templates = {}
 
 table.make_unique(templates)

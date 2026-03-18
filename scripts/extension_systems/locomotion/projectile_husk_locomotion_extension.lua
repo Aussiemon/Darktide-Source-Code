@@ -217,7 +217,7 @@ ProjectileHuskLocomotionExtension._step_interpolation_snapshots = function (self
 	return new_snapshot_t
 end
 
-ProjectileHuskLocomotionExtension._switch_locomotion_state = function (self, new_loc_state, unit)
+ProjectileHuskLocomotionExtension._switch_locomotion_state = function (self, new_state, unit)
 	local old_loc_state = self._current_locomotion_state
 
 	if old_loc_state == locomotion_states.carried then
@@ -228,7 +228,7 @@ ProjectileHuskLocomotionExtension._switch_locomotion_state = function (self, new
 		end
 	end
 
-	if new_loc_state == locomotion_states.carried then
+	if new_state == locomotion_states.carried then
 		local carrier_unit_id = GameSession.game_object_field(self._game_session, self._game_object_id, "carrier_unit_id")
 		local carrier_unit = Managers.state.unit_spawner:unit(carrier_unit_id)
 
@@ -237,9 +237,20 @@ ProjectileHuskLocomotionExtension._switch_locomotion_state = function (self, new
 
 			Luggable.link_to_player_unit(self._world, carrier_unit, unit, self._item)
 		end
+	elseif new_state == locomotion_states.deployed then
+		local projectile_template = self._projectile_template
+		local deployable_settings = projectile_template.deployable
+
+		deployable_settings.deploy_func(self._world, self._physics_world, self._projectile_unit, false, nil, self)
+
+		local fx_extension = self._fx_extension
+
+		if fx_extension then
+			fx_extension:try_start_fx("deploy")
+		end
 	end
 
-	self._current_locomotion_state = new_loc_state
+	self._current_locomotion_state = new_state
 end
 
 ProjectileHuskLocomotionExtension._interpolate = function (self, unit, interpolation_data, snapshot_ring_buffer, snapshot_t)

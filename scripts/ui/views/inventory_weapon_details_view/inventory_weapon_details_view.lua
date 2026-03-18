@@ -597,7 +597,7 @@ end
 
 local EMPTY_TABLE = {}
 
-function _scale_value_by_type(value, display_type)
+local function _scale_value_by_type(value, display_type)
 	if display_type == "multiplier" then
 		value = (value - 1) * 100
 	elseif display_type == "inverse_multiplier" then

@@ -52,7 +52,7 @@ HudElementWorldMarkers.init = function (self, parent, draw_layer, start_scale)
 	event_manager:register(self, "request_world_markers_list", "event_request_world_markers_list")
 
 	self._safe_raycast_cb = callback(self, "_async_raycast_result_cb")
-	self._raycast_object = Managers.state.game_mode:create_safe_raycast_object("closest", "types", "both", "collision_filter", "filter_interactable_line_of_sight_marker_check")
+	self._raycast_object = Managers.state.game_mode:create_safe_raycast_object("all", "types", "both", "collision_filter", "filter_interactable_line_of_sight_marker_check")
 end
 
 HudElementWorldMarkers.destroy = function (self, ui_renderer)
@@ -248,7 +248,7 @@ HudElementWorldMarkers._calculate_markers = function (self, dt, t, input_service
 
 	self._raycast_frame_counter = (self._raycast_frame_counter + 1) % HudElementWorldMarkersSettings.raycasts_frame_delay
 
-	local camera = self._camera
+	local camera = self:_get_camera()
 
 	if camera then
 		local scale = ui_renderer.scale
@@ -473,7 +473,7 @@ HudElementWorldMarkers._calculate_markers = function (self, dt, t, input_service
 			end
 		end
 	else
-		self._camera = self._parent:player_camera()
+		self._player_camera = self._parent:player_camera()
 	end
 
 	local markers_to_remove = #temp_array_markers_to_remove
@@ -490,7 +490,7 @@ HudElementWorldMarkers._calculate_markers = function (self, dt, t, input_service
 end
 
 HudElementWorldMarkers._draw_markers = function (self, dt, t, input_service, ui_renderer, render_settings)
-	local camera = self._camera
+	local camera = self:_get_camera()
 
 	if camera then
 		local markers_by_type = self._markers_by_type
@@ -731,7 +731,7 @@ HudElementWorldMarkers._raycast_markers = function (self, marker_raycast_queue)
 	end
 
 	local raycast_object = self._raycast_object
-	local camera_position = Camera.local_position(self._camera)
+	local camera_position = Camera.local_position(self:_get_camera())
 	local raycasts_per_frame = HudElementWorldMarkersSettings.raycasts_per_frame
 	local num_raycast_to_check = math.min(num_raycast_queue, raycasts_per_frame)
 
@@ -753,15 +753,40 @@ HudElementWorldMarkers._raycast_markers = function (self, marker_raycast_queue)
 	table.clear(marker_raycast_queue)
 end
 
-HudElementWorldMarkers._async_raycast_result_cb = function (self, id, data, hit, hit_position)
+HudElementWorldMarkers._async_raycast_result_cb = function (self, id, data, hits)
 	if self.destroyed then
 		return
 	end
 
+	local hit = false
 	local marker = data[1]
+	local unit = marker.unit
+
+	if hits then
+		if unit then
+			for i = 1, #hits do
+				local hit_data = hits[i]
+				local actor = hit_data[4]
+
+				if actor and Actor.unit(actor) ~= unit then
+					hit = true
+
+					break
+				end
+			end
+		else
+			hit = true
+		end
+	end
 
 	marker.raycast_result = hit
 	marker.raycast_frame_count = 0
+end
+
+HudElementWorldMarkers._get_camera = function (self)
+	local camera = self._player_camera
+
+	return camera
 end
 
 return HudElementWorldMarkers

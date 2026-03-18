@@ -28,6 +28,16 @@ local COMBAT = {
 	condition = "is_aggroed",
 	name = "combat",
 }
+local WEAPON_MALFUNCTION = {
+	"BtConditionalSequenceNode",
+	{
+		"BtWeaponMalfunctionAction",
+		name = "weapon_malfunction_loop",
+		action_data = action_data.weapon_malfunction_loop,
+	},
+	condition = "has_weapon_malfunction",
+	name = "weapon_malfunction",
+}
 local behavior_tree = {
 	"BtSelectorNode",
 	{
@@ -82,6 +92,7 @@ local behavior_tree = {
 		name = "stagger",
 		action_data = action_data.stagger,
 	},
+	WEAPON_MALFUNCTION,
 	MELEE_COMBAT,
 	COMBAT,
 	{

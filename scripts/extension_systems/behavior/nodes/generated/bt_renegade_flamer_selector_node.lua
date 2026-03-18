@@ -51,14 +51,13 @@ BtRenegadeFlamerSelectorNode.evaluate = function (self, unit, blackboard, scratc
 	end
 
 	do
-		local node_disable = children[2]
-		local disable_component = blackboard.disable
-		local condition_result = disable_component.is_disabled
+		local node_disable_actions = children[2]
+		local leaf_node = node_disable_actions:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
 
-		if condition_result then
-			new_running_child_nodes[node_identifier] = node_disable
+		if leaf_node then
+			new_running_child_nodes[node_identifier] = node_disable_actions
 
-			return node_disable
+			return leaf_node
 		end
 	end
 
@@ -147,7 +146,23 @@ BtRenegadeFlamerSelectorNode.evaluate = function (self, unit, blackboard, scratc
 	end
 
 	do
-		local node_melee_attack = children[6]
+		local node_weapon_malfunction = children[6]
+		local buff_extension = ScriptUnit.extension(unit, "buff_system")
+		local condition_result = buff_extension and buff_extension:has_keyword("weapon_malfunction")
+
+		if condition_result then
+			local leaf_node = node_weapon_malfunction:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+
+			if leaf_node then
+				new_running_child_nodes[node_identifier] = node_weapon_malfunction
+
+				return leaf_node
+			end
+		end
+	end
+
+	do
+		local node_melee_attack = children[7]
 		local tree_node = node_melee_attack.tree_node
 		local condition_args = tree_node.condition_args
 		local is_running = last_leaf_node_running and last_running_node == node_melee_attack
@@ -222,7 +237,7 @@ BtRenegadeFlamerSelectorNode.evaluate = function (self, unit, blackboard, scratc
 	end
 
 	do
-		local node_combat = children[7]
+		local node_combat = children[8]
 		local is_running = last_leaf_node_running and last_running_node == node_combat
 		local condition_result
 
@@ -274,7 +289,7 @@ BtRenegadeFlamerSelectorNode.evaluate = function (self, unit, blackboard, scratc
 		end
 	end
 
-	local node_idle = children[8]
+	local node_idle = children[9]
 
 	new_running_child_nodes[node_identifier] = node_idle
 

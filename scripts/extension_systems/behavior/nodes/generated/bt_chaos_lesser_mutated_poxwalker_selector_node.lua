@@ -47,14 +47,13 @@ BtChaosLesserMutatedPoxwalkerSelectorNode.evaluate = function (self, unit, black
 	end
 
 	do
-		local node_disable = children[2]
-		local disable_component = blackboard.disable
-		local condition_result = disable_component.is_disabled
+		local node_disable_actions = children[2]
+		local leaf_node = node_disable_actions:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
 
-		if condition_result then
-			new_running_child_nodes[node_identifier] = node_disable
+		if leaf_node then
+			new_running_child_nodes[node_identifier] = node_disable_actions
 
-			return node_disable
+			return leaf_node
 		end
 	end
 

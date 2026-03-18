@@ -327,17 +327,19 @@ function _apply_suppression_minion(suppressed_unit, suppression_value, suppressi
 	local is_enemy = side_system:is_enemy(attacking_unit, suppressed_unit)
 
 	if is_enemy then
-		local perception_extension = ScriptUnit.extension(suppressed_unit, "perception_system")
+		local perception_extension = ScriptUnit.has_extension(suppressed_unit, "perception_system")
 
-		if optional_instant_aggro then
-			MinionPerception.attempt_aggro(perception_extension, attacking_unit)
-		else
-			MinionPerception.attempt_alert(perception_extension, attacking_unit)
+		if perception_extension then
+			if optional_instant_aggro then
+				MinionPerception.attempt_aggro(perception_extension, attacking_unit)
+			else
+				MinionPerception.attempt_alert(perception_extension, attacking_unit)
+			end
+
+			local target_position = Unit.world_position(attacking_unit, Unit.node(attacking_unit, "enemy_aim_target_03"))
+
+			perception_extension:set_last_los_position(attacking_unit, target_position)
 		end
-
-		local target_position = Unit.world_position(attacking_unit, Unit.node(attacking_unit, "enemy_aim_target_03"))
-
-		perception_extension:set_last_los_position(attacking_unit, target_position)
 	end
 end
 

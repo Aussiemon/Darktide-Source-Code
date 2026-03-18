@@ -195,6 +195,10 @@ StateGameplay.on_reload = function (self, refreshed_resources)
 	self._state_machine:on_reload(refreshed_resources)
 end
 
+StateGameplay.on_recover = function (self)
+	self._state_machine:on_recover()
+end
+
 StateGameplay._update_performance_reporter = function (self, dt, t)
 	local testify_performance_reporter = self._testify_performance_reporter
 

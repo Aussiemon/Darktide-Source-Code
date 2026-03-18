@@ -538,6 +538,13 @@ local default_view_input_settings = {
 			bindable = false,
 			description = "",
 		},
+		expedition_menu_show_tutorial = {
+			"keyboard_q",
+			"xbox_controller_right_thumb",
+			"ps4_controller_r3",
+			bindable = false,
+			description = "",
+		},
 	},
 	settings = {
 		close_view = {
@@ -1070,6 +1077,10 @@ local default_view_input_settings = {
 		},
 		mission_board_play_debrief = {
 			key_alias = "mission_board_play_debrief",
+			type = "pressed",
+		},
+		expedition_menu_show_tutorial = {
+			key_alias = "expedition_menu_show_tutorial",
 			type = "pressed",
 		},
 	},

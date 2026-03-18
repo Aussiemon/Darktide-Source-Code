@@ -15,7 +15,10 @@ local UISettings = require("scripts/settings/ui/ui_settings")
 local Definitions = require("scripts/ui/views/live_events_view/live_events_view_definitions")
 local Styles = require("scripts/ui/views/live_events_view/live_events_view_styles")
 local Settings = require("scripts/ui/views/live_events_view/live_events_view_settings")
+local Templates = require("scripts/ui/views/live_events_view/live_events_view_templates")
 local LiveEventsView = class("LiveEventsView", "BaseView")
+local HISTORY_LIMIT = Settings.live_events_history_limit or 3
+local HISTORY_ENTRIES = Settings.live_events_history_entries or nil
 
 local function _apply_package_item_icon_cb_func(widget, item)
 	local icon_style = widget.style.icon
@@ -27,8 +30,11 @@ local function _apply_package_item_icon_cb_func(widget, item)
 	widget_content.icon = item_display_materials[item_type] or item_display_materials.default
 
 	local item_display_sizes = Settings.ui_item_display_sizes
+	local inverse_scale = RESOLUTION_LOOKUP.inverse_scale
+	local icon_size = item_display_sizes[item_type] or item_display_sizes.default
 
-	icon_style.size = item_display_sizes[item_type] or item_display_sizes.default
+	icon_style.size = icon_size
+	material_values.icon_size = icon_size
 
 	local item_display_offsets = Settings.ui_item_display_offsets
 
@@ -36,8 +42,6 @@ local function _apply_package_item_icon_cb_func(widget, item)
 
 	if item.icon_material and item.icon_material ~= "" then
 		widget.content.icon = item.icon_material
-		material_values.use_placeholder_texture = 0
-		material_values.use_render_target = 0
 	else
 		material_values.texture_map = item.icon
 		material_values.texture_icon = item.icon
@@ -132,7 +136,7 @@ LiveEventsView.on_enter = function (self)
 	self._active_event_id = active_event_id
 
 	self:_setup_events_button_list(events)
-	self:_on_entry_selected(active_event_id)
+	self:_on_entry_selected(active_event_id, self._selected_button_list_index or 1)
 	LiveEventsView.super.on_enter(self)
 end
 
@@ -143,15 +147,14 @@ LiveEventsView._draw_widgets = function (self, dt, t, input_service, ui_renderer
 		end
 	end
 
-	if self._reward_widgets then
-		for _, widget in pairs(self._reward_widgets) do
-			UIWidget.draw(widget, ui_renderer)
-		end
-	end
+	if self._entry_widgets and not table.is_empty(self._entry_widgets) then
+		local selected_event_id = self._selected_event_id
+		local selected_event = self._events[selected_event_id] or LiveEvents[selected_event_id]
+		local template_name = selected_event and selected_event.template_name or selected_event_id
+		local template = Templates[template_name] or Templates.default
 
-	if self._reward_line_widgets then
-		for _, widget in pairs(self._reward_line_widgets) do
-			UIWidget.draw(widget, ui_renderer)
+		if template.draw then
+			template.draw(self, dt, t, ui_renderer, render_settings, input_service, self._entry_widgets)
 		end
 	end
 
@@ -161,17 +164,22 @@ end
 LiveEventsView.update = function (self, dt, t, input_service)
 	self:_update_reward_tooltip(dt, t, input_service)
 	self:_handle_gamepad_input(dt, t, input_service)
+	self:_update_button_list_widget_states()
 
 	return LiveEventsView.super.update(self, dt, t, input_service)
 end
 
 LiveEventsView.on_exit = function (self)
-	if self._reward_widgets then
-		for _, widget in pairs(self._reward_widgets) do
-			self:_unload_item_icon(widget, self._ui_renderer)
-		end
+	if self._entry_widgets then
+		local selected_event = self._events[self._selected_event_id] or LiveEvents[self._selected_event_id]
+		local template_name = selected_event.template_name or self._selected_event_id
+		local template = Templates[template_name] or Templates.default
 
-		self._reward_widgets = nil
+		if template and template.destroy then
+			local ui_renderer = self._ui_renderer
+
+			template.destroy(self, self._entry_widgets, ui_renderer)
+		end
 	end
 
 	if self._offscreen_renderer then
@@ -197,254 +205,135 @@ end
 
 LiveEventsView._setup_events_button_list = function (self, events)
 	local button_list_widgets = {}
-	local i = 1
+	local button_index = 1
 
 	for _, event in pairs(events) do
 		local template_name = event.template_name
 		local event_data = LiveEvents[template_name]
 
 		if event_data then
-			local button_name = "event_button_" .. template_name
+			local button_widget = self:_create_entry_button_widget(event_data, template_name, button_index, event.id, event)
 
-			if self._widgets_by_name[button_name] then
-				button_name = "event_button_" .. template_name .. "duplicate_" .. i
-			end
-
-			local button_content_override = {
-				gamepad_action = "confirm_pressed",
-				original_text = Localize(event_data.name),
-				text = Localize(event_data.name),
-				hotspot = {
-					pressed_callback = callback(self, "_on_entry_selected", event.id),
-				},
-			}
-			local button_definition = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "button_list_anchor", button_content_override, Styles.sizes.event_button_size)
-			local button_widget = self:_create_widget(button_name, button_definition)
-
-			button_widget.offset[2] = (i - 1) * Styles.spacing.button_spacing
+			button_widget.offset[2] = (button_index - 1) * Styles.spacing.button_spacing
 			button_list_widgets[#button_list_widgets + 1] = button_widget
-			i = i + 1
+			button_index = button_index + 1
+		end
+	end
+
+	local latest_button = button_list_widgets[#button_list_widgets]
+	local latest_template_name = latest_button.content.template_name
+	local start_index = 1
+
+	if HISTORY_ENTRIES then
+		for index, event_name in pairs(HISTORY_ENTRIES) do
+			if event_name == latest_template_name then
+				start_index = index
+
+				break
+			end
+		end
+	end
+
+	if start_index then
+		local start, end_index = start_index + 1, math.min(start_index + HISTORY_LIMIT - 1, #HISTORY_ENTRIES)
+
+		for i = start, end_index do
+			local template_name = HISTORY_ENTRIES[i]
+			local event_data = LiveEvents[template_name]
+
+			if event_data then
+				local button_widget = self:_create_entry_button_widget(event_data, template_name, button_index)
+
+				button_widget.offset[2] = (button_index - 1) * Styles.spacing.button_spacing
+				button_list_widgets[#button_list_widgets + 1] = button_widget
+				button_index = button_index + 1
+			end
 		end
 	end
 
 	self._button_list_widgets = button_list_widgets
 end
 
-LiveEventsView._on_entry_selected = function (self, event_id)
-	local entry_base_widget = self._widgets_by_name.entry_base
-	local event = self._events[event_id]
+LiveEventsView._create_entry_button_widget = function (self, event_data, template_name, button_index, event_id, optional_backend_data)
+	local button_name = "event_button_" .. template_name
 
-	if not event then
-		entry_base_widget.visible = false
-
-		return
+	if self._widgets_by_name[button_name] then
+		button_name = "event_button_" .. template_name .. "duplicate_" .. Application.make_hash(template_name, event_id, math.random())
 	end
 
+	local button_content_override = {
+		gamepad_action = "confirm_pressed",
+		original_text = Localize(event_data.name),
+		text = Localize(event_data.name),
+		template_name = template_name,
+		hotspot = {
+			pressed_callback = callback(self, "_on_entry_selected", event_id or template_name, button_index),
+		},
+	}
+	local button_definition = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "button_list_anchor", button_content_override, Styles.sizes.event_button_size)
+	local button_widget = self:_create_widget(button_name, button_definition)
+
+	return button_widget
+end
+
+LiveEventsView._on_entry_selected = function (self, event_id, button_index)
 	if event_id == self._selected_event_id then
 		return
 	end
 
-	self._selected_event_id = event_id
-	entry_base_widget.visible = true
+	if self._entry_widgets then
+		local old_selected_event = self._events[self._selected_event_id] or LiveEvents[self._selected_event_id]
+		local old_template_name = old_selected_event.template_name or self._selected_event_id
+		local old_template = Templates[old_template_name] or Templates.default
 
-	local base_content = entry_base_widget.content
-	local base_style = entry_base_widget.style
-	local template_name = event.template_name
-	local event_data = LiveEvents[template_name]
+		if old_template and old_template.destroy then
+			local ui_renderer = self._ui_renderer
+
+			old_template.destroy(self, self._entry_widgets, ui_renderer)
+		end
+	end
+
+	self._selected_event_id = event_id
+	self._selected_button_list_index = button_index or self._selected_button_list_index
+
+	self:initilize_entry(event_id)
+end
+
+LiveEventsView.initilize_entry = function (self, event_id)
+	local event = self._events[event_id]
+	local event_data = event and LiveEvents[event.template_name] or LiveEvents[event_id]
 
 	if not event_data then
-		Log.warning("Missing LiveEvents data for event template " .. tostring(template_name))
+		return
 	end
 
-	local height = Styles.spacing.text_top_padding + Styles.spacing.event_name_height + 20
+	local template_name = event and event.template_name or event_data.id
+	local template = Templates[template_name] or Templates.default
+	local composition = template.composition
+	local entry_widgets
 
-	base_content.event_name = event_data and Localize(event_data.name) or "n/a"
-
-	if event_data and event_data.lore then
-		local event_lore = Localize(event_data.lore)
-
-		base_content.event_lore = event_lore
-
-		local lore_text_style = base_style.event_lore
-		local lore_text_height = TextUtilities.text_height(self._ui_renderer, event_lore, lore_text_style, lore_text_style.size, true)
-
-		lore_text_style.size[2] = lore_text_height
-		height = height + lore_text_height + 46
-	else
-		base_style.event_lore.visible = false
+	if composition and template.initialize then
+		entry_widgets = template.initialize(self, composition, event, event_data)
 	end
 
-	local event_description = event_data and Localize(event_data.description) or "n/a"
-
-	base_content.event_description = event_description
-
-	local description_text_height = TextUtilities.text_height(self._ui_renderer, event_description, Styles.texts.event_description, Styles.texts.event_description.size, true)
-	local description_text_style = base_style.event_description
-
-	description_text_style.size[2] = description_text_height
-	description_text_style.offset[2] = height + 20
-	height = height + description_text_height + 60
-
-	if event_data and event_data.event_context then
-		local event_context = Localize(event_data.event_context)
-
-		base_content.event_context = event_context
-
-		local context_text_style = base_style.event_context
-		local context_text_height = TextUtilities.text_height(self._ui_renderer, event_context, context_text_style, context_text_style.size, true)
-
-		context_text_style.size[2] = context_text_height
-		context_text_style.offset[2] = height
-		height = height + context_text_height + 20
-	else
-		base_style.event_context.visible = false
-	end
-
-	base_content.rewards_track_text = Localize("loc_mission_voting_view_salary") .. ":"
-	base_style.rewards_track_text.offset[2] = height
-	height = height + 10
-
-	local should_increase_size = self:_create_reward_widgets(event)
-
-	height = height + (should_increase_size and Styles.spacing.reward_track_spacing + Styles.sizes.reward_size[2] + 10 or Styles.spacing.reward_track_spacing)
-
-	self:_set_scenegraph_size("entries_anchor", nil, height)
-
-	entry_base_widget.dirty = true
+	self._entry_widgets = entry_widgets
 end
 
-LiveEventsView._create_reward_widgets = function (self, event)
-	if self._reward_widgets then
-		for _, widget in pairs(self._reward_widgets) do
-			self:_unload_item_icon(widget, self._ui_renderer)
-			self:_unregister_widget_name(widget.name)
-		end
-
-		table.clear(self._reward_widgets)
-	end
-
-	if self._reward_line_widgets then
-		for _, widget in pairs(self._reward_line_widgets) do
-			self:_unregister_widget_name(widget.name)
-		end
-
-		table.clear(self._reward_line_widgets)
-	end
-
-	local reward_widgets = {}
-	local line_widgets = {}
-	local tiers = event.tiers or {}
-	local progress_bar_size = self._ui_scenegraph.event_progress_bar.size
-	local bar_width = progress_bar_size[1]
-	local rewards_box_width = self._ui_scenegraph.rewards_box.size[1]
-	local num_tiers = #tiers
-	local max_target_exp = tiers[num_tiers] and tiers[num_tiers].target or 1
-	local should_increase_size = false
-	local reward_start_x = -(#tiers * (Styles.sizes.reward_size[1] + 40)) / 2
-
-	for k = 1, num_tiers do
-		local tier = tiers[k]
-		local rewards = tier.rewards or {}
-
-		for j = 1, #rewards do
-			local tier_index = k
-			local reward_index = j
-			local reward = rewards[j]
-			local widget_definition = Definitions.create_reward_widget("rewards_box", reward, tier_index, reward_index)
-			local target_line_definition = UIWidget.create_definition({
-				{
-					pass_type = "texture",
-					style_id = "line",
-					value = "content/ui/materials/mission_board/mission_line",
-					value_id = "line",
-					style = Styles.reward.bar_connection_line,
-				},
-			}, "event_progress_bar")
-			local reward_widget = self:_create_widget("reward_widget_" .. tier_index .. "_" .. reward_index, widget_definition)
-			local line_widget = self:_create_widget("reward_line_widget_" .. tier_index .. "_" .. reward_index, target_line_definition)
-
-			line_widgets[#line_widgets + 1] = line_widget
-
-			local tier_target_exp = tier.target or 1
-			local rewards_spacing = tier_target_exp / max_target_exp * rewards_box_width
-			local line_spacing = tier_target_exp / max_target_exp * bar_width
-			local offset_x = rewards_spacing - 2
-
-			reward_widgets[#reward_widgets + 1] = reward_widget
-			reward_widget.offset[1] = offset_x - Styles.sizes.reward_size[1] / 2
-			line_widget.offset[1] = line_spacing - 2
-
-			local has_reward_with_same_target = false
-
-			for m = 1, #reward_widgets do
-				local widget = reward_widgets[m]
-				local content = widget.content
-
-				if content.tier_xp == tier.target and widget ~= reward_widget then
-					has_reward_with_same_target = true
-					should_increase_size = true
-
-					break
-				end
-			end
-
-			if has_reward_with_same_target then
-				reward_widget.offset[2] = -(Styles.sizes.reward_size[2] + 10)
-				line_widget.offset[2] = -(Styles.sizes.reward_size[2] + 10)
-			else
-				reward_widget.offset[2] = -(j - 1) * (Styles.sizes.reward_size[2] + 10)
-				line_widget.offset[2] = -((j - 1) * (Styles.sizes.reward_size[2] + 10))
-			end
-
-			reward_widget.content.reward = reward
-			reward_widget.content.tier_xp = tier.target
-
-			if reward.type == "item" then
-				local item = MasterItems.get_item(reward.id)
-
-				self:_request_item_icon(reward_widget, item, self._ui_renderer)
-
-				reward_widget.content.item = item
-			else
-				reward_widget.content.amount = reward.amount
-				reward_widget.content.currency = reward.currency
-			end
-		end
-	end
-
-	self._reward_widgets = reward_widgets
-	self._reward_line_widgets = line_widgets
-
-	self:_setup_event_progress_bar(event)
-
-	return should_increase_size
+LiveEventsView._set_current_event_progress = function (self, current_progress)
+	self._selected_event_progress = current_progress
 end
 
-LiveEventsView._setup_event_progress_bar = function (self, event)
-	local event_progress_bar_widget = self._widgets_by_name.event_progress_bar
-	local event_progress_bar_content = event_progress_bar_widget.content
-	local event_progress_bar_style = event_progress_bar_widget.style
-	local current_progress = Managers.live_event:active_progress()
-	local tiers = event.tiers or {}
-	local num_tiers = #tiers
-	local max_progress = tiers[num_tiers] and tiers[num_tiers].target or 1
-
-	current_progress = math.clamp(current_progress, 0, max_progress)
-
-	local actual_progress = math.clamp(current_progress / max_progress, 0, 1)
-
-	event_progress_bar_content.progress = actual_progress or 0
-	event_progress_bar_content.current_progress = actual_progress or 0
-	event_progress_bar_content.max_progress = max_progress
-	event_progress_bar_style.bar.color = Color.golden_rod(255, true)
-	event_progress_bar_widget.dirty = true
-
+LiveEventsView._set_current_event_progress_text = function (self, current_progress, target_progress)
 	local progress_text_widget = self._widgets_by_name.progress_text
-	local progress_text = string.format("%.0f%%", actual_progress * 100) .. " [" .. tostring(current_progress) .. "/" .. tostring(max_progress) .. "]"
 
-	progress_text_widget.content.progress_text = progress_text
-	progress_text_widget.dirty = true
-	self._active_event_progress = current_progress
+	if not current_progress or not target_progress then
+		progress_text_widget.visible = false
+
+		return
+	end
+
+	progress_text_widget.content.progress_text = tostring(current_progress) .. " / " .. tostring(target_progress)
+	progress_text_widget.visible = true
 end
 
 LiveEventsView._request_item_icon = function (self, widget, item, ui_renderer)
@@ -484,15 +373,34 @@ LiveEventsView._unload_item_icon = function (self, widget, ui_renderer)
 	end
 end
 
+LiveEventsView._update_button_list_widget_states = function (self)
+	if not self._button_list_widgets or not self._selected_button_list_index then
+		return
+	end
+
+	for index, widget in pairs(self._button_list_widgets) do
+		local content = widget.content
+		local hotspot = content.hotspot
+
+		if hotspot then
+			local is_selected = index == self._selected_button_list_index
+
+			hotspot.is_selected = is_selected
+		end
+	end
+end
+
 LiveEventsView._update_reward_tooltip = function (self, dt, t, input_service, ui_renderer)
 	local visible = false
 	local reward_tooltip_widget = self._widgets_by_name.reward_info_tooltip
 	local reward_tooltip_content = reward_tooltip_widget.content
 	local reward_tooltip_style = reward_tooltip_widget.style
+	local entry_reward_widgets = self._entry_widgets and self._entry_widgets.rewards
+	local reward_widgets = entry_reward_widgets and entry_reward_widgets.rewards
 
-	if self._reward_widgets then
-		for i = 1, #self._reward_widgets do
-			local reward_widget = self._reward_widgets[i]
+	if reward_widgets then
+		for i = 1, #reward_widgets do
+			local reward_widget = reward_widgets[i]
 			local hotspot = reward_widget.content.hotspot
 
 			if hotspot and (hotspot.is_hover or InputDevice.gamepad_active and hotspot.is_selected and self._show_reward_tooltip) then
@@ -511,7 +419,7 @@ LiveEventsView._update_reward_tooltip = function (self, dt, t, input_service, ui
 					reward_tooltip_content.reward_tooltip_rarity = string.format("{#color(%d, %d, %d)}%s{#reset()}", rarity_settings.color[2], rarity_settings.color[3], rarity_settings.color[4], Localize(rarity_settings.display_name))
 					reward_tooltip_style.reward_tooltip_info.visible = true
 					reward_tooltip_style.reward_tooltip_rarity.visible = true
-					reward_tooltip_content.reward_tooltip_target_xp = tostring(self._active_event_progress) .. " / " .. tostring(reward_widget.content.tier_xp) .. " XP"
+					reward_tooltip_content.reward_tooltip_target_xp = tostring(self._selected_event_progress) .. " / " .. tostring(reward_widget.content.tier_xp)
 				else
 					local currency_settings = WalletSettings[reward.currency]
 
@@ -519,7 +427,7 @@ LiveEventsView._update_reward_tooltip = function (self, dt, t, input_service, ui
 					reward_tooltip_content.reward_tooltip_rarity = ""
 					reward_tooltip_style.reward_tooltip_rarity.visible = false
 					reward_tooltip_style.reward_tooltip_info.visible = false
-					reward_tooltip_content.reward_tooltip_target_xp = tostring(self._active_event_progress) .. " / " .. tostring(reward_widget.content.tier_xp) .. " XP"
+					reward_tooltip_content.reward_tooltip_target_xp = tostring(self._selected_event_progress) .. " / " .. tostring(reward_widget.content.tier_xp)
 				end
 
 				visible = true
@@ -534,7 +442,7 @@ LiveEventsView._update_reward_tooltip = function (self, dt, t, input_service, ui
 		local scale = RESOLUTION_LOOKUP.scale
 
 		if InputDevice.gamepad_active then
-			local selected_reward_widget = self._reward_widgets[self._selected_reward_index]
+			local selected_reward_widget = reward_widgets[self._selected_reward_index]
 
 			if selected_reward_widget then
 				local widget_position = selected_reward_widget.offset
@@ -612,8 +520,11 @@ LiveEventsView._handle_gamepad_input = function (self, dt, t, input_service)
 		end
 	end
 
-	if self._reward_widgets and #self._reward_widgets > 0 then
-		if self._selected_reward_index > #self._reward_widgets then
+	local entry_reward_widgets = self._entry_widgets and self._entry_widgets.rewards
+	local reward_widgets = entry_reward_widgets and entry_reward_widgets.rewards
+
+	if reward_widgets and #reward_widgets > 0 then
+		if self._selected_reward_index > #reward_widgets then
 			self._selected_reward_index = 1
 		end
 
@@ -621,14 +532,14 @@ LiveEventsView._handle_gamepad_input = function (self, dt, t, input_service)
 			local new_selected_index = self._selected_reward_index - 1
 
 			if new_selected_index < 1 then
-				new_selected_index = #self._reward_widgets
+				new_selected_index = #reward_widgets
 			end
 
 			self._selected_reward_index = new_selected_index
 		elseif input_service:get("navigate_right_continuous") then
 			local new_selected_index = self._selected_reward_index + 1
 
-			if new_selected_index > #self._reward_widgets then
+			if new_selected_index > #reward_widgets then
 				new_selected_index = 1
 			end
 
@@ -636,21 +547,9 @@ LiveEventsView._handle_gamepad_input = function (self, dt, t, input_service)
 		end
 	end
 
-	if self._button_list_widgets then
-		for i = 1, #self._button_list_widgets do
-			local widget = self._button_list_widgets[i]
-			local hotspot = widget.content.hotspot
-
-			if hotspot then
-				hotspot.is_selected = i == self._selected_button_list_index
-				widget.dirty = true
-			end
-		end
-	end
-
-	if self._reward_widgets then
-		for i = 1, #self._reward_widgets do
-			local widget = self._reward_widgets[i]
+	if reward_widgets then
+		for i = 1, #reward_widgets do
+			local widget = reward_widgets[i]
 			local hotspot = widget.content.hotspot
 
 			if hotspot then

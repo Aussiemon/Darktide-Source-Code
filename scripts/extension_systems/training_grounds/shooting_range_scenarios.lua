@@ -9,11 +9,11 @@ ShootingRangeScenarios.init = {
 	steps = {
 		ShootingRangeSteps.init,
 		ShootingRangeSteps.make_player_invulnerable,
-		GenericSteps.dynamic.add_unique_buff("tg_player_unperceivable"),
 		GenericSteps.dynamic.start_parallel_scenario("shooting_range", "portal_loop"),
 		GenericSteps.dynamic.start_parallel_scenario("shooting_range", "pickup_loop"),
 		GenericSteps.dynamic.start_parallel_scenario("shooting_range", "enemies_loop"),
 		GenericSteps.dynamic.start_parallel_scenario("shooting_range", "chest_loop"),
+		ShootingRangeSteps.sr_unperceivable_loop,
 	},
 	cleanup = {},
 }

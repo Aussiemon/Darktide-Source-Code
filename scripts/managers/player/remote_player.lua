@@ -5,12 +5,12 @@ local PlayerManager = require("scripts/foundation/managers/player/player_manager
 local Missions = require("scripts/settings/mission/mission_templates")
 local RemotePlayer = class("RemotePlayer")
 
-RemotePlayer.init = function (self, unique_id, session_id, channel_id, peer_id, local_player_id, profile, slot, account_id, human_controlled, is_server, telemetry_game_session, last_mission_id)
+RemotePlayer.init = function (self, unique_id, session_id, channel_id, peer_id, local_player_id, profile, slot, account_id, human_controlled, is_server, telemetry_ids, last_mission_id)
 	self.player_unit = nil
 	self.owned_units = {}
 	self.is_server = is_server
 	self.remote = true
-	self._telemetry_game_session = telemetry_game_session
+	self._telemetry_ids = telemetry_ids
 	self.stat_id = string.format("%s:%s", peer_id, local_player_id)
 	self._unique_id = unique_id
 	self._session_id = session_id
@@ -235,7 +235,11 @@ RemotePlayer.is_player_blocked = function (self)
 end
 
 RemotePlayer.telemetry_game_session = function (self)
-	return self._telemetry_game_session
+	return self._telemetry_ids.session
+end
+
+RemotePlayer.telemetry_current_instance = function (self)
+	return self._telemetry_ids.instance
 end
 
 RemotePlayer.telemetry_subject = function (self)

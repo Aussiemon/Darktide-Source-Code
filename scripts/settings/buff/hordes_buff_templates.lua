@@ -74,16 +74,6 @@ templates.hordes_buff_max_grenades_increase = {
 		[stat_buffs.extra_max_amount_of_grenades] = 1,
 	},
 }
-templates.hordes_buff_attack_speed_increase = {
-	class_name = "buff",
-	max_stacks = 1,
-	max_stacks_cap = 1,
-	predicted = false,
-	buff_category = buff_categories.hordes_buff,
-	stat_buffs = {
-		[stat_buffs.attack_speed] = 0.15,
-	},
-}
 templates.hordes_buff_rending_increase = {
 	class_name = "buff",
 	max_stacks = 1,

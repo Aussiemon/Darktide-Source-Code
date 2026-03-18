@@ -41,11 +41,15 @@ SmartTagTarget.component_data = {
 		value = "health_station",
 		options_keys = {
 			"health_station",
+			"expedition_loot_converter",
 			"pickup",
+			"hack",
 		},
 		options_values = {
 			"health_station",
+			"expedition_loot_converter",
 			"pickup",
+			"hack",
 		},
 	},
 	extensions = {

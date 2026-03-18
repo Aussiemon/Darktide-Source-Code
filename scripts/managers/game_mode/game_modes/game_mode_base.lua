@@ -228,4 +228,8 @@ GameModeBase.get_additional_pickups = function (self)
 	return nil
 end
 
+GameModeBase.in_safe_zone = function (self)
+	return false
+end
+
 return GameModeBase

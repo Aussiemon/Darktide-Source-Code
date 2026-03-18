@@ -1454,10 +1454,10 @@ weapon_template.base_stats = {
 				weapon_handling_trait_templates.stubrevolver_crit_stat,
 			},
 			action_left_light = {
-				damage_trait_templates.stubrevolver_crit_stat,
+				weapon_handling_trait_templates.stubrevolver_crit_stat,
 			},
 			action_special_down_left = {
-				damage_trait_templates.stubrevolver_crit_stat,
+				weapon_handling_trait_templates.stubrevolver_crit_stat,
 			},
 			action_right_light_pushfollow = {
 				weapon_handling_trait_templates.stubrevolver_crit_stat,

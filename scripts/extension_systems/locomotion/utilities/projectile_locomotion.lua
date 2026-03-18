@@ -15,7 +15,7 @@ end
 
 local function _has_actor(unit, actor_name)
 	local actor_id = Unit.find_actor(unit, actor_name)
-	local actor = Unit.actor(unit, actor_id)
+	local actor = actor_id and Unit.actor(unit, actor_id) or nil
 
 	return actor
 end

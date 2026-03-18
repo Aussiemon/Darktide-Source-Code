@@ -19,8 +19,10 @@ MinionBehaviorExtension.init = function (self, extension_init_context, unit, ext
 	local world, physics_world = extension_init_context.world, extension_init_context.physics_world
 	local selected_attack_names_or_nil = extension_init_data.selected_attack_names
 	local owner_unit_or_nil = extension_init_data.owner_unit
+	local group_target = extension_init_data.group_target
+	local owning_auto_event_id = extension_init_data.owning_auto_event_id
 
-	self:_init_blackboard_components(blackboard, breed, unit, world, physics_world, game_session, selected_attack_names_or_nil, owner_unit_or_nil)
+	self:_init_blackboard_components(blackboard, breed, unit, world, physics_world, game_session, selected_attack_names_or_nil, owner_unit_or_nil, group_target, owning_auto_event_id)
 
 	local behavior_tree_name = extension_init_data.behavior_tree_name
 
@@ -43,7 +45,11 @@ MinionBehaviorExtension.override_brain = function (self, behavior_tree_name, t)
 	self:_init_brain(self._unit, self._breed, self._blackboard, behavior_tree_name)
 end
 
-MinionBehaviorExtension._init_blackboard_components = function (self, blackboard, breed, unit, world, physics_world, game_session, optional_selected_attack_names, optional_owner_unit)
+MinionBehaviorExtension.set_brain_enabled = function (self, is_enabled)
+	self._brain:set_active(is_enabled)
+end
+
+MinionBehaviorExtension._init_blackboard_components = function (self, blackboard, breed, unit, world, physics_world, game_session, optional_selected_attack_names, optional_owner_unit, group_target, owning_auto_event_id)
 	local spawn_component = Blackboard.write_component(blackboard, "spawn")
 
 	spawn_component.unit = unit
@@ -55,10 +61,47 @@ MinionBehaviorExtension._init_blackboard_components = function (self, blackboard
 	spawn_component.spawner_unit = nil
 	spawn_component.spawner_spawn_index = -1
 	spawn_component.anim_translation_scale_factor = 1
+	spawn_component.spawn_source = "default"
+
+	if Blackboard.has_component(blackboard, "group_data") then
+		local group_data_component = Blackboard.write_component(blackboard, "group_data")
+
+		group_data_component.group_target = group_target
+		group_data_component.owning_auto_event_id = owning_auto_event_id or ""
+	end
+
+	if Blackboard.has_component(blackboard, "vortex_grabbed") then
+		local vortex_grabbed_component = Blackboard.write_component(blackboard, "vortex_grabbed")
+
+		vortex_grabbed_component.in_vortex = false
+		vortex_grabbed_component.landing_finished = false
+		vortex_grabbed_component.in_vortex_state = ""
+		vortex_grabbed_component.eject_height = 0
+
+		vortex_grabbed_component.ejected_from_vortex:store(Vector3(0, 0, 0))
+	end
+
+	if Blackboard.has_component(blackboard, "chase_target") then
+		local chase_target_component = Blackboard.write_component(blackboard, "chase_target")
+
+		chase_target_component.wander_state = "recalc_path"
+		chase_target_component.num_players_inside = 0
+		chase_target_component.idle_time = 0
+		chase_target_component.wander_time = 0
+		chase_target_component.kill_time = -1
+		chase_target_component.new_target_time = 0
+		chase_target_component.target_unit = nil
+	end
 
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
 
 	behavior_component.move_state = ""
+
+	if self._breed.airbound then
+		behavior_component.move_medium = "air"
+	else
+		behavior_component.move_medium = "ground"
+	end
 
 	if optional_owner_unit then
 		behavior_component.owner_unit = optional_owner_unit

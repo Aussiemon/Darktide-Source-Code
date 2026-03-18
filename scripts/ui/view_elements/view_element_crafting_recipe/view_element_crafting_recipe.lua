@@ -31,7 +31,6 @@ ViewElementCraftingRecipe.init = function (self, parent, draw_layer, start_scale
 	self._default_grid_size = table.clone(menu_settings.grid_size)
 	self._default_mask_size = table.clone(menu_settings.mask_size)
 
-	self:present_grid_layout({}, ViewElementCraftingRecipeBlueprints)
 	self:_set_scenegraph_position("grid_content_pivot", nil, nil, 100)
 
 	self.content = {}
@@ -71,6 +70,7 @@ ViewElementCraftingRecipe.init = function (self, parent, draw_layer, start_scale
 		text = Utf8.upper(Localize("loc_crafting_upgrade_button")),
 		complete_function = callback(self, "_cb_on_continue_pressed"),
 	})
+	self:present_grid_layout({}, ViewElementCraftingRecipeBlueprints)
 end
 
 ViewElementCraftingRecipe.disable_price_prasentation = function (self)

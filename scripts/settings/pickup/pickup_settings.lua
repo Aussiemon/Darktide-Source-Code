@@ -2,8 +2,9 @@
 
 local pickup_settings = {}
 
-pickup_settings.distribution_types = table.enum("end_event", "mid_event", "primary", "secondary", "reward", "guaranteed", "manual", "flow", "side_mission")
+pickup_settings.distribution_types = table.enum("end_event", "mid_event", "primary", "secondary", "reward", "bonus_reward", "guaranteed", "manual", "flow", "side_mission")
 pickup_settings.pool_types = {
+	bonus_reward_distribution = "bonus_reward",
 	end_event_distribution = "end_event",
 	mid_event_distribution = "mid_event",
 	primary_distribution = "primary",
@@ -401,6 +402,72 @@ pickup_settings.horde_distribution_pool = {
 				0,
 				1,
 				4,
+			},
+		},
+	},
+}
+pickup_settings.expedition_distribution_pool = {
+	primary = {
+		forge_material = {
+			small_metal = {
+				0,
+				2,
+				2,
+				4,
+				4,
+			},
+			large_metal = {
+				0,
+				1,
+				2,
+				4,
+				6,
+			},
+			small_platinum = {
+				0,
+				1,
+				1,
+				1,
+				1,
+			},
+			large_platinum = {
+				0,
+				0,
+				0,
+				1,
+				2,
+			},
+		},
+	},
+	secondary = {
+		forge_material = {
+			small_metal = {
+				0,
+				4,
+				5,
+				5,
+				6,
+			},
+			large_metal = {
+				0,
+				0,
+				1,
+				1,
+				5,
+			},
+			small_platinum = {
+				0,
+				0,
+				1,
+				1,
+				2,
+			},
+			large_platinum = {
+				0,
+				0,
+				0,
+				0,
+				0,
 			},
 		},
 	},

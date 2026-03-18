@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/fx/minion_fx_extension.lua
 
 local Effect = require("scripts/extension_systems/fx/utilities/effect")
+local DynamicFXTemplates = require("scripts/extension_systems/fx/dynamic_fx_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
 local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
 local MinionFxExtension = class("MinionFxExtension")
@@ -19,6 +20,8 @@ MinionFxExtension.init = function (self, extension_init_context, unit, extension
 	self._unit = unit
 	self._breed = extension_init_data.breed
 	self._sources = {}
+
+	self:_init_dynamic_sfx(self._breed)
 
 	if not is_server then
 		local network_event_delegate = extension_init_context.network_event_delegate
@@ -39,7 +42,7 @@ MinionFxExtension.init = function (self, extension_init_context, unit, extension
 end
 
 MinionFxExtension.extensions_ready = function (self, world, unit)
-	self._visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+	self._visual_loadout_extension = ScriptUnit.has_extension(unit, "visual_loadout_system")
 end
 
 local ALWAYS_TARGET_BREEDS = {
@@ -53,6 +56,17 @@ MinionFxExtension.game_object_initialized = function (self, game_session, game_o
 
 	if has_unit_data_system then
 		self._always_update_ranged_target = ALWAYS_TARGET_BREEDS[ScriptUnit.extension(self._unit, "unit_data_system"):breed().name]
+	end
+end
+
+MinionFxExtension.update = function (self)
+	local unit = self._unit
+	local dynamic_sfx = self._dynamic_sfx
+
+	for i = 1, dynamic_sfx[0] do
+		local data = dynamic_sfx[i]
+
+		data.func(unit, data.scratch)
 	end
 end
 
@@ -266,6 +280,28 @@ MinionFxExtension.unregister_sound_source = function (self, source_name)
 	WwiseWorld.destroy_manual_source(wwise_world, sources[source_name])
 
 	sources[source_name] = nil
+end
+
+MinionFxExtension._init_dynamic_sfx = function (self, breed)
+	local dynamic_sfx = {
+		[0] = 0,
+	}
+	local template_names = breed.dynamic_fx_templates
+
+	if template_names then
+		local num_templates = #template_names
+
+		for i = 1, num_templates do
+			dynamic_sfx[i] = {
+				func = DynamicFXTemplates[template_names[i]].func,
+				scratch = {},
+			}
+		end
+
+		dynamic_sfx[0] = num_templates
+	end
+
+	self._dynamic_sfx = dynamic_sfx
 end
 
 return MinionFxExtension

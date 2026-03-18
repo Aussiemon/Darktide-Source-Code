@@ -66,6 +66,8 @@ NodeBuilderViewBase.on_enter = function (self)
 	if first_layout_name then
 		self:_activate_layout_by_name(first_layout_name)
 	end
+
+	self:_set_zoom(1)
 end
 
 NodeBuilderViewBase._setup_node_connection_widget = function (self)
@@ -150,13 +152,18 @@ NodeBuilderViewBase._on_node_widget_left_pressed = function (self, widget)
 	local success = false
 	local already_spent_node_points, max_points = self:_node_points_by_widget(widget)
 
-	if not already_spent_node_points or already_spent_node_points < max_points then
+	already_spent_node_points = already_spent_node_points or 0
+
+	local amount_to_add = 1
+	local can_spend_points = max_points - already_spent_node_points - amount_to_add
+
+	if not already_spent_node_points or can_spend_points then
 		local content = widget.content
 		local node_data = content.node_data
 		local status = self:_node_availability_status(node_data)
 
 		if status == NODE_STATUS.available then
-			success = self:_add_node_point_on_widget(widget)
+			success = self:_add_node_point_on_widget(widget, amount_to_add)
 		end
 	end
 
@@ -287,7 +294,7 @@ NodeBuilderViewBase._can_node_traverse_to_start = function (self, node, ignore_l
 			local parent_node = self:_node_by_name(parent_name)
 
 			if parent_node then
-				if parent_node.type == "start" then
+				if parent_node.type == "start" or parent_node.type == "start_center" then
 					return true, step_count
 				elseif node_widget_tiers[parent_name] then
 					local could_traverse_parent, parent_step_count = self:_can_node_traverse_to_start(parent_node, ignore_list, step_count)
@@ -504,7 +511,7 @@ NodeBuilderViewBase._add_node = function (self, x, y, optional_source_node_widge
 
 	local nodes = active_layout.nodes
 	local source_node_data_or_nil = optional_source_node_widget and optional_source_node_widget.content.node_data
-	local node = source_node_data_or_nil and source_node_data_or_nil.node_type ~= "start" and table.clone(source_node_data_or_nil) or {
+	local node = source_node_data_or_nil and source_node_data_or_nil.node_type ~= "start" and source_node_data_or_nil.node_type ~= "start_center" and table.clone(source_node_data_or_nil) or {
 		cost = 1,
 		group_name = nil,
 		horizontal_alignment = nil,
@@ -638,7 +645,7 @@ NodeBuilderViewBase.start_node = function (self)
 	local node_widgets = self._node_widgets
 
 	for i = 1, #node_widgets do
-		if node_widgets[i].content.node_data.type == "start" then
+		if node_widgets[i].content.node_data.type == "start" or node_widgets[i].content.node_data.type == "start_center" then
 			return node_widgets[i]
 		end
 	end
@@ -740,7 +747,7 @@ NodeBuilderViewBase._update_node_widgets = function (self)
 			if hotspot.is_hover then
 				local node_type = node_data.type
 
-				if not node_type or node_type ~= "start" then
+				if not node_type or node_type ~= "start" and node_type ~= "start_center" then
 					can_draw_tooltip = true
 				end
 
@@ -992,7 +999,7 @@ NodeBuilderViewBase._node_availability_status = function (self, node, can_always
 						points_spent_on_all_parents = false
 					end
 
-					if (parent_tier and children_unlock_points <= parent_points_spent or parent_node.type == "start") and can_afford then
+					if (parent_tier and children_unlock_points <= parent_points_spent or parent_node.type == "start" or parent_node.type == "start_center") and can_afford then
 						return_result = NODE_STATUS.available
 					end
 				end
@@ -1058,7 +1065,7 @@ NodeBuilderViewBase._points_available = function (self)
 	return points_available
 end
 
-NodeBuilderViewBase._add_node_point_on_widget = function (self, widget)
+NodeBuilderViewBase._add_node_point_on_widget = function (self, widget, amount_to_add)
 	local active_layout = self:get_active_layout()
 
 	if not active_layout then
@@ -1066,9 +1073,15 @@ NodeBuilderViewBase._add_node_point_on_widget = function (self, widget)
 	end
 
 	local node = widget.content.node_data
+	local amount_spent = self:_node_points_spent()
 	local max_node_points = self:_max_node_points()
+	local available_points_to_spend = max_node_points - amount_spent
 
-	if max_node_points <= self:_node_points_spent() then
+	if available_points_to_spend < amount_to_add then
+		amount_to_add = available_points_to_spend
+	end
+
+	if available_points_to_spend <= 0 then
 		return false
 	end
 
@@ -1079,7 +1092,7 @@ NodeBuilderViewBase._add_node_point_on_widget = function (self, widget)
 		return false
 	end
 
-	tiers[name] = (tiers[name] or 0) + 1
+	tiers[name] = (tiers[name] or 0) + amount_to_add
 
 	local instant_tooltip = true
 
@@ -1217,7 +1230,10 @@ NodeBuilderViewBase._remove_node_points_on_child_nodes_of_node = function (self,
 end
 
 NodeBuilderViewBase._set_zoom = function (self, zoom)
-	self._current_zoom = math.clamp(zoom, 0.25, 1)
+	local active_layout = self:get_active_layout()
+	local base_zoom = active_layout.base_zoom or 1
+
+	self._current_zoom = math.clamp(zoom, 0.25, base_zoom)
 
 	self:_force_update_scenegraph()
 
@@ -1794,7 +1810,7 @@ NodeBuilderViewBase._draw_connection_between_widgets = function (self, ui_render
 	local color_status
 
 	if is_parent_starting_node then
-		if parent_node.type ~= "start" and not node_widget_tiers[parent_node_name] then
+		if parent_node.type ~= "start" and parent_node.type ~= "start_center" and not node_widget_tiers[parent_node_name] then
 			color_status = "locked"
 		elseif unlocked_child then
 			color_status = "locked"

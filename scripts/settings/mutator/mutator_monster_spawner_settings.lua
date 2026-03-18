@@ -1762,5 +1762,49 @@ MutatorMonsterSpawnerSettings.skulls_locations = {
 		},
 	},
 }
+MutatorMonsterSpawnerSettings.expeditions_locations = {
+	mission_location_256m_ravine_001 = {
+		{
+			section = 1,
+			position = Vector3Box(-55, 8, 2.2),
+		},
+		{
+			section = 2,
+			position = Vector3Box(26, -34, 1.9),
+		},
+		{
+			section = 3,
+			position = Vector3Box(43, 26, 1.6),
+		},
+	},
+	mission_location_256m_chasm_002 = {
+		{
+			section = 1,
+			position = Vector3Box(75.386, -3.88523, 31.597),
+		},
+		{
+			section = 2,
+			position = Vector3Box(-28.3554, 103.902, 35.2151),
+		},
+		{
+			section = 3,
+			position = Vector3Box(-114.881, -60.2494, 29.5935),
+		},
+	},
+	mission_location_256m_oil_001 = {
+		{
+			section = 1,
+			position = Vector3Box(167, -30, -8),
+		},
+		{
+			section = 2,
+			position = Vector3Box(-101, -71, -22),
+		},
+		{
+			section = 3,
+			position = Vector3Box(44, 228, -38),
+		},
+	},
+}
 
 return MutatorMonsterSpawnerSettings

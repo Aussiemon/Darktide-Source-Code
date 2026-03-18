@@ -13,6 +13,7 @@ local CircumstanceTemplates = require("scripts/settings/circumstance/circumstanc
 local CorruptorSettings = require("scripts/settings/corruptor/corruptor_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local Deployables = require("scripts/settings/deployables/deployables")
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local DialogueLookup = require("scripts/settings/dialogue/dialogue_lookup")
 local DialogueLookupConcepts = require("scripts/settings/dialogue/dialogue_lookup_concepts")
@@ -42,6 +43,7 @@ local MissionsObjectiveTargetUiTypeStrings = require("scripts/settings/mission_o
 local MissionsObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
 local MissionsObjectiveUiStrings = require("scripts/settings/mission_objective/mission_objective_ui_strings")
 local MissionSoundEvents = require("scripts/settings/sound/mission_sound_events")
+local MotionTriggeredExplosivesSettings = require("scripts/settings/motion_triggered_explosives/motion_triggered_explosives_settings")
 local MutatorMinionVisualOverrideSettings = require("scripts/settings/mutator/mutator_mininion_visual_overrides_settings")
 local MoodSettings = require("scripts/settings/camera/mood/mood_settings")
 local OutlineSettings = require("scripts/settings/outline/outline_settings")
@@ -67,11 +69,15 @@ local SurfaceMaterialSettings = require("scripts/settings/surface_material_setti
 local TimedExplosivesSettings = require("scripts/settings/timed_explosives/timed_explosives_settings")
 local VfxNames = require("scripts/settings/fx/vfx_names")
 local VotingTemplates = require("scripts/settings/voting/voting_templates")
+local VotingFlowSettings = require("scripts/settings/voting/voting_flow_settings")
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_traits/weapon_trait_templates")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
-local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
+local VisualLoadoutExtractData = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_extract_data")
+local ExpeditionCollectibles = require("scripts/settings/expeditions/expedition_collectibles")
+local ExpeditionAirstrikes = require("scripts/settings/expeditions/expedition_airstrikes")
+local AreaOfEffectUnitSpawnerTemplates = require("scripts/extension_systems/area_of_effect/area_of_effect_unit_spawner_templates")
 
 local function _create_lookup(lookup, hashtable)
 	local existing_keys = {}
@@ -115,6 +121,14 @@ NetworkLookup.bot_orders = {
 	"drop",
 	"pickup",
 }
+NetworkLookup.heat_stages = {
+	"none",
+	"undetected",
+	"alert",
+	"detected",
+	"max",
+	"safe_room",
+}
 
 local no_item_definitions = {}
 local bot_profiles = BotCharacterProfiles(no_item_definitions)
@@ -132,6 +146,7 @@ NetworkLookup.chest_states = {
 }
 NetworkLookup.cinematic_scene_names = _create_lookup({}, CinematicSceneSettings.CINEMATIC_NAMES)
 NetworkLookup.circumstance_templates = _create_lookup({}, CircumstanceTemplates)
+NetworkLookup.motion_triggered_explosives_settings = _create_lookup({}, MotionTriggeredExplosivesSettings)
 NetworkLookup.MutatorMinionVisualOverrideSettings = _create_lookup({}, MutatorMinionVisualOverrideSettings)
 NetworkLookup.corruptor_arm_animation_speed_types = _create_lookup({}, CorruptorSettings.animation_speed_multiplier)
 NetworkLookup.damage_efficiencies = _create_lookup({}, AttackSettings.damage_efficiencies)
@@ -166,6 +181,8 @@ NetworkLookup.emote_slots = {
 	"slot_animation_emote_4",
 	"slot_animation_emote_5",
 }
+NetworkLookup.expedition_collectibles = _create_lookup({}, ExpeditionCollectibles)
+NetworkLookup.expedition_airstrikes = _create_lookup({}, ExpeditionAirstrikes)
 NetworkLookup.flow_events = FlowEvents
 NetworkLookup.game_mode_outcomes = {
 	"n/a",
@@ -285,6 +302,7 @@ NetworkLookup.mission_objective_target_ui_types = MissionsObjectiveTargetUiTypeS
 NetworkLookup.mission_objective_ui_states = {
 	"default",
 	"alert",
+	"critical",
 }
 NetworkLookup.mission_giver_vo_overrides = _create_lookup({}, MissionGiverVoSettings.overrides)
 NetworkLookup.missions = _create_lookup({}, Missions)
@@ -409,7 +427,9 @@ NetworkLookup.respawn_beacon_states = {
 }
 NetworkLookup.force_field_unit_names = {
 	"content/characters/player/human/attachments_combat/psyker_shield/psyker_shield_flat_functional",
+	"content/characters/player/human/attachments_combat/psyker_shield/shield_wall_functional",
 	"content/characters/player/human/attachments_combat/psyker_shield/shield_sphere_functional",
+	"content/pickups/pocketables/void_shield/void_shell_sphere_expeditions",
 }
 NetworkLookup.force_field_shape_overrides = {
 	"none",
@@ -477,6 +497,7 @@ NetworkLookup.voting_options = _create_lookup({
 }, voting_options)
 NetworkLookup.voting_results = _create_lookup({}, voting_results)
 NetworkLookup.voting_templates = _create_lookup({}, VotingTemplates.network)
+NetworkLookup.voting_flow_settings = _create_lookup({}, VotingFlowSettings)
 NetworkLookup.weapon_blood_amounts = _create_lookup({}, BloodSettings.weapon_blood_amounts)
 
 local EMPTY_TABLE = {}
@@ -505,12 +526,14 @@ NetworkLookup.weapon_modifier_override_type = _create_lookup({}, {
 	base_stats = true,
 	perks = true,
 	traits = true,
+	weapon_skin = true,
 })
 NetworkLookup.weapon_modifier_override_keys = _create_lookup({}, {
 	id = true,
 	name = true,
 	rarity = true,
 	value = true,
+	weapon_skin_item_name = true,
 })
 NetworkLookup.weapon_templates = _create_lookup({}, WeaponTemplates)
 NetworkLookup.wounds_templates = _create_lookup({}, WoundsTemplates)
@@ -531,6 +554,10 @@ for i = 1, #HavocSettings.positive_modifiers do
 end
 
 NetworkLookup.havoc_modifiers = _create_lookup({}, hash_table)
+NetworkLookup.deployable_settings = _create_lookup({
+	"n/a",
+}, Deployables)
+NetworkLookup.area_of_effect_unit_spawner_templates = _create_lookup({}, AreaOfEffectUnitSpawnerTemplates)
 
 local function _init(name, lookup_table)
 	for index, key in ipairs(lookup_table) do
@@ -613,7 +640,7 @@ NetworkLookup.create_attachment_names_lookup = function (items)
 		NetworkLookup._create_attachment_names_lookup_recursive(attachment_names, items, item)
 	end
 
-	NetworkLookup._create_dynamic_lookup(DynamicLookup.player_attachment_names, attachment_names, "n/a", VisualLoadoutCustomization.ROOT_ATTACH_NAME)
+	NetworkLookup._create_dynamic_lookup(DynamicLookup.player_attachment_names, attachment_names, "n/a", VisualLoadoutExtractData.ROOT_ATTACH_NAME)
 end
 
 return NetworkLookup

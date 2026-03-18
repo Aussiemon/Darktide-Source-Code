@@ -39,6 +39,7 @@ local breed_data = {
 	game_object_type = "minion_chaos_hound",
 	half_extent_forward = 0.8,
 	half_extent_right = 0.3,
+	heat = 0.2,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	look_at_distance = 20,
 	navigation_propagation_box_extent = 200,
@@ -92,6 +93,7 @@ local breed_data = {
 	behavior_tree_name = breed_name,
 	animation_variables = {
 		"gallop_lean",
+		"anim_move_speed",
 	},
 	attack_intensity_cooldowns = {
 		disabling = {

@@ -4,17 +4,18 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
-local MainPathQueries = require("scripts/utilities/main_path_queries")
-local MinionMovement = require("scripts/utilities/minion_movement")
-local MinionPatrols = require("scripts/utilities/minion_patrols")
-local NavQueries = require("scripts/utilities/nav_queries")
-local NavigationCostSettings = require("scripts/settings/navigation/navigation_cost_settings")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
 local HitScan = require("scripts/utilities/attack/hit_scan")
 local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
+local MainPathQueries = require("scripts/utilities/main_path_queries")
 local MinionAttack = require("scripts/utilities/minion_attack")
+local MinionMovement = require("scripts/utilities/minion_movement")
+local MinionPatrols = require("scripts/utilities/minion_patrols")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
+local NavQueries = require("scripts/utilities/nav_queries")
+local NavigationCostSettings = require("scripts/settings/navigation/navigation_cost_settings")
 local Trajectory = require("scripts/utilities/trajectory")
 local Vo = require("scripts/utilities/vo")
 local STATES = table.index_lookup_table("passive", "aiming", "shooting")
@@ -716,7 +717,7 @@ BtRenegadeFlamerPatrolAction._update_liquid_beam_positions = function (self, dt,
 end
 
 BtRenegadeFlamerPatrolAction._start_effect_template = function (self, unit, scratchpad, action_data)
-	local effect_template = action_data.effect_template
+	local effect_template = EffectTemplates[action_data.effect_template_name]
 	local fx_system = scratchpad.fx_system
 	local liquid_beam_effect_id = fx_system:start_template_effect(effect_template, unit)
 

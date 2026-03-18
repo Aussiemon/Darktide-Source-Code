@@ -6,6 +6,7 @@ local player_progression_unlocks = {
 	cosmetics_vendor = "commissary",
 	crafting = "omnissiah",
 	credits_vendor = "armoury",
+	expeditions = "expedition",
 	gadget_slot_1 = 8,
 	gadget_slot_2 = 16,
 	gadget_slot_3 = 24,

@@ -68,16 +68,34 @@ MinionState.is_staggered = function (unit)
 	return buff_extension and buff_extension:has_keyword(buff_keywords.count_as_staggered)
 end
 
+MinionState.is_vortex_grabbed = function (unit)
+	local target_blackboard = BLACKBOARDS[unit]
+
+	if target_blackboard then
+		local in_vortex_state = target_blackboard.in_vortex_state
+
+		if not in_vortex_state == "in_vortex_init" and not in_vortex_state == "landed" then
+			return true
+		end
+	end
+
+	return false
+end
+
 MinionState.is_burning = function (unit)
 	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 
 	return buff_extension and buff_extension:has_keyword(buff_keywords.burning)
 end
 
-MinionState.is_electrocuted = function (unit)
-	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+MinionState.is_electrocuted = function (buff_extension, optional_target_group_keyword)
+	if not buff_extension then
+		return false
+	end
 
-	return buff_extension and buff_extension:has_keyword(buff_keywords.electrocuted)
+	local is_electrocuted = buff_extension:has_keyword(buff_keywords.electrocuted)
+
+	return is_electrocuted
 end
 
 return MinionState

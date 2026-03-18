@@ -24,12 +24,12 @@ local armor_modifiers = {
 	default = {
 		near = {
 			attack = {
-				[armor_types.unarmored] = damage_lerp_values.lerp_1,
-				[armor_types.armored] = damage_lerp_values.lerp_0_7,
+				[armor_types.unarmored] = damage_lerp_values.lerp_1_1,
+				[armor_types.armored] = damage_lerp_values.lerp_0_8,
 				[armor_types.resistant] = damage_lerp_values.lerp_0_7,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_0_9,
-				[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_4,
 			},
@@ -46,8 +46,8 @@ local armor_modifiers = {
 		},
 		far = {
 			attack = {
-				[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
-				[armor_types.armored] = damage_lerp_values.lerp_0_6,
+				[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
+				[armor_types.armored] = damage_lerp_values.lerp_0_7,
 				[armor_types.resistant] = damage_lerp_values.lerp_0_6,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_0_8,
@@ -138,7 +138,7 @@ damage_templates.dual_stub_pistols_base = {
 	},
 	power_distribution = {
 		attack = {
-			210,
+			225,
 			345,
 		},
 		impact = {
@@ -260,8 +260,8 @@ damage_templates.dual_stub_pistols_special = {
 	},
 	power_distribution = {
 		attack = {
-			210,
-			345,
+			255,
+			355,
 		},
 		impact = {
 			25,

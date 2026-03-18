@@ -97,6 +97,19 @@ local Credits = {
 				type = "person",
 			},
 			{
+				text = "",
+				type = "person",
+			},
+			{
+				localized = true,
+				text = "loc_credits_view_associate_art_director_title",
+				type = "title",
+			},
+			{
+				text = "Lucas Ragnar Örström",
+				type = "person",
+			},
+			{
 				text = " ",
 				type = "person",
 			},
@@ -106,7 +119,7 @@ local Credits = {
 				type = "title",
 			},
 			{
-				text = "Victor Magnusson",
+				text = "Victor Magnuson",
 				type = "person",
 			},
 			{
@@ -157,6 +170,10 @@ local Credits = {
 				type = "person",
 			},
 			{
+				text = "Rikard Gaulitz",
+				type = "person",
+			},
+			{
 				text = " ",
 				type = "person",
 			},
@@ -179,19 +196,11 @@ local Credits = {
 			},
 			{
 				localized = true,
-				text = "loc_credits_view_team_manager_title",
+				text = "loc_credits_view_development_director_title",
 				type = "title",
 			},
 			{
-				text = "Emil Nygren",
-				type = "person",
-			},
-			{
-				text = "Elsa Stjernström",
-				type = "person",
-			},
-			{
-				text = "Otto Elggren",
+				text = "Lucia Granda",
 				type = "person",
 			},
 			{
@@ -212,6 +221,10 @@ local Credits = {
 				type = "person",
 			},
 			{
+				text = "Erik Ekström",
+				type = "person",
+			},
+			{
 				text = " ",
 				type = "person",
 			},
@@ -226,6 +239,10 @@ local Credits = {
 			},
 			{
 				text = "Scott Rhodes",
+				type = "person",
+			},
+			{
+				text = "Philipp Glietsch",
 				type = "person",
 			},
 			{
@@ -254,7 +271,45 @@ local Credits = {
 				type = "person",
 			},
 			{
-				text = "Erik Ekström",
+				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
+				text = "loc_credits_view_head_of_managers_title",
+				type = "title",
+			},
+			{
+				text = "Arvid Nilsson",
+				type = "person",
+			},
+			{
+				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
+				text = "loc_credits_view_team_manager_title",
+				type = "title",
+			},
+			{
+				text = "Emil Nygren",
+				type = "person",
+			},
+			{
+				text = "Elsa Stjernström",
+				type = "person",
+			},
+			{
+				text = "Otto Elggren",
+				type = "person",
+			},
+			{
+				text = "Tom Batsford",
+				type = "person",
+			},
+			{
+				text = "Katarzyna Zielinska",
 				type = "person",
 			},
 			{
@@ -285,6 +340,19 @@ local Credits = {
 			},
 			{
 				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
+				text = "loc_credits_view_additional_external_development_manager_title",
+				type = "title",
+			},
+			{
+				text = "Nils Wolf",
+				type = "person",
+			},
+			{
+				text = "",
 				type = "person",
 			},
 			{
@@ -378,13 +446,8 @@ local Credits = {
 				type = "person",
 			},
 			{
-				text = " ",
+				text = "Matteo Angioletti",
 				type = "person",
-			},
-			{
-				localized = true,
-				text = "loc_credits_view_additional_combat_designer_title",
-				type = "title",
 			},
 			{
 				text = "Erik Gustafsson",
@@ -428,11 +491,19 @@ local Credits = {
 				type = "person",
 			},
 			{
+				text = "Gunnar Kollnitz",
+				type = "person",
+			},
+			{
 				text = "Jonathan von Zeipel",
 				type = "person",
 			},
 			{
 				text = "Kevin Dahl-Skog",
+				type = "person",
+			},
+			{
+				text = "Rafał Rzeuski",
 				type = "person",
 			},
 			{
@@ -446,10 +517,6 @@ local Credits = {
 			},
 			{
 				text = "Niklas Fegraeus",
-				type = "person",
-			},
-			{
-				text = "Rafał Rzeuski",
 				type = "person",
 			},
 			{
@@ -550,6 +617,10 @@ local Credits = {
 				type = "person",
 			},
 			{
+				text = "Johan Lundgren",
+				type = "person",
+			},
+			{
 				text = " ",
 				type = "person",
 			},
@@ -563,6 +634,10 @@ local Credits = {
 				type = "person",
 			},
 			{
+				text = "Sara Sällemark",
+				type = "person",
+			},
+			{
 				text = " ",
 				type = "person",
 			},
@@ -570,10 +645,6 @@ local Credits = {
 				localized = true,
 				text = "loc_credits_view_level_art_title",
 				type = "title",
-			},
-			{
-				text = "Sara Sällemark",
-				type = "person",
 			},
 			{
 				text = "Daniel Asperen",
@@ -635,19 +706,6 @@ local Credits = {
 			},
 			{
 				localized = true,
-				text = "loc_credits_view_head_of_art_title",
-				type = "title",
-			},
-			{
-				text = "Arvid Nilsson",
-				type = "person",
-			},
-			{
-				text = " ",
-				type = "person",
-			},
-			{
-				localized = true,
 				text = "loc_credits_view_concept_art_title",
 				type = "title",
 			},
@@ -684,6 +742,10 @@ local Credits = {
 				type = "person",
 			},
 			{
+				text = "Fífa Finnsdóttir",
+				type = "person",
+			},
+			{
 				text = " ",
 				type = "person",
 			},
@@ -706,6 +768,14 @@ local Credits = {
 			},
 			{
 				text = "Ana Gomes",
+				type = "person",
+			},
+			{
+				text = "Anne Isaksson",
+				type = "person",
+			},
+			{
+				text = "Tuva Ekelund",
 				type = "person",
 			},
 			{
@@ -735,10 +805,6 @@ local Credits = {
 				type = "person",
 			},
 			{
-				text = "Anne Isaksson",
-				type = "person",
-			},
-			{
 				text = " ",
 				type = "person",
 			},
@@ -749,6 +815,10 @@ local Credits = {
 			},
 			{
 				text = "Juras Rodionovas",
+				type = "person",
+			},
+			{
+				text = "Linn Pennanen",
 				type = "person",
 			},
 			{
@@ -769,11 +839,11 @@ local Credits = {
 				type = "person",
 			},
 			{
-				text = "Linn Pennanen",
+				text = "Freja Hammar",
 				type = "person",
 			},
 			{
-				text = "Freja Hammar",
+				text = "Bianca Reutergårdh",
 				type = "person",
 			},
 			{
@@ -826,6 +896,23 @@ local Credits = {
 			},
 			{
 				text = "Simon Jonasson",
+				type = "person",
+			},
+			{
+				text = "Johan Lind",
+				type = "person",
+			},
+			{
+				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
+				text = "loc_credits_view_additional_weapon_art_title",
+				type = "title",
+			},
+			{
+				text = "Alexader Jansson",
 				type = "person",
 			},
 			{
@@ -912,6 +999,10 @@ local Credits = {
 				type = "person",
 			},
 			{
+				text = "Nikita Smirnov",
+				type = "person",
+			},
+			{
 				text = " ",
 				type = "person",
 			},
@@ -987,6 +1078,18 @@ local Credits = {
 				type = "person",
 			},
 			{
+				text = "Julia Eklund Granstedt",
+				type = "person",
+			},
+			{
+				text = "Olliver Eriksson",
+				type = "person",
+			},
+			{
+				text = "Joakim Fridlund",
+				type = "person",
+			},
+			{
 				text = " ",
 				type = "person",
 			},
@@ -1056,6 +1159,10 @@ local Credits = {
 			},
 			{
 				text = "Felicia Kyrling",
+				type = "person",
+			},
+			{
+				text = "Maximilian Hussong",
 				type = "person",
 			},
 			{
@@ -1253,6 +1360,10 @@ local Credits = {
 				type = "person",
 			},
 			{
+				text = "Nemanja Nikolic",
+				type = "person",
+			},
+			{
 				text = " ",
 				type = "person",
 			},
@@ -1292,14 +1403,6 @@ local Credits = {
 			},
 			{
 				text = "Sebastian Granstrand",
-				type = "person",
-			},
-			{
-				text = "Tom Batsford",
-				type = "person",
-			},
-			{
-				text = "Gunnar Kollnitz",
 				type = "person",
 			},
 			{
@@ -1347,6 +1450,26 @@ local Credits = {
 				type = "person",
 			},
 			{
+				text = "Teodor Tysklind",
+				type = "person",
+			},
+			{
+				text = "Diego Vallauri",
+				type = "person",
+			},
+			{
+				text = "Daniel Bruna",
+				type = "person",
+			},
+			{
+				text = "Kim de Winter",
+				type = "person",
+			},
+			{
+				text = "Adriano Orioli",
+				type = "person",
+			},
+			{
 				text = " ",
 				type = "person",
 			},
@@ -1360,28 +1483,7 @@ local Credits = {
 				type = "person",
 			},
 			{
-				text = "Diego Vallauri",
-				type = "person",
-			},
-			{
-				text = "Daniel Bruna",
-				type = "person",
-			},
-			{
-				text = " ",
-				type = "person",
-			},
-			{
-				localized = true,
-				text = "loc_credits_view_gameplay_programmer_intern_title",
-				type = "title",
-			},
-			{
 				text = "Sebastian Åkerlund",
-				type = "person",
-			},
-			{
-				text = "Teodor Tysklind",
 				type = "person",
 			},
 			{
@@ -1415,10 +1517,6 @@ local Credits = {
 				type = "person",
 			},
 			{
-				text = "Manny Blanc",
-				type = "person",
-			},
-			{
 				text = "Mirel Grigore",
 				type = "person",
 			},
@@ -1428,11 +1526,24 @@ local Credits = {
 			},
 			{
 				localized = true,
-				text = "loc_credits_view_director_central_services_title",
+				text = "loc_credits_view_head_of_engineering_title",
 				type = "title",
 			},
 			{
-				text = "Rikard Gaulitz",
+				text = "Andreas Jonsson",
+				type = "person",
+			},
+			{
+				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
+				text = "loc_credits_view_additional_producer_title",
+				type = "title",
+			},
+			{
+				text = "Fenni Johansson",
 				type = "person",
 			},
 			{
@@ -1486,6 +1597,14 @@ local Credits = {
 				type = "person",
 			},
 			{
+				text = "Marcus Dahl",
+				type = "person",
+			},
+			{
+				text = "Oscar Tillgren",
+				type = "person",
+			},
+			{
 				text = " ",
 				type = "person",
 			},
@@ -1503,7 +1622,7 @@ local Credits = {
 				type = "person",
 			},
 			{
-				text = "Marcus Dahl",
+				text = "Charlie Frost",
 				type = "person",
 			},
 			{
@@ -1610,6 +1729,10 @@ local Credits = {
 				type = "person",
 			},
 			{
+				text = "Johan Sjölin",
+				type = "person",
+			},
+			{
 				text = " ",
 				type = "person",
 			},
@@ -1661,6 +1784,10 @@ local Credits = {
 			},
 			{
 				text = "Jonas Hultén",
+				type = "person",
+			},
+			{
+				text = "Manny Blanc",
 				type = "person",
 			},
 			{
@@ -1750,6 +1877,10 @@ local Credits = {
 				type = "person",
 			},
 			{
+				text = "Marcus Hedberg",
+				type = "person",
+			},
+			{
 				text = " ",
 				type = "person",
 			},
@@ -1795,10 +1926,6 @@ local Credits = {
 				type = "person",
 			},
 			{
-				text = "Matteo Angioletti",
-				type = "person",
-			},
-			{
 				text = "Katharina Baron",
 				type = "person",
 			},
@@ -1815,6 +1942,14 @@ local Credits = {
 				type = "person",
 			},
 			{
+				text = "Carl Höjdén",
+				type = "person",
+			},
+			{
+				text = "David Lindahl",
+				type = "person",
+			},
+			{
 				text = " ",
 				type = "person",
 			},
@@ -1828,15 +1963,7 @@ local Credits = {
 				type = "person",
 			},
 			{
-				text = "Carl Höjdén",
-				type = "person",
-			},
-			{
 				text = "Bryan Lobo",
-				type = "person",
-			},
-			{
-				text = "Marcus Hedberg",
 				type = "person",
 			},
 			{
@@ -1875,11 +2002,37 @@ local Credits = {
 			},
 			{
 				localized = true,
+				text = "loc_credits_view_head_of_marketing_title",
+				type = "title",
+			},
+			{
+				text = "Rodrigue Delrue",
+				type = "person",
+			},
+			{
+				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
 				text = "loc_credits_view_marketing_communications_director_title",
 				type = "title",
 			},
 			{
 				text = "Jérôme Ortmann",
+				type = "person",
+			},
+			{
+				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
+				text = "loc_credits_view_additional_community_lead_title",
+				type = "title",
+			},
+			{
+				text = "Jimmy Tisell",
 				type = "person",
 			},
 			{
@@ -1951,7 +2104,16 @@ local Credits = {
 				type = "person",
 			},
 			{
-				text = "Rodrigue Delrue",
+				text = " ",
+				type = "person",
+			},
+			{
+				localized = true,
+				text = "loc_credits_view_additional_product_marketing_manager_title",
+				type = "title",
+			},
+			{
+				text = "Christie Moulding",
 				type = "person",
 			},
 			{
@@ -2218,6 +2380,10 @@ local Credits = {
 				type = "person",
 			},
 			{
+				text = "Rachel Raschke",
+				type = "person",
+			},
+			{
 				text = " ",
 				type = "person",
 			},
@@ -2244,6 +2410,10 @@ local Credits = {
 				type = "person",
 			},
 			{
+				text = "Jackeline Pålsson",
+				type = "person",
+			},
+			{
 				text = " ",
 				type = "person",
 			},
@@ -2253,7 +2423,7 @@ local Credits = {
 				type = "title",
 			},
 			{
-				text = "Jackeline Pålsson",
+				text = "Natalia Myslinska",
 				type = "person",
 			},
 			{
@@ -2266,7 +2436,71 @@ local Credits = {
 				type = "title",
 			},
 			{
+				text = "Alberto Amigo",
+				type = "person",
+			},
+			{
+				text = "Alberto Virzi",
+				type = "person",
+			},
+			{
+				text = "Anton Lindén",
+				type = "person",
+			},
+			{
+				text = "Anton Syrvachev",
+				type = "person",
+			},
+			{
+				text = "Avian Jurić",
+				type = "person",
+			},
+			{
 				text = "Batuhan Ertas",
+				type = "person",
+			},
+			{
+				text = "Dennis Johansson",
+				type = "person",
+			},
+			{
+				text = "Erik Hammarbäck",
+				type = "person",
+			},
+			{
+				text = "Fedor Matveev",
+				type = "person",
+			},
+			{
+				text = "New Person",
+				type = "person",
+			},
+			{
+				text = "Jérémie Tauziède",
+				type = "person",
+			},
+			{
+				text = "Joel Zetterberg",
+				type = "person",
+			},
+			{
+				text = "Johan Haubo",
+				type = "person",
+			},
+			{
+				text = "Johannes Palmblad",
+				type = "person",
+			},
+			{
+				text = "Jonas Wallin",
+				type = "person",
+			},
+			{
+				text = "Lena Envall",
+				type = "person",
+			},
+			{
+				text = "Martin Wallin",
 				type = "person",
 			},
 			{
@@ -2274,11 +2508,55 @@ local Credits = {
 				type = "person",
 			},
 			{
+				text = "Michael Rådström",
+				type = "person",
+			},
+			{
+				text = "Michal Zielinski",
+				type = "person",
+			},
+			{
+				text = "Oda Kristine Sandaker",
+				type = "person",
+			},
+			{
+				text = "Ola Jentzsch",
+				type = "person",
+			},
+			{
+				text = "Oskar Karlsson",
+				type = "person",
+			},
+			{
 				text = "Pål Wallo",
 				type = "person",
 			},
 			{
-				text = "Rikard Drakborn",
+				text = "Qingcheng Huang",
+				type = "person",
+			},
+			{
+				text = "Rebecka Broman",
+				type = "person",
+			},
+			{
+				text = "Riccardo Rizzo",
+				type = "person",
+			},
+			{
+				text = "Robert Pettersson",
+				type = "person",
+			},
+			{
+				text = "Rómulo Espinosa Montoya",
+				type = "person",
+			},
+			{
+				text = "Stephanie Brown",
+				type = "person",
+			},
+			{
+				text = "Tomas Wallin",
 				type = "person",
 			},
 			{
@@ -4150,10 +4428,6 @@ local Credits = {
 				localized = true,
 				text = "loc_credits_view_special_thanks_to_title",
 				type = "title",
-			},
-			{
-				text = "Incan, TheOneTrueSkeleton, Captain Kentucky, Gawain, Kaelus Von Sestiaf, Sequens, Witchfinder Dilara, notfuegonasus, I2ain, Nategore, TPKPatchy, Indypride from milkandcookiesTW, SqueakCheesetaker, Maya-moo, Ishka, Malacar, raindish, Bioshift, jtcLIVE, Royale w/ Cheese, «§ëvënPrøxy», Nayre, Core, jinxedmerphit, Old´Un, Zeropathic, Luetin, Borgarbjörnen, Haywire Hayley, Daniel Kaye aka Action Johnny @ The Action Window, Luke Ridley, Commissar Tyr, combine00, Emorist, Hubert \"Kerfus\" Spala, Grimalackt, Tyler Bono, Nikky \"Hank\" van der Meer, jsat.",
-				type = "person",
 			},
 			{
 				text = " ",

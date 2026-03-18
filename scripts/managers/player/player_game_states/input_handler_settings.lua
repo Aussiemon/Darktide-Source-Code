@@ -19,8 +19,6 @@ local input_handler_settings = {
 		"weapon_inspect_hold",
 		"weapon_extra_hold",
 		"jump_held",
-		"interact_primary_hold",
-		"interact_secondary_hold",
 	},
 	ephemeral_actions = {
 		"jump",
@@ -49,8 +47,6 @@ local input_handler_settings = {
 		"grenade_ability_release",
 		"weapon_extra_pressed",
 		"weapon_extra_release",
-		"interact_primary_pressed",
-		"interact_secondary_pressed",
 	},
 	ui_interaction_actions = {
 		"finished_interaction",

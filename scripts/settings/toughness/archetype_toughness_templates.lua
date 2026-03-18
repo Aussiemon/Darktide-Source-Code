@@ -108,7 +108,7 @@ archetype_toughness_templates.adamant = {
 	},
 }
 archetype_toughness_templates.broker = {
-	max = 75,
+	max = 100,
 	optional_on_hit_function = nil,
 	regeneration_delay = 3,
 	template_type = template_types.player,

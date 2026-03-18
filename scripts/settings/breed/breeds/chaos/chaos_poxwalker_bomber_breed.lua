@@ -34,6 +34,7 @@ local breed_data = {
 	faction_name = "chaos",
 	fx_proximity_culling_weight = 6,
 	game_object_type = "minion_special_melee",
+	heat = 0.2,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	navigation_propagation_box_extent = 200,
 	not_bot_target = true,

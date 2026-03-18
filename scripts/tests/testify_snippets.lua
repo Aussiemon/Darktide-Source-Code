@@ -24,6 +24,22 @@ TestifySnippets.create_character_if_none = function ()
 	end
 end
 
+TestifySnippets.exit_to_main_menu_and_wait = function (duration)
+	local duration = duration or 2
+
+	Testify:make_request("exit_to_main_menu")
+	Testify:make_request("wait_for_main_menu_displayed")
+	TestifySnippets.wait(duration)
+end
+
+TestifySnippets.skip_main_menu = function ()
+	local current_state = Testify:make_request("current_state_name")
+
+	if current_state == "StateMainMenu" then
+		Testify:make_request("press_play_main_menu")
+	end
+end
+
 TestifySnippets.skip_title_and_main_menu_and_create_character_if_none = function ()
 	if not DEDICATED_SERVER then
 		TestifySnippets.skip_splash_and_title_screen()

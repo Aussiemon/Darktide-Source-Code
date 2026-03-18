@@ -37,8 +37,8 @@ MinigameFrequency.hot_join_sync = function (self, sender, channel)
 	end
 end
 
-MinigameFrequency.start = function (self, player)
-	MinigameFrequency.super.start(self, player)
+MinigameFrequency.start = function (self, player, send_to_self_client)
+	MinigameFrequency.super.start(self, player, send_to_self_client)
 	Unit.flow_event(self._minigame_unit, "lua_minigame_start")
 
 	if player then

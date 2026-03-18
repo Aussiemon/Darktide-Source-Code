@@ -69,11 +69,7 @@ BrokerStimmBuilderView.on_enter = function (self)
 
 			local profile_preset_talents_version = profile_preset.talents_version
 
-			if not TalentLayoutParser.is_same_version(profile_preset_talents_version, active_talents_version) then
-				talents = {}
-			else
-				talents = profile_preset and TalentLayoutParser.filter_layout_talents(profile, "specialization_talent_layout_file_path", context and context.current_profile_equipped_specialization_talents or profile_preset.talents) or {}
-			end
+			talents = profile_preset and TalentLayoutParser.filter_layout_talents(profile, "specialization_talent_layout_file_path", context and context.current_profile_equipped_specialization_talents or profile_preset.talents) or {}
 		else
 			local current_profile_equipped_specialization_talents = context and context.current_profile_equipped_specialization_talents
 
@@ -93,6 +89,10 @@ BrokerStimmBuilderView.on_enter = function (self)
 				end
 			end
 		end
+
+		TalentLayoutParser.validate_talent_layouts(talents, {
+			active_layout,
+		}, true)
 
 		self._node_widget_tiers = table.clone_instance(talents)
 
@@ -169,15 +169,17 @@ BrokerStimmBuilderView.event_on_profile_preset_changed = function (self, profile
 	local talents
 
 	if previously_active_profile_preset_id and profile_preset then
-		if not TalentLayoutParser.is_same_version(talents_version, active_talents_version) then
-			talents = {}
-		else
-			talents = profile_preset and TalentLayoutParser.filter_layout_talents(profile, "specialization_talent_layout_file_path", profile_preset.talents) or {}
-		end
+		talents = profile_preset and TalentLayoutParser.filter_layout_talents(profile, "specialization_talent_layout_file_path", profile_preset.talents) or {}
 	else
 		talents = table.clone_instance(self._node_widget_tiers)
 		self._save_talent_changes = true
 	end
+
+	local active_layout = self._active_layout
+
+	TalentLayoutParser.validate_talent_layouts(talents, {
+		active_layout,
+	}, true)
 
 	self._node_widget_tiers = talents and table.clone_instance(talents) or {}
 
@@ -230,8 +232,8 @@ BrokerStimmBuilderView._remove_node_point_on_widget = function (self, widget)
 	self._save_talent_changes = true
 end
 
-BrokerStimmBuilderView._add_node_point_on_widget = function (self, widget)
-	local success = BrokerStimmBuilderView.super._add_node_point_on_widget(self, widget)
+BrokerStimmBuilderView._add_node_point_on_widget = function (self, widget, amount_to_add)
+	local success = BrokerStimmBuilderView.super._add_node_point_on_widget(self, widget, amount_to_add)
 
 	if success then
 		self._save_talent_changes = true

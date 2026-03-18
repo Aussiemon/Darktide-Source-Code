@@ -90,8 +90,8 @@ PickupSystem._fetch_settings = function (self)
 	end
 
 	local circumstance_name = Managers.state.circumstance:circumstance_name()
-	local circumstance_template = CircumstanceTemplates[circumstance_name]
-	local mission_overrides = circumstance_template.mission_overrides
+	local circumstance_template = circumstance_name and CircumstanceTemplates[circumstance_name]
+	local mission_overrides = circumstance_template and circumstance_template.mission_overrides
 
 	if mission_overrides and mission_overrides.pickup_settings then
 		local pickup_settings_adjust = self:_get_pickup_pool_from_difficulty(mission_overrides.pickup_settings, difficulty)
@@ -157,6 +157,18 @@ PickupSystem.delete_units = function (self)
 end
 
 PickupSystem.on_remove_extension = function (self, unit, ...)
+	local extension = self._unit_to_extension_map[unit]
+
+	extension:despawn_items()
+
+	for pickup_unit, spawner in pairs(self._pickup_to_spawner) do
+		if spawner == extension then
+			self._pickup_to_spawner[pickup_unit] = nil
+
+			break
+		end
+	end
+
 	PickupSystem.super.on_remove_extension(self, unit, ...)
 end
 
@@ -168,8 +180,22 @@ PickupSystem.on_gameplay_post_init = function (self, level)
 	end
 end
 
+PickupSystem.on_location_setup = function (self)
+	self:call_gameplay_post_init_on_extensions()
+
+	if self._is_server then
+		self:_populate_pickups()
+	end
+end
+
 PickupSystem.external_populate_pickups = function (self)
 	self:_populate_pickups()
+end
+
+PickupSystem.get_pickups_for_location_transition = function (self, register_func)
+	for unit, _ in pairs(self._dropped_pickups) do
+		register_func(unit, "hard", "PickupSystem", self.despawn_pickup, self, unit)
+	end
 end
 
 PickupSystem._shuffle = function (self, source, seed)
@@ -933,7 +959,7 @@ PickupSystem.spawn_pickup = function (self, pickup_name, position, rotation, opt
 		local spawn_rotation = pickup_settings.spawn_rotation:unbox()
 		local new_rotation = Quaternion.from_euler_angles_xyz(spawn_rotation.x, spawn_rotation.y, spawn_rotation.z)
 
-		rotation = Quaternion.multiply(rotation, new_rotation)
+		rotation = Quaternion.multiply(new_rotation, rotation)
 	end
 
 	if pickup_settings.randomized_rotation then
@@ -941,7 +967,7 @@ PickupSystem.spawn_pickup = function (self, pickup_name, position, rotation, opt
 		local rx, ry, rz = unpack(pickup_settings.randomized_rotation)
 		local random_rotation = Quaternion.from_euler_angles_xyz(rx and math.random() * lim or 0, ry and math.random() * lim or 0, rz and math.random() * lim or 0)
 
-		rotation = Quaternion.multiply(rotation, random_rotation)
+		rotation = Quaternion.multiply(random_rotation, rotation)
 	end
 
 	local pickup_unit, pickup_unit_go_id = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template_name, position, rotation, nil, pickup_settings, optional_placed_on_unit, optional_spawn_interaction_cooldown, optional_origin_player)
@@ -1027,6 +1053,10 @@ end
 
 PickupSystem.dropped = function (self, pickup_unit)
 	self._dropped_pickups[pickup_unit] = true
+end
+
+PickupSystem.dropped_pickups = function (self)
+	return self._dropped_pickups
 end
 
 PickupSystem.register_material_collected = function (self, pickup_unit, interactor_unit, type, size, optional_ignore_notification, optional_allow_multiple_per_unit)

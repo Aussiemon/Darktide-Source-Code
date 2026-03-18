@@ -13,6 +13,36 @@ local weapon_ammo_templates = {
 			1,
 		},
 	},
+	expeditions_big_grenade = {
+		ammunition_reserve = 3,
+		ammunition_clips = {
+			3,
+		},
+	},
+	expeditions_airstrike = {
+		ammunition_reserve = 1,
+		ammunition_clips = {
+			1,
+		},
+	},
+	expeditions_attack_valkyrie = {
+		ammunition_reserve = 1,
+		ammunition_clips = {
+			1,
+		},
+	},
+	expeditions_artillery_strike = {
+		ammunition_reserve = 1,
+		ammunition_clips = {
+			1,
+		},
+	},
+	motion_detection_mine = {
+		ammunition_reserve = 3,
+		ammunition_clips = {
+			3,
+		},
+	},
 	bolter_p1_m1 = {
 		ammunition_clips = {
 			{
@@ -229,37 +259,37 @@ local weapon_ammo_templates = {
 	lasgun_p1_m1 = {
 		ammunition_clips = {
 			{
-				lerp_basic = 60,
+				lerp_basic = 80,
 				lerp_perfect = 120,
 			},
 		},
 		ammunition_reserve = {
-			lerp_basic = 400,
-			lerp_perfect = 800,
+			lerp_basic = 480,
+			lerp_perfect = 960,
 		},
 	},
 	lasgun_p1_m2 = {
 		ammunition_clips = {
 			{
-				lerp_basic = 60,
+				lerp_basic = 70,
 				lerp_perfect = 160,
 			},
 		},
 		ammunition_reserve = {
-			lerp_basic = 480,
-			lerp_perfect = 1000,
+			lerp_basic = 540,
+			lerp_perfect = 1160,
 		},
 	},
 	lasgun_p1_m3 = {
 		ammunition_clips = {
 			{
-				lerp_basic = 60,
+				lerp_basic = 70,
 				lerp_perfect = 120,
 			},
 		},
 		ammunition_reserve = {
-			lerp_basic = 300,
-			lerp_perfect = 720,
+			lerp_basic = 360,
+			lerp_perfect = 840,
 		},
 	},
 	lasgun_p2_m1 = {

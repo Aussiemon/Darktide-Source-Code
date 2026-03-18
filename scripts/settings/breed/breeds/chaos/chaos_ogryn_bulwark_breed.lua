@@ -41,6 +41,7 @@ local breed_data = {
 	half_extent_forward = 0.5,
 	half_extent_right = 0.5,
 	has_direct_ragdoll_flow_event = true,
+	heat = 1.2,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	player_locomotion_constrain_radius = 0.9,
 	power_level_type = "chaos_ogryn_default_melee",
@@ -69,6 +70,9 @@ local breed_data = {
 		melee = true,
 		minion = true,
 		ogryn = true,
+	},
+	vortex_settings = {
+		die_on_vortex_land = false,
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.resistant,

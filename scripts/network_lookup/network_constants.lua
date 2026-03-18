@@ -94,6 +94,7 @@ _check_network_lookup_boundaries("lookup_3bit", "projectile_template_effects")
 _check_network_lookup_boundaries("lookup_2bit", "force_field_unit_names")
 _check_network_lookup_boundaries("hit_type_id", "surface_hit_types")
 _check_network_lookup_boundaries("voting_template_id", "voting_templates")
+_check_network_lookup_boundaries("voting_flow_setting_id", "voting_flow_settings")
 _check_network_lookup_boundaries("lookup_1bit", "weapon_blood_amounts")
 _check_network_lookup_boundaries("optional_wounds_shape_id", "wounds_shapes")
 _check_network_lookup_boundaries("camera_shake_id", "camera_shake_events")
@@ -251,6 +252,7 @@ NetworkConstants.fixed_frame_offset_end_t_4bit = Network.type_info("fixed_frame_
 NetworkConstants.fixed_frame_offset_end_t_6bit = Network.type_info("fixed_frame_offset_end_t_6bit")
 NetworkConstants.fixed_frame_offset_end_t_7bit = Network.type_info("fixed_frame_offset_end_t_7bit")
 NetworkConstants.fixed_frame_offset_end_t_9bit = Network.type_info("fixed_frame_offset_end_t_9bit")
+NetworkConstants.move_speed = Network.type_info("move_speed")
 
 local prd_state = Network.type_info("prd_state")
 
@@ -281,6 +283,7 @@ local particle_index = Network.type_info("particle_index")
 
 NetworkConstants.particle_index_min = particle_index.min
 NetworkConstants.particle_index_max = particle_index.max
+NetworkConstants.mission_objective_max_increment = Network.type_info("mission_objective_max_increment")
 
 local function _check_dialogue_breed_settings_voices()
 	local max_num_wwise_voices = 0

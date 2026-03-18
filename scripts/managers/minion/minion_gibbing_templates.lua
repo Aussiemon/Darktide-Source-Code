@@ -9,6 +9,7 @@ local function _create_gibbing_template_entry(path)
 	gibbing_templates[name] = gibbing_template
 end
 
+_create_gibbing_template_entry("scripts/managers/minion/minion_gibbing_templates/chaos_armored_hound_gibbing_template")
 _create_gibbing_template_entry("scripts/managers/minion/minion_gibbing_templates/chaos_beast_of_nurgle_gibbing_template")
 _create_gibbing_template_entry("scripts/managers/minion/minion_gibbing_templates/chaos_daemonhost_gibbing_template")
 _create_gibbing_template_entry("scripts/managers/minion/minion_gibbing_templates/chaos_hound_gibbing_template")
@@ -18,6 +19,7 @@ _create_gibbing_template_entry("scripts/managers/minion/minion_gibbing_templates
 _create_gibbing_template_entry("scripts/managers/minion/minion_gibbing_templates/chaos_newly_infected_gibbing_template")
 _create_gibbing_template_entry("scripts/managers/minion/minion_gibbing_templates/chaos_ogryn_bulwark_gibbing_template")
 _create_gibbing_template_entry("scripts/managers/minion/minion_gibbing_templates/chaos_ogryn_executor_gibbing_template")
+_create_gibbing_template_entry("scripts/managers/minion/minion_gibbing_templates/chaos_ogryn_houndmaster_gibbing_template")
 _create_gibbing_template_entry("scripts/managers/minion/minion_gibbing_templates/chaos_ogryn_gunner_gibbing_template")
 _create_gibbing_template_entry("scripts/managers/minion/minion_gibbing_templates/chaos_poxwalker_bomber_gibbing_template")
 _create_gibbing_template_entry("scripts/managers/minion/minion_gibbing_templates/chaos_poxwalker_gibbing_template")

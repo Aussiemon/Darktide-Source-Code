@@ -329,6 +329,9 @@ local item_slot_settings = {
 		store_category = "weapons",
 		wield_input = "wield_2",
 	},
+	slot_timed = {
+		slot_type = "weapon",
+	},
 	slot_pocketable = {
 		slot_type = "pocketable",
 		wield_input = "wield_3",
@@ -360,8 +363,8 @@ local item_slot_settings = {
 		ability_type = "grenade_ability",
 		slot_type = "ability",
 	},
-	slot_set = {},
 	inspect_pose = {},
+	slot_set = {},
 	slot_net = {
 		slot_type = "vfx",
 	},

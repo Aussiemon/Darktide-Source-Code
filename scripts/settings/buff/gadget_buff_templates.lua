@@ -192,6 +192,7 @@ templates.gadget_damage_reduction_vs_hounds = {
 	stat_buffs = {
 		[stat_buffs.damage_taken_by_chaos_hound_multiplier] = 0.8,
 		[stat_buffs.damage_taken_by_chaos_hound_mutator_multiplier] = 0.8,
+		[stat_buffs.damage_taken_by_chaos_armored_hound_multiplier] = 0.8,
 	},
 }
 templates.gadget_damage_reduction_vs_mutants = {

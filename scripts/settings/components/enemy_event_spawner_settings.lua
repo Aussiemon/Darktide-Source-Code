@@ -658,6 +658,200 @@ local enemy_event_spawner_compositions = {
 						},
 					},
 				},
+				{
+					breeds = {
+						{
+							name = "renegade_captain",
+							amount = {
+								1,
+								1,
+							},
+						},
+						{
+							name = "renegade_plasma_gunner",
+							amount = {
+								5,
+								6,
+							},
+						},
+					},
+				},
+			},
+		},
+	},
+	exp_rotten_armor = {
+		renegade = {
+			{
+				{
+					breeds = {
+						{
+							name = "renegade_berzerker",
+							amount = {
+								1,
+								2,
+							},
+						},
+					},
+				},
+				{
+					breeds = {
+						{
+							name = "renegade_berzerker",
+							amount = {
+								1,
+								2,
+							},
+						},
+					},
+				},
+				{
+					breeds = {
+						{
+							name = "renegade_executor",
+							amount = {
+								2,
+								4,
+							},
+						},
+						{
+							name = "renegade_berzerker",
+							amount = {
+								1,
+								2,
+							},
+						},
+					},
+				},
+				{
+					breeds = {
+						{
+							name = "renegade_executor",
+							amount = {
+								2,
+								4,
+							},
+						},
+						{
+							name = "renegade_berzerker",
+							amount = {
+								2,
+								4,
+							},
+						},
+					},
+				},
+				{
+					breeds = {
+						{
+							name = "renegade_executor",
+							amount = {
+								2,
+								4,
+							},
+						},
+						{
+							name = "renegade_berzerker",
+							amount = {
+								2,
+								4,
+							},
+						},
+						{
+							name = "chaos_ogryn_executor",
+							amount = {
+								1,
+								1,
+							},
+						},
+					},
+				},
+			},
+		},
+		cultist = {
+			{
+				{
+					breeds = {
+						{
+							name = "renegade_berzerker",
+							amount = {
+								1,
+								2,
+							},
+						},
+					},
+				},
+				{
+					breeds = {
+						{
+							name = "renegade_berzerker",
+							amount = {
+								1,
+								2,
+							},
+						},
+					},
+				},
+				{
+					breeds = {
+						{
+							name = "renegade_executor",
+							amount = {
+								2,
+								4,
+							},
+						},
+						{
+							name = "renegade_berzerker",
+							amount = {
+								1,
+								2,
+							},
+						},
+					},
+				},
+				{
+					breeds = {
+						{
+							name = "renegade_executor",
+							amount = {
+								2,
+								4,
+							},
+						},
+						{
+							name = "renegade_berzerker",
+							amount = {
+								2,
+								4,
+							},
+						},
+					},
+				},
+				{
+					breeds = {
+						{
+							name = "renegade_executor",
+							amount = {
+								2,
+								4,
+							},
+						},
+						{
+							name = "renegade_berzerker",
+							amount = {
+								2,
+								4,
+							},
+						},
+						{
+							name = "chaos_ogryn_executor",
+							amount = {
+								1,
+								1,
+							},
+						},
+					},
+				},
 			},
 		},
 	},

@@ -7,18 +7,26 @@ local ExternalPaymentPlatformXbox = require("scripts/backend/platform/external_p
 local ExternalPaymentPlatformPlaystation = require("scripts/backend/platform/external_payment_platform_playstation")
 local ExternalPaymentPlatform = {}
 
-ExternalPaymentPlatform[Backend.AUTH_METHOD_NONE] = ExternalPaymentPlatformBase
 ExternalPaymentPlatform[Backend.AUTH_METHOD_STEAM] = ExternalPaymentPlatformSteam
 ExternalPaymentPlatform[Backend.AUTH_METHOD_XBOXLIVE] = ExternalPaymentPlatformXbox
 ExternalPaymentPlatform[Backend.AUTH_METHOD_PSN] = ExternalPaymentPlatformPlaystation
-ExternalPaymentPlatform[Backend.AUTH_METHOD_DEV_USER] = ExternalPaymentPlatformBase
-ExternalPaymentPlatform[Backend.AUTH_METHOD_AWS] = ExternalPaymentPlatformBase
 
 local ExternalPayment = {}
 
 ExternalPayment.new = function (self)
 	local authenticate_method = Backend:get_auth_method()
-	local instance = ExternalPaymentPlatform[authenticate_method]:new()
+
+	Log.debug("ExternalPayment", "Using method: %s", authenticate_method)
+
+	local payment_platform = ExternalPaymentPlatform[authenticate_method]
+
+	if payment_platform == nil then
+		Log.debug("ExternalPayment", "No external payment platform for auth method %s. Using base platform.", authenticate_method)
+
+		payment_platform = ExternalPaymentPlatformBase
+	end
+
+	local instance = payment_platform:new()
 
 	return instance
 end

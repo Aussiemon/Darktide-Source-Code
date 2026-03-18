@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/force_field/force_field_system.lua
 
-require("scripts/extension_systems/force_field/force_field_extension")
+require("scripts/extension_systems/force_field/psyker_force_field_unit_extension")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
@@ -197,10 +197,11 @@ ForceFieldSystem._check_unit_collisions = function (self, t)
 				if HEALTH_ALIVE[unit] then
 					local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 					local breed = unit_data_extension:breed()
-					local unit_radius = breed.player_locomotion_constrain_radius * 2
+					local locomotion_constraint_radius = breed.player_locomotion_constrain_radius
+					local unit_radius = locomotion_constraint_radius and locomotion_constraint_radius * 2
 					local unit_pos = POSITION_LOOKUP[unit]
 
-					if buff_extension and extension:is_unit_colliding(unit_pos, unit_radius) then
+					if buff_extension and unit_radius and extension:is_unit_colliding(unit_pos, unit_radius) then
 						if not units_inside[unit] then
 							local param_table = buff_extension:request_proc_event_param_table()
 

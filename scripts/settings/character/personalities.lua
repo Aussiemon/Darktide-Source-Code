@@ -714,14 +714,14 @@ local personality_options = {
 		},
 	},
 }
-local personality_options_by_id = {}
+local personalities = {}
 
-for i = 1, #personality_options do
-	local personality_option = personality_options[i]
-	local id = string.format("option_%d", i)
+for ii = 1, #personality_options do
+	local personality_option = personality_options[ii]
+	local id = string.format("option_%d", ii)
 
 	personality_option.id = id
-	personality_options_by_id[id] = personality_option
+	personalities[id] = personality_option
 end
 
-return settings("Personalities", personality_options_by_id)
+return settings("Personalities", personalities)

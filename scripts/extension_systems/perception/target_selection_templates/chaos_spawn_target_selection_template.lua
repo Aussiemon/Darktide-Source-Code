@@ -93,20 +93,22 @@ target_selection_template.chaos_spawn = function (unit, side, perception_compone
 			local target_unit = target_units[i]
 
 			if target_unit ~= current_target_unit then
-				local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
-				local target_breed = unit_data_extension:breed()
+				local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
+				local target_breed = target_unit_data_extension:breed()
 				local is_shooting = false
+				local can_be_disabled = false
+				local is_disabled = false
 
 				if Breed.is_player(target_breed) then
-					local shooting_status = unit_data_extension:read_component("shooting_status")
+					local shooting_status = target_unit_data_extension:read_component("shooting_status")
 
 					is_shooting = shooting_status.shooting or not shooting_status.shooting and t <= shooting_status.shooting_end_time + 1
-				end
+					can_be_disabled = AttackIntensity.player_can_be_attacked(target_unit, "disabling")
 
-				local can_be_disabled = AttackIntensity.player_can_be_attacked(target_unit, "disabling")
-				local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
-				local character_state_component = target_unit_data_extension:read_component("character_state")
-				local is_disabled = PlayerUnitStatus.is_disabled(character_state_component)
+					local character_state_component = target_unit_data_extension:read_component("character_state")
+
+					is_disabled = PlayerUnitStatus.is_disabled(character_state_component)
+				end
 
 				if can_be_disabled and not is_disabled then
 					local target_position = POSITION_LOOKUP[target_unit]

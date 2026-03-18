@@ -103,7 +103,6 @@ MissionBoardView.on_enter = function (self)
 	self._world_spawner = UIWorldSpawner:new(world_spawner_settings.world_name, world_spawner_settings.world_layer, world_spawner_settings.world_timer_name, self.view_name)
 
 	self._world_spawner:spawn_level(world_spawner_settings.level_name)
-	self:_setup_view_elements()
 	self:on_resolution_modified(self._render_scale)
 
 	local player = self:_player()
@@ -132,6 +131,8 @@ MissionBoardView.on_enter = function (self)
 	local on_screen_effect_id = World.create_particles(self._world_spawner._world, ScreenEffectSettings.on_screen_effect, Vector3(0, 0, 1))
 
 	self._on_screen_effect_id = on_screen_effect_id
+
+	self:_setup_view_elements()
 end
 
 MissionBoardView._setup_view_elements = function (self)
@@ -144,7 +145,7 @@ MissionBoardView._setup_view_elements = function (self)
 		if load_on_enter then
 			local elem = Elements[element_name]
 
-			self:_add_element(elem, element_name, self._element_layer)
+			self:_add_element(elem, element_name, self._element_layer, element_context)
 
 			self._element_layer = self._element_layer + 10
 		end
@@ -320,9 +321,6 @@ MissionBoardView._open_current_page = function (self)
 
 	local page_index = self._page_index
 	local page_settings = self._mission_board_logic:get_current_page(page_index)
-
-	self:_change_ui_theme(page_settings.ui_theme)
-
 	local widgets_by_name = self._widgets_by_name
 	local view_element_campaign_mission_list = self:_element("mission_list")
 	local mission_list_visible = view_element_campaign_mission_list and view_element_campaign_mission_list:visible()
@@ -346,7 +344,6 @@ MissionBoardView._open_current_page = function (self)
 
 	self._page_index = page_index
 
-	self:_update_difficulty_stepper(page_index)
 	self._mission_board_logic:refresh_filtered_missions()
 	self:_refresh_issue()
 	self:_update_telemetry_name(false)
@@ -614,7 +611,7 @@ MissionBoardView._set_static_campaign_playlist_widget = function (self)
 	local completed_campaign, total_campaign = self._mission_board_logic:get_campaign_mission_progression()
 
 	return self:_set_static_mission_widget("upsell", "campaign_playlist_upsell", "campaign_upsell", {
-		icon = "content/ui/textures/mission_board/aquilla_digital",
+		icon = "content/ui/textures/icons/mission_types_pj/mission_type_story",
 		is_locked = false,
 		is_story = true,
 		sub_header_text = Localize("loc_glossary_completed") .. " (" .. tostring(completed_campaign) .. "/" .. tostring(total_campaign) .. ")",
@@ -918,11 +915,8 @@ MissionBoardView._get_mission_locked_issue_message = function (self)
 
 		unlock_data = game_modes_data and game_modes_data.quickplay or {}
 	else
-		local ignore_filter = false
 		local view_element_campaign_mission_list = self:_element("mission_list")
-
-		ignore_filter = view_element_campaign_mission_list and view_element_campaign_mission_list:visible()
-
+		local ignore_filter = view_element_campaign_mission_list and view_element_campaign_mission_list:visible()
 		local selected_mission_data = self:_mission(selected_mission_id, ignore_filter)
 		local category = selected_mission_data and selected_mission_data.category
 		local mission_key = selected_mission_data and selected_mission_data.map
@@ -1024,11 +1018,8 @@ MissionBoardView._update_info_state = function (self, t)
 
 		self:_poll_issue_localized("mission_locked", 2, not quickplay_unlocked, "loc_mission_board_locked_issue")
 	else
-		local ignore_filter = false
 		local view_element_campaign_mission_list = self:_element("mission_list")
-
-		ignore_filter = view_element_campaign_mission_list and view_element_campaign_mission_list:visible()
-
+		local ignore_filter = view_element_campaign_mission_list and view_element_campaign_mission_list:visible()
 		local mission = self:_mission(mission_id, ignore_filter)
 		local is_locked = mission and self._mission_board_logic:is_mission_locked(mission)
 
@@ -1134,14 +1125,12 @@ MissionBoardView.update = function (self, dt, t, input_service)
 		self._is_loading = is_loading
 		widgets_by_name.loading.content.visible = is_loading
 		widgets_by_name.gamepad_cursor.content.visible = not is_loading
-		widgets_by_name.difficulty_stepper.content.visible = not is_loading
-		widgets_by_name.difficulty_progress_bar.content.visible = not is_loading
-		widgets_by_name.difficulty_progress_tooltip.content.visible = not is_loading
 		widgets_by_name.play_button.content.visible = not is_loading
 		widgets_by_name.play_button_legend.content.visible = not is_loading
 
 		local view_element_mission_location = self:_element("mission_location")
 		local view_element_objectives = self:_element("mission_objectives")
+		local view_element_difficulty_selector = self:_element("difficulty_selector")
 
 		if view_element_mission_location then
 			view_element_mission_location:set_visibility(not is_loading)
@@ -1149,6 +1138,10 @@ MissionBoardView.update = function (self, dt, t, input_service)
 
 		if view_element_objectives then
 			view_element_objectives:set_visibility(not is_loading)
+		end
+
+		if view_element_difficulty_selector then
+			view_element_difficulty_selector:set_visibility(not is_loading)
 		end
 	end
 
@@ -1171,9 +1164,6 @@ MissionBoardView.update = function (self, dt, t, input_service)
 		self._filtered_missions = self._mission_board_logic:get_filtered_missions()
 		self._page_index = self._mission_board_logic:get_current_page_index()
 
-		self:_create_difficulty_stepper_indicators()
-		self:_setup_difficulty_selector()
-		self:_setup_threat_level_tooltip()
 		self:_open_current_page()
 
 		local has_active_campaign_missions = self:_has_active_campaign_missions(self._filtered_missions)
@@ -1182,6 +1172,12 @@ MissionBoardView.update = function (self, dt, t, input_service)
 
 		if view_element_campaign_mission_list.initialize_data then
 			view_element_campaign_mission_list:initialize_data()
+		end
+
+		local view_element_difficulty_selector = self:_element("difficulty_selector")
+
+		if view_element_difficulty_selector then
+			view_element_difficulty_selector:initialize_data()
 		end
 	end
 
@@ -1198,13 +1194,24 @@ MissionBoardView.update = function (self, dt, t, input_service)
 	self:_update_info_state(t)
 	self:_update_camera(dt, t)
 	self:_update_hologram_unit(dt, t)
-	self:_update_threat_level_tooltip(dt, t)
 
 	local world_spawner = self._world_spawner
 
 	if world_spawner then
 		world_spawner:update(dt, t)
 	end
+end
+
+MissionBoardView.get_current_selected_difficulty = function (self)
+	return self._mission_board_logic:get_current_page_index()
+end
+
+MissionBoardView.get_threat_level_progress = function (self)
+	return self._mission_board_logic:get_threat_level_progress()
+end
+
+MissionBoardView.get_difficulty_settings = function (self)
+	return self._mission_board_logic:get_page_settings()
 end
 
 MissionBoardView._mission = function (self, mission_id, ignore_filter)
@@ -1495,7 +1502,6 @@ MissionBoardView._handle_input = function (self, input_service, dt, t)
 
 	MissionBoardView.super._handle_input(self, input_service, dt, t)
 	self:_play_button_input(input_service)
-	self:_difficulty_stepper_input(input_service)
 
 	local view_element_campaign_mission_list = self:_element("mission_list")
 
@@ -1581,14 +1587,6 @@ MissionBoardView.draw = function (self, dt, t, input_service, layer)
 
 		for i = 1, mission_count do
 			local widget = mission_widgets[i]
-
-			UIWidget.draw(widget, ui_renderer)
-		end
-	end
-
-	if self._difficulty_indicator_widgets then
-		for i = 1, #self._difficulty_indicator_widgets do
-			local widget = self._difficulty_indicator_widgets[i]
 
 			UIWidget.draw(widget, ui_renderer)
 		end
@@ -1741,7 +1739,6 @@ MissionBoardView._callback_close_replay_campaign_missions_view = function (self)
 		return
 	end
 
-	self:_play_sound("story_mission_exit")
 	self:_set_selected_quickplay(true, true)
 
 	local widgets_by_name = self._widgets_by_name
@@ -1838,225 +1835,12 @@ MissionBoardView.event_mission_board_mission_tile_pressed = function (self, miss
 	self:_set_selected_mission(mission_id, false, true)
 end
 
-MissionBoardView._get_difficulty_data_by_name = function (self, difficulty_name)
-	for i = 1, #DangerSettings do
-		local difficulty_data = DangerSettings[i]
-
-		if difficulty_data.name == difficulty_name then
-			return difficulty_data
-		end
-	end
-end
-
-MissionBoardView._update_threat_level_progress = function (self, difficulty_index, target_color)
-	local widget = self._widgets_by_name.difficulty_progress_bar
-
-	if not difficulty_index or not target_color then
-		widgte.visible = false
-
-		return
-	end
-
-	local content = widget.content
-	local style = widget.style
-	local difficulty_progress_data = self._mission_board_logic:get_threat_level_progress()
-
-	if not difficulty_progress_data or table.is_empty(difficulty_progress_data) then
-		widget.visible = false
-
-		return
-	end
-
-	local progress = 0
-	local selected_difficulty_data = DangerSettings[difficulty_index]
-	local current_unlocked_difficulty = difficulty_progress_data.current_difficulty
-	local current_unlocked_difficulty_data = current_unlocked_difficulty ~= "n/a" and self:_get_difficulty_data_by_name(difficulty_progress_data.current_difficulty)
-
-	if current_unlocked_difficulty_data then
-		local current_unlocked_difficulty_index = current_unlocked_difficulty_data.index
-
-		progress = difficulty_index < current_unlocked_difficulty_index and 1 or difficulty_progress_data.progress or 0
-	end
-
-	content.progress = progress
-	content.target_color = target_color
-end
-
 MissionBoardView._get_input_text = function (self, alias_name)
 	local service_type = "View"
 	local color_tint_text = true
 	local input_key = InputUtils.input_text_for_current_input_device(service_type, alias_name, color_tint_text)
 
 	return input_key
-end
-
-MissionBoardView._setup_difficulty_selector = function (self)
-	local difficulty_selector = self._widgets_by_name.difficulty_stepper
-
-	if difficulty_selector then
-		local content = difficulty_selector.content
-
-		content.left_pressed_callback = callback(self, "_request_prev_page")
-		content.right_pressed_callback = callback(self, "_request_next_page")
-	end
-end
-
-MissionBoardView._create_difficulty_stepper_indicators = function (self)
-	local page_settings = self._page_settings
-	local num_settings = page_settings and #page_settings or 0
-	local stepper_indicators = {}
-
-	for i = 1, num_settings do
-		local page_data = page_settings[i]
-		local danger_settings = DangerSettings[i]
-		local indicator_pass_templates = StepperPassTemplates.difficulty_stepper_indicator.passes
-		local content_overrides = {
-			icon = danger_settings.digital_icon,
-			internal_selected_difficulty = i,
-			current_selected_difficulty = self._page_index,
-			is_unlocked = page_data and page_data.is_unlocked,
-			active = i == self._page_index,
-		}
-		local indicator = UIWidget.create_definition(indicator_pass_templates, "difficulty_stepper_indicators", content_overrides)
-		local widget = UIWidget.init("difficulty_indicator_" .. i, indicator)
-
-		widget.offset[1] = 28 + (i - 1) * ((Dimensions.difficulty_stepper_width - 56) / num_settings)
-
-		local content = widget.content
-
-		content.hotspot.pressed_callback = callback(self, "_request_page_at", i)
-		stepper_indicators[#stepper_indicators + 1] = widget
-	end
-
-	self._difficulty_indicator_widgets = stepper_indicators
-
-	self:_update_difficulty_stepper(self._page_index)
-end
-
-MissionBoardView._update_difficulty_stepper = function (self, page_index)
-	local page_settings = self._page_settings[page_index]
-
-	if not page_settings then
-		return
-	end
-
-	local difficulty_selector = self._widgets_by_name.difficulty_stepper
-	local content = difficulty_selector.content
-
-	content.danger = page_index
-	content.difficulty_text = Text.localize_to_upper(page_settings.loc_name)
-
-	local target_color = DangerSettings[page_index].color
-
-	content.target_color = target_color
-
-	local current_difficulty_index = page_index
-	local difficulty_indicators = self._difficulty_indicator_widgets
-
-	if not difficulty_indicators then
-		return
-	end
-
-	for i = 1, #difficulty_indicators do
-		local indicator = difficulty_indicators[i]
-		local indicator_content = indicator.content
-
-		indicator_content.current_selected_difficulty = current_difficulty_index
-		indicator_content.active = i == current_difficulty_index
-		indicator_content.target_color = DangerSettings[page_index].color
-	end
-
-	local next_page = self._page_settings[page_index + 1]
-
-	content.next_page_unlocked = next_page and next_page.is_unlocked or false
-
-	self:_update_threat_level_progress(page_index, target_color)
-end
-
-MissionBoardView._setup_threat_level_tooltip = function (self)
-	local difficulty_progress_tooltip = self._widgets_by_name.difficulty_progress_tooltip
-
-	if not difficulty_progress_tooltip then
-		return
-	end
-
-	local difficulty_progress_data = self._mission_board_logic:get_threat_level_progress()
-
-	if not difficulty_progress_data or table.is_empty(difficulty_progress_data) then
-		difficulty_progress_tooltip.visible = false
-
-		return
-	end
-
-	local content = difficulty_progress_tooltip.content
-	local current_difficulty = difficulty_progress_data.current_difficulty
-	local next_difficulty = difficulty_progress_data.next_difficulty
-	local current_exp = difficulty_progress_data.current or 0
-	local next_exp = difficulty_progress_data.target or 0
-	local current_difficulty_data = self:_get_difficulty_data_by_name(current_difficulty)
-	local next_difficulty_data = self:_get_difficulty_data_by_name(next_difficulty)
-
-	if not current_difficulty_data or not next_difficulty_data then
-		difficulty_progress_tooltip.visible = false
-
-		return
-	end
-
-	local formatted_tooltip_text = Localize("loc_mission_board_current_threat_level_progress_tooltip", true, {
-		current_difficulty = Localize(current_difficulty_data.display_name),
-		next_difficulty = Localize(next_difficulty_data.display_name),
-		current = current_exp,
-		target = next_exp,
-	})
-
-	content.text = formatted_tooltip_text
-	difficulty_progress_tooltip.visible = true
-end
-
-MissionBoardView._update_threat_level_tooltip = function (self, dt, t)
-	local stepper_widget = self._widgets_by_name.difficulty_stepper
-
-	if not stepper_widget then
-		return
-	end
-
-	local content = stepper_widget.content
-	local hotspot = content.tooltip_hotspot
-
-	if not hotspot then
-		return
-	end
-
-	local difficulty_progress_tooltip = self._widgets_by_name.difficulty_progress_tooltip
-
-	if not difficulty_progress_tooltip then
-		return
-	end
-
-	local style = difficulty_progress_tooltip.style
-
-	if InputDevice.gamepad_active then
-		local gamepad_anim_progress = content.gamepad_anim_progress or 0
-
-		if self._threat_level_tooltip_visible then
-			gamepad_anim_progress = math.clamp(gamepad_anim_progress + dt * 2, 0, 1)
-		else
-			gamepad_anim_progress = math.clamp(gamepad_anim_progress - dt * 2, 0, 1)
-		end
-
-		difficulty_progress_tooltip.offset[1] = 400 - gamepad_anim_progress * 400
-		style.text.text_color[1] = 255 * gamepad_anim_progress
-		style.background.color[1] = 255 * gamepad_anim_progress
-		style.frame.color[1] = 255 * gamepad_anim_progress
-		content.gamepad_anim_progress = gamepad_anim_progress
-	else
-		local hover_progress = hotspot.anim_hover_progress or 0
-
-		difficulty_progress_tooltip.offset[1] = 400 - hover_progress * 400
-		style.text.text_color[1] = 255 * hover_progress
-		style.background.color[1] = 255 * hover_progress
-		style.frame.color[1] = 255 * hover_progress
-	end
 end
 
 MissionBoardView._add_view_element = function (self, element_name)
@@ -2077,17 +1861,6 @@ end
 
 MissionBoardView._callback_show_threat_level_tooltip = function (self)
 	self._threat_level_tooltip_visible = true
-end
-
-MissionBoardView._set_stepper_gamepad_input = function (self)
-	local difficulty_selector = self._widgets_by_name.difficulty_stepper
-
-	if difficulty_selector then
-		local content = difficulty_selector.content
-
-		content.gamepad_left_input_text = self:_get_input_text("navigate_primary_left")
-		content.gamepad_right_input_text = self:_get_input_text("navigate_primary_right")
-	end
 end
 
 MissionBoardView._on_group_finder_pressed = function (self)
@@ -2174,6 +1947,50 @@ MissionBoardView._get_hologram_unit = function (self, unit_name)
 	end
 
 	return unit
+end
+
+MissionBoardView.is_mission_locked = function (self, mission)
+	return self._mission_board_logic and self._mission_board_logic:is_mission_locked(mission)
+end
+
+MissionBoardView.get_mission_unlock_data = function (self, map, category)
+	return self._mission_board_logic and self._mission_board_logic:get_mission_unlock_data(map, category)
+end
+
+MissionBoardView.is_campaign_mission = function (self, mission)
+	return self._mission_board_logic and self._mission_board_logic:is_story_mission(mission)
+end
+
+MissionBoardView.get_bonus_data = function (self, bonus_type)
+	return self._mission_board_logic and self._mission_board_logic:get_bonus_data(bonus_type)
+end
+
+MissionBoardView.get_missions_per_category = function (self, category)
+	if not category then
+		return {}
+	end
+
+	return self._mission_board_logic and self._mission_board_logic:_get_missions_per_category(category)
+end
+
+MissionBoardView.get_campaigns_data = function (self)
+	return self._mission_board_logic and self._mission_board_logic:get_campaigns_data()
+end
+
+MissionBoardView.get_data_by_campaign = function (self, campaign_id)
+	return self._mission_board_logic and self._mission_board_logic:get_data_by_campaign(campaign_id)
+end
+
+MissionBoardView.has_synced_missions_data = function (self)
+	return self._mission_board_logic and self._mission_board_logic:has_synced_missions_data()
+end
+
+MissionBoardView.get_campaign_mission_display_order = function (self, mission_key, mission_category, campaign_key)
+	return self._mission_board_logic and self._mission_board_logic:get_campaign_mission_display_order(mission_key, mission_category, campaign_key)
+end
+
+MissionBoardView.get_missions_by_filters = function (self, filters)
+	return self._mission_board_logic and self._mission_board_logic:get_missions_by_filters(filters)
 end
 
 return MissionBoardView

@@ -4,7 +4,6 @@ local BreedShootTemplates = require("scripts/settings/breed/breed_shoot_template
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local UtilityConsiderations = require("scripts/extension_systems/behavior/utility_considerations")
 local damage_types = DamageSettings.damage_types
@@ -15,6 +14,16 @@ local action_data = {
 	idle = {
 		anim_events = "idle",
 		rotate_towards_target = true,
+	},
+	weapon_malfunction_loop = {
+		rotate_towards_target = false,
+		anim_events = {
+			"suppressed_loop_01",
+		},
+		end_anim_events = {
+			"stagger_finished",
+			"idle",
+		},
 	},
 	patrol = {
 		anim_events = {
@@ -364,6 +373,55 @@ local action_data = {
 		},
 		running_stagger_min_duration = {
 			shotgun_run_stagger_04 = 1.6666666666666667,
+		},
+	},
+	escape_to_combat_vector_weapon_malfunction = {
+		degree_per_direction = 10,
+		idle_anim_events = "idle",
+		max_distance_to_target = 40,
+		min_distance_to_target = 30,
+		move_anim_events = "move_fwd",
+		move_to_cooldown = 0.25,
+		move_to_fail_cooldown = 1,
+		randomized_direction_degree_range = 120,
+		speed = 4.2,
+		utility_weight = 1,
+		considerations = UtilityConsiderations.escape_to_combat_vector_far,
+		start_move_anim_events = {
+			bwd = "move_start_bwd",
+			fwd = "move_start_fwd",
+			left = "move_start_left",
+			right = "move_start_right",
+		},
+		start_move_anim_data = {
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
+			move_start_bwd = {
+				sign = -1,
+				rad = math.pi,
+			},
+			move_start_left = {
+				sign = 1,
+				rad = math.pi / 2,
+			},
+			move_start_right = {
+				sign = -1,
+				rad = math.pi / 2,
+			},
+		},
+		start_move_rotation_timings = {
+			move_start_bwd = 0,
+			move_start_fwd = 0,
+			move_start_left = 0,
+			move_start_right = 0,
+		},
+		start_rotation_durations = {
+			move_start_bwd = 0.26666666666666666,
+			move_start_fwd = 0.26666666666666666,
+			move_start_left = 0.26666666666666666,
+			move_start_right = 0.26666666666666666,
 		},
 	},
 	ranged_follow_no_los = {
@@ -1379,13 +1437,28 @@ local action_data = {
 	use_stim = {
 		anim_event = "use_syringe",
 		duration = 1.6666666666666667,
+		effect_template_name = "minion_stim_effect",
 		exit_state = "to_ranged",
-		effect_template = EffectTemplates.minion_stim_effect,
 		stim_buffs = {
 			"mutator_stimmed_minion_red",
 			"mutator_stimmed_minion_yellow",
 			"mutator_stimmed_minion_green",
 			"mutator_stimmed_minion_blue",
+		},
+	},
+	vortex_grabbed = {
+		ignore_rotate_towards_target = false,
+		anim_events = {
+			loop = {
+				"vortex_loop",
+			},
+			landing = {
+				"vortex_landing",
+			},
+		},
+		anim_durations = {
+			vortex_landing = 5.666666666666667,
+			vortex_loop = 0.3333333333333333,
 		},
 	},
 }

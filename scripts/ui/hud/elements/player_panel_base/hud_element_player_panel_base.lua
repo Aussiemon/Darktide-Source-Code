@@ -53,6 +53,16 @@ HudElementPlayerPanelBase.init = function (self, parent, draw_layer, start_scale
 	self._settings = definition_settings
 	self._supported_features = self._settings.feature_list
 
+	if self._supported_features.expedition_currency then
+		local game_mode_name = Managers.state.game_mode:game_mode_name()
+		local player = data.player
+		local valid_player = player:is_human_controlled()
+
+		if game_mode_name == "expedition" and valid_player then
+			self._handle_expedition_currency = true
+		end
+	end
+
 	local definitions = require(definition_path)
 
 	HudElementPlayerPanelBase.super.init(self, parent, draw_layer, start_scale, definitions)
@@ -99,6 +109,7 @@ HudElementPlayerPanelBase.init = function (self, parent, draw_layer, start_scale
 	Managers.event:register(self, "chat_manager_participant_update", "_chat_manager_participant_update")
 	Managers.event:register(self, "event_player_profile_updated", "_event_player_profile_updated")
 	Managers.event:register(self, "event_hub_title_color_type_changed", "_event_hub_title_color_type_changed")
+	Managers.event:register(self, "expedition_player_purchase_performed", "_expedition_player_purchase_performed")
 end
 
 HudElementPlayerPanelBase.update = function (self, dt, t, ui_renderer, render_settings, input_service)
@@ -125,13 +136,20 @@ end
 
 HudElementPlayerPanelBase._player_extensions = function (self, player)
 	local player_unit = player.player_unit
+	local use_cached = self._extensions ~= nil and self._player_unit == player_unit and ALIVE[player_unit]
 
-	if Unit.alive(player_unit) then
-		if not self._extensions then
-			self._extensions = self._parent:get_all_player_extensions(player, {})
-		end
-	elseif self._extensions then
+	if use_cached then
+		return self._extensions
+	end
+
+	if self._extensions then
+		self._player_unit = nil
 		self._extensions = nil
+	end
+
+	if ALIVE[player_unit] then
+		self._player_unit = player_unit
+		self._extensions = self._parent:get_all_player_extensions(player, {})
 	end
 
 	return self._extensions
@@ -345,12 +363,13 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 	local pounced = false
 	local netted = false
 	local warp_grabbed = false
+	local vortex_grabbed = false
 	local mutant_charged = false
 	local consumed = false
 	local grabbed = false
 
 	if not dead then
-		disabled, knocked_down, hogtied, ledge_hanging, pounced, netted, warp_grabbed, mutant_charged, consumed, grabbed = self:_is_player_disabled(unit_data_extension)
+		disabled, knocked_down, hogtied, ledge_hanging, pounced, netted, warp_grabbed, mutant_charged, consumed, grabbed, vortex_grabbed = self:_is_player_disabled(unit_data_extension)
 	end
 
 	if supported_features.voip then
@@ -579,6 +598,8 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 			player_status = "netted"
 		elseif warp_grabbed then
 			player_status = "warp_grabbed"
+		elseif vortex_grabbed then
+			player_status = "vortex_grabbed"
 		elseif mutant_charged then
 			player_status = "mutant_charged"
 		elseif consumed then
@@ -653,6 +674,26 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 		self._health_ghost_fraction = bar_ghost_fraction
 		self._health_max_fraction = bar_max_fraction
 		self._health_max_percentage = health_max_percentage
+	end
+
+	if self._handle_expedition_currency then
+		local game_mode_manager = Managers.state.game_mode
+		local game_mode = game_mode_manager:game_mode()
+		local draw_expedition_currency = is_my_player or game_mode.in_safe_zone and game_mode:in_safe_zone()
+
+		if draw_expedition_currency then
+			local expedition_currency = self:_get_expedition_currency(player)
+			local expedition_loot = self:_get_expedition_loot(player)
+
+			if self._expedition_currency ~= expedition_currency or self._expedition_loot ~= expedition_loot then
+				self._expedition_loot = expedition_loot
+				self._expedition_currency = expedition_currency
+
+				self:_set_expedition_currency_display(expedition_currency or 1, expedition_loot or 0)
+			end
+		end
+
+		self:_set_widget_visible(self._widgets_by_name.expedition_currency, draw_expedition_currency, ui_renderer)
 	end
 end
 
@@ -732,8 +773,9 @@ HudElementPlayerPanelBase._is_player_disabled = function (self, unit_data_extens
 	local mutant_charged = PlayerUnitStatus.is_mutant_charged(disabled_character_state_component)
 	local consumed = PlayerUnitStatus.is_consumed(disabled_character_state_component)
 	local grabbed = PlayerUnitStatus.is_grabbed(disabled_character_state_component)
+	local vortex_grabbed = PlayerUnitStatus.is_vortex_grabbed(disabled_character_state_component)
 
-	return requires_help, knocked_down, hogtied, ledge_hanging, pounced, netted, warp_grabbed, mutant_charged, consumed, grabbed
+	return requires_help, knocked_down, hogtied, ledge_hanging, pounced, netted, warp_grabbed, mutant_charged, consumed, grabbed, vortex_grabbed
 end
 
 HudElementPlayerPanelBase._set_speaking = function (self, speaking, ui_renderer)
@@ -757,8 +799,6 @@ HudElementPlayerPanelBase._set_widget_visible = function (self, widget, visible,
 	if not visible then
 		UIWidget.destroy(ui_renderer, widget)
 	end
-
-	self._draw_health_segments = true
 end
 
 HudElementPlayerPanelBase._set_dead = function (self, is_dead, show_as_dead, ui_renderer)
@@ -931,21 +971,24 @@ HudElementPlayerPanelBase._get_weapon_ammo_status = function (self, player, dead
 
 	for ii = 1, #weapon_slots do
 		local slot_id = weapon_slots[ii]
-		local inventory_component = unit_data_extension:read_component(slot_id)
-		local weapon_template = visual_loadout_extension:weapon_template_from_slot(slot_id)
-		local hud_configuration = weapon_template and weapon_template.hud_configuration
-		local uses_ammunition = hud_configuration and hud_configuration.uses_ammunition
 
-		if inventory_component and uses_ammunition then
-			uses_ammo = true
+		if unit_data_extension:has_component(slot_id) then
+			local inventory_component = unit_data_extension:read_component(slot_id)
+			local weapon_template = visual_loadout_extension:weapon_template_from_slot(slot_id)
+			local hud_configuration = weapon_template and weapon_template.hud_configuration
+			local uses_ammunition = hud_configuration and hud_configuration.uses_ammunition
 
-			local max_clip = Ammo.max_ammo_in_clips(inventory_component) or 0
-			local max_reserve = inventory_component.max_ammunition_reserve or 0
-			local current_clip = Ammo.current_ammo_in_clips(inventory_component) or 0
-			local current_reserve = inventory_component.current_ammunition_reserve or 0
+			if inventory_component and uses_ammunition then
+				uses_ammo = true
 
-			total_current_ammo = total_current_ammo + (current_clip + current_reserve)
-			total_max_ammo = total_max_ammo + (max_clip + max_reserve)
+				local max_clip = Ammo.max_ammo_in_clips(inventory_component) or 0
+				local max_reserve = inventory_component.max_ammunition_reserve or 0
+				local current_clip = Ammo.current_ammo_in_clips(inventory_component) or 0
+				local current_reserve = inventory_component.current_ammunition_reserve or 0
+
+				total_current_ammo = total_current_ammo + (current_clip + current_reserve)
+				total_max_ammo = total_max_ammo + (max_clip + max_reserve)
+			end
 		end
 	end
 
@@ -1618,6 +1661,7 @@ HudElementPlayerPanelBase.destroy = function (self, ui_renderer)
 	Managers.event:unregister(self, "chat_manager_participant_update")
 	Managers.event:unregister(self, "event_player_profile_updated")
 	Managers.event:unregister(self, "event_hub_title_color_type_changed")
+	Managers.event:unregister(self, "expedition_player_purchase_performed")
 	HudElementPlayerPanelBase.super.destroy(self, ui_renderer)
 	self:_unload_portrait_icon(ui_renderer)
 	self:_unload_portrait_frame(ui_renderer)
@@ -1701,6 +1745,47 @@ HudElementPlayerPanelBase.on_resolution_modified = function (self)
 	HudElementPlayerPanelBase.super.on_resolution_modified(self)
 
 	self._draw_health_segments = true
+end
+
+HudElementPlayerPanelBase._get_expedition_currency = function (self, player)
+	local game_mode_manager = Managers.state.game_mode
+	local game_mode = game_mode_manager:game_mode()
+
+	if player:is_human_controlled() then
+		local peer_id = player:peer_id()
+		local expedition_currency_amount = game_mode:expedition_currency(peer_id)
+
+		return expedition_currency_amount or 0
+	end
+
+	return 0
+end
+
+HudElementPlayerPanelBase._get_expedition_loot = function (self, player)
+	local game_mode_manager = Managers.state.game_mode
+	local game_mode = game_mode_manager:game_mode()
+
+	if player:is_human_controlled() then
+		local peer_id = player:peer_id()
+		local expedition_loot_amount = game_mode:expedition_loot(peer_id)
+
+		return expedition_loot_amount or 0
+	end
+
+	return 0
+end
+
+HudElementPlayerPanelBase._set_expedition_currency_display = function (self, currency_amount, loot_amount)
+	local text = currency_amount and tostring(currency_amount) .. " " .. Localize("loc_expeditions_currency_name_hud") .. "" or ""
+	local widget = self._widgets_by_name.expedition_currency
+
+	widget.content.text = text
+	widget.dirty = true
+end
+
+HudElementPlayerPanelBase._expedition_player_purchase_performed = function (self)
+	self._expedition_currency = nil
+	self._expedition_loot = nil
 end
 
 return HudElementPlayerPanelBase

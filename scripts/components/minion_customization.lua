@@ -82,15 +82,14 @@ MinionCustomization._customize = function (self, unit, item_definitions)
 
 	local attach_settings = self._attach_settings
 	local item_table = self:get_data(unit, "attachment_items")
-	local global_material_override_table = self:get_data(unit, "global_material_override")
 	local global_material_override_table_items = self:get_data(unit, "global_material_override_items")
 
 	attach_settings.item_definitions = item_definitions or attach_settings.item_definitions
 
-	self:_apply_customization(unit, attach_settings, item_table, global_material_override_table, global_material_override_table_items)
+	self:_apply_customization(unit, attach_settings, item_table, global_material_override_table_items)
 end
 
-MinionCustomization._apply_customization = function (self, unit, attach_settings, item_table, global_material_override_table, global_material_override_table_items)
+MinionCustomization._apply_customization = function (self, unit, attach_settings, item_table, global_material_override_table_items)
 	self:_spawn_items(item_table)
 
 	if attach_settings.lod_group then
@@ -107,10 +106,6 @@ MinionCustomization._apply_customization = function (self, unit, attach_settings
 		if bounding_volume then
 			LODGroup.override_bounding_volume(attach_settings.lod_shadow_group, bounding_volume)
 		end
-	end
-
-	for i, material_override in pairs(global_material_override_table) do
-		VisualLoadoutCustomization.apply_material_override(unit, unit, false, material_override, self.in_editor)
 	end
 
 	for i, material_override in pairs(global_material_override_table_items) do
@@ -145,10 +140,6 @@ MinionCustomization._spawn_items = function (self, items)
 							Unit.set_data(item_unit, "attached_items", num_attachments - j + 1, all_attachment_units[j])
 						end
 					end
-
-					VisualLoadoutCustomization.apply_material_override(item_unit, unit, false, self:get_data(unit, "attachment_material_override_1", i), in_editor)
-					VisualLoadoutCustomization.apply_material_override(item_unit, unit, false, self:get_data(unit, "attachment_material_override_2", i), in_editor)
-					VisualLoadoutCustomization.apply_material_override(item_unit, unit, false, self:get_data(unit, "attachment_material_override_3", i), in_editor)
 
 					local material_override_items = self:get_data(unit, "attachment_material_override_items")
 
@@ -244,36 +235,8 @@ MinionCustomization.component_data = {
 		ui_name = "Item",
 		ui_type = "resource_array",
 	},
-	attachment_material_override_1 = {
-		category = "Attachments",
-		size = 1,
-		ui_name = "Material Override 1 for Item",
-		ui_type = "text_box_array",
-		validator = "contentpathsallowed",
-	},
-	attachment_material_override_2 = {
-		category = "Attachments",
-		size = 1,
-		ui_name = "Material Override 2 for Item",
-		ui_type = "text_box_array",
-		validator = "contentpathsallowed",
-	},
-	attachment_material_override_3 = {
-		category = "Attachments",
-		size = 1,
-		ui_name = "Material Override 3 for Item",
-		ui_type = "text_box_array",
-		validator = "contentpathsallowed",
-	},
-	global_material_override = {
-		category = "Attachments",
-		size = 1,
-		ui_name = "Global Material Override",
-		ui_type = "text_box_array",
-		validator = "contentpathsallowed",
-	},
 	attachment_material_override_items = {
-		category = "Attachment Item Material Overrides",
+		category = "Attachments",
 		ui_name = "Item Material Overrides",
 		ui_type = "struct_array",
 		definition = {
@@ -294,7 +257,7 @@ MinionCustomization.component_data = {
 		},
 	},
 	global_material_override_items = {
-		category = "Attachment Item Material Overrides",
+		category = "Attachments",
 		filter = "item",
 		size = 1,
 		ui_name = "Global Material Override Items",

@@ -47,6 +47,25 @@ GameplayInitStepNavigation._init_navigation = function (self, world, nav_world, 
 	local mission_template = MissionTemplates[mission_name]
 	local path_type = mission_template.path_type or "linear"
 	local main_path_resource_name = level_name .. "_main_path"
+	local mechanism_manager = Managers.mechanism
+	local mechanism_name = mechanism_manager:mechanism_name()
+
+	if mechanism_name == "expedition" then
+		local mechanism = mechanism_manager:current_mechanism()
+		local current_location_index = mechanism:current_location_index()
+		local levels_spawner = mechanism:levels_spawner()
+		local expedition = levels_spawner:expedition()
+		local segment = expedition[current_location_index]
+		local levels_data = segment.levels_data
+
+		for _, level_data in ipairs(levels_data) do
+			if level_data.is_location then
+				main_path_resource_name = level_data.level_name .. "_main_path"
+
+				break
+			end
+		end
+	end
 
 	Managers.state.main_path = MainPathManager:new(world, nav_world, level_seed, main_path_resource_name, path_type, num_sides, is_server, use_nav_point_time_slice)
 end

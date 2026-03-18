@@ -368,7 +368,7 @@ local StateGameplayTestify = {
 			base_stats = {},
 		}
 
-		weapon_system:debug_set_weapon_override(player, selected_overrides, slot_name)
+		weapon_system:debug_set_weapon_overrides(player, selected_overrides, slot_name)
 	end,
 	set_alternate_fire = function (_, _, params)
 		local unit = params.unit

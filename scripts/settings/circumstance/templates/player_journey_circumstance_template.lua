@@ -3,9 +3,16 @@
 local circumstance_templates = {}
 local MissionOverrides = require("scripts/settings/circumstance/mission_overrides")
 local base_mission_overrides = MissionOverrides.merge("stats_story", "stats_default")
+local pj_01_minion_health_modifier = {
+	-0.3,
+	-0.3,
+	-0.3,
+	-0.3,
+	-0.3,
+	-0.3,
+}
 
 circumstance_templates.player_journey_01 = {
-	minion_health_modifier = -0.3,
 	theme_tag = "default",
 	wwise_state = "None",
 	mission_overrides = base_mission_overrides,
@@ -14,15 +21,26 @@ circumstance_templates.player_journey_01 = {
 		"mutator_no_monsters",
 		"mutator_no_witches",
 		"mutator_only_traitor_guard_faction",
+		"mutator_depleted_captain_shields",
 	},
+	minion_health_modifier = pj_01_minion_health_modifier,
 	ui = {
 		description = "loc_circumstance_player_journey_01_description",
 		display_name = "loc_circumstance_player_journey_01_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
 	},
 }
+
+local pj_02_minion_health_modifier = {
+	-0.2,
+	-0.2,
+	-0.2,
+	-0.2,
+	-0.2,
+	-0.2,
+}
+
 circumstance_templates.player_journey_02 = {
-	minion_health_modifier = -0.2,
 	theme_tag = "default",
 	wwise_state = "None",
 	mission_overrides = base_mission_overrides,
@@ -32,14 +50,24 @@ circumstance_templates.player_journey_02 = {
 		"mutator_no_witches",
 		"mutator_only_traitor_guard_faction",
 	},
+	minion_health_modifier = pj_02_minion_health_modifier,
 	ui = {
 		description = "loc_circumstance_player_journey_02_description",
 		display_name = "loc_circumstance_player_journey_02_title",
 		icon = "content/ui/materials/icons/circumstances/live_event_01",
 	},
 }
+
+local pj_03_minion_health_modifier = {
+	-0.1,
+	-0.1,
+	-0.1,
+	-0.1,
+	-0.1,
+	-0.1,
+}
+
 circumstance_templates.player_journey_03 = {
-	minion_health_modifier = -0.1,
 	theme_tag = "default",
 	wwise_state = "None",
 	mission_overrides = base_mission_overrides,
@@ -49,6 +77,7 @@ circumstance_templates.player_journey_03 = {
 		"mutator_no_witches",
 		"mutator_only_traitor_guard_faction",
 	},
+	minion_health_modifier = pj_03_minion_health_modifier,
 	ui = {
 		description = "loc_circumstance_player_journey_03_description",
 		display_name = "loc_circumstance_player_journey_03_title",

@@ -3,7 +3,6 @@
 local BreedShootTemplates = require("scripts/settings/breed/breed_shoot_templates")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local UtilityConsiderations = require("scripts/extension_systems/behavior/utility_considerations")
@@ -14,6 +13,16 @@ local action_data = {
 	name = "renegade_gunner",
 	idle = {
 		anim_events = "idle",
+	},
+	weapon_malfunction_loop = {
+		rotate_towards_target = false,
+		anim_events = {
+			"to_combat",
+			"out_of_aim",
+		},
+		end_anim_events = {
+			"idle",
+		},
 	},
 	patrol = {
 		anim_events = {
@@ -410,7 +419,106 @@ local action_data = {
 			move_start_right = 0.26666666666666666,
 		},
 	},
+	escape_to_combat_vector_weapon_malfunction = {
+		degree_per_direction = 10,
+		idle_anim_events = "idle",
+		max_distance_to_target = 40,
+		min_distance_to_target = 30,
+		move_anim_events = "move_fwd",
+		move_to_cooldown = 0.25,
+		move_to_fail_cooldown = 1,
+		randomized_direction_degree_range = 120,
+		speed = 4.2,
+		utility_weight = 1,
+		considerations = UtilityConsiderations.escape_to_combat_vector_far,
+		start_move_anim_events = {
+			bwd = "move_start_bwd",
+			fwd = "move_start_fwd",
+			left = "move_start_left",
+			right = "move_start_right",
+		},
+		start_move_anim_data = {
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
+			move_start_bwd = {
+				sign = -1,
+				rad = math.pi,
+			},
+			move_start_left = {
+				sign = 1,
+				rad = math.pi / 2,
+			},
+			move_start_right = {
+				sign = -1,
+				rad = math.pi / 2,
+			},
+		},
+		start_move_rotation_timings = {
+			move_start_bwd = 0,
+			move_start_fwd = 0,
+			move_start_left = 0,
+			move_start_right = 0,
+		},
+		start_rotation_durations = {
+			move_start_bwd = 0.26666666666666666,
+			move_start_fwd = 0.26666666666666666,
+			move_start_left = 0.26666666666666666,
+			move_start_right = 0.26666666666666666,
+		},
+	},
 	move_to_cover = {
+		anim_driven_min_distance = 3,
+		move_type_switch_stickiness = 2,
+		sprint_anim_event = "assault_fwd",
+		idle_anim_events = {
+			"idle",
+			"idle_2",
+			"idle_3",
+		},
+		start_move_anim_events = {
+			bwd = "move_start_bwd",
+			fwd = "move_start_fwd",
+			left = "move_start_left",
+			right = "move_start_right",
+		},
+		start_move_anim_data = {
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
+			move_start_bwd = {
+				sign = -1,
+				rad = math.pi,
+			},
+			move_start_left = {
+				sign = 1,
+				rad = math.pi / 2,
+			},
+			move_start_right = {
+				sign = -1,
+				rad = math.pi / 2,
+			},
+		},
+		start_move_rotation_timings = {
+			move_start_bwd = 0,
+			move_start_fwd = 0,
+			move_start_left = 0,
+			move_start_right = 0,
+		},
+		start_rotation_durations = {
+			move_start_bwd = 0.26666666666666666,
+			move_start_fwd = 0.26666666666666666,
+			move_start_left = 0.26666666666666666,
+			move_start_right = 0.26666666666666666,
+		},
+		speeds = {
+			jogging = 4.2,
+			sprinting = 5.6,
+		},
+	},
+	move_to_cover_weapon_malfunction = {
 		anim_driven_min_distance = 3,
 		move_type_switch_stickiness = 2,
 		sprint_anim_event = "assault_fwd",
@@ -550,6 +658,58 @@ local action_data = {
 		},
 	},
 	in_cover = {
+		aim_anim_event = "aim",
+		aim_duration = 1,
+		attack_intensity_type = "elite_ranged",
+		clear_shot_line_of_sight_id = "gun",
+		enter_cover_speed = 2,
+		exit_anim_event = "exit_cover",
+		fx_source_name = "muzzle",
+		inventory_slot = "slot_ranged_weapon",
+		peek_duration = 1.1666666666666667,
+		suppressed_anim = "suppressed_loop",
+		suppressive_fire = true,
+		suppressive_fire_spread_multiplier = 4,
+		enter_cover_anim_states = {
+			high = "to_high_cover",
+			low = "to_low_cover",
+		},
+		enter_cover_durations = {
+			to_high_cover = 1.1111111111111112,
+			to_low_cover = 1.25,
+		},
+		peek_anim_events = {
+			left = "peek_left",
+			right = "peek_right",
+			up = "peek_up",
+		},
+		start_aiming_at_target_timings = {
+			aim = 0.5,
+		},
+		num_shots = shooting_difficulty_settings.num_shots_cover,
+		time_per_shot = shooting_difficulty_settings.time_per_shot,
+		attack_intensities = {
+			elite_ranged = 10,
+			ranged = 2,
+		},
+		shoot_template = BreedShootTemplates.renegade_gunner_aimed,
+		stagger_type_reduction = {
+			killshot = 60,
+			ranged = 60,
+		},
+		clear_shot_offset_from_peeking = {
+			high = {
+				left = Vector3Box(-0.496811, -0.555117, 1.45703),
+				right = Vector3Box(0.710413, -0.420349, 1.45625),
+			},
+			low = {
+				left = Vector3Box(-0.765147, -0.43428, 0.888766),
+				right = Vector3Box(0.716341, -0.391699, 0.919069),
+				up = Vector3Box(0.00867844, -0.426697, 1.32044),
+			},
+		},
+	},
+	in_cover_weapon_malfunction = {
 		aim_anim_event = "aim",
 		aim_duration = 1,
 		attack_intensity_type = "elite_ranged",
@@ -963,13 +1123,28 @@ local action_data = {
 	use_stim = {
 		anim_event = "use_syringe",
 		duration = 1.6666666666666667,
+		effect_template_name = "minion_stim_effect",
 		exit_state = "to_ranged",
-		effect_template = EffectTemplates.minion_stim_effect,
 		stim_buffs = {
 			"mutator_stimmed_minion_red",
 			"mutator_stimmed_minion_yellow",
 			"mutator_stimmed_minion_green",
 			"mutator_stimmed_minion_blue",
+		},
+	},
+	vortex_grabbed = {
+		ignore_rotate_towards_target = false,
+		anim_events = {
+			loop = {
+				"vortex_loop",
+			},
+			landing = {
+				"vortex_landing",
+			},
+		},
+		anim_durations = {
+			vortex_landing = 5.666666666666667,
+			vortex_loop = 0.3333333333333333,
 		},
 	},
 }

@@ -24,14 +24,33 @@ local VIEW_SETTINGS = {
 				return false
 			end
 
-			local host_type = Managers.multiplayer_session:host_type()
+			local check_host_type = true
 
-			if host_type ~= HOST_TYPES.mission_server then
+			if check_host_type then
+				local host_type = Managers.multiplayer_session:host_type()
+
+				if host_type ~= HOST_TYPES.mission_server then
+					return false
+				end
+			end
+
+			local mechanism_state = Managers.mechanism:mechanism_state()
+
+			if mechanism_state == "adventure_selected" then
 				return false
 			end
 
-			if Managers.mechanism:mechanism_state() == "adventure_selected" then
+			if mechanism_state == "expedition_selected" then
 				return false
+			end
+
+			if mechanism_state == "adventure" or mechanism_state == "expedition" then
+				local unit_spawner_manager = Managers.state.unit_spawner
+				local fully_hot_join_synced = unit_spawner_manager and unit_spawner_manager:fully_hot_join_synced()
+
+				if not fully_hot_join_synced then
+					return true, DELAYED_LOADING_ICON
+				end
 			end
 
 			local mechanism_data = Managers.mechanism:mechanism_data()
@@ -55,19 +74,25 @@ local VIEW_SETTINGS = {
 				return false
 			end
 
-			if Managers.mechanism:mechanism_state() == "adventure_selected" then
+			local mechanism_state = Managers.mechanism:mechanism_state()
+
+			if mechanism_state == "adventure_selected" then
 				return true, LOADING_ICON
 			end
 
-			if Managers.mechanism:mechanism_state() == "client_wait_for_server" then
+			if mechanism_state == "expedition_selected" then
+				return false
+			end
+
+			if mechanism_state == "client_wait_for_server" then
 				return true, LOADING_ICON
 			end
 
-			if Managers.mechanism:mechanism_state() == "client_exit_gameplay" then
+			if mechanism_state == "client_exit_gameplay" then
 				return true, LOADING_ICON
 			end
 
-			if Managers.mechanism:mechanism_state() == false then
+			if mechanism_state == false then
 				local host_type = Managers.connection:host_type()
 
 				if host_type == HOST_TYPES.mission_server then

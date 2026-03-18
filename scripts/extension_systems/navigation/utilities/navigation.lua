@@ -93,7 +93,7 @@ Navigation.add_nav_data = function (nav_world, nav_data, level_name)
 	for i = 1, num_nav_data do
 		local nav_data_name, _ = LevelResource.navdata_resource(level_name, i)
 
-		if Application.can_get_resource_id("navdata", nav_data_name) then
+		if Application.can_get_resource_id("NavData", nav_data_name) then
 			nav_data[#nav_data + 1] = GwNavWorld.add_navdata(nav_world, nav_data_name)
 			nav_data_found = true
 		end

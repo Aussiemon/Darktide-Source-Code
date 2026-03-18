@@ -2,13 +2,27 @@
 
 local Breed = require("scripts/utilities/breed")
 local Breeds = require("scripts/settings/breed/breeds")
-local minion_list = {}
-local minion_list_by_name = {}
+local minion_breeds_array = {}
+local minion_breeds_by_name = {}
+local minion_breed_names_array = {}
 
 for name, breed in pairs(Breeds) do
 	if Breed.is_minion(breed) then
-		minion_list[#minion_list + 1] = breed
-		minion_list_by_name[name] = breed
+		minion_breeds_array[#minion_breeds_array + 1] = breed
+		minion_breeds_by_name[name] = breed
+		minion_breed_names_array[#minion_breed_names_array + 1] = name
+	end
+end
+
+local player_breeds_array = {}
+local player_breeds_by_name = {}
+local player_breed_names_array = {}
+
+for name, breed in pairs(Breeds) do
+	if Breed.is_player(breed) then
+		player_breeds_array[#player_breeds_array + 1] = breed
+		player_breeds_by_name[name] = breed
+		player_breed_names_array[#player_breed_names_array + 1] = name
 	end
 end
 
@@ -18,9 +32,9 @@ BreedQueries.match_minions_by_tags = function (template_breed_tags, optional_exc
 	local best_breeds = {}
 	local num_template_breed_tags = #template_breed_tags
 
-	for i = 1, #minion_list do
+	for ii = 1, #minion_breeds_array do
 		repeat
-			local breed = minion_list[i]
+			local breed = minion_breeds_array[ii]
 			local sub_faction = breed.sub_faction_name
 
 			if not breed.can_be_used_for_all_factions and sub_faction ~= wanted_sub_faction then
@@ -47,12 +61,12 @@ BreedQueries.match_minions_by_tags = function (template_breed_tags, optional_exc
 				end
 			end
 
-			for j = 1, num_template_breed_tags do
-				local tags = template_breed_tags[j]
+			for jj = 1, num_template_breed_tags do
+				local tags = template_breed_tags[jj]
 				local has_all_tags = true
 
-				for k = 1, #tags do
-					local tag = tags[k]
+				for kk = 1, #tags do
+					local tag = tags[kk]
 
 					if not minion_breed_tags[tag] then
 						has_all_tags = false
@@ -76,8 +90,8 @@ local affordable_breeds = {}
 BreedQueries.pick_random_minion_by_points = function (minion_breeds, points)
 	table.clear_array(affordable_breeds, #affordable_breeds)
 
-	for i = 1, #minion_breeds do
-		local breed = minion_breeds[i]
+	for ii = 1, #minion_breeds do
+		local breed = minion_breeds[ii]
 		local cost = breed.point_cost
 
 		if cost and cost <= points then
@@ -122,8 +136,8 @@ BreedQueries.add_spawns_single_breed = function (spawners, breed_name, breed_amo
 		spawned_minion_data.spawner_queue_id = spawner_queue_id
 	end
 
-	for i = 1, #breed_lists do
-		local spawner = spawners[i]
+	for ii = 1, #breed_lists do
+		local spawner = spawners[ii]
 		local param_table = spawner:request_param_table()
 
 		param_table.target_side_id = target_side_id
@@ -134,7 +148,7 @@ BreedQueries.add_spawns_single_breed = function (spawners, breed_name, breed_amo
 		param_table.aggro_state = optional_aggro_state
 		param_table.max_health_modifier = optional_max_health_modifier
 
-		local queue_id = spawner:add_spawns(breed_lists[i], spawn_side_id, param_table)
+		local queue_id = spawner:add_spawns(breed_lists[ii], spawn_side_id, param_table)
 		local queue_ids = spawner_queue_id[spawner]
 
 		if queue_ids then
@@ -147,8 +161,28 @@ BreedQueries.add_spawns_single_breed = function (spawners, breed_name, breed_amo
 	end
 end
 
-BreedQueries.minion_breeds = function ()
-	return minion_list_by_name
+BreedQueries.minion_breeds_by_name = function ()
+	return minion_breeds_by_name
+end
+
+BreedQueries.minion_breeds_array = function ()
+	return minion_breeds_array
+end
+
+BreedQueries.minion_breed_names_array = function ()
+	return minion_breed_names_array
+end
+
+BreedQueries.player_breeds_by_name = function ()
+	return player_breeds_by_name
+end
+
+BreedQueries.player_breeds_array = function ()
+	return player_breeds_array
+end
+
+BreedQueries.player_breed_names_array = function ()
+	return player_breed_names_array
 end
 
 return BreedQueries

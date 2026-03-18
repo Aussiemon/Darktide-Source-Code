@@ -81,6 +81,7 @@ NavGraphExtension.destroy = function (self)
 		local nav_graph = nav_graphs[i]
 
 		GwNavGraph.destroy(nav_graph)
+		self._nav_graph_system:add_despawning_nav_graph(nav_graph)
 	end
 end
 

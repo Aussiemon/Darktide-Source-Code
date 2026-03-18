@@ -68,6 +68,12 @@ DummySessionReport.fetch_session_report = function (account_id)
 								none = 33,
 							},
 						},
+						{
+							typePath = "team_expedition_loot_retrieved",
+							sessionValue = {
+								none = 1337,
+							},
+						},
 					},
 					accountId = account_id,
 					rewardCards = {
@@ -238,6 +244,126 @@ DummySessionReport.fetch_session_report = function (account_id)
 									source = "weaponDrop",
 									overrides = {
 										rarity = 5,
+									},
+								},
+							},
+						},
+						{
+							kind = "expeditionStats",
+							rewards = {
+								{
+									lootRetrieved = 30,
+									rewardType = "expeditionStats",
+									source = "skill",
+									statChanges = {
+										{
+											scope = "all_time",
+											path = {
+												"expedition",
+											},
+											stats = {
+												count = {
+													fromValue = 1,
+													toValue = 2,
+												},
+												count_malice = {
+													fromValue = 1,
+													toValue = 2,
+												},
+												total_loot = {
+													fromValue = 30,
+													toValue = 40,
+												},
+												total_loot_malice = {
+													fromValue = 30,
+													toValue = 40,
+												},
+											},
+										},
+										{
+											scope = "campaign",
+											path = {
+												"expedition",
+												"campaign",
+												"CAMP001",
+											},
+											stats = {
+												count = {
+													fromValue = 1,
+													toValue = 2,
+												},
+												count_malice = {
+													fromValue = 1,
+													toValue = 2,
+												},
+												total_loot = {
+													fromValue = 30,
+													toValue = 40,
+												},
+												total_loot_malice = {
+													fromValue = 30,
+													toValue = 40,
+												},
+											},
+										},
+										{
+											scope = "rotation",
+											path = {
+												"expedition",
+												"campaign",
+												"CAMP001",
+												"rotation",
+												"ROT01",
+											},
+											stats = {
+												count = {
+													fromValue = 1,
+													toValue = 2,
+												},
+												count_malice = {
+													fromValue = 1,
+													toValue = 2,
+												},
+												total_loot = {
+													fromValue = 30,
+													toValue = 40,
+												},
+												total_loot_malice = {
+													fromValue = 30,
+													toValue = 40,
+												},
+											},
+										},
+										{
+											scope = "node",
+											path = {
+												"expedition",
+												"campaign",
+												"CAMP001",
+												"rotation",
+												"ROT01",
+												"node",
+												"node_704adcaa-a450-46d7-829d-386d265cca21",
+											},
+											stats = {
+												count = {
+													fromValue = 1,
+													toValue = 2,
+												},
+												count_malice = {
+													fromValue = 1,
+													toValue = 2,
+												},
+												total_loot = {
+													fromValue = 30,
+													toValue = 40,
+												},
+												total_loot_malice = {
+													fromValue = 30,
+													toValue = 40,
+												},
+											},
+										},
 									},
 								},
 							},

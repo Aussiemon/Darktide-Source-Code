@@ -58,7 +58,9 @@ party_panel_style.background = {
 	},
 }
 party_panel_style.header = table.clone(UIFontSettings.header_3)
-party_panel_header_style = party_panel_style.header
+
+local party_panel_header_style = party_panel_style.header
+
 party_panel_header_style.offset = {
 	0,
 	-40,

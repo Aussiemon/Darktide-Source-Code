@@ -103,7 +103,7 @@ BotPerceptionExtension.pre_update = function (self, unit, dt, t)
 	local side_system = self._side_system
 	local side, search_position = side_system.side_by_unit[unit], POSITION_LOOKUP[unit]
 	local enemy_side_names = side:relation_side_names("enemy")
-	local ai_target_units = side.ai_target_units
+	local ai_ground_target_units = side.ai_ground_target_units
 	local broadphase_system, perception_system, slot_system = self._broadphase_system, self._perception_system, self._slot_system
 	local broadphase = broadphase_system.broadphase
 	local num_hits = broadphase.query(broadphase, search_position, FORCED_PRIO_UPDATE_RANGE, broadphase_results, enemy_side_names, MINION_BREED_TYPE)
@@ -112,7 +112,7 @@ BotPerceptionExtension.pre_update = function (self, unit, dt, t)
 		repeat
 			local enemy_unit = broadphase_results[i]
 
-			if not ai_target_units[enemy_unit] then
+			if not ai_ground_target_units[enemy_unit] then
 				break
 			end
 

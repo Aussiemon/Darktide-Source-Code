@@ -3,7 +3,6 @@
 local BreedShootTemplates = require("scripts/settings/breed/breed_shoot_templates")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local GroundImpactFxTemplates = require("scripts/settings/fx/ground_impact_fx_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
@@ -292,6 +291,7 @@ local action_data = {
 	},
 	plasma_pistol_shoot = {
 		attack_intensity_type = "ranged",
+		before_shoot_effect_template_name = "renegade_captain_plasma_pistol_charge_up",
 		before_shoot_effect_template_timing = 1.25,
 		can_strafe_shoot = true,
 		degree_per_direction = 10,
@@ -334,10 +334,10 @@ local action_data = {
 			left = "move_left_walk_aim",
 			right = "move_right_walk_aim",
 		},
-		before_shoot_effect_template = EffectTemplates.renegade_captain_plasma_pistol_charge_up,
 	},
 	plasma_pistol_shoot_volley = {
 		attack_intensity_type = "ranged",
+		before_shoot_effect_template_name = "renegade_captain_plasma_pistol_charge_up",
 		before_shoot_effect_template_timing = 1.25,
 		can_strafe_shoot = true,
 		degree_per_direction = 10,
@@ -380,7 +380,6 @@ local action_data = {
 			left = "move_left_walk_aim",
 			right = "move_right_walk_aim",
 		},
-		before_shoot_effect_template = EffectTemplates.renegade_captain_plasma_pistol_charge_up,
 		multi_target_config = {
 			max_switches = 8,
 			rotation_speed = 4.5,
@@ -756,6 +755,7 @@ local action_data = {
 		aoe_threat_timing = 0.3,
 		attack_type = "oobb",
 		collision_filter = "filter_minion_melee",
+		effect_template_name = "renegade_captain_power_sword_sweep",
 		height = 2.75,
 		ignore_blocked = true,
 		ignore_dodge = true,
@@ -842,7 +842,6 @@ local action_data = {
 				max_angle = math.degrees_to_radians(180),
 			},
 		},
-		effect_template = EffectTemplates.renegade_captain_power_sword_sweep,
 		effect_template_start_timings = {
 			attack_swing_combo_01 = 0.16666666666666666,
 			attack_swing_combo_02 = 0.16666666666666666,
@@ -856,6 +855,7 @@ local action_data = {
 		assault_vo_interval_t = 1,
 		attack_type = "sweep",
 		collision_filter = "filter_minion_melee_friendly_fire",
+		effect_template_name = "renegade_captain_power_sword_sweep",
 		hit_zone_name = "center_mass",
 		ignore_blocked = true,
 		move_speed_variable_lerp_speed = 4,
@@ -889,7 +889,6 @@ local action_data = {
 			ranged = 100,
 		},
 		damage_type = damage_types.minion_powered_sharp,
-		effect_template = EffectTemplates.renegade_captain_power_sword_sweep,
 		effect_template_start_timings = {
 			attack_heavy_swing = 0.6666666666666666,
 		},
@@ -958,6 +957,7 @@ local action_data = {
 		collision_filter = "filter_minion_melee",
 		dodge_range = 2.75,
 		dodge_width = 1.1,
+		effect_template_name = "renegade_captain_powermaul_ground_slam",
 		height = 3,
 		power_level_type = "melee_two_hand",
 		range = 4,
@@ -989,7 +989,6 @@ local action_data = {
 		damage_profile = DamageProfileTemplates.renegade_captain_powermaul_melee_cleave,
 		damage_type = damage_types.minion_melee_blunt_elite,
 		ground_impact_fx_template = GroundImpactFxTemplates.renegade_captain_powermaul_melee_cleave,
-		effect_template = EffectTemplates.renegade_captain_powermaul_ground_slam,
 		effect_template_start_timings = {
 			attack_01 = 0,
 			attack_02 = 0,
@@ -1001,6 +1000,7 @@ local action_data = {
 		collision_filter = "filter_minion_melee_friendly_fire",
 		dodge_range = 2.75,
 		dodge_width = 1.1,
+		effect_template_name = "renegade_captain_powermaul_ground_slam",
 		height = 3,
 		move_speed = 4,
 		move_speed_variable_lerp_speed = 4,
@@ -1060,13 +1060,13 @@ local action_data = {
 		damage_profile = DamageProfileTemplates.renegade_captain_powermaul_melee_cleave,
 		damage_type = damage_types.minion_melee_blunt_elite,
 		ground_impact_fx_template = GroundImpactFxTemplates.renegade_captain_powermaul_melee_cleave,
-		effect_template = EffectTemplates.renegade_captain_powermaul_ground_slam,
 		effect_template_start_timings = {
 			attack_move_01 = 0,
 		},
 	},
 	powermaul_melee_attack = {
 		aoe_threat_timing = 0.3,
+		effect_template_name = "renegade_captain_powermaul_ground_slam",
 		ignore_blocked = true,
 		power_level_type = "melee_two_hand",
 		utility_weight = 1,
@@ -1089,7 +1089,6 @@ local action_data = {
 		},
 		damage_profile = DamageProfileTemplates.renegade_captain_melee_default,
 		damage_type = damage_types.minion_melee_blunt_elite,
-		effect_template = EffectTemplates.renegade_captain_powermaul_ground_slam,
 		effect_template_start_timings = {
 			cultist_captain_heavy = 0,
 		},
@@ -1097,6 +1096,7 @@ local action_data = {
 	powermaul_moving_melee_attack = {
 		aoe_threat_timing = 0.3,
 		dodge_weapon_reach = 3,
+		effect_template_name = "renegade_captain_powermaul_ground_slam",
 		ignore_blocked = true,
 		move_speed = 4,
 		move_speed_variable_lerp_speed = 4,
@@ -1154,7 +1154,6 @@ local action_data = {
 				},
 			},
 		},
-		effect_template = EffectTemplates.renegade_captain_powermaul_ground_slam,
 		effect_template_start_timings = {
 			cultist_heavy_moving = 0,
 		},
@@ -1164,6 +1163,7 @@ local action_data = {
 		assault_vo_interval_t = 1,
 		attack_type = "oobb",
 		collision_filter = "filter_minion_melee",
+		effect_template_name = "renegade_captain_powermaul_ground_slam",
 		height = 3,
 		ignore_blocked = true,
 		power_level_type = "melee_two_hand",
@@ -1190,7 +1190,6 @@ local action_data = {
 		},
 		damage_profile = DamageProfileTemplates.renegade_captain_powermaul_ground_slam,
 		damage_type = damage_types.minion_powered_blunt,
-		effect_template = EffectTemplates.renegade_captain_powermaul_ground_slam,
 		effect_template_start_timings = {
 			cultist_heavy_slam = 0,
 		},
@@ -1226,6 +1225,7 @@ local action_data = {
 		damage_type = damage_types.minion_melee_blunt_elite,
 	},
 	void_shield_explosion = {
+		effect_template_name = "void_shield_explosion",
 		hit_effect = "content/fx/particles/screenspace/screen_disturbance_scanlines_pulse",
 		hit_zone_name = "center_mass",
 		power_level = 100,
@@ -1244,9 +1244,9 @@ local action_data = {
 		},
 		damage_profile = DamageProfileTemplates.renegade_captain_void_shield_explosion,
 		damage_type = damage_types.minion_powered_sharp,
-		effect_template = EffectTemplates.void_shield_explosion,
 	},
 	throw_frag_grenade = {
+		effect_template_name = "renegade_captain_grenade",
 		utility_weight = 20,
 		considerations = UtilityConsiderations.renegade_captain_throw_frag_grenade,
 		aim_anim_events = {
@@ -1258,7 +1258,6 @@ local action_data = {
 		action_durations = {
 			throw_grenade = 2.5,
 		},
-		effect_template = EffectTemplates.renegade_captain_grenade,
 		effect_template_timings = {
 			throw_grenade = 0.4375,
 		},
@@ -1270,6 +1269,7 @@ local action_data = {
 		},
 	},
 	throw_fire_grenade = {
+		effect_template_name = "renegade_captain_grenade",
 		utility_weight = 20,
 		considerations = UtilityConsiderations.renegade_captain_throw_fire_grenade,
 		aim_anim_events = {
@@ -1281,7 +1281,6 @@ local action_data = {
 		action_durations = {
 			throw_grenade = 2.5,
 		},
-		effect_template = EffectTemplates.renegade_captain_grenade,
 		effect_template_timings = {
 			throw_grenade = 0.4375,
 		},
@@ -1304,6 +1303,7 @@ local action_data = {
 		drag_anim_event = "drag_player",
 		drag_anim_exit_delay = 2.3333333333333335,
 		drag_wwise_event = "wwise/events/weapon/play_enemy_netgunner_net_pull",
+		effect_template_name = "renegade_netgunner_net",
 		fx_source_name = "muzzle",
 		inventory_slot = "slot_netgun",
 		max_net_distance = 14,
@@ -1316,7 +1316,6 @@ local action_data = {
 		vo_event = "throwing_net",
 		drag_anim_delay = PlayerCharacterConstants.netted_fp_anim_duration,
 		shoot_template = BreedShootTemplates.renegade_netgunner_default,
-		effect_template = EffectTemplates.renegade_netgunner_net,
 		num_shots = shooting_difficulty_settings_netgun.num_shots,
 	},
 	charge = {
@@ -1844,8 +1843,8 @@ local action_data = {
 	use_stim = {
 		anim_event = "use_syringe",
 		duration = 1.6666666666666667,
+		effect_template_name = "minion_stim_effect",
 		exit_state = "to_melee",
-		effect_template = EffectTemplates.minion_stim_effect,
 		stim_buffs = {
 			"mutator_stimmed_minion_red",
 			"mutator_stimmed_minion_yellow",

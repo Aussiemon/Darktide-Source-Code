@@ -92,6 +92,7 @@ MultiplayerSession.became_host = function (self, host_type, lobby_id)
 			local slot = player_manager:claim_slot()
 
 			player:set_slot(slot)
+			player:set_telemetry_instance(Application.guid())
 		end
 	end
 end
@@ -138,6 +139,7 @@ MultiplayerSession.stopped_being_host = function (self, is_error, source, reason
 
 			player_manager:release_slot(slot)
 			player:set_slot(0)
+			player:set_telemetry_instance(nil)
 		end
 	end
 end
@@ -150,9 +152,10 @@ MultiplayerSession.client_joined = function (self, channel_id, peer_id, player_s
 	local profile_chunks_array = player_sync_data.profile_chunks_array
 	local player_session_id_array = player_sync_data.player_session_id_array
 	local slot_array = player_sync_data.slot_array
+	local player_instance_id_array = player_sync_data.player_instance_id_array
 	local last_mission_id = player_sync_data.last_mission_id
 
-	Managers.player:create_players_from_sync_data(RemotePlayer, channel_id, peer_id, is_server, local_player_id_array, is_human_controlled_array, account_id_array, profile_chunks_array, player_session_id_array, slot_array, last_mission_id)
+	Managers.player:create_players_from_sync_data(RemotePlayer, channel_id, peer_id, is_server, local_player_id_array, is_human_controlled_array, account_id_array, profile_chunks_array, player_session_id_array, slot_array, player_instance_id_array, last_mission_id)
 	Managers.loading:add_client(channel_id)
 
 	local package_synchronizer_host = Managers.package_synchronization:synchronizer_host()
@@ -356,8 +359,9 @@ MultiplayerSession.other_client_joined = function (self, peer_id, player_sync_da
 	local profile_chunks_array = player_sync_data.profile_chunks_array
 	local player_session_id_array = player_sync_data.player_session_id_array
 	local slot_array = player_sync_data.slot_array
+	local player_instance_id_array = player_sync_data.player_instance_id_array
 
-	Managers.player:create_players_from_sync_data(RemotePlayer, channel_id, peer_id, is_server, local_player_id_array, is_human_controlled_array, account_id_array, profile_chunks_array, player_session_id_array, slot_array)
+	Managers.player:create_players_from_sync_data(RemotePlayer, channel_id, peer_id, is_server, local_player_id_array, is_human_controlled_array, account_id_array, profile_chunks_array, player_session_id_array, slot_array, player_instance_id_array)
 
 	local package_synchronizer_client = Managers.package_synchronization:synchronizer_client()
 

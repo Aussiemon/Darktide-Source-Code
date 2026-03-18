@@ -1,14 +1,21 @@
 ﻿-- chunkname: @scripts/settings/buff/liquid_area_buff_templates.lua
 
+local AilmentSettings = require("scripts/settings/ailments/ailment_settings")
 local Attack = require("scripts/utilities/attack/attack")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BurningSettings = require("scripts/settings/burning/burning_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local FixedFrame = require("scripts/utilities/fixed_frame")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
+local MinionState = require("scripts/utilities/minion_state")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local Vo = require("scripts/utilities/vo")
+local ailment_effects = AilmentSettings.effects
+local attack_types = AttackSettings.attack_types
 local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local buff_targets = BuffSettings.targets
@@ -149,6 +156,135 @@ templates.flame_grenade_liquid_area = {
 		0.5,
 		1.25,
 	},
+	interval_func = _scaled_damage_interval_function,
+	minion_effects = minion_burning_buff_effects.fire,
+}
+templates.fire_trap_liquid_area = {
+	class_name = "interval_buff",
+	max_stacks = 1,
+	power_level_random = true,
+	predicted = false,
+	keywords = {
+		buff_keywords.burning,
+	},
+	power_level = {
+		default = {
+			500,
+			625,
+			750,
+			875,
+		},
+	},
+	damage_template = DamageProfileTemplates.flame_grenade_liquid_area_fire_burning,
+	damage_type = damage_types.burning,
+	interval = {
+		0.25,
+		0.625,
+	},
+	interval_func = _scaled_damage_interval_function,
+	minion_effects = minion_burning_buff_effects.fire,
+}
+templates.shock_trap_liquid_area = {
+	class_name = "interval_buff",
+	duration = nil,
+	interval_stack_removal = true,
+	max_stacks = 1,
+	max_stacks_cap = 1,
+	predicted = false,
+	refresh_duration_on_stack = false,
+	start_interval_on_apply = true,
+	start_with_frame_offset = true,
+	interval = {
+		0.3,
+		0.8,
+	},
+	keywords = {
+		buff_keywords.electrocuted,
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local unit_data = ScriptUnit.has_extension(unit, "unit_data_system")
+		local breed = unit_data and unit_data:breed()
+		local is_poxwalker_bomber = breed and breed.tags and breed.name == "chaos_poxwalker_bomber"
+
+		template_data.is_poxwalker_bomber = is_poxwalker_bomber
+		template_data.start_time = FixedFrame.get_latest_fixed_time()
+
+		local owner_unit = template_context.owner_unit
+
+		template_data.player_applying_buff = owner_unit and Managers.state.player_unit_spawn:owner(owner_unit)
+	end,
+	interval_func = function (template_data, template_context, template, dt, t)
+		local is_server = template_context.is_server
+
+		if not is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local is_staggered_poxwalker_bomber = template_data.is_poxwalker_bomber and MinionState.is_staggered(unit)
+
+		if HEALTH_ALIVE[unit] and not is_staggered_poxwalker_bomber then
+			local damage_template = DamageProfileTemplates.shock_grenade_stun_interval
+			local owner_unit = template_context.owner_unit
+			local power_level = PowerLevelSettings.default_power_level
+			local random_radians = math.random_range(0, math.pi * 2)
+			local attack_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
+
+			attack_direction = Vector3.normalize(attack_direction)
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.electrocution, "attack_type", attack_types.buff, "attacking_unit", HEALTH_ALIVE[owner_unit] and owner_unit, "attack_direction", attack_direction)
+		end
+	end,
+	minion_effects = {
+		ailment_effect = ailment_effects.electrocution,
+		node_effects = {
+			{
+				node_name = "j_spine",
+				vfx = {
+					material_emission = true,
+					orphaned_policy = "destroy",
+					particle_effect = "content/fx/particles/enemies/buff_chainlightning",
+					stop_type = "stop",
+				},
+				sfx = {
+					looping_wwise_start_event = "wwise/events/weapon/play_psyker_chain_lightning_hit",
+					looping_wwise_stop_event = "wwise/events/weapon/stop_psyker_chain_lightning_hit",
+				},
+			},
+		},
+	},
+}
+templates.promethium_liquid_area = {
+	class_name = "interval_buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
+	hud_priority = 1,
+	interval = 0.5,
+	is_negative = true,
+	max_stacks = 1,
+	max_stacks_cap = 1,
+	predicted = false,
+	keywords = {
+		buff_keywords.burning,
+	},
+	power_level = {
+		default = {
+			500,
+			600,
+			750,
+			850,
+			1000,
+		},
+		player = {
+			100,
+			200,
+			300,
+			400,
+			500,
+		},
+	},
+	damage_template = DamageProfileTemplates.burning,
+	damage_type = damage_types.burning,
 	interval_func = _scaled_damage_interval_function,
 	minion_effects = minion_burning_buff_effects.fire,
 }

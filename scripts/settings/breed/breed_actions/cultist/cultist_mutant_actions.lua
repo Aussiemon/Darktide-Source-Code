@@ -2,7 +2,6 @@
 
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local MinionPushFxTemplates = require("scripts/settings/fx/minion_push_fx_templates")
 local damage_types = DamageSettings.damage_types
 local action_data = {
@@ -29,6 +28,7 @@ local action_data = {
 		degree_per_throw_direction = 20,
 		dodge_collision_radius = 0.5,
 		dodge_rotation_speed = 0.01,
+		effect_template_name = "cultist_mutant_charge_foley",
 		grab_close_up_distance = 3,
 		max_animation_variable = 1.2,
 		max_slowdown_angle = 60,
@@ -224,7 +224,6 @@ local action_data = {
 			change_target_right = 1.3333333333333333,
 			charge_fwd = 0.3333333333333333,
 		},
-		effect_template = EffectTemplates.cultist_mutant_charge_foley,
 		start_effect_timing = {
 			change_target_bwd = 1.6666666666666667,
 			change_target_fwd = 1.3333333333333333,

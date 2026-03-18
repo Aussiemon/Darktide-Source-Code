@@ -13,13 +13,13 @@ HavocBackgroundView.init = function (self, settings, context)
 
 	self._havoc_init_promises = PromiseContainer:new()
 
-	local on_backend_init_data_fetching_complete_callback = callback(function ()
+	local function on_backend_init_data_fetching_complete_callback()
 		self._initialization_of_backend_data_completed = true
 
 		if self:is_view_requirements_complete() then
 			self:_on_view_requirements_complete()
 		end
-	end)
+	end
 
 	self:_initialize_havoc_state(on_backend_init_data_fetching_complete_callback)
 
@@ -55,7 +55,7 @@ HavocBackgroundView.auto_cancel_mission = function (self)
 		},
 	}
 
-	local on_complete_callback = callback(function ()
+	local function on_complete_callback()
 		self._rewards.current.charges = self.havoc_order.charges
 		self._rewards.current.rank = self.havoc_order.data and self.havoc_order.data.rank
 
@@ -71,7 +71,7 @@ HavocBackgroundView.auto_cancel_mission = function (self)
 			Log.error("HavocBackgroundView", "HavocBackgroundView:auto_cancel_mission() called when HavocBackgroundView:_current_state is not \"key\"")
 			ferror("HavocBackgroundView:auto_cancel_mission() called when HavocBackgroundView:_current_state is not \"key\"")
 		end
-	end)
+	end
 
 	self:_close_active_view()
 	self:_initialize_havoc_state(on_complete_callback)
@@ -93,7 +93,7 @@ HavocBackgroundView.revoke_mission = function (self)
 	self:_close_active_view()
 
 	local function next_function(data)
-		local on_complete_callback = callback(function ()
+		local function on_complete_callback()
 			self._rewards.current.charges = self.havoc_order.charges
 			self._rewards.current.rank = self.havoc_order.data and self.havoc_order.data.rank
 
@@ -109,7 +109,7 @@ HavocBackgroundView.revoke_mission = function (self)
 				Log.error("HavocBackgroundView", "HavocBackgroundView:revoke_mission() called when HavocBackgroundView:_current_state is not \"key\"")
 				ferror("HavocBackgroundView:revoke_mission() called when HavocBackgroundView:_current_state is not \"key\"")
 			end
-		end)
+		end
 
 		self:_initialize_havoc_state(on_complete_callback)
 	end
@@ -154,12 +154,12 @@ end
 HavocBackgroundView.event_havoc_background_on_end_time_met = function (self)
 	self._rewards = nil
 
-	local on_complete_callback = callback(function ()
+	local function on_complete_callback()
 		if self._current_state == "key" then
 			self:_close_active_view()
 			self:_setup_key_ui()
 		end
-	end)
+	end
 
 	self:_initialize_havoc_state(on_complete_callback)
 end
@@ -526,7 +526,7 @@ end
 HavocBackgroundView.reinitialize = function (self)
 	self._rewards = nil
 
-	local on_complete_callback = callback(function ()
+	local function on_complete_callback()
 		if self._rewards then
 			self:_setup_rewarding_ui()
 		elseif self._current_state == "off_cadence" then
@@ -536,7 +536,7 @@ HavocBackgroundView.reinitialize = function (self)
 		elseif self._current_state == "key" then
 			self:_setup_key_ui()
 		end
-	end)
+	end
 
 	self:_close_active_view()
 	self:_initialize_havoc_state(on_complete_callback)

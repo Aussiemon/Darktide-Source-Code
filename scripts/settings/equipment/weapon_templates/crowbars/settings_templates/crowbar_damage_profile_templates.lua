@@ -737,8 +737,8 @@ overrides.heavy_crowbar_sticky = {
 			"power_distribution",
 			"attack",
 			{
-				120,
-				240,
+				130,
+				260,
 			},
 		},
 		{

@@ -2136,30 +2136,30 @@ templates.psyker_soul_on_warpfire_kill = {
 		template_data.buff_extension = ScriptUnit.extension(unit, "buff_system")
 		template_data.psyker_increased_soul_generation = talent_extension:has_special_rule(special_rules.psyker_increased_soul_generation)
 	end,
-	proc_func = function (params, template_data, template_context)
-		local killed_unit = params.dying_unit
-		local killed_unit_buff_extension = ScriptUnit.has_extension(killed_unit, "buff_system")
-		local valid_target = killed_unit_buff_extension and (killed_unit_buff_extension:has_keyword(keywords.warpfire_burning) or killed_unit_buff_extension:had_keyword(keywords.warpfire_burning))
+	check_proc_func = function (params, template_data, template_context, t)
+		local keywords_on_death_or_nil = params.keywords_on_death_or_nil
+		local is_valid_target = keywords_on_death_or_nil and keywords_on_death_or_nil[keywords.warpfire_burning]
 
-		if not valid_target then
+		if not is_valid_target then
 			local own_unit = template_context.unit
 			local attacking_unit = params.attacking_unit
 
 			if own_unit == attacking_unit then
 				local damage_type = params.damage_type
 
-				valid_target = damage_type == damage_types.warpfire
+				is_valid_target = damage_type == damage_types.warpfire
 			end
 		end
 
-		if valid_target then
-			local buff_name = template_data.buff_name
-			local buff_extension = template_data.buff_extension
-			local t = FixedFrame.get_latest_fixed_time()
-			local num_stacks = template_data.psyker_increased_soul_generation and talent_settings_2.combat_ability_1.stacks or 1
+		return is_valid_target
+	end,
+	proc_func = function (params, template_data, template_context)
+		local buff_name = template_data.buff_name
+		local buff_extension = template_data.buff_extension
+		local t = FixedFrame.get_latest_fixed_time()
+		local num_stacks = template_data.psyker_increased_soul_generation and talent_settings_2.combat_ability_1.stacks or 1
 
-			buff_extension:add_internally_controlled_buff_with_stacks(buff_name, num_stacks, t)
-		end
+		buff_extension:add_internally_controlled_buff_with_stacks(buff_name, num_stacks, t)
 	end,
 }
 templates.psyker_increased_chain_lightning_size = {
@@ -2859,7 +2859,7 @@ templates.psyker_kills_stack_other_weapon_damage = {
 }
 templates.psyker_cycle_stacking_warp_damage = {
 	class_name = "buff",
-	duration = 8,
+	duration = 10,
 	hud_icon = "content/ui/textures/icons/buffs/hud/psyker/psyker_1_tier_2_name_2",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	hud_priority = 5,
@@ -3170,7 +3170,6 @@ templates.psyker_melee_attack_speed = {
 	predicted = false,
 	stat_buffs = {
 		[stat_buffs.melee_attack_speed] = talent_settings.melee_attack_speed.attack_speed,
-		[stat_buffs.ranged_attack_speed] = talent_settings.melee_attack_speed.attack_speed,
 	},
 }
 templates.psyker_cleave_from_peril = {
@@ -3317,27 +3316,27 @@ templates.psyker_killing_enemy_with_warpfire_boosts = {
 	start_func = function (template_data, template_context)
 		template_data.buff_name = "psyker_killing_enemy_with_warpfire_boosts_boost_buff"
 	end,
-	proc_func = function (params, template_data, template_context, t)
-		local killed_unit = params.dying_unit
-		local killed_unit_buff_extension = ScriptUnit.has_extension(killed_unit, "buff_system")
-		local valid_target = killed_unit_buff_extension and (killed_unit_buff_extension:has_keyword(keywords.warpfire_burning) or killed_unit_buff_extension:had_keyword(keywords.warpfire_burning))
+	check_proc_func = function (params, template_data, template_context, t)
+		local keywords_on_death_or_nil = params.keywords_on_death_or_nil
+		local is_valid_target = keywords_on_death_or_nil and keywords_on_death_or_nil[keywords.warpfire_burning]
 
-		if not valid_target then
+		if not is_valid_target then
 			local own_unit = template_context.unit
 			local attacking_unit = params.attacking_unit
 
 			if own_unit == attacking_unit then
 				local damage_type = params.damage_type
 
-				valid_target = damage_type == damage_types.warpfire
+				is_valid_target = damage_type == damage_types.warpfire
 			end
 		end
 
-		if valid_target then
-			local buff_name = template_data.buff_name
+		return is_valid_target
+	end,
+	proc_func = function (params, template_data, template_context, t)
+		local buff_name = template_data.buff_name
 
-			template_context.buff_extension:add_internally_controlled_buff(buff_name, t)
-		end
+		template_context.buff_extension:add_internally_controlled_buff(buff_name, t)
 	end,
 }
 templates.psyker_killing_enemy_with_warpfire_boosts_boost_buff = {
@@ -3819,6 +3818,9 @@ templates.psyker_toughness_on_melee_buff = {
 
 		Toughness.replenish_percentage(template_context.unit, toughness, false, "psyker_melee_toughness")
 	end,
+	related_talents = {
+		"psyker_toughness_on_melee",
+	},
 }
 
 return templates

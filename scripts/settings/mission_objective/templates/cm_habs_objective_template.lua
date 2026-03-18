@@ -22,7 +22,7 @@ local mission_objective_templates = {
 				description = "loc_objective_cm_habs_scan_hab_a_desc",
 				event_type = "mid_event",
 				header = "loc_objective_cm_habs_scan_hab_a_header",
-				mission_objective_type = "scanning",
+				mission_objective_type = "zone",
 				music_wwise_state = "scanning_event",
 				show_progression_popup_on_update = false,
 			},

@@ -34,6 +34,8 @@ ComponentExtension.extensions_ready = function (self, world, unit)
 			component:extensions_ready(world, unit)
 		end
 	end
+
+	Unit.flow_event(unit, "components_ready")
 end
 
 ComponentExtension.hot_join_sync = function (self, unit, client, channel)
@@ -198,7 +200,9 @@ ComponentExtension._parse_components = function (self, unit)
 	end
 end
 
-ComponentExtension.add_component = function (self, component_name, unit, starts_enabled)
+local EMPTY_TABLE = {}
+
+ComponentExtension.add_component = function (self, component_name, unit, starts_enabled, optional_component_data, optional_init_data)
 	local cbs = self._event_callbacks
 	local is_server, nav_world = self._is_server, self._nav_world
 	local component_guid = Application.guid()
@@ -213,10 +217,16 @@ ComponentExtension.add_component = function (self, component_name, unit, starts_
 	Unit.set_data(unit, "component_guids", i, component_guid)
 	Unit.set_data(unit, "components", component_guid, "name", component_name)
 
-	local component_class = Components[component_name]
-	local component, run_update = component_class:new(component_guid, i, unit, is_server, nav_world)
+	if optional_component_data then
+		for k, v in pairs(optional_component_data) do
+			Unit.set_data(unit, "components", component_guid, "component_data", k, v)
+		end
+	end
 
-	component.name = component_name
+	local init_data = optional_init_data or EMPTY_TABLE
+	local component_class = Components[component_name]
+	local component, run_update = component_class:new(component_guid, i, unit, is_server, nav_world, init_data)
+
 	component.is_enabled = starts_enabled == nil and true or starts_enabled or false
 
 	if component.update and component.is_enabled and run_update then

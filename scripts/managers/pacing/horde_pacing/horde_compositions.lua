@@ -12,6 +12,7 @@ local function _create_horde_composition_entry(path)
 end
 
 _create_horde_composition_entry("scripts/managers/pacing/horde_pacing/compositions/cultist_horde_compositions")
+_create_horde_composition_entry("scripts/managers/pacing/horde_pacing/compositions/expedition_horde_compositions")
 _create_horde_composition_entry("scripts/managers/pacing/horde_pacing/compositions/havoc/havoc_cultist_horde_compositions")
 _create_horde_composition_entry("scripts/managers/pacing/horde_pacing/compositions/havoc/havoc_renegade_horde_compositions")
 _create_horde_composition_entry("scripts/managers/pacing/horde_pacing/compositions/mutator_horde_compositions")

@@ -257,7 +257,7 @@ local archetype_talents = {
 			},
 		},
 		ogryn_grenade_frag = {
-			description = "loc_ability_ogryn_grenade_demolition_desc",
+			description = "loc_ability_ogryn_grenade_demolition_instakill_desc",
 			display_name = "loc_ability_ogryn_grenade_demolition",
 			hud_icon = "content/ui/textures/icons/abilities/hud/combat_ability_bonebreaker_hud",
 			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tactical",
@@ -299,7 +299,7 @@ local archetype_talents = {
 			},
 		},
 		ogryn_special_ammo = {
-			description = "loc_talent_ogryn_combat_ability_special_ammo_new_desc",
+			description = "loc_talent_ogryn_combat_ability_special_ammo_replenish_desc",
 			display_name = "loc_talent_ogryn_combat_ability_special_ammo",
 			large_icon = "content/ui/textures/icons/talents/ogryn_1/ogryn_1_combat",
 			name = "F-Ability - Enter a stance that reloads you ranged weapon with a custom magazine with 3 times capacity",
@@ -350,6 +350,10 @@ local archetype_talents = {
 				reduced_move_penalty = {
 					format_type = "percentage",
 					value = talent_settings_1.combat_ability_3.reduced_move_penalty,
+				},
+				ammo_return_percent = {
+					format_type = "percentage",
+					value = talent_settings_1.combat_ability.ammo_return,
 				},
 			},
 			player_ability = {
@@ -467,7 +471,7 @@ local archetype_talents = {
 			},
 		},
 		ogryn_base_tank_passive = {
-			description = "loc_talent_ogryn_2_base_3_description_new",
+			description = "loc_talent_ogryn_tank_passive_desc",
 			display_name = "loc_talent_ogryn_2_base_3",
 			hud_icon = "content/ui/materials/icons/abilities/default",
 			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_base_3",
@@ -488,6 +492,15 @@ local archetype_talents = {
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
 					end,
+				},
+				duration = {
+					format_type = "number",
+					value = shared_talent_settings.tank.dodge_linger_duration,
+				},
+				dr = {
+					format_type = "percentage",
+					prefix = "+",
+					value = shared_talent_settings.tank.damage_taken_multiplier * shared_talent_settings.tank.damage_taken_while_dodging,
 				},
 			},
 			passive = {
@@ -755,7 +768,7 @@ local archetype_talents = {
 			},
 		},
 		ogryn_toughness_while_bracing = {
-			description = "loc_talent_ogryn_toughness_regen_while_bracing_desc",
+			description = "loc_talent_ogryn_toughness_regen_while_bracing_or_shooting_desc",
 			display_name = "loc_talent_ogryn_toughness_regen_while_bracing",
 			icon = "content/ui/textures/icons/talents/ogryn_1/ogryn_1_tier_3_3",
 			name = "Regenerate toughness while bracing.",
@@ -948,7 +961,7 @@ local archetype_talents = {
 			},
 		},
 		ogryn_bracing_reduces_damage_taken = {
-			description = "loc_talent_ogryn_bracing_reduces_damage_taken_desc",
+			description = "loc_talent_ogryn_bracing_or_shooting_reduces_damage_taken_desc",
 			display_name = "loc_talent_ogryn_bracing_reduces_damage_taken",
 			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_3_3",
 			name = "Reduced damage taken while braced",

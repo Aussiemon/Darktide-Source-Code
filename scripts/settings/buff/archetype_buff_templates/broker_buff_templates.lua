@@ -33,7 +33,7 @@ local Stagger = require("scripts/utilities/attack/stagger")
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local PlayerAbilities = require("scripts/settings/ability/player_abilities/player_abilities")
-local ShoutAbilityImplementation = require("scripts/extension_systems/ability/utilities/shout_ability_implementation")
+local ShoutAbility = require("scripts/extension_systems/ability/utilities/shout_ability")
 local Explosion = require("scripts/utilities/attack/explosion")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local attack_types = AttackSettings.attack_types
@@ -494,7 +494,7 @@ local function _apply_punk_rage_shout(player_unit, player_unit_data_extension, s
 	local locomotion_component = player_unit_data_extension:read_component("locomotion")
 	local power_modifier
 
-	ShoutAbilityImplementation.execute(shout_radius, "broker_rage_shout", player_unit, t, locomotion_component, forward, nil, nil, power_modifier)
+	ShoutAbility.execute(shout_radius, "broker_rage_shout", player_unit, t, locomotion_component, forward, nil, nil, power_modifier)
 
 	local player_fx_extension = ScriptUnit.extension(player_unit, "fx_system")
 
@@ -1027,6 +1027,13 @@ templates.broker_passive_increased_ranged_dodges = {
 		return wielded_slot == "slot_secondary"
 	end,
 }
+templates.broker_passive_increased_dodges = {
+	class_name = "buff",
+	predicted = false,
+	conditional_stat_buffs = {
+		[stat_buffs.extra_consecutive_dodges] = talent_settings.broker_passive_increased_dodges.extra_consecutive_dodges,
+	},
+}
 templates.broker_passive_close_ranged_damage = {
 	class_name = "buff",
 	predicted = false,
@@ -1107,6 +1114,13 @@ templates.broker_passive_improved_dodges = {
 	stat_buffs = {
 		[stat_buffs.dodge_speed_multiplier] = talent_settings.broker_passive_improved_dodges.dodge_speed_multiplier,
 		[stat_buffs.dodge_linger_time] = talent_settings.broker_passive_improved_dodges.dodge_linger_time,
+	},
+}
+templates.broker_passive_longer_dodges = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.dodge_distance_modifier] = talent_settings.broker_passive_longer_dodges.dodge_distance_modifier,
 	},
 }
 templates.broker_passive_dodge_melee_on_slide = {
@@ -2651,18 +2665,18 @@ templates.broker_toughness_on_toxined_kill = {
 	max_stacks_cap = 1,
 	predicted = false,
 	skip_tactical_overlay = true,
+	range = talent_settings.broker_passive_toughness_on_toxined_kill.range,
 	proc_events = {
 		[proc_events.on_minion_damage_taken] = 1,
 	},
 	start_func = function (template_data, template_context)
 		template_data.side_system = Managers.state.extension:system("side_system")
+		template_data.range = template_context.template.range
 	end,
 	check_proc_func = function (params, template_data, template_context, t)
 		if not template_context.is_server then
 			return false
 		elseif template_context.unit ~= params.attacked_unit then
-			return false
-		elseif params.attack_type ~= "melee" then
 			return false
 		elseif params.attack_results ~= "died" then
 			return false
@@ -2682,6 +2696,16 @@ templates.broker_toughness_on_toxined_kill = {
 			return false
 		end
 
+		local player_pos = Unit.world_position(params.attacking_unit, 1)
+		local enemy_pos = Unit.world_position(template_context.unit, 1)
+		local distance_squared = Vector3.distance_squared(player_pos, enemy_pos)
+		local range_squared = template_data.range * template_data.range
+		local in_range = distance_squared <= range_squared
+
+		if not in_range then
+			return false
+		end
+
 		return true
 	end,
 	proc_func = function (params, template_data, template_context, t)
@@ -2691,6 +2715,95 @@ templates.broker_toughness_on_toxined_kill = {
 		Toughness.replenish_percentage(attacker, amount)
 
 		template_data.done = true
+	end,
+}
+templates.broker_passive_replenish_toughness_while_toxined_enemies_in_proximity = {
+	always_show_in_hud = true,
+	class_name = "interval_buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/broker/broker_toughness_on_toxined_kill",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
+	hud_priority = 1,
+	max_stacks = 1,
+	max_stacks_cap = 1,
+	predicted = false,
+	interval = talent_settings.broker_passive_replenish_toughness_while_toxined_enemies_in_proximity.interval,
+	toughness_amount = talent_settings.broker_passive_replenish_toughness_while_toxined_enemies_in_proximity.toughness_amount,
+	max_enemies = talent_settings.broker_passive_replenish_toughness_while_toxined_enemies_in_proximity.max_enemies,
+	range = talent_settings.broker_passive_replenish_toughness_while_toxined_enemies_in_proximity.range,
+	visual_stack_count = function (template_data, template_context)
+		return math.min(template_data.num_toxined_in_range, template_data.max_enemies)
+	end,
+	start_func = function (template_data, template_context)
+		template_data.toughness_amount = template_context.template.toughness_amount
+		template_data.max_enemies = template_context.template.max_enemies
+		template_data.toughness_extension = ScriptUnit.extension(template_context.unit, "toughness_system")
+		template_data.side_system = Managers.state.extension:system("side_system")
+		template_data.buff_templates = require("scripts/settings/buff/buff_templates")
+
+		local broadphase_system = Managers.state.extension:system("broadphase_system")
+		local broadphase = broadphase_system.broadphase
+		local unit = template_context.unit
+		local side_system = Managers.state.extension:system("side_system")
+		local side = side_system.side_by_unit[unit]
+		local enemy_side_names = side:relation_side_names("enemy")
+
+		template_data.broadphase = broadphase
+		template_data.broadphase_results = {}
+		template_data.num_toxined_in_range = 0
+		template_data.check_enemy_proximity_t = 0
+		template_data.enemy_side_names = enemy_side_names
+		template_data.check_interval = talent_settings.broker_passive_replenish_toughness_while_toxined_enemies_in_proximity.check_interval
+		template_data.range = template_context.template.range
+	end,
+	update_func = function (template_data, template_context, dt, t)
+		if t < template_data.check_enemy_proximity_t then
+			return
+		end
+
+		local broadphase = template_data.broadphase
+		local enemy_side_names = template_data.enemy_side_names
+		local broadphase_results = template_data.broadphase_results
+
+		table.clear(broadphase_results)
+
+		local player_unit = template_context.unit
+		local player_position = POSITION_LOOKUP[player_unit]
+		local range = template_data.range
+		local num_hits = broadphase.query(broadphase, player_position, range, broadphase_results, enemy_side_names)
+
+		if num_hits == 0 then
+			template_data.num_toxined_in_range = 0
+		else
+			local count = 0
+
+			for ii = 1, num_hits do
+				local enemy_unit = broadphase_results[ii]
+				local enemy_unit_buff_extension = ScriptUnit.has_extension(enemy_unit, "buff_system")
+
+				if enemy_unit_buff_extension and enemy_unit_buff_extension:has_keyword(keywords.toxin) then
+					count = count + 1
+				end
+			end
+
+			template_data.num_toxined_in_range = count
+		end
+
+		template_data.check_enemy_proximity_t = t + template_data.check_interval
+	end,
+	interval_func = function (template_data, template_context, template)
+		if not template_context.is_server then
+			return
+		end
+
+		local character_state_component = template_data.character_state_component
+
+		if character_state_component and PlayerUnitStatus.is_knocked_down(character_state_component) then
+			return
+		end
+
+		local recovered_tougness = template_data.toughness_amount * math.min(template_data.num_toxined_in_range, template_data.max_enemies)
+
+		Toughness.replenish_percentage(template_context.unit, recovered_tougness)
 	end,
 }
 templates.broker_passive_increased_toxin_damage = {
@@ -2804,7 +2917,7 @@ templates.broker_passive_low_ammo_regen = {
 	proc_events = {
 		[proc_events.on_kill] = 1,
 	},
-	check_proc_func = CheckProcFunctions.on_elite_or_special_kill,
+	check_proc_func = CheckProcFunctions.on_elite_or_special_melee_kill,
 	proc_func = function (params, template_data, template_context)
 		local slot_secondary_component = template_data.unit_data_extension:write_component("slot_secondary")
 		local max_reserve = Ammo.max_ammo_in_reserve(slot_secondary_component)
@@ -2814,10 +2927,10 @@ templates.broker_passive_low_ammo_regen = {
 			local threshold = template_data.ammo_threshold
 			local clip_percentage = current_ammo_reserve / max_reserve
 
-			if clip_percentage < threshold then
+			if clip_percentage <= threshold then
 				local ammo_return = template_data.ammo_return
 
-				Ammo.add_to_reserve(slot_secondary_component, math.max(math.floor(max_reserve * threshold) - current_ammo_reserve, 1))
+				Ammo.add_to_reserve(slot_secondary_component, math.max(math.floor(max_reserve * ammo_return) - current_ammo_reserve, 1))
 			end
 		end
 	end,
@@ -2902,6 +3015,299 @@ templates.broker_passive_blitz_inflicts_toxin = {
 			end
 		end
 	end,
+}
+
+local TOXIN_SPREAD_RESULTS = {}
+
+templates.broker_passive_toxin_spread_on_kills = {
+	buff_to_add = "neurotoxin_interval_buff3",
+	class_name = "proc_buff",
+	max_targets = 10,
+	predicted = false,
+	radius = 4,
+	stacks_to_add = 2,
+	proc_events = {
+		[proc_events.on_hit] = 1,
+	},
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_melee_hit, CheckProcFunctions.on_elite_kill),
+	start_func = function (template_data, template_context)
+		local side_system = Managers.state.extension:system("side_system")
+		local side = side_system.side_by_unit[template_context.unit]
+		local broadphase_system = Managers.state.extension:system("broadphase_system")
+
+		template_data.broadphase = broadphase_system.broadphase
+		template_data.enemy_side_names = side:relation_side_names("enemy")
+	end,
+	proc_func = function (params, template_data, template_context, t)
+		local broadphase = template_data.broadphase
+		local enemy_side_names = template_data.enemy_side_names
+		local buff_to_add = template_context.template.buff_to_add
+		local stacks_to_add = template_context.template.stacks_to_add
+		local attacked_unit = params.attacked_unit
+		local from_position = POSITION_LOOKUP[attacked_unit] or POSITION_LOOKUP[template_context.unit]
+		local num_hits = broadphase.query(broadphase, from_position, template_context.template.radius, TOXIN_SPREAD_RESULTS, enemy_side_names)
+
+		num_hits = math.min(num_hits, template_context.template.max_targets)
+
+		for i = 1, num_hits do
+			local enemy_unit = TOXIN_SPREAD_RESULTS[i]
+
+			if HEALTH_ALIVE[enemy_unit] then
+				local enemy_unit_buff_extension = ScriptUnit.has_extension(enemy_unit, "buff_system")
+
+				if enemy_unit_buff_extension then
+					for _ = 1, stacks_to_add do
+						local current_stacks = enemy_unit_buff_extension:current_stacks(buff_to_add)
+
+						if current_stacks < stacks_to_add then
+							enemy_unit_buff_extension:add_internally_controlled_buff(buff_to_add, t, "owner_unit", template_context.unit)
+						elseif stacks_to_add <= current_stacks then
+							enemy_unit_buff_extension:refresh_duration_of_stacking_buff(buff_to_add, t)
+						end
+					end
+				end
+			end
+		end
+
+		if ALIVE[attacked_unit] then
+			local node = Unit.has_node(attacked_unit, "j_spine") and Unit.node(attacked_unit, "j_spine")
+
+			if node then
+				local node_position = Unit.world_position(attacked_unit, node)
+				local fx_system = Managers.state.extension:system("fx_system")
+
+				fx_system:trigger_vfx("content/fx/particles/weapons/pistols/needlepistol/needlepistol_explosion_primer_m1", node_position)
+			end
+		end
+	end,
+}
+templates.broker_passive_ranged_apply_brittleness = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_hit] = 1,
+	},
+	check_proc_func = CheckProcFunctions.on_ranged_weakspot_crit,
+	proc_func = function (params, template_data, template_context, t)
+		local attacked_unit = params.attacked_unit
+
+		if not HEALTH_ALIVE[attacked_unit] then
+			return false
+		end
+
+		local buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
+
+		if buff_extension then
+			buff_extension:add_internally_controlled_buff("broker_passive_ranged_apply_brittleness_stack", t)
+		end
+	end,
+}
+templates.broker_passive_ranged_apply_brittleness_stack = {
+	class_name = "buff",
+	duration = 5,
+	max_stacks = 2,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	stat_buffs = {
+		[stat_buffs.rending_multiplier] = 0.1,
+	},
+}
+templates.broker_passive_melee_apply_brittleness = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_hit] = 1,
+	},
+	check_proc_func = CheckProcFunctions.on_melee_weakspot_crit,
+	proc_func = function (params, template_data, template_context, t)
+		local attacked_unit = params.attacked_unit
+
+		if not HEALTH_ALIVE[attacked_unit] then
+			return false
+		end
+
+		local buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
+
+		if buff_extension then
+			buff_extension:add_internally_controlled_buff("broker_passive_melee_apply_brittleness_stack", t)
+		end
+	end,
+}
+templates.broker_passive_melee_apply_brittleness_stack = {
+	class_name = "buff",
+	duration = 5,
+	max_stacks = 2,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	stat_buffs = {
+		[stat_buffs.rending_multiplier] = 0.1,
+	},
+}
+
+local EMPTY_TABLE = {}
+
+templates.broker_passive_crit_grants_damage = {
+	class_name = "buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/broker/broker_crit_damage",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
+	hud_priority = 1,
+	predicted = false,
+	crit_cap = talent_settings.broker_passive_crit_grants_damage.max_stacks,
+	melee_damage_per_stack = talent_settings.broker_passive_crit_grants_damage.melee_damage,
+	crit_per_stack = talent_settings.broker_passive_crit_grants_damage.critical_chance,
+	max_melee_damage = talent_settings.broker_passive_crit_grants_damage.max_stacks * talent_settings.broker_passive_crit_grants_damage.melee_damage,
+	stat_buffs = {
+		[stat_buffs.melee_damage] = 1,
+	},
+	stat_buff_multiplier = function (template_data, template_context)
+		local visual_loadout_extension = template_data.visual_loadout_extension
+		local wielded_slot = visual_loadout_extension:currently_wielded_slot()
+		local weapon_template = visual_loadout_extension:weapon_template_from_slot(wielded_slot)
+		local is_ranged, is_melee = false, false
+
+		if weapon_template and weapon_template.keywords then
+			is_ranged = table.array_contains(weapon_template.keywords, "ranged")
+			is_melee = table.array_contains(weapon_template.keywords, "melee")
+		end
+
+		local weapon_handling_template = template_data.weapon_extension:weapon_handling_template() or EMPTY_TABLE
+		local chance = CriticalStrike.chance(template_context.player, weapon_handling_template, is_ranged, is_melee, false)
+		local crit_stacks = math.floor(chance / template_context.template.crit_per_stack)
+		local stacks = math.round(math.min(crit_stacks, template_context.template.crit_cap))
+
+		template_data.visual_chance = stacks
+
+		return template_context.template.melee_damage_per_stack * stacks
+	end,
+	visual_stack_count = function (template_data, template_context)
+		return template_data.visual_chance
+	end,
+	start_func = function (template_data, template_context)
+		template_data.damage_per_crit = template_context.template.melee_damage_per_stack / template_context.template.crit_per_stack
+		template_data.weapon_extension = ScriptUnit.extension(template_context.unit, "weapon_system")
+		template_data.visual_loadout_extension = ScriptUnit.extension(template_context.unit, "visual_loadout_system")
+		template_data.visual_chance = 0
+	end,
+}
+templates.broker_passive_toxin_infected_enemies_take_increased_damage = {
+	class_name = "proc_buff",
+	max_stacks = 1,
+	max_stacks_cap = 1,
+	predicted = false,
+	proc_events = {
+		[proc_events.on_buff_added] = 1,
+		[proc_events.on_buff_stack_added] = 1,
+	},
+	start_func = function (template_data, template_context)
+		template_data.side_system = Managers.state.extension:system("side_system")
+		template_data.buff_templates = require("scripts/settings/buff/buff_templates")
+	end,
+	check_proc_func = function (params, template_data, template_context, t)
+		if not template_context.is_server then
+			return false
+		end
+
+		local is_enemy = template_data.side_system:is_enemy(params.unit, template_context.unit)
+
+		if not is_enemy then
+			return false
+		end
+
+		local buff_template = template_data.buff_templates[params.template_name]
+
+		if buff_template.keywords and table.contains(buff_template.keywords, keywords.toxin) then
+			return true
+		end
+	end,
+	proc_func = function (params, template_data, template_context, t)
+		local enemy_unit_buff_extension = ScriptUnit.has_extension(params.unit, "buff_system")
+
+		enemy_unit_buff_extension:add_internally_controlled_buff("broker_passive_toxin_infected_enemies_take_increased_damage_debuff", t)
+	end,
+}
+templates.broker_passive_toxin_infected_enemies_take_increased_damage_debuff = {
+	class_name = "buff",
+	duration = 5,
+	max_stacks = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	stat_buffs = {
+		[stat_buffs.damage_taken_modifier] = 0.1,
+	},
+	start_func = function (template_data, template_context)
+		template_data.earliest_exit = template_context.buff:start_time() + 0.1
+	end,
+	conditional_exit_func = function (template_data, template_context, dt, t)
+		if t < template_data.earliest_exit then
+			return false
+		end
+
+		return not template_context.buff_extension:has_keyword(keywords.toxin)
+	end,
+}
+templates.broker_passive_non_crits_increase_crit = {
+	class_name = "proc_buff",
+	max_stacks = 1,
+	predicted = false,
+	proc_events = {
+		[proc_events.on_hit] = 1,
+	},
+	check_proc_func = CheckProcFunctions.on_melee_non_crit,
+	start_func = function (template_data, template_context)
+		template_data.buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
+	end,
+	proc_func = function (params, template_data, template_context, t)
+		template_data.buff_extension:add_internally_controlled_buff("broker_passive_non_crits_increase_crit_stack", t)
+	end,
+}
+templates.broker_passive_non_crits_increase_crit_stack = {
+	always_show_in_hud = true,
+	class_name = "proc_buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_ability_chastise_the_wicked",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
+	hud_priority = 1,
+	predicted = false,
+	remove_on_proc = true,
+	proc_events = {
+		[proc_events.on_hit] = 1,
+	},
+	check_proc_func = CheckProcFunctions.on_crit_melee,
+	stat_buffs = {
+		[stat_buffs.melee_critical_strike_chance] = 0.05,
+	},
+}
+templates.broker_passive_non_crits_increase_crit_stack.max_stacks = math.ceil(1 / templates.broker_passive_non_crits_increase_crit_stack.stat_buffs[stat_buffs.melee_critical_strike_chance])
+templates.broker_passive_knockback_on_taking_melee_damage = {
+	class_name = "proc_buff",
+	cooldown_duration = 8,
+	hud_icon = "content/ui/textures/icons/buffs/hud/broker/broker_knockback_push",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
+	hud_priority = 1,
+	predicted = false,
+	proc_events = {
+		[proc_events.on_player_hit_received] = 1,
+	},
+	check_proc_func = CheckProcFunctions.on_melee_hit,
+	start_func = function (template_data, template_context)
+		template_data.buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
+	end,
+	proc_func = function (params, template_data, template_context, t)
+		local player_unit = template_context.unit
+		local player_position = POSITION_LOOKUP[player_unit]
+		local explosion_position = player_position + Vector3(0, 0, 0.65)
+		local explosion_template = ExplosionTemplates.broker_passive_knockback_on_taking_melee_damage
+
+		Explosion.create_explosion(template_context.world, template_context.physics_world, explosion_position, nil, template_context.unit, explosion_template, PowerLevelSettings.default_power_level, 1, attack_types.explosion)
+		template_data.buff_extension:add_internally_controlled_buff("broker_passive_knockback_on_taking_melee_damage_proc", t)
+	end,
+}
+templates.broker_passive_knockback_on_taking_melee_damage_proc = {
+	class_name = "buff",
+	duration = 3,
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.movement_speed] = 0.1,
+	},
 }
 
 local function _broker_keystone_vultures_mark_on_kill_proc_func(params, template_data, template_context, t)
@@ -3232,6 +3638,42 @@ templates.broker_keystone_adrenaline_junkie_stack = {
 	sub_4_duration = talent_settings.broker_keystone_adrenaline_junkie.sub_4_duration,
 	max_stacks = talent_settings.broker_keystone_adrenaline_junkie.adrenaline_max_stacks,
 	max_stacks_cap = talent_settings.broker_keystone_adrenaline_junkie.adrenaline_max_stacks,
+	stat_buffs = {
+		[stat_buffs.critical_strike_chance] = 0.1,
+		[stat_buffs.movement_speed] = 0.1,
+	},
+	stat_buff_multipliers = {
+		[stat_buffs.critical_strike_chance] = function (template_data, template_context)
+			if not template_data.sub_7_scaling_ms_crit then
+				return 0
+			end
+
+			local buff_extension = template_context.buff_extension
+
+			if buff_extension:current_stacks("broker_keystone_adrenaline_junkie_proc") > 0 then
+				return 0
+			end
+
+			local buff = template_context.buff
+
+			return 1 / buff:max_stacks()
+		end,
+		[stat_buffs.movement_speed] = function (template_data, template_context)
+			if not template_data.sub_7_scaling_ms_crit then
+				return 0
+			end
+
+			local buff_extension = template_context.buff_extension
+
+			if buff_extension:current_stacks("broker_keystone_adrenaline_junkie_proc") > 0 then
+				return 0
+			end
+
+			local buff = template_context.buff
+
+			return 1 / buff:max_stacks()
+		end,
+	},
 	start_func = function (template_data, template_context)
 		local talent_extension = ScriptUnit.extension(template_context.unit, "talent_system")
 
@@ -3240,6 +3682,8 @@ templates.broker_keystone_adrenaline_junkie_stack = {
 
 			template_context.buff:add_duration(new_duration - template_context.template.duration)
 		end
+
+		template_data.sub_7_scaling_ms_crit = talent_extension:has_special_rule(special_rules.broker_keystone_adrenaline_junkie_scaling_ms_crit)
 	end,
 	on_reached_max_stack_func = function (template_data, template_context)
 		local t = FixedFrame.get_latest_fixed_time()
@@ -3264,6 +3708,7 @@ templates.broker_keystone_adrenaline_junkie_proc = {
 	predicted = false,
 	refresh_duration_on_stack = true,
 	skip_tactical_overlay = true,
+	sub_8_stamina_regain = 0.5,
 	duration = talent_settings.broker_keystone_adrenaline_junkie.frenzy_duration,
 	sub_3_frenzy_duration = talent_settings.broker_keystone_adrenaline_junkie.sub_3_frenzy_duration,
 	max_stacks = talent_settings.broker_keystone_adrenaline_junkie.frenzy_max_stacks,
@@ -3272,6 +3717,38 @@ templates.broker_keystone_adrenaline_junkie_proc = {
 	stat_buffs = {
 		[stat_buffs.melee_attack_speed] = talent_settings.broker_keystone_adrenaline_junkie.melee_attack_speed,
 		[stat_buffs.melee_damage] = talent_settings.broker_keystone_adrenaline_junkie.melee_damage,
+	},
+	conditional_stat_buffs = {
+		[stat_buffs.alternate_fire_movement_speed_reduction_modifier] = 0,
+		[stat_buffs.weapon_action_movespeed_reduction_multiplier] = 0,
+		[stat_buffs.critical_strike_chance] = templates.broker_keystone_adrenaline_junkie_stack.stat_buffs[stat_buffs.critical_strike_chance],
+		[stat_buffs.movement_speed] = templates.broker_keystone_adrenaline_junkie_stack.stat_buffs[stat_buffs.movement_speed],
+		[stat_buffs.toughness_damage_taken_multiplier] = 0.9,
+	},
+	conditional_stat_buffs_funcs = {
+		[stat_buffs.alternate_fire_movement_speed_reduction_modifier] = function (template_data, template_context)
+			local visual_loadout_extension = template_data.visual_loadout_extension
+			local wielded_slot = visual_loadout_extension:currently_wielded_slot()
+			local weapon_template = visual_loadout_extension:weapon_template_from_slot(wielded_slot)
+
+			return weapon_template and weapon_template.keywords and table.array_contains(weapon_template.keywords, "melee")
+		end,
+		[stat_buffs.weapon_action_movespeed_reduction_multiplier] = function (template_data, template_context)
+			local visual_loadout_extension = template_data.visual_loadout_extension
+			local wielded_slot = visual_loadout_extension:currently_wielded_slot()
+			local weapon_template = visual_loadout_extension:weapon_template_from_slot(wielded_slot)
+
+			return weapon_template and weapon_template.keywords and table.array_contains(weapon_template.keywords, "melee")
+		end,
+		[stat_buffs.critical_strike_chance] = function (template_data, template_context)
+			return template_data.sub_7_scaling_ms_crit
+		end,
+		[stat_buffs.movement_speed] = function (template_data, template_context)
+			return template_data.sub_7_scaling_ms_crit
+		end,
+		[stat_buffs.toughness_damage_taken_multiplier] = function (template_data, template_context)
+			return template_data.sub_8_stamina_burst
+		end,
 	},
 	start_func = function (template_data, template_context)
 		local talent_extension = ScriptUnit.extension(template_context.unit, "talent_system")
@@ -3283,6 +3760,18 @@ templates.broker_keystone_adrenaline_junkie_proc = {
 		end
 
 		template_data.restore_toughness = template_context.is_server and talent_extension:has_special_rule(special_rules.broker_keystone_adrenaline_junkie_restore_toughness) and template_context.template.sub_5_toughness_per_tick
+		template_data.visual_loadout_extension = ScriptUnit.extension(template_context.unit, "visual_loadout_system")
+		template_data.sub_7_scaling_ms_crit = talent_extension:has_special_rule(special_rules.broker_keystone_adrenaline_junkie_scaling_ms_crit)
+		template_data.sub_8_stamina_burst = talent_extension:has_special_rule(special_rules.broker_keystone_adrenaline_junkie_stamina_burst)
+
+		if template_data.sub_8_stamina_burst then
+			Stamina.add_stamina_percent(template_context.unit, template_context.template.sub_8_stamina_regain)
+		end
+	end,
+	refresh_func = function (template_data, template_context)
+		if template_data.sub_8_stamina_burst then
+			Stamina.add_stamina_percent(template_context.unit, template_context.template.sub_8_stamina_regain)
+		end
 	end,
 	update_func = function (template_data, template_context, dt, t)
 		if template_data.restore_toughness then

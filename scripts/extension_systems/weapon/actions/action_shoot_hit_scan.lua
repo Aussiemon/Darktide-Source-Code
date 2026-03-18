@@ -2,12 +2,15 @@
 
 require("scripts/extension_systems/weapon/actions/action_shoot")
 
-local HitScan = require("scripts/utilities/attack/hit_scan")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local HitScan = require("scripts/utilities/attack/hit_scan")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local RangedAction = require("scripts/utilities/action/ranged_action")
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
+local attack_results = AttackSettings.attack_results
 local proc_events = BuffSettings.proc_events
+local buff_keywords = BuffSettings.keywords
 local ActionShootHitScan = class("ActionShootHitScan", "ActionShoot")
 local IMPACT_FX_DATA = {
 	will_be_predicted = true,
@@ -32,7 +35,7 @@ ActionShootHitScan._shoot = function (self, position, rotation, power_level, cha
 	local is_critical_strike = self._critical_strike_component.is_active
 	local direction = Quaternion.forward(rotation)
 	local instakill = false
-	local end_position, hit_weakspot, killing_blow, hit_minion, num_hit_units
+	local end_position, hit_weakspot, killing_blow, hit_minion, num_hit_units, hit_scan_result, hit_results_per_unit
 	local rewind_ms = self:_rewind_ms(is_local_unit, player, position, direction, max_distance)
 
 	power_level = hit_scan_template.power_level or power_level or DEFAULT_POWER_LEVEL
@@ -66,11 +69,11 @@ ActionShootHitScan._shoot = function (self, position, rotation, power_level, cha
 
 		table.sort(ALL_HITS, _hit_sort_function)
 
-		end_position, hit_weakspot, killing_blow, hit_minion, num_hit_units = HitScan.process_hits(is_server, world, physics_world, player_unit, fire_config, ALL_HITS, position, direction, power_level, charge_level, IMPACT_FX_DATA, max_distance, debug_drawer, is_local_unit, player, instakill, is_critical_strike, weapon_item, wielded_slot)
+		end_position, hit_weakspot, killing_blow, hit_minion, num_hit_units, hit_scan_result, hit_results_per_unit = HitScan.process_hits(is_server, world, physics_world, player_unit, fire_config, ALL_HITS, position, direction, power_level, charge_level, IMPACT_FX_DATA, max_distance, debug_drawer, is_local_unit, player, instakill, is_critical_strike, weapon_item, wielded_slot, true)
 	else
 		local hits = HitScan.raycast(physics_world, position, direction, max_distance, nil, nil, rewind_ms, is_local_unit, player, is_server)
 
-		end_position, hit_weakspot, killing_blow, hit_minion, num_hit_units = HitScan.process_hits(is_server, world, physics_world, player_unit, fire_config, hits, position, direction, power_level, charge_level, IMPACT_FX_DATA, max_distance, debug_drawer, is_local_unit, player, instakill, is_critical_strike, weapon_item, wielded_slot)
+		end_position, hit_weakspot, killing_blow, hit_minion, num_hit_units, hit_scan_result, hit_results_per_unit = HitScan.process_hits(is_server, world, physics_world, player_unit, fire_config, hits, position, direction, power_level, charge_level, IMPACT_FX_DATA, max_distance, debug_drawer, is_local_unit, player, instakill, is_critical_strike, weapon_item, wielded_slot, true)
 	end
 
 	local action_component = self._action_component

@@ -75,7 +75,9 @@ HudElementPlayerAbility.update = function (self, dt, t, ui_renderer, render_sett
 		uses_charges = max_ability_charges and max_ability_charges > 1
 		has_charges_left = remaining_ability_charges > 0
 
-		if is_paused then
+		local should_show_empty_cooldown = is_paused
+
+		if should_show_empty_cooldown then
 			cooldown_progress = 0
 		elseif max_ability_cooldown and max_ability_cooldown > 0 then
 			cooldown_progress = 1 - math.lerp(0, 1, remaining_ability_cooldown / max_ability_cooldown)
@@ -93,11 +95,24 @@ HudElementPlayerAbility.update = function (self, dt, t, ui_renderer, render_sett
 			local duration_tracking_buff = pause_cooldown_settings.duration_tracking_buff
 
 			if duration_tracking_buff then
-				local buff_extension = parent:get_player_extension(player, "buff_system")
+				if type(duration_tracking_buff) == "table" then
+					for _, duration_tracking_buff_name in ipairs(duration_tracking_buff) do
+						local buff_extension = parent:get_player_extension(player, "buff_system")
 
-				if buff_extension:current_stacks(duration_tracking_buff) > 0 then
-					cooldown_progress = buff_extension:buff_duration_progress(duration_tracking_buff)
-					in_process_of_going_on_cooldown = cooldown_progress > 0
+						if buff_extension:current_stacks(duration_tracking_buff_name) > 0 then
+							cooldown_progress = buff_extension:buff_duration_progress(duration_tracking_buff_name)
+							in_process_of_going_on_cooldown = cooldown_progress > 0
+
+							break
+						end
+					end
+				else
+					local buff_extension = parent:get_player_extension(player, "buff_system")
+
+					if buff_extension:current_stacks(duration_tracking_buff) > 0 then
+						cooldown_progress = buff_extension:buff_duration_progress(duration_tracking_buff)
+						in_process_of_going_on_cooldown = cooldown_progress > 0
+					end
 				end
 			end
 

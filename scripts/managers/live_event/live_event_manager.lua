@@ -4,21 +4,18 @@ local Items = require("scripts/utilities/items")
 local LiveEvents = require("scripts/settings/live_event/live_events")
 local Promise = require("scripts/foundation/utilities/promise")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local Text = require("scripts/utilities/ui/text")
-local UISettings = require("scripts/settings/ui/ui_settings")
 local LiveEventManager = class("LiveEventManager")
 local REFRESH_TIMER_SUCCESS = 300
 local REFRESH_TIMER_FAILURE = 60
 local STATE_FAIL_DELAY = 60
 local CLIENT_RPCS = {
 	"rpc_live_event_trigger_combat_feed",
-	"rpc_player_collected_event_materials",
-	"rpc_show_live_event_notification",
 }
 
 LiveEventManager.init = function (self, is_host, event_delegate)
 	self._events = {}
 	self._active_event_id = nil
+	self._listener_ids = {}
 	self._is_host = not not is_host
 	self._event_delegate = event_delegate
 
@@ -37,7 +34,7 @@ LiveEventManager.destroy = function (self)
 		refresh_promise:cancel()
 	end
 
-	self:_stop_current_event()
+	self:_stop_all_active_events()
 
 	if not self._is_host then
 		self._event_delegate:unregister_events(unpack(CLIENT_RPCS))
@@ -58,42 +55,57 @@ LiveEventManager.has_player = function (self, id)
 end
 
 LiveEventManager.remove_player = function (self, id)
+	local promises = {}
 	local promise = Promise.resolved()
 	local player_data = self._players[id]
-	local event_id = self:active_event_id()
+	local active_events = self:get_active_events()
+
+	if not player_data or table.is_empty(active_events) then
+		self._players[id] = nil
+
+		table.insert(promises, promise)
+
+		return promises
+	end
+
 	local account_id = player_data.account_id
 	local is_host = self._is_host
-	local has_data = player_data.progress[event_id] ~= nil
 
-	if is_host and event_id and account_id and has_data then
-		self:_update_player_xp(id, event_id)
+	for event_id, _ in pairs(active_events) do
+		local has_data = player_data.progress[event_id] ~= nil
 
-		local active_event_xp = table.nested_get(player_data, "progress", event_id, "xp")
+		if is_host and event_id and account_id and has_data then
+			self:_update_player_xp(id, event_id)
 
-		if active_event_xp and active_event_xp ~= 0 then
-			promise = Managers.backend.interfaces.tracks:modify_track_account_state(account_id, event_id, active_event_xp):catch(function (error)
-				if type(error) == "string" then
-					Log.error("LiveEventManager", "Failed to modify track account state:\n%s\n-------", error)
-				else
-					Log.error("LiveEventManager", "Failed to modify track account state:\n%s\n-------", table.tostring(error, 5))
-				end
-			end)
+			local event_xp = table.nested_get(player_data, "progress", event_id, "xp")
+
+			if event_xp and event_xp ~= 0 then
+				promise = Managers.backend.interfaces.tracks:modify_track_account_state(account_id, event_id, event_xp):catch(function (error)
+					if type(error) == "string" then
+						Log.error("LiveEventManager", "Failed to modify track account state:\n%s\n-------", error)
+					else
+						Log.error("LiveEventManager", "Failed to modify track account state:\n%s\n-------", table.tostring(error, 5))
+					end
+				end)
+
+				table.insert(promises, promise)
+			end
 		end
 	end
 
 	self._players[id] = nil
 
-	return promise
+	return promises
 end
 
 LiveEventManager.remove_all = function (self)
 	local promises = {}
 
 	for id, _ in pairs(self._players) do
-		local promise = self:remove_player(id)
+		local remove_promises = self:remove_player(id)
 
-		if promise then
-			promises[#promises + 1] = promise
+		if remove_promises and #remove_promises > 0 then
+			promises = table.append(promises, remove_promises)
 		end
 	end
 
@@ -299,15 +311,62 @@ LiveEventManager._needs_update = function (self, dt, t)
 	return self._time_since_update > REFRESH_TIMER_SUCCESS
 end
 
-LiveEventManager._stop_current_event = function (self)
-	self._active_event_id = nil
+LiveEventManager._start_event = function (self, event_id)
+	local event_data = self._events[event_id]
 
-	if self._listener_id then
-		Managers.stats:remove_listener(self._listener_id)
-
-		self._listener_id = nil
+	if not self._listener_ids[event_id] then
+		self._listener_ids[event_id] = {}
 	end
 
+	local template = self:get_event_template(event_id)
+	local combat_feed = template.combat_feed
+
+	if combat_feed and self._is_host then
+		if combat_feed.stat_id then
+			if not self._listener_ids[event_id] then
+				self._listener_ids[event_id] = {}
+			end
+
+			local event_listener_ids = self._listener_ids[event_id]
+
+			event_listener_ids[#event_listener_ids + 1] = Managers.stats:add_listener("TEAM", {
+				combat_feed.stat_id,
+			}, callback(self, "_trigger_combat_feed", event_id))
+		end
+
+		if combat_feed.stats then
+			if not self._listener_ids[event_id] then
+				self._listener_ids[event_id] = {}
+			end
+
+			local event_listener_ids = self._listener_ids[event_id]
+
+			for i = 1, #combat_feed.stats do
+				event_listener_ids[#event_listener_ids + 1] = Managers.stats:add_listener("TEAM", {
+					combat_feed.stats[i].stat_id,
+				}, callback(self, "_trigger_combat_feed", event_id))
+			end
+		end
+	end
+end
+
+LiveEventManager._stop_event = function (self, event_id)
+	if not self._listener_ids or not self._listener_ids[event_id] then
+		Log.warning("LiveEventManager", "Trying to stop event '%s' that doesn't have any listeners.", event_id)
+
+		return
+	end
+
+	local event_listener_ids = self._listener_ids[event_id]
+
+	for i = 1, #event_listener_ids do
+		Managers.stats:remove_listener(event_listener_ids[i])
+	end
+
+	self._listener_ids[event_id] = nil
+end
+
+LiveEventManager._stop_all_active_events = function (self)
 	if self._listener_ids and #self._listener_ids > 0 then
 		for i = 1, #self._listener_ids do
 			Managers.stats:remove_listener(self._listener_ids[i])
@@ -317,33 +376,7 @@ LiveEventManager._stop_current_event = function (self)
 	end
 end
 
-LiveEventManager._start_event = function (self, event_id)
-	local event_data = self._events[event_id]
-	local template = LiveEvents[event_data.template_name]
-	local combat_feed = template.combat_feed
-
-	if combat_feed and self._is_host then
-		if combat_feed.stat_id then
-			self._listener_id = Managers.stats:add_listener("TEAM", {
-				combat_feed.stat_id,
-			}, callback(self, "_trigger_combat_feed", event_id))
-		end
-
-		if combat_feed.stats then
-			self._listener_ids = {}
-
-			for i = 1, #combat_feed.stats do
-				self._listener_ids[i] = Managers.stats:add_listener("TEAM", {
-					combat_feed.stats[i].stat_id,
-				}, callback(self, "_trigger_combat_feed", event_id))
-			end
-		end
-	end
-
-	self._active_event_id = event_id
-end
-
-LiveEventManager._update_active_event = function (self, dt, t)
+LiveEventManager._update_events = function (self, dt, t)
 	local active_event_id, lowest_time = nil, math.huge
 	local server_time = Managers.backend:get_server_time(t)
 
@@ -354,15 +387,18 @@ LiveEventManager._update_active_event = function (self, dt, t)
 
 		if is_active and starts_at < lowest_time then
 			active_event_id = event_id
+			lowest_time = starts_at
 		end
-	end
 
-	if active_event_id ~= self._active_event_id then
-		self:_stop_current_event()
-	end
+		if event_data.is_active ~= is_active then
+			if event_data.is_active and not is_active then
+				self:_stop_event(event_id)
+			elseif not event_data.is_active and is_active then
+				self:_start_event(event_id)
+			end
+		end
 
-	if active_event_id ~= self._active_event_id then
-		self:_start_event(active_event_id)
+		event_data.is_active = is_active
 	end
 end
 
@@ -383,7 +419,7 @@ LiveEventManager.update = function (self, dt, t)
 		self:_update_player(dt, id)
 	end
 
-	self:_update_active_event(dt, t)
+	self:_update_events(dt, t)
 end
 
 local function get_template_name_from_old_category(str)
@@ -523,7 +559,10 @@ LiveEventManager.events = function (self)
 end
 
 LiveEventManager._active_event = function (self)
-	return self._events[self._active_event_id]
+	local active_events = self:get_active_events()
+	local _, event_data = next(active_events)
+
+	return event_data
 end
 
 LiveEventManager.active_template = function (self)
@@ -532,18 +571,20 @@ LiveEventManager.active_template = function (self)
 	return active_event and LiveEvents[active_event.template_name]
 end
 
-LiveEventManager.active_tiers = function (self)
-	local active_event = self:_active_event()
-
-	return active_event and active_event.tiers
-end
-
 LiveEventManager.active_event_id = function (self)
-	return self._events[self._active_event_id] and self._active_event_id or nil
+	local active_events = self:get_active_events()
+	local event_id = next(active_events)
+
+	return event_id
 end
 
 LiveEventManager._get_current_xp = function (self, id, event_id)
 	local event = self._events[event_id]
+
+	if not event then
+		return 0
+	end
+
 	local template = LiveEvents[event.template_name]
 	local stat_id = template.stat
 
@@ -652,99 +693,107 @@ LiveEventManager._trigger_combat_feed = function (self, event_id, listener_id, s
 	end
 end
 
-LiveEventManager.get_active_event_name = function (self)
-	local active_template = self:active_template()
+LiveEventManager.get_event_data = function (self, event_id)
+	return self._events[event_id]
+end
 
-	if not active_template then
+LiveEventManager.get_event_name = function (self, event_id)
+	local event_template = self:get_event_template(event_id)
+
+	return event_template and event_template.name
+end
+
+LiveEventManager.get_event_wallet_settings = function (self, event_id)
+	local event_template = self:get_event_template(event_id)
+
+	return event_template and event_template.event_material_wallet_settings
+end
+
+LiveEventManager.get_active_events = function (self)
+	local active_events = {}
+
+	for event_id, event_data in pairs(self._events) do
+		if event_data.is_active then
+			active_events[event_id] = event_data
+		end
+	end
+
+	return active_events
+end
+
+LiveEventManager.get_event_template = function (self, event_id)
+	if not event_id then
 		return nil
 	end
 
-	return active_template.name
+	local event_data = self._events[event_id]
+
+	if not event_data then
+		return nil
+	end
+
+	local template_name = event_data.template_name
+	local event_template = LiveEvents[template_name]
+
+	return event_template
 end
 
-LiveEventManager.get_active_event_wallet_settings = function (self)
-	local active_template = self:active_template()
+LiveEventManager.get_event_tiers = function (self, event_id)
+	local event_data = self._events[event_id]
 
-	return active_template and active_template.event_material_wallet_settings
+	return event_data and event_data.tiers
 end
 
-LiveEventManager.rpc_player_collected_event_materials = function (self, channel_id, peer_id, material_type_lookup, material_size_lookup, interaction_type_lookup)
-	local material_type = NetworkLookup.material_type_lookup[material_type_lookup]
-	local material_size = NetworkLookup.material_size_lookup[material_size_lookup]
+LiveEventManager.event_progress = function (self, optional_player_id, event_id)
+	local id = optional_player_id or 1
+	local player_data = self._players[id]
 
-	self:_show_collected_materials_notification(self:active_template(), peer_id, material_type, material_size, interaction_type_lookup)
+	if not player_data then
+		return 0
+	end
+
+	local progress_data = player_data.progress[event_id]
+
+	if not progress_data or not progress_data.value then
+		return 0
+	end
+
+	return (progress_data.value or 0) + self:_get_current_xp(id, event_id)
 end
 
-LiveEventManager._show_collected_materials_notification = function (self, event_template, peer_id, material_type, material_size, interaction_type_lookup)
-	local player_manager = Managers.player
-	local local_player_id = 1
-	local player = player_manager:player(peer_id, local_player_id)
-	local player_name = player and player:name()
-	local player_slot = player and player.slot and player:slot()
-	local player_slot_colors = UISettings.player_slot_colors
-	local player_slot_color = player_slot and player_slot_colors[player_slot]
+LiveEventManager.event_completion_rate = function (self, optional_player_id, event_id)
+	local player_progress = self:event_progress(optional_player_id, event_id)
+	local event_tiers = self:get_event_tiers(event_id)
+	local event_data = self._events[event_id]
+	local max_tier = event_tiers[#event_tiers]
+	local max_progress = max_tier.target
+	local active_completion_rate = player_progress / max_progress
 
-	if player_name and player_slot_color then
-		player_name = Text.apply_color_to_text(player_name, player_slot_color)
-	end
-
-	local optional_localization_key
-
-	if event_template and event_template.interaction_type_loc_strings then
-		optional_localization_key = event_template.interaction_type_loc_strings[interaction_type_lookup]
-	end
-
-	optional_localization_key = optional_localization_key or "loc_tactical_overlay_crafting_mat_notification"
-
-	Managers.event:trigger("event_add_notification_message", "currency", {
-		use_player_portrait = true,
-		currency = material_type,
-		amount_size = material_size,
-		player_name = player_name,
-		optional_localization_key = optional_localization_key,
-	})
+	return active_completion_rate
 end
 
-LiveEventManager.send_live_event_notification = function (self, key)
-	if not self._is_host then
-		return
+LiveEventManager.active_time_left = function (self, optional_t, event_id)
+	local live_events = self:get_active_events()
+
+	if not live_events or not live_events[event_id] then
+		return 0
 	end
 
-	local active_template = self:active_template()
+	local event_data = live_events[event_id]
 
-	if not active_template then
-		return
+	if not event_data or not event_data.ends_at then
+		return 0
 	end
 
-	if not active_template.notifications then
-		return
-	end
+	local t = Managers.backend:get_server_time(optional_t or Managers.time:time("main"))
 
-	if not active_template.notifications[key] then
-		return
-	end
-
-	Managers.state.game_session:send_rpc_clients("rpc_show_live_event_notification", key)
+	return (event_data.ends_at - t) / 1000
 end
 
-LiveEventManager.rpc_show_live_event_notification = function (self, channel_id, key)
-	local active_template = self:active_template()
+LiveEventManager.is_event_active = function (self, event_id)
+	local event_data = self._events[event_id]
 
-	if not active_template then
-		return
-	end
-
-	if not active_template.notifications then
-		return
-	end
-
-	local notification_data = active_template.notifications[key]
-
-	if not notification_data then
-		return
-	end
-
-	Managers.event:trigger("event_show_live_event_notification", notification_data.title, notification_data.subtitle, notification_data.sound_event)
+	return event_data and event_data.is_active
 end
 
 return LiveEventManager

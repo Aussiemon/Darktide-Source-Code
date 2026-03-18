@@ -191,6 +191,11 @@ GameplayStateRun.on_reload = function (self, refreshed_resources)
 	Managers.state.extension:on_reload(refreshed_resources)
 end
 
+GameplayStateRun.on_recover = function (self)
+	Managers.state.nav_mesh:on_recover()
+	Managers.state.unit_spawner:on_recover()
+end
+
 GameplayStateRun._register_run_network_events = function (self, is_server)
 	if not is_server then
 		local connection_manager = Managers.connection

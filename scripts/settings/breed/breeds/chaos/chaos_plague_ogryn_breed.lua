@@ -38,6 +38,7 @@ local breed_data = {
 	game_object_type = "minion_monster",
 	half_extent_forward = 0.6,
 	half_extent_right = 0.7,
+	heat = 2,
 	hit_reacts_min_damage = 100,
 	ignore_stagger_accumulation = true,
 	is_boss = true,

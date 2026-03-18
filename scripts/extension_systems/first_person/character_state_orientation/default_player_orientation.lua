@@ -42,6 +42,8 @@ DefaultPlayerOrientation.pre_update = function (self, main_t, main_dt, input, se
 	local orientation = self._orientation
 	local position = self._first_person_component.position
 	local weapon_action_component = self._weapon_action_component
+	local combat_ability_action_component = self._combat_ability_action_component
+	local grenade_ability_action_component = self._grenade_ability_action_component
 	local aim_assist_ramp_component = self._aim_assist_ramp_component
 	local targeting_data = self._smart_targeting_extension:targeting_data()
 	local aim_assist_context = self:_aim_assist_context()
@@ -74,7 +76,7 @@ DefaultPlayerOrientation.pre_update = function (self, main_t, main_dt, input, se
 	local yaw = (orientation.yaw - look_delta.x) % PI_2
 	local pitch = math.clamp((orientation.pitch + PI) % PI_2 - PI + look_delta.y, min_pitch, max_pitch) % PI_2
 
-	yaw, pitch = AimAssist.apply_aim_assist(main_t, main_dt, input, targeting_data, aim_assist_ramp_component, weapon_action_component, yaw, pitch, position)
+	yaw, pitch = AimAssist.apply_aim_assist(main_t, main_dt, input, targeting_data, aim_assist_ramp_component, weapon_action_component, yaw, pitch, position, combat_ability_action_component, grenade_ability_action_component)
 	orientation.yaw = math.mod_two_pi(yaw)
 	orientation.pitch = math.mod_two_pi(pitch)
 	orientation.roll = 0

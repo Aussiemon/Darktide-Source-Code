@@ -25,7 +25,7 @@ end
 
 table.sort(archetype_names_array)
 
-archetype_settings = {
+local archetype_settings = {
 	archetype_names = archetype_names,
 	archetype_names_array = archetype_names_array,
 	archetype_cosmetics_whitelist = {

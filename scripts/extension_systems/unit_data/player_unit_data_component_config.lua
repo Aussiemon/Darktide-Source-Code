@@ -260,6 +260,12 @@ local WARP_CHARGE_TEMPLATES = {
 
 _extract_weapon_tweak_template_names(WARP_CHARGE_TEMPLATES, tweak_template_types.warp_charge)
 
+local WEAPON_CHAIN_LIGHTNING_TEMPLATES = {
+	"none",
+}
+
+_extract_weapon_tweak_template_names(WEAPON_CHAIN_LIGHTNING_TEMPLATES, tweak_template_types.weapon_chain_lightning)
+
 local BURNINATING_TEMPLATES = {
 	"none",
 }
@@ -574,6 +580,7 @@ local PlayerComponentConfig = {
 		position = "locomotion_position",
 		rotation = "locomotion_rotation",
 		velocity_current = "Vector3",
+		velocity_current_before_z_stepup_cut = "Vector3",
 	},
 	player_unit_linker = {
 		linked = "bool",
@@ -703,6 +710,7 @@ local PlayerComponentConfig = {
 			"mutant_charged",
 			"consumed",
 			"grabbed",
+			"vortex_grabbed",
 		},
 		trigger_animation = {
 			"none",
@@ -727,6 +735,7 @@ local PlayerComponentConfig = {
 			"mutant_charged",
 			"consumed",
 			"grabbed",
+			"vortex_grabbed",
 		},
 	},
 	debug_state_input = {
@@ -1034,6 +1043,7 @@ local PlayerComponentConfig = {
 		sway_template_name = SWAY_TEMPLATES,
 		toughness_template_name = TOUGHNESS_TEMPLATES,
 		warp_charge_template_name = WARP_CHARGE_TEMPLATES,
+		weapon_chain_lightning_template_name = WEAPON_CHAIN_LIGHTNING_TEMPLATES,
 		weapon_handling_template_name = WEAPON_HANDLING_TEMPLATES,
 		weapon_shout_template_name = WEAPON_SHOUT_TEMPLATES,
 	},

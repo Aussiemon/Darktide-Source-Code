@@ -9,6 +9,7 @@ local NavGraphSystem = class("NavGraphSystem", "ExtensionSystemBase")
 NavGraphSystem.init = function (self, ...)
 	NavGraphSystem.super.init(self, ...)
 
+	self._despawning_nav_graphs = {}
 	self._smart_object_id_to_extension = {}
 end
 
@@ -28,6 +29,14 @@ end
 NavGraphSystem.destroy = function (self)
 	SmartObject.reset_last_smart_object_id()
 	NavGraphSystem.super.destroy(self)
+end
+
+NavGraphSystem.are_nav_graphs_pending_removal = function (self)
+	return not table.is_empty(self._despawning_nav_graphs)
+end
+
+NavGraphSystem.add_despawning_nav_graph = function (self, nav_graph)
+	self._despawning_nav_graphs[nav_graph] = true
 end
 
 NavGraphSystem.register_smart_object_id_to_extension = function (self, smart_object_id, extension)
@@ -50,6 +59,14 @@ NavGraphSystem.unregister_smart_object_id_from_extension = function (self, smart
 	local smart_object_id_to_extension = self._smart_object_id_to_extension
 
 	smart_object_id_to_extension[smart_object_id] = nil
+end
+
+NavGraphSystem.update = function (self, context, dt, t)
+	for nav_graph in pairs(self._despawning_nav_graphs) do
+		if not GwNavGraph.is_in_database(nav_graph) then
+			self._despawning_nav_graphs[nav_graph] = nil
+		end
+	end
 end
 
 NavGraphSystem.smart_object_layer_type = function (self, smart_object_id)

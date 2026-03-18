@@ -2,24 +2,19 @@
 
 local GameStateDebug = class("GameStateDebug")
 
-GameStateDebug.DEBUG = false
-
 local function _debug_print(format, ...)
-	if GameStateDebug.DEBUG then
-		Log.info("GameStateDebug", format, ...)
-	end
+	Log.debug("GameStateDebug", format, ...)
 end
 
 local function _debug_warn(format, ...)
-	if GameStateDebug.DEBUG then
-		Log.warning("GameStateDebug", format, ...)
-	end
+	Log.warning("GameStateDebug", format, ...)
 end
 
 GameStateDebug.init = function (self)
 	self._state_machines = {}
-	self._cached_description = ""
 	self._dirty = true
+	self._cached_description = ""
+	self._top_level_cache = {}
 end
 
 GameStateDebug.on_state_machine_created = function (self, parent_sm_name, sm_name, initial_state)
@@ -117,35 +112,41 @@ GameStateDebug._create_descriptions = function (self, sm)
 	end
 end
 
-GameStateDebug.get_current_state_description = function (self)
-	if not self._dirty then
-		return self._cached_description, self._num_lines
-	end
-
-	local full_description = ""
-	local sms = self._state_machines
-	local num_lines = 0
-
-	for _, sm in pairs(sms) do
-		local branches = self:_create_descriptions(sm)
-
-		for _, branch in ipairs(branches) do
-			full_description = full_description .. branch .. "\n"
-			num_lines = num_lines + 1
-		end
-	end
-
+GameStateDebug._update_cache = function (self)
 	self._dirty = false
 
-	if num_lines > 1 then
-		full_description = "\t\n" .. full_description
-		num_lines = num_lines + 1
+	local lines = {}
+
+	for name, sm in pairs(self._state_machines) do
+		local branches = self:_create_descriptions(sm)
+
+		self._top_level_cache[name] = {
+			table.concat(branches, "\n"),
+			#branches,
+		}
+
+		table.append(lines, branches)
 	end
 
-	self._cached_description = full_description
-	self._num_lines = num_lines
+	if #lines <= 1 then
+		self._cached_description, self._num_lines = table.concat(lines, "\n"), #lines
 
-	return full_description, num_lines
+		return
+	end
+
+	self._cached_description, self._num_lines = "\t\n" .. table.concat(lines, "\n"), 1 + #lines
+end
+
+GameStateDebug.get_current_state_description = function (self, name)
+	if self._dirty then
+		self:_update_cache()
+	end
+
+	if name then
+		return unpack(self._top_level_cache[name] or {})
+	end
+
+	return self._cached_description, self._num_lines
 end
 
 return GameStateDebug

@@ -134,22 +134,20 @@ VotingManager.is_host = function (self, voting_id)
 	return self:_get_impl_by_vote_id(voting_id):is_host(voting_id)
 end
 
-VotingManager.create_notification = function (self, voting_id, data)
-	if not DEDICATED_SERVER then
-		return self._notification_handler:create(voting_id, data)
+VotingManager.set_notification = function (self, voting_id, data, sound_event)
+	if DEDICATED_SERVER then
+		return
 	end
+
+	self._notification_handler:set(voting_id, data, sound_event)
 end
 
-VotingManager.modify_notification = function (self, voting_id, data)
-	if not DEDICATED_SERVER then
-		return self._notification_handler:modify(voting_id, data)
+VotingManager.unset_notification = function (self, voting_id)
+	if DEDICATED_SERVER then
+		return
 	end
-end
 
-VotingManager.remove_notification = function (self, voting_id)
-	if not DEDICATED_SERVER then
-		return self._notification_handler:remove(voting_id)
-	end
+	self._notification_handler:unset(voting_id)
 end
 
 return VotingManager

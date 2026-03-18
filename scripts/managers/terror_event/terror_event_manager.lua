@@ -20,6 +20,7 @@ TerrorEventManager.init = function (self, world, is_server, network_event_delega
 	self._wwise_world = Managers.world:wwise_world(world)
 	self._level = nil
 	self._point_modifier = 1
+	self._max_points_modifier = 1
 	self._terror_trickle_data = {
 		spawned_minion_data = {},
 	}
@@ -59,22 +60,27 @@ TerrorEventManager._load_mission_event_templates = function (self, mission)
 	if mission_template_files then
 		for i = 1, #mission_template_files do
 			local template_file = mission_template_files[i]
-			local template = TerrorEventTemplates[template_file]
-			local events = template.events
 
-			if events then
-				table.merge(event_templates, events)
-			end
-
-			local random_events = template.random_events
-
-			if random_events then
-				table.merge(random_event_templates, random_events)
-			end
+			self:_load_event_template(template_file, event_templates, random_event_templates)
 		end
 	end
 
 	return event_templates, random_event_templates
+end
+
+TerrorEventManager._load_event_template = function (self, template_file, event_templates, random_event_templates)
+	local template = TerrorEventTemplates[template_file]
+	local events = template.events
+
+	if events then
+		table.merge(event_templates, events)
+	end
+
+	local random_events = template.random_events
+
+	if random_events then
+		table.merge(random_event_templates, random_events)
+	end
 end
 
 TerrorEventManager._create_network_lookups = function (self, events)
@@ -290,12 +296,30 @@ TerrorEventManager.get_terror_event_point_modifier = function (self)
 	return self._point_modifier
 end
 
+TerrorEventManager.set_max_points_modifer = function (self, modifer)
+	self._max_points_modifier = modifer
+end
+
+TerrorEventManager.get_max_points_modifer = function (self)
+	return self._max_points_modifier
+end
+
 TerrorEventManager.replace_terror_event_tags = function (self, tags_to_replace)
 	self._tags_replacement = tags_to_replace
 end
 
 TerrorEventManager.get_tags_replacement = function (self, side_name)
 	local tags_replacement = self._tags_replacement
+
+	return tags_replacement and tags_replacement[side_name]
+end
+
+TerrorEventManager.replace_excluded_terror_event_tags = function (self, tags_to_replace)
+	self._excluded_tags_replacement = tags_to_replace
+end
+
+TerrorEventManager.get_excluded_tags_replacement = function (self, side_name)
+	local tags_replacement = self._excluded_tags_replacement
 
 	return tags_replacement and tags_replacement[side_name]
 end

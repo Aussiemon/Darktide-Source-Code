@@ -52,7 +52,7 @@ local function _apply_all_weapon_modifiers(local_player, weapon_template)
 
 	local weapon_system = Managers.state.extension:system("weapon_system")
 
-	weapon_system:debug_set_weapon_override(local_player, new_modifiers)
+	weapon_system:debug_set_weapon_overrides(local_player, new_modifiers)
 end
 
 local PlayerManagerFixedTestify = {
@@ -69,7 +69,7 @@ local PlayerManagerFixedTestify = {
 		local player = data.player
 		local weapon_system = Managers.state.extension:system("weapon_system")
 
-		weapon_system:debug_set_weapon_override(player, RESET_WEAPON_MODIFIERS)
+		weapon_system:debug_set_weapon_overrides(player, RESET_WEAPON_MODIFIERS)
 	end,
 	reset_grenade_charges = function (_, _, data)
 		local player = data.player

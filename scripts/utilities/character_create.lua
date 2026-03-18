@@ -3,6 +3,7 @@
 local Archetypes = require("scripts/settings/archetype/archetypes")
 local ArchetypeSettings = require("scripts/settings/archetype/archetype_settings")
 local Breeds = require("scripts/settings/breed/breeds")
+local BreedQueries = require("scripts/utilities/breed_queries")
 local Childhood = require("scripts/settings/character/childhood")
 local Crimes = require("scripts/settings/character/crimes")
 local CrimesCompabilityMap = require("scripts/settings/character/crimes_compability_mapping")
@@ -490,10 +491,7 @@ CharacterCreate._setup_default_values = function (self)
 
 	self._archetypes_array = archetypes_array
 	self._archetype_names_array = archetype_names_array
-	self._breeds_array = {
-		"human",
-		"ogryn",
-	}
+	self._breeds_array = BreedQueries.player_breed_names_array()
 	self._genders_array = {
 		"female",
 		"male",

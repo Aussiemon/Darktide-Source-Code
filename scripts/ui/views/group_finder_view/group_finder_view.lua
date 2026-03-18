@@ -1724,13 +1724,13 @@ GroupFinderView._cb_on_start_group_button_pressed = function (self)
 
 	local promise, id = party_immaterium:start_party_finder_advertise(metadata_config, tags_for_group_advertisement, region)
 
-	Log.info("Party advertisement initiated with ID:", id)
+	Log.info("GroupFinderView", "Party advertisement initiated with ID: %s", id)
 	self._promise_container:cancel_on_destroy(promise)
 	promise:next(function (result)
-		Log.info("Party advertisement successfully started with result:", result)
+		Log.info("GroupFinderView", "Party advertisement successfully started with result: %s", result)
 		self:_set_state(STATE.advertising)
 	end):catch(function (error)
-		Log.error("Failed to start party advertisement. Error:", table.tostring(error, 10))
+		Log.error("GroupFinderView", "Failed to start party advertisement. Error: %s", table.tostring(error, 10))
 	end)
 	self:_play_sound(UISoundEvents.group_finder_own_group_advertisement_start)
 end

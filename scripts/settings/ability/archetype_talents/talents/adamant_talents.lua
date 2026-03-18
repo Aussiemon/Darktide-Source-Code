@@ -1,12 +1,9 @@
 ﻿-- chunkname: @scripts/settings/ability/archetype_talents/talents/adamant_talents.lua
 
-local BuffSettings = require("scripts/settings/buff/buff_settings")
 local PlayerAbilities = require("scripts/settings/ability/player_abilities/player_abilities")
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
-local proc_events = BuffSettings.proc_events
 local special_rules = SpecialRulesSettings.special_rules
-local stat_buffs = BuffSettings.stat_buffs
 local talent_settings = TalentSettings.adamant
 local math_round = math.round
 
@@ -199,7 +196,7 @@ local archetype_talents = {
 			},
 		},
 		adamant_stance = {
-			description = "loc_talent_adamant_stance_ability_alt_description",
+			description = "loc_talent_adamant_stance_ability_power_description",
 			display_name = "loc_talent_adamant_stance_ability_name",
 			large_icon = "content/ui/textures/icons/talents/adamant/adamant_ability_stance",
 			name = "Stance",
@@ -227,6 +224,16 @@ local archetype_talents = {
 					value_manipulation = function (value)
 						return 100 * (1 - value)
 					end,
+				},
+				damage = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.combat_ability.stance.damage,
+				},
+				strength = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.combat_ability.stance.damage,
 				},
 				damage_taken = {
 					format_type = "percentage",
@@ -315,7 +322,7 @@ local archetype_talents = {
 			},
 		},
 		adamant_stance_ranged_kills_transfer_ammo = {
-			description = "loc_talent_adamant_stance_ranged_kills_transfer_ammo_desc",
+			description = "loc_talent_adamant_stance_ranged_kills_transfer_ammo_no_cd_desc",
 			display_name = "loc_talent_adamant_stance_ranged_kills_transfer_ammo",
 			name = "",
 			format_values = {
@@ -542,7 +549,7 @@ local archetype_talents = {
 			},
 		},
 		adamant_area_buff_drone_improved = {
-			description = "loc_talent_ability_area_buff_drone_ct_description",
+			description = "loc_talent_ability_area_buff_drone_improved_description",
 			display_name = "loc_talent_ability_area_buff_drone",
 			large_icon = "content/ui/textures/icons/talents/adamant/adamant_ability_area_buff_drone",
 			name = "Nuncio-Aquila",
@@ -1826,37 +1833,40 @@ local archetype_talents = {
 			},
 		},
 		adamant_terminus_warrant = {
-			description = "loc_talent_adamant_terminus_warrant_shortened_alt_desc",
+			description = "loc_talent_adamant_terminus_warrant_new_desc",
 			display_name = "loc_talent_adamant_bullet_rain",
 			name = "",
 			format_values = {
-				melee_damage = {
-					format_type = "percentage",
-					prefix = "+",
-					value = talent_settings.terminus_warrant.melee_damage,
+				max_stacks = {
+					format_type = "number",
+					value = talent_settings.terminus_warrant.max_stacks,
 				},
-				melee_cleave = {
+				weakspot_stacks = {
+					format_type = "number",
+					value = talent_settings.terminus_warrant.ranged_stacks_on_weakspot,
+				},
+				melee_strength = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.melee_cleave,
+					value = talent_settings.terminus_warrant.melee_power_level_modifier,
 				},
 				melee_impact = {
 					format_type = "percentage",
 					prefix = "+",
 					value = talent_settings.terminus_warrant.melee_impact,
 				},
-				melee_remove = {
-					format_type = "number",
-					value = talent_settings.terminus_warrant.melee_remove,
-				},
-				ranged_remove = {
-					format_type = "number",
-					value = talent_settings.terminus_warrant.ranged_remove,
-				},
-				ranged_damage = {
+				ranged_strength = {
 					format_type = "percentage",
 					prefix = "+",
-					value = talent_settings.terminus_warrant.ranged_damage,
+					value = talent_settings.terminus_warrant.ranged_power_level_modifier,
+				},
+				tdr = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.terminus_warrant.toughness_damage_taken_multiplier,
+					value_manipulation = function (value)
+						return math_round((1 - value) * 100)
+					end,
 				},
 				suppression = {
 					format_type = "percentage",
@@ -1868,32 +1878,58 @@ local archetype_talents = {
 					prefix = "+",
 					value = talent_settings.terminus_warrant.ranged_max_hit_mass_attack_modifier,
 				},
-				melee_attack_speed = {
-					format_type = "percentage",
-					prefix = "+",
-					value = talent_settings.terminus_warrant.melee_attack_speed,
-				},
-				fire_rate = {
-					format_type = "percentage",
-					prefix = "+",
-					value = talent_settings.terminus_warrant.fire_rate,
-				},
-				max_stacks = {
+				ranged_duration = {
 					format_type = "number",
-					value = talent_settings.terminus_warrant.max_stacks,
+					value = talent_settings.terminus_warrant.ranged_duration,
 				},
-				swap_stacks = {
+				melee_duration = {
 					format_type = "number",
-					value = talent_settings.terminus_warrant.swap_stacks,
-				},
-				duration = {
-					format_type = "number",
-					value = talent_settings.terminus_warrant.duration,
+					value = talent_settings.terminus_warrant.melee_duration,
 				},
 			},
 			passive = {
 				buff_template_name = "adamant_terminus_warrant",
 				identifier = "adamant_terminus_warrant",
+			},
+		},
+		adamant_terminus_warrant_support = {
+			description = "loc_talent_adamant_terminus_warrant_support_desc",
+			display_name = "loc_talent_adamant_bullet_rain_toughness",
+			name = "",
+			format_values = {
+				toughness = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.terminus_warrant.toughness_replenish,
+				},
+			},
+			special_rule = {
+				identifier = "adamant_terminus_warrant_support_talent",
+				special_rule_name = special_rules.adamant_terminus_warrant_support_talent,
+			},
+		},
+		adamant_terminus_warrant_cdr = {
+			description = "loc_talent_adamant_terminus_warrant_cdr_desc",
+			display_name = "loc_talent_adamant_bullet_rain_tdr",
+			name = "",
+			format_values = {
+				cdr = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.terminus_warrant.cdr,
+				},
+				stacks = {
+					format_type = "number",
+					value = talent_settings.terminus_warrant.max_stacks,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.terminus_warrant.cdr_duration,
+				},
+			},
+			special_rule = {
+				identifier = "adamant_terminus_warrant_cdr_talent",
+				special_rule_name = special_rules.adamant_terminus_warrant_cdr_talent,
 			},
 		},
 		adamant_terminus_warrant_upgrade = {
@@ -1926,18 +1962,31 @@ local archetype_talents = {
 			},
 		},
 		adamant_terminus_warrant_ranged = {
-			description = "loc_talent_adamant_terminus_warrant_ranged_alt_desc",
+			description = "loc_talent_adamant_terminus_warrant_reload_fire_rate_desc",
 			display_name = "loc_talent_adamant_bullet_rain_fire_rate",
 			name = "",
 			format_values = {
+				ammo = {
+					format_type = "percentage",
+					value = talent_settings.terminus_warrant.reload_per_stack,
+				},
 				reload_speed = {
 					format_type = "percentage",
 					prefix = "+",
 					value = talent_settings.terminus_warrant.reload_speed,
 				},
-				bonus_stacks = {
+				ranged_attack_speed = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.terminus_warrant.ranged_attack_speed,
+				},
+				stacks = {
 					format_type = "number",
-					value = talent_settings.terminus_warrant.bonus_stacks,
+					value = talent_settings.terminus_warrant.ranged_swap_stacks,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.terminus_warrant.ranged_duration,
 				},
 			},
 			special_rule = {
@@ -1946,7 +1995,7 @@ local archetype_talents = {
 			},
 		},
 		adamant_terminus_warrant_melee = {
-			description = "loc_talent_adamant_terminus_warrant_toughness_desc",
+			description = "loc_talent_adamant_terminus_warrant_toughness_alt_desc",
 			display_name = "loc_talent_adamant_bullet_rain_toughness",
 			name = "",
 			format_values = {
@@ -2006,6 +2055,54 @@ local archetype_talents = {
 			special_rule = {
 				identifier = "adamant_terminus_warrant_improved_talent",
 				special_rule_name = special_rules.adamant_terminus_warrant_improved_talent,
+			},
+		},
+		adamant_terminus_warrant_improved_combined = {
+			description = "loc_talent_adamant_terminus_warrant_improved_combined_desc",
+			display_name = "loc_talent_adamant_bullet_rain_ability",
+			name = "",
+			format_values = {
+				attack_speed = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.terminus_warrant.melee_attack_speed,
+				},
+				crit_chance = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.terminus_warrant.crit_chance,
+				},
+				rending = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.terminus_warrant.melee_rending,
+				},
+				crit_damage = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.terminus_warrant.crit_damage,
+				},
+				weakspot_damage = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.terminus_warrant.weakspot_damage,
+				},
+				melee_stacks = {
+					format_type = "number",
+					value = talent_settings.terminus_warrant.max_stacks,
+				},
+				ranged_stacks = {
+					format_type = "number",
+					value = talent_settings.terminus_warrant.max_stacks,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.terminus_warrant.upgrade_duration,
+				},
+			},
+			special_rule = {
+				identifier = "adamant_terminus_warrant_upgrade_talent",
+				special_rule_name = special_rules.adamant_terminus_warrant_upgrade_talent,
 			},
 		},
 		adamant_exterminator = {

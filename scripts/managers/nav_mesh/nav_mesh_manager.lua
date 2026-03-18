@@ -153,6 +153,7 @@ end
 NavMeshManager.add_nav_tag_volumes_for_level = function (self, level, optional_position, optional_rotation)
 	local nav_tag_volume_data = {}
 	local level_name = Level.name(level):match("(.+)%..+$")
+	local level_index = Managers.state.unit_spawner:index_by_level(level)
 	local file_path = level_name .. "_volume_data"
 
 	if Application.can_get_resource("lua", file_path) then
@@ -188,10 +189,11 @@ NavMeshManager.add_nav_tag_volumes_for_level = function (self, level, optional_p
 		end
 
 		local volume_name = data.name
+		local layer_name = volume_name .. "_level_" .. tostring(level_index)
 		local volume_allowed = true
 		local volume_type = data.type
 
-		level_nav_tag_volumes[#level_nav_tag_volumes + 1] = self:add_nav_tag_volume(bottom_points, alt_min_z, alt_max_z, volume_name, volume_allowed, volume_type)
+		level_nav_tag_volumes[#level_nav_tag_volumes + 1] = self:add_nav_tag_volume(bottom_points, alt_min_z, alt_max_z, layer_name, volume_allowed, volume_type)
 	end
 
 	self._level_nav_tags[level] = level_nav_tag_volumes
@@ -201,7 +203,7 @@ NavMeshManager.remove_nav_tag_volumes_for_level = function (self, level)
 	local level_nav_tag_volumes = self._level_nav_tags[level]
 
 	if not level_nav_tag_volumes then
-		Log.error("NavMeshManager", "[remove_nav_tag_volumes_for_level] trying to remove nav tags volumes for level: %s, which wass not added", Level.name(level))
+		Log.error("NavMeshManager", "[remove_nav_tag_volumes_for_level] trying to remove nav tags volumes for level: %s, which was not added", level)
 
 		return
 	end
@@ -234,6 +236,7 @@ NavMeshManager.add_nav_tag_volume = function (self, bottom_points, altitude_min,
 		name = layer_name,
 		type = optional_type,
 		bottom_points = Navigation.vector3s_to_arrays(bottom_points),
+		nav_tag_volume = nav_tag_volume,
 	}
 
 	if not self._is_server then
@@ -283,7 +286,7 @@ NavMeshManager.remove_nav_tag_volume = function (self, nav_tag_volume)
 end
 
 NavMeshManager.are_nav_volumes_being_added_or_removed = function (self)
-	return GwNavTagVolume.all_integrated(self._nav_world)
+	return not GwNavTagVolume.all_integrated(self._nav_world)
 end
 
 NavMeshManager.num_nav_tag_volumes = function (self)
@@ -457,7 +460,11 @@ NavMeshManager._destroy_nav_cost_maps = function (self)
 end
 
 NavMeshManager._destroy_nav_tag_volumes = function (self)
-	self._nav_tag_volume_data = nil
+	for _, volume_data in pairs(self._nav_tag_volume_data) do
+		GwNavTagVolume.destroy(volume_data.nav_tag_volume)
+	end
+
+	table.clear(self._nav_tag_volume_data)
 end
 
 NavMeshManager.nav_cost_map = function (self, cost_map_id)
@@ -697,6 +704,14 @@ NavMeshManager.set_async_paused = function (self, paused)
 	end
 
 	self._async_update_paused = not not paused
+end
+
+NavMeshManager.on_recover = function (self)
+	if self._async_update_running then
+		GwNavWorld.join_async_update(self._nav_world)
+
+		self._async_update_running = false
+	end
 end
 
 NavMeshManager.hot_join_sync = function (self, sender, channel)

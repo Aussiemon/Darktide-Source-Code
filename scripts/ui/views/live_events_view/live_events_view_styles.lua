@@ -145,6 +145,21 @@ Styles.texts.rewards_track_text = {
 		50,
 	},
 }
+Styles.texts.active_text = {
+	font_size = 12,
+	font_type = "proxima_nova_bold",
+	horizontal_alignment = "center",
+	text_horizontal_alignment = "left",
+	text_vertical_alignment = "top",
+	vertical_alignment = "center",
+	text_color = Color.golden_rod(255, true),
+	offset = {
+		0,
+		0,
+		2,
+	},
+	size = sizes.event_button_size,
+}
 Styles.entry = {}
 Styles.entry.background = {
 	horizontal_alignment = "center",
@@ -225,7 +240,7 @@ Styles.reward.background = {
 		0,
 		10,
 	},
-	color = Color.black(225, true),
+	color = Color.black(165, true),
 }
 Styles.reward.hotspot = {
 	on_hover_sound = UISoundEvents.default_mouse_hover,
@@ -321,7 +336,7 @@ Styles.reward.amount = {
 }
 Styles.reward.bar_connection_line = {
 	horizontal_alignment = "left",
-	vertical_alignment = "center",
+	vertical_alignment = "bottom",
 	size = {
 		2,
 		50,
@@ -329,8 +344,8 @@ Styles.reward.bar_connection_line = {
 	color = Color.terminal_text_body(200, true),
 	offset = {
 		0,
-		-30,
-		2,
+		-16,
+		-2,
 	},
 }
 Styles.event_progress_bar = {}
@@ -372,11 +387,11 @@ Styles.event_progress_bar.progress_text = {
 	horizontal_alignment = "center",
 	text_horizontal_alignment = "center",
 	text_vertical_alignment = "center",
-	vertical_alignment = "center",
+	vertical_alignment = "bottom",
 	text_color = Color.golden_rod(255, true),
 	offset = {
 		0,
-		40,
+		50,
 		2,
 	},
 	size = {

@@ -69,6 +69,38 @@ local wallet_settings = {
 			small = "loc_pickup_small_platinum",
 		},
 	},
+	expedition_salvage = {
+		backend_index = 1,
+		display_name = "loc_currency_name_expedition_salvage",
+		font_gradient_material = "content/ui/materials/font_gradients/slug_font_gradient_diamantine",
+		font_gradient_material_insufficient_funds = "content/ui/materials/font_gradients/slug_font_gradient_insufficient_funds",
+		icon_texture_big = "content/ui/materials/icons/currencies/salvage_big",
+		icon_texture_small = "content/ui/materials/icons/currencies/salvage_small",
+		show_in_character_menu = false,
+		sort_order = 2,
+		string_symbol = "",
+		notification_sound_event = UISoundEvents.notification_expedition_currency_recieved_salvage,
+		pickup_localization_by_size = {
+			large = "loc_pickup_large_platinum",
+			small = "loc_pickup_small_platinum",
+		},
+	},
+	expedition_loot = {
+		backend_index = 1,
+		display_name = "loc_currency_name_expedition_loot",
+		font_gradient_material = "content/ui/materials/font_gradients/slug_font_gradient_diamantine",
+		font_gradient_material_insufficient_funds = "content/ui/materials/font_gradients/slug_font_gradient_insufficient_funds",
+		icon_texture_big = "content/ui/materials/icons/currencies/tech_remnant_big",
+		icon_texture_small = "content/ui/materials/icons/currencies/tech_remnant_small",
+		show_in_character_menu = false,
+		sort_order = 1,
+		string_symbol = "",
+		notification_sound_event = UISoundEvents.notification_expedition_currency_recieved_loot,
+		pickup_localization_by_size = {
+			large = "loc_pickup_large_platinum",
+			small = "loc_pickup_small_platinum",
+		},
+	},
 }
 
 for key, value in pairs(wallet_settings) do

@@ -9,6 +9,9 @@ local TelemetryManagerTestify = {
 			return Testify.RETRY
 		end
 	end,
+	telemetry_collect_all_allocators = function (telemetry_manager)
+		telemetry_manager:set_allocators_to_track_testify({})
+	end,
 }
 
 return TelemetryManagerTestify

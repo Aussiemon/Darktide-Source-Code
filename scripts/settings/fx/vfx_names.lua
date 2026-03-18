@@ -118,7 +118,6 @@ for name, template in pairs(MinionPushFxTemplates) do
 end
 
 vfx_names["content/fx/particles/enemies/bolstering_shockwave"] = true
-vfx_names["content/fx/particles/enemies/renegade_psyker/renegade_psyker_summoning_circle"] = true
 vfx_names["content/fx/particles/weapons/force_staff/force_staff_impact_01"] = true
 vfx_names["content/fx/particles/debug/fx_debug_1m_burst"] = true
 vfx_names["content/fx/particles/impacts/flesh/nurgle_corruption_death"] = true
@@ -128,6 +127,7 @@ vfx_names["content/fx/particles/screenspace/screen_gardens_embrace"] = true
 vfx_names["content/fx/particles/enemies/buff_gardens_embrace_head"] = true
 vfx_names["content/fx/particles/enemies/buff_gardens_embrace_head_02"] = true
 vfx_names["content/fx/particles/enemies/enraged_elites_rage"] = true
+vfx_names["content/fx/particles/enemies/chaos_ogryn/houndmaster_poker"] = true
 vfx_names["content/fx/particles/enemies/rotten_armor_leak"] = true
 vfx_names["content/fx/particles/enemies/rotten_armor_death"] = true
 vfx_names["content/fx/particles/enemies/rotten_armor_death"] = true
@@ -147,5 +147,6 @@ vfx_names["content/fx/particles/player_buffs/buff_electricity_grenade_01"] = tru
 vfx_names["content/fx/particles/player_buffs/buff_electricity_one_target_01"] = true
 vfx_names["content/fx/particles/abilities/squad_leader_ability_shout_activate"] = true
 vfx_names["content/fx/particles/enemies/renegade_plasma_trooper/renegade_plasma_explosion_medium"] = true
+vfx_names["content/fx/particles/environment/valkyrie_takeoff_kickup_dust"] = true
 
 return vfx_names

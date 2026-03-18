@@ -212,102 +212,6 @@ local entry_base = UIWidget.create_definition({
 		style = Styles.entry.background,
 	},
 }, "entries_anchor")
-
-local function _reward_elements_change_function(content, style, dt, animations)
-	local hotspot = content.hotspot or content.parent.hotspot
-
-	if hotspot.is_hover then
-		style.color = style.hover_color
-	elseif InputDevice.gamepad_active and hotspot.is_selected then
-		style.color = style.selected_color
-	else
-		style.color = style.default_color
-	end
-end
-
-local function create_reward_widget(scenegraph_id, reward, tier_index, reward_index)
-	local reward_type = reward.type
-	local amount = reward.amount
-	local currency = reward.currency
-	local currency_settings = currency and WalletSettings[currency]
-	local currency_icon = currency_settings and currency_settings.icon_texture_big
-	local id = reward.id
-	local passes = {}
-	local reward_frame_pass = {
-		pass_type = "texture",
-		style_id = "frame",
-		value = "content/ui/materials/frames/frame_tile_2px",
-		value_id = "frame",
-		style = Styles.reward.frame,
-		change_function = _reward_elements_change_function,
-	}
-	local reward_corner_frame_pass = {
-		pass_type = "texture",
-		style_id = "frameframe_corner",
-		value = "content/ui/materials/frames/frame_corner_2px",
-		value_id = "frame_corner",
-		style = Styles.reward.frame_corner,
-		change_function = _reward_elements_change_function,
-	}
-	local reward_background_pass = {
-		pass_type = "texture",
-		style_id = "background",
-		value = "content/ui/materials/backgrounds/terminal_basic",
-		value_id = "background",
-		style = Styles.reward.background,
-	}
-	local reward_hotspot_pass = {
-		content_id = "hotspot",
-		pass_type = "hotspot",
-		style_id = "hotspot",
-		style = Styles.reward.hotspot,
-	}
-
-	passes[#passes + 1] = reward_frame_pass
-	passes[#passes + 1] = reward_background_pass
-	passes[#passes + 1] = reward_hotspot_pass
-	passes[#passes + 1] = reward_corner_frame_pass
-
-	if reward_type == "currency" then
-		local reward_icon_pass = {
-			pass_type = "texture",
-			style_id = "icon",
-			value_id = "icon",
-			value = currency_icon,
-			style = Styles.reward.currency_icon,
-		}
-		local amount_text_pass = {
-			pass_type = "text",
-			style_id = "amount",
-			value_id = "amount",
-			value = tostring(amount),
-			style = Styles.reward.amount,
-		}
-
-		passes[#passes + 1] = reward_icon_pass
-		passes[#passes + 1] = amount_text_pass
-	elseif reward_type == "item" then
-		local reward_icon_pass = {
-			pass_type = "texture",
-			style_id = "icon",
-			value = "content/ui/materials/icons/items/containers/item_container_landscape",
-			value_id = "icon",
-			style = Styles.reward.icon,
-		}
-
-		passes[#passes + 1] = reward_icon_pass
-	end
-
-	local widget_definition = UIWidget.create_definition(passes, scenegraph_id)
-
-	return widget_definition
-end
-
-local event_progress_bar_content_override = {
-	progress = 0,
-	bar_length = scenegraph_definition.event_progress_bar.size[1],
-}
-local event_progress_bar = UIWidget.create_definition(BarPassTemplates.experience_bar, "event_progress_bar", event_progress_bar_content_override)
 local reward_info_tooltip = UIWidget.create_definition({
 	{
 		pass_type = "texture",
@@ -361,8 +265,7 @@ local reward_info_tooltip = UIWidget.create_definition({
 	},
 }, "reward_tooltip")
 local widget_definitions = {
-	entry_base = entry_base,
-	event_progress_bar = event_progress_bar,
+	reward_info_tooltip = reward_info_tooltip,
 	progress_text = UIWidget.create_definition({
 		{
 			pass_type = "text",
@@ -371,11 +274,9 @@ local widget_definitions = {
 			style = Styles.event_progress_bar.progress_text,
 		},
 	}, "event_progress_bar"),
-	reward_info_tooltip = reward_info_tooltip,
 }
 
 return {
-	create_reward_widget = create_reward_widget,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
 }

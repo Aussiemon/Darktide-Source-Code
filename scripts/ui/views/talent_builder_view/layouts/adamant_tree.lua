@@ -6,7 +6,7 @@ return {
 	name = "adamant_tree",
 	node_points = 30,
 	talent_points = 30,
-	version = 18,
+	version = 19,
 	nodes = {
 		{
 			cost = 0,
@@ -571,6 +571,7 @@ return {
 		},
 		{
 			cost = 1,
+			icon = "content/ui/textures/frames/talents/circular_small_frame",
 			max_points = 1,
 			talent = "base_toughness_damage_reduction_node_buff_medium_1",
 			type = "stat",
@@ -691,6 +692,7 @@ return {
 		},
 		{
 			cost = 1,
+			icon = "content/ui/textures/frames/talents/circular_small_frame",
 			max_points = 1,
 			talent = "base_ranged_damage_node_buff_medium_1",
 			type = "stat",
@@ -713,6 +715,7 @@ return {
 		},
 		{
 			cost = 1,
+			icon = "content/ui/textures/frames/talents/circular_small_frame",
 			max_points = 1,
 			talent = "base_melee_damage_node_buff_medium_1",
 			type = "stat",
@@ -936,6 +939,7 @@ return {
 		},
 		{
 			cost = 1,
+			icon = "content/ui/textures/frames/talents/circular_small_frame",
 			max_points = 1,
 			talent = "base_cleave_node_buff_medium_1",
 			type = "stat",
@@ -961,6 +965,7 @@ return {
 		},
 		{
 			cost = 1,
+			icon = "content/ui/textures/frames/talents/circular_small_frame",
 			max_points = 1,
 			talent = "base_impact_node_buff_medium_1",
 			type = "stat",
@@ -1428,7 +1433,7 @@ return {
 			cost = 1,
 			icon = "content/ui/textures/icons/talents/adamant/adamant_terminus_warrant_ranged",
 			max_points = 1,
-			talent = "adamant_terminus_warrant_ranged",
+			talent = "adamant_terminus_warrant_cdr",
 			type = "keystone_modifier",
 			widget_name = "node_b6adf64e-bc34-455a-a059-552c4fb0f8a0",
 			x = 965,
@@ -1447,9 +1452,9 @@ return {
 		},
 		{
 			cost = 1,
-			icon = "content/ui/textures/icons/talents/adamant/adamant_terminus_warrant_melee",
+			icon = "content/ui/textures/icons/talents/adamant/adamant_terminus_warrant_tdr",
 			max_points = 1,
-			talent = "adamant_terminus_warrant_melee",
+			talent = "adamant_terminus_warrant_support",
 			type = "keystone_modifier",
 			widget_name = "node_446b745a-e92e-4e31-8cc0-0ee5327f5674",
 			x = 1205,
@@ -1459,26 +1464,6 @@ return {
 			},
 			parents = {
 				"node_65d7f26b-711e-4ef9-ae0e-5bad2ac7a818",
-			},
-			requirements = {
-				all_parents_chosen = false,
-				children_unlock_points = 1,
-				min_points_spent = 0,
-			},
-		},
-		{
-			cost = 1,
-			icon = "content/ui/textures/icons/talents/adamant/adamant_terminus_warrant_fire_rate",
-			max_points = 1,
-			talent = "adamant_terminus_warrant_improved",
-			type = "keystone_modifier",
-			widget_name = "node_40edc5b7-fae7-4043-9cfd-7ec06b1b59cb",
-			x = 1085,
-			y = 2645,
-			children = {},
-			parents = {
-				"node_9a64c5d0-9d4b-479f-90d2-4c48d8523a70",
-				"node_9964320a-cf72-40d7-ad57-d4e5bc4a7345",
 			},
 			requirements = {
 				all_parents_chosen = false,
@@ -1844,16 +1829,14 @@ return {
 		},
 		{
 			cost = 1,
-			icon = "content/ui/textures/icons/talents/adamant/adamant_terminus_warrant_tdr",
+			icon = "content/ui/textures/icons/talents/adamant/adamant_terminus_warrant_fire_rate",
 			max_points = 1,
-			talent = "adamant_terminus_warrant_upgrade",
+			talent = "adamant_terminus_warrant_improved_combined",
 			type = "keystone_modifier",
 			widget_name = "node_9964320a-cf72-40d7-ad57-d4e5bc4a7345",
 			x = 1085,
-			y = 2525,
-			children = {
-				"node_40edc5b7-fae7-4043-9cfd-7ec06b1b59cb",
-			},
+			y = 2585,
+			children = {},
 			parents = {
 				"node_65d7f26b-711e-4ef9-ae0e-5bad2ac7a818",
 			},

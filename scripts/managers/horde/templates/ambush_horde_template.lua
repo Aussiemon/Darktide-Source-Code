@@ -178,6 +178,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 
 			param_table.target_side_id = target_side_id
 			param_table.group_id = group_id
+			param_table.optional_group_target = target_unit
 
 			spawner:add_spawns(breed_list, side_id, param_table)
 		end
@@ -198,6 +199,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 
 				queue_parameters.optional_aggro_state = aggro_states.aggroed
 				queue_parameters.optional_target_unit = target_unit
+				queue_parameters.optional_group_target = target_unit
 				queue_parameters.optional_group_id = group_id
 				num_spawned = num_spawned + 1
 			end

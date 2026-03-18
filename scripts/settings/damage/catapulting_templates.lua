@@ -7,6 +7,18 @@ catapulting_templates.plague_ogryn_catapult = {
 	force = 12,
 	z_force = 6,
 }
+catapulting_templates.houndmaster_catapult = {
+	catapult_through_block = true,
+	direction_from_node = "j_spine",
+	force = 11,
+	z_force = 6,
+}
+catapulting_templates.houndmaster_catapult_standing = {
+	catapult_through_block = true,
+	direction_from_node = "j_spine",
+	force = 4.5,
+	z_force = 3,
+}
 catapulting_templates.renegade_captain_kick_catapult = {
 	direction_from_node = "j_spine",
 	force = 10,

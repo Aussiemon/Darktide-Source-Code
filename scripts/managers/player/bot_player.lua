@@ -7,6 +7,11 @@ local BotPlayer = class("BotPlayer", "HumanPlayer")
 
 BotPlayer.init = function (self, unique_id, session_id, channel_id, peer_id, local_player_id, profile, slot, ...)
 	BotPlayer.super.init(self, unique_id, session_id, channel_id, peer_id, local_player_id, profile, slot, ...)
+
+	self._telemetry_ids = {
+		instance = nil,
+		session = nil,
+	}
 end
 
 BotPlayer.type = function (self)

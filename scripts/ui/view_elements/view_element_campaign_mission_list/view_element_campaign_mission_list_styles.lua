@@ -43,29 +43,14 @@ Styles.list_background.list_background_fade = {
 		27,
 	},
 	size = {
-		380,
 		1120,
-	},
-	uvs = {
-		{
-			0,
-			0,
-		},
-		{
-			1,
-			1,
-		},
-	},
-	pivot = {
-		0,
-		0,
+		692,
 	},
 	offset = {
-		-370,
-		1100,
-		1,
+		0,
+		-20,
+		0,
 	},
-	angle = math.degrees_to_radians(90),
 }
 Styles.bottom_detail = {}
 Styles.bottom_detail.background = {
@@ -106,7 +91,7 @@ Styles.bottom_detail.frame = {
 }
 Styles.bottom_detail.flavor_text_1 = {
 	font_size = 22,
-	font_type = "kode_mono_medium",
+	font_type = "mono_tide_medium",
 	horizontal_alignment = "left",
 	text_horizontal_alignment = "left",
 	text_vertical_alignment = "center",
@@ -130,7 +115,7 @@ Styles.bottom_detail.flavor_text_1 = {
 Styles.campaign_header = {}
 Styles.campaign_header.header_text = {
 	font_size = 30,
-	font_type = "kode_mono_medium",
+	font_type = "mono_tide_medium",
 	horizontal_alignment = "center",
 	text_horizontal_alignment = "center",
 	text_vertical_alignment = "center",
@@ -341,7 +326,7 @@ Styles.list_panel.panel_button_highlight = {
 }
 Styles.list_panel.panel_button_campaign_title = {
 	font_size = 22,
-	font_type = "kode_mono_medium",
+	font_type = "mono_tide_medium",
 	horizontal_alignment = "left",
 	text_horizontal_alignment = "center",
 	text_vertical_alignment = "center",

@@ -18,6 +18,8 @@ BaseView.init = function (self, definitions, settings, context, dynamic_package_
 	self._definitions = definitions
 	self._settings = settings
 	self._local_player_id = 1
+	self._using_cursor_navigation = Managers.ui:using_cursor_navigation()
+	self._has_initialized_navigation = false
 	self._start_loading_time = Managers.time:time("main")
 
 	local package_name = settings.package
@@ -505,7 +507,8 @@ BaseView.update = function (self, dt, t, input_service)
 	if self._entered and input_service and not input_service:is_null_service() then
 		local using_cursor_navigation = Managers.ui:using_cursor_navigation()
 
-		if self._using_cursor_navigation ~= using_cursor_navigation or self._using_cursor_navigation == nil then
+		if self._using_cursor_navigation ~= using_cursor_navigation or not self._has_initialized_navigation then
+			self._has_initialized_navigation = true
 			self._using_cursor_navigation = using_cursor_navigation
 
 			self:_on_navigation_input_changed()

@@ -22,6 +22,7 @@ local breed_data = {
 	display_name = "loc_breed_display_name_undefined",
 	end_of_round_state_machine = "content/characters/player/human/third_person/animations/menu/end_of_round",
 	faction_name = "imperium",
+	first_person_pose_scale = 1,
 	first_person_unit = "content/characters/player/human/first_person/base",
 	friendly_hit_mass = 0,
 	hit_mass = 2,

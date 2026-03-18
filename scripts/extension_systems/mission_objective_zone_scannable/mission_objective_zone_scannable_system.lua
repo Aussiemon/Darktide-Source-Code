@@ -24,6 +24,10 @@ MissionObjectiveZoneScannableSystem.on_gameplay_post_init = function (self, leve
 	self:call_gameplay_post_init_on_extensions(level)
 end
 
+MissionObjectiveZoneScannableSystem.on_location_setup = function (self)
+	self:call_gameplay_post_init_on_extensions()
+end
+
 MissionObjectiveZoneScannableSystem.destroy = function (self)
 	if not self._is_server then
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))

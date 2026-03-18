@@ -82,6 +82,19 @@ local visibility_groups = {
 		end,
 	},
 	{
+		name = "player_in_danger_zone",
+		validation_function = function (hud)
+			local game_mode_manager = Managers.state.game_mode
+			local game_mode = game_mode_manager:game_mode()
+
+			if game_mode and game_mode.is_player_in_danger_zone then
+				local player = hud:player()
+
+				return game_mode:is_player_in_danger_zone(player)
+			end
+		end,
+	},
+	{
 		name = "testify",
 		validation_function = function (hud)
 			return Managers.state.cinematic:active_camera() and Managers.state.cinematic._active_testify_camera ~= nil

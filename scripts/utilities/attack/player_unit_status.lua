@@ -17,6 +17,7 @@ local DISABLED_STATES = {
 	mutant_charged = true,
 	netted = true,
 	pounced = true,
+	vortex_grabbed = true,
 	warp_grabbed = true,
 }
 local REQUIRES_HELP = {
@@ -168,6 +169,14 @@ PlayerUnitStatus.is_warp_grabbed = function (disabled_character_state_component)
 	local disabling_unit = disabled_character_state_component.disabling_unit
 
 	return is_warp_grabbed, disabling_unit
+end
+
+PlayerUnitStatus.is_vortex_grabbed = function (disabled_character_state_component)
+	local is_disabled = disabled_character_state_component.is_disabled
+	local is_vortex_grabbed = is_disabled and disabled_character_state_component.disabling_type == "vortex_grabbed"
+	local disabling_unit = disabled_character_state_component.disabling_unit
+
+	return is_vortex_grabbed, disabling_unit
 end
 
 PlayerUnitStatus.is_mutant_charged = function (disabled_character_state_component)

@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/backend/tracks.lua
 
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
+local Promise = require("scripts/foundation/utilities/promise")
 local Tracks = class("Tracks")
 
 Tracks.get_all_tracks_state = function (self, optional_account_id)
@@ -99,6 +100,62 @@ Tracks.get_masteries_tracks = function (self)
 
 	return Managers.backend:title_request(builder:to_string()):next(function (data)
 		return data.body.tracks
+	end)
+end
+
+Tracks.get_expeditions_tracks = function (self)
+	local builder = BackendUtilities.url_builder():path("/tracks"):path("/category"):path("/expedition")
+
+	return Managers.backend:title_request(builder:to_string()):next(function (data)
+		return data.body.tracks
+	end)
+end
+
+Tracks.get_graph_track_layout = function (self, track_id)
+	local builder = BackendUtilities.url_builder():path("/tracks/"):path(track_id):path("/graph/layout")
+
+	return Managers.backend:title_request(builder:to_string()):next(function (data)
+		return data.body.layout
+	end)
+end
+
+Tracks.claim_track_node = function (self, track_id, node_id, optional_account_id)
+	return Managers.backend:authenticate():next(function (account)
+		local account_id = optional_account_id or account.sub
+		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/tracks/"):path(track_id):path("/nodes/"):path(node_id)
+		local options = {
+			method = "POST",
+		}
+
+		return Managers.backend:title_request(builder:to_string(), options)
+	end)
+end
+
+Tracks.claim_track_node_reward = function (self, track_id, node_id, reward_id)
+	return Managers.backend:authenticate():next(function (account)
+		local account_id = account.sub
+		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/tracks/"):path(track_id):path("/nodes/"):path(node_id):path("/reward/"):path(reward_id)
+		local options = {
+			method = "POST",
+		}
+
+		return Managers.backend:title_request(builder:to_string(), options)
+	end)
+end
+
+Tracks.get_claimable_track_nodes = function (self, track_id)
+	return Managers.backend:authenticate():next(function (account)
+		local account_id = account.sub
+		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/tracks/"):path(track_id):path("/claimable-nodes")
+		local options = {
+			method = "GET",
+		}
+
+		return Managers.backend:title_request(builder:to_string(), options):next(function (data)
+			return data.body.claimableNodes
+		end)
+	end):catch(function (error)
+		return Promise.rejected(error)
 	end)
 end
 

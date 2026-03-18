@@ -24,6 +24,7 @@ ViewElementInventoryWeaponPreview.init = function (self, parent, draw_layer, sta
 	self._pass_input = true
 	self._shading_environment = context and context.shading_environment
 	self._ignore_blur = context and context.ignore_blur
+	self._keep_rotation = true
 	self._draw_background = context and context.draw_background == true or false
 
 	self:_initialize_preview_world()
@@ -297,6 +298,10 @@ end
 
 ViewElementInventoryWeaponPreview.stop_presenting = function (self)
 	if self._ui_weapon_spawner then
+		if self._keep_rotation then
+			self._current_rotation_angle = self._ui_weapon_spawner:rotation_angle()
+		end
+
 		self._ui_weapon_spawner:destroy()
 
 		self._ui_weapon_spawner = nil
@@ -314,6 +319,10 @@ ViewElementInventoryWeaponPreview.present_item = function (self, item, disable_a
 	end
 
 	if self._ui_weapon_spawner then
+		if self._keep_rotation then
+			self._current_rotation_angle = self._ui_weapon_spawner:rotation_angle()
+		end
+
 		self._ui_weapon_spawner:destroy()
 
 		self._ui_weapon_spawner = nil
@@ -331,6 +340,13 @@ ViewElementInventoryWeaponPreview.present_item = function (self, item, disable_a
 	local spawn_scale = Unit.world_scale(spawn_point_unit, 1)
 	local previewer_reference_name = self._reference_name
 	local ui_weapon_spawner = UIWeaponSpawner:new(previewer_reference_name, world, camera, unit_spawner)
+
+	if self._current_rotation_angle then
+		ui_weapon_spawner:set_rotation(self._current_rotation_angle)
+
+		self._current_rotation_angle = nil
+	end
+
 	local on_loaded_callback = callback(self, "cb_on_preview_loaded")
 
 	ui_weapon_spawner:start_presentation(item, spawn_position, spawn_rotation, spawn_scale, spawn_point_unit, true, on_loaded_callback, nil, on_complete_callback)

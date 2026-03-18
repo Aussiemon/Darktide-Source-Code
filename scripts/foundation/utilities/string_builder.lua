@@ -3,6 +3,12 @@
 local StringBuilder = class("StringBuilder")
 
 StringBuilder.init = function (self)
+	self:reset()
+end
+
+StringBuilder.reset = function (self)
+	table.clear(self)
+
 	self._length = 0
 	self[1] = ""
 end
@@ -12,14 +18,7 @@ StringBuilder.close = function (self)
 end
 
 StringBuilder.flush = function (self)
-	if self._length > 1 then
-		local str = table.concat(self, "", 1, self._length)
-
-		table.clear(self)
-
-		self._length = 1
-		self[1] = str
-	end
+	return
 end
 
 StringBuilder.write = function (self, ...)
@@ -34,12 +33,21 @@ StringBuilder.write = function (self, ...)
 end
 
 StringBuilder.format = function (self, ...)
-	self[self._length + 1] = string.format(...)
-	self._length = self._length + 1
+	local new_length = self._length + 1
+
+	self[new_length] = string.format(...)
+	self._length = new_length
 end
 
 StringBuilder.tostring = function (self)
-	self:flush()
+	if self._length > 1 then
+		local str = table.concat(self, "", 1, self._length)
+
+		table.clear(self)
+
+		self._length = 1
+		self[1] = str
+	end
 
 	return self[1]
 end

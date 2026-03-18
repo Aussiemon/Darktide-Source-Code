@@ -94,10 +94,13 @@ local function _init_and_run_tests(breeds)
 			local target_selection_template = breed_data.target_selection_template
 			local target_selection_weights = breed_data.target_selection_weights
 			local sounds = breed_data.sounds
-			local events, use_proximity_culling = sounds.events, sounds.use_proximity_culling
 
-			for sound_alias, _ in pairs(use_proximity_culling) do
-				-- Nothing
+			if sounds then
+				local events, use_proximity_culling = sounds.events, sounds.use_proximity_culling
+
+				for sound_alias, _ in pairs(use_proximity_culling) do
+					-- Nothing
+				end
 			end
 
 			local fx_proximity_culling_weight = breed_data.fx_proximity_culling_weight

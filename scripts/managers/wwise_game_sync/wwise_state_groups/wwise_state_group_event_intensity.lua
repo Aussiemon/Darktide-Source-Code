@@ -20,9 +20,9 @@ local EVENT_INTENSITY = {
 	[MissionSoundEvents.objective_start_timed] = 80,
 	[MissionSoundEvents.objective_start_demolition] = 80,
 	[MissionSoundEvents.objective_start_luggable] = 80,
-	[MissionSoundEvents.objective_start_scanning] = 0,
-	[MissionSoundEvents.scanning_travel_start] = 80,
-	[MissionSoundEvents.scanning_scan_start] = 80,
+	[MissionSoundEvents.objective_start_zone] = 0,
+	[MissionSoundEvents.zone_travel_start] = 80,
+	[MissionSoundEvents.zone_start] = 80,
 	[MissionSoundEvents.objective_finished] = 0,
 }
 local INTENSITY_PROGRESS_RATE = {

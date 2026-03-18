@@ -299,6 +299,20 @@ local templates = {
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
 		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_deployed_ammo_crate,
 	},
+	expeditions_loot_pickup_over_here = {
+		group = "object",
+		is_cancelable = true,
+		lifetime = 10,
+		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+	},
+	expeditions_salvage_pickup_over_here = {
+		group = "object",
+		is_cancelable = true,
+		lifetime = 10,
+		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+	},
 	small_metal_pickup_over_here = {
 		group = "object",
 		is_cancelable = true,
@@ -524,18 +538,26 @@ local templates = {
 				local companion_spawner_extension = ScriptUnit.has_extension(tag:tagger_unit(), "companion_spawner_system")
 
 				if companion_spawner_extension then
-					local companion_unit = companion_spawner_extension:companion_unit()
+					local companion_units = companion_spawner_extension and companion_spawner_extension:companion_units()
 
-					if not companion_unit then
-						return
-					end
+					if companion_units then
+						for i = 1, #companion_units do
+							repeat
+								local companion_unit = companion_units[i]
 
-					local fx_system = Managers.state.extension:system("fx_system")
+								if not companion_unit then
+									break
+								end
 
-					if not fx_system:has_running_template_of_name(companion_unit, EffectTemplates.companion_dog_bark.name) then
-						local template_effect_id = fx_system:start_template_effect(EffectTemplates.companion_dog_bark, companion_unit)
+								local fx_system = Managers.state.extension:system("fx_system")
 
-						tag.template_effect_id = template_effect_id
+								if not fx_system:has_running_template_of_name(companion_unit, EffectTemplates.companion_dog_bark.name) then
+									local template_effect_id = fx_system:start_template_effect(EffectTemplates.companion_dog_bark, companion_unit)
+
+									tag.template_effect_id = template_effect_id
+								end
+							until true
+						end
 					end
 				end
 			end
@@ -546,18 +568,26 @@ local templates = {
 			end
 
 			local companion_spawner_extension = ScriptUnit.has_extension(tag:tagger_unit(), "companion_spawner_system")
-			local companion_unit = companion_spawner_extension and companion_spawner_extension:companion_unit()
+			local companion_units = companion_spawner_extension and companion_spawner_extension:companion_units()
 
-			if not companion_unit then
-				return
-			end
+			if companion_units then
+				for i = 1, #companion_units do
+					repeat
+						local companion_unit = companion_units[i]
 
-			local fx_system = Managers.state.extension:system("fx_system")
+						if not companion_unit then
+							break
+						end
 
-			if fx_system:has_running_template_of_name(companion_unit, EffectTemplates.companion_dog_bark.name) then
-				fx_system:stop_template_effect(tag.template_effect_id)
+						local fx_system = Managers.state.extension:system("fx_system")
 
-				tag.template_effect_id = nil
+						if fx_system:has_running_template_of_name(companion_unit, EffectTemplates.companion_dog_bark.name) then
+							fx_system:stop_template_effect(tag.template_effect_id)
+
+							tag.template_effect_id = nil
+						end
+					until true
+				end
 			end
 		end,
 	},

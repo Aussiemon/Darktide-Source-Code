@@ -12,6 +12,7 @@ end
 
 add_override("saints")
 add_override("live_event_broker_stimms")
+add_override("live_event_play_expeditions")
 add_override("default")
 add_override("story")
 

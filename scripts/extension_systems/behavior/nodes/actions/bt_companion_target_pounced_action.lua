@@ -6,6 +6,7 @@ local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local Explosion = require("scripts/utilities/attack/explosion")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local proc_events = BuffSettings.proc_events
@@ -68,8 +69,9 @@ BtCompanionTargetPouncedAction.enter = function (self, unit, breed, blackboard, 
 	scratchpad.target_death_component = target_blackboard.death
 	scratchpad.target_disable_component = Blackboard.write_component(target_blackboard, "disable")
 
-	if action_data.effect_template then
-		local global_effect_id = fx_system:start_template_effect(action_data.effect_template, unit)
+	if action_data.effect_template_name then
+		local effect_template = EffectTemplates[action_data.effect_template_name]
+		local global_effect_id = fx_system:start_template_effect(effect_template, unit)
 
 		scratchpad.global_effect_id = global_effect_id
 	end
@@ -121,7 +123,7 @@ BtCompanionTargetPouncedAction.leave = function (self, unit, breed, blackboard, 
 
 	scratchpad.locomotion_extension:set_movement_type("snap_to_navmesh")
 
-	if action_data.effect_template then
+	if action_data.effect_template_name then
 		local fx_system = scratchpad.fx_system
 
 		fx_system:stop_template_effect(scratchpad.global_effect_id)

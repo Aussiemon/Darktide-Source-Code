@@ -5,43 +5,30 @@ local ViewElementTutorialPopupSettings = require("scripts/ui/view_elements/view_
 local Text = require("scripts/utilities/ui/text")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local TalentBuilderViewTutorialBlueprints = require("scripts/ui/views/talent_builder_view/talent_builder_view_tutorial_blueprints")
+local TutorialBlueprints = require("scripts/ui/view_elements/view_element_tutorial_popup/view_element_tutorial_popup_blueprints")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local WorldRenderUtils = require("scripts/utilities/world_render")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
+local page_templates = require("scripts/ui/view_elements/view_element_tutorial_popup/view_element_tutorial_popup_templates")
 local ViewElementTutorialPopup = class("ViewElementTutorialPopup", "ViewElementBase")
 
 ViewElementTutorialPopup.init = function (self, parent, draw_layer, start_scale, context)
+	self._pivot_offset = {
+		0,
+		0,
+	}
+
 	ViewElementTutorialPopup.super.init(self, parent, draw_layer, start_scale, Definitions)
 
 	local view_name = self._parent.view_name
 
 	self.view_name = view_name
 	self._close_callback = context and context.close_callback
-	self._popup_pages = context and context.popup_pages or ViewElementTutorialPopupSettings.tutorial_popup_pages
+	self._popup_pages = context and context.popup_pages or {}
+	self._popup_pages_size = #self._popup_pages
 
-	self:_setup_default_gui()
 	self:_setup_tutorial_grid()
 	self:_present_tutorial_popup_page(1)
-end
-
-ViewElementTutorialPopup._setup_default_gui = function (self)
-	local ui_manager = Managers.ui
-	local class_name = self.__class_name
-	local timer_name = "ui"
-	local world_layer = self._draw_layer
-	local world_name = class_name .. "_ui_default_world"
-	local view_name = self._parent.view_name
-
-	self._world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
-
-	local viewport_name = class_name .. "_ui_default_world_viewport"
-	local viewport_type = "overlay"
-	local viewport_layer = 1
-
-	self._viewport = ui_manager:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
-	self._viewport_name = viewport_name
-	self._ui_default_renderer = ui_manager:create_renderer(class_name .. "_ui_default_renderer", self._world)
 end
 
 ViewElementTutorialPopup._setup_tutorial_grid = function (self)
@@ -85,17 +72,19 @@ ViewElementTutorialPopup._setup_tutorial_grid = function (self)
 	self:_play_sound(UISoundEvents.tutorial_popup_enter)
 end
 
-ViewElementTutorialPopup.ui_renderer = function (self)
-	return self._ui_default_renderer
+ViewElementTutorialPopup.set_pivot_offset = function (self, x, y)
+	return
 end
 
 ViewElementTutorialPopup._update_grid_position = function (self)
-	local scenegraph_id = "tutorial_grid"
-	local position = self:scenegraph_world_position(scenegraph_id, 1)
-	local horizontal_alignment = self._ui_scenegraph[scenegraph_id].horizontal_alignment
-	local vertical_alignment = self._ui_scenegraph[scenegraph_id].vertical_alignment
+	if self._tutorial_grid then
+		local scenegraph_id = "tutorial_grid"
+		local position = self:scenegraph_world_position(scenegraph_id, 1)
+		local horizontal_alignment = self._ui_scenegraph[scenegraph_id].horizontal_alignment
+		local vertical_alignment = self._ui_scenegraph[scenegraph_id].vertical_alignment
 
-	self._tutorial_grid:set_pivot_offset(position[1], position[2], horizontal_alignment, vertical_alignment)
+		self._tutorial_grid:set_pivot_offset(position[1], position[2], horizontal_alignment, vertical_alignment)
+	end
 end
 
 ViewElementTutorialPopup._present_tutorial_popup_page = function (self, page_index)
@@ -103,34 +92,21 @@ ViewElementTutorialPopup._present_tutorial_popup_page = function (self, page_ind
 	local page_content = tutorial_popup_pages[page_index]
 	local widgets_by_name = self._widgets_by_name
 
-	widgets_by_name.tutorial_window.content.page_counter = tostring(page_index) .. "/" .. tostring(#tutorial_popup_pages)
-	widgets_by_name.tutorial_window.content.title = Localize(page_content.header)
 	widgets_by_name.tutorial_window.content.image = page_content.image
 
-	local layout = {}
+	local template_name = page_content.template or "default"
+	local template = page_templates[template_name]
+	local layout = template.layout_function(page_content, page_index, self._popup_pages_size)
+	local image_size = template.image_size
 
-	layout[#layout + 1] = {
-		widget_type = "dynamic_spacing",
-		size = {
-			500,
-			10,
-		},
-	}
-	layout[#layout + 1] = {
-		widget_type = "text",
-		text = Localize(page_content.text),
-	}
-	layout[#layout + 1] = {
-		widget_type = "dynamic_spacing",
-		size = {
-			500,
-			25,
-		},
+	widgets_by_name.tutorial_window.style.image.size = {
+		image_size[1],
+		image_size[2],
 	}
 
 	local grid = self._tutorial_grid
 
-	grid:present_grid_layout(layout, TalentBuilderViewTutorialBlueprints)
+	grid:present_grid_layout(layout, TutorialBlueprints)
 	grid:set_handle_grid_navigation(true)
 
 	self._active_tutorial_popup_page = page_index
@@ -167,8 +143,10 @@ ViewElementTutorialPopup._update_tutorial_button_texts = function (self)
 	local page_content = tutorial_popup_pages[page_index]
 	local using_cursor_navigation = self._using_cursor_navigation
 	local widgets_by_name = self._widgets_by_name
-	local button_1_default_text = page_content.button_1 and Localize(page_content.button_1)
-	local button_2_default_text = page_content.button_2 and Localize(page_content.button_2)
+	local button_1_loc = page_content.button_1 or page_index == 1 and "loc_skip" or "loc_previous"
+	local button_2_loc = page_content.button_2 or page_index == #tutorial_popup_pages and "loc_talent_menu_tutorial_final_button_label" or "loc_next"
+	local button_1_default_text = Localize(button_1_loc)
+	local button_2_default_text = Localize(button_2_loc)
 
 	widgets_by_name.tutorial_button_1.content.original_text = button_1_default_text or "n/a"
 	widgets_by_name.tutorial_button_2.content.original_text = button_2_default_text or "n/a"
@@ -227,8 +205,8 @@ end
 ViewElementTutorialPopup.cb_on_tutorial_button_2_pressed = function (self)
 	local current_page_index = self._active_tutorial_popup_page or 1
 
-	if current_page_index < #self._popup_pages then
-		local next_page_index = math.min(current_page_index + 1, #self._popup_pages)
+	if current_page_index < self._popup_pages_size then
+		local next_page_index = math.min(current_page_index + 1, self._popup_pages_size)
 
 		self:_present_tutorial_popup_page(next_page_index)
 		self:_play_sound(UISoundEvents.tutorial_popup_slide_next)
@@ -244,21 +222,9 @@ end
 
 ViewElementTutorialPopup.destroy = function (self, ui_renderer)
 	self:_play_sound(UISoundEvents.tutorial_popup_exit)
-	self._tutorial_grid:destroy(self._ui_default_renderer)
+	self._tutorial_grid:destroy(ui_renderer)
 
 	self._tutorial_grid = nil
-	self._ui_default_renderer = nil
-
-	Managers.ui:destroy_renderer(self.__class_name .. "_ui_default_renderer")
-
-	local world = self._world
-	local viewport_name = self._viewport_name
-
-	ScriptWorld.destroy_viewport(world, viewport_name)
-	Managers.ui:destroy_world(world)
-
-	self._viewport_name = nil
-	self._world = nil
 
 	ViewElementTutorialPopup.super.destroy(self, ui_renderer)
 end
@@ -276,17 +242,17 @@ ViewElementTutorialPopup.update = function (self, dt, t, input_service)
 		self._tutorial_window_open_animation_id = nil
 	end
 
-	self._tutorial_grid:update(dt, t, input_service)
-	self:_update_grid_position()
+	if self._tutorial_grid then
+		self._tutorial_grid:update(dt, t, input_service)
+		self:_update_grid_position()
+	end
 
 	return ViewElementTutorialPopup.super.update(self, dt, t, input_service)
 end
 
 ViewElementTutorialPopup.draw = function (self, dt, t, ui_renderer, render_settings, input_service)
-	local ui_default_renderer = self._ui_default_renderer
-
 	self._tutorial_grid:draw(dt, t, ui_renderer, render_settings, input_service)
-	ViewElementTutorialPopup.super.draw(self, dt, t, ui_default_renderer, render_settings, input_service)
+	ViewElementTutorialPopup.super.draw(self, dt, t, ui_renderer, render_settings, input_service)
 end
 
 ViewElementTutorialPopup._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
@@ -294,24 +260,25 @@ ViewElementTutorialPopup._draw_widgets = function (self, dt, t, input_service, u
 end
 
 ViewElementTutorialPopup.on_resolution_modified = function (self, scale)
-	self._tutorial_grid:on_resolution_modified(scale)
+	if self._tutorial_grid then
+		self._tutorial_grid:on_resolution_modified(scale)
+	end
+
 	ViewElementTutorialPopup.super.on_resolution_modified(self, scale)
 	self:_update_grid_position()
 end
 
 ViewElementTutorialPopup.set_render_scale = function (self, scale)
-	self._tutorial_grid:set_render_scale(scale)
+	if self._tutorial_grid then
+		self._tutorial_grid:set_render_scale(scale)
+	end
+
 	ViewElementTutorialPopup.super.set_render_scale(self, scale)
 end
 
 ViewElementTutorialPopup.set_draw_layer = function (self, draw_layer)
-	self._tutorial_grid:set_draw_layer(draw_layer)
-
-	if self._world then
-		local world_name = self._unique_id .. "_ui_default_world"
-		local world_layer = draw_layer
-
-		Managers.world:set_world_layer(world_name, world_layer)
+	if self._tutorial_grid then
+		self._tutorial_grid:set_draw_layer(draw_layer)
 	end
 
 	ViewElementGrid.super.set_draw_layer(self, draw_layer)

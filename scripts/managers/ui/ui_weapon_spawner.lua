@@ -344,6 +344,16 @@ UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, level_link
 			Unit.set_local_pose(link_unit, right_attach_target_node_index, right_attach_offset)
 		end
 	end
+
+	local spawn_rotation = rotation
+
+	if self._rotation_angle and self._rotation_angle ~= 0 then
+		local weapon_rotation_angle = Quaternion.axis_angle(Vector3(0, 0, 1), -self._rotation_angle)
+
+		spawn_rotation = Quaternion.multiply(weapon_rotation_angle, spawn_rotation)
+
+		Unit.set_local_rotation(link_unit, 1, spawn_rotation)
+	end
 end
 
 UIWeaponSpawner.cb_on_unit_3p_streaming_complete = function (self, item_unit_3p, complete_callback, timeout)
@@ -378,6 +388,14 @@ UIWeaponSpawner._update_input_rotation = function (self, dt)
 	if not weapon_spawn_data then
 		return
 	end
+end
+
+UIWeaponSpawner.set_rotation = function (self, angle)
+	self:_set_rotation(angle)
+end
+
+UIWeaponSpawner.rotation_angle = function (self)
+	return self._rotation_angle
 end
 
 UIWeaponSpawner._set_rotation = function (self, angle)

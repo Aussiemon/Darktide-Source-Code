@@ -18,7 +18,7 @@ BtChaosPoxwalkerExplodeAction.enter = function (self, unit, breed, blackboard, s
 	local optional_apply_owner_buffs = false
 	local death_component = blackboard.death
 
-	if death_component.staggered_during_lunge then
+	if action_data.staggered_during_lunge and death_component.staggered_during_lunge then
 		local stagger_component = blackboard.stagger
 
 		optional_attacking_unit_owner_unit = ALIVE[stagger_component.attacker_unit] and stagger_component.attacker_unit

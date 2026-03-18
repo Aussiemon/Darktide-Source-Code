@@ -37,6 +37,7 @@ local breed_data = {
 	faction_name = "chaos",
 	fx_proximity_culling_weight = 4,
 	game_object_type = "minion_melee",
+	heat = 1,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	player_locomotion_constrain_radius = 0.4,
 	power_level_type = "berzerker_default_melee",
@@ -61,6 +62,9 @@ local breed_data = {
 		elite = true,
 		melee = true,
 		minion = true,
+	},
+	vortex_settings = {
+		die_on_vortex_land = false,
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.armored,

@@ -57,16 +57,18 @@ LocalPlayersSyncState.update = function (self, dt)
 	end
 end
 
-LocalPlayersSyncState.rpc_sync_local_players_reply = function (self, channel_id, local_player_id_array, slot_array)
+LocalPlayersSyncState.rpc_sync_local_players_reply = function (self, channel_id, local_player_id_array, slot_array, player_instance_id_array)
 	local peer_id = Network.peer_id()
 
 	for i = 1, #local_player_id_array do
 		local local_player_id = local_player_id_array[i]
 		local slot = slot_array[i]
+		local player_instance_id = player_instance_id_array[i]
 		local player = Managers.player:player(peer_id, local_player_id)
 
 		if player then
 			player:set_slot(slot)
+			player:set_telemetry_instance(player_instance_id)
 		end
 	end
 

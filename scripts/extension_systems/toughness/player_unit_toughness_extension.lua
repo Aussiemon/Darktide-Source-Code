@@ -122,8 +122,11 @@ PlayerUnitToughnessExtension._update_toughness = function (self, dt, t)
 	local toughness_regen_disabled = self:_toughness_regen_disabled()
 	local regen_rate = 0
 	local buffs = self._buff_extension:stat_buffs()
+	local is_out_of_combat = num_occupied_slots == 0
+	local min_toughness_coherency_regen_rate_modifier = math.max(buffs.min_toughness_coherency_regen_rate_modifier - 1, 0)
+	local can_regen_coherency_toughness_at_all_times = min_toughness_coherency_regen_rate_modifier > 0
 
-	if num_occupied_slots == 0 and toughness_damage > 0 and toughness_regen_delay < t and not toughness_regen_disabled then
+	if (is_out_of_combat or can_regen_coherency_toughness_at_all_times) and toughness_damage > 0 and toughness_regen_delay < t and not toughness_regen_disabled then
 		local weapon_toughness_template = self._weapon_extension:toughness_template()
 		local unit_data_extension = ScriptUnit.extension(self._unit, "unit_data_system")
 		local locomotion_component = unit_data_extension:read_component("locomotion")
@@ -132,7 +135,7 @@ PlayerUnitToughnessExtension._update_toughness = function (self, dt, t)
 		local base_rate = standing_still and toughness_template.regeneration_speed.moving or toughness_template.regeneration_speed.still
 		local weapon_rate_modifier = weapon_toughness_template and (standing_still and weapon_toughness_template.regeneration_speed_modifier.moving or weapon_toughness_template.regeneration_speed_modifier.still) or 1
 		local buff_rate_modifier = buffs.toughness_regen_rate_modifier * buffs.toughness_regen_rate_multiplier
-		local coherency_rate_modifier = buffs.toughness_coherency_regen_rate_modifier
+		local coherency_rate_modifier = math.max(buffs.toughness_coherency_regen_rate_modifier, min_toughness_coherency_regen_rate_modifier)
 
 		coherency_rate_modifier = coherency_rate_modifier + (buffs.toughness_extra_regen_rate or 0)
 
@@ -155,9 +158,7 @@ PlayerUnitToughnessExtension._update_toughness = function (self, dt, t)
 
 		regen_rate = regen_rate + buff_regen
 
-		local prevent_when_depleted = false
-
-		prevent_when_depleted = self._buff_extension:has_keyword(buff_keywords.prevent_toughness_regen_when_depleted)
+		local prevent_when_depleted = self._buff_extension:has_keyword(buff_keywords.prevent_toughness_regen_when_depleted)
 
 		if prevent_when_depleted and self:current_toughness_percent() <= 0 then
 			regen_rate = 0

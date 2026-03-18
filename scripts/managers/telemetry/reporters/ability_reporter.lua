@@ -35,6 +35,7 @@ AbilityReporter.register_event = function (self, player, ability_name)
 		local player_data = {
 			telemetry_subject = subject,
 			telemetry_game_session = player:telemetry_game_session(),
+			telemetry_current_instance = player:telemetry_current_instance(),
 		}
 
 		self._reports[player_key] = {

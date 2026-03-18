@@ -2392,7 +2392,9 @@ stat_definitions.total_melee_toughness_regen = {
 
 do
 	local valid_chaos_hound_breeds = {
+		chaos_armored_hound = true,
 		chaos_hound = true,
+		chaos_hound_mutator = true,
 	}
 
 	stat_definitions.poxhound_pushed_mid_air = {
@@ -2474,6 +2476,7 @@ do
 
 	local valid_mutant_breeds = {
 		cultist_mutant = true,
+		cultist_mutant_mutator = true,
 	}
 
 	stat_definitions.mutant_charge_dodged = {
@@ -2625,6 +2628,7 @@ do
 	local valid_flamer_breeds = {
 		cultist_flamer = true,
 		renegade_flamer = true,
+		renegade_flamer_mutator = true,
 	}
 
 	stat_definitions.flamer_killed_before_attack_occurred = {
@@ -2700,6 +2704,32 @@ do
 						local num_grabs = target_blackboard.statistics.num_grabs_done
 
 						if num_grabs <= 0 then
+							return increment(self, stat_data)
+						end
+					end
+				end,
+			},
+		},
+	}
+	stat_definitions.team_houndmaster_killed_no_one_pounced = {
+		flags = {
+			StatFlags.backend,
+		},
+		data = {},
+		triggers = {
+			{
+				id = "hook_boss_died",
+				trigger = function (self, stat_data, breed_name, boss_max_health, boss_unit_id, time_since_first_damage, attack_data)
+					if attack_data.target_breed_name == "chaos_ogryn_houndmaster" then
+						local target_blackboard = attack_data.target_blackboard
+
+						if not target_blackboard then
+							return
+						end
+
+						local num_pounced = target_blackboard.summon.num_pounced
+
+						if num_pounced <= 0 then
 							return increment(self, stat_data)
 						end
 					end
@@ -3757,6 +3787,7 @@ do
 
 	local valid_daemonhost_breeds = {
 		chaos_daemonhost = true,
+		chaos_mutator_daemonhost = true,
 	}
 
 	stat_definitions.kill_daemonhost = {
@@ -4874,7 +4905,31 @@ do
 					end,
 				},
 			},
-			include_condition = include_condition,
+			include_condition = function (self, config)
+				if not include_condition(self, config) then
+					return false
+				end
+
+				local player = Managers.player:player(config.peer_id, config.local_player_id)
+
+				if not player then
+					return false
+				end
+
+				local profile = player:profile()
+
+				if not profile then
+					return false
+				end
+
+				local talents = profile.talents
+
+				if not talents then
+					return false
+				end
+
+				return talents.zealot_toughness_damage_reduction_coherency_improved ~= nil
+			end,
 		}
 		stat_definitions.zealot_aura_corruption_healed = {
 			flags = {
@@ -7375,6 +7430,244 @@ do
 	end
 end
 
+stat_definitions.hook_expedition_loot_collected_by_team = {
+	flags = {
+		StatFlags.hook,
+		StatFlags.team,
+	},
+}
+stat_definitions.hook_expedition_extract_at_last_location = {
+	flags = {
+		StatFlags.hook,
+		StatFlags.team,
+	},
+}
+stat_definitions.hook_expedition_extract_at_last_location_full_team = {
+	flags = {
+		StatFlags.hook,
+		StatFlags.team,
+	},
+}
+stat_definitions.hook_expedition_opportunity_completed = {
+	flags = {
+		StatFlags.hook,
+		StatFlags.team,
+	},
+}
+stat_definitions.hook_expedition_loot_recovered = {
+	flags = {
+		StatFlags.hook,
+	},
+}
+stat_definitions.hook_expedition_spent_in_store = {
+	flags = {
+		StatFlags.hook,
+	},
+}
+stat_definitions.hook_loot_luggable_deposited = {
+	flags = {
+		StatFlags.hook,
+	},
+}
+stat_definitions.hook_loot_luggable_extracted = {
+	flags = {
+		StatFlags.hook,
+	},
+}
+stat_definitions.hook_team_loot_luggable_deposited = {
+	flags = {
+		StatFlags.team,
+		StatFlags.never_log,
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "hook_loot_luggable_deposited",
+			trigger = StatMacros.forward,
+		},
+		{
+			id = "hook_loot_luggable_extracted",
+			trigger = StatMacros.forward,
+		},
+	},
+}
+stat_definitions.session_team_expedition_loot_retrieved = {
+	flags = {
+		StatFlags.team,
+	},
+	triggers = {
+		{
+			id = "hook_expedition_loot_collected_by_team",
+			trigger = function (self, stat_data, expedition_loot_collected_by_team)
+				return set_to(self, stat_data, expedition_loot_collected_by_team)
+			end,
+		},
+	},
+	include_condition = function (self, config)
+		local game_mode_name = config.game_mode_name
+
+		return game_mode_name == "expedition"
+	end,
+}
+stat_definitions.expedition_total_loot_extracted = {
+	flags = {
+		StatFlags.backend,
+	},
+	triggers = {
+		{
+			id = "hook_expedition_loot_collected_by_team",
+			trigger = StatMacros.increment_by,
+		},
+	},
+	include_condition = function (self, config)
+		local game_mode_name = config.game_mode_name
+
+		return game_mode_name == "expedition"
+	end,
+}
+stat_definitions.expedition_total_luggables_retrieved = {
+	flags = {
+		StatFlags.backend,
+	},
+	triggers = {
+		{
+			id = "hook_loot_luggable_deposited",
+			trigger = StatMacros.increment,
+		},
+	},
+	include_condition = function (self, config)
+		local game_mode_name = config.game_mode_name
+
+		return game_mode_name == "expedition"
+	end,
+}
+stat_definitions.expedition_max_loot_extracted = {
+	flags = {
+		StatFlags.backend,
+	},
+	triggers = {
+		{
+			id = "hook_expedition_loot_collected_by_team",
+			trigger = StatMacros.set_to_max,
+		},
+	},
+	include_condition = function (self, config)
+		local game_mode_name = config.game_mode_name
+
+		return game_mode_name == "expedition"
+	end,
+}
+stat_definitions.expedition_last_location_extraction_full_team = {
+	flags = {
+		StatFlags.backend,
+	},
+	triggers = {
+		{
+			id = "hook_expedition_extract_at_last_location_full_team",
+			trigger = StatMacros.increment,
+		},
+	},
+	include_condition = function (self, config)
+		local game_mode_name = config.game_mode_name
+
+		return game_mode_name == "expedition" and config.difficulty >= 5
+	end,
+}
+stat_definitions.expedition_last_location_extraction = {
+	flags = {
+		StatFlags.backend,
+	},
+	triggers = {
+		{
+			id = "hook_expedition_extract_at_last_location",
+			trigger = StatMacros.increment,
+		},
+	},
+	include_condition = function (self, config)
+		local game_mode_name = config.game_mode_name
+
+		return game_mode_name == "expedition"
+	end,
+}
+stat_definitions.expedition_total_opportunities_completed = {
+	flags = {
+		StatFlags.backend,
+	},
+	triggers = {
+		{
+			id = "hook_expedition_opportunity_completed",
+			trigger = StatMacros.increment,
+		},
+	},
+	include_condition = function (self, config)
+		local game_mode_name = config.game_mode_name
+
+		return game_mode_name == "expedition"
+	end,
+}
+stat_definitions.session_team_expedition_stolen_loot_recovered = {
+	flags = {
+		StatFlags.backend,
+	},
+	triggers = {
+		{
+			id = "hook_expedition_loot_recovered",
+			trigger = function (self, stat_data, reason, amount)
+				if reason == "stolen" then
+					return increment(self, stat_data)
+				end
+			end,
+		},
+	},
+	include_condition = function (self, config)
+		local game_mode_name = config.game_mode_name
+
+		return game_mode_name == "expedition"
+	end,
+}
+stat_definitions.session_team_expedition_dropped_loot_recovered = {
+	flags = {
+		StatFlags.backend,
+	},
+	triggers = {
+		{
+			id = "hook_expedition_loot_recovered",
+			trigger = function (self, stat_data, reason, amount)
+				if reason == "death" then
+					return increment(self, stat_data)
+				end
+			end,
+		},
+	},
+	include_condition = function (self, config)
+		local game_mode_name = config.game_mode_name
+
+		return game_mode_name == "expedition"
+	end,
+}
+stat_definitions.expedition_total_spent_in_store = {
+	flags = {
+		StatFlags.backend,
+	},
+	triggers = {
+		{
+			id = "hook_expedition_spent_in_store",
+			trigger = StatMacros.increment_by,
+		},
+	},
+	include_condition = function (self, config)
+		local game_mode_name = config.game_mode_name
+
+		return game_mode_name == "expedition"
+	end,
+}
+stat_definitions.expedition_meta_nodes_unlocked = {
+	flags = {
+		StatFlags.backend,
+		StatFlags.no_sync,
+	},
+	data = {},
+}
 stat_definitions.live_event_darkness_twins_won = {
 	flags = {
 		StatFlags.team,
@@ -7569,6 +7862,7 @@ stat_definitions.live_event_skulls_forward = {
 		},
 	},
 	data = {
+		stat_override = "live_event_skulls_guns",
 		circumstances = {
 			skulls_event_01 = true,
 			skulls_event_01_02 = true,
@@ -7580,6 +7874,10 @@ stat_definitions.live_event_skulls_forward = {
 		},
 	},
 	include_condition = function (self, config)
+		if StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override) then
+			return true
+		end
+
 		local circumstance_name = config.circumstance_name
 
 		return self.data.circumstances[circumstance_name]
@@ -7597,6 +7895,7 @@ stat_definitions.live_event_skulls_count = {
 		},
 	},
 	data = {
+		stat_override = "live_event_skulls_guns",
 		circumstances = {
 			skulls_event_01 = true,
 			skulls_event_01_02 = true,
@@ -7608,6 +7907,43 @@ stat_definitions.live_event_skulls_count = {
 		},
 	},
 	include_condition = function (self, config)
+		if StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override) then
+			return true
+		end
+
+		local circumstance_name = config.circumstance_name
+
+		return self.data.circumstances[circumstance_name]
+	end,
+}
+stat_definitions.live_event_skulls_guns_count = {
+	flags = {
+		StatFlags.always_log,
+		StatFlags.no_recover,
+	},
+	triggers = {
+		{
+			id = "live_event_skulls_forward",
+			trigger = StatMacros.increment_by,
+		},
+	},
+	data = {
+		stat_override = "live_event_skulls_guns",
+		circumstances = {
+			skulls_event_01 = true,
+			skulls_event_01_02 = true,
+			skulls_event_01_03 = true,
+			skulls_event_01_04 = true,
+			skulls_event_01_05 = true,
+			skulls_event_01_06 = true,
+			skulls_event_01_07 = true,
+		},
+	},
+	include_condition = function (self, config)
+		if StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override) then
+			return true
+		end
+
 		local circumstance_name = config.circumstance_name
 
 		return self.data.circumstances[circumstance_name]
@@ -7984,6 +8320,51 @@ stat_definitions.abhuman_explosions_mission_won = {
 		local circumstance_name = config.circumstance_name
 
 		return self.data.circumstances[circumstance_name]
+	end,
+}
+stat_definitions.elite_army_mission_won = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	data = {
+		circumstances = {
+			elite_army = true,
+			elite_army_darkness = true,
+			elite_army_gas = true,
+			elite_army_hunt_grou = true,
+			elite_army_more_res = true,
+			elite_army_ventilation = true,
+			elite_army_waves_spec = true,
+		},
+	},
+	triggers = {
+		{
+			id = "mission_won",
+			trigger = StatMacros.increment,
+		},
+	},
+	include_condition = function (self, config)
+		local circumstance_name = config.circumstance_name
+
+		return self.data.circumstances[circumstance_name]
+	end,
+}
+stat_definitions.live_event_expeditions_loot_extracted = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "hook_expedition_loot_collected_by_team",
+			trigger = StatMacros.set_to_max,
+		},
+	},
+	include_condition = function (self, config)
+		local game_mode_name = config.game_mode_name
+
+		return game_mode_name == "expedition"
 	end,
 }
 stat_definitions = _stat_data

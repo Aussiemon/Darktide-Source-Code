@@ -46,4 +46,7 @@ for name, template in pairs(SpecialsPacingTemplates) do
 	end
 end
 
+sound_events["wwise/events/world/play_lightning_storm_thunder"] = true
+sound_events["wwise/events/world/stop_lightning_storm_thunder"] = true
+
 return sound_events

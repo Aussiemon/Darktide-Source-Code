@@ -97,13 +97,14 @@ PlayerCharacterStateHogtied.on_exit = function (self, unit, t, next_state)
 
 		if is_player_alive then
 			local companion_spawner_extension = ScriptUnit.has_extension(unit, "companion_spawner_system")
-			local companion_unit = companion_spawner_extension and companion_spawner_extension:companion_unit()
-			local talent_extension = ScriptUnit.has_extension(unit, "talent_system")
-			local companion_is_disabled = talent_extension and talent_extension:has_special_rule(SpecialRulesSettings.special_rules.disable_companion)
+			local have_companions = companion_spawner_extension and companion_spawner_extension:have_companions()
 			local should_have_companion = companion_spawner_extension and companion_spawner_extension:should_have_companion()
 
-			if companion_spawner_extension and should_have_companion and not companion_unit and not companion_is_disabled then
-				companion_spawner_extension:spawn_unit()
+			if should_have_companion then
+				companion_spawner_extension:despawn_units()
+				companion_spawner_extension:spawn_units()
+			elseif not should_have_companion and have_companions then
+				companion_spawner_extension:despawn_units()
 			end
 
 			local rescued_by_player = true

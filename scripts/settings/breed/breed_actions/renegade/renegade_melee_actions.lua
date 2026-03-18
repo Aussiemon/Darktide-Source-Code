@@ -2,7 +2,6 @@
 
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local UtilityConsiderations = require("scripts/extension_systems/behavior/utility_considerations")
 local damage_types = DamageSettings.damage_types
@@ -1129,13 +1128,28 @@ local action_data = {
 	use_stim = {
 		anim_event = "use_syringe",
 		duration = 1.6666666666666667,
+		effect_template_name = "minion_stim_effect",
 		exit_state = "to_melee",
-		effect_template = EffectTemplates.minion_stim_effect,
 		stim_buffs = {
 			"mutator_stimmed_minion_red",
 			"mutator_stimmed_minion_yellow",
 			"mutator_stimmed_minion_green",
 			"mutator_stimmed_minion_blue",
+		},
+	},
+	vortex_grabbed = {
+		ignore_rotate_towards_target = false,
+		anim_events = {
+			loop = {
+				"vortex_loop",
+			},
+			landing = {
+				"vortex_landing",
+			},
+		},
+		anim_durations = {
+			vortex_landing = 5.666666666666667,
+			vortex_loop = 0.3333333333333333,
 		},
 	},
 }

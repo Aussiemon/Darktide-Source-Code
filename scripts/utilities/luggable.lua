@@ -109,6 +109,17 @@ Luggable.link_to_player_unit = function (world, player_unit, luggable_unit, item
 	local visual_loadout_extension = ScriptUnit.extension(player_unit, "visual_loadout_system")
 
 	visual_loadout_extension:force_update_item_visibility()
+
+	local destructible_actor_id = Unit.find_actor(luggable_unit, "destructible")
+
+	if destructible_actor_id then
+		local destructible_actor = Unit.actor(luggable_unit, destructible_actor_id)
+
+		if destructible_actor then
+			Actor.set_kinematic(destructible_actor, false)
+			Actor.put_to_sleep(destructible_actor)
+		end
+	end
 end
 
 Luggable.unlink_from_player_unit = function (world, luggable_unit)
@@ -116,6 +127,17 @@ Luggable.unlink_from_player_unit = function (world, luggable_unit)
 
 	World.unlink_unit(world, luggable_unit, reset_scene_graph)
 	Unit.set_unit_visibility(luggable_unit, true, true)
+
+	local destructible_actor_id = Unit.find_actor(luggable_unit, "destructible")
+
+	if destructible_actor_id then
+		local destructible_actor = Unit.actor(luggable_unit, destructible_actor_id)
+
+		if destructible_actor then
+			Actor.wake_up(destructible_actor)
+			Actor.set_kinematic(destructible_actor, true)
+		end
+	end
 end
 
 return Luggable

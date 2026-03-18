@@ -335,6 +335,22 @@ local material_overrides = {
 			},
 		},
 	},
+	mask_hide_neck_01 = {
+		property_overrides = {
+			positive_mask = {
+				0.304,
+				0.511,
+				0,
+				0,
+			},
+			negative_mask = {
+				0.305,
+				0,
+				0.152,
+				0,
+			},
+		},
+	},
 	mask_face_bandana = {
 		property_overrides = {
 			positive_mask = {

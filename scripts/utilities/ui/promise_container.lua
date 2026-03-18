@@ -22,6 +22,8 @@ PromiseContainer.cancel_on_destroy = function (self, promise)
 			self._promises[promise] = nil
 		end, function ()
 			self._promises[promise] = nil
+		end):catch(function ()
+			self._promises[promise] = nil
 		end)
 	end
 

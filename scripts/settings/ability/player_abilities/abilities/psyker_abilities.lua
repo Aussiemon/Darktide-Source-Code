@@ -62,7 +62,7 @@ local abilities = {
 		inventory_item_name = "content/items/weapons/player/psyker_shield_dome",
 		stat_buff = "ability_extra_charges",
 		max_charges = protectorate_talent_settings.combat_ability.max_charges,
-		cooldown = protectorate_talent_settings.combat_ability.cooldown,
+		cooldown = protectorate_talent_settings.combat_ability.cooldown_sphere,
 		archetypes = {
 			"psyker",
 		},

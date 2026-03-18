@@ -11,5 +11,7 @@ end
 
 _create_boss_patrol_entry("scripts/managers/pacing/monster_pacing/templates/renegade_boss_patrols")
 _create_boss_patrol_entry("scripts/managers/pacing/monster_pacing/templates/cultist_boss_patrols")
+_create_boss_patrol_entry("scripts/managers/pacing/monster_pacing/templates/expedition_renegade_boss_patrols")
+_create_boss_patrol_entry("scripts/managers/pacing/monster_pacing/templates/expedition_cultist_boss_patrols")
 
 return settings("BossPatrols", boss_patrols)

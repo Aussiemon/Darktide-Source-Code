@@ -36,6 +36,7 @@ local breed_data = {
 	fx_proximity_culling_weight = 6,
 	game_object_type = "minion_netgunner",
 	has_direct_ragdoll_flow_event = true,
+	heat = 0.2,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check_no_transparent",
 	player_locomotion_constrain_radius = 0.4,
 	run_speed = 5.2,
@@ -63,6 +64,9 @@ local breed_data = {
 		disabler = true,
 		minion = true,
 		special = true,
+	},
+	vortex_settings = {
+		die_on_vortex_land = false,
 	},
 	point_cost = breed_terror_event_settings.point_cost,
 	armor_type = armor_types.berserker,

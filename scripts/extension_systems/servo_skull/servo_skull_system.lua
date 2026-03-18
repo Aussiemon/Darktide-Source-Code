@@ -25,6 +25,10 @@ ServoSkullSystem.on_gameplay_post_init = function (self, level)
 	self:call_gameplay_post_init_on_extensions(level)
 end
 
+ServoSkullSystem.on_location_setup = function (self)
+	self:call_gameplay_post_init_on_extensions()
+end
+
 ServoSkullSystem.hot_join_sync = function (self, sender, channel)
 	local unit_to_extension_map = self._unit_to_extension_map
 

@@ -8,6 +8,7 @@ local PowerLevelSettings = require("scripts/settings/damage/power_level_settings
 local PushSettings = require("scripts/settings/damage/push_settings")
 local GibbingPower = GibbingSettings.gibbing_power
 local GibbingTypes = GibbingSettings.gibbing_types
+local GibPushForce = GibbingSettings.gib_push_force
 local armor_types = ArmorSettings.types
 local push_templates = PushSettings.push_templates
 local damage_templates = {}
@@ -170,6 +171,54 @@ damage_templates.barrel_explosion_close = {
 	catapulting_template = CatapultingTemplates.barrel_explosion,
 	gibbing_type = GibbingTypes.explosion,
 	gibbing_power = GibbingPower.heavy,
+}
+damage_templates.expeditions_lightning_strike_explosion_close = {
+	disorientation_type = "grenadier",
+	ignore_stagger_reduction = true,
+	ignore_stun_immunity = true,
+	ignore_toughness = true,
+	interrupt_alternate_fire = true,
+	ogryn_disorientation_type = "grenadier",
+	override_allow_friendly_fire = true,
+	ragdoll_push_force = 1000,
+	stagger_category = "explosion",
+	suppression_value = 20,
+	cleave_distribution = {
+		attack = 0.1,
+		impact = 0.15,
+	},
+	armor_damage_modifier_ranged = {
+		near = barrel_explosion_close_admr,
+		far = barrel_explosion_far_admr,
+	},
+	power_distribution_ranged = {
+		attack = {
+			far = 10,
+			near = 100,
+		},
+		impact = {
+			far = 2,
+			near = 30,
+		},
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+	power_distribution = {
+		attack = 600,
+		impact = 100,
+	},
+	force_look_function = ForcedLookSettings.look_functions.heavy,
+	push_template = push_templates.grenadier_explosion,
+	gibbing_type = GibbingTypes.explosion,
+	gibbing_power = GibbingPower.heavy,
+}
+damage_templates.expeditions_lightning_strike_explosion = table.clone(damage_templates.expeditions_lightning_strike_explosion_close)
+damage_templates.expeditions_lightning_strike_explosion.power_distribution = {
+	attack = 300,
+	impact = 50,
 }
 damage_templates.fire_barrel_explosion = {
 	disorientation_type = "grenadier",
@@ -481,6 +530,145 @@ damage_templates.no_mans_land_tank_wall_explosion = {
 	force_look_function = ForcedLookSettings.look_functions.to_or_from_attack_direction,
 	push_template = push_templates.grenadier_explosion,
 	catapulting_template = CatapultingTemplates.breach_charge_catapult,
+}
+
+local AIRSTRIKE_NUKE_ADM = {
+	attack = {
+		[armor_types.unarmored] = 1,
+		[armor_types.armored] = 1,
+		[armor_types.resistant] = 2,
+		[armor_types.player] = 0,
+		[armor_types.berserker] = 1,
+		[armor_types.super_armor] = 1,
+		[armor_types.disgustingly_resilient] = 1,
+		[armor_types.void_shield] = 1,
+	},
+	impact = {
+		[armor_types.unarmored] = 2,
+		[armor_types.armored] = 2,
+		[armor_types.resistant] = 2,
+		[armor_types.player] = 2,
+		[armor_types.berserker] = 2,
+		[armor_types.super_armor] = 2,
+		[armor_types.disgustingly_resilient] = 2,
+		[armor_types.void_shield] = 2,
+	},
+}
+local AIRSTRIKE_NUKE_ATTACK = 3200
+local AIRSTRIKE_NUKE_IMPACT = 128
+
+damage_templates.expedition_airstrike_nuke_close = {
+	ignore_stagger_reduction = true,
+	ragdoll_push_force = 1000,
+	stagger_category = "explosion",
+	suppression_value = 20,
+	cleave_distribution = {
+		attack = 0.1,
+		impact = 0.15,
+	},
+	armor_damage_modifier_ranged = {
+		near = AIRSTRIKE_NUKE_ADM,
+		far = AIRSTRIKE_NUKE_ADM,
+	},
+	power_distribution_ranged = {
+		attack = {
+			near = AIRSTRIKE_NUKE_ATTACK,
+			far = AIRSTRIKE_NUKE_ATTACK * 0.8,
+		},
+		impact = {
+			near = AIRSTRIKE_NUKE_IMPACT,
+			far = AIRSTRIKE_NUKE_IMPACT * 0.8,
+		},
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+	power_distribution = {
+		attack = AIRSTRIKE_NUKE_ATTACK,
+		impact = AIRSTRIKE_NUKE_IMPACT,
+	},
+	gibbing_type = GibbingTypes.explosion,
+	gibbing_power = GibbingPower.infinite,
+	gib_push_force = GibPushForce.explosive_heavy,
+}
+overrides.expedition_airstrike_nuke = {
+	parent_template_name = "expedition_airstrike_nuke_close",
+	overrides = {
+		{
+			"power_distribution_ranged",
+			"attack",
+			"near",
+			AIRSTRIKE_NUKE_ATTACK * 0.8,
+		},
+		{
+			"power_distribution_ranged",
+			"attack",
+			"far",
+			AIRSTRIKE_NUKE_ATTACK * 0.4,
+		},
+		{
+			"power_distribution_ranged",
+			"impact",
+			"near",
+			AIRSTRIKE_NUKE_IMPACT * 0.8,
+		},
+		{
+			"power_distribution_ranged",
+			"impact",
+			"far",
+			AIRSTRIKE_NUKE_IMPACT * 0.4,
+		},
+		{
+			"gibbing_power",
+			GibbingPower.heavy,
+		},
+		{
+			"gib_push_force",
+			GibPushForce.explosive,
+		},
+	},
+}
+damage_templates.promethium_barrel_explosion = {
+	ignore_stagger_reduction = true,
+	ragdoll_push_force = 1000,
+	stagger_category = "explosion",
+	suppression_value = 20,
+	cleave_distribution = {
+		attack = 0.1,
+		impact = 0.15,
+	},
+	armor_damage_modifier_ranged = {
+		near = fire_barrel_explosion_close_admr,
+		far = fire_barrel_explosion_far_admr,
+	},
+	power_distribution_ranged = {
+		attack = {
+			far = 10,
+			near = 10,
+		},
+		impact = {
+			far = 2,
+			near = 30,
+		},
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+	power_distribution = {
+		attack = 10,
+		impact = 10,
+	},
+	gibbing_type = GibbingTypes.explosion,
+	gibbing_power = GibbingPower.heavy,
+}
+damage_templates.promethium_barrel_explosion_close = table.clone(damage_templates.promethium_barrel_explosion)
+damage_templates.promethium_barrel_explosion_close.power_distribution = {
+	attack = 50,
+	impact = 20,
 }
 
 return {

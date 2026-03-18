@@ -528,6 +528,35 @@ Ammo.add_to_all_slots = function (unit, percent)
 	return ammo_gained
 end
 
+Ammo.add_to_all_slots_flat = function (unit, amount)
+	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+	local visual_loadout_extension = ScriptUnit.has_extension(unit, "visual_loadout_system")
+	local ammo_gained = 0
+
+	if visual_loadout_extension and visual_loadout_extension.slot_configuration_by_type then
+		local weapon_slot_configuration = visual_loadout_extension:slot_configuration_by_type("weapon")
+		local weapon_system = Managers.state.extension:system("weapon_system")
+
+		for slot_name, config in pairs(weapon_slot_configuration) do
+			local inventory_slot_component = unit_data_extension:write_component(slot_name)
+
+			if inventory_slot_component.max_ammunition_reserve > 0 then
+				local ammo_reserve = inventory_slot_component.current_ammunition_reserve
+				local max_ammo_reserve = inventory_slot_component.max_ammunition_reserve
+				local ammo_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
+				local max_ammo_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
+				local missing_clip = max_ammo_clip - ammo_clip
+				local new_ammo_amount = math.min(ammo_reserve + amount, max_ammo_reserve + missing_clip)
+
+				inventory_slot_component.current_ammunition_reserve = new_ammo_amount
+				ammo_gained = ammo_gained + (new_ammo_amount - ammo_reserve)
+			end
+		end
+	end
+
+	return ammo_gained
+end
+
 Ammo.add_ammo_using_pickup_data = function (unit, pickup_data, skip_proc)
 	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
 	local visual_loadout_extension = ScriptUnit.has_extension(unit, "visual_loadout_system")

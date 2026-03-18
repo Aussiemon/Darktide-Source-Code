@@ -61,7 +61,6 @@ local mission_objective_templates = {
 				collect_amount = 4,
 				description = "loc_objective_op_no_mans_collect_coordinates_desc",
 				header = "loc_objective_op_no_mans_collect_coordinates_header",
-				icon = "content/ui/materials/icons/objectives/secondary",
 				mission_objective_type = "collect",
 			},
 			objective_op_no_mans_light_flare = {

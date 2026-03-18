@@ -248,6 +248,40 @@ haptic_trigger_templates.melee.chainsword_2h = {
 		},
 	},
 }
+haptic_trigger_templates.melee.dual_shivs = {
+	right = {
+		multi_position_feedback = {
+			strength = {
+				0,
+				0,
+				0,
+				0,
+				0,
+				0,
+				0,
+				0,
+				3,
+				1,
+			},
+		},
+	},
+	left = {
+		multi_position_feedback = {
+			strength = {
+				0,
+				0,
+				0,
+				0,
+				0,
+				0,
+				1,
+				1,
+				1,
+				1,
+			},
+		},
+	},
+}
 haptic_trigger_templates.ranged.none = {
 	right = {
 		off = {},
@@ -1004,7 +1038,7 @@ haptic_trigger_templates.ranged.dual_auto = {
 		weapon = {
 			end_position = 3,
 			start_position = 2,
-			strength = 8,
+			strength = 3,
 		},
 		vibration = {
 			amplitude = 5,
@@ -1015,9 +1049,9 @@ haptic_trigger_templates.ranged.dual_auto = {
 	left = {
 		scale_vibration_with_ammo = true,
 		weapon = {
-			end_position = 4,
-			start_position = 3,
-			strength = 8,
+			end_position = 7,
+			start_position = 2,
+			strength = 1,
 		},
 		vibration = {
 			amplitude = 5,
@@ -1103,5 +1137,11 @@ end
 
 _preprocess("melee")
 _preprocess("ranged")
+
+for group_name, templates in pairs(haptic_trigger_templates) do
+	for template_name, template in pairs(templates) do
+		template.name = template_name
+	end
+end
 
 return settings("HapticTriggerTemplates", haptic_trigger_templates)

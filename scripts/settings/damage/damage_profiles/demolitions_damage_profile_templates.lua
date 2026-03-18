@@ -1396,6 +1396,7 @@ ogryn_grenade.power_distribution_ranged.impact.far = 10
 ogryn_grenade.damage_type = damage_types.grenade_frag
 ogryn_grenade.gibbing_power = gibbing_power.heavy
 ogryn_grenade.ragdoll_push_force = 1200
+ogryn_grenade.instakill_non_monster_or_captain_or_ogryn = true
 ogryn_grenade.stat_buffs = {
 	"frag_damage",
 }
@@ -1435,10 +1436,156 @@ close_ogryn_grenade.power_distribution.attack = 1500
 close_ogryn_grenade.damage_type = damage_types.grenade_frag
 close_ogryn_grenade.gibbing_power = gibbing_power.heavy
 close_ogryn_grenade.ragdoll_push_force = 2000
+close_ogryn_grenade.instakill_non_monster_or_captain_or_ogryn = true
 close_ogryn_grenade.stat_buffs = {
 	"frag_damage",
 }
 damage_templates.close_ogryn_grenade = close_ogryn_grenade
+
+local EXPEDITIONS_BIG_GRENADE_ATTACK = 2400
+local EXPEDITIONS_BIG_GRENADE_IMPACT = 480
+
+damage_templates.expeditions_big_grenade_close = {
+	ignore_stagger_reduction = true,
+	instakill_non_monster_or_captain_or_ogryn = true,
+	ragdoll_push_force = 2000,
+	stagger_category = "explosion",
+	suppression_value = 12,
+	cleave_distribution = {
+		attack = 0.15,
+		impact = 0.15,
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 3.25,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 1,
+			[armor_types.disgustingly_resilient] = 3.25,
+			[armor_types.void_shield] = 1,
+		},
+		impact = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 1,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 1,
+		},
+	},
+	power_distribution = {
+		attack = EXPEDITIONS_BIG_GRENADE_ATTACK,
+		impact = EXPEDITIONS_BIG_GRENADE_IMPACT,
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+	damage_type = damage_types.grenade_frag,
+	gibbing_type = gibbing_types.explosion,
+	gibbing_power = gibbing_power.infinite,
+	gib_push_force = GibbingSettings.gib_push_force.explosive_heavy,
+}
+overrides.expeditions_big_grenade = {
+	parent_template_name = "expeditions_big_grenade_close",
+	overrides = {
+		{
+			"power_distribution",
+			"attack",
+			EXPEDITIONS_BIG_GRENADE_ATTACK / 2,
+		},
+		{
+			"power_distribution",
+			"impact",
+			EXPEDITIONS_BIG_GRENADE_IMPACT / 4,
+		},
+		{
+			"gibbing_power",
+			gibbing_power.heavy,
+		},
+		{
+			"gib_push_force",
+			GibbingSettings.gib_push_force.explosive,
+		},
+	},
+}
+
+local ATTACK_VALKYRIE_MISSILE_ATTACK = 900
+local ATTACK_VALKYRIE_MISSILE_IMPACT = 150
+
+damage_templates.attack_valkyrie_missile_explosion_close = {
+	ignore_stagger_reduction = true,
+	ragdoll_push_force = 2000,
+	stagger_category = "explosion",
+	suppression_value = 10,
+	cleave_distribution = {
+		attack = 1,
+		impact = 1,
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 1.25,
+			[armor_types.armored] = 2,
+			[armor_types.resistant] = 2,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1.35,
+			[armor_types.super_armor] = 2.4,
+			[armor_types.disgustingly_resilient] = 0.75,
+			[armor_types.void_shield] = 1.1,
+		},
+		impact = {
+			[armor_types.unarmored] = 2,
+			[armor_types.armored] = 2,
+			[armor_types.resistant] = 2,
+			[armor_types.player] = 2,
+			[armor_types.berserker] = 2,
+			[armor_types.super_armor] = 2,
+			[armor_types.disgustingly_resilient] = 2,
+			[armor_types.void_shield] = 2,
+		},
+	},
+	power_distribution = {
+		attack = ATTACK_VALKYRIE_MISSILE_ATTACK,
+		impact = ATTACK_VALKYRIE_MISSILE_IMPACT,
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+	damage_type = damage_types.grenade_frag,
+	gibbing_type = gibbing_types.explosion,
+	gibbing_power = gibbing_power.infinite,
+	gib_push_force = GibbingSettings.gib_push_force.explosive_heavy,
+}
+overrides.attack_valkyrie_missile_explosion = {
+	parent_template_name = "attack_valkyrie_missile_explosion_close",
+	overrides = {
+		{
+			"power_distribution",
+			"attack",
+			ATTACK_VALKYRIE_MISSILE_ATTACK / 2,
+		},
+		{
+			"power_distribution",
+			"impact",
+			ATTACK_VALKYRIE_MISSILE_IMPACT / 2,
+		},
+		{
+			"gibbing_power",
+			gibbing_power.heavy,
+		},
+		{
+			"gib_push_force",
+			GibbingSettings.gib_push_force.explosive,
+		},
+	},
+}
 
 return {
 	base_templates = damage_templates,

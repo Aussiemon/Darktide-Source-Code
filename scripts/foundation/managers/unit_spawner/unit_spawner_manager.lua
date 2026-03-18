@@ -72,6 +72,12 @@ UnitSpawnerManager.init = function (self, world, extension_manager, is_server, u
 	self._last_level_id = 0
 end
 
+UnitSpawnerManager.on_recover = function (self)
+	if self._deletion_state ~= DELETION_STATES.default then
+		self:set_deletion_state(DELETION_STATES.default)
+	end
+end
+
 UnitSpawnerManager.next_level_id = function (self)
 	return self._last_level_id + 1
 end
@@ -142,6 +148,7 @@ UnitSpawnerManager.register_dynamic_level_spawned_units_client = function (self,
 
 	if self.is_fully_hot_join_synced then
 		level_data = {
+			is_dynamic = true,
 			is_spawned = false,
 			start_index = self._next_level_unit_index,
 			end_index = self._next_level_unit_index + #units,
@@ -151,7 +158,6 @@ UnitSpawnerManager.register_dynamic_level_spawned_units_client = function (self,
 		level_data = self._registered_levels[server_level_id]
 
 		if not level_data then
-			table.dump(self._registered_levels, "registered levels", 2)
 			ferror("Trying to spawn dynamic level with id %i that server hasn't synced yet.", server_level_id)
 		end
 	end
@@ -269,6 +275,7 @@ UnitSpawnerManager.register_static_level_spawned_units = function (self, level, 
 	assign_sub_level_ids(level, 1, all_sub_levels)
 
 	self._registered_levels[id] = {
+		is_dynamic = false,
 		is_spawned = true,
 		level = level,
 		start_index = self._next_level_unit_index,
@@ -285,8 +292,9 @@ UnitSpawnerManager._register_spawned_units = function (self, level, units, id, o
 	local unit_array = self._level_unit_array
 	local index_lookup = self._level_unit_index_lookup
 	local unit
+	local num_units = #units
 
-	for i = 1, #units do
+	for i = 1, num_units do
 		unit = units[i]
 		unit_array[next_index] = unit
 		index_lookup[unit] = next_index
@@ -374,8 +382,12 @@ UnitSpawnerManager._add_pending_extensions = function (self)
 end
 
 UnitSpawnerManager.mark_for_deletion = function (self, unit)
-	if self._deletion_queue:contains(unit) then
+	local already_marked_for_deletion = self._deletion_queue:contains(unit)
+
+	if already_marked_for_deletion then
 		Log.exception("UnitSpawnerManager", "Tried to mark %s for deletion twice!", tostring(unit))
+
+		return
 	end
 
 	local deletion_state = self._deletion_state
@@ -548,7 +560,6 @@ UnitSpawnerManager.unit = function (self, game_object_id_or_level_index, is_leve
 		if unit then
 			return unit
 		else
-			table.dump(self._level_unit_array)
 			Log.exception("UnitSpawnerManager", "[FEATURE_expanded_level_ids] Level index %i not found in level unit array", game_object_id_or_level_index)
 		end
 

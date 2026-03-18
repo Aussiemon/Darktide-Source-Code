@@ -212,9 +212,9 @@ AFKChecker._show_warning_popup = function (self, minutes_to_kick)
 		options = {
 			{
 				text = "loc_popup_button_cancel",
-				callback = callback(function ()
+				callback = function ()
 					Managers.state.game_session:send_rpc_server("rpc_report_menu_activity")
-				end),
+				end,
 			},
 		},
 	}

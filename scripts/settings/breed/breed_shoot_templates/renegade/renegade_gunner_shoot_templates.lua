@@ -1,15 +1,14 @@
 ﻿-- chunkname: @scripts/settings/breed/breed_shoot_templates/renegade/renegade_gunner_shoot_templates.lua
 
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
 local damage_types = DamageSettings.damage_types
 local renegade_gunner_default = {
 	collision_filter = "filter_minion_shooting",
+	effect_template_name = "renegade_gunner_hellgun",
 	hit_scan_template = HitScanTemplates.gunner_bullet_sweep,
 	spread = math.degrees_to_radians(1.5),
-	effect_template = EffectTemplates.renegade_gunner_hellgun,
 	damage_type = damage_types.minion_laser,
 	line_effect = LineEffects.renegade_gunner_lasbeam,
 	damage_falloff = {

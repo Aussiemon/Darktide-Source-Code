@@ -8,6 +8,7 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Block = require("scripts/utilities/attack/block")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local GroundImpact = require("scripts/utilities/attack/ground_impact")
 local MinionAttack = require("scripts/utilities/minion_attack")
 local MinionBackstabSettings = require("scripts/settings/minion_backstab/minion_backstab_settings")
@@ -684,7 +685,7 @@ BtMeleeAttackAction.run = function (self, unit, breed, blackboard, scratchpad, a
 	MinionAttack.update_lag_compensation_melee(unit, breed, scratchpad, blackboard, t, action_data)
 
 	if scratchpad.effect_template_start_timing and t >= scratchpad.effect_template_start_timing then
-		local effect_template = action_data.effect_template
+		local effect_template = EffectTemplates[action_data.effect_template_name]
 		local fx_system = Managers.state.extension:system("fx_system")
 
 		scratchpad.global_effect_id = fx_system:start_template_effect(effect_template, unit)

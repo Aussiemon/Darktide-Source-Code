@@ -31,6 +31,12 @@ HudElementPlayerWeapon.init = function (self, parent, draw_layer, start_scale, d
 	self._gamepad_wield_input = slot_settings and slot_settings.gamepad_wield_input or self._wield_input
 	self._hide_input_on_gamepad_wielded = slot_settings and slot_settings.hide_input_on_gamepad_wielded
 
+	local player = data.player
+	local player_unit = player and player.player_unit
+	local talent_extension = ScriptUnit.has_extension(player_unit, "talent_system")
+
+	self._talent_extension = talent_extension
+
 	local weapon_template = data.weapon_template
 
 	self._weapon_name = data.weapon_name
@@ -159,6 +165,14 @@ HudElementPlayerWeapon._apply_color_values = function (self, destination_color, 
 	destination_color[4] = target_color[4]
 end
 
+HudElementPlayerWeapon.flash_slot_display = function (self)
+	if not self._animate_charge_gained then
+		self._animate_charge_gained = true
+		self._animate_charge_gained_t = Managers.time:time("ui")
+		self._animate_first_charge = true
+	end
+end
+
 HudElementPlayerWeapon._set_ammo_refill_alpha = function (self, alpha)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.background
@@ -251,60 +265,9 @@ HudElementPlayerWeapon.update = function (self, dt, t, ui_renderer, render_setti
 
 				self._cooldown_progress = cooldown_progress
 			end
-
-			if self._animate_charge_gained then
-				local background_widget = self._widgets_by_name.background
-				local background_style = background_widget.style
-				local icon_widget = self._widgets_by_name.icon
-				local icon_style = icon_widget.style.icon
-				local icon_cooldown_done_style = icon_widget.style.icon_cooldown_done
-
-				background_widget.dirty = true
-				icon_widget.dirty = true
-
-				local icon_pop_time = 0.2
-				local glass_time = 0.25
-				local glow_time = 0.5
-				local time_in_anim = t - self._animate_charge_gained_t
-				local glass_anim_p = math.clamp01(time_in_anim / glass_time)
-				local glow_anim_p = math.clamp01(time_in_anim / glow_time)
-				local pop_anim_p = math.clamp01(time_in_anim / icon_pop_time)
-				local all_done = math.min(glass_anim_p, glow_anim_p, pop_anim_p) == 1
-
-				if all_done then
-					self._animate_charge_gained = false
-					self._animate_charge_gained_t = nil
-					self._animate_first_charge = false
-					background_style.background_stripe_wide.color[1] = 0
-					background_style.background_stripe_thin_left.color[1] = 0
-					background_style.background_stripe_thin_right.color[1] = 0
-					icon_cooldown_done_style.color[1] = 0
-					icon_style.color[1] = 255
-				else
-					if self._animate_first_charge then
-						table.merge(background_style.background_stripe_wide.color, background_style.background_stripe_wide.active_color)
-						table.merge(background_style.background_stripe_thin_left.color, background_style.background_stripe_thin_left.active_color)
-						table.merge(background_style.background_stripe_thin_right.color, background_style.background_stripe_thin_right.active_color)
-
-						background_style.background_stripe_wide.offset_scale[1] = math.remap(0, 1, -0.5, 1, glass_anim_p)
-
-						local icon_scale_multiplier = HudElementPlayerWeaponHandlerSettings.icon_shrink_scale
-						local pop_size = 1 / (1 - icon_scale_multiplier)
-						local size_increase = math.lerp(pop_size, 1, pop_anim_p)
-
-						icon_cooldown_done_style.size[1] = icon_style.size[1] * size_increase
-						icon_cooldown_done_style.size[2] = icon_style.size[2] * size_increase
-						icon_cooldown_done_style.color[1] = 200
-					end
-
-					local glow_p = 1 - math.easeInCubic(glow_anim_p)
-
-					background_style.cooldown_done_glow.color[1] = glow_p * 255
-				end
-			end
 		end
 
-		if self._uses_ammo and self._total_ammo ~= remaining_ability_charges then
+		if self._uses_ammo and remaining_ability_charges and self._total_ammo ~= remaining_ability_charges then
 			self._low_on_ammo = remaining_ability_charges <= 0
 
 			self:_set_clip_amount(remaining_ability_charges, clip_total, 1)
@@ -369,6 +332,57 @@ HudElementPlayerWeapon.update = function (self, dt, t, ui_renderer, render_setti
 					self._overheat_progress = overheat_current_percentage
 				end
 			end
+		end
+	end
+
+	if self._animate_charge_gained then
+		local background_widget = self._widgets_by_name.background
+		local background_style = background_widget.style
+		local icon_widget = self._widgets_by_name.icon
+		local icon_style = icon_widget.style.icon
+		local icon_cooldown_done_style = icon_widget.style.icon_cooldown_done
+
+		background_widget.dirty = true
+		icon_widget.dirty = true
+
+		local icon_pop_time = 0.2
+		local glass_time = 0.25
+		local glow_time = 0.5
+		local time_in_anim = t - self._animate_charge_gained_t
+		local glass_anim_p = math.clamp01(time_in_anim / glass_time)
+		local glow_anim_p = math.clamp01(time_in_anim / glow_time)
+		local pop_anim_p = math.clamp01(time_in_anim / icon_pop_time)
+		local all_done = math.min(glass_anim_p, glow_anim_p, pop_anim_p) == 1
+
+		if all_done then
+			self._animate_charge_gained = false
+			self._animate_charge_gained_t = nil
+			self._animate_first_charge = false
+			background_style.background_stripe_wide.color[1] = 0
+			background_style.background_stripe_thin_left.color[1] = 0
+			background_style.background_stripe_thin_right.color[1] = 0
+			icon_cooldown_done_style.color[1] = 0
+			icon_style.color[1] = 255
+		else
+			if self._animate_first_charge then
+				table.merge(background_style.background_stripe_wide.color, background_style.background_stripe_wide.active_color)
+				table.merge(background_style.background_stripe_thin_left.color, background_style.background_stripe_thin_left.active_color)
+				table.merge(background_style.background_stripe_thin_right.color, background_style.background_stripe_thin_right.active_color)
+
+				background_style.background_stripe_wide.offset_scale[1] = math.remap(0, 1, -0.5, 1, glass_anim_p)
+
+				local icon_scale_multiplier = HudElementPlayerWeaponHandlerSettings.icon_shrink_scale
+				local pop_size = 1 / (1 - icon_scale_multiplier)
+				local size_increase = math.lerp(pop_size, 1, pop_anim_p)
+
+				icon_cooldown_done_style.size[1] = icon_style.size[1] * size_increase
+				icon_cooldown_done_style.size[2] = icon_style.size[2] * size_increase
+				icon_cooldown_done_style.color[1] = 200
+			end
+
+			local glow_p = 1 - math.easeInCubic(glow_anim_p)
+
+			background_style.cooldown_done_glow.color[1] = glow_p * 255
 		end
 	end
 

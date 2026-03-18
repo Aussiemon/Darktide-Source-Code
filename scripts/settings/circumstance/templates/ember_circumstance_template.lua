@@ -80,5 +80,23 @@ circumstance_templates.ember_01_more_res = {
 	},
 	mission_overrides = MissionOverrides.all_fire_barrels,
 }
+circumstance_templates.ember_01_havoc = {
+	dialogue_id = "circumstance_vo_ember",
+	theme_tag = "ember",
+	wwise_state = "ember_01",
+	ui = {
+		background = "content/ui/materials/backgrounds/mutators/mutator_bg_ember",
+		description = "loc_circumstance_ember_description",
+		display_name = "loc_circumstance_ember_title",
+		icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_ember",
+		mission_board_icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_ember",
+	},
+	mutators = {
+		"mutator_renegade_flamer_none_packs",
+		"mutator_only_traitor_guard_faction",
+		"mutator_renegade_grenadier",
+	},
+	mission_overrides = MissionOverrides.all_fire_barrels,
+}
 
 return circumstance_templates

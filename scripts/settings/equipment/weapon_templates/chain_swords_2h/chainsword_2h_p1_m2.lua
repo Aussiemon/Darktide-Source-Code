@@ -30,6 +30,7 @@ local weapon_template = {}
 
 weapon_template.action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs)
 weapon_template.action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
+weapon_template.action_inputs.start_attack.buffer_time = 0.5
 weapon_template.action_inputs.wield.buffer_time = 0.4
 
 local _force_abort_breed_tags_special_active = {
@@ -544,6 +545,7 @@ weapon_template.actions = {
 			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
+				chain_time = 0.4,
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
@@ -551,11 +553,11 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.96,
+				chain_time = 0.76,
 			},
 			special_action = {
 				action_name = "action_start_special",
-				chain_time = 0.4,
+				chain_time = 0.55,
 			},
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -846,7 +848,7 @@ weapon_template.actions = {
 			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
-				chain_time = 0.3,
+				chain_time = 0.4,
 			},
 			start_attack = {
 				action_name = "action_melee_start_left_2",
@@ -854,11 +856,11 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.96,
+				chain_time = 0.76,
 			},
 			special_action = {
 				action_name = "action_start_special",
-				chain_time = 0.4,
+				chain_time = 0.6,
 			},
 		},
 		hit_stickyness_settings = hit_stickyness_settings_heavy,
@@ -1623,10 +1625,10 @@ weapon_template.weapon_special_tweak_data = {
 }
 weapon_template.fx_sources = {
 	_block = "fx_block",
-	_melee_idling = "fx_engine",
 	_special_active = "fx_weapon_special",
 	_sticky = "fx_sawing",
 	_sweep = "fx_sweep",
+	_wielded_idling = "fx_engine",
 }
 weapon_template.crosshair = {
 	crosshair_type = "dot",

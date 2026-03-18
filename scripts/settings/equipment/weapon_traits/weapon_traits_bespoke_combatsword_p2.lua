@@ -366,11 +366,11 @@ templates.weapon_trait_bespoke_combatsword_p2_rending_on_multiple_hits = {
 					required_num_hits = 2,
 				},
 				stat_buffs = {
-					[stat_buffs.rending_multiplier] = 0.04,
+					[stat_buffs.rending_multiplier] = 0.05,
 				},
 			},
 			{
-				child_duration = 2.5,
+				child_duration = 3,
 				buff_data = {
 					required_num_hits = 2,
 				},
@@ -379,21 +379,21 @@ templates.weapon_trait_bespoke_combatsword_p2_rending_on_multiple_hits = {
 				},
 			},
 			{
-				child_duration = 2.5,
+				child_duration = 3.5,
+				buff_data = {
+					required_num_hits = 2,
+				},
+				stat_buffs = {
+					[stat_buffs.rending_multiplier] = 0.07,
+				},
+			},
+			{
+				child_duration = 4,
 				buff_data = {
 					required_num_hits = 2,
 				},
 				stat_buffs = {
 					[stat_buffs.rending_multiplier] = 0.08,
-				},
-			},
-			{
-				child_duration = 2.5,
-				buff_data = {
-					required_num_hits = 2,
-				},
-				stat_buffs = {
-					[stat_buffs.rending_multiplier] = 0.1,
 				},
 			},
 		},

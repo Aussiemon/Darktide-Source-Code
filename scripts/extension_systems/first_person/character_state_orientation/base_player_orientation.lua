@@ -26,6 +26,8 @@ BasePlayerOrientation.init = function (self, player, orientation)
 	self._recoil_control_component = unit_data_extension:read_component("recoil_control")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._weapon_lock_view_component = unit_data_extension:read_component("weapon_lock_view")
+	self._combat_ability_action_component = unit_data_extension:read_component("combat_ability_action")
+	self._grenade_ability_action_component = unit_data_extension:read_component("grenade_ability_action")
 end
 
 BasePlayerOrientation.destroy = function (self)

@@ -1,11 +1,11 @@
 ﻿-- chunkname: @scripts/managers/ui/ui_world_spawner.lua
 
-local ScriptWorld = require("scripts/foundation/utilities/script_world")
-local ScriptViewport = require("scripts/foundation/utilities/script_viewport")
-local UIUnitSpawner = require("scripts/managers/ui/ui_unit_spawner")
 local ExtensionManager = require("scripts/foundation/managers/extension/extension_manager")
-local WorldRenderUtils = require("scripts/utilities/world_render")
+local ScriptViewport = require("scripts/foundation/utilities/script_viewport")
+local ScriptWorld = require("scripts/foundation/utilities/script_world")
+local UIUnitSpawner = require("scripts/managers/ui/ui_unit_spawner")
 local VOSourcesCache = require("scripts/extension_systems/dialogue/vo_sources_cache")
+local WorldRender = require("scripts/utilities/world_render")
 local UIWorldSpawner = class("UIWorldSpawner")
 
 UIWorldSpawner.init = function (self, world_name, world_layer, timer_name, optional_view_name, optional_flags)
@@ -114,6 +114,8 @@ UIWorldSpawner.spawn_level = function (self, level_name, included_object_sets, p
 	local world = self._world
 	local spawn_units = true
 
+	ResourceReferenceContext.push("UIWorldSpawner:spawn_level")
+	ResourceReferenceContext.push(self._world_name)
 	self:_setup_extension_manager()
 
 	local level = ScriptWorld.spawn_level(world, level_name, position, rotation, spawn_units, ignore_level_background, included_object_sets)
@@ -131,6 +133,8 @@ UIWorldSpawner.spawn_level = function (self, level_name, included_object_sets, p
 	end
 
 	self._extension_manager:on_gameplay_post_init(level)
+	ResourceReferenceContext.pop(self._world_name)
+	ResourceReferenceContext.pop("UIWorldSpawner:spawn_level")
 end
 
 UIWorldSpawner.trigger_level_event = function (self, event_name)
@@ -353,7 +357,13 @@ UIWorldSpawner.create_viewport = function (self, camera_unit, viewport_name, vie
 	shading_callback = shading_callback or callback(self, "_shading_callback")
 	self._ignore_camera_destruction = camera_unit ~= nil
 
+	ResourceReferenceContext.push("UIWorldSpawner:create_viewport")
+	ResourceReferenceContext.push(self._world_name)
+
 	local viewport = ScriptWorld.create_viewport(world, viewport_name, viewport_type, viewport_layer, camera_unit, nil, nil, nil, shading_environment, shading_callback, nil, render_targets)
+
+	ResourceReferenceContext.pop(self._world_name)
+	ResourceReferenceContext.pop("UIWorldSpawner:create_viewport")
 
 	self._viewport = viewport
 	self._viewport_name = viewport_name
@@ -692,9 +702,9 @@ UIWorldSpawner._set_world_blur_value = function (self, blur_amount)
 	local viewport_name = self._viewport_name
 
 	if self._world_blurred then
-		WorldRenderUtils.enable_world_fullscreen_blur(world_name, viewport_name, blur_amount)
+		WorldRender.enable_world_fullscreen_blur(world_name, viewport_name, blur_amount)
 	else
-		WorldRenderUtils.disable_world_fullscreen_blur(world_name, viewport_name)
+		WorldRender.disable_world_fullscreen_blur(world_name, viewport_name)
 	end
 end
 

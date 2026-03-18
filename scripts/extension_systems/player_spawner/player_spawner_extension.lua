@@ -4,14 +4,21 @@ local PlayerSpawnerExtension = class("PlayerSpawnerExtension")
 
 PlayerSpawnerExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._active = false
+	self._identifier = nil
+	self._unit = unit
 	self._player_spawner_system = extension_init_context.owner_system
 end
 
-PlayerSpawnerExtension.activate_spawner = function (self, ...)
+PlayerSpawnerExtension.destroy = function (self)
+	self:deactivate_spawner(self._unit, self._identifier)
+end
+
+PlayerSpawnerExtension.activate_spawner = function (self, unit, player_side, identifier, ...)
 	if not self._active then
-		self._player_spawner_system:add_spawn_point(...)
+		self._player_spawner_system:add_spawn_point(unit, player_side, identifier, ...)
 
 		self._active = true
+		self._identifier = identifier
 	end
 end
 

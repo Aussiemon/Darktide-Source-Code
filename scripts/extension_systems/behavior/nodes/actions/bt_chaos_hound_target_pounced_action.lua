@@ -86,6 +86,7 @@ BtChaosHoundTargetPouncedAction.init_values = function (self, blackboard)
 end
 
 local cooldown_by_breed = {
+	chaos_armored_hound = "chaos_armored_hound_pounce",
 	chaos_hound = "chaos_hound_pounce",
 	chaos_hound_mutator = "chaos_hound_pounce",
 }
@@ -133,9 +134,10 @@ BtChaosHoundTargetPouncedAction.run = function (self, unit, breed, blackboard, s
 			local owner_unit = summon_unit_component.owner
 
 			if owner_unit and HEALTH_ALIVE[owner_unit] then
-				local summon_extension = ScriptUnit.extension(summon_unit_component.owner, "summon_minions_system")
+				local owner_blackboard = BLACKBOARDS[owner_unit]
+				local summon_component = Blackboard.write_component(owner_blackboard, "summon")
 
-				summon_extension:wwise_on_minion_success()
+				summon_component.num_pounced = summon_component.num_pounced + 1
 
 				local vo_event = action_data.vo_event
 
@@ -144,6 +146,18 @@ BtChaosHoundTargetPouncedAction.run = function (self, unit, breed, blackboard, s
 					local owner_breed = owner_unit_data_extension:breed()
 
 					Vo.enemy_generic_vo_event(owner_unit, vo_event, owner_breed.name)
+				end
+			end
+
+			if not scratchpad.loot_stolen_from_target_unit then
+				scratchpad.loot_stolen_from_target_unit = true
+
+				local game_mode_manager = Managers.state.game_mode
+				local game_mode = game_mode_manager:game_mode()
+				local game_mode_name = game_mode:name()
+
+				if game_mode_name == "expedition" then
+					game_mode:minion_steal(pounce_target, unit)
 				end
 			end
 		else

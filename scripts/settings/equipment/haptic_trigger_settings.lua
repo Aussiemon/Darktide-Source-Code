@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/haptic_trigger_settings.lua
 
-function _index_lookup_table(start_index, ...)
+local function _index_lookup_table(start_index, ...)
 	local t = {}
 
 	for ii = 1, select("#", ...) do

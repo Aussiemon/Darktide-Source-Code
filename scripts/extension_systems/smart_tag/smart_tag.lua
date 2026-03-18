@@ -171,6 +171,8 @@ SmartTag.validate_target_unit = function (target_unit)
 				return false, REMOVE_TAG_REASONS.health_station_depleted
 			end
 		end
+	elseif target_type == "expedition_loot_converter" then
+		return true
 	end
 
 	return true

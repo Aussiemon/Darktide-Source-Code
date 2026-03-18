@@ -1,8 +1,8 @@
 ﻿-- chunkname: @scripts/settings/stats/stat_configs.lua
 
-local StatConfigs = {}
+local stat_configs = {}
 
-StatConfigs.session = {
+stat_configs.session = {
 	mission_name = {
 		required = true,
 	},
@@ -43,7 +43,13 @@ StatConfigs.session = {
 		default = "none",
 	},
 }
-StatConfigs.user = {
+stat_configs.user = {
+	peer_id = {
+		required = true,
+	},
+	local_player_id = {
+		required = true,
+	},
 	archetype_name = {
 		required = true,
 	},
@@ -59,4 +65,4 @@ StatConfigs.user = {
 	},
 }
 
-return settings("StatConfigs", StatConfigs)
+return settings("StatConfigs", stat_configs)

@@ -201,6 +201,21 @@ Account.check_and_run_migrations = function (self, account_id)
 	end)
 end
 
+Account.get_statistics = function (self, statistics_path)
+	return Managers.backend:authenticate():next(function (account)
+		local account_id = account.sub
+		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/account/statistics/"):path(statistics_path)
+
+		return Managers.backend:title_request(builder:to_string()):next(function (result)
+			if result and result.body then
+				return result.body.statistics
+			end
+
+			return nil
+		end)
+	end)
+end
+
 implements(Account, Interface)
 
 return Account

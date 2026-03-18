@@ -768,6 +768,33 @@ damage_templates.warp_charge_exploding_tick = {
 		},
 	},
 }
+damage_templates.vortex_grab_wall_slam = {
+	disorientation_type = "falling_light",
+	ignore_shield = true,
+	ignore_toughness = false,
+	interrupt_alternate_fire = true,
+	ogryn_disorientation_type = "falling_light",
+	stagger_category = "ranged",
+	armor_damage_modifier = {
+		attack = default_armor_mod,
+		impact = default_armor_mod,
+	},
+	power_distribution = {
+		attack = 0.4,
+		impact = 0.4,
+	},
+	cleave_distribution = {
+		attack = 0.25,
+		impact = 0.25,
+	},
+	force_look_function = ForcedLookSettings.look_functions.light,
+	push_template = push_templates.heavy,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+}
 damage_templates.falling_light = {
 	disorientation_type = "falling_light",
 	ignore_shield = true,

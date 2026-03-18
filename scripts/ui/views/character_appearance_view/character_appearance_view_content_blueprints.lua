@@ -8,6 +8,7 @@ local TextInputPassTemplates = require("scripts/ui/pass_templates/text_input_pas
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIResolution = require("scripts/managers/ui/ui_resolution")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local Views = require("scripts/ui/views/views")
 local MasterItems = require("scripts/backend/master_items")
 local grid_size = CharacterAppearanceViewSettings.grid_size
 local grid_width = grid_size[1]
@@ -124,6 +125,14 @@ local blueprints = {
 				content.selected_text = nil
 				content._selection_start = nil
 				content._selection_end = nil
+			end
+
+			local barber_view_settings = Views.barber_vendor_background_view
+
+			if content.is_writing then
+				barber_view_settings.close_on_hotkey_pressed = false
+			else
+				barber_view_settings.close_on_hotkey_pressed = true
 			end
 		end,
 	},

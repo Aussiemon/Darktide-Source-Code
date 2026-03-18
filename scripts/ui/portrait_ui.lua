@@ -321,12 +321,12 @@ PortraitUI._get_unit_by_value_key = function (self, key, value)
 	local level = world_spawner:level()
 	local level_units = Level.units(level)
 
-	for i = 1, #level_units do
-		local unit = level_units[i]
+	for ii = 1, #level_units do
+		local unit = level_units[ii]
 		local unit_array_size = Unit.data_table_size(unit, key) or 0
 
-		for j = 1, unit_array_size do
-			local unit_array_value = Unit.get_data(unit, key, j)
+		for jj = 1, unit_array_size do
+			local unit_array_value = Unit.get_data(unit, key, jj)
 
 			if not unit_array_value then
 				return

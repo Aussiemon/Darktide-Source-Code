@@ -414,7 +414,7 @@ MinionBuffExtension._stop_fx = function (self, index, template)
 			local effect_template = minion_effects.effect_template
 			local fx_system = Managers.state.extension:system("fx_system")
 
-			if effect_template and self._effect_template_id and fx_system:has_running_global_effect_id(self._effect_template_id) then
+			if effect_template and self._effect_template_id and fx_system:has_running_template_effect_with_global_effect_id(self._effect_template_id) then
 				fx_system:stop_template_effect(self._effect_template_id)
 			end
 		end

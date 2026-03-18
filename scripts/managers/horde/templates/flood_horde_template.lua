@@ -164,6 +164,7 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 
 		param_table.target_side_id = target_side_id
 		param_table.group_id = group_id
+		param_table.optional_group_target = target_unit
 
 		spawner:add_spawns(breed_list, side_id, param_table)
 	end
@@ -186,6 +187,7 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 
 				param_table.optional_aggro_state = aggro_states.aggroed
 				param_table.optional_target_unit = target_unit
+				param_table.optional_group_target = target_unit
 				param_table.optional_group_id = group_id
 
 				minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, param_table)
@@ -235,6 +237,7 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 			param_table.optional_aggro_state = aggro_states.aggroed
 			param_table.optional_target_unit = target_unit
 			param_table.optional_group_id = group_id
+			param_table.optional_group_target = target_unit
 
 			minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, param_table)
 

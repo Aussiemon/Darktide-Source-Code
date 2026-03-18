@@ -129,27 +129,30 @@ Stagger.can_stagger = function (unit)
 	return true
 end
 
-Stagger.force_stagger = function (unit, stagger_type, attack_direction, duration, length_scale, immune_time, attacker_unit)
+Stagger.force_stagger = function (unit, stagger_type, attack_direction, duration, length_scale, immune_time, attacker_unit, ignore_no_stagger)
 	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 	local no_stagger = buff_extension and buff_extension:has_keyword(buff_keywords.no_stagger)
 
-	if no_stagger then
+	if no_stagger and not ignore_no_stagger then
 		return
 	end
 
 	local t = Managers.time:time("gameplay")
 	local blackboard = BLACKBOARDS[unit]
-	local stagger_component = Blackboard.write_component(blackboard, "stagger")
 
-	stagger_component.immune_time = t + (immune_time or 0)
-	stagger_component.type = stagger_type
+	if blackboard then
+		local stagger_component = Blackboard.write_component(blackboard, "stagger")
 
-	stagger_component.direction:store(attack_direction)
+		stagger_component.immune_time = t + (immune_time or 0)
+		stagger_component.type = stagger_type
 
-	stagger_component.duration = duration
-	stagger_component.length = length_scale or 1
-	stagger_component.num_triggered_staggers = stagger_component.num_triggered_staggers + 1
-	stagger_component.attacker_unit = attacker_unit
+		stagger_component.direction:store(attack_direction)
+
+		stagger_component.duration = duration
+		stagger_component.length = length_scale or 1
+		stagger_component.num_triggered_staggers = stagger_component.num_triggered_staggers + 1
+		stagger_component.attacker_unit = attacker_unit
+	end
 end
 
 function _get_breed(unit)

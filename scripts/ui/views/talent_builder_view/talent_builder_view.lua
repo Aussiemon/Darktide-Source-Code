@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/ui/views/talent_builder_view/talent_builder_view.lua
 
+local ArchetypeSettings = require("scripts/settings/archetype/archetype_settings")
 local Archetypes = require("scripts/settings/archetype/archetypes")
 local CharacterSheet = require("scripts/utilities/character_sheet")
 local Colors = require("scripts/utilities/ui/colors")
@@ -15,6 +16,7 @@ local Text = require("scripts/utilities/ui/text")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
+local NodeLayout = require("scripts/ui/views/node_builder_view_base/utilities/node_layout")
 local loadout_ability_widget_name_list = {
 	"loadout_slot_ability",
 	"loadout_slot_tactical",
@@ -87,7 +89,6 @@ TalentBuilderView.on_enter = function (self)
 	local nodes = active_layout.nodes
 	local player = self._preview_player
 	local profile = player:profile()
-	local active_talents_version = TalentLayoutParser.talents_version(profile)
 	local profile_preset_id = ProfileUtils.get_active_profile_preset_id()
 
 	if self._is_own_player and not self._is_readonly then
@@ -97,14 +98,7 @@ TalentBuilderView.on_enter = function (self)
 
 		if profile_preset then
 			self._active_profile_preset_id = profile_preset_id
-
-			local profile_preset_talents_version = profile_preset.talents_version
-
-			if not TalentLayoutParser.is_same_version(profile_preset_talents_version, active_talents_version) then
-				talents = {}
-			else
-				talents = profile_preset and TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", context and context.current_profile_equipped_talents or profile_preset.talents) or {}
-			end
+			talents = profile_preset and TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", context and context.current_profile_equipped_talents or profile_preset.talents) or {}
 		else
 			local current_profile_equipped_talents = context and context.current_profile_equipped_talents
 
@@ -124,6 +118,10 @@ TalentBuilderView.on_enter = function (self)
 				end
 			end
 		end
+
+		TalentLayoutParser.validate_talent_layouts(talents, {
+			active_layout,
+		}, true)
 
 		self._node_widget_tiers = table.clone_instance(talents)
 
@@ -168,7 +166,7 @@ TalentBuilderView.on_enter = function (self)
 
 		local node = content.node_data
 
-		if node.type ~= "start" then
+		if node.type ~= "start" and node.type ~= "start_center" then
 			all_nodes_cost_one = all_nodes_cost_one and node.cost == 1
 		end
 	end
@@ -203,21 +201,22 @@ end
 TalentBuilderView.event_on_profile_preset_changed = function (self, profile_preset, on_preset_deleted)
 	local player = self._preview_player
 	local profile = player:profile()
-	local active_talent_version = TalentLayoutParser.talents_version(profile)
 	local talents_version = profile_preset and profile_preset.talents_version
 	local profile_preset_id = ProfileUtils.get_active_profile_preset_id()
 	local talents
 
 	if profile_preset then
-		if not TalentLayoutParser.is_same_version(talents_version, active_talent_version) then
-			talents = {}
-		else
-			talents = profile_preset and TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", profile_preset.talents) or {}
-		end
+		talents = profile_preset and TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", profile_preset.talents) or {}
 	else
 		talents = table.clone_instance(self._node_widget_tiers)
 		self._save_talent_changes = true
 	end
+
+	local active_layout = self._active_layout
+
+	TalentLayoutParser.validate_talent_layouts(talents, {
+		active_layout,
+	}, true)
 
 	self._node_widget_tiers = talents and table.clone_instance(talents) or {}
 
@@ -263,8 +262,8 @@ TalentBuilderView._remove_node_point_on_widget = function (self, widget)
 	self._save_talent_changes = true
 end
 
-TalentBuilderView._add_node_point_on_widget = function (self, widget)
-	local success = TalentBuilderView.super._add_node_point_on_widget(self, widget)
+TalentBuilderView._add_node_point_on_widget = function (self, widget, amount_to_add)
+	local success = TalentBuilderView.super._add_node_point_on_widget(self, widget, amount_to_add)
 
 	if success then
 		self._save_talent_changes = true
@@ -458,7 +457,7 @@ TalentBuilderView._refresh_all_nodes = function (self)
 	local layout = self:get_active_layout()
 	local archetype_name = layout.archetype_name
 
-	if archetype_name then
+	if archetype_name and archetype_name ~= "not_selected" then
 		self:on_archetype_name_changed(archetype_name)
 	end
 
@@ -615,7 +614,7 @@ TalentBuilderView._draw_connection_between_widgets = function (self, ui_renderer
 	local color_status
 
 	if is_parent_starting_node then
-		if parent_node.type ~= "start" and not node_widget_tiers[parent_node_name] then
+		if parent_node.type ~= "start" and parent_node.type ~= "start_center" and not node_widget_tiers[parent_node_name] then
 			color_status = "locked"
 		elseif child_unlocked then
 			color_status = "chosen"
@@ -1094,7 +1093,7 @@ TalentBuilderView._update_gamepad_cursor = function (self, dt, t, input_service)
 				local node_data = widget.content.node_data
 				local type = node_data.type
 
-				if type ~= "start" then
+				if type ~= "start" and type ~= "start_center" then
 					local is_selected = i == self._selected_node_index
 					local has_overlap, score, widget_size, widget_center = process_gamepad_cursor_widget_func(self, widget, cursor_size, is_sticky, is_selected, pos, normalized_gamepad_cursor_average_vel)
 					local delta_dir, delta_len = Vector3.direction_length(widget_center - cursor_center)
@@ -1273,7 +1272,7 @@ TalentBuilderView._on_node_widget_left_pressed = function (self, widget)
 	local node_data = widget.content.node_data
 	local type = node_data.type
 
-	if type == "start" then
+	if type == "start" or type == "start_center" then
 		return
 	end
 
@@ -1292,7 +1291,7 @@ TalentBuilderView._on_node_widget_right_pressed = function (self, widget)
 	local node_data = widget.content.node_data
 	local type = node_data.type
 
-	if type == "start" then
+	if type == "start" or type == "start_center" then
 		return
 	end
 
@@ -1301,12 +1300,6 @@ TalentBuilderView._on_node_widget_right_pressed = function (self, widget)
 	if success then
 		self:_play_sound(UISoundEvents.talent_node_clear)
 	end
-end
-
-TalentBuilderView._get_relative_path = function (self)
-	local path = debug.getinfo(1, "S").source:sub(2)
-
-	return path:match("(.*/)")
 end
 
 TalentBuilderView._max_node_points = function (self)
@@ -1942,11 +1935,24 @@ TalentBuilderView._setup_talents_summary_grid = function (self)
 			ability = {},
 			blitz = {},
 			aura = {},
+			iconics = {},
 		}
 		local player = self._preview_player
 		local profile = player and player:profile()
 
 		CharacterSheet.class_loadout(profile, base_class_loadout, true)
+
+		local iconics = base_class_loadout.iconics
+
+		for i = 1, #iconics do
+			local iconic = iconics[i]
+
+			nodes_to_present[#nodes_to_present + 1] = {
+				type = "iconic",
+				widget_type = "iconic",
+				talent = iconic,
+			}
+		end
 
 		if not ability_added then
 			local talent = base_class_loadout.ability.talent
@@ -2058,7 +2064,7 @@ TalentBuilderView._setup_talents_summary_grid = function (self)
 				end
 
 				layout[#layout + 1] = {
-					widget_type = "talent_info",
+					widget_type = data.widget_type or "talent_info",
 					talent = talent,
 					display_name = display_name,
 					description = description,
@@ -2069,7 +2075,7 @@ TalentBuilderView._setup_talents_summary_grid = function (self)
 					node_type = node_type,
 				}
 
-				if node_type ~= "stat" then
+				if node_type ~= "stat" and node_type ~= "iconic" then
 					layout[#layout + 1] = {
 						widget_type = "dynamic_spacing",
 						size = {

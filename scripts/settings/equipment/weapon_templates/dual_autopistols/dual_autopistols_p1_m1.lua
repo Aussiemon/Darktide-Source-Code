@@ -304,7 +304,6 @@ weapon_template.actions = {
 			post_loop_shoot_tail_sfx_alias = "ranged_shot_tail",
 			pre_loop_shoot_sfx_alias = "ranged_pre_loop_shot",
 			pre_loop_shoot_tail_sfx_alias = "ranged_shot_tail",
-			shell_casing_effect = "content/fx/particles/weapons/shells/shell_casing_autopistol_01",
 			spread_rotated_muzzle_flash = false,
 			line_effect = LineEffects.autogun_bullet,
 		},
@@ -396,7 +395,6 @@ weapon_template.actions = {
 			post_loop_shoot_tail_sfx_alias = "ranged_shot_tail",
 			pre_loop_shoot_sfx_alias = "ranged_pre_loop_shot",
 			pre_loop_shoot_tail_sfx_alias = "ranged_shot_tail",
-			shell_casing_effect = "content/fx/particles/weapons/shells/shell_casing_autopistol_01",
 			spread_rotated_muzzle_flash = false,
 			line_effect = LineEffects.autogun_bullet,
 		},
@@ -692,7 +690,6 @@ weapon_template.conditional_state_to_action_input = {
 }
 weapon_template.no_ammo_delay = 0.15
 weapon_template.ammo_template = "dual_autopistols_p1_m1"
-weapon_template.using_magazine = true
 weapon_template.hud_configuration = {
 	uses_ammunition = true,
 	uses_overheat = false,

@@ -22,6 +22,9 @@ breed_terror_event_settings.chaos_mutator_daemonhost = {
 breed_terror_event_settings.chaos_hound = {
 	point_cost = 12,
 }
+breed_terror_event_settings.chaos_armored_hound = {
+	point_cost = 18,
+}
 breed_terror_event_settings.chaos_newly_infected = {
 	point_cost = 1,
 }
@@ -42,6 +45,9 @@ breed_terror_event_settings.chaos_ogryn_gunner = {
 }
 breed_terror_event_settings.chaos_ogryn_executor = {
 	point_cost = 15,
+}
+breed_terror_event_settings.chaos_ogryn_houndmaster = {
+	point_cost = math.huge,
 }
 breed_terror_event_settings.chaos_poxwalker_bomber = {
 	point_cost = 6,
@@ -116,6 +122,12 @@ breed_terror_event_settings.cultist_berzerker = {
 	point_cost = 6,
 }
 breed_terror_event_settings.cultist_captain = {
+	point_cost = 10,
+}
+breed_terror_event_settings.sand_vortex = {
+	point_cost = 10,
+}
+breed_terror_event_settings.nurgle_flies = {
 	point_cost = 10,
 }
 

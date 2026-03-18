@@ -3,7 +3,7 @@
 require("scripts/extension_systems/weapon/actions/action_ability_base")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local ShoutAbilityImplementation = require("scripts/extension_systems/ability/utilities/shout_ability_implementation")
+local ShoutAbility = require("scripts/extension_systems/ability/utilities/shout_ability")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local Vo = require("scripts/utilities/vo")
@@ -83,7 +83,7 @@ ActionOgrynShout.start = function (self, action_settings, t, time_scale, action_
 	local radius = action_settings.radius
 	local shout_target_template_name = self._ability_template_tweak_data.shout_target_template or action_settings.shout_target_template
 
-	self._num_hits = ShoutAbilityImplementation.execute(radius, shout_target_template_name, player_unit, t, locomotion_component, shout_direction)
+	self._num_hits = ShoutAbility.execute(radius, shout_target_template_name, player_unit, t, locomotion_component, shout_direction)
 
 	local buff_extension = ScriptUnit.extension(self._player_unit, "buff_system")
 	local param_table = buff_extension:request_proc_event_param_table()

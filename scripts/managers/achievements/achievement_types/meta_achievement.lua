@@ -37,12 +37,16 @@ MetaAchievement.verifier = function (achievement_definition)
 	local has_target = type(target) == "number"
 	local has_achievements = type(achievements) == "table"
 
-	if not has_target or not has_achievements then
-		return false
+	if not has_target then
+		return false, "has no target"
+	end
+
+	if not has_achievements then
+		return false, "has no achievements"
 	end
 
 	if target > table.size(achievements) then
-		return false
+		return false, "more targets than achievements"
 	end
 
 	return true

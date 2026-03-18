@@ -8,7 +8,7 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local VoiceFxPresetSettings = require("scripts/settings/dialogue/voice_fx_preset_settings")
 local VoQueryConstants = require("scripts/settings/dialogue/vo_query_constants")
 local Vo = {}
-local _get_breed, _get_alive_players, _get_healthy_players, _get_players_in_state, _get_random_player, _get_random_vox_unit, _get_all_vox_voice_profiles, _get_closest_player_except, _get_random_non_threatening_player_unit, _can_player_trigger_vo, _get_mission_giver_unit, _log_vo_event, _get_player_level, _can_interact, _get_interaction_level_req
+local _get_breed, _get_alive_players, _get_healthy_players, _get_players_in_state, _get_random_player, _get_random_vox_unit, _get_all_vox_voice_profiles, _get_closest_player_except, _get_random_non_threatening_player_unit, _can_player_trigger_vo, _get_mission_giver_unit, _log_vo_event, _get_player_level, _can_interact, _get_interaction_level_req, _is_old_archetype
 local DEFAULT_OPINION = "dislikes_character"
 local INTERACTIONS = {
 	health_station = function (dialogue_extension)
@@ -952,13 +952,40 @@ Vo.mission_giver_mission_info = function (unit, trigger_id)
 end
 
 Vo.mission_giver_mission_info_vo = function (voice_selection, selected_voice, trigger_id)
-	local voice_over_spawn_manager = Managers.state.voice_over_spawn
+	local is_server = Managers.state.game_session:is_server()
 
-	if voice_selection == "rule_based" then
-		local mission_giver_units = voice_over_spawn_manager:voice_over_units()
+	if is_server then
+		local voice_over_spawn_manager = Managers.state.voice_over_spawn
 
-		for voice_profile, unit in pairs(mission_giver_units) do
-			local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
+		if voice_selection == "rule_based" then
+			local mission_giver_units = voice_over_spawn_manager:voice_over_units()
+
+			for voice_profile, unit in pairs(mission_giver_units) do
+				local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
+				local event_name = "mission_info"
+				local event_data = dialogue_extension:get_event_data_payload()
+
+				event_data.trigger_id = trigger_id
+
+				dialogue_extension:trigger_dialogue_event(event_name, event_data)
+			end
+
+			return
+		end
+
+		local mission_giver_unit
+
+		if voice_selection == "mission_default" then
+			local voice_profile = voice_over_spawn_manager:current_voice_profile()
+
+			mission_giver_unit = voice_over_spawn_manager:voice_over_unit(voice_profile)
+		elseif voice_selection == "selected_voice" then
+			mission_giver_unit = voice_over_spawn_manager:voice_over_unit(selected_voice)
+		end
+
+		local dialogue_extension = ScriptUnit.has_extension(mission_giver_unit, "dialogue_system")
+
+		if dialogue_extension then
 			local event_name = "mission_info"
 			local event_data = dialogue_extension:get_event_data_payload()
 
@@ -966,29 +993,6 @@ Vo.mission_giver_mission_info_vo = function (voice_selection, selected_voice, tr
 
 			dialogue_extension:trigger_dialogue_event(event_name, event_data)
 		end
-
-		return
-	end
-
-	local mission_giver_unit
-
-	if voice_selection == "mission_default" then
-		local voice_profile = voice_over_spawn_manager:current_voice_profile()
-
-		mission_giver_unit = voice_over_spawn_manager:voice_over_unit(voice_profile)
-	elseif voice_selection == "selected_voice" then
-		mission_giver_unit = voice_over_spawn_manager:voice_over_unit(selected_voice)
-	end
-
-	local dialogue_extension = ScriptUnit.has_extension(mission_giver_unit, "dialogue_system")
-
-	if dialogue_extension then
-		local event_name = "mission_info"
-		local event_data = dialogue_extension:get_event_data_payload()
-
-		event_data.trigger_id = trigger_id
-
-		dialogue_extension:trigger_dialogue_event(event_name, event_data)
 	end
 end
 
@@ -1030,6 +1034,32 @@ Vo.mission_giver_vo_event = function (voice_profile, concept, trigger_id)
 		if dialogue_extension then
 			dialogue_extension:trigger_dialogue_event(event_name, event_data)
 		end
+	end
+end
+
+Vo.mission_giver_heat_vo = function (voice_profile, heat_stage, trigger_id)
+	local unit = _get_mission_giver_unit(voice_profile)
+
+	if unit then
+		local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
+
+		if trigger_id == "escape_event" then
+			dialogue_extension:store_in_memory("faction_memory", "heat_vo_disabled", 1)
+		else
+			local event_name = "heat_vo"
+			local event_data = dialogue_extension:get_event_data_payload()
+
+			event_data.trigger_id = trigger_id
+			event_data.heat_stage = heat_stage
+
+			if dialogue_extension then
+				dialogue_extension:trigger_dialogue_event(event_name, event_data)
+			end
+		end
+
+		local value = heat_stage == "detected" or heat_stage == "max" and 1 or 0
+
+		dialogue_extension:store_in_memory("faction_memory", "expeditions_high_heat", value)
 	end
 end
 
@@ -1361,8 +1391,11 @@ Vo.play_local_vo_event = function (unit, rule_name, wwise_route_key, seed, is_op
 end
 
 Vo.set_story_ticker = function (params)
-	DialogueSettings.story_ticker_enabled = params
-	DialogueSettings.short_story_ticker_enabled = params
+	local dialogue_system = Managers.state.extension:system_by_extension("DialogueExtension")
+
+	dialogue_system:set_mission_dialogue_setting("story_ticker_enabled", params)
+	dialogue_system:set_mission_dialogue_setting("short_story_ticker_enabled", params)
+	dialogue_system:set_mission_dialogue_setting("npc_story_ticker_enabled", params)
 end
 
 Vo.set_dynamic_smart_tag = function (unit, tag)
@@ -1440,6 +1473,19 @@ Vo.set_unit_vo_memory = function (unit, memory_type, memory_id, value)
 
 	if dialogue_extension then
 		dialogue_extension:store_in_memory(memory_type, memory_id, value)
+	end
+end
+
+Vo.set_npc_faction_memory = function (memory_id, value)
+	local is_server = Managers.state.game_session:is_server()
+
+	if is_server then
+		local voice_over_spawn_manager = Managers.state.voice_over_spawn
+		local voice_profile = voice_over_spawn_manager:current_voice_profile()
+		local mission_giver_unit = voice_over_spawn_manager:voice_over_unit(voice_profile)
+		local dialogue_extension = ScriptUnit.has_extension(mission_giver_unit, "dialogue_system")
+
+		dialogue_extension:store_in_memory("faction_memory", memory_id, value)
 	end
 end
 

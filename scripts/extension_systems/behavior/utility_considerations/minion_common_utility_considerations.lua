@@ -305,6 +305,47 @@ local considerations = {
 			is_condition = true,
 		},
 	},
+	escape_to_combat_vector_far = {
+		distance_to_combat_vector = {
+			blackboard_component = "combat_vector",
+			component_field = "distance",
+			max_value = 45,
+			spline = {
+				0,
+				0,
+				0.5,
+				0,
+				0.75,
+				1,
+				1,
+				1,
+			},
+		},
+		distance_to_target = {
+			blackboard_component = "perception",
+			component_field = "target_distance",
+			max_value = 45,
+			spline = {
+				0,
+				0,
+				0.25,
+				0,
+				0.5,
+				1,
+				0.51,
+				0,
+				0.900001,
+				0,
+				1,
+				0,
+			},
+		},
+		has_combat_vector_position = {
+			blackboard_component = "combat_vector",
+			component_field = "has_position",
+			is_condition = true,
+		},
+	},
 	run_stop_and_shoot = {
 		distance_to_combat_vector = {
 			blackboard_component = "combat_vector",

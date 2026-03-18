@@ -63,6 +63,15 @@ HumanGameplay.init = function (self, player, game_state_context)
 			local player_spawner_system = Managers.state.extension:system("player_spawner_system")
 			local wanted_spawn_point = player:wanted_spawn_point()
 
+			if not wanted_spawn_point then
+				local game_mode_manager = Managers.state.game_mode
+				local game_mode = game_mode_manager:game_mode()
+
+				if game_mode.next_spawn_point_identifier then
+					wanted_spawn_point = game_mode:next_spawn_point_identifier()
+				end
+			end
+
 			player:set_wanted_spawn_point(nil)
 
 			local spawn_position, spawn_rotation, spawn_parent, spawn_side = player_spawner_system:next_free_spawn_point(wanted_spawn_point)

@@ -297,6 +297,7 @@ PlayerUnitWeaponExtension._init_action_components = function (self, unit_data_ex
 	weapon_tweak_templates.sway_template_name = "none"
 	weapon_tweak_templates.toughness_template_name = "none"
 	weapon_tweak_templates.warp_charge_template_name = "none"
+	weapon_tweak_templates.weapon_chain_lightning_template_name = "none"
 	weapon_tweak_templates.weapon_handling_template_name = "none"
 	weapon_tweak_templates.weapon_shout_template_name = "none"
 	self._weapon_tweak_templates_component = weapon_tweak_templates
@@ -320,6 +321,10 @@ PlayerUnitWeaponExtension.extensions_ready = function (self, world, unit)
 	local ability_extension = ScriptUnit.extension(unit, "ability_system")
 
 	self._ability_extension = ability_extension
+
+	local coherency_extension = ScriptUnit.extension(unit, "coherency_system")
+
+	self._coherency_extension = coherency_extension
 
 	local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	local first_person_unit = first_person_extension:first_person_unit()
@@ -411,7 +416,7 @@ end
 PlayerUnitWeaponExtension._wielded_weapon = function (self, inventory_component, weapons)
 	local wielded_slot = inventory_component.wielded_slot
 
-	return weapons[wielded_slot]
+	return weapons[wielded_slot], wielded_slot
 end
 
 PlayerUnitWeaponExtension.update = function (self, unit, dt, t)
@@ -690,6 +695,7 @@ PlayerUnitWeaponExtension.on_slot_wielded = function (self, slot_name, t, skip_w
 	weapon_tweak_templates_component.sway_template_name = weapon_template.sway_template or "none"
 	weapon_tweak_templates_component.toughness_template_name = weapon_template.toughness_template or "none"
 	weapon_tweak_templates_component.warp_charge_template_name = weapon_template.warp_charge_template or "none"
+	weapon_tweak_templates_component.weapon_chain_lightning_template_name = weapon_template.weapon_chain_lightning_template or "none"
 	weapon_tweak_templates_component.weapon_shout_template_name = weapon_template.weapon_shout_template_name or "none"
 
 	action_handler:set_active_template("weapon_action", weapon_template.name)
@@ -731,6 +737,7 @@ PlayerUnitWeaponExtension.on_slot_unwielded = function (self, slot_name, t)
 	weapon_tweak_templates_component.sway_template_name = "none"
 	weapon_tweak_templates_component.toughness_template_name = "none"
 	weapon_tweak_templates_component.warp_charge_template_name = "none"
+	weapon_tweak_templates_component.weapon_chain_lightning_template_name = "none"
 	weapon_tweak_templates_component.weapon_handling_template_name = "none"
 	weapon_tweak_templates_component.weapon_shout_template_name = "none"
 
@@ -769,18 +776,16 @@ end
 local action_params_temp = {}
 
 PlayerUnitWeaponExtension._start_action = function (self, action_name, action_settings, t, used_input, transition_type)
-	local weapon = self:_wielded_weapon(self._inventory_component, self._weapons)
+	local weapon, wielded_slot = self:_wielded_weapon(self._inventory_component, self._weapons)
 	local action_objects = weapon.actions
-	local action_params = self:_fill_action_params(weapon, self._unit)
-	local inventory_component = self._inventory_component
-	local wielded_slot = inventory_component.wielded_slot
+	local action_params = self:_fill_action_params(weapon, self._unit, wielded_slot)
 	local condition_func_params = self:condition_func_params(wielded_slot)
 
 	self._action_handler:start_action("weapon_action", action_objects, action_name, action_params, action_settings, used_input, t, transition_type, condition_func_params)
 end
 
 PlayerUnitWeaponExtension.server_correction_occurred = function (self, unit)
-	local weapon = self:_wielded_weapon(self._inventory_component, self._weapons)
+	local weapon, wielded_slot = self:_wielded_weapon(self._inventory_component, self._weapons)
 	local action_objects, actions
 
 	if weapon then
@@ -788,7 +793,7 @@ PlayerUnitWeaponExtension.server_correction_occurred = function (self, unit)
 		actions = weapon.weapon_template.actions
 	end
 
-	local action_params = self:_fill_action_params(weapon, self._unit)
+	local action_params = self:_fill_action_params(weapon, self._unit, wielded_slot)
 
 	self._action_handler:server_correction_occurred("weapon_action", action_objects, action_params, actions)
 end
@@ -804,17 +809,15 @@ PlayerUnitWeaponExtension.start_action = function (self, action_name, t)
 end
 
 PlayerUnitWeaponExtension.stop_action = function (self, reason, data, t, allow_reason_chain_action)
-	local inventory_component = self._inventory_component
-	local wielded_slot = inventory_component.wielded_slot
+	local weapon, wielded_slot = self:_wielded_weapon(self._inventory_component, self._weapons)
 
 	if not allow_reason_chain_action or wielded_slot == "none" then
 		self._action_handler:stop_action("weapon_action", reason, data, t)
 	else
 		local condition_func_params = self:condition_func_params(wielded_slot)
-		local weapon = self:_wielded_weapon(self._inventory_component, self._weapons)
 		local actions = weapon.weapon_template.actions
 		local action_objects = weapon.actions
-		local action_params = self:_fill_action_params(weapon, self._unit)
+		local action_params = self:_fill_action_params(weapon, self._unit, wielded_slot)
 
 		self._action_handler:stop_action("weapon_action", reason, data, t, actions, action_objects, action_params, condition_func_params)
 	end
@@ -890,6 +893,29 @@ PlayerUnitWeaponExtension.blocked_attack = function (self, attacking_unit, hit_w
 			param_table.attack_type = attack_type
 
 			buff_extension:add_proc_event(proc_events.on_perfect_block, param_table)
+		end
+	end
+
+	local is_server = self._is_server
+
+	if is_server and block_broken then
+		local coherency_extension = self._coherency_extension
+		local units_in_coherency = coherency_extension:in_coherence_units()
+
+		for coherency_unit in pairs(units_in_coherency) do
+			local coherency_unit_buff_extension = HEALTH_ALIVE[coherency_unit] and ScriptUnit.has_extension(coherency_unit, "buff_system") or nil
+
+			if coherency_unit_buff_extension then
+				param_table = buff_extension:request_proc_event_param_table()
+
+				if param_table then
+					param_table.player_unit = coherency_unit
+					param_table.attacking_unit = attacking_unit
+					param_table.attack_type = attack_type
+
+					buff_extension:add_proc_event(proc_events.on_coherency_player_block_broken_server, param_table)
+				end
+			end
 		end
 	end
 
@@ -1016,18 +1042,16 @@ PlayerUnitWeaponExtension.condition_func_params = function (self, wielded_slot)
 end
 
 PlayerUnitWeaponExtension.update_weapon_actions = function (self, fixed_frame)
-	local inventory_component = self._inventory_component
-	local wielded_slot = inventory_component.wielded_slot
+	local wielded_weapon, wielded_slot = self:_wielded_weapon(self._inventory_component, self._weapons)
 
 	if wielded_slot == "none" then
 		return
 	end
 
 	local condition_func_params = self:condition_func_params(wielded_slot)
-	local wielded_weapon = self:_wielded_weapon(inventory_component, self._weapons)
 	local actions = wielded_weapon.weapon_template.actions
 	local action_objects = wielded_weapon.actions
-	local action_params = self:_fill_action_params(wielded_weapon, self._unit)
+	local action_params = self:_fill_action_params(wielded_weapon, self._unit, wielded_slot)
 
 	self:update_weapon_special_implementation(fixed_frame)
 	self._action_handler:update_actions(fixed_frame, "weapon_action", condition_func_params, actions, action_objects, action_params)
@@ -1553,6 +1577,16 @@ PlayerUnitWeaponExtension.warp_charge_template = function (self)
 	return self:_weapon_tweak_template(template_types.warp_charge, template_name)
 end
 
+PlayerUnitWeaponExtension.weapon_chain_lightning_template = function (self)
+	local template_name = self._weapon_tweak_templates_component.weapon_chain_lightning_template_name
+
+	if template_name == "none" then
+		return
+	end
+
+	return self:_weapon_tweak_template(template_types.weapon_chain_lightning, template_name)
+end
+
 PlayerUnitWeaponExtension.sprint_template = function (self)
 	local template_name = self._weapon_tweak_templates_component.sprint_template_name
 
@@ -1689,9 +1723,10 @@ PlayerUnitWeaponExtension.action_input_is_currently_valid = function (self, comp
 	return self._action_handler:action_input_is_currently_valid(component_name, actions, condition_func_params, current_fixed_t, action_input, used_input)
 end
 
-PlayerUnitWeaponExtension._fill_action_params = function (self, weapon, player_unit)
+PlayerUnitWeaponExtension._fill_action_params = function (self, weapon, player_unit, wielded_slot)
 	action_params_temp.weapon = weapon
 	action_params_temp.player_unit = player_unit
+	action_params_temp.wielded_slot = wielded_slot
 
 	return action_params_temp
 end

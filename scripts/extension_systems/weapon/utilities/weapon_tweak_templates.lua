@@ -7,6 +7,7 @@ local SuppressionTemplates = require("scripts/settings/equipment/suppression_tem
 local SwayTemplates = require("scripts/settings/equipment/sway_templates")
 local WeaponAmmoTemplates = require("scripts/settings/equipment/weapon_handling_templates/weapon_ammo_templates")
 local WeaponBurninatingTemplates = require("scripts/settings/equipment/weapon_handling_templates/weapon_burninating_templates")
+local WeaponChainLightningTemplates = require("scripts/settings/equipment/weapon_handling_templates/weapon_chain_lightning_templates")
 local WeaponChargeTemplates = require("scripts/settings/equipment/weapon_handling_templates/weapon_charge_templates")
 local WeaponDodgeTemplates = require("scripts/settings/dodge/weapon_dodge_templates")
 local WeaponHandlingTemplates = require("scripts/settings/equipment/weapon_handling_templates/weapon_handling_templates")
@@ -50,6 +51,7 @@ WeaponTweakTemplates.preparse_weapon_template = function (weapon_template)
 	base_template_lookup[template_types.movement_curve_modifier] = _preparse_templates(weapon_template, template_types.movement_curve_modifier)
 	base_template_lookup[template_types.charge] = _preparse_templates(weapon_template, template_types.charge)
 	base_template_lookup[template_types.warp_charge] = _preparse_templates(weapon_template, template_types.warp_charge)
+	base_template_lookup[template_types.weapon_chain_lightning] = _preparse_templates(weapon_template, template_types.weapon_chain_lightning)
 	base_template_lookup[template_types.damage] = _preparse_damage_templates(weapon_template)
 	base_template_lookup[template_types.explosion] = _preparse_explosion_templates(weapon_template)
 	weapon_template.__base_template_lookup = base_template_lookup
@@ -75,6 +77,7 @@ WeaponTweakTemplates.create = function (lerp_values, weapon_template, override_l
 	templates[template_types.movement_curve_modifier] = _build_templates(WeaponMovementCurveModifierTemplates, base_template_lookup[template_types.movement_curve_modifier], lerp_values[template_types.movement_curve_modifier], override_lerp_value_or_nil)
 	templates[template_types.charge] = _build_templates(WeaponChargeTemplates, base_template_lookup[template_types.charge], lerp_values[template_types.charge], override_lerp_value_or_nil)
 	templates[template_types.warp_charge] = _build_templates(WeaponWarpChargeTemplates, base_template_lookup[template_types.warp_charge], lerp_values[template_types.warp_charge], override_lerp_value_or_nil)
+	templates[template_types.weapon_chain_lightning] = _build_templates(WeaponChainLightningTemplates, base_template_lookup[template_types.weapon_chain_lightning], lerp_values[template_types.weapon_chain_lightning], override_lerp_value_or_nil)
 
 	return templates
 end
@@ -512,6 +515,7 @@ local BASE_TEMPLATES = {
 	[template_types.sway] = SwayTemplates,
 	[template_types.toughness] = WeaponToughnessTemplates,
 	[template_types.warp_charge] = WeaponWarpChargeTemplates,
+	[template_types.weapon_chain_lightning] = WeaponChainLightningTemplates,
 	[template_types.weapon_handling] = WeaponHandlingTemplates,
 	[template_types.weapon_shout] = WeaponShoutTemplates,
 }

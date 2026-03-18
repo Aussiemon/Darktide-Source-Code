@@ -3,6 +3,7 @@
 local DLCSettings = {
 	dlc_id = "broker_cosmetic",
 	image = "content/ui/textures/dlc/broker/dt_broker_deluxe_store_large",
+	includes = nil,
 	loc_name = "loc_dlc_broker_name_cosmetic_upgrade",
 	steam_dlc_target = 4013300,
 	texture_package = "packages/ui/dlc/broker",

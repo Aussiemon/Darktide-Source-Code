@@ -24,16 +24,20 @@ local breed_name = "chaos_hound"
 local breed_data = {
 	base_height = 1.5,
 	base_unit = "content/characters/enemy/chaos_hound/third_person/base",
+	behavior_tree_name = "chaos_hound_mutator",
 	bone_lod_radius = 1.5,
 	broadphase_radius = 1,
 	can_be_used_for_all_factions = true,
+	can_patrol = true,
 	challenge_rating = 1,
+	detection_radius = 20,
 	display_name = "loc_breed_display_name_chaos_hound",
 	faction_name = "chaos",
 	fx_proximity_culling_weight = 6,
 	game_object_type = "minion_chaos_hound",
 	half_extent_forward = 0.8,
 	half_extent_right = 0.3,
+	heat = 0.2,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	look_at_distance = 20,
 	name = "chaos_hound_mutator",
@@ -53,7 +57,7 @@ local breed_data = {
 	use_wounds = true,
 	uses_wwise_special_targeting_parameter = true,
 	volley_fire_target = true,
-	walk_speed = 2.3,
+	walk_speed = 6,
 	breed_type = breed_types.minion,
 	tags = {
 		disabler = true,
@@ -85,9 +89,9 @@ local breed_data = {
 	sounds = require("scripts/settings/breed/breeds/chaos/chaos_hound_mutator_sounds"),
 	vfx = require("scripts/settings/breed/breeds/chaos/chaos_common_vfx"),
 	look_at_tag = breed_name,
-	behavior_tree_name = breed_name,
 	animation_variables = {
 		"gallop_lean",
+		"anim_move_speed",
 	},
 	attack_intensity_cooldowns = {
 		disabling = {
@@ -95,7 +99,6 @@ local breed_data = {
 			2.8,
 		},
 	},
-	detection_radius = math.huge,
 	target_changed_attack_intensities = {
 		disabling = 5,
 	},
@@ -116,6 +119,7 @@ local breed_data = {
 	},
 	aim_config = {
 		distance = 5,
+		ignore_require_target = true,
 		lerp_speed = 200,
 		node = "j_neck",
 		target = "head_aim_target",

@@ -10,6 +10,7 @@ local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementVideo = require("scripts/ui/view_elements/view_element_video/view_element_video")
 local Vo = require("scripts/utilities/vo")
+local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local MissionIntroView = class("MissionIntroView", "BaseView")
 
 local function _generate_seed(mission_id)
@@ -19,8 +20,8 @@ local function _generate_seed(mission_id)
 
 	local seed = 1
 
-	for i = 1, 5 do
-		local num = string.byte(mission_id, i) or 1
+	for ii = 1, 5 do
+		local num = string.byte(mission_id, ii) or 1
 
 		seed = seed * num
 	end
@@ -45,6 +46,10 @@ MissionIntroView.init = function (self, settings, context)
 	local intro_level, dynamic_level_package = self.select_target_intro_level()
 
 	self._intro_level = intro_level
+
+	local intro_level_theme = self._get_intro_level_theme(intro_level)
+
+	self._intro_level_theme = intro_level_theme
 
 	MissionIntroView.super.init(self, Definitions, settings, context, dynamic_level_package)
 
@@ -106,10 +111,11 @@ MissionIntroView.event_register_mission_intro_camera = function (self, camera_un
 	self:_unregister_event("event_register_mission_intro_camera")
 
 	local intro_level = self._intro_level
+	local intro_level_theme = self._intro_level_theme
 	local viewport_name = MissionIntroViewSettings.viewport_name
 	local viewport_type = MissionIntroViewSettings.viewport_type
 	local viewport_layer = MissionIntroViewSettings.viewport_layer
-	local shading_environment = intro_level.shading_environment
+	local shading_environment = intro_level_theme.shading_environment or intro_level.shading_environment
 
 	self._world_spawner:create_viewport(camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment)
 end
@@ -166,6 +172,13 @@ MissionIntroView._initialize_background_world = function (self)
 	end
 
 	self:_register_event("event_mission_intro_trigger_players_event")
+
+	local level = self._world_spawner:level()
+	local intro_level_theme = self._intro_level_theme
+
+	if intro_level_theme.theme_tag and level then
+		Level.trigger_event(level, "theme_tag_" .. tostring(intro_level_theme.theme_tag))
+	end
 end
 
 MissionIntroView._get_unit_by_value_key = function (self, key, value)
@@ -173,8 +186,8 @@ MissionIntroView._get_unit_by_value_key = function (self, key, value)
 	local level = world_spawner:level()
 	local level_units = Level.units(level)
 
-	for i = 1, #level_units do
-		local unit = level_units[i]
+	for ii = 1, #level_units do
+		local unit = level_units[ii]
 
 		if Unit.get_data(unit, key) == value then
 			return unit
@@ -255,8 +268,8 @@ MissionIntroView._get_free_slot_id = function (self, player)
 	local back_slots_decided = #prioritized_ogryn_slots == 2
 
 	if is_ogryn and back_slots_decided then
-		for i = 1, #prioritized_ogryn_slots do
-			local slot_index = prioritized_ogryn_slots[i]
+		for ii = 1, #prioritized_ogryn_slots do
+			local slot_index = prioritized_ogryn_slots[ii]
 			local slot = spawn_slots[slot_index]
 
 			if not slot.occupied then
@@ -264,28 +277,28 @@ MissionIntroView._get_free_slot_id = function (self, player)
 			end
 		end
 	else
-		for i = 1, #spawn_slots do
-			local slot = spawn_slots[i]
+		for ii = 1, #spawn_slots do
+			local slot = spawn_slots[ii]
 
 			if not slot.occupied then
 				if not back_slots_decided then
 					if is_ogryn then
-						table.remove(prioritized_ogryn_slots, i)
+						table.remove(prioritized_ogryn_slots, ii)
 					else
-						table.remove(prioritized_ogryn_slots, i + 1)
+						table.remove(prioritized_ogryn_slots, ii + 1)
 					end
 				end
 
-				return i
+				return ii
 			end
 		end
 	end
 
-	for i = 1, #spawn_slots do
-		local slot = spawn_slots[i]
+	for ii = 1, #spawn_slots do
+		local slot = spawn_slots[ii]
 
 		if not slot.occupied then
-			return i
+			return ii
 		end
 	end
 end
@@ -293,11 +306,11 @@ end
 MissionIntroView._player_slot_id = function (self, unique_id)
 	local spawn_slots = self._spawn_slots
 
-	for i = 1, #spawn_slots do
-		local slot = spawn_slots[i]
+	for ii = 1, #spawn_slots do
+		local slot = spawn_slots[ii]
 
 		if slot.occupied and slot.unique_id == unique_id then
-			return i
+			return ii
 		end
 	end
 end
@@ -311,27 +324,27 @@ MissionIntroView._setup_spawn_slots = function (self)
 	local spawn_slots = {}
 	local num_slots = 6
 
-	for i = 1, num_slots do
-		local spawn_point_unit = spawn_point_units[i]
+	for ii = 1, num_slots do
+		local spawn_point_unit = spawn_point_units[ii]
 		local initial_position = Unit.world_position(spawn_point_unit, 1)
 		local initial_rotation = Unit.world_rotation(spawn_point_unit, 1)
-		local profile_spawner = UIProfileSpawner:new("MissionIntroView_" .. i, world, camera, unit_spawner)
+		local profile_spawner = UIProfileSpawner:new("MissionIntroView_" .. ii, world, camera, unit_spawner)
 
-		for j = 1, #ignored_slots do
-			local slot_name = ignored_slots[j]
+		for jj = 1, #ignored_slots do
+			local slot_name = ignored_slots[jj]
 
 			profile_spawner:ignore_slot(slot_name)
 		end
 
 		local spawn_slot = {
-			index = i,
+			index = ii,
 			boxed_rotation = QuaternionBox(initial_rotation),
 			boxed_position = Vector3.to_array(initial_position),
 			profile_spawner = profile_spawner,
 			spawn_point_unit = spawn_point_unit,
 		}
 
-		spawn_slots[i] = spawn_slot
+		spawn_slots[ii] = spawn_slot
 	end
 
 	self._spawn_slots = spawn_slots
@@ -340,8 +353,8 @@ end
 MissionIntroView.event_mission_intro_trigger_players_event = function (self, animation_event)
 	local spawn_slots = self._spawn_slots
 
-	for i = 1, #spawn_slots do
-		local slot = spawn_slots[i]
+	for ii = 1, #spawn_slots do
+		local slot = spawn_slots[ii]
 
 		if slot.occupied then
 			local profile_spawner = slot.profile_spawner
@@ -354,8 +367,8 @@ end
 MissionIntroView._update_player_slots = function (self, dt, t, input_service)
 	local spawn_slots = self._spawn_slots
 
-	for i = 1, #spawn_slots do
-		local slot = spawn_slots[i]
+	for ii = 1, #spawn_slots do
+		local slot = spawn_slots[ii]
 
 		if slot.occupied then
 			local profile_spawner = slot.profile_spawner
@@ -379,8 +392,8 @@ MissionIntroView._assign_player_slots = function (self)
 	end
 
 	local function ogryn_sort_function(a, b)
-		local a_slot_index = a:slot() + (a:breed_name() == "human" and 0 or 100)
-		local b_slot_index = b:slot() + (b:breed_name() == "human" and 0 or 100)
+		local a_slot_index = a:slot() + (a:breed_name() == "ogryn" and 100 or 0)
+		local b_slot_index = b:slot() + (b:breed_name() == "ogryn" and 100 or 0)
 
 		return a_slot_index < b_slot_index
 	end
@@ -398,8 +411,8 @@ MissionIntroView._assign_player_slots = function (self)
 
 	local spawn_slots = self._spawn_slots
 
-	for i = 1, #temp_sorted_players do
-		local player = temp_sorted_players[i]
+	for ii = 1, #temp_sorted_players do
+		local player = temp_sorted_players[ii]
 		local unique_id = player:unique_id()
 		local slot_id = self:_player_slot_id(unique_id)
 
@@ -535,6 +548,23 @@ MissionIntroView.dialogue_system = function (self)
 	local extension_manager = Managers.ui:world_extension_manager(world)
 
 	return extension_manager:system_by_extension("DialogueExtension")
+end
+
+MissionIntroView._get_intro_level_theme = function (intro_level)
+	local intro_level_theme = {}
+	local mechanism_data = Managers.mechanism:mechanism_data()
+
+	if intro_level and mechanism_data then
+		local circumstance_template = mechanism_data.circumstance_name and CircumstanceTemplates[mechanism_data.circumstance_name]
+		local theme_tag = circumstance_template and circumstance_template.theme_tag
+
+		if theme_tag and intro_level.shading_environments then
+			intro_level_theme.theme_tag = theme_tag
+			intro_level_theme.shading_environment = intro_level.shading_environments[theme_tag]
+		end
+	end
+
+	return intro_level_theme
 end
 
 return MissionIntroView

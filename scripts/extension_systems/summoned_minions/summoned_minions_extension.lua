@@ -61,6 +61,10 @@ SummonedMinionsExtension.update = function (self, context, dt, t)
 	self:_evaluate_summmoned_minions()
 end
 
+SummonedMinionsExtension.summoned_minions = function (self)
+	return self._summoned_minions
+end
+
 SummonedMinionsExtension._evaluate_summmoned_minions = function (self)
 	local summon_minions = self._summoned_minions
 	local amount = 0
@@ -95,27 +99,6 @@ SummonedMinionsExtension._on_death = function (self)
 	end
 
 	local wwise_events = template.wwise_on_death_events
-
-	if not wwise_events then
-		return
-	end
-
-	local probability = template.wwise_event_probability
-	local chance = math.random()
-
-	if probability < chance then
-		local unit = self._unit
-		local position = POSITION_LOOKUP[unit]
-		local random_event = wwise_events[math.random(1, #wwise_events)]
-		local fx_system = Managers.state.extension:system("fx_system")
-
-		fx_system:trigger_wwise_event(random_event, position)
-	end
-end
-
-SummonedMinionsExtension.wwise_on_minion_success = function (self)
-	local template = self._template
-	local wwise_events = template.wwise_on_success_events
 
 	if not wwise_events then
 		return

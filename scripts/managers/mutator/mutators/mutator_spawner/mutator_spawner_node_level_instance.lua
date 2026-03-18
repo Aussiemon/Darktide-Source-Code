@@ -43,7 +43,7 @@ MutatorSpawnerNodeLevelInstance._do_spawn = function (self, spawn_position, ahea
 end
 
 MutatorSpawnerNodeLevelInstance.destroy = function (self)
-	Managers.state.level_instance:cleanup()
+	return
 end
 
 return MutatorSpawnerNodeLevelInstance

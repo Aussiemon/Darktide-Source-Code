@@ -27,10 +27,12 @@ local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadou
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local Stagger = require("scripts/utilities/attack/stagger")
+local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local attack_types = AttackSettings.attack_types
 local proc_events = BuffSettings.proc_events
+local stagger_types = StaggerSettings.stagger_types
 local DAMAGE_COLLISION_FILTER = "filter_player_character_lunge"
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local LUNGE_ATTACK_POWER_LEVEL = 1000
@@ -714,6 +716,13 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 			local hit_unit_action = behaviour_extension and behaviour_extension:running_action()
 			local attack_type = AttackSettings.attack_types.melee
 			local damage_dealt, attack_result, damage_efficiency = Attack.execute(hit_unit, damage_profile, "power_level", LUNGE_ATTACK_POWER_LEVEL, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "attack_type", attack_type, "attacking_unit", unit, "damage_type", damage_type)
+			local force_stagger = lunge_template.force_stagger
+
+			if self._is_server and force_stagger then
+				local force_stagger_ignore_no_stagger = lunge_template.force_stagger_ignore_no_stagger
+
+				Stagger.force_stagger(hit_unit, stagger_types.explosion, attack_direction, 4, 1, 4, unit, force_stagger_ignore_no_stagger)
+			end
 
 			ImpactEffect.play(hit_unit, hit_actor, damage_dealt, damage_type, nil, attack_result, hit_world_position, nil, attack_direction, unit, nil, nil, nil, damage_efficiency, damage_profile)
 

@@ -189,15 +189,19 @@ PlayerUnitTalentExtension._apply_talents = function (self, archetype, talents, f
 
 	local game_mode_name = Managers.state.game_mode:game_mode_name()
 	local is_training_grounds = game_mode_name == "training_grounds"
-	local disable_companion_special_rule_name = "disable_companion"
-	local has_disable_companion_special_rule = active_special_rules[disable_companion_special_rule_name]
+	local companion_spawner_extension = self._companion_spawner_extension
+	local should_have_companion = companion_spawner_extension and companion_spawner_extension:should_have_companion()
 	local owner_player = self._player
 	local unit_data_extension = owner_player and ScriptUnit.has_extension(owner_player.player_unit, "unit_data_system")
 	local character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
 	local is_hogtied = character_state_component and PlayerUnitStatus.is_hogtied(character_state_component)
+	local have_companions = companion_spawner_extension and companion_spawner_extension:have_companions()
 
-	if not is_hogtied and not has_disable_companion_special_rule and not is_training_grounds then
-		self._companion_spawner_extension:spawn_unit()
+	if not is_hogtied and should_have_companion and not is_training_grounds then
+		companion_spawner_extension:despawn_units()
+		companion_spawner_extension:spawn_units()
+	elseif not should_have_companion and have_companions then
+		companion_spawner_extension:despawn_units()
 	end
 end
 

@@ -1,8 +1,10 @@
 ﻿-- chunkname: @scripts/ui/views/scanner_display_view/scanner_display_view.lua
 
 local MinigameBalanceView = require("scripts/ui/views/scanner_display_view/minigame_balance_view")
+local MinigameDecodeSearchView = require("scripts/ui/views/scanner_display_view/minigame_decode_search_view")
 local MinigameDecodeSymbolsView = require("scripts/ui/views/scanner_display_view/minigame_decode_symbols_view")
 local MinigameDrillView = require("scripts/ui/views/scanner_display_view/minigame_drill_view")
+local MinigameExpeditionMapView = require("scripts/ui/views/scanner_display_view/minigame_expedition_map_view")
 local MinigameFrequencyView = require("scripts/ui/views/scanner_display_view/minigame_frequency_view")
 local MinigameNoneView = require("scripts/ui/views/scanner_display_view/minigame_none_view")
 local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
@@ -16,9 +18,11 @@ local ScannerDisplayView = class("ScannerDisplayView", "BaseView")
 ScannerDisplayView.MINIGAMES = {
 	[MinigameSettings.types.none] = MinigameNoneView,
 	[MinigameSettings.types.balance] = MinigameBalanceView,
+	[MinigameSettings.types.decode_search] = MinigameDecodeSearchView,
 	[MinigameSettings.types.decode_symbols] = MinigameDecodeSymbolsView,
 	[MinigameSettings.types.drill] = MinigameDrillView,
 	[MinigameSettings.types.frequency] = MinigameFrequencyView,
+	[MinigameSettings.types.expedition_map] = MinigameExpeditionMapView,
 }
 
 ScannerDisplayView.init = function (self, settings, context)
@@ -124,7 +128,7 @@ ScannerDisplayView._link_material = function (self)
 	if render_target then
 		local plane_unit = self._auspex_unit
 
-		if plane_unit then
+		if plane_unit and Unit.alive(plane_unit) then
 			local material_linked = Unit.get_data(plane_unit, "auspex_scanner_display_material_linked")
 
 			if not material_linked then
@@ -142,7 +146,7 @@ end
 ScannerDisplayView._unlink_material = function (self)
 	local plane_unit = self._auspex_unit
 
-	if plane_unit then
+	if plane_unit and Unit.alive(plane_unit) then
 		local material_linked = Unit.get_data(plane_unit, "auspex_scanner_display_material_linked")
 
 		if material_linked then
@@ -155,8 +159,20 @@ ScannerDisplayView._unlink_material = function (self)
 	end
 end
 
+local _ingame_service_type = "Ingame"
+
 ScannerDisplayView.update = function (self, dt, t)
 	self._minigame:update(dt, t, self._widgets_by_name)
+
+	local ingame_input_service = Managers.ui:input_service(_ingame_service_type)
+	local ignore_hud_input = true
+	local is_input_blocked = Managers.ui:using_input(ignore_hud_input)
+	local ui_manager = Managers.ui
+
+	if not ui_manager:view_active("system_view") and not is_input_blocked and ingame_input_service:get("menu") then
+		ui_manager:open_view("system_view")
+	end
+
 	self:_link_material()
 
 	return ScannerDisplayView.super.update(self, dt, t)

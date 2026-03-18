@@ -25,8 +25,9 @@ PocketableInteraction.stop = function (self, world, interactor_unit, interaction
 
 		local inventory_item = Pocketable.item_from_name(pickup_data.inventory_item)
 		local inventory_slot_name = pickup_data.inventory_slot_name
+		local wield_on_equip = pickup_data.wield_on_equip
 
-		Pocketable.equip_pocketable(t, interactor_is_server, interactor_unit, interactee_unit, inventory_item, inventory_slot_name)
+		Pocketable.equip_pocketable(t, interactor_is_server, interactor_unit, interactee_unit, inventory_item, inventory_slot_name, wield_on_equip)
 
 		if interactor_is_server then
 			local pickup_animation_system = Managers.state.extension:system("pickup_animation_system")

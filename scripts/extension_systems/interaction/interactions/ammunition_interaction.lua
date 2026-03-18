@@ -20,7 +20,12 @@ AmmunitionInteraction.stop = function (self, world, interactor_unit, unit_data_c
 
 			self:_add_ammo(interactor_unit, pickup_data)
 			self:_trigger_sound(interactor_unit, pickup_data)
-			self:_use_charge(target_unit, interactor_unit)
+
+			local game_object_id = Managers.state.unit_spawner:game_object_id(target_unit)
+
+			if game_object_id then
+				self:_use_charge(target_unit, interactor_unit)
+			end
 		end
 	end
 end
@@ -113,6 +118,10 @@ function _can_refill_grenades(interactor_unit, pickup_data)
 		return true, has_missing_charges
 	elseif disable_grenade_pickups then
 		return false, false
+	end
+
+	if pickup_data.refill_blitz then
+		return true, has_missing_charges
 	end
 
 	if pickup_data and pickup_data.ammo_crate then

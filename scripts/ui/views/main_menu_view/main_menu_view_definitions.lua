@@ -19,43 +19,6 @@ text_style.offset = {
 }
 text_style.text_color = Color.terminal_text_body(255, true)
 
-local friends_online_text = table.clone(UIFontSettings.symbol)
-
-friends_online_text.vertical_alignment = "center"
-friends_online_text.text_horizontal_alignment = "left"
-friends_online_text.text_vertical_alignment = "center"
-friends_online_text.offset = {
-	0,
-	0,
-	0,
-}
-friends_online_text.font_size = 24
-friends_online_text.text_color = Color.terminal_text_body(255, true)
-
-local strike_team_text = table.clone(UIFontSettings.symbol)
-
-strike_team_text.vertical_alignment = "center"
-strike_team_text.text_horizontal_alignment = "left"
-strike_team_text.text_vertical_alignment = "center"
-strike_team_text.offset = {
-	0,
-	0,
-	0,
-}
-strike_team_text.font_size = 24
-strike_team_text.text_color = Color.terminal_text_body(255, true)
-
-local symbol_style = table.clone(UIFontSettings.symbol)
-
-symbol_style.text_vertical_alignment = "center"
-symbol_style.offset = {
-	0,
-	-2,
-	0,
-}
-symbol_style.font_size = 24
-symbol_style.text_color = Color.terminal_text_body(255, true)
-
 local character_name = table.clone(UIFontSettings.header_2)
 
 character_name.text_horizontal_alignment = "center"
@@ -312,11 +275,11 @@ local scenegraph_definition = {
 		parent = "counts_background",
 		vertical_alignment = "top",
 		size = {
-			220,
+			260,
 			60,
 		},
 		position = {
-			80,
+			40,
 			-4,
 			1,
 		},
@@ -326,11 +289,11 @@ local scenegraph_definition = {
 		parent = "counts_background",
 		vertical_alignment = "top",
 		size = {
-			220,
+			260,
 			60,
 		},
 		position = {
-			-80,
+			-40,
 			-4,
 			1,
 		},
@@ -539,47 +502,21 @@ local widget_definitions = {
 	friends_online = UIWidget.create_definition({
 		{
 			pass_type = "text",
-			style_id = "icon",
-			value = "",
-			value_id = "icon",
-			style = symbol_style,
-		},
-		{
-			pass_type = "text",
 			style_id = "text",
+			value = "",
 			value_id = "text",
-			value = Localize("loc_main_menu_friends_online_count"),
 			style = text_style,
-		},
-		{
-			pass_type = "text",
-			style_id = "text_count",
-			value = "0",
-			value_id = "text_count",
-			style = friends_online_text,
 		},
 	}, "party_count"),
 	strike_team = UIWidget.create_definition({
 		{
 			pass_type = "text",
-			style_id = "icon",
-			value = "",
-			value_id = "icon",
-			style = symbol_style,
-		},
-		{
-			pass_type = "text",
 			style_id = "text",
-			value_id = "text",
-			value = Localize("loc_main_menu_warband_count"),
-			style = text_style,
-		},
-		{
-			pass_type = "text",
-			style_id = "text_count",
 			value = "",
-			value_id = "text_count",
-			style = strike_team_text,
+			value_id = "text",
+			style = table.merge(table.clone(text_style), {
+				text_horizontal_alignment = "right",
+			}),
 		},
 	}, "strike_team_count"),
 	character_info = UIWidget.create_definition({
@@ -992,15 +929,6 @@ local legend_inputs = {
 		on_pressed_callback = "_on_delete_selected_character_pressed",
 		visibility_function = function (parent)
 			return not parent._is_main_menu_open and parent._character_details_active
-		end,
-	},
-	{
-		alignment = "right_alignment",
-		display_name = "loc_main_menu_show_news",
-		input_action = "navigate_primary_right_pressed",
-		on_pressed_callback = "_news_requested",
-		visibility_function = function (parent)
-			return InputDevice.gamepad_active and not parent._is_main_menu_open and parent:_can_show_news() and false
 		end,
 	},
 }

@@ -2,6 +2,7 @@
 
 require("scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node")
 
+local MonsterInjectionTemplates = require("scripts/settings/mutator/mutator_monster_spawner_injection/mutator_monster_spawner_injection_templates")
 local MutatorSpawnerNodeEnemyTemplate = class("MutatorSpawnerNodeEnemyTemplate", "MutatorSpawnerNode")
 
 MutatorSpawnerNodeEnemyTemplate.init = function (self, template)
@@ -10,9 +11,29 @@ MutatorSpawnerNodeEnemyTemplate.init = function (self, template)
 	self._run_on_init = false
 	self._enemy_placement_method = template.enemy_placement_method
 	self._composition = template.composition
+	self._force_horde = template.force_horde_on_spawn
+
+	local injection_template_settings = template.injection_template_settings
+
+	if injection_template_settings then
+		local injection_template_name = injection_template_settings.name
+
+		self._injection_template_settings = injection_template_settings
+		self._injection_template = MonsterInjectionTemplates[injection_template_name]
+	end
 end
 
 MutatorSpawnerNodeEnemyTemplate._do_spawn = function (self, spawn_position, ahead_target_unit)
+	if self._injection_template then
+		self._injection_template:spawn(spawn_position, ahead_target_unit, 2)
+
+		return
+	end
+
+	if self._force_horde then
+		Managers.state.pacing:force_horde_pacing_spawn()
+	end
+
 	local nav_mesh_manager = Managers.state.nav_mesh
 	local nav_world = nav_mesh_manager:nav_world()
 	local breed_data = {}

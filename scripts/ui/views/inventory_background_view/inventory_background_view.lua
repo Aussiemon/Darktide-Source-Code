@@ -1086,7 +1086,6 @@ InventoryBackgroundView._setup_top_panel = function (self)
 			default_icon = "content/ui/materials/icons/items/gears/head/empty",
 			loadout_slot = true,
 			scenegraph_id = "slot_gear_head",
-			slot_icon = "content/ui/materials/icons/item_types/beveled/headgears",
 			slot_title = "loc_inventory_title_slot_gear_head",
 			widget_type = "gear_item_slot",
 			slot = ItemSlotSettings.slot_gear_head,
@@ -1103,7 +1102,6 @@ InventoryBackgroundView._setup_top_panel = function (self)
 			default_icon = "content/ui/materials/icons/items/gears/arms/empty",
 			loadout_slot = true,
 			scenegraph_id = "slot_gear_upperbody",
-			slot_icon = "content/ui/materials/icons/item_types/beveled/upper_bodies",
 			slot_title = "loc_inventory_title_slot_gear_upperbody",
 			widget_type = "gear_item_slot",
 			slot = ItemSlotSettings.slot_gear_upperbody,
@@ -1120,7 +1118,6 @@ InventoryBackgroundView._setup_top_panel = function (self)
 			default_icon = "content/ui/materials/icons/items/gears/legs/empty",
 			loadout_slot = true,
 			scenegraph_id = "slot_gear_lowerbody",
-			slot_icon = "content/ui/materials/icons/item_types/beveled/lower_bodies",
 			slot_title = "loc_inventory_title_slot_gear_lowerbody",
 			widget_type = "gear_item_slot",
 			slot = ItemSlotSettings.slot_gear_lowerbody,
@@ -1137,7 +1134,6 @@ InventoryBackgroundView._setup_top_panel = function (self)
 			default_icon = "content/ui/materials/icons/items/gears/legs/empty",
 			loadout_slot = true,
 			scenegraph_id = "slot_gear_extra_cosmetic",
-			slot_icon = "content/ui/materials/icons/item_types/beveled/accessories",
 			slot_title = "loc_inventory_title_slot_gear_extra_cosmetic",
 			widget_type = "gear_item_slot",
 			slot = ItemSlotSettings.slot_gear_extra_cosmetic,
@@ -1187,7 +1183,6 @@ InventoryBackgroundView._setup_top_panel = function (self)
 			default_icon = "content/ui/materials/icons/items/gears/head/empty",
 			loadout_slot = true,
 			scenegraph_id = "slot_character_title",
-			slot_icon = "content/ui/materials/icons/item_types/beveled/headgears",
 			slot_title = "loc_inventory_title_slot_character_title",
 			widget_type = "character_title_item_slot",
 			slot = ItemSlotSettings.slot_character_title,
@@ -1207,7 +1202,6 @@ InventoryBackgroundView._setup_top_panel = function (self)
 			default_icon = "content/ui/materials/icons/items/gears/legs/empty",
 			loadout_slot = true,
 			scenegraph_id = "slot_companion_gear_full",
-			slot_icon = "content/ui/materials/icons/item_types/beveled/companion_gear_full",
 			slot_title = "loc_inventory_title_slot_companion_gear_full",
 			widget_type = "gear_item_slot",
 			slot = ItemSlotSettings.slot_companion_gear_full,
@@ -1589,6 +1583,10 @@ InventoryBackgroundView._setup_top_panel = function (self)
 					return
 				end
 
+				content.show_alert = self._has_empty_talent_nodes
+				content.show_modified = self._modified_talents
+				content.show_warning = self._invalid_specialization_talents
+
 				local save_manager = Managers.save
 				local save_data = save_manager:account_data()
 				local seen_points_per_character = save_data and save_data.last_viewed_max_specialization_points or {}
@@ -1929,7 +1927,6 @@ end
 InventoryBackgroundView.event_on_profile_preset_changed = function (self, profile_preset, on_preset_deleted)
 	local player = self._preview_player
 	local profile = player:profile()
-	local active_talents_version = TalentLayoutParser.talents_version(profile)
 
 	if profile_preset and profile_preset.loadout then
 		local equipped_previous_slots = {}
@@ -1952,23 +1949,33 @@ InventoryBackgroundView.event_on_profile_preset_changed = function (self, profil
 	end
 
 	if profile_preset then
-		local active_talent_version = TalentLayoutParser.talents_version(profile)
+		local archetype = profile.archetype
+		local talent_layout_file_path = archetype.talent_layout_file_path
+		local active_layout = require(talent_layout_file_path)
+		local preset_talents = profile_preset.talents or {}
 
-		if TalentLayoutParser.is_same_version(profile_preset.talents_version, active_talent_version) then
-			local preset_talents = profile_preset.talents or {}
+		self._current_profile_equipped_talents = TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", preset_talents)
 
-			self._current_profile_equipped_talents = TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", preset_talents)
+		TalentLayoutParser.validate_talent_layouts(self._current_profile_equipped_talents, {
+			active_layout,
+		}, true)
+
+		local is_talent_selection_valid = TalentLayoutParser.is_talent_selection_valid(profile, "talent_layout_file_path", preset_talents)
+
+		if is_talent_selection_valid then
+			self._valid_profile_equipped_talents = TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", preset_talents)
+		end
+
+		local specialization_talent_layout_file_path = archetype.specialization_talent_layout_file_path
+
+		if specialization_talent_layout_file_path then
+			local specialization_layout = require(specialization_talent_layout_file_path)
+
 			self._current_profile_equipped_specialization_talents = TalentLayoutParser.filter_layout_talents(profile, "specialization_talent_layout_file_path", profile_preset.talents)
 
-			local is_talent_selection_valid = TalentLayoutParser.is_talent_selection_valid(profile, "talent_layout_file_path", preset_talents)
-
-			if is_talent_selection_valid then
-				self._valid_profile_equipped_talents = TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", preset_talents)
-			end
-		else
-			self._current_profile_equipped_talents = {}
-			self._valid_profile_equipped_talents = {}
-			self._current_profile_equipped_specialization_talents = {}
+			TalentLayoutParser.validate_talent_layouts(self._current_profile_equipped_specialization_talents, {
+				specialization_layout,
+			}, true)
 		end
 	end
 
@@ -2022,9 +2029,10 @@ InventoryBackgroundView._update_missing_warning_marker = function (self)
 		local profile = player:profile()
 
 		self._invalid_talents = self._current_profile_equipped_talents and not TalentLayoutParser.is_talent_selection_valid(profile, "talent_layout_file_path", self._current_profile_equipped_talents) or false
+		self._invalid_specialization_talents = self._current_profile_equipped_specialization_talents and not TalentLayoutParser.is_talent_selection_valid(profile, "specialization_talent_layout_file_path", self._current_profile_equipped_specialization_talents) or false
 
 		if self._profile_presets_element then
-			local show_warning = not table.is_empty(self._invalid_slots) or not table.is_empty(self._duplicated_slots) or self._invalid_talents
+			local show_warning = not table.is_empty(self._invalid_slots) or not table.is_empty(self._duplicated_slots) or self._invalid_talents or self._current_profile_equipped_specialization_talents
 			local show_modified = not table.is_empty(self._modified_slots) or self._modified_talents
 
 			self._profile_presets_element:set_current_profile_loadout_status(show_warning, show_modified)
@@ -2048,6 +2056,8 @@ InventoryBackgroundView._update_missing_warning_marker = function (self)
 				local show_modified = not table.is_empty(modified_slots)
 				local invalid_talents = false
 				local modified_talents = false
+				local invalid_specialization_talents = false
+				local modified_specialization_talents = false
 				local preset_talents_version = preset.talents_version
 
 				if not preset_talents_version or not TalentLayoutParser.is_same_version(active_talent_version, preset_talents_version) then
@@ -2060,12 +2070,18 @@ InventoryBackgroundView._update_missing_warning_marker = function (self)
 					show_warning = true
 				end
 
+				if not TalentLayoutParser.is_talent_selection_valid(profile, "specialization_talent_layout_file_path", preset.talents) then
+					invalid_specialization_talents = true
+					show_warning = true
+				end
+
 				self._profile_presets_element:show_profile_preset_missing_items_warning(show_warning, show_modified, preset.id)
 
 				if active_preset then
 					self._invalid_slots = table.merge(table.merge({}, invalid_slots), duplicated_slots)
 					self._modified_slots = modified_slots
 					self._invalid_talents = invalid_talents
+					self._invalid_specialization_talents = invalid_specialization_talents
 					self._modified_talents = modified_talents
 
 					self._profile_presets_element:set_current_profile_loadout_status(show_warning, show_modified)
@@ -2905,6 +2921,16 @@ InventoryBackgroundView._check_mastery_sync_status = function (self)
 	end
 end
 
+InventoryBackgroundView._inventory_item_from_fallback_item = function (self, fallback_item)
+	if self._inventory_items then
+		for gear_id, item in pairs(self._inventory_items) do
+			if item.name == fallback_item.name then
+				return item
+			end
+		end
+	end
+end
+
 InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 	local invalid_slots = {}
 	local modified_slots = {}
@@ -2983,7 +3009,9 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 				modified_slots[removed_slot_name] = true
 			elseif fallback_item then
 				if not read_only then
-					self:_equip_slot_item(removed_slot_name, fallback_item, true)
+					local fallback_inventory_item = self:_inventory_item_from_fallback_item(fallback_item)
+
+					self:_equip_slot_item(removed_slot_name, fallback_inventory_item or fallback_item, true)
 				end
 
 				if fallback_item.always_owned then

@@ -5,18 +5,18 @@ local function interaction_template_tests(templates)
 		local duration = template.duration
 
 		if duration > 0 then
-			local has_start_anim = template.start_anim_event_func or template.start_anim_event or not template.start_anim_event and template.start_anim_event_3p
+			local start_anim_event_func = template.start_anim_event_func
+			local has_start_anim = start_anim_event_func or template.start_anim_event or not template.start_anim_event and template.start_anim_event_3p
 
-			if not template.stop_anim_event_func and not template.stop_anim_event then
-				if not template.stop_anim_event then
-					local var_1_0 = template.stop_anim_event_3p
-				else
-					local var_1_1 = false
-				end
+			if template.start_anim_event_validation_func then
+				template.start_anim_event_validation_func(template)
 			end
 
-			if false then
-				local has_stop_anim = true
+			local stop_anim_event_func = template.stop_anim_event_func
+			local has_stop_anim = stop_anim_event_func or template.stop_anim_event or not template.stop_anim_event and template.stop_anim_event_3p
+
+			if template.stop_anim_event_validation_func then
+				template.stop_anim_event_validation_func(template)
 			end
 		end
 	end

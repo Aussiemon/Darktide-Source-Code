@@ -412,9 +412,9 @@ ClassSelectionView._on_quit_pressed = function (self)
 			{
 				close_on_pressed = true,
 				text = "loc_popup_button_quit_game",
-				callback = callback(function ()
+				callback = function ()
 					Application.quit()
-				end),
+				end,
 			},
 		},
 	}
@@ -1119,15 +1119,15 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 			end
 		end
 
-		local unique_weapons = {}
+		local defining_weapons = {}
 
-		if archetype.unique_weapons then
-			for i = 1, #archetype.unique_weapons do
-				local weapon = archetype.unique_weapons[i]
+		if archetype.defining_weapons then
+			for i = 1, #archetype.defining_weapons do
+				local weapon = archetype.defining_weapons[i]
 				local item = MasterItems.get_item(weapon.item)
 
 				if item then
-					unique_weapons[#unique_weapons + 1] = {
+					defining_weapons[#defining_weapons + 1] = {
 						item = table.clone_instance(item),
 						display_name = weapon.display_name,
 					}
@@ -1135,7 +1135,7 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 			end
 		end
 
-		if #unique_weapons > 0 then
+		if #defining_weapons > 0 then
 			layout[#layout + 1] = {
 				widget_type = "dynamic_spacing",
 				size = {
@@ -1145,7 +1145,7 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 			}
 			layout[#layout + 1] = {
 				widget_type = "header",
-				text = Localize("loc_class_selection_specialization_class_unique_weapons_title"),
+				text = Localize("loc_class_selection_specialization_class_defining_weapons_title"),
 			}
 			layout[#layout + 1] = {
 				widget_type = "dynamic_spacing",
@@ -1155,8 +1155,8 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 				},
 			}
 
-			for i = 1, #unique_weapons do
-				local unique_weapon = unique_weapons[i]
+			for i = 1, #defining_weapons do
+				local unique_weapon = defining_weapons[i]
 
 				layout[#layout + 1] = {
 					widget_type = "weapon",
@@ -1164,7 +1164,7 @@ ClassSelectionView._create_archetype_abilities_info = function (self)
 					item = unique_weapon.item,
 				}
 
-				if i < #unique_weapons then
+				if i < #defining_weapons then
 					layout[#layout + 1] = {
 						widget_type = "dynamic_spacing",
 						size = {

@@ -1,7 +1,6 @@
 ﻿-- chunkname: @scripts/settings/breed/breed_actions/chaos/chaos_poxwalker_bomber_actions.lua
 
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local UtilityConsiderations = require("scripts/extension_systems/behavior/utility_considerations")
 local action_data = {
@@ -75,6 +74,7 @@ local action_data = {
 		controlled_stagger = true,
 		controlled_stagger_ignored_combat_range = "melee",
 		controlled_stagger_min_speed = 2,
+		effect_template_name = "chaos_poxwalker_bomber_foley",
 		effect_template_start_distance = 10,
 		effect_template_stop_distance = 18,
 		enter_lunge_distance = 6,
@@ -93,7 +93,6 @@ local action_data = {
 		stagger_duration_modifier_during_lunge = 0.175,
 		use_animation_running_stagger_speed = true,
 		walk_anim_event = "walk_fwd",
-		effect_template = EffectTemplates.chaos_poxwalker_bomber_foley,
 		stagger_type_reduction = {
 			melee = -200,
 			ranged = 20,
@@ -117,6 +116,7 @@ local action_data = {
 	},
 	explode = {
 		explode_position_node = "j_spine2",
+		staggered_during_lunge = true,
 		utility_weight = 1,
 		considerations = UtilityConsiderations.chaos_poxwalker_bomber_explode,
 		explosion_template = ExplosionTemplates.poxwalker_bomber,

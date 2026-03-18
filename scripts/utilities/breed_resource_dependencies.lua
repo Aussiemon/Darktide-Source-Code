@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/utilities/breed_resource_dependencies.lua
 
 local BreedActions = require("scripts/settings/breed/breed_actions")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local ImpactFxResourceDependencies = require("scripts/settings/damage/impact_fx_resource_dependencies")
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
 local BreedResourceDependencies = {}
@@ -30,6 +31,7 @@ BreedResourceDependencies.generate = function (breeds, item_definitions)
 	return resource_packages
 end
 
+local EFFECT_TEMPLATE_END_STRING = "effect_template_name"
 local CONTENT_START_STRING = "content/"
 local CONTENT_ITEM_START_STRING = "content/items/"
 local CONTENT_UI_START_STRING = "content/ui/"
@@ -40,7 +42,7 @@ local function _is_valid_resource_name(value)
 end
 
 BreedResourceDependencies._resolve_recursive = function (data, item_definitions, resource_packages)
-	for _, value in pairs(data) do
+	for key, value in pairs(data) do
 		local value_type = type(value)
 
 		if value_type == "string" then
@@ -50,6 +52,10 @@ BreedResourceDependencies._resolve_recursive = function (data, item_definitions,
 				else
 					resource_packages[value] = true
 				end
+			elseif string.ends_with(key, EFFECT_TEMPLATE_END_STRING) then
+				local effect_template = EffectTemplates[value]
+
+				BreedResourceDependencies._resolve_recursive(effect_template, item_definitions, resource_packages)
 			end
 		elseif value_type == "table" then
 			BreedResourceDependencies._resolve_recursive(value, item_definitions, resource_packages)

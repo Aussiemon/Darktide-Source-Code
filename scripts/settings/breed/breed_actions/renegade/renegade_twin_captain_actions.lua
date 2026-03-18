@@ -3,7 +3,6 @@
 local BreedShootTemplates = require("scripts/settings/breed/breed_shoot_templates")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
@@ -342,6 +341,7 @@ local action_data = {
 		},
 	},
 	quick_throw_grenade = {
+		effect_template_name = "renegade_captain_grenade",
 		multiple_throw_chance = 0,
 		utility_weight = 5,
 		vo_event = "throwing_grenade",
@@ -371,7 +371,6 @@ local action_data = {
 			throw_grenade_five = 4.871794871794871,
 			throw_grenade_five_02 = 5.128205128205129,
 		},
-		effect_template = EffectTemplates.renegade_captain_grenade,
 		effect_template_timings = {
 			throw_grenade = 0.4375,
 			throw_grenade_five = 1.4871794871794872,
@@ -426,6 +425,7 @@ local action_data = {
 		},
 	},
 	multiple_quick_throw_grenade = {
+		effect_template_name = "renegade_captain_grenade",
 		multiple_throw_chance = 1,
 		utility_weight = 200,
 		vo_event = "throwing_grenade",
@@ -462,7 +462,6 @@ local action_data = {
 			throw_grenade_five = 4.871794871794871,
 			throw_grenade_five_02 = 5.128205128205129,
 		},
-		effect_template = EffectTemplates.renegade_captain_grenade,
 		effect_template_timings = {
 			captain_heads_barrage = 1.3333333333333333,
 			throw_grenade = 0.4375,
@@ -528,6 +527,7 @@ local action_data = {
 		},
 	},
 	multiple_quick_throw_grenade_empowered = {
+		effect_template_name = "renegade_captain_grenade",
 		multiple_throw_chance = 1,
 		utility_weight = 2000,
 		vo_event = "throwing_grenade",
@@ -564,7 +564,6 @@ local action_data = {
 			throw_grenade_five = 4.871794871794871,
 			throw_grenade_five_02 = 5.128205128205129,
 		},
-		effect_template = EffectTemplates.renegade_captain_grenade,
 		effect_template_timings = {
 			captain_heads_barrage = 1.3333333333333333,
 			throw_grenade = 0.4375,
@@ -704,6 +703,7 @@ local action_data = {
 		},
 	},
 	plasma_pistol_shoot = {
+		before_shoot_effect_template_name = "renegade_captain_plasma_pistol_charge_up",
 		before_shoot_effect_template_timing = 0.75,
 		can_strafe_shoot = true,
 		degree_per_direction = 10,
@@ -746,7 +746,6 @@ local action_data = {
 			left = "move_left_walk_aim",
 			right = "move_right_walk_aim",
 		},
-		before_shoot_effect_template = EffectTemplates.renegade_captain_plasma_pistol_charge_up,
 	},
 	throw_grenade = {
 		utility_weight = 20,
@@ -789,6 +788,7 @@ local action_data = {
 		slot_plasma_pistol = "to_pistol",
 	},
 	shield_down_recharge = {
+		charge_effect_template_name = "linked_beam",
 		shield_break_duration = 10,
 		stand_up_anim_duration = 1.3333333333333333,
 		vo_event = "taunt_shield",
@@ -805,7 +805,6 @@ local action_data = {
 			600,
 			800,
 		},
-		charge_effect_template = EffectTemplates.linked_beam,
 		regenerate_full_delay = {
 			20,
 			18,
@@ -815,6 +814,7 @@ local action_data = {
 		},
 	},
 	void_shield_explosion = {
+		effect_template_name = "void_shield_explosion",
 		hit_effect = "content/fx/particles/screenspace/screen_disturbance_scanlines_pulse",
 		hit_zone_name = "center_mass",
 		power_level = 100,
@@ -833,7 +833,6 @@ local action_data = {
 		},
 		damage_profile = DamageProfileTemplates.renegade_captain_void_shield_explosion,
 		damage_type = damage_types.minion_powered_sharp,
-		effect_template = EffectTemplates.void_shield_explosion,
 	},
 	stagger = {
 		stagger_duration_mods = {

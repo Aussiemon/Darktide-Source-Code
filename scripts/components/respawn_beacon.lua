@@ -9,9 +9,10 @@ RespawnBeacon.init = function (self, unit)
 
 	if respawn_beacon_extension then
 		local side = self:get_data(unit, "side")
+		local safe_zone = self:get_data(unit, "safe_zone")
 		local debug_ignore_check_distances = self:get_data(unit, "debug_ignore_check_distances")
 
-		respawn_beacon_extension:setup_from_component(side, debug_ignore_check_distances)
+		respawn_beacon_extension:setup_from_component(side, safe_zone, debug_ignore_check_distances)
 	end
 end
 
@@ -309,6 +310,11 @@ RespawnBeacon.component_data = {
 			"heroes",
 			"villains",
 		},
+	},
+	safe_zone = {
+		ui_name = "Safe Zone",
+		ui_type = "check_box",
+		value = false,
 	},
 	debug_ignore_check_distances = {
 		ui_name = "Ignore Debug Check Distances",

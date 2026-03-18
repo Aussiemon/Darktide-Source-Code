@@ -158,7 +158,7 @@ ExtensionManager.units = function (self)
 end
 
 ExtensionManager.destroy = function (self)
-	self._extension_system_holder:destroy()
+	self._extension_system_holder:delete()
 
 	self._units = nil
 	self._unit_extensions_list = nil
@@ -336,6 +336,10 @@ end
 
 ExtensionManager.on_gameplay_post_init = function (self, level, themes)
 	self._extension_system_holder:on_gameplay_post_init(level, themes)
+end
+
+ExtensionManager.on_location_setup = function (self)
+	self._extension_system_holder:on_location_setup()
 end
 
 ExtensionManager.init_time_slice_on_gameplay_post_init = function (self, level, themes)

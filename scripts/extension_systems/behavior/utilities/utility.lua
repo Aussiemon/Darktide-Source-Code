@@ -63,4 +63,63 @@ Utility.get_action_utility = function (action, blackboard, t, utility_data)
 	return total_utility
 end
 
+Utility.find_rendezvous_position = function (unit, action_data, blackboard)
+	local rendezvous_radius = action_data.rendezvous_radius
+	local rendezvous_offset = action_data.rendezvous_offset
+	local side = Managers.state.extension:system("side_system").side_by_unit[unit]
+	local allied_units = side.valid_human_units
+	local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+	local Breed = require("scripts/utilities/breed")
+	local unit_pos = Unit.local_position(unit, 1)
+	local closest_position
+	local closest_is_player = false
+	local closest_is_disabled = false
+	local closest_distance = math.huge
+	local rotation = Quaternion.identity()
+
+	for i = 1, #allied_units do
+		repeat
+			local ally_unit = allied_units[i]
+			local data_extension = ScriptUnit.has_extension(ally_unit, "unit_data_system")
+			local is_player = data_extension and Breed.is_player(data_extension:breed())
+
+			if closest_is_player and not is_player then
+				break
+			end
+
+			local character_state_component = is_player and data_extension:read_component("character_state")
+			local is_disabled = character_state_component and PlayerUnitStatus.is_disabled(character_state_component)
+
+			if closest_is_disabled and not is_disabled then
+				break
+			end
+
+			local ally_pos = POSITION_LOOKUP[ally_unit]
+			local dist_sq = Vector3.distance_squared(unit_pos, ally_pos)
+
+			if dist_sq < closest_distance then
+				closest_is_disabled = is_disabled
+				closest_is_player = is_player
+				closest_distance = dist_sq
+				closest_position = ally_pos
+				rotation = Unit.local_rotation(ally_unit, 1)
+			end
+		until true
+	end
+
+	local rendezvous_reference = closest_position
+
+	if not rendezvous_reference then
+		return nil, nil
+	end
+
+	local rendezvous_position = closest_position + Quaternion.rotate(Quaternion.flat_no_roll(rotation), Vector3(rendezvous_offset[1], rendezvous_offset[2], rendezvous_offset[3]))
+	local random_offset_x, random_offset_y = math.get_uniformly_random_point_inside_sector(0, rendezvous_radius, 0, 2 * math.pi)
+
+	rendezvous_position[1] = rendezvous_position[1] + random_offset_x
+	rendezvous_position[2] = rendezvous_position[2] + random_offset_y
+
+	return rendezvous_position, rendezvous_reference
+end
+
 return Utility

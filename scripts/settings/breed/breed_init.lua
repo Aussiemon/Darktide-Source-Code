@@ -16,11 +16,14 @@ local function _init_breed_settings(Breeds)
 			end
 
 			local sounds = breed_data.sounds
-			local events, use_proximity_culling = sounds.events, sounds.use_proximity_culling
 
-			for sound_alias, _ in pairs(events) do
-				if use_proximity_culling[sound_alias] == nil then
-					use_proximity_culling[sound_alias] = true
+			if sounds then
+				local events, use_proximity_culling = sounds.events, sounds.use_proximity_culling
+
+				for sound_alias, _ in pairs(events) do
+					if use_proximity_culling[sound_alias] == nil then
+						use_proximity_culling[sound_alias] = true
+					end
 				end
 			end
 		end

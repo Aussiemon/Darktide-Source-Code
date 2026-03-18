@@ -46,7 +46,7 @@ Styles.objectives_panel.frame = {
 }
 Styles.objectives_panel.sub_title = {
 	font_size = 14,
-	font_type = "kode_mono_medium",
+	font_type = "mono_tide_medium",
 	horizontal_alignment = "center",
 	text_horizontal_alignment = "left",
 	text_vertical_alignment = "top",
@@ -60,7 +60,7 @@ Styles.objectives_panel.sub_title = {
 }
 Styles.objectives_panel.title = {
 	font_size = 16,
-	font_type = "kode_mono_bold",
+	font_type = "mono_tide_bold",
 	horizontal_alignment = "left",
 	text_horizontal_alignment = "left",
 	text_vertical_alignment = "top",
@@ -132,7 +132,7 @@ Styles.mission_objective_info.frame = {
 }
 Styles.mission_objective_info.objective_description = {
 	font_size = 16,
-	font_type = "kode_mono_medium",
+	font_type = "mono_tide_medium",
 	hdr = true,
 	text_horizontal_alignment = "left",
 	text_vertical_alignment = "top",
@@ -162,6 +162,21 @@ Styles.mission_objective_info.background = {
 		0,
 	},
 }
+Styles.mission_objective_info.mission_giver_background = {
+	horizontal_alignment = "right",
+	scale_to_material = true,
+	vertical_alignment = "bottom",
+	size = {
+		Dimensions.details_width * 0.52,
+		Dimensions.rewards_height,
+	},
+	offset = {
+		0,
+		0,
+		5,
+	},
+	color = Color.black(255, true),
+}
 Styles.mission_objective_info.mission_giver_frame = {
 	horizontal_alignment = "right",
 	scale_to_material = true,
@@ -179,7 +194,7 @@ Styles.mission_objective_info.mission_giver_frame = {
 }
 Styles.mission_objective_info.mission_giver_name = {
 	font_size = 12,
-	font_type = "kode_mono_medium",
+	font_type = "mono_tide_medium",
 	horizontal_alignment = "right",
 	text_horizontal_alignment = "right",
 	text_vertical_alignment = "center",
@@ -213,7 +228,7 @@ Styles.mission_objective_info.background_fade = {
 	horizontal_alignment = "left",
 	vertical_alignment = "bottom",
 	color = {
-		125,
+		255,
 		101,
 		145,
 		102,
@@ -238,12 +253,22 @@ Styles.mission_objective_info.background_fade = {
 		2,
 	},
 	size = {
-		Dimensions.details_height,
+		Dimensions.details_height * 0.5,
 		Dimensions.details_width,
 	},
 	angle = math.degrees_to_radians(90),
 }
 Styles.mission_objective_info.reward = {}
+Styles.mission_objective_info.reward.background = {
+	horizontal_alignment = "left",
+	vertical_alignment = "bottom",
+	color = Color.black(255, true),
+	offset = {
+		0,
+		0,
+		4,
+	},
+}
 Styles.mission_objective_info.reward.frame = {
 	scale_to_material = true,
 	offset = {
@@ -255,7 +280,7 @@ Styles.mission_objective_info.reward.frame = {
 }
 Styles.mission_objective_info.reward.amount = {
 	font_size = 16,
-	font_type = "kode_mono_bold",
+	font_type = "mono_tide_bold",
 	horizontal_alignment = "left",
 	text_horizontal_alignment = "left",
 	text_vertical_alignment = "center",

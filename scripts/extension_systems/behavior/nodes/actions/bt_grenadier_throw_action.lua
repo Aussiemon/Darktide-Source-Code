@@ -3,6 +3,8 @@
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local Items = require("scripts/utilities/items")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local MasterItems = require("scripts/backend/master_items")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local MinionPerception = require("scripts/utilities/minion_perception")
@@ -52,7 +54,7 @@ BtGrenadierThrowAction.leave = function (self, unit, breed, blackboard, scratchp
 		local delta_position = Unit.delta_position(unit, unit_node)
 		local node_velocity = delta_position / dt
 
-		self:_throw_grenade(unit, scratchpad, action_data, "drop", throw_position, throw_direction, blackboard, t, node_velocity)
+		self:_throw_grenade(unit, breed, scratchpad, action_data, "drop", throw_position, throw_direction, blackboard, t, node_velocity)
 	end
 
 	if scratchpad.global_effect_id then
@@ -64,7 +66,7 @@ end
 
 BtGrenadierThrowAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
 	if scratchpad.throw_timing then
-		self:_update_grenade_throwing(unit, t, blackboard, scratchpad, action_data)
+		self:_update_grenade_throwing(unit, breed, blackboard, scratchpad, action_data, t)
 	end
 
 	local done = t > scratchpad.action_duration
@@ -96,7 +98,7 @@ BtGrenadierThrowAction._start_aiming = function (self, unit, t, scratchpad, acti
 		scratchpad.start_drop_grenade_timing = t + start_drop_grenade_timing
 	end
 
-	local effect_template = action_data.effect_template
+	local effect_template = action_data.effect_template_name and EffectTemplates[action_data.effect_template_name]
 
 	if effect_template then
 		local effect_template_timings = action_data.effect_template_timings
@@ -107,11 +109,12 @@ BtGrenadierThrowAction._start_aiming = function (self, unit, t, scratchpad, acti
 	end
 end
 
-BtGrenadierThrowAction._update_grenade_throwing = function (self, unit, t, blackboard, scratchpad, action_data)
+BtGrenadierThrowAction._update_grenade_throwing = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	self:_aim_at_target(scratchpad)
 
 	if scratchpad.effect_template_timing and t > scratchpad.effect_template_timing then
-		local global_effect_id = scratchpad.fx_system:start_template_effect(action_data.effect_template, unit)
+		local effect_template = EffectTemplates[action_data.effect_template_name]
+		local global_effect_id = scratchpad.fx_system:start_template_effect(effect_template, unit)
 
 		scratchpad.global_effect_id = global_effect_id
 		scratchpad.effect_template_timing = nil
@@ -121,7 +124,7 @@ BtGrenadierThrowAction._update_grenade_throwing = function (self, unit, t, black
 		local throw_grenade_component = scratchpad.throw_grenade_component
 		local throw_position, throw_direction = throw_grenade_component.throw_position:unbox(), throw_grenade_component.throw_direction:unbox()
 
-		self:_throw_grenade(unit, scratchpad, action_data, "throw", throw_position, throw_direction, blackboard, t)
+		self:_throw_grenade(unit, breed, scratchpad, action_data, "throw", throw_position, throw_direction, blackboard, t)
 
 		scratchpad.throw_timing = nil
 
@@ -129,7 +132,7 @@ BtGrenadierThrowAction._update_grenade_throwing = function (self, unit, t, black
 	end
 end
 
-BtGrenadierThrowAction._throw_grenade = function (self, unit, scratchpad, action_data, throw_type, throw_position, throw_direction, blackboard, t, optional_owner_velocity)
+BtGrenadierThrowAction._throw_grenade = function (self, unit, breed, scratchpad, action_data, throw_type, throw_position, throw_direction, blackboard, t, optional_owner_velocity)
 	local throw_config = action_data.throw_config
 	local projectile_template = throw_config.projectile_template
 	local locomotion_template = projectile_template.locomotion_template
@@ -161,7 +164,7 @@ BtGrenadierThrowAction._throw_grenade = function (self, unit, scratchpad, action
 	local item_name = throw_config.item
 	local item_definitions = MasterItems.get_cached()
 	local item = item_definitions[item_name]
-	local grenade_unit_name, locomotion_state = item.base_unit, trajectory_parameters.locomotion_state
+	local grenade_unit_name, locomotion_state = Items.base_unit(item, breed.name), trajectory_parameters.locomotion_state
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system.side_by_unit[unit]
 	local is_critical_strike, origin_item_slot, charge_level, target_unit, target_position, weapon_item_or_nil, fuse_override_time_or_nil

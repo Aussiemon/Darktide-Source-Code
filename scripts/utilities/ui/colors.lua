@@ -26,6 +26,8 @@ ColorUtilities.format_color_to_material = function (source)
 end
 
 ColorUtilities.color_copy = function (source, target, ignore_alpha)
+	local target = target or table.new(4, 0)
+
 	if not ignore_alpha then
 		target[1] = source[1]
 	end
@@ -33,6 +35,17 @@ ColorUtilities.color_copy = function (source, target, ignore_alpha)
 	target[2] = source[2]
 	target[3] = source[3]
 	target[4] = source[4]
+
+	return target
+end
+
+ColorUtilities.clone = function (source, ignore_alpha)
+	return ColorUtilities.color_copy(source, {
+		255,
+		255,
+		255,
+		255,
+	}, ignore_alpha)
 end
 
 local function hue2rgb(p, q, t)

@@ -7,6 +7,7 @@ local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local HitScan = require("scripts/utilities/attack/hit_scan")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local MinionMovement = require("scripts/utilities/minion_movement")
@@ -77,7 +78,7 @@ BtCompanionTargetPounceAndEscapeAction.leave = function (self, unit, breed, blac
 	pounce_component.leap_node = ""
 
 	local companion_pounce_setting = scratchpad.companion_pounce_setting
-	local hurt_effect_template = companion_pounce_setting.hurt_effect_template
+	local hurt_effect_template = companion_pounce_setting.hurt_effect_template_name and EffectTemplates[companion_pounce_setting.hurt_effect_template_name]
 
 	if hurt_effect_template and scratchpad.global_effect_id then
 		local fx_system = scratchpad.fx_system
@@ -154,7 +155,7 @@ BtCompanionTargetPounceAndEscapeAction.run = function (self, unit, breed, blackb
 		end
 
 		local fx_system = scratchpad.fx_system
-		local hurt_effect_template = companion_pounce_setting.hurt_effect_template
+		local hurt_effect_template = companion_pounce_setting.hurt_effect_template_name and EffectTemplates[companion_pounce_setting.hurt_effect_template_name]
 
 		if hurt_effect_template and not fx_system:has_running_template_of_name(unit, hurt_effect_template.name) then
 			local global_effect_id = fx_system:start_template_effect(hurt_effect_template, unit)
@@ -235,6 +236,18 @@ BtCompanionTargetPounceAndEscapeAction._initial_set_up = function (self, unit, s
 	local on_target_hit_settings = companion_pounce_setting.on_target_hit
 	local pounce_component = scratchpad.pounce_component
 	local pounce_target = pounce_component.pounce_target
+
+	if companion_pounce_setting.companion_pounce_action == "pushed_away" then
+		local force_stagger_settings = companion_pounce_setting.force_stagger_settings
+		local attack_direction = Vector3.normalize(Quaternion.forward(Unit.local_rotation(unit, 1)))
+
+		Stagger.force_stagger(pounce_target, force_stagger_settings.stagger_type, attack_direction, force_stagger_settings.duration, force_stagger_settings.length_scale, force_stagger_settings.immune_time, unit)
+
+		pounce_component.has_pounce_started = true
+
+		return
+	end
+
 	local damage_profile = companion_pounce_setting.damage_profile
 	local damage_dealt, attack_result, damage_efficiency, stagger_result, _ = self:_damage_target(unit, pounce_target, action_data, damage_profile)
 	local attack_direction = Vector3.normalize(Quaternion.forward(Unit.local_rotation(unit, 1)))

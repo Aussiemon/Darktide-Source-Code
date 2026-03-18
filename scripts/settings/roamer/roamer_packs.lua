@@ -14,5 +14,7 @@ end
 _create_roamer_pack_entry("scripts/settings/roamer/roamer_packs/renegade_roamer_packs")
 _create_roamer_pack_entry("scripts/settings/roamer/roamer_packs/cultists_roamer_packs")
 _create_roamer_pack_entry("scripts/settings/roamer/roamer_packs/chaos_roamer_packs")
+_create_roamer_pack_entry("scripts/settings/roamer/roamer_packs/mutator_roamer_packs")
+_create_roamer_pack_entry("scripts/settings/roamer/roamer_packs/expeditions_roamer_packs")
 
 return settings("RoamerPacks", roamer_packs)

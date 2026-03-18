@@ -45,6 +45,12 @@ DamageVolume.init = function (self, unit, is_server, nav_world)
 		self._enabled = true
 	end
 
+	local ignore_bots = self:get_data(unit, "ignore_bots")
+
+	if ignore_bots then
+		self._ignore_bots = true
+	end
+
 	run_update = true
 
 	return run_update
@@ -88,6 +94,8 @@ end
 DamageVolume._update = function (self, unit, dt, t, num_results)
 	local buff_affected_units = self._buff_affected_units
 	local ALIVE = ALIVE
+	local ignore_bots = self._ignore_bots
+	local player_manager = Managers.player
 
 	for i = 1, num_results do
 		repeat
@@ -95,6 +103,14 @@ DamageVolume._update = function (self, unit, dt, t, num_results)
 
 			if not ALIVE[affected_unit] then
 				break
+			end
+
+			if ignore_bots then
+				local player = player_manager:player_by_unit(affected_unit)
+
+				if player and not player:is_human_controlled() then
+					break
+				end
 			end
 
 			local affected_unit_position = (POSITION_LOOKUP[affected_unit] or Unit.world_position(affected_unit, 1)) + Vector3(0, 0, 0.1)
@@ -241,6 +257,11 @@ end
 DamageVolume.component_data = {
 	start_enabled = {
 		ui_name = "start_enabled",
+		ui_type = "check_box",
+		value = true,
+	},
+	ignore_bots = {
+		ui_name = "ignore_bots",
 		ui_type = "check_box",
 		value = true,
 	},

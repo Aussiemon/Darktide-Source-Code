@@ -12,6 +12,7 @@ local settings = {
 	source = {
 		id = "bishop",
 		platform = PLATFORM,
+		platform_detailed = PLATFORM_DETAILED,
 		environment = BUILD,
 		version = {
 			game = APPLICATION_SETTINGS.game_version,

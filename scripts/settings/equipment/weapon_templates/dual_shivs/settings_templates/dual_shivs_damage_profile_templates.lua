@@ -165,12 +165,12 @@ damage_templates.dual_shivs_light_ninja = {
 	stagger_category = "melee",
 	cleave_distribution = {
 		attack = {
+			1,
 			3,
-			5,
 		},
 		impact = {
+			1,
 			3,
-			5,
 		},
 	},
 	damage_type = damage_types.metal_slashing_light,
@@ -263,6 +263,47 @@ damage_templates.dual_shivs_light_ninja = {
 	gib_push_force = GibbingSettings.gib_push_force.sawing_light,
 }
 overrides.dual_shivs_light_ninja_stabby = {
+	parent_template_name = "dual_shivs_light_ninja",
+	overrides = {
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				65,
+				110,
+			},
+		},
+		{
+			"targets",
+			1,
+			"crit_boost",
+			0.8,
+		},
+		{
+			"cleave_distribution",
+			"attack",
+			{
+				1,
+				3,
+			},
+		},
+		{
+			"cleave_distribution",
+			"impact",
+			{
+				1,
+				3,
+			},
+		},
+		{
+			"gibbing_power",
+			gibbing_power.light,
+		},
+	},
+}
+overrides.dual_shivs_light_ninja_stabby_m2 = {
 	parent_template_name = "dual_shivs_light_ninja",
 	overrides = {
 		{
@@ -822,12 +863,12 @@ damage_templates.dual_shivs_heavy_linesman = {
 			},
 			power_distribution = {
 				attack = {
-					90,
-					160,
+					95,
+					170,
 				},
 				impact = {
-					4,
-					8,
+					5,
+					9,
 				},
 			},
 			finesse_boost = PowerLevelSettings.ninjafencer_finesse_boost_amount,

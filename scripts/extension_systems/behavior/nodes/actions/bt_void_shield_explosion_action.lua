@@ -5,6 +5,7 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 local Animation = require("scripts/utilities/animation")
 local Attack = require("scripts/utilities/attack/attack")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local Vo = require("scripts/utilities/vo")
 local BtVoidShieldExplosionAction = class("BtVoidShieldExplosionAction", "BtNode")
 
@@ -113,7 +114,7 @@ BtVoidShieldExplosionAction._deal_damage = function (self, t, unit, action_data)
 end
 
 BtVoidShieldExplosionAction._start_effect_template = function (self, unit, scratchpad, action_data)
-	local effect_template = action_data.effect_template
+	local effect_template = EffectTemplates[action_data.effect_template_name]
 	local fx_system = scratchpad.fx_system
 	local global_effect_id = fx_system:start_template_effect(effect_template, unit)
 

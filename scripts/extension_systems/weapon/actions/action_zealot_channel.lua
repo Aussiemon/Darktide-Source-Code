@@ -284,7 +284,7 @@ ActionZealotChannel._collect_tick_stagger_targets = function (self, dt, radius, 
 	local side = side_system.side_by_unit[unit]
 	local player_position = POSITION_LOOKUP[unit]
 	local enemy_side_names = side:relation_side_names("enemy")
-	local ai_target_units = side.ai_target_units
+	local ai_ground_target_units = side.ai_ground_target_units
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
 	local broadphase = broadphase_system.broadphase
 
@@ -296,7 +296,7 @@ ActionZealotChannel._collect_tick_stagger_targets = function (self, dt, radius, 
 		repeat
 			local target_unit = _broadphase_results[ii]
 
-			if not ai_target_units[target_unit] then
+			if not ai_ground_target_units[target_unit] then
 				break
 			end
 
@@ -318,7 +318,7 @@ ActionZealotChannel._collect_tick_stagger_targets = function (self, dt, radius, 
 		repeat
 			local target_unit = _broadphase_results[ii]
 
-			if not ai_target_units[target_unit] then
+			if not ai_ground_target_units[target_unit] then
 				break
 			end
 

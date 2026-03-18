@@ -24,6 +24,7 @@ MinionShieldExtension.init = function (self, extension_init_context, unit, exten
 	self._template = shield_template
 	self._regen_hit_strength_rate = shield_template.regen_hit_strength_rate
 	self._hit_strength = 0
+	self._damage_index = 0
 
 	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 	local shield_item = visual_loadout_extension:slot_item(shield_template.open_up_vfx_slot_name)
@@ -81,13 +82,6 @@ MinionShieldExtension.can_block_attack = function (self, damage_profile, attacki
 
 	if Breed.is_minion(attacking_owner_breed) and side_system:is_ally(unit, attacking_unit_owner_unit) then
 		return true
-	end
-
-	local perception_component = self._blackboard.perception
-	local is_aggroed = perception_component.aggro_state == "aggroed"
-
-	if not is_aggroed then
-		return false
 	end
 
 	local hit_zone = hit_actor and HitZone.get(unit, hit_actor)
@@ -156,14 +150,18 @@ MinionShieldExtension.apply_stagger = function (self, unit, damage_profile, stag
 	elseif hit_strength == open_up_threshold then
 		stagger_type, duration_scale, length_scale = stagger_types.shield_heavy_block, 1, 1
 
-		local fx_system = Managers.state.extension:system("fx_system")
-		local shield_item = self._shield_item
-		local fx_source_name = template.open_up_vfx_node
-		local attachment_unit, node = MinionVisualLoadout.attachment_unit_and_node_from_node_name(shield_item, fx_source_name)
-		local source_position = Unit.world_position(attachment_unit, node)
-		local source_rotation = Unit.world_rotation(attachment_unit, node)
+		local skip_open_up_vfx = self._template.skip_open_up_vfx
 
-		fx_system:trigger_vfx(template.open_up_vfx, source_position, source_rotation)
+		if not skip_open_up_vfx then
+			local fx_system = Managers.state.extension:system("fx_system")
+			local shield_item = self._shield_item
+			local fx_source_name = template.open_up_vfx_node
+			local attachment_unit, node = MinionVisualLoadout.attachment_unit_and_node_from_node_name(shield_item, fx_source_name)
+			local source_position = Unit.world_position(attachment_unit, node)
+			local source_rotation = Unit.world_rotation(attachment_unit, node)
+
+			fx_system:trigger_vfx(template.open_up_vfx, source_position, source_rotation)
+		end
 
 		self._hit_strength = 0
 	elseif quarter_open_up_threshold < hit_strength then

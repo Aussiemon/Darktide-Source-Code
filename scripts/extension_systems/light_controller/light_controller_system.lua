@@ -56,8 +56,8 @@ end
 
 LightControllerSystem._fetch_settings = function (self, mission, circumstance_name)
 	local original_settings = mission.light_groups_enabled or {}
-	local circumstance_template = CircumstanceTemplates[circumstance_name]
-	local mission_overrides = circumstance_template.mission_overrides
+	local circumstance_template = circumstance_name and CircumstanceTemplates[circumstance_name]
+	local mission_overrides = circumstance_template and circumstance_template.mission_overrides
 	local circumstance_settings = mission_overrides and mission_overrides.light_groups_enabled or nil
 
 	return circumstance_settings or original_settings

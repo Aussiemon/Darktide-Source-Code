@@ -27,6 +27,10 @@ PayloadSystem.on_gameplay_post_init = function (self, level)
 	self:call_gameplay_post_init_on_extensions(level)
 end
 
+PayloadSystem.on_location_setup = function (self)
+	self:call_gameplay_post_init_on_extensions()
+end
+
 PayloadSystem.destroy = function (self)
 	if not self._is_server then
 		self._network_event_delegate:unregister_events(unpack(RPCS))

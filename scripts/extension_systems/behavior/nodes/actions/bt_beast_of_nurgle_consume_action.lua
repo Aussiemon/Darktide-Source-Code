@@ -176,6 +176,18 @@ end
 BtBeastOfNurgleConsumeAction._update_consuming = function (self, unit, scratchpad, action_data, t, dt)
 	local target_unit = scratchpad.perception_component.target_unit
 
+	if not scratchpad.loot_stolen_from_target_unit then
+		scratchpad.loot_stolen_from_target_unit = true
+
+		local game_mode_manager = Managers.state.game_mode
+		local game_mode = game_mode_manager:game_mode()
+		local game_mode_name = game_mode:name()
+
+		if game_mode_name == "expedition" then
+			game_mode:minion_steal(target_unit, unit)
+		end
+	end
+
 	if scratchpad.consume_timing and t >= scratchpad.consume_timing then
 		local consume_node_name = action_data.consume_node
 		local consume_node = Unit.node(unit, consume_node_name)
@@ -375,12 +387,15 @@ end
 local ABOVE = 1
 local BELOW = 2
 local LATERAL = 2
-local THROW_TELEPORT_UP_OFFSET_HUMAN, THROW_TELEPORT_UP_OFFSET_OGRYN, MAX_STEPS, MAX_TIME = 0.75, 0, 20, 1.25
+local MAX_STEPS, MAX_TIME = 20, 1.25
+local THROW_TELEPORT_UP_OFFSET = {
+	human = 0.75,
+	ogryn = 0,
+}
 
 BtBeastOfNurgleConsumeAction._test_throw_trajectory = function (self, unit, scratchpad, action_data, test_direction, to)
 	local unit_position = POSITION_LOOKUP[unit]
-	local is_human = scratchpad.consumed_unit_breed_name == "human"
-	local up = Vector3.up() * (is_human and THROW_TELEPORT_UP_OFFSET_HUMAN or THROW_TELEPORT_UP_OFFSET_OGRYN)
+	local up = Vector3.up() * THROW_TELEPORT_UP_OFFSET[scratchpad.consumed_unit_breed_name]
 	local from = unit_position + test_direction + up
 	local catapult_force = action_data.catapult_force[scratchpad.consumed_unit_breed_name]
 	local catapult_z_force = action_data.catapult_z_force[scratchpad.consumed_unit_breed_name]

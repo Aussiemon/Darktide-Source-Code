@@ -3,6 +3,7 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local Side = require("scripts/extension_systems/side/side")
+local Breeds = require("scripts/settings/breed/breeds")
 local keywords = BuffSettings.keywords
 local SideSystem = class("SideSystem", "ExtensionSystemBase")
 
@@ -345,6 +346,15 @@ local function _is_valid_target(unit, side_extension)
 		if PlayerUnitStatus.is_hogtied(character_state_component) then
 			return false
 		end
+	else
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local breed_name = unit_data_extension:breed_name()
+		local breed = Breeds[breed_name]
+		local is_untargetable = breed.is_untargetable
+
+		if is_untargetable then
+			return false
+		end
 	end
 
 	return true
@@ -405,6 +415,10 @@ SideSystem._update_frame_tables = function (self, side)
 				end
 			end
 		end
+	end
+
+	if self._is_server then
+		Managers.state.pacing:update_auto_event_frame_tables()
 	end
 end
 
@@ -471,6 +485,11 @@ SideSystem._update_enemy_frame_tables = function (self, side)
 
 		table.clear(ai_target_units)
 
+		local ai_ground_target_units = side.ai_ground_target_units
+		local num_ai_ground_target_units = 0
+
+		table.clear(ai_ground_target_units)
+
 		local enemy_units = side:relation_units("enemy")
 		local num_enemy_units = #enemy_units
 
@@ -482,6 +501,14 @@ SideSystem._update_enemy_frame_tables = function (self, side)
 				num_ai_target_units = num_ai_target_units + 1
 				ai_target_units[num_ai_target_units] = unit
 				ai_target_units[unit] = num_ai_target_units
+
+				local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
+				if navigation_extension:move_medium() == "ground" then
+					num_ai_ground_target_units = num_ai_ground_target_units + 1
+					ai_ground_target_units[num_ai_ground_target_units] = unit
+					ai_ground_target_units[unit] = num_ai_ground_target_units
+				end
 			end
 		end
 	end

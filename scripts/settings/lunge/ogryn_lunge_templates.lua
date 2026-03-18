@@ -90,6 +90,8 @@ ogryn_lunge_templates.ogryn_charge_increased_distance.stop_tags = {
 	monster = true,
 }
 ogryn_lunge_templates.ogryn_charge_increased_distance.stop_armor_types = nil
+ogryn_lunge_templates.ogryn_charge_increased_distance.force_stagger = true
+ogryn_lunge_templates.ogryn_charge_increased_distance.force_stagger_ignore_no_stagger = true
 ogryn_lunge_templates.ogryn_charge_increased_distance.anim_settings.timing_anims = {
 	[2.3] = "ability_charge_out",
 }

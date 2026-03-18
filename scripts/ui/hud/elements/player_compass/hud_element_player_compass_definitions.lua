@@ -5,8 +5,8 @@ local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local background_size = {
-	1000,
-	25,
+	960,
+	50,
 }
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -15,8 +15,8 @@ local scenegraph_definition = {
 		parent = "screen",
 		vertical_alignment = "top",
 		size = {
-			background_size[1] + 70,
-			background_size[2] + 20,
+			background_size[1],
+			background_size[2],
 		},
 		position = {
 			0,
@@ -28,7 +28,10 @@ local scenegraph_definition = {
 		horizontal_alignment = "center",
 		parent = "bounding_box",
 		vertical_alignment = "top",
-		size = background_size,
+		size = {
+			background_size[1] - 50,
+			background_size[2],
+		},
 		position = {
 			0,
 			5,
@@ -40,12 +43,12 @@ local scenegraph_definition = {
 		parent = "background",
 		vertical_alignment = "center",
 		size = {
-			background_size[1] - 50,
-			background_size[2],
+			760,
+			40,
 		},
 		position = {
 			0,
-			0,
+			5,
 			0,
 		},
 	},
@@ -96,73 +99,95 @@ local widget_definitions = {
 	background = UIWidget.create_definition({
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/dividers/faded_line_01",
+			style_id = "compass_aquila",
+			value = "content/ui/materials/compass/ui_compass_aquila",
 			style = {
 				horizontal_alignment = "center",
-				color = Color.ui_hud_green_light(255, true),
-				size = {
-					nil,
-					2,
-				},
-				size_addition = {
-					100,
-					0,
-				},
 				offset = {
 					0,
-					-3,
+					-7,
 					1,
 				},
-			},
-		},
-		{
-			pass_type = "texture",
-			value = "content/ui/materials/dividers/faded_line_01",
-			style = {
-				horizontal_alignment = "center",
-				color = Color.ui_hud_green_dark(255, true),
 				size = {
-					nil,
-					2,
+					96,
+					68,
 				},
-				size_addition = {
-					100,
-					0,
-				},
-				offset = {
-					0,
-					-2,
-					0,
+				material_values = {
+					state = 1,
 				},
 			},
 		},
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/masks/drop_shadow_center_fade",
+			style_id = "compass_background",
+			value = "content/ui/materials/compass/ui_compass_background",
 			style = {
 				horizontal_alignment = "center",
-				color = Color.ui_hud_green_dark(255, true),
-				size = {
-					nil,
-					22,
-				},
-				size_addition = {
-					0,
-					0,
-				},
 				offset = {
 					0,
-					-2,
-					-1,
+					0,
+					0,
+				},
+				material_values = {
+					state = 1,
 				},
 			},
 		},
 	}, "background"),
+	navigation_lines = UIWidget.create_definition({
+		{
+			pass_type = "texture",
+			style_id = "lines",
+			value = "content/ui/materials/compass/ui_compass_navigation",
+			style = {
+				horizontal_alignment = "center",
+				scale_to_material = true,
+				vertical_alignment = "center",
+				size = {
+					756,
+					26,
+				},
+				offset = {
+					0,
+					0,
+					1,
+				},
+				material_values = {
+					uv_offset = 0,
+				},
+			},
+		},
+	}, "area"),
 }
 local header_font_setting_name = "hud_body"
 local header_font_settings = UIFontSettings[header_font_setting_name]
 local header_font_color = Color.ui_hud_green_super_light(255, true)
+local header_font_color = {
+	255,
+	114,
+	247,
+	119,
+}
 local default_widget_icon_definition = UIWidget.create_definition({
+	{
+		pass_type = "texture",
+		style_id = "frame",
+		value = "content/ui/materials/backgrounds/scanner/scanner_decode_symbol_frame",
+		value_id = "frame",
+		style = {
+			hdr = true,
+			color = {
+				255,
+				255,
+				255,
+				255,
+			},
+			size = {
+				50,
+				50,
+			},
+		},
+	},
 	{
 		pass_type = "texture",
 		style_id = "icon",
@@ -178,6 +203,23 @@ local default_widget_icon_definition = UIWidget.create_definition({
 		},
 		visibility_function = function (content, style)
 			return content.icon ~= nil
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "title_icon",
+		value = "content/ui/materials/hud/interactions/icons/location",
+		value_id = "title_icon",
+		style = {
+			offset = {
+				0,
+				0,
+				1,
+			},
+			color = Color.ui_hud_green_light(255, true),
+		},
+		visibility_function = function (content, style)
+			return content.title_icon ~= nil
 		end,
 	},
 	{

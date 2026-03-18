@@ -569,7 +569,7 @@ local archetype_talents = {
 			},
 		},
 		veteran_combat_ability_revive_nearby_allies = {
-			description = "loc_talent_veteran_combat_ability_revives_description",
+			description = "loc_talent_veteran_combat_ability_revives_new_description",
 			display_name = "loc_talent_veteran_combat_ability_revives",
 			icon = "content/ui/textures/icons/talents/veteran_3/veteran_3_tier_6_3",
 			name = "Your shout now revives knocked down allies in coherency",
@@ -607,10 +607,6 @@ local archetype_talents = {
 			special_rule = {
 				identifier = "squad_leader_shout_special_rule",
 				special_rule_name = special_rules.shout_revives_allies,
-			},
-			passive = {
-				buff_template_name = "veteran_combat_ability_revive_nearby_allies",
-				identifier = "veteran_combat_ability_revive_nearby_allies",
 			},
 		},
 		veteran_combat_ability_extra_charge = {
@@ -3076,6 +3072,22 @@ local archetype_talents = {
 			passive = {
 				buff_template_name = "veteran_flanking_damage",
 				identifier = "veteran_flanking_damage",
+			},
+		},
+		veteran_increased_ranged_cleave = {
+			description = "loc_talent_veteran_increased_ranged_cleave_desc",
+			display_name = "loc_talent_veteran_increased_ranged_cleave",
+			name = "",
+			format_values = {
+				cleave = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.veteran_increased_ranged_cleave.cleave,
+				},
+			},
+			passive = {
+				buff_template_name = "veteran_increased_ranged_cleave",
+				identifier = "veteran_increased_ranged_cleave",
 			},
 		},
 	},

@@ -7,9 +7,6 @@ local pickup_data = {
 	name = "live_event_saints_01_pickup_large",
 	smart_tag_target_type = "pickup",
 	unit_name = "content/pickups/collectibles/collectibles_saints/pickup_collectible_saints_large_01",
-	unit_names = {
-		"content/pickups/collectibles/collectibles_saints/pickup_collectible_saints_large_01",
-	},
 	on_pickup_func = function (pickup_unit, interactor_unit, pickup_data, t)
 		local caused_by_player = Managers.state.player_unit_spawn:owner(interactor_unit)
 

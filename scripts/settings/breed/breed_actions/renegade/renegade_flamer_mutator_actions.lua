@@ -4,7 +4,6 @@ local BreedShootTemplates = require("scripts/settings/breed/breed_shoot_template
 local RenegadeFlamerSettings = require("scripts/settings/specials/renegade_flamer_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
@@ -17,6 +16,16 @@ local action_data = {
 	idle = {
 		rotate_towards_target = true,
 		anim_events = {
+			"idle",
+		},
+	},
+	weapon_malfunction_loop = {
+		rotate_towards_target = false,
+		anim_events = {
+			"suppressed_loop_01",
+		},
+		end_anim_events = {
+			"stagger_finished",
 			"idle",
 		},
 	},
@@ -213,6 +222,7 @@ local action_data = {
 		can_strafe_shoot = true,
 		collision_filter = "filter_minion_shooting_no_friendly_fire",
 		degree_per_direction = 10,
+		effect_template_name = "renegade_flamer_mutator",
 		exit_after_cooldown = true,
 		liquid_paint_brush_size = 1,
 		max_distance_to_target = 14,
@@ -252,7 +262,6 @@ local action_data = {
 		attack_intensities = {
 			ranged = 0.1,
 		},
-		effect_template = EffectTemplates.renegade_flamer_mutator,
 		inventory_slot = RenegadeFlamerSettings.inventory_slot,
 		fx_source_name = RenegadeFlamerSettings.fx_source_name,
 		range = RenegadeFlamerSettings.range,
@@ -302,6 +311,7 @@ local action_data = {
 		can_strafe_shoot = true,
 		collision_filter = "filter_minion_shooting_no_friendly_fire",
 		degree_per_direction = 10,
+		effect_template_name = "renegade_flamer_mutator_throw",
 		end_duration = 1,
 		exit_after_cooldown = true,
 		liquid_paint_brush_size = 1,
@@ -349,7 +359,6 @@ local action_data = {
 			left = "aim_turn_left",
 			right = "aim_turn_right",
 		},
-		effect_template = EffectTemplates.renegade_flamer_mutator_throw,
 		inventory_slot = RenegadeFlamerSettings.inventory_slot,
 		fx_source_name = RenegadeFlamerSettings.fx_source_name,
 		range = RenegadeFlamerSettings.range,

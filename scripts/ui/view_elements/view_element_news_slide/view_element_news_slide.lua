@@ -1,15 +1,18 @@
 ﻿-- chunkname: @scripts/ui/view_elements/view_element_news_slide/view_element_news_slide.lua
 
 local Definitions = require("scripts/ui/view_elements/view_element_news_slide/view_element_news_slide_definitions")
+local NewsActionHandler = require("scripts/ui/utilities/news_action_handler")
+local Promise = require("scripts/foundation/utilities/promise")
+local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local Settings = require("scripts/ui/view_elements/view_element_news_slide/view_element_news_slide_settings")
 local Text = require("scripts/utilities/ui/text")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local NewsActionHandler = require("scripts/ui/utilities/news_action_handler")
 local ViewElementNewsSlide = class("ViewElementNewsSlide", "ViewElementBase")
 
 ViewElementNewsSlide.init = function (self, parent, draw_layer, start_scale)
 	ViewElementNewsSlide.super.init(self, parent, draw_layer, start_scale, Definitions)
 
+	self._promise_container = PromiseContainer:new()
 	self._slide_data = nil
 	self._textures = {}
 	self._old_index = nil
@@ -31,24 +34,16 @@ ViewElementNewsSlide.init = function (self, parent, draw_layer, start_scale)
 	self._widgets_by_name.open_news_button.content.original_text = Localize("loc_main_menu_show_news")
 	self._widgets_by_name.open_news_button.content.gamepad_action = self._input_action_open_news
 	self._widgets_by_name.open_news_button.content.hotspot.pressed_callback = view_request_callback
-	self._backend_promise = Managers.data_service.news:get_events():next(function (backend_data)
-		self._backend_promise = Managers.data_service.player_survey:refresh_account_surveys():next(function (ok)
-			self._backend_promise = nil
 
-			self:_initialize_slides(backend_data)
-		end)
-	end):catch(function (error)
-		self._backend_promise = nil
-
+	Promise.all(self._promise_container:cancel_on_destroy(Managers.data_service.news:get_events()), self._promise_container:cancel_on_destroy(Managers.data_service.player_survey:refresh_account_surveys())):next(function (arr)
+		return arr[1]
+	end):next(callback(self, "_initialize_slides")):catch(function (error)
 		Log.warning("ViewElementNewsSlide", "Failed to load news with error: %s", table.tostring(error, 5))
 	end)
 end
 
 ViewElementNewsSlide.destroy = function (self)
-	if self._backend_promise then
-		self._backend_promise:cancel()
-	end
-
+	self._promise_container:delete()
 	self:_delete_progress_bar()
 
 	for url, _ in pairs(self._textures) do
@@ -139,7 +134,7 @@ ViewElementNewsSlide._initialize_slides = function (self, backend_data)
 	table.sort(slides, _compare_slides)
 
 	for url, _ in pairs(self._textures) do
-		Managers.url_loader:load_texture(url, nil, "view_element_news_slide"):next(function (data)
+		self._promise_container:cancel_on_destroy(Managers.url_loader:load_texture(url, nil, "view_element_news_slide"):next()):next(function (data)
 			self._textures[url] = data
 		end)
 	end

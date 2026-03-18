@@ -31,6 +31,8 @@ HudElementPlayerWeaponHandler.init = function (self, parent, draw_layer, start_s
 
 	self._scan_delay = HudElementPlayerWeaponHandlerSettings.scan_delay
 	self._scan_delay_duration = 0
+
+	self:_register_event("event_flash_slot_display_by_id")
 end
 
 local function sort_weapon_entries_by_order(a, b)
@@ -155,6 +157,17 @@ HudElementPlayerWeaponHandler._weapon_scan = function (self, extensions, ui_rend
 	end
 
 	self:_update_weapon_count(num_weapons, force_update_positions)
+end
+
+HudElementPlayerWeaponHandler.event_flash_slot_display_by_id = function (self, slot_id)
+	local player_weapons = self._player_weapons
+	local data = player_weapons[slot_id]
+
+	if data then
+		local hud_element_player_weapon = data.hud_element_player_weapon
+
+		hud_element_player_weapon:flash_slot_display()
+	end
 end
 
 HudElementPlayerWeaponHandler._update_weapon_count = function (self, new_weapon_count, force_update)

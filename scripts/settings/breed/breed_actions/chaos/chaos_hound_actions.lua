@@ -13,6 +13,16 @@ local action_data = {
 	death = {
 		instant_ragdoll_chance = 1,
 	},
+	patrol = {
+		optional_set_aggroed = true,
+		patrol_offset = 5,
+		anim_events = {
+			"walk_fwd",
+		},
+		speeds = {
+			walk_fwd = 0.7,
+		},
+	},
 	leap = {
 		aoe_bot_threat_duration = 1,
 		aoe_bot_threat_timing = 0.5,

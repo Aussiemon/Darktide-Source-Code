@@ -225,6 +225,33 @@ templates.hit_by_poxburster_bile = {
 		},
 	},
 }
+templates.houndmaster_electrocution = {
+	class_name = "buff",
+	duration = 10,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_plasma_reduced_toughness",
+	is_negative = true,
+	max_stacks = 2,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	stat_buffs = {
+		[buff_stat_buffs.sprint_movement_speed] = -0.05,
+		[buff_stat_buffs.stamina_cost_multiplier] = 2,
+		[buff_stat_buffs.stamina_regeneration_multiplier] = 0.25,
+		[buff_stat_buffs.dodge_cooldown_reset_modifier] = 1.5,
+	},
+	keywords = {
+		buff_keywords.electrocuted,
+	},
+	player_effects = {
+		on_screen_effect = "content/fx/particles/screenspace/screen_player_electrified",
+		stop_type = "destroy",
+		wwise_state = {
+			group = "swamped",
+			off_state = "none",
+			on_state = "on",
+		},
+	},
+}
 templates.renegade_plasma_gunner_toughness_reduction = {
 	class_name = "buff",
 	duration = 5,
@@ -715,6 +742,30 @@ templates.renegade_flamer_backpack_damaged = {
 			},
 		},
 	},
+}
+templates.hit_by_sand_vortex = {
+	class_name = "interval_buff",
+	duration = 1,
+	interval = 2,
+	max_stacks = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	keywords = {
+		buff_keywords.burning,
+	},
+	interval_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if HEALTH_ALIVE[unit] then
+			local damage_template = DamageProfileTemplates.horde_flame_impact
+			local power_level_table = MinionDifficultySettings.power_level.chaos_engulfed_enemy_fire_attack
+			local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
+			local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
+		end
+	end,
+	minion_effects = minion_burning_buff_effects.chemfire,
 }
 templates.cultist_flamer_backpack_damaged = table.clone(templates.renegade_flamer_backpack_damaged)
 templates.cultist_flamer_backpack_damaged.minion_effects.stack_node_effects = {

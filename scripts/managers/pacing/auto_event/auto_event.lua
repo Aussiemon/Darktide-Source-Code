@@ -7,11 +7,19 @@ local NavQueries = require("scripts/utilities/nav_queries")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local aggro_states = PerceptionSettings.aggro_states
-local PRE_STINGER_WWISE_EVENT = "wwise/events/minions/play_minion_horde_poxwalker_ambush_2d"
-local STINGER_WWISE_EVENT = "wwise/events/minions/play_minion_horde_poxwalker_ambush_3d"
+local DEFAULT_PRE_STINGER_WWISE_EVENT = "wwise/events/minions/play_minion_horde_poxwalker_ambush_2d"
+local DEFAULT_STINGER_WWISE_EVENT = "wwise/events/minions/play_minion_horde_poxwalker_ambush_3d"
 local AutoEvent = class("AutoEvent")
 local DEFAULT_NUM_WAVES = 3
-local MAX_SPAWN_LOCATIONS = 15
+local MAX_SPAWN_LOCATIONS = 10
+local CAPTAIN_BREEDS = {
+	cultist = "cultist_captain",
+	renegade = "renegade_captain",
+}
+local TWIN_BREEDS = {
+	"renegade_twin_captain",
+	"renegade_twin_captain_two",
+}
 local _get_valid_player_target
 local TEMP_EVENT_DATA = {}
 
@@ -28,22 +36,41 @@ AutoEvent.init = function (self, nav_world, world, side_id, target_side_id, temp
 	self._groups = {}
 	self._max_spawn_locations = MAX_SPAWN_LOCATIONS
 	self._minion_spawner_radius_checks = {
+		20,
+		30,
+		35,
+		40,
+	}
+	self._minion_occluded_radius_checks = {
+		4,
 		8,
 		12,
 		15,
-		25,
 	}
+	self._update_frequency_group_check = 3
 	self._nav_world = nav_world
 	self._physics_world = World.physics_world(world)
-	self._side_id = side_id
+
+	local side_system = Managers.state.extension:system("side_system")
+	local side_names = side_system:side_names()
+	local side_name = side_names[side_id]
+
+	self._side_id, self._side_name, self._target_side_id = side_id, side_name, target_side_id
+	self._side_system = side_system
 	self._target_side_id = target_side_id
 	template_name = template_name or "dummy_auto_event_template"
 	self._template = AutoEventsTemplates[template_name]
 	self._active_events = {}
 end
 
-AutoEvent.on_gameplay_post_init = function (self)
-	return
+AutoEvent.auto_event_active = function (self)
+	if not self._num_active_events then
+		return false
+	end
+
+	local is_active = self._num_active_events > 0
+
+	return is_active
 end
 
 AutoEvent.swap_auto_event_template = function (self, template_name)
@@ -79,6 +106,8 @@ AutoEvent.request_auto_event = function (self, params, debug_position)
 		local waves_cooldown = math.random(waves_cooldown_by_resistance[1], waves_cooldown_by_resistance[2])
 
 		waves_cooldown = waves_cooldown * inital_cooldown_multiplier
+		param_table.is_paused = false
+		param_table.paused_check_t = 0
 		param_table.wave_cooldown = waves_cooldown + t
 
 		local pre_stinger_delay = waves_cooldown / 2 + t
@@ -87,8 +116,19 @@ AutoEvent.request_auto_event = function (self, params, debug_position)
 		param_table.groups = {}
 		param_table.stop_requested = false
 		param_table.waves_to_spawn = Managers.state.difficulty:get_table_entry_by_resistance(self._template.num_waves_by_resistance) or DEFAULT_NUM_WAVES
-		param_table.spawned_monster = 0
+		param_table.tried_spawning_captain = false
+		param_table.tried_spawning_monster = false
+		param_table.tried_spawning_twin = false
+		param_table.injection_spawn_table = {}
 		param_table.last_special_injected_t = 0
+
+		if self._template.optional_disallowed_positions then
+			param_table.optional_disallowed_positions = {}
+		end
+
+		if params.level_reference and self._template.check_radius_to_players then
+			param_table.level_reference = params.owning_level
+		end
 
 		local allowed_composition_types = self._template.composition
 		local composition_type = params.composition_type
@@ -104,9 +144,31 @@ AutoEvent.request_auto_event = function (self, params, debug_position)
 
 		if allowed_size_types[auto_event_size] then
 			param_table.size_multiplier = allowed_size_types[auto_event_size]
+			param_table.size_name = auto_event_size
 		else
 			param_table.size_multiplier = allowed_size_types.default
+			param_table.size_name = "default"
 		end
+
+		local should_force_inject_captain = params.inject_captain
+
+		if should_force_inject_captain then
+			param_table.should_force_inject_captain = should_force_inject_captain
+		end
+
+		local should_force_inject_monster = params.inject_monster
+
+		if should_force_inject_monster then
+			param_table.should_force_inject_monster = should_force_inject_monster
+		end
+
+		local should_force_inject_twin = params.inject_twin
+
+		if should_force_inject_twin then
+			param_table.should_force_inject_twin = should_force_inject_twin
+		end
+
+		param_table.num_valid_players_in_radius = 0
 
 		local uuid = tostring(params.node_id)
 
@@ -171,6 +233,14 @@ AutoEvent.kill_remaining_enemies = function (self, uuid)
 	end
 end
 
+AutoEvent.update_auto_event_frame_tables = function (self)
+	for uuid, data in pairs(self._active_events) do
+		if self._template.check_radius_to_players then
+			self:_check_players_in_radius(uuid, data)
+		end
+	end
+end
+
 local SUCCESS_SPECIAL_COOLDOWN_TIME = {
 	15,
 	25,
@@ -185,20 +255,32 @@ AutoEvent._try_inject_special = function (self, event_data, t)
 	local special_config = template.special_config
 
 	if special_config then
+		local success_cooldown = Managers.state.difficulty:get_table_entry_by_resistance(special_config.success_cooldown) or SUCCESS_SPECIAL_COOLDOWN_TIME
+		local failed_cooldown = Managers.state.difficulty:get_table_entry_by_resistance(special_config.failed_cooldown) or FAILED_SPECIAL_COOLDOWN_TIME
 		local last_special_injected_t = event_data.last_special_injected_t
 		local chance_for_special_injection = Managers.state.difficulty:get_table_entry_by_resistance(special_config.chance_for_special_injection)
+		local game_mode_name = Managers.state.game_mode:game_mode_name()
+
+		if game_mode_name == "expedition" then
+			local num_specials_allowed = math.round(Managers.state.pacing:max_num_specials() / self._num_active_events)
+			local currently_spawned_by_event = Managers.state.pacing:get_num_specials_owned_by_auto_event(event_data.uuid)
+
+			if num_specials_allowed <= currently_spawned_by_event then
+				return
+			end
+		end
 
 		if chance_for_special_injection >= math.random() and last_special_injected_t <= t then
 			local breeds = special_config.breeds
 			local breed_name = breeds[math.random(1, #breeds)]
 			local target_unit = _get_valid_player_target(event_data.position)
-			local success = Managers.state.pacing:try_inject_special(breed_name, nil, target_unit, nil)
+			local success = Managers.state.pacing:try_inject_special(breed_name, nil, target_unit, nil, nil, nil, nil, event_data.uuid)
 			local cooldown
 
 			if success then
-				cooldown = math.random(SUCCESS_SPECIAL_COOLDOWN_TIME[1], SUCCESS_SPECIAL_COOLDOWN_TIME[2])
+				cooldown = math.random(success_cooldown[1], success_cooldown[2])
 			else
-				cooldown = math.random(FAILED_SPECIAL_COOLDOWN_TIME[1], FAILED_SPECIAL_COOLDOWN_TIME[2])
+				cooldown = math.random(failed_cooldown[1], failed_cooldown[2])
 			end
 
 			event_data.last_special_injected_t = cooldown + t
@@ -231,32 +313,177 @@ AutoEvent._check_num_events = function (self)
 	self._num_active_events = 0
 
 	for uuid, data in pairs(self._active_events) do
-		self._num_active_events = self._num_active_events + 1
+		if not data.stop_requested or not data.is_paused then
+			self._num_active_events = self._num_active_events + 1
+		end
 	end
 end
 
-local FORCE_SKIP_CURRENT_WAVE_TIMING = 30
-local MINIUM_AMOUNT_OF_ENEMIES_REQUIRED = 15
+local RADIUS_BY_LEVEL_TAG = {
+	level_size_16 = 8,
+	level_size_32 = 16,
+	level_size_48 = 24,
+	level_size_64 = 32,
+}
+local MARGIN_BY_LEVEL_TAG = {
+	level_size_16 = 10,
+	level_size_32 = 10,
+	level_size_48 = 10,
+	level_size_64 = 10,
+}
+
+AutoEvent._get_first_available_radius_by_tags = function (self, tags)
+	for _, tag in ipairs(tags) do
+		local radius, margin = RADIUS_BY_LEVEL_TAG[tag], MARGIN_BY_LEVEL_TAG[tag]
+
+		if radius then
+			return radius, margin
+		end
+	end
+end
+
+local PLAYERS_IN_RADIUS_PER_EVENT = {}
+
+AutoEvent._check_players_in_radius = function (self, uuid, data)
+	if not PLAYERS_IN_RADIUS_PER_EVENT[uuid] then
+		PLAYERS_IN_RADIUS_PER_EVENT[uuid] = {
+			num_valid_units = 0,
+			player_units = {},
+		}
+	end
+
+	local event_data = PLAYERS_IN_RADIUS_PER_EVENT[uuid]
+
+	table.clear(event_data.player_units)
+
+	local level_reference = data.level_reference
+	local tags, position
+
+	if level_reference then
+		local game_mode_manager = Managers.state.game_mode
+		local game_mode = game_mode_manager:game_mode()
+		local level_data = game_mode:get_level_data(data.level_reference)
+
+		position = level_data.position:unbox()
+		tags = level_data.tags
+	else
+		position = data.position:unbox()
+	end
+
+	local radius, margin
+
+	if tags then
+		radius, margin = self:_get_first_available_radius_by_tags(tags)
+	else
+		radius, margin = RADIUS_BY_LEVEL_TAG.level_size_32, MARGIN_BY_LEVEL_TAG.level_size_32
+	end
+
+	local side = self._side_system:get_side(1)
+	local valid_player_units = side.valid_player_units
+	local num_valid_player_units = #valid_player_units
+	local num_valid = 0
+
+	for i = 1, num_valid_player_units do
+		local target_unit = valid_player_units[i]
+		local player_position = POSITION_LOOKUP[target_unit]
+		local flattened_player_position = Vector3(player_position.x, player_position.y, 0)
+		local flattened_level_position = Vector3(position.x, position.y, 0)
+		local distance = Vector3.distance(flattened_level_position, flattened_player_position)
+
+		if distance < radius + margin and HEALTH_ALIVE[target_unit] then
+			num_valid = num_valid + 1
+			event_data.player_units[target_unit] = num_valid
+			event_data.player_units[num_valid] = target_unit
+		end
+	end
+
+	event_data.num_valid_units = num_valid
+	data.num_valid_players_in_radius = num_valid
+end
+
+AutoEvent.get_all_valid_units_in_event = function (self, uuid)
+	if PLAYERS_IN_RADIUS_PER_EVENT[uuid] then
+		local event_data = PLAYERS_IN_RADIUS_PER_EVENT[uuid]
+
+		return event_data.player_units, event_data.num_valid_units
+	else
+		return nil
+	end
+end
+
+AutoEvent._try_aggro_nearby_groups = function (self, data)
+	local groups = data.groups
+
+	for i = 1, #groups do
+		local group_id = groups[i]
+		local group_position = self._group_system:group_position(group_id)
+
+		if group_position then
+			Managers.state.pacing:aggro_all_within_radius(group_position, 10)
+		end
+	end
+end
+
+local FORCE_SKIP_CURRENT_WAVE_TIMING = 35
+local MINIUM_AMOUNT_OF_ENEMIES_REQUIRED = 10
+local DEFAULT_TOTAL_MINIONS_ALLOWED_HARDLIMIT = 165
+local DEFAULT_TOTAL_MINIONS_ALLOWED_BEFORE_CUTOFF = 125
+local PAUSE_TRICKLE_TIME = 5
 
 AutoEvent.update = function (self, dt, t)
 	self:_check_num_events()
 
+	local total_minions_spawned_stop_threshold = DEFAULT_TOTAL_MINIONS_ALLOWED_HARDLIMIT
+	local total_minions_spawned = Managers.state.minion_spawn:num_spawned_minions()
 	local active_events = self._active_events
 
 	for uuid, data in pairs(active_events) do
+		if self._template.optional_aggro_all_within_range then
+			self:_try_aggro_nearby_groups(data)
+		end
+
+		if self._template.check_radius_to_players and data.is_paused and t > data.paused_check_t then
+			if data.num_valid_players_in_radius > 0 then
+				data.is_paused = false
+			else
+				data.paused_check_t = data.paused_check_t + 1
+			end
+		end
+
 		if t > data.pre_stinger_delay and not data.pre_stinger_played then
 			data.pre_stinger_played = true
 
 			local optional_ambisonics = true
+			local pre_stinger = DEFAULT_PRE_STINGER_WWISE_EVENT
+			local stinger_settings = self._template.stingers
 
-			self._fx_system:trigger_wwise_event(PRE_STINGER_WWISE_EVENT, nil, nil, nil, nil, nil, optional_ambisonics)
+			if stinger_settings and stinger_settings.pre_stingers then
+				pre_stinger = stinger_settings.pre_stingers[data.size_name]
+			end
+
+			self._fx_system:trigger_wwise_event(pre_stinger, nil, nil, nil, nil, nil, optional_ambisonics)
+		end
+
+		if total_minions_spawned_stop_threshold <= total_minions_spawned then
+			if t > data.wave_cooldown then
+				data.wave_cooldown = t + PAUSE_TRICKLE_TIME
+			end
+
+			return
 		end
 
 		if t > data.wave_cooldown and data.waves_to_spawn >= 1 then
 			if not data.stinger_played then
 				data.stinger_played = true
 
-				self._fx_system:trigger_wwise_event(STINGER_WWISE_EVENT, data.position:unbox(), nil, nil, nil, nil, nil)
+				local stinger = DEFAULT_STINGER_WWISE_EVENT
+				local stinger_settings = self._template.stingers
+
+				if stinger_settings and stinger_settings.stingers then
+					stinger = stinger_settings.stingers[data.size_name]
+				end
+
+				self._fx_system:trigger_wwise_event(stinger, data.position:unbox(), nil, nil, nil, nil, nil)
 			end
 
 			if not data.primary_wave_event_sent then
@@ -294,11 +521,11 @@ AutoEvent.update = function (self, dt, t)
 			data.wave_cooldown = waves_cooldown + t
 			data.waves_to_spawn = data.waves_to_spawn - 1
 
-			self:_try_inject_special(data.position, t)
+			self:_try_inject_special(data, t)
 		end
 
 		if data.waves_to_spawn == 0 and data.frame_skipped then
-			self:_try_inject_special(data.position, t)
+			self:_try_inject_special(data, t)
 
 			for i = 1, #data.groups do
 				local current_group_id = data.groups[i]
@@ -336,18 +563,21 @@ AutoEvent.update = function (self, dt, t)
 					end
 
 					self._active_events[data.uuid] = nil
-				else
+				elseif not self._template.check_radius_to_players or self._template.check_radius_to_players and data.num_valid_players_in_radius > 0 then
 					local cooldown_by_resistance = Managers.state.difficulty:get_table_entry_by_resistance(self._template.cooldown)
 					local first_wave_cooldown = math.random(cooldown_by_resistance[1], cooldown_by_resistance[2])
 					local pre_stinger_delay = first_wave_cooldown / 2 + t
 
 					data.pre_stinger_delay = pre_stinger_delay
 					data.wave_cooldown = first_wave_cooldown + t
-					data.waves_to_spawn = 3
+					data.waves_to_spawn = Managers.state.difficulty:get_table_entry_by_resistance(self._template.num_waves_by_resistance) or DEFAULT_NUM_WAVES
 					data.pre_stinger_played = nil
 					data.stinger_played = false
 					data.primary_wave_event_sent = false
 					data.frame_skipped = nil
+				elseif self._template.check_radius_to_players and data.num_valid_players_in_radius < 1 then
+					data.is_paused = true
+					data.paused_check_t = t + 1
 				end
 			end
 		end
@@ -396,13 +626,8 @@ AutoEvent.has_active_event = function (self)
 	return self._is_currently_running
 end
 
-AutoEvent._check_monster_allowance = function (self, template, composition, event_data)
-	return
-end
-
 local breeds_to_spawn = {}
 local SPAWN_SIDE_NAME = "villains"
-local DEFAULT_POINT_POOL = 30
 
 AutoEvent._compose_spawn_list = function (self, event_data)
 	local composition = {
@@ -412,13 +637,22 @@ AutoEvent._compose_spawn_list = function (self, event_data)
 	local template = self._template
 	local template_compositions = template.composition
 	local choosen_composition = template_compositions[event_data.composition_type]
+	local total_minions_spawned = Managers.state.minion_spawn:num_spawned_minions()
+	local total_minions_allowed_before_reduction = DEFAULT_TOTAL_MINIONS_ALLOWED_BEFORE_CUTOFF
 	local points_base = template.points_base
 	local resistance_multiplier = template.resistance_multiplier
-	local point_pool = template.conditional_function(points_base) or DEFAULT_POINT_POOL
+	local point_pool
+
+	if total_minions_allowed_before_reduction < total_minions_spawned then
+		point_pool = template.conditional_function(points_base) * 0.5 / self._num_active_events
+	else
+		point_pool = template.conditional_function(points_base)
+	end
+
 	local multiplier = Managers.state.difficulty:get_table_entry_by_resistance(resistance_multiplier)
 	local event_size = event_data.size_multiplier
 
-	point_pool = point_pool * event_size * multiplier
+	point_pool = math.round(point_pool * event_size * multiplier)
 
 	local point_pool_length = point_pool
 
@@ -482,7 +716,6 @@ AutoEvent._compose_spawn_list = function (self, event_data)
 		data.points = 0
 	end
 
-	self:_check_monster_allowance(template, composition, event_data)
 	table.clear_array(breeds_to_spawn, #breeds_to_spawn)
 
 	local breeds = composition.breeds
@@ -502,8 +735,132 @@ AutoEvent._compose_spawn_list = function (self, event_data)
 	return breeds_to_spawn, #breeds_to_spawn
 end
 
-local MIN_DISTANCE_FROM_PLAYERS, MAX_DISTANCE_FROM_PLAYERS = 12, 100
-local INITIAL_GROUP_OFFSET = 2
+AutoEvent._check_for_injection_spawn = function (self, event_data, nearby_spawners, nearby_occluded_positions, group_id, target_side_id, side_id)
+	local template = self._template
+	local captains_settings = template.captains_settings
+	local require_toughness_setup
+
+	if captains_settings and not event_data.tried_spawning_captain then
+		local should_force_inject_captain = event_data.should_force_inject_captain
+		local should_inject_captain = self._template.captains_settings.execute(should_force_inject_captain)
+
+		if should_inject_captain then
+			local current_faction = Managers.state.pacing:current_faction()
+			local correct_captain = CAPTAIN_BREEDS[current_faction]
+
+			event_data.injection_spawn_table[#event_data.injection_spawn_table + 1] = correct_captain
+
+			Managers.event:trigger("coordinated_horde_spawned", "elite_captain_ambush")
+		end
+
+		event_data.tried_spawning_captain = true
+	end
+
+	local monster_settings = template.monster_settings
+
+	if monster_settings and not event_data.tried_spawning_monster then
+		local monster_breeds = self._template.monster_settings.monster_breeds
+		local should_force_inject_monster = event_data.should_force_inject_monster
+		local should_inject_monster = self._template.captains_settings.execute(should_force_inject_monster)
+
+		if should_inject_monster then
+			event_data.injection_spawn_table[#event_data.injection_spawn_table + 1] = monster_breeds[math.random(1, #monster_breeds)]
+		end
+
+		event_data.tried_spawning_monster = true
+	end
+
+	local twins_settings = template.twins_settings
+
+	if twins_settings and not event_data.tried_spawning_twin then
+		local should_force_inject_twin = event_data.should_force_inject_twin
+		local should_inject_twins, num_twins = self._template.captains_settings.execute(should_force_inject_twin)
+
+		if should_inject_twins then
+			if num_twins == 1 then
+				event_data.injection_spawn_table[#event_data.injection_spawn_table + 1] = TWIN_BREEDS[math.random(1, #TWIN_BREEDS)]
+			else
+				for i = 1, num_twins do
+					event_data.injection_spawn_table[#event_data.injection_spawn_table + 1] = TWIN_BREEDS[i]
+				end
+			end
+		end
+
+		event_data.tried_spawning_twin = true
+		require_toughness_setup = true
+	end
+
+	local injection_spawn_length = #event_data.injection_spawn_table
+
+	if injection_spawn_length > 0 then
+		local success = false
+		local owning_auto_event_id
+
+		if self._template.check_radius_to_players then
+			owning_auto_event_id = event_data.uuid
+		end
+
+		local valid_spawners = {}
+
+		for i = 1, #nearby_spawners do
+			local current_spawner = nearby_spawners[i]
+
+			if current_spawner._spawn_type == "default" then
+				valid_spawners[#valid_spawners + 1] = current_spawner
+			end
+		end
+
+		if #valid_spawners > 0 then
+			local breed_list = {}
+			local chosen_spawner = valid_spawners[math.random(1, #valid_spawners)]
+
+			for ii = 1, injection_spawn_length do
+				breed_list[#breed_list + 1] = event_data.injection_spawn_table[ii]
+			end
+
+			local param_table = chosen_spawner:request_param_table()
+
+			param_table.target_side_id = target_side_id
+			param_table.group_id = group_id
+
+			if require_toughness_setup then
+				param_table.optional_init_toughness = true
+			end
+
+			param_table.optional_owning_auto_event_id = owning_auto_event_id
+
+			chosen_spawner:add_spawns(breed_list, side_id, param_table)
+
+			success = true
+		end
+
+		if not success then
+			for ii = 1, injection_spawn_length do
+				local spawn_position = nearby_occluded_positions[math.random(1, #nearby_occluded_positions)]
+				local minion_spawn_manager = Managers.state.minion_spawn
+				local spawn_rotation = Quaternion.identity()
+
+				if spawn_position then
+					local breed_name = event_data.injection_spawn_table[ii]
+					local queue_parameters = minion_spawn_manager:queue_minion_to_spawn(breed_name, spawn_position, spawn_rotation, side_id)
+
+					queue_parameters.optional_aggro_state = aggro_states.aggroed
+					queue_parameters.optional_group_id = group_id
+					queue_parameters.optional_owning_auto_event_id = owning_auto_event_id
+
+					if require_toughness_setup then
+						queue_parameters.optional_init_toughness = true
+					end
+				end
+			end
+		end
+	end
+
+	table.clear(event_data.injection_spawn_table)
+end
+
+local MIN_DISTANCE_FROM_PLAYERS, MAX_DISTANCE_FROM_PLAYERS = 10, 60
+local INITIAL_GROUP_OFFSET = 1
 local nearby_spawners, nearby_occluded_positions = {}, {}
 
 AutoEvent.execute = function (self, physics_world, nav_world, side, target_side, position, event_data)
@@ -521,6 +878,7 @@ AutoEvent.execute = function (self, physics_world, nav_world, side, target_side,
 	local nav_spawn_points = main_path_manager:nav_spawn_points()
 	local num_groups = GwNavSpawnPoints.get_count(nav_spawn_points)
 	local minion_spawner_radius_checks = self._minion_spawner_radius_checks
+	local minion_occluded_radius_checks = self._minion_occluded_radius_checks
 	local max_spawn_locations = self._max_spawn_locations
 	local navmesh_position = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, position, 1, 1, 3, 5)
 
@@ -576,14 +934,24 @@ AutoEvent.execute = function (self, physics_world, nav_world, side, target_side,
 		end
 	end
 
+	local optional_disallowed_positions = event_data.optional_disallowed_positions
+
 	if num_spawn_locations < max_spawn_locations then
 		local spawn_locations_left = max_spawn_locations - num_spawn_locations
 
-		for i = 1, #minion_spawner_radius_checks do
-			local radius = minion_spawner_radius_checks[i]
-			local occluded_positions, num_occluded_positions = SpawnPointQueries.get_occluded_positions(nav_world, nav_spawn_points, navmesh_position, side.valid_enemy_player_units_positions, radius, num_groups, MIN_DISTANCE_FROM_PLAYERS, MAX_DISTANCE_FROM_PLAYERS, INITIAL_GROUP_OFFSET)
+		for i = 1, #minion_occluded_radius_checks do
+			local radius = minion_occluded_radius_checks[i]
+			local occluded_positions, num_occluded_positions = SpawnPointQueries.get_occluded_positions(nav_world, nav_spawn_points, navmesh_position, side.valid_enemy_player_units_positions, radius, num_groups, MIN_DISTANCE_FROM_PLAYERS, MAX_DISTANCE_FROM_PLAYERS, INITIAL_GROUP_OFFSET, optional_disallowed_positions)
 
 			if occluded_positions then
+				if optional_disallowed_positions then
+					table.clear(optional_disallowed_positions)
+
+					for ii = 1, num_occluded_positions do
+						optional_disallowed_positions[#optional_disallowed_positions + 1] = Vector3Box(occluded_positions[ii])
+					end
+				end
+
 				for j = 1, num_occluded_positions do
 					local occluded_position = occluded_positions[j]
 
@@ -610,6 +978,12 @@ AutoEvent.execute = function (self, physics_world, nav_world, side, target_side,
 
 	event_data.groups[#event_data.groups + 1] = group_id
 
+	local owning_auto_event_id
+
+	if self._template.check_radius_to_players then
+		owning_auto_event_id = event_data.uuid
+	end
+
 	local num_spawned = 0
 
 	if num_spawn_locations <= num_to_spawn then
@@ -630,7 +1004,7 @@ AutoEvent.execute = function (self, physics_world, nav_world, side, target_side,
 
 			param_table.target_side_id = target_side_id
 			param_table.group_id = group_id
-			param_table.optional_target_unit = _get_valid_player_target(event_data.position)
+			param_table.optional_owning_auto_event_id = owning_auto_event_id
 
 			spawner:add_spawns(breed_list, side_id, param_table)
 		end
@@ -651,12 +1025,13 @@ AutoEvent.execute = function (self, physics_world, nav_world, side, target_side,
 
 				queue_parameters.optional_aggro_state = aggro_states.aggroed
 				queue_parameters.optional_group_id = group_id
-				queue_parameters.optional_target_unit = _get_valid_player_target(event_data.position)
+				queue_parameters.optional_owning_auto_event_id = owning_auto_event_id
 				num_spawned = num_spawned + 1
 			end
 		end
 	end
 
+	self:_check_for_injection_spawn(event_data, nearby_spawners, nearby_occluded_positions, group_id, target_side_id, side_id)
 	Log.info("Auto Event", "Managed to spawn %d/%d horde enemies.", num_spawned, num_to_spawn)
 
 	return horde, navmesh_position

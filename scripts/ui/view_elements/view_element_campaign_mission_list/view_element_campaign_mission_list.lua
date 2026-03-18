@@ -17,6 +17,7 @@ local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local InputUtils = require("scripts/managers/input/input_utils")
 local InputDevice = require("scripts/managers/input/input_device")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ViewElementCampaignMissionList = class("ViewElementCampaignMissionList", "ViewElementBase")
 local DEFAULT_FILTERS = {
 	required_category = {
@@ -145,7 +146,7 @@ end
 
 ViewElementCampaignMissionList.initialize_data = function (self)
 	local parent = self:parent()
-	local campaign_data = parent._mission_board_logic:get_campaigns_data()
+	local campaign_data = parent.get_campaigns_data and parent:get_campaigns_data() or {}
 
 	self._campaigns_data = campaign_data
 
@@ -160,7 +161,7 @@ ViewElementCampaignMissionList.on_enter = function (self)
 		ui_renderer = self._ui_renderer,
 	})
 
-	self:_play_sound("story_mission_enter")
+	self:_play_sound(UISoundEvents.special_assignment_mission_board_enter)
 end
 
 ViewElementCampaignMissionList.on_exit = function (self)
@@ -170,7 +171,7 @@ ViewElementCampaignMissionList.on_exit = function (self)
 		ui_renderer = self._ui_renderer,
 	})
 
-	self:_play_sound("story_mission_exit")
+	self:_play_sound(UISoundEvents.special_assignment_mission_board_exit)
 end
 
 ViewElementCampaignMissionList.update = function (self, dt, t, input_service)
@@ -179,7 +180,7 @@ ViewElementCampaignMissionList.update = function (self, dt, t, input_service)
 	end
 
 	local parent = self:parent()
-	local has_synced_data = parent._mission_board_logic:has_synced_missions_data()
+	local has_synced_data = parent.has_synced_missions_data and parent:has_synced_missions_data()
 
 	if has_synced_data and self._data_synced ~= has_synced_data then
 		self._data_synced = has_synced_data
@@ -770,11 +771,11 @@ ViewElementCampaignMissionList._recursive_mission_placement = function (self, gr
 	local texture = mission_template.texture_small
 	local parent = self:parent()
 	local theme = parent:_get_ui_theme()
-	local is_locked = parent._mission_board_logic:is_mission_locked(mission)
+	local is_locked = parent.is_mission_locked and parent:is_mission_locked(mission)
 	local cell_data = {}
 	local display_order = self:_get_mission_display_order(mission_data.mission, mission_data.category, mission_data.campaign) or 1
-	local unlock_data = parent._mission_board_logic:get_mission_unlock_data(mission_data.mission, mission_data.category)
-	local is_story_mission = parent._mission_board_logic:is_story_mission(mission)
+	local unlock_data = parent.get_mission_unlock_data and parent:get_mission_unlock_data(mission_data.mission, mission_data.category)
+	local is_story_mission = parent.is_campaign_mission and parent:is_campaign_mission(mission)
 	local creation_context = {
 		skip_background_frame = true,
 		row = row,
@@ -959,7 +960,7 @@ end
 
 ViewElementCampaignMissionList._setup_mission_data = function (self, missions, ordered_story_missions)
 	local parent = self:parent()
-	local story_t = table.clone(parent._mission_board_logic:_get_missions_per_category("story"))
+	local story_t = table.clone(parent.get_missions_per_category and parent:get_missions_per_category("story") or {})
 
 	local function get_story_mission_by_key(key)
 		for _, mission_data in pairs(story_t) do
@@ -1026,7 +1027,7 @@ end
 ViewElementCampaignMissionList._get_mission_display_order = function (self, mission_key, mission_category, campaign)
 	local parent = self:parent()
 
-	return parent._mission_board_logic:get_campaign_mission_display_order(mission_key, mission_category, campaign)
+	return parent.get_campaign_mission_display_order and parent:get_campaign_mission_display_order(mission_key, mission_category, campaign)
 end
 
 ViewElementCampaignMissionList._set_selected_mission = function (self, mission_id)
@@ -1247,7 +1248,7 @@ end
 
 ViewElementCampaignMissionList.refresh_mission_list = function (self, optional_filters)
 	local parent = self:parent()
-	local page_index = parent._mission_board_logic:get_current_page_index() or 1
+	local page_index = parent.get_current_selected_difficulty and parent:get_current_selected_difficulty() or 1
 	local difficulty_data = DangerSettings[page_index]
 	local challenge = difficulty_data and difficulty_data.challenge
 	local resistance = difficulty_data and difficulty_data.resistance
@@ -1272,7 +1273,7 @@ ViewElementCampaignMissionList.refresh_mission_list = function (self, optional_f
 
 	self._mission_grid = grid
 
-	local filtered_missions = parent._mission_board_logic:get_missions_by_filters(filters) or {}
+	local filtered_missions = parent.get_missions_by_filters and parent:get_missions_by_filters(filters) or {}
 
 	self._missions = filtered_missions
 
@@ -1299,15 +1300,18 @@ ViewElementCampaignMissionList.refresh_mission_list = function (self, optional_f
 		end
 	else
 		local head_mission = campaign_missions[1]
-		local mission_data = self:_get_mission_by_key(head_mission.mission)
 
-		if mission_data then
-			local theme = parent:_get_ui_theme()
-			local slots = theme.slots.small
-			local slot = slots[1]
+		if head_mission then
+			local mission_data = self:_get_mission_by_key(head_mission.mission)
 
-			parent:set_selected_mission(mission_data.id, true)
-			parent:set_camera_target_zoom_rotation(slot.zoom, slot.rotation)
+			if mission_data then
+				local theme = parent:_get_ui_theme()
+				local slots = theme.slots.small
+				local slot = slots[1]
+
+				parent:set_selected_mission(mission_data.id, true)
+				parent:set_camera_target_zoom_rotation(slot.zoom, slot.rotation)
+			end
 		end
 	end
 
@@ -1358,7 +1362,7 @@ ViewElementCampaignMissionList._switch_previous_campaign_tab = function (self)
 			campaign_id,
 		}
 
-		local campaign_data = parent._mission_board_logic:get_data_by_campaign(campaign_id)
+		local campaign_data = parent.get_data_by_campaign and parent:get_data_by_campaign(campaign_id) or {}
 		local required_categories = self:_get_campaign_required_categories(campaign_data, campaign_id)
 
 		optional_filters.required_category = required_categories
@@ -1386,7 +1390,7 @@ ViewElementCampaignMissionList._switch_next_campaign_tab = function (self)
 			campaign_id,
 		}
 
-		local campaign_data = parent._mission_board_logic:get_data_by_campaign(campaign_id)
+		local campaign_data = parent.get_data_by_campaign and parent:get_data_by_campaign(campaign_id) or {}
 		local required_categories = self:_get_campaign_required_categories(campaign_data, campaign_id)
 
 		optional_filters.required_category = required_categories

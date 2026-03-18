@@ -50,9 +50,10 @@ ActionPlaceForceField._place_unit = function (self, action_settings, position, r
 	local owner_unit = self._player_unit
 	local unit_name = action_settings.functional_unit
 	local husk_unit_name = action_settings.functional_unit
-	local unit_template = "force_field"
-	local material
-	local unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, position, rotation, material, husk_unit_name, placed_on_unit, owner_unit)
+	local unit_template = "psyker_force_field"
+	local material, shape_override
+	local ability_type = action_settings.ability_type
+	local unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, position, rotation, material, husk_unit_name, placed_on_unit, owner_unit, shape_override, ability_type)
 
 	self._force_field_unit = unit
 	self._placed_unit = true

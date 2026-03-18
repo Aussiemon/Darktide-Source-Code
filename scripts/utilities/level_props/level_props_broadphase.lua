@@ -16,7 +16,7 @@ LevelPropsBroadphase.check_units_nearby = function (position, radius, side_name)
 		local num_results = broadphase.query(broadphase, query_position, query_radius, BROADPHASE_RESULTS, side_name)
 
 		if num_results > 0 then
-			return true
+			return BROADPHASE_RESULTS, num_results
 		end
 	else
 		local game_mode_manager = Managers.state.game_mode
@@ -28,12 +28,12 @@ LevelPropsBroadphase.check_units_nearby = function (position, radius, side_name)
 			local num_results = broadphase.query(broadphase, query_position, query_radius, BROADPHASE_RESULTS, side.name)
 
 			if num_results > 0 then
-				return true
+				return BROADPHASE_RESULTS, num_results
 			end
 		end
 	end
 
-	return false
+	return nil, 0
 end
 
 return LevelPropsBroadphase

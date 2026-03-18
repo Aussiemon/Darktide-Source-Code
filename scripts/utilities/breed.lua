@@ -116,4 +116,12 @@ Breed.unit_breed_or_nil = function (unit)
 	return unit_data_extension:breed()
 end
 
+Breed.can_fly = function (breed_or_nil)
+	if not breed_or_nil then
+		return false
+	end
+
+	return breed_or_nil.flying or false
+end
+
 return Breed

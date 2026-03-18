@@ -83,6 +83,30 @@ local mechanism_settings = {
 		},
 		loader_paths = {},
 	},
+	expedition = {
+		class_file_name = "scripts/managers/mechanism/mechanisms/mechanism_expedition",
+		class_name = "MechanismExpedition",
+		states = {
+			"expedition_selected",
+			"mission_server_exit",
+			"client_exit_gameplay",
+			"client_wait_for_server",
+			"expedition",
+			"score",
+			"joining_party_game_session",
+		},
+		game_states = {
+			score = StateGameScore,
+			mission_server_exit = StateMissionServerExit,
+		},
+		player_package_synchronization_settings = {
+			prioritization_template = "default",
+			required_index = nil,
+		},
+		loader_paths = {
+			"scripts/loading/loaders/expedition_levels_loader",
+		},
+	},
 	left_session = {
 		class_file_name = "scripts/managers/mechanism/mechanisms/mechanism_left_session",
 		class_name = "MechanismLeftSession",

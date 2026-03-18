@@ -53,6 +53,10 @@ local function _try_get_mission_text()
 		local mission_id = game_state.params.backend_mission_id
 
 		first_value, second_value = _get_quick_play_values(mission_id)
+
+		if string.find(mission_id, "category=expedition") ~= nil then
+			first_value = string.format("%s - %s", first_value, Localize("loc_mission_name_exp_wastes"))
+		end
 	elseif game_state.params.mission_data then
 		local mission_data_json = game_state.params.mission_data
 		local mission_data = cjson.decode(mission_data_json)

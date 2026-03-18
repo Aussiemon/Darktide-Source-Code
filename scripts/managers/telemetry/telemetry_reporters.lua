@@ -82,6 +82,10 @@ TelemetryReporters.reporter = function (self, name)
 	return self._reporters[name]
 end
 
+TelemetryReporters.has_reporter = function (self, name)
+	return self._reporters[name] ~= nil
+end
+
 TelemetryReporters.update = function (self, dt, t)
 	for _, reporter in pairs(self._reporters) do
 		reporter:update(dt, t)

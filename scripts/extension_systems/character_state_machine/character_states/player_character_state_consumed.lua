@@ -3,6 +3,7 @@
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local FirstPersonView = require("scripts/utilities/first_person_view")
 local ForceRotation = require("scripts/extension_systems/locomotion/utilities/force_rotation")
 local Interrupt = require("scripts/utilities/attack/interrupt")
@@ -127,6 +128,9 @@ local THROW_TELEPORT_FWD_OFFSET = {
 	human = 3.2,
 	ogryn = 3.2,
 }
+local INVERT_DIRECTION = {
+	ogryn = true,
+}
 
 PlayerCharacterStateConsumed.on_exit = function (self, unit, t, next_state)
 	PlayerCharacterStateConsumed.super.on_exit(self, unit, t, next_state)
@@ -143,13 +147,13 @@ PlayerCharacterStateConsumed.on_exit = function (self, unit, t, next_state)
 
 	if is_server and ALIVE[disabling_unit] then
 		local breed_name = self._breed.name
-		local is_human = breed_name == "human"
 		local disabling_unit_position = Unit.world_position(disabling_unit, 1)
 		local unit_rotation = Unit.local_rotation(disabling_unit, 1)
-		local up = Vector3.up() * (THROW_TELEPORT_UP_OFFSET[breed_name] or THROW_TELEPORT_UP_OFFSET.human)
-		local disabling_unit_forward = Quaternion.forward(unit_rotation) * (THROW_TELEPORT_FWD_OFFSET[breed_name] or THROW_TELEPORT_FWD_OFFSET.human)
+		local up = Vector3.up() * THROW_TELEPORT_UP_OFFSET[breed_name]
+		local disabling_unit_forward = Quaternion.forward(unit_rotation) * THROW_TELEPORT_FWD_OFFSET[breed_name]
 		local teleport_position = disabling_unit_position + disabling_unit_forward + up
-		local direction = is_human and disabling_unit_forward or -disabling_unit_forward
+		local invert_direction = INVERT_DIRECTION[breed_name]
+		local direction = invert_direction and -disabling_unit_forward or disabling_unit_forward
 		local teleport_rotation = Quaternion.look(direction)
 
 		PlayerMovement.teleport_fixed_update(unit, teleport_position, teleport_rotation)
@@ -260,6 +264,11 @@ PlayerCharacterStateConsumed._remove_buffs = function (self)
 	end
 end
 
+local CONSUMED_ANIM_EVENTS = {
+	human = "player_human_consumed",
+	ogryn = "player_ogryn_consumed",
+}
+
 PlayerCharacterStateConsumed.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
 	local disabling_unit = self._disabled_state_input.disabling_unit
 
@@ -271,7 +280,7 @@ PlayerCharacterStateConsumed.fixed_update = function (self, unit, dt, t, next_st
 
 		local breed_name = self._breed.name
 
-		self._animation_extension:anim_event("player_" .. breed_name .. "_consumed")
+		self._animation_extension:anim_event(CONSUMED_ANIM_EVENTS[breed_name])
 
 		if self._is_server then
 			local teleport_position, teleport_rotation = Unit.world_position(disabling_unit, Unit.node(disabling_unit, CONSUMED_UNIT_LINK_NODE)), Quaternion.inverse(Unit.local_rotation(disabling_unit, Unit.node(disabling_unit, CONSUMED_UNIT_LINK_NODE)))
@@ -280,7 +289,7 @@ PlayerCharacterStateConsumed.fixed_update = function (self, unit, dt, t, next_st
 
 			local fx_system = Managers.state.extension:system("fx_system")
 			local disabling_breed = self._disabling_breed
-			local target_effect_template = disabling_breed.target_effect_template
+			local target_effect_template = disabling_breed.target_effect_template_name and EffectTemplates[disabling_breed.target_effect_template_name]
 			local effect_id = fx_system:start_template_effect(target_effect_template, unit)
 
 			self._consumed_effect_id = effect_id

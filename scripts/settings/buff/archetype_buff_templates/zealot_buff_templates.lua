@@ -2943,6 +2943,9 @@ templates.zealot_reload_from_backstab_replenish_ammo = {
 	conditional_exit_func = function (template_data)
 		return template_data.remove_buff
 	end,
+	related_talents = {
+		"zealot_reload_from_backstab",
+	},
 }
 templates.zealot_backstab_allied_toughness = {
 	class_name = "proc_buff",
@@ -3325,6 +3328,7 @@ templates.zealot_stamina_cost_multiplier_aura = {
 	start_func = _penance_start_func("zealot_stamina_cost_multiplier_aura_tracking_buff"),
 	stat_buffs = {
 		[stat_buffs.stamina_cost_multiplier] = talent_settings.zealot_stamina_cost_multiplier_aura.stamina_cost_multiplier,
+		[stat_buffs.stamina_regeneration_delay] = talent_settings.zealot_stamina_cost_multiplier_aura.stamina_delay,
 	},
 	related_talents = {
 		"zealot_toughness_damage_reduction_coherency_improved",
@@ -4091,6 +4095,13 @@ templates.zealot_invisibility = {
 
 		local buff_extension = template_context.buff_extension
 		local can_attack_during_invisibility = not not buff_extension:has_keyword(keywords.can_attack_during_invisibility)
+		local unit = template_context.unit
+		local attack_instigator_unit = params.attack_instigator_unit
+
+		if attack_instigator_unit and attack_instigator_unit ~= unit then
+			return
+		end
+
 		local damage_type = params.damage_type
 
 		if damage_type and (ALLOWED_INVISIBILITY_DAMAGE_TYPES[damage_type] or can_attack_during_invisibility) then
@@ -4129,6 +4140,12 @@ templates.zealot_invisibility = {
 			local toughness_to_restore = talent_settings.zealot_leave_stealth_toughness_regen.toughness_to_restore
 
 			Toughness.replenish_percentage(template_context.unit, toughness_to_restore, false, "zealot_stealth")
+		end
+
+		local event_manager = Managers.event
+
+		if event_manager then
+			event_manager:trigger("player_unit_stealth_entered")
 		end
 	end,
 	stop_func = function (template_data, template_context)

@@ -60,6 +60,14 @@ local wwise_game_sync_settings = {
 			normal = "normal",
 			none = DEFAULT_GROUP_STATE,
 		},
+		music_expedition_combat = {
+			extraction = "extraction",
+			high_combat = "high_combat",
+			low_combat = "low_combat",
+			med_combat = "med_combat",
+			no_combat = "no_combat",
+			safe_room = "safe_room",
+		},
 		music_objective = {
 			collect_event = "collect_event",
 			control_event = "control_event",
@@ -113,6 +121,7 @@ local wwise_game_sync_settings = {
 				mutant_charged = "mutant_charged",
 				netted = "netted",
 				pounced = "pounced",
+				vortex_grabbed = "vortex_grabbed",
 				warp_grabbed = "warp_grabbed",
 			},
 			character_status = {

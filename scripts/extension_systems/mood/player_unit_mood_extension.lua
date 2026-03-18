@@ -155,7 +155,7 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 	local ogryn_combat_ability_stance_active = buff_extension:has_keyword(buff_keywords.ogryn_combat_ability_stance)
 	local broker_combat_ability_focus_active = buff_extension:has_keyword(buff_keywords.broker_combat_ability_focus)
 	local broker_combat_ability_punk_rage_active = buff_extension:has_keyword(buff_keywords.broker_combat_ability_punk_rage)
-	local broker_punk_rage_exhaustion = buff_extension:has_keyword(buff_keywords.broker_punk_rage_exhaustion)
+	local expeditions_death_imminent = buff_extension:has_keyword(buff_keywords.expeditions_death_imminent)
 	local has_invisible_keyword = buff_extension:has_keyword(buff_keywords.invisible)
 	local is_in_stealth = (archetype_name == "zealot" or archetype_name == "broker") and has_invisible_keyword
 	local is_in_veteran_stealth = archetype_name == "veteran" and has_invisible_keyword
@@ -272,6 +272,12 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 		self:_add_mood(t, mood_types.broker_combat_ability_punk_rage)
 	else
 		self:_remove_mood(t, mood_types.broker_combat_ability_punk_rage)
+	end
+
+	if expeditions_death_imminent then
+		self:_add_mood(t, mood_types.expeditions_death_imminent)
+	else
+		self:_remove_mood(t, mood_types.expeditions_death_imminent)
 	end
 
 	if veteran_combat_ability_stance_active then

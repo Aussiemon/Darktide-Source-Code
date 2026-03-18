@@ -747,6 +747,10 @@ ViewElementWintrack.update = function (self, dt, t, input_service)
 	return ViewElementWintrack.super.update(self, dt, t, input_service)
 end
 
+ViewElementWintrack.can_claim_reward = function (self)
+	return self._can_claim_rewards
+end
+
 ViewElementWintrack._update_claim_button_state = function (self, force_effect)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.claim_button

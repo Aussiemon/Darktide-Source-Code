@@ -20,13 +20,16 @@ end
 
 PlayerMovement._teleport = function (player_unit, position, rotation, send_character_state_disruption_event)
 	local mover = Unit.mover(player_unit)
+	local old_position = Mover.position(mover)
 
 	Mover.set_position(mover, position)
 
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 	local locomotion_component = unit_data_extension:write_component("locomotion")
+	local inair_state_component = unit_data_extension:write_component("inair_state")
 
 	locomotion_component.position = position
+	inair_state_component.fell_from_height = inair_state_component.fell_from_height + (position.z - old_position.z)
 
 	if rotation then
 		locomotion_component.rotation = rotation
@@ -112,30 +115,37 @@ PlayerMovement.calculate_relative_rotation = function (parent_unit, absolute_rot
 	return Matrix4x4.rotation(relative_pose)
 end
 
-local ROTATION_SOFT_LIMIT = math.pi * 0.5
-local ROTATION_HARD_LIMIT = math.pi * 0.75
+local PI = math.pi
+local HALF_PI = PI * 0.5
+local ROTATION_SOFT_LIMIT = PI * 0.5
+local ROTATION_HARD_LIMIT = PI * 0.75
 
-PlayerMovement.calculate_final_unit_rotation = function (current_rotation, target_rotation, forward_rotation, t, is_husk)
-	local angle_to_forward = Quaternion.angle(current_rotation, forward_rotation)
+PlayerMovement.calculate_final_unit_rotation = function (unit, current_rotation, target_rotation, look_rotation, lerp_t, is_husk)
+	local angle_to_forward = Quaternion.angle(current_rotation, look_rotation)
 	local angle_to_target = Quaternion.angle(current_rotation, target_rotation)
 
 	if not is_husk then
 		if angle_to_forward > ROTATION_HARD_LIMIT then
 			local clamp_lerp = 0.95 * (ROTATION_HARD_LIMIT / angle_to_forward)
+			local final_rotation = Quaternion.lerp(look_rotation, current_rotation, clamp_lerp)
 
-			return Quaternion.lerp(forward_rotation, current_rotation, clamp_lerp)
+			return final_rotation
 		end
 
 		local angle_speed_up = 1 + (angle_to_forward > ROTATION_SOFT_LIMIT and angle_to_target or 0)
 
-		t = t * angle_speed_up
+		lerp_t = math.min(lerp_t * angle_speed_up, 1)
 	end
 
-	if angle_to_forward > math.pi * 0.5 and angle_to_forward < angle_to_target then
-		return Quaternion.lerp(current_rotation, forward_rotation, t)
+	if angle_to_forward > HALF_PI and angle_to_forward < angle_to_target then
+		local final_rotation = Quaternion.lerp(current_rotation, look_rotation, lerp_t)
+
+		return final_rotation
 	end
 
-	return Quaternion.lerp(current_rotation, target_rotation, t)
+	local final_rotation = Quaternion.lerp(current_rotation, target_rotation, lerp_t)
+
+	return final_rotation
 end
 
 return PlayerMovement

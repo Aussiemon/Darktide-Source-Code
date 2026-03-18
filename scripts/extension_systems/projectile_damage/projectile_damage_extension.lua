@@ -65,6 +65,7 @@ ProjectileDamageExtension.init = function (self, extension_init_context, unit, e
 	self._marked_for_deletion = false
 	self._has_impacted = false
 	self._reset_time = false
+	self._has_deployed = false
 	self._impact_hit = false
 	self._impact_hit_weakspot = 0
 	self._num_impact_hit_kill = 0
@@ -132,9 +133,17 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 
 	local projectile_template = self._projectile_template
 	local locomotion_extension = self._locomotion_extension
+	local damage_settings = projectile_template.damage
+	local fuse_damage_settings = damage_settings and damage_settings.fuse
 	local current_locomotion_state = locomotion_extension:current_state()
 
 	if projectile_template.deployable and current_locomotion_state == locomotion_states.deployed then
+		self._has_deployed = true
+
+		if fuse_damage_settings and fuse_damage_settings.deploy_triggered then
+			self._reset_time = true
+		end
+
 		return
 	end
 
@@ -172,11 +181,10 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 	local weapon_item_or_nil = self._weapon_item_or_nil
 	local origin_slot_or_nil = self._origin_item_slot
 	local charge_level = self._charge_level or 1
-	local damage_settings = projectile_template.damage
-	local fuse_damage_settings = damage_settings and damage_settings.fuse
+	local skip_fuse_reset = fuse_damage_settings and fuse_damage_settings.skip_fuse_reset
 	local _, position = locomotion_extension:previous_and_current_positions()
 
-	if self._reset_time and not fuse_damage_settings.skip_fuse_reset then
+	if self._reset_time and not skip_fuse_reset then
 		life_time = 0
 		self._reset_time = false
 	end
@@ -203,11 +211,12 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 
 	local impact_triggered = fuse_damage_settings and fuse_damage_settings.impact_triggered
 	local proximity_triggered = fuse_damage_settings and fuse_damage_settings.proximity_triggered
-	local min_lifetime = fuse_damage_settings.min_lifetime
+	local deploy_triggered = fuse_damage_settings and fuse_damage_settings.deploy_triggered
+	local min_lifetime = fuse_damage_settings and fuse_damage_settings.min_lifetime
 	local sticking_to_unit, sticking_to_actor_index = locomotion_extension:sticking_to_unit()
-	local fuse_time = self._fuse_override_time_or_nil or sticking_to_unit and fuse_damage_settings.sticky_fuse_time or self._has_impacted and impact_triggered and fuse_damage_settings.impact_fuse_time or fuse_damage_settings.fuse_time
-	local max_lifetime = fuse_damage_settings.max_lifetime or fuse_time * 2
-	local kill_at_lifetime = fuse_damage_settings.kill_at_lifetime
+	local fuse_time = self._fuse_override_time_or_nil or sticking_to_unit and fuse_damage_settings.sticky_fuse_time or self._has_impacted and impact_triggered and fuse_damage_settings.impact_fuse_time or self._has_deployed and deploy_triggered and fuse_damage_settings.deploy_fuse_time or fuse_damage_settings and fuse_damage_settings.fuse_time or 0
+	local max_lifetime = fuse_damage_settings and fuse_damage_settings.max_lifetime or fuse_time * 2
+	local kill_at_lifetime = fuse_damage_settings and fuse_damage_settings.kill_at_lifetime
 
 	if kill_at_lifetime and kill_at_lifetime < new_life_time then
 		mark_for_deletion = true

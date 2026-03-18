@@ -60,6 +60,10 @@ EventSynchronizerSystem.on_gameplay_post_init = function (self, level)
 	self:call_gameplay_post_init_on_extensions(level)
 end
 
+EventSynchronizerSystem.on_location_setup = function (self)
+	self:call_gameplay_post_init_on_extensions()
+end
+
 EventSynchronizerSystem.destroy = function (self)
 	self._network_event_delegate:unregister_events(unpack(RPCS))
 	EventSynchronizerSystem.super.destroy(self)

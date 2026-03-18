@@ -1,6 +1,5 @@
 ﻿-- chunkname: @scripts/settings/breed/breed_combat_ranges/renegade/renegade_executor_combat_ranges.lua
 
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local combat_ranges = {
 	name = "renegade_executor",
 	starting_combat_range = "far",
@@ -38,7 +37,7 @@ local combat_ranges = {
 				sticky_time = 0,
 				switch_combat_range = "close",
 			},
-			effect_template = EffectTemplates.renegade_executor_chainaxe,
+			effect_template_name = "renegade_executor_chainaxe",
 		},
 	},
 }

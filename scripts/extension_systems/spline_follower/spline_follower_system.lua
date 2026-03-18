@@ -7,7 +7,6 @@ local LevelEventSettings = require("scripts/settings/level_event/level_event_set
 local SplineFollowerSystem = class("SplineFollowerSystem", "ExtensionSystemBase")
 local RPCS = {
 	"rpc_spline_follower_hot_join_sync",
-	"rpc_spline_follower_system_seed_sync",
 }
 
 SplineFollowerSystem.init = function (self, context, system_init_data, ...)
@@ -18,7 +17,7 @@ SplineFollowerSystem.init = function (self, context, system_init_data, ...)
 	self._objective_spline_path_indices = {}
 	self._start_spline_indices = {}
 	self._spline_connection_radius = LevelEventSettings.spline_follower.spline_connection_radius
-	self._seed = self._is_server and system_init_data.level_seed or nil
+	self._seed = system_init_data.level_seed
 
 	local network_event_delegate = context.network_event_delegate
 
@@ -30,10 +29,12 @@ end
 
 SplineFollowerSystem.on_gameplay_post_init = function (self, level)
 	self:_setup_splines()
+	self:_setup_spline_paths()
+end
 
-	if self._is_server then
-		self:_setup_spline_paths()
-	end
+SplineFollowerSystem.on_location_setup = function (self)
+	self:_setup_splines()
+	self:_setup_spline_paths()
 end
 
 SplineFollowerSystem.destroy = function (self)
@@ -41,10 +42,6 @@ SplineFollowerSystem.destroy = function (self)
 end
 
 SplineFollowerSystem.hot_join_sync = function (self, sender, channel)
-	local seed = self._seed
-
-	RPC.rpc_spline_follower_system_seed_sync(channel, seed)
-
 	local unit_to_extension_map = self._unit_to_extension_map
 
 	for unit, extension in pairs(unit_to_extension_map) do
@@ -71,6 +68,9 @@ SplineFollowerSystem._setup_splines = function (self)
 	local spline_group_system = Managers.state.extension:system("spline_group_system")
 	local spline_names_by_level = spline_group_system:spline_names()
 	local objective_splines = self._objective_splines
+
+	table.clear(objective_splines)
+
 	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
 	for level, spline_names_by_objective_name in pairs(spline_names_by_level) do
@@ -113,6 +113,8 @@ SplineFollowerSystem._setup_spline_paths = function (self)
 	local splines = self._objective_splines
 	local seed = self._seed
 	local objective_spline_path_indices = self._objective_spline_path_indices
+
+	table.clear(objective_spline_path_indices)
 
 	for objective_group, spline_group in table.sorted(splines, TEMP_GROUP_KEYS) do
 		local group_spline_path_indices = objective_spline_path_indices[objective_group] or {}
@@ -270,12 +272,6 @@ SplineFollowerSystem.get_objective_connected_spline = function (self, objective_
 
 		return spline
 	end
-end
-
-SplineFollowerSystem.rpc_spline_follower_system_seed_sync = function (self, channel_id, seed)
-	self._seed = seed
-
-	self:_setup_spline_paths()
 end
 
 SplineFollowerSystem.rpc_spline_follower_hot_join_sync = function (self, channel_id, unit_id, is_level_unit, current_spline_index, is_moving, objective_name_id, objective_group_id)

@@ -1,6 +1,5 @@
 ﻿-- chunkname: @scripts/settings/toughness/minion_toughness_templates.lua
 
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local ToughnessSettings = require("scripts/settings/toughness/toughness_settings")
@@ -9,6 +8,7 @@ local toughness_templates = {}
 
 toughness_templates.renegade_captain = {
 	break_shield_when_depleted = true,
+	effect_template_name = "renegade_captain_void_shield",
 	linked_actor = "c_captain_void_shield",
 	regeneration_delay = 6,
 	regeneration_speed = 100,
@@ -35,7 +35,6 @@ toughness_templates.renegade_captain = {
 		0.07,
 		0.06,
 	},
-	effect_template = EffectTemplates.renegade_captain_void_shield,
 	depleted_settings = {
 		explosion_power_level = 500,
 		stagger_strength_multiplier = 10,
@@ -64,6 +63,7 @@ toughness_templates.renegade_captain = {
 toughness_templates.cultist_captain = table.clone(toughness_templates.renegade_captain)
 toughness_templates.twin_captain_one = {
 	clamp_toughness_until_condition = "remove_toughness_clamp",
+	effect_template_name = "renegade_captain_void_shield",
 	ignore_flickering_on_depleted = true,
 	ignore_stagger_on_damage = true,
 	linked_actor = "c_captain_void_shield",
@@ -93,7 +93,6 @@ toughness_templates.twin_captain_one = {
 		0.5,
 		0.5,
 	},
-	effect_template = EffectTemplates.renegade_captain_void_shield,
 	depleted_settings = {
 		explosion_power_level = 500,
 		set_toughness_broke_behavior = true,

@@ -80,6 +80,10 @@ templates.syringe_heal_corruption_buff = {
 
 		fx_extension:spawn_unit_particles(particle_name, "hips", true, "destroy", nil, nil, nil, true)
 
+		local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+		local character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
+
+		template_data.character_state_component = character_state_component
 		template_data.health_before = health_extension:current_health()
 		template_data.permanent_damage_before = health_extension:permanent_damage_taken()
 	end,

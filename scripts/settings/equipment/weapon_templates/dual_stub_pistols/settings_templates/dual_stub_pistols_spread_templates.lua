@@ -24,8 +24,8 @@ spread_templates.dual_stub_pistols_hip = {
 			},
 		},
 		continuous_spread = {
-			min_pitch = 2.2,
-			min_yaw = 2.2,
+			min_pitch = 1.8,
+			min_yaw = 1.8,
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.5,
@@ -77,8 +77,8 @@ spread_templates.dual_stub_pistols_hip = {
 			"still",
 		},
 		continuous_spread = {
-			min_pitch = 2.35,
-			min_yaw = 2.35,
+			min_pitch = 1.9,
+			min_yaw = 1.9,
 		},
 	},
 	crouch_still = {
@@ -97,8 +97,8 @@ spread_templates.dual_stub_pistols_hip = {
 			"still",
 		},
 		continuous_spread = {
-			min_pitch = 1.85,
-			min_yaw = 1.85,
+			min_pitch = 1.45,
+			min_yaw = 1.45,
 		},
 	},
 }
@@ -120,8 +120,8 @@ spread_templates.dual_stub_pistols_braced = {
 			},
 		},
 		continuous_spread = {
-			min_pitch = 1.3,
-			min_yaw = 1.3,
+			min_pitch = 1,
+			min_yaw = 1,
 		},
 		immediate_spread = {
 			num_shots_clear_time = 0.5,
@@ -173,8 +173,8 @@ spread_templates.dual_stub_pistols_braced = {
 			"still",
 		},
 		continuous_spread = {
-			min_pitch = 1.4,
-			min_yaw = 1.4,
+			min_pitch = 1.1,
+			min_yaw = 1.1,
 		},
 	},
 	crouch_still = {
@@ -183,8 +183,8 @@ spread_templates.dual_stub_pistols_braced = {
 			"still",
 		},
 		continuous_spread = {
-			min_pitch = 1.15,
-			min_yaw = 1.15,
+			min_pitch = 1,
+			min_yaw = 1,
 		},
 	},
 	crouch_moving = {
@@ -193,8 +193,8 @@ spread_templates.dual_stub_pistols_braced = {
 			"still",
 		},
 		continuous_spread = {
-			min_pitch = 1.25,
-			min_yaw = 1.25,
+			min_pitch = 1.1,
+			min_yaw = 1.1,
 		},
 	},
 }

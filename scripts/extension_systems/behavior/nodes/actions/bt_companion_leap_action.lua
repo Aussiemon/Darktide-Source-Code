@@ -4,6 +4,7 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local CompanionDogLocomotionSettings = require("scripts/settings/companion/companion_dog_locomotion_settings")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local GroundImpact = require("scripts/utilities/attack/ground_impact")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionAttack = require("scripts/utilities/minion_attack")
@@ -97,7 +98,7 @@ BtCompanionLeapAction.leave = function (self, unit, breed, blackboard, scratchpa
 
 	MinionPerception.set_target_lock(unit, scratchpad.perception_component, false)
 
-	if action_data.effect_template and scratchpad.global_effect_id then
+	if action_data.effect_template_name and scratchpad.global_effect_id then
 		local fx_system = scratchpad.fx_system
 
 		fx_system:stop_template_effect(scratchpad.global_effect_id)
@@ -298,9 +299,10 @@ BtCompanionLeapAction._leap = function (self, unit, scratchpad, action_data, sta
 		return "running"
 	end
 
-	if action_data.effect_template then
+	if action_data.effect_template_name then
+		local effect_template = EffectTemplates[action_data.effect_template_name]
 		local fx_system = scratchpad.fx_system
-		local global_effect_id = fx_system:start_template_effect(action_data.effect_template, unit)
+		local global_effect_id = fx_system:start_template_effect(effect_template, unit)
 
 		scratchpad.global_effect_id = global_effect_id
 	end

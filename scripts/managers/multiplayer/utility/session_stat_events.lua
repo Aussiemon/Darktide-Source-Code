@@ -20,6 +20,7 @@ SessionStatEvents.create_mission_events = function (mission_data, mission_result
 	local circumstance = Managers.state.circumstance:circumstance_name()
 	local team_kills = Managers.stats:read_team_stat("session_team_kills")
 	local team_deaths = Managers.stats:read_team_stat("team_deaths")
+	local team_expedition_loot_retrieved = Managers.stats:read_team_stat("session_team_expedition_loot_retrieved") or 0
 	local side_mission_progress = mission_result.sideMissions[1] and mission_result.sideMissions[1].count or 0
 	local side_mission_complete = mission_result.sideMissions[1] and mission_result.sideMissions[1].win or false
 	local side_mission_name = mission_result.sideMissions[1] and mission_result.sideMissions[1].missionName or "default"

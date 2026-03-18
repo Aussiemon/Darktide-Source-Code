@@ -649,8 +649,8 @@ MinionMovement.smooth_speed_based_on_distance = function (unit, scratchpad, dt, 
 	scratchpad.current_speed_timer = math.clamp(scratchpad.current_speed_timer + dt, 0, speed_timer)
 
 	if speed_timer <= scratchpad.current_speed_timer then
-		local current_speed = scratchpad.navigation_extension:max_speed()
-		local max_deceleration = use_slow_action_data and adapt_speed.slow_max_deceleration or adapt_speed.max_acceleration
+		local current_speed = scratchpad.navigation_extension and scratchpad.navigation_extension:max_speed() or scratchpad.locomotion_extension and Vector3.length(scratchpad.locomotion_extension:current_velocity())
+		local max_deceleration = use_slow_action_data and adapt_speed.slow_max_deceleration or adapt_speed.max_deceleration
 		local max_acceleration_per_second = not ignore_max_acc and adapt_speed.max_acceleration * dt or math.huge
 		local max_deceleration_per_second = not ignore_max_dec and max_deceleration * dt or math.huge
 		local distance = math.clamp(Vector3.length(move_to_position - self_position) - threshold, 0, math.huge)
@@ -672,7 +672,11 @@ MinionMovement.smooth_speed_based_on_distance = function (unit, scratchpad, dt, 
 
 		new_velocity = current_speed + delta_speed
 
-		scratchpad.navigation_extension:set_max_speed(new_velocity)
+		if scratchpad.navigation_extension then
+			scratchpad.navigation_extension:set_max_speed(new_velocity)
+		end
+
+		return new_velocity
 	end
 end
 

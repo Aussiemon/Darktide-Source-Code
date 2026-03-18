@@ -58,8 +58,8 @@ MinigameDecodeSymbols._player_miss_target = function (self, player)
 	self._misses_per_player[unique_id] = (self._misses_per_player[unique_id] or 0) + 1
 end
 
-MinigameDecodeSymbols.start = function (self, player)
-	MinigameDecodeSymbols.super.start(self, player)
+MinigameDecodeSymbols.start = function (self, player, send_to_self_client)
+	MinigameDecodeSymbols.super.start(self, player, send_to_self_client)
 	Unit.flow_event(self._minigame_unit, "lua_minigame_start")
 
 	local is_server = self._is_server
@@ -203,7 +203,9 @@ MinigameDecodeSymbols.on_action_pressed = function (self, t)
 	else
 		local player = Managers.player:player_from_session_id(self._player_session_id)
 
-		self:_player_miss_target(player)
+		if player then
+			self:_player_miss_target(player)
+		end
 
 		self._current_stage = math.max(self._current_stage - 1, 1)
 

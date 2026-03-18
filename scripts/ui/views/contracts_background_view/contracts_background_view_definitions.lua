@@ -140,11 +140,14 @@ local button_options_definitions = {
 
 				content.text = Localize("loc_live_events_view_title")
 
-				if not Managers.live_event:active_event_id() then
-					content.hotspot.disabled = true
-				else
+				local disabled = true
+
+				if next(Managers.live_event:events()) ~= nil then
+					disabled = false
 					content.hotspot.pressed_callback = callback_function
 				end
+
+				content.hotspot.disabled = disabled
 			end,
 		},
 	},

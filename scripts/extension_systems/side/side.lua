@@ -43,6 +43,7 @@ Side.init = function (self, definition, side_id)
 	self.valid_enemy_human_units_positions = {}
 	self.valid_enemy_player_units = {}
 	self.valid_enemy_player_units_positions = {}
+	self.ai_ground_target_units = {}
 	self.ai_target_units = {}
 	self.aggroed_minion_target_units = {}
 	self.num_aggroed_minion_target_units = 0

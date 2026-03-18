@@ -182,7 +182,9 @@ ActionSweep.start = function (self, action_settings, t, time_scale, action_start
 
 	self._combo_count = combo_count
 
-	self:_check_for_critical_strike(true, false)
+	local action_should_auto_crit = action_settings.guaranteed_crit or nil
+
+	self:_check_for_critical_strike(true, false, action_should_auto_crit, action_should_auto_crit)
 
 	for i = 1, #self._hit_units do
 		table.clear(self._hit_units[i])
@@ -213,6 +215,18 @@ ActionSweep.start = function (self, action_settings, t, time_scale, action_start
 		self._weapon_extension:set_wielded_weapon_weapon_special_active(t, true)
 
 		self._weapon_action_component.special_active_at_start = true
+	end
+
+	if action_settings.toggle_special_on_during_sweep then
+		self._weapon_extension:set_wielded_weapon_weapon_special_active(t, true, "manual_toggle")
+
+		self._weapon_action_component.special_active_at_start = true
+	end
+
+	if action_settings.toggle_special_off_during_sweep then
+		self._weapon_extension:set_wielded_weapon_weapon_special_active(t, false, "manual_toggle")
+
+		self._weapon_action_component.special_active_at_start = false
 	end
 
 	local fx_extension = self._fx_extension
@@ -1278,7 +1292,7 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 	num_hit_enemies = num_hit_enemies + 1
 
 	local use_reduced_hit_mass = buff_extension:has_keyword(buff_keywords.use_reduced_hit_mass)
-	local ignore_armor_aborts_attack = is_critical_strike and buff_extension:has_keyword(buff_keywords.ignore_armor_aborts_attack_critical_strike) or buff_extension:has_keyword(buff_keywords.ignore_armor_aborts_attack) or use_reduced_hit_mass
+	local ignore_armor_aborts_attack = is_critical_strike and buff_extension:has_keyword(buff_keywords.ignore_armor_aborts_attack_critical_strike) or buff_extension:has_keyword(buff_keywords.ignore_armor_aborts_attack) or use_reduced_hit_mass or action_settings.ignore_armor_aborts_attack
 	local attack_type = AttackSettings.attack_types.melee
 	local hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name_or_nil, player_unit)
 	local target_hit_mass = HitMass.target_hit_mass(player_unit, hit_unit, hit_weakspot, is_critical_strike, attack_type)

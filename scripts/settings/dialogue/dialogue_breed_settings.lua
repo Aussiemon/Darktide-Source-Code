@@ -14,6 +14,8 @@ dialogue_breed_settings.voice_classes_2d = {
 	"enemy_nemesis_wolfer",
 	"enemy_ritualist",
 	"enemy_wolfer_adjutant",
+	"dreg_lector",
+	"dreg_report",
 	"interrogator",
 	"barber",
 	"enginseer",
@@ -38,6 +40,7 @@ dialogue_breed_settings.chaos_hound = {
 	wwise_voices = nil,
 }
 dialogue_breed_settings.chaos_hound_mutator = table.clone(dialogue_breed_settings.chaos_hound)
+dialogue_breed_settings.chaos_armored_hound = table.clone(dialogue_breed_settings.chaos_hound)
 dialogue_breed_settings.chaos_plague_ogryn = {
 	dialogue_memory_faction_name = "enemy",
 	has_dialogue_extension = true,
@@ -192,52 +195,67 @@ dialogue_breed_settings.chaos_spawn = {
 	wwise_voice_switch_group = nil,
 	wwise_voices = nil,
 }
-dialogue_breed_settings.human = {
-	dialogue_memory_faction_name = "player",
-	has_dialogue_extension = true,
-	is_network_synced = true,
-	trigger_heard_vo = false,
-	trigger_seen_vo = false,
-	vo_class_name = "veteran",
-	vo_triggers_enemy_kill_query = false,
-	wwise_voice_switch_group = "voice_profile",
-	wwise_voices = {
-		"veteran_female_a",
-		"veteran_female_b",
-		"veteran_female_c",
-		"veteran_male_a",
-		"veteran_male_b",
-		"veteran_male_c",
-		"psyker_male_a",
-		"psyker_male_b",
-		"psyker_male_c",
-		"psyker_female_a",
-		"psyker_female_b",
-		"psyker_female_c",
-		"ogryn_a",
-		"ogryn_b",
-		"ogryn_c",
-		"ogryn_d",
-		"zealot_female_a",
-		"zealot_female_b",
-		"zealot_female_c",
-		"zealot_male_a",
-		"zealot_male_b",
-		"zealot_male_c",
-		"adamant_male_a",
-		"adamant_male_b",
-		"adamant_male_c",
-		"adamant_female_a",
-		"adamant_female_b",
-		"adamant_female_c",
-		"broker_male_a",
-		"broker_male_b",
-		"broker_male_c",
-		"broker_female_a",
-		"broker_female_b",
-		"broker_female_c",
-	},
+
+local function _generate_player_settings(wwise_voices, vo_class_name)
+	local settings = {
+		dialogue_memory_faction_name = "player",
+		has_dialogue_extension = true,
+		is_network_synced = true,
+		trigger_heard_vo = false,
+		trigger_seen_vo = false,
+		vo_triggers_enemy_kill_query = false,
+		wwise_voice_switch_group = "voice_profile",
+		wwise_voices = wwise_voices,
+		vo_class_name = vo_class_name,
+	}
+
+	return settings
+end
+
+local HUMAN_WWISE_VOICES = {
+	"adamant_female_a",
+	"adamant_female_b",
+	"adamant_female_c",
+	"adamant_male_a",
+	"adamant_male_b",
+	"adamant_male_c",
+	"broker_female_a",
+	"broker_female_b",
+	"broker_female_c",
+	"broker_male_a",
+	"broker_male_b",
+	"broker_male_c",
+	"ogryn_a",
+	"ogryn_b",
+	"ogryn_c",
+	"ogryn_d",
+	"psyker_female_a",
+	"psyker_female_b",
+	"psyker_female_c",
+	"psyker_male_a",
+	"psyker_male_b",
+	"psyker_male_c",
+	"veteran_female_a",
+	"veteran_female_b",
+	"veteran_female_c",
+	"veteran_male_a",
+	"veteran_male_b",
+	"veteran_male_c",
+	"zealot_female_a",
+	"zealot_female_b",
+	"zealot_female_c",
+	"zealot_male_a",
+	"zealot_male_b",
+	"zealot_male_c",
 }
+
+dialogue_breed_settings.human = _generate_player_settings(HUMAN_WWISE_VOICES, "veteran")
+dialogue_breed_settings.ogryn = _generate_player_settings({
+	"ogryn_a",
+	"ogryn_b",
+	"ogryn_c",
+	"ogryn_d",
+}, "ogryn")
 dialogue_breed_settings.mission_giver = {
 	dialogue_memory_faction_name = "mission_giver",
 	has_dialogue_extension = true,
@@ -266,6 +284,7 @@ dialogue_breed_settings.mission_giver = {
 		"enemy_wolfer_adjutant_d",
 		"enemy_wolfer_adjutant_e",
 		"dreg_lector_a",
+		"dreg_report_a",
 		"interrogator_a",
 		"training_ground_psyker_a",
 		"enginseer_a",
@@ -549,6 +568,20 @@ dialogue_breed_settings.dreg_lector = {
 		"dreg_lector_a",
 	},
 }
+dialogue_breed_settings.dreg_report = {
+	dialogue_memory_faction_name = "npc",
+	has_dialogue_extension = true,
+	is_network_synced = true,
+	prop_name = "voice_over_2d",
+	trigger_heard_vo = false,
+	trigger_seen_vo = false,
+	vo_class_name = "dreg_report",
+	vo_triggers_enemy_kill_query = false,
+	wwise_voice_switch_group = "voice_profile",
+	wwise_voices = {
+		"dreg_report_a",
+	},
+}
 dialogue_breed_settings.enemy_ritualist = {
 	dialogue_memory_faction_name = "npc",
 	has_dialogue_extension = true,
@@ -624,22 +657,6 @@ dialogue_breed_settings.mourningstar_servitor = {
 		random_talk_start_delay_t = 131,
 		random_talk_tick_time_t = 67,
 		trigger_id = "random_talk",
-	},
-}
-dialogue_breed_settings.ogryn = {
-	dialogue_memory_faction_name = "player",
-	has_dialogue_extension = true,
-	is_network_synced = true,
-	trigger_heard_vo = false,
-	trigger_seen_vo = false,
-	vo_class_name = "ogryn",
-	vo_triggers_enemy_kill_query = false,
-	wwise_voice_switch_group = "voice_profile",
-	wwise_voices = {
-		"ogryn_a",
-		"ogryn_b",
-		"ogryn_c",
-		"ogryn_d",
 	},
 }
 dialogue_breed_settings.renegade_assault = {
@@ -737,6 +754,21 @@ dialogue_breed_settings.chaos_ogryn_executor = {
 	wwise_voice_switch_group = "switch_voice_enemy_chaos_ogryn_armoured_executor",
 	wwise_voices = {
 		"enemy_chaos_ogryn_armoured_executor_a",
+	},
+}
+dialogue_breed_settings.chaos_ogryn_houndmaster = {
+	dialogue_memory_faction_name = "enemy",
+	has_dialogue_extension = true,
+	is_network_synced = false,
+	no_damage_vo_event = "no_damage_taunt",
+	stop_vce_event = "wwise/events/minions/stop_all_chaos_ogryn_executor_vce",
+	trigger_heard_vo = false,
+	trigger_seen_vo = true,
+	vo_class_name = "enemy_hound_master",
+	vo_triggers_enemy_kill_query = true,
+	wwise_voice_switch_group = "switch_voice_enemy_chaos_ogryn_houndmaster",
+	wwise_voices = {
+		"enemy_hound_master_a",
 	},
 }
 dialogue_breed_settings.chaos_ogryn_bulwark = {
@@ -1404,7 +1436,9 @@ dialogue_breed_settings.travelling_salesman = {
 	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
-		"travelling_salesman_a, travelling_salesman_b, travelling_salesman_c",
+		"travelling_salesman_a",
+		"travelling_salesman_b",
+		"travelling_salesman_c",
 	},
 }
 dialogue_breed_settings.commissar = {
@@ -1479,6 +1513,26 @@ dialogue_breed_settings.companion_dog = {
 	trigger_seen_vo = true,
 	vo_class_name = "companion_dog",
 	vo_triggers_enemy_kill_query = true,
+	wwise_voice_switch_group = nil,
+	wwise_voices = nil,
+}
+dialogue_breed_settings.sand_vortex = {
+	dialogue_memory_faction_name = "npc",
+	has_dialogue_extension = false,
+	is_network_synced = false,
+	trigger_heard_vo = true,
+	trigger_seen_vo = true,
+	vo_triggers_enemy_kill_query = true,
+	wwise_voice_switch_group = nil,
+	wwise_voices = nil,
+}
+dialogue_breed_settings.attack_valkyrie = {
+	dialogue_memory_faction_name = "npc",
+	has_dialogue_extension = false,
+	is_network_synced = false,
+	trigger_heard_vo = false,
+	trigger_seen_vo = false,
+	vo_triggers_enemy_kill_query = false,
 	wwise_voice_switch_group = nil,
 	wwise_voices = nil,
 }

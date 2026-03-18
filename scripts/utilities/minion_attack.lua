@@ -10,6 +10,7 @@ local Block = require("scripts/utilities/attack/block")
 local Breed = require("scripts/utilities/breed")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local GroundImpact = require("scripts/utilities/attack/ground_impact")
 local HitScan = require("scripts/utilities/attack/hit_scan")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
@@ -511,7 +512,7 @@ MinionAttack.update_shooting = function (unit, scratchpad, t, action_data)
 	local attack_delay = MinionAttack.get_attack_delay(unit)
 	local global_effect_id = scratchpad.global_effect_id
 	local shoot_template = action_data.shoot_template
-	local effect_template = shoot_template.effect_template
+	local effect_template = shoot_template.effect_template_name and EffectTemplates[shoot_template.effect_template_name]
 	local fx_system = scratchpad.fx_system
 	local time_left_to_shoot = current_shoot_timing + attack_delay
 
@@ -527,7 +528,7 @@ MinionAttack.update_shooting = function (unit, scratchpad, t, action_data)
 	local before_shoot_effect_template_timing = scratchpad.before_shoot_effect_template_timing
 
 	if before_shoot_effect_template_timing and before_shoot_effect_template_timing < t then
-		local before_shoot_effect_template = action_data.before_shoot_effect_template
+		local before_shoot_effect_template = EffectTemplates[action_data.before_shoot_effect_template_name]
 
 		scratchpad.before_shoot_effect_id = fx_system:start_template_effect(before_shoot_effect_template, unit)
 		scratchpad.before_shoot_effect_template_timing = nil
@@ -755,7 +756,7 @@ MinionAttack.push_nearby_enemies = function (unit, scratchpad, action_data, igno
 				local breed_or_nil = unit_data_extension and unit_data_extension:breed()
 				local breed_name = breed_or_nil and breed_or_nil.name
 
-				if breed_name and optional_ignored_breeds and optional_ignored_breeds[breed_name] then
+				if breed_name and optional_ignored_breeds and optional_ignored_breeds[breed_name] or breed_or_nil and breed_or_nil.ignore_minion_push then
 					break
 				end
 
@@ -1139,15 +1140,21 @@ function _melee_hit(unit, breed, scratchpad, blackboard, target_unit, hit_positi
 
 	local debuff_attack_type = "melee"
 
-	_apply_debuff(action_data, result, target_unit, nil, debuff_attack_type)
+	_apply_debuff(action_data, result, target_unit, nil, debuff_attack_type, scratchpad)
 
 	return result
 end
 
-function _apply_debuff(action_data, result, target_unit, _result_per_unit, attack_type)
+function _apply_debuff(action_data, result, target_unit, _result_per_unit, attack_type, scratchpad)
 	local should_apply_debuff = action_data.apply_buff_to_target_unit
+	local debuff_allowed_per_strike = action_data.debuff_allowed_per_strike
+	local allowed_for_current_strike
 
-	if not should_apply_debuff then
+	if debuff_allowed_per_strike then
+		allowed_for_current_strike = debuff_allowed_per_strike[scratchpad.attack_event][scratchpad.attack_index]
+	end
+
+	if not should_apply_debuff and (not debuff_allowed_per_strike or debuff_allowed_per_strike and allowed_for_current_strike) then
 		return
 	end
 

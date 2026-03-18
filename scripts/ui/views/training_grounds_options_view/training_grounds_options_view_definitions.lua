@@ -160,7 +160,7 @@ local scenegraph_definition = {
 		},
 	},
 	difficulty_stepper_indicators = {
-		horizontal_alignment = "left",
+		horizontal_alignment = "center",
 		parent = "difficulty_stepper",
 		vertical_alignment = "top",
 		size = {
@@ -170,7 +170,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			1,
+			150,
 		},
 	},
 }
@@ -466,9 +466,6 @@ local widget_definitions = {
 			style = view_styles.select_difficulty_text_style,
 		},
 	}, "difficulty_stepper"),
-	difficulty_stepper = UIWidget.create_definition(StepperPassTemplates.mission_board_stepper, "difficulty_stepper", {
-		next_page_unlocked = true,
-	}),
 }
 
 return {

@@ -3,6 +3,7 @@
 local DLCSettings = {
 	dlc_id = "adamant",
 	image = "content/ui/textures/dlc/adamant/dt_adamant_standard_store_large",
+	includes = nil,
 	loc_name = "loc_dlc_adamant_name",
 	steam_dlc_target = 3710910,
 	texture_package = "packages/ui/dlc/adamant",

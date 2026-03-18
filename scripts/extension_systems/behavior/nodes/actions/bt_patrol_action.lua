@@ -132,6 +132,22 @@ BtPatrolAction.leave = function (self, unit, breed, blackboard, scratchpad, acti
 	if scratchpad.is_patrol_leader then
 		self:trigger_patrol_sound(scratchpad, false)
 	end
+
+	if action_data.optional_set_aggroed then
+		local perception_extension = ScriptUnit.extension(unit, "perception_system")
+
+		if not destroy and blackboard.perception.aggro_state == "alerted" then
+			perception_extension:aggro()
+
+			local alert_spread_radius, target_unit = 5, blackboard.perception.target_unit
+
+			if alert_spread_radius and ALIVE[target_unit] then
+				local optional_require_los = true
+
+				perception_extension:alert_nearby_allies(target_unit, alert_spread_radius, optional_require_los, nil)
+			end
+		end
+	end
 end
 
 local WAIT_AT_DESTINATION_TIME_RANGE = {
@@ -154,7 +170,9 @@ BtPatrolAction.run = function (self, unit, breed, blackboard, scratchpad, action
 		scratchpad.has_followed_path = scratchpad.has_followed_path or navigation_extension:is_following_path()
 
 		if not scratchpad.wait_at_destination_t and is_patrol_leader and scratchpad.has_followed_path and navigation_extension:has_reached_destination() then
-			scratchpad.wait_at_destination_t = t + math.random_range(WAIT_AT_DESTINATION_TIME_RANGE[1], WAIT_AT_DESTINATION_TIME_RANGE[2])
+			local wait_at_destination_time_range = action_data.waiting_range or WAIT_AT_DESTINATION_TIME_RANGE
+
+			scratchpad.wait_at_destination_t = t + math.random_range(wait_at_destination_time_range[1], wait_at_destination_time_range[2])
 		end
 	end
 
@@ -376,8 +394,9 @@ BtPatrolAction._update_patrolling = function (self, unit, breed, blackboard, scr
 	end
 
 	local back_offset = is_third and 2 or 1
+	local patrol_offset = action_data.patrol_offset or PATORL_OFFSET_BACK
 
-	patrol_position = patrol_position + follow_unit_bwd * (PATORL_OFFSET_BACK * back_offset)
+	patrol_position = patrol_position + follow_unit_bwd * (patrol_offset * back_offset)
 
 	local follow_unit_leader_speed = patrol_leader_nav_extension:max_speed()
 	local navigation_extension = scratchpad.navigation_extension

@@ -22,7 +22,8 @@ local _apply_ailment_material_effect, _apply_push_forces, _create_inverse_root_n
 local INVERSE_ROOT_NODE_BIND_POSE_LOOKUP_BY_BREED_NAME = {}
 local MinionGibbing = class("MinionGibbing")
 
-MinionGibbing.init = function (self, unit, breed, world, wwise_world, gib_template, visual_loadout_extension, random_seed, optional_gib_variations, optional_wounds_extension)
+MinionGibbing.init = function (self, unit, breed, world, wwise_world, gib_template, visual_loadout_extension, random_seed, optional_gib_variations, optional_wounds_extension, item_definitions)
+	self._item_definitions = item_definitions
 	self._gibs = {}
 	self._flesh_gibs = {}
 	self._prevented_gibs = {}
@@ -94,11 +95,11 @@ MinionGibbing.spawn_gib_from_queue = function (self, unit, gib_settings, gib_pos
 	if slot_material_override_names then
 		for i = 1, #slot_material_override_names do
 			local slot_material_override_name = slot_material_override_names[i]
-			local apply_to_parent, material_overrides = visual_loadout_extension:slot_material_override(slot_material_override_name)
+			local apply_to_parent, material_override_items = visual_loadout_extension:slot_material_override_items(slot_material_override_name)
 
-			if material_overrides then
-				for _, material_override in pairs(material_overrides) do
-					VisualLoadoutCustomization.apply_material_override(gib_unit, gib_unit, apply_to_parent, material_override, false)
+			if material_override_items then
+				for _, material_override_item in pairs(material_override_items) do
+					VisualLoadoutCustomization.apply_material_override_item(gib_unit, gib_unit, apply_to_parent, material_override_item, false, self._item_definitions)
 				end
 			end
 		end
@@ -330,11 +331,11 @@ MinionGibbing.gib = function (self, hit_zone_name_or_nil, attack_direction, dama
 		if slot_material_override_names then
 			for i = 1, #slot_material_override_names do
 				local slot_material_override_name = slot_material_override_names[i]
-				local apply_to_parent, material_overrides = visual_loadout_extension:slot_material_override(slot_material_override_name)
+				local apply_to_parent, material_override_items = visual_loadout_extension:slot_material_override_items(slot_material_override_name)
 
-				if material_overrides then
-					for _, material_override in pairs(material_overrides) do
-						VisualLoadoutCustomization.apply_material_override(stump_unit, stump_unit, apply_to_parent, material_override, false)
+				if material_override_items then
+					for _, material_override_item in pairs(material_override_items) do
+						VisualLoadoutCustomization.apply_material_override_item(stump_unit, stump_unit, apply_to_parent, material_override_item, false, self._item_definitions)
 					end
 				end
 			end

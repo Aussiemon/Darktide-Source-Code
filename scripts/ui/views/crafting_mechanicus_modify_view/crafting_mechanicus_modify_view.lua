@@ -16,7 +16,6 @@ CraftingMechanicusModifyView.init = function (self, settings, context)
 	self._parent = context.parent
 	self._preselected_item = context.item
 	self._selected_grid = "item_grid"
-	self._wanted_grid = self._preselected_item and "crafting_recipe"
 
 	CraftingMechanicusModifyView.super.init(self, CraftingMechanicusModifyViewDefinitions, settings, context)
 end
@@ -33,26 +32,6 @@ CraftingMechanicusModifyView.on_enter = function (self)
 		200,
 	}, "content/ui/materials/frames/item_info_lower", nil, nil)
 
-	self._crafting_recipe = self:_setup_crafting_recipe("crafting_recipe", "crafting_recipe_pivot")
-
-	if self._preselected_item then
-		local selected_index = self._crafting_recipe:selected_grid_index()
-
-		self._crafting_recipe:present_recipe_navigation_with_item(CraftingSettings.recipes_ui_order, callback(self, "cb_on_recipe_button_pressed"), function ()
-			if selected_index then
-				self._crafting_recipe:select_grid_index(selected_index)
-			end
-
-			self:_update_weapon_stats_position("crafting_recipe_pivot", self._crafting_recipe)
-		end, self._preselected_item, CraftingSettings.type, {
-			masteries_data = self._masteries_data,
-		})
-	else
-		self._crafting_recipe:present_recipe_navigation(CraftingSettings.recipes_ui_order, callback(self, "cb_on_recipe_button_pressed"), callback(self, "_update_weapon_stats_position", "crafting_recipe_pivot", self._crafting_recipe), CraftingSettings.type, {
-			masteries_data = self._masteries_data,
-		})
-	end
-
 	local character_id = self:_player():character_id()
 	local slot_filter_list = {
 		"slot_primary",
@@ -67,6 +46,8 @@ CraftingMechanicusModifyView.on_enter = function (self)
 		"GADGET",
 	}
 
+	self:set_loading_state(true)
+
 	self._inventory_promise = Managers.data_service.gear:fetch_inventory(character_id, slot_filter_list, item_type_filter_list)
 
 	self._inventory_promise:next(function (items)
@@ -74,13 +55,21 @@ CraftingMechanicusModifyView.on_enter = function (self)
 			return
 		end
 
-		Managers.data_service.mastery:get_all_masteries():next(function (masteries_data)
+		return Managers.data_service.mastery:get_all_masteries():next(function (masteries_data)
 			if self._destroyed or not self._inventory_promise then
 				return
 			end
 
-			self._inventory_promise:next(callback(self, "_cb_fetch_inventory_items", items, masteries_data))
+			self._inventory_promise = nil
+
+			self:set_loading_state(false)
+			self:_cb_fetch_inventory_items(items, masteries_data)
 		end)
+	end):catch(function (items)
+		self._inventory_promise = nil
+
+		self:set_loading_state(false)
+		self:_cb_fetch_inventory_items({}, {})
 	end)
 end
 
@@ -109,8 +98,11 @@ CraftingMechanicusModifyView._setup_crafting_recipe = function (self, reference_
 		},
 		edge_padding = edge_padding,
 	}
+	local crafting_recipe = self:_add_element(ViewElementCraftingRecipe, reference_name, layer, context)
 
-	return self:_add_element(ViewElementCraftingRecipe, reference_name, layer, context)
+	self:_update_crafting_recipe_position("crafting_recipe_pivot", crafting_recipe)
+
+	return crafting_recipe
 end
 
 CraftingMechanicusModifyView._setup_sort_options = function (self)
@@ -224,15 +216,14 @@ CraftingMechanicusModifyView.on_resolution_modified = function (self, scale)
 	CraftingMechanicusModifyView.super.on_resolution_modified(self, scale)
 
 	if self._crafting_recipe then
-		self:_update_weapon_stats_position("crafting_recipe_pivot", self._crafting_recipe)
+		self:_update_crafting_recipe_position("crafting_recipe_pivot", self._crafting_recipe)
 	end
 end
 
-CraftingMechanicusModifyView._update_weapon_stats_position = function (self, scenegraph_id, weapon_stats)
+CraftingMechanicusModifyView._update_crafting_recipe_position = function (self, scenegraph_id, crafting_recipe)
 	local position = self:_scenegraph_world_position(scenegraph_id)
 
-	weapon_stats:set_pivot_offset(position[1], position[2])
-	self:_set_scenegraph_size(scenegraph_id, nil, weapon_stats:grid_height())
+	crafting_recipe:set_pivot_offset(position[1], position[2])
 end
 
 CraftingMechanicusModifyView.on_back_pressed = function (self)
@@ -242,17 +233,24 @@ end
 CraftingMechanicusModifyView._set_selected_grid = function (self, new_selected_grid)
 	self._selected_grid = new_selected_grid
 
-	if self._using_cursor_navigation then
+	local crafting_recipe = self._crafting_recipe
+	local item_grid = self._item_grid
+	local tab_menu = self._tab_menu_element
+
+	if not crafting_recipe or not item_grid or not tab_menu then
 		return
 	end
 
-	local crafting_recipe = self._crafting_recipe
-	local item_grid = self._item_grid
+	if self._using_cursor_navigation then
+		return
+	end
 
 	if new_selected_grid == "item_grid" then
 		crafting_recipe:disable_input(true)
 		crafting_recipe:select_grid_index(nil)
 		crafting_recipe:set_navigation_button_color_intensity(0.7)
+		tab_menu:set_color_intensity_multiplier(1)
+		tab_menu:disable_input(false)
 		item_grid:disable_input(false)
 		item_grid:set_color_intensity_multiplier(1)
 	elseif new_selected_grid == "crafting_recipe" then
@@ -282,8 +280,10 @@ CraftingMechanicusModifyView._set_selected_grid = function (self, new_selected_g
 		end
 
 		crafting_recipe:set_navigation_button_color_intensity(1)
+		tab_menu:disable_input(true)
 		item_grid:disable_input(true)
 		item_grid:set_color_intensity_multiplier(0.5)
+		tab_menu:set_color_intensity_multiplier(0.5)
 	else
 		ferror("Unknown grid: %s", new_selected_grid)
 	end
@@ -339,17 +339,23 @@ end
 CraftingMechanicusModifyView._preview_item = function (self, item)
 	CraftingMechanicusModifyView.super._preview_item(self, item)
 
-	if not self._current_item and not self._preselected_item or self._current_item ~= item then
+	if (not self._current_item or self._current_item ~= item) and self._crafting_recipe then
 		self._current_item = item
 
-		local selected_index = self._crafting_recipe:selected_grid_index()
-
 		self._crafting_recipe:present_recipe_navigation_with_item(CraftingSettings.recipes_ui_order, callback(self, "cb_on_recipe_button_pressed"), function ()
+			if self._preselected_item then
+				self._wanted_grid = self._preselected_item and "crafting_recipe"
+				self._preselected_item = nil
+			end
+
+			local selected_index = self._crafting_recipe:selected_grid_index()
+
 			if selected_index then
 				self._crafting_recipe:select_grid_index(selected_index)
 			end
 
-			self:_update_weapon_stats_position("crafting_recipe_pivot", self._crafting_recipe)
+			self:_set_scenegraph_size("crafting_recipe_pivot", nil, self._crafting_recipe:grid_height())
+			self._crafting_recipe:set_visibility(true)
 		end, item, CraftingSettings.type, {
 			masteries_data = self._masteries_data,
 		})
@@ -412,8 +418,6 @@ CraftingMechanicusModifyView._cb_fetch_inventory_items = function (self, items, 
 	local tab_index = 1
 
 	if preselected_item then
-		self._selected_gear_id = preselected_item.gear_id
-
 		local item_slots = preselected_item.slots
 
 		for i = 1, #tabs_content do
@@ -430,22 +434,25 @@ CraftingMechanicusModifyView._cb_fetch_inventory_items = function (self, items, 
 	self:cb_switch_tab(tab_index)
 end
 
-CraftingMechanicusModifyView.cb_switch_tab = function (self, tab_index)
+CraftingMechanicusModifyView._requested_index_on_present = function (self)
 	if self._preselected_item then
-		self._preselected_item = nil
+		self._selected_gear_id = self._preselected_item.gear_id
 	else
 		local start_index = 1
 		local equipped_item
 		local tabs_content = CraftingMechanicusModifyViewDefinitions.item_category_tabs_content
-		local tab_slots = tabs_content[tab_index].slot_types
+		local tab_index = self._tab_menu_element and self._tab_menu_element:selected_index()
+		local tab_slots = tab_index and tabs_content[tab_index].slot_types
 
-		for i = 1, #tab_slots do
-			local tab_slot = tab_slots[i]
+		if tab_slots then
+			for i = 1, #tab_slots do
+				local tab_slot = tab_slots[i]
 
-			equipped_item = self:equipped_item_in_slot(tab_slot)
+				equipped_item = self:equipped_item_in_slot(tab_slot)
 
-			if equipped_item then
-				break
+				if equipped_item then
+					break
+				end
 			end
 		end
 
@@ -464,7 +471,23 @@ CraftingMechanicusModifyView.cb_switch_tab = function (self, tab_index)
 		end
 	end
 
-	CraftingMechanicusModifyView.super.cb_switch_tab(self, tab_index)
+	return CraftingMechanicusModifyView.super._requested_index_on_present(self)
+end
+
+CraftingMechanicusModifyView._cb_on_present = function (self)
+	CraftingMechanicusModifyView.super._cb_on_present(self)
+
+	local selected_grid_index = self:selected_grid_index()
+
+	if not selected_grid_index and self._crafting_recipe then
+		self:_remove_element("crafting_recipe")
+
+		self._crafting_recipe = nil
+	elseif selected_grid_index and not self._crafting_recipe then
+		self._crafting_recipe = self:_setup_crafting_recipe("crafting_recipe", "crafting_recipe_pivot")
+
+		self._crafting_recipe:set_visibility(false)
+	end
 end
 
 CraftingMechanicusModifyView.equipped_item_in_slot = function (self, slot_name)
@@ -521,18 +544,40 @@ CraftingMechanicusModifyView._setup_menu_tabs = function (self, content)
 	self:_update_tab_bar_position()
 end
 
+CraftingMechanicusModifyView.cb_switch_tab = function (self, index)
+	self._current_item = nil
+
+	CraftingMechanicusModifyView.super.cb_switch_tab(self, index)
+end
+
 CraftingMechanicusModifyView._on_navigation_input_changed = function (self)
 	if self._item_grid then
 		self._item_grid:_on_navigation_input_changed()
 		self._item_grid:set_color_intensity_multiplier(1)
+	end
+
+	if self._crafting_recipe then
 		self._crafting_recipe:set_navigation_button_color_intensity(1)
 	end
 
+	if self._tab_menu_element then
+		self._tab_menu_element:set_color_intensity_multiplier(1)
+	end
+
 	if self._using_cursor_navigation then
-		self._crafting_recipe:disable_input(false)
-		self._crafting_recipe:select_grid_index(nil)
-		self._item_grid:disable_input(false)
-		self._item_grid:select_grid_index(nil)
+		if self._item_grid then
+			self._item_grid:disable_input(false)
+			self._item_grid:select_grid_index(nil)
+		end
+
+		if self._crafting_recipe then
+			self._crafting_recipe:disable_input(false)
+			self._crafting_recipe:select_grid_index(nil)
+		end
+
+		if self._tab_menu_element then
+			self._tab_menu_element:disable_input(false)
+		end
 	else
 		self:_set_selected_grid(self._selected_grid)
 	end

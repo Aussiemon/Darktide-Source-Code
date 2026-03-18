@@ -44,7 +44,6 @@ ability_template.actions = {
 		minimum_hold_time = 0.075,
 		start_input = "aim_pressed",
 		total_time = math.huge,
-		radius = RADIUS,
 		allowed_chain_actions = {
 			aim_released = {
 				action_name = "action_order_companion",

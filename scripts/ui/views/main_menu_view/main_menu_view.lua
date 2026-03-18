@@ -188,7 +188,7 @@ MainMenuView._update_counts_refreshes = function (self, dt, t)
 	local party_time = self._refresh_party_time or 0
 
 	if party_time <= t then
-		Managers.data_service.social:fetch_party_members():next(callback(self, "cb_update_strike_team_count"))
+		self._promise_container:cancel_on_destroy(Managers.data_service.social:fetch_party_members()):next(callback(self, "cb_update_strike_team_count"))
 
 		self._refresh_party_time = t + 0.5
 	end
@@ -196,7 +196,7 @@ MainMenuView._update_counts_refreshes = function (self, dt, t)
 	local friends_time = self._refresh_friends_time or 0
 
 	if friends_time <= t then
-		Managers.data_service.social:fetch_friends():next(callback(self, "cb_update_friends_count"))
+		self._promise_container:cancel_on_destroy(Managers.data_service.social:fetch_friends()):next(callback(self, "cb_update_friends_count"))
 		Managers.data_service.social:fetch_blocked_accounts()
 
 		self._refresh_friends_time = t + 30
@@ -216,74 +216,53 @@ MainMenuView.cb_update_friends_count = function (self, friends)
 		return
 	end
 
-	local text_style = self._widgets_by_name.friends_online.style.text
-	local text_value = self._widgets_by_name.friends_online.content.text
-	local icon_style = self._widgets_by_name.friends_online.style.icon
-	local icon_value = self._widgets_by_name.friends_online.content.icon
-	local text_count_style = self._widgets_by_name.friends_online.style.text_count
-	local text_count_value = self._widgets_by_name.friends_online.content.text_count
-	local size = {
-		1000,
-		30,
-	}
-	local text_width = Text.text_width(self._ui_renderer, text_value, text_style, size)
-	local icon_width = Text.text_width(self._ui_renderer, icon_value, icon_style, size)
-	local text_count_width = Text.text_width(self._ui_renderer, text_count_value, text_count_style, size)
-	local margin = 5
+	local num_friends = self._widgets_by_name.friends_online.content.count or 0
 
-	icon_style.offset[1] = text_width + margin * 2
-	text_count_style.offset[1] = icon_style.offset[1] + icon_width + margin
+	if friends then
+		num_friends = 0
 
-	self:_set_scenegraph_size("party_count", text_count_style.offset[1] + text_count_width, nil)
+		for i = 1, #friends do
+			local player_info = friends[i]
+			local is_blocked = player_info:is_blocked()
+			local is_online = SocialConstants.OnlineStatus.online == player_info:online_status()
+			local is_friend = player_info:is_friend()
 
-	local num_friends = 0
+			if not is_blocked and is_online and is_friend then
+				num_friends = num_friends + 1
+			end
 
-	for i = 1, #friends do
-		local player_info = friends[i]
-		local is_blocked = player_info:is_blocked()
-		local is_online = SocialConstants.OnlineStatus.online == player_info:online_status()
-		local is_friend = player_info:is_friend()
-
-		if not is_blocked and is_online and is_friend then
-			num_friends = num_friends + 1
+			self._widgets_by_name.friends_online.content.count = num_friends
 		end
 	end
 
-	self._widgets_by_name.friends_online.content.text_count = num_friends
+	local font_size = self._render_scale and self._render_scale * 24 or 24
+	local text_value = string.format("%s {#size(" .. font_size .. ")}%s %d{#reset()}", Localize("loc_main_menu_friends_online_count"), "", num_friends)
+
+	self._widgets_by_name.friends_online.content.text = text_value
 end
 
 MainMenuView.cb_update_strike_team_count = function (self, party)
-	if not self._destroyed then
-		local num_party = 0
+	if self._destroyed then
+		return
+	end
+
+	local num_party = self._widgets_by_name.strike_team.content.count or 0
+
+	if party then
+		num_party = 0
 
 		for unique_id, player_info in pairs(party) do
 			num_party = num_party + 1
 		end
 
-		local max_party_limit = MainMenuViewSettings.max_party_size
-
-		self._widgets_by_name.strike_team.content.text_count = string.format("%d/%d", num_party, max_party_limit)
-
-		local text_style = self._widgets_by_name.strike_team.style.text
-		local text_value = self._widgets_by_name.strike_team.content.text
-		local icon_style = self._widgets_by_name.strike_team.style.icon
-		local icon_value = self._widgets_by_name.strike_team.content.icon
-		local text_count_style = self._widgets_by_name.strike_team.style.text_count
-		local text_count_value = self._widgets_by_name.strike_team.content.text_count
-		local size = {
-			1000,
-			30,
-		}
-		local text_width = Text.text_width(self._ui_renderer, text_value, text_style, size)
-		local icon_width = Text.text_width(self._ui_renderer, icon_value, icon_style, size)
-		local text_count_width = Text.text_width(self._ui_renderer, text_count_value, text_count_style, size)
-		local margin = 5
-
-		icon_style.offset[1] = text_width + margin * 2
-		text_count_style.offset[1] = icon_style.offset[1] + icon_width + margin
-
-		self:_set_scenegraph_size("strike_team_count", text_count_style.offset[1] + text_count_width, nil)
+		self._widgets_by_name.strike_team.content.count = num_party
 	end
+
+	local max_party_limit = MainMenuViewSettings.max_party_size
+	local font_size = self._render_scale and self._render_scale * 24 or 24
+	local text_value = string.format("%s  {#size(" .. font_size .. ")}%s %d/%d{#reset()}", Localize("loc_main_menu_warband_count"), "", num_party, max_party_limit)
+
+	self._widgets_by_name.strike_team.content.text = text_value
 end
 
 MainMenuView.cb_on_list_entry_pressed = function (self, widget, entry)
@@ -416,7 +395,7 @@ MainMenuView._reset_news_list = function (self)
 end
 
 MainMenuView._populate_news_list = function (self)
-	Managers.data_service.news:get_news():next(function (raw_news)
+	self._promise_container:cancel_on_destroy(Managers.data_service.news:get_news()):next(function (raw_news)
 		local slides = table.filter_array(raw_news, function (item)
 			return not item:is_read()
 		end)
@@ -446,6 +425,12 @@ end
 
 MainMenuView._event_profiles_sync_changed = function (self, profiles_syncing, character_syncing)
 	self:_set_waiting_for_profiles(profiles_syncing)
+end
+
+MainMenuView.on_resolution_modified = function (self, scale)
+	MainMenuView.super.on_resolution_modified(self, scale)
+	self:cb_update_friends_count()
+	self:cb_update_strike_team_count()
 end
 
 MainMenuView.update = function (self, dt, t, input_service)
@@ -658,13 +643,13 @@ MainMenuView._on_delete_selected_character_pressed = function (self)
 			template_type = "terminal_button_hold_small",
 			text = "loc_main_menu_delete_character_popup_confirm",
 			on_complete_sound = UISoundEvents.delete_character_confirm,
-			callback = callback(function ()
+			callback = function ()
 				local character_id = profile.character_id
 
 				Managers.event:trigger("event_request_delete_character", character_id)
 
 				self._delete_popup_id = nil
-			end),
+			end,
 			template_options = {
 				start_delay = 3,
 				start_input_action = "confirm_pressed",
@@ -676,9 +661,9 @@ MainMenuView._on_delete_selected_character_pressed = function (self)
 			hotkey = "back",
 			template_type = "terminal_button_small",
 			text = "loc_main_menu_delete_character_popup_cancel",
-			callback = callback(function ()
+			callback = function ()
 				self._delete_popup_id = nil
-			end),
+			end,
 		},
 	}
 

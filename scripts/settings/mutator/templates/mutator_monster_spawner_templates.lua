@@ -7,39 +7,79 @@ local MutatorSpawnerLocationSources = require("scripts/managers/mutator/mutators
 local havoc_twins_settings = HavocMutatorLocalSettings.mutator_havoc_twins_settings
 local mutator_havoc_chaos_rituals = HavocMutatorLocalSettings.mutator_havoc_chaos_rituals
 local mutator_templates = {
-	mutator_monster_spawner = {
-		class = "scripts/managers/mutator/mutators/mutator_monster_spawner",
-		spawner_template = mutator_havoc_chaos_rituals,
-	},
-	mutator_monster_havoc_twins = {
-		class = "scripts/managers/mutator/mutators/mutator_monster_spawner",
-		spawner_template = havoc_twins_settings,
-	},
-	mutator_nurgle_totem = {
-		asset_package = "content/characters/enemy/mutators/skull_totems_assets",
-		class = "scripts/managers/mutator/mutators/mutator_monster_spawner",
-		spawner_template = {
-			force_horde_on_spawn = true,
-			injection_template = "nurgle_totems",
-			num_to_spawn = 3,
-			spawn_locations = "skulls_locations",
-			trigger_distance = 55,
-			monster_breed_name = {
-				"nurgle_totems",
+	mutator_monster_spawner = mutator_havoc_chaos_rituals,
+	mutator_monster_havoc_twins = havoc_twins_settings,
+	mutator_spawner_expedition_rotten_armor_size_04 = {
+		class = "scripts/managers/mutator/mutators/mutator_spawner",
+		num_to_spawn = 4,
+		proximity_trigger_distance = 30,
+		spawn_type = "proximity",
+		trigger_distance = 77,
+		spawn_locations = MutatorSpawnerLocationSources.prebaked_mission_locations("expeditions_locations"),
+		size = {
+			level_size_4 = true,
+		},
+		spawners = {
+			{
+				class = "scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_level_instance",
+				template = {
+					asset_package = "content/levels/expeditions/circumstances/exp_circ_assets",
+					run_on_init = true,
+					use_slot_specific_levels = true,
+					levels = {
+						level_size_4 = {
+							"content/levels/expeditions/circumstances/exp_circ_04m_rotten_armor",
+						},
+					},
+					placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
+					size_lookup = {
+						"level_size_4",
+					},
+					spawn_settings = {
+						randomize_rotation = true,
+					},
+				},
+			},
+			{
+				class = "scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_enemy_template",
+				template = {
+					placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
+					composition = EnemyEventSpawnerSettings.nurgle_totem,
+					enemy_placement_method = MutatorSpawnerNode.CIRCLE_PLACEMENT,
+				},
 			},
 		},
 	},
-	mutator_plasma_smuggler_groups = {
-		asset_package = "packages/content/live_events/plasma_smugglers/plasma_smugglers_assets",
-		class = "scripts/managers/mutator/mutators/mutator_monster_spawner",
-		spawner_template = {
-			force_horde_on_spawn = true,
-			injection_template = "plasma_smugglers",
-			num_to_spawn = 3,
-			spawn_locations = "skulls_locations",
-			trigger_distance = 55,
-			monster_breed_name = {
-				"plasma_smugglers",
+	mutator_spawner_expedition_rotten_armor_size_02 = {
+		class = "scripts/managers/mutator/mutators/mutator_spawner",
+		num_to_spawn = 35,
+		proximity_trigger_distance = 30,
+		spawn_type = "proximity",
+		trigger_distance = 77,
+		spawn_locations = MutatorSpawnerLocationSources.prebaked_mission_locations("expeditions_locations"),
+		size = {
+			level_size_2 = true,
+		},
+		spawners = {
+			{
+				class = "scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_level_instance",
+				template = {
+					asset_package = "content/levels/expeditions/circumstances/exp_circ_assets",
+					run_on_init = true,
+					use_slot_specific_levels = true,
+					levels = {
+						level_size_2 = {
+							"content/levels/expeditions/circumstances/exp_circ_02m_rotten_armor_01",
+						},
+					},
+					placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
+					size_lookup = {
+						"level_size_2",
+					},
+					spawn_settings = {
+						randomize_rotation = true,
+					},
+				},
 			},
 		},
 	},

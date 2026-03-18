@@ -94,8 +94,11 @@ local function _throwing_knives_find_best_target(integration_data, search_positi
 	if number_of_results > 0 then
 		for ii = 1, number_of_results do
 			local unit = results[ii]
+			local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+			local breed = unit_data_extension and unit_data_extension:breed()
+			local untargetable = breed and breed.is_untargetable
 
-			if ScriptUnit.has_extension(unit, "health_system") then
+			if ScriptUnit.has_extension(unit, "health_system") and not untargetable then
 				local last_hit_unit = integration_data.last_hit_unit
 				local damage_extension = integration_data.damage_extension
 				local hit_units = damage_extension:hit_units()

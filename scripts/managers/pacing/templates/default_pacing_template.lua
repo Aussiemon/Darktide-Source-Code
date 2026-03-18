@@ -178,6 +178,7 @@ local DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS = {
 }
 local pacing_template = {
 	name = "default",
+	progression_type = "main_path",
 	starting_state = "build_up_tension_low",
 	horde_pacing_template = HordePacingTemplates.default_horde,
 	specials_pacing_template = SpecialsPacingTemplates.default_specials,

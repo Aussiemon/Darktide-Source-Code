@@ -59,16 +59,18 @@ DLCPurchaseView._setup_input_legend = function (self)
 end
 
 DLCPurchaseView._register_button_callbacks = function (self)
-	local backend_auth_method = Backend:get_auth_method()
-
-	self._widgets_by_name.standard_dlc_button.content.hotspot.pressed_callback = callback(self, "_on_store_button_pressed", self._dlc_settings.ids[backend_auth_method].id, "standard")
-	self._widgets_by_name.deluxe_dlc_button.content.hotspot.pressed_callback = callback(self, "_on_store_button_pressed", self._dlc_settings_deluxe.ids[backend_auth_method].id, "deluxe")
+	self._widgets_by_name.standard_dlc_button.content.hotspot.pressed_callback = callback(self, "_on_store_button_pressed", self._dlc_settings, "standard")
+	self._widgets_by_name.deluxe_dlc_button.content.hotspot.pressed_callback = callback(self, "_on_store_button_pressed", self._dlc_settings_deluxe, "deluxe")
 end
 
-DLCPurchaseView._on_store_button_pressed = function (self, product_id, button_key)
+DLCPurchaseView._on_store_button_pressed = function (self, dlc_settings, button_key)
 	self._widgets_by_name.loading.content.visible = true
 
 	Managers.telemetry_events:dlc_purchase_button_clicked(self._telemetry_id, button_key)
+
+	local backend_auth_method = Backend:get_auth_method()
+	local product_id = dlc_settings.ids[backend_auth_method].id
+
 	Managers.dlc:open_to_store(product_id, callback(self, "_cb_on_flow_finished"))
 end
 

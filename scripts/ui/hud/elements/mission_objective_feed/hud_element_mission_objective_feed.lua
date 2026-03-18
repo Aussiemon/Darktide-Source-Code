@@ -7,6 +7,7 @@ local HudElementMissionObjectiveFeedSettings = require("scripts/ui/hud/elements/
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local Text = require("scripts/utilities/ui/text")
 local MissionObjectiveGoal = require("scripts/extension_systems/mission_objective/utilities/mission_objective_goal")
+local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local HudElementMissionObjectiveFeed = class("HudElementMissionObjectiveFeed", "HudElementBase")
 
 HudElementMissionObjectiveFeed.init = function (self, parent, draw_layer, start_scale, definitions)
@@ -63,13 +64,14 @@ HudElementMissionObjectiveFeed._update_live_event = function (self, force, ui_re
 
 	local game_mode = Managers.state.game_mode:game_mode_name()
 	local is_hub = game_mode == "hub"
-	local is_visible = live_event_id ~= nil and is_hub
+	local show_in_mission = game_mode == "coop_complete_objective" and GameParameters.show_live_event_objective_in_adventure
+	local is_visible = live_event_id ~= nil and (is_hub or show_in_mission)
 
 	if not is_visible then
 		return
 	end
 
-	local live_event_template = Managers.live_event:active_template()
+	local live_event_template = Managers.live_event:get_event_template(live_event_id)
 	local live_event_objective = live_event_template.objective
 
 	if not live_event_objective then
@@ -105,15 +107,10 @@ HudElementMissionObjectiveFeed._create_local_objective = function (self, objecti
 	return objective
 end
 
-HudElementMissionObjectiveFeed._update_hazard_stripes_and_alert = function (self, ui_renderer)
-	if DEDICATED_SERVER then
-		return
-	end
-
-	local hud_objectives = self._hud_objectives
-	local objective_widgets = self._objective_widgets
-	local alert = false
+HudElementMissionObjectiveFeed._overaching_state = function (self)
+	local state = "default"
 	local hazard_stripes = false
+	local hud_objectives = self._hud_objectives
 
 	for objective, hud_objective in pairs(hud_objectives) do
 		local ui_state = hud_objective:state()
@@ -122,12 +119,35 @@ HudElementMissionObjectiveFeed._update_hazard_stripes_and_alert = function (self
 		if category == "overarching" and objective:use_hud() then
 			hazard_stripes = true
 
-			if ui_state == "alert" then
-				alert = true
+			if ui_state == "alert" or ui_state == "critical" then
+				state = ui_state
 
 				break
 			end
 		end
+	end
+
+	return state, hazard_stripes
+end
+
+HudElementMissionObjectiveFeed._update_hazard_stripes_and_alert = function (self, ui_renderer)
+	if DEDICATED_SERVER then
+		return
+	end
+
+	local objective_widgets = self._objective_widgets
+	local state, hazard_stripes = self:_overaching_state()
+	local in_altered_state = state == "alert" or state == "critical"
+
+	if in_altered_state and not self._alert_objective_info then
+		self._alert_objective_info = self:_create_local_objective("alert_info", "alert_info", 100)
+
+		self:_add_objective(self._alert_objective_info, ui_renderer, true)
+	elseif not in_altered_state and self._alert_objective_info then
+		self:_remove_objective(self._alert_objective_info)
+		self._alert_objective_info:destroy()
+
+		self._alert_objective_info = nil
 	end
 
 	if self._hazard_stripes_active ~= hazard_stripes then
@@ -144,25 +164,113 @@ HudElementMissionObjectiveFeed._update_hazard_stripes_and_alert = function (self
 		else
 			self:_remove_objective(self._hazard_objective_top)
 			self._hazard_objective_top:destroy()
+
+			self._hazard_objective_top = nil
+
 			self:_remove_objective(self._hazard_objective_bottom)
 			self._hazard_objective_bottom:destroy()
+
+			self._hazard_objective_bottom = nil
 		end
 	end
 
-	for objective, hud_objective in pairs(self._hud_objectives) do
-		local category = hud_objective:objective_category()
-		local widget = objective_widgets[objective]
+	if self._active_state ~= state then
+		self._active_state = state
 
-		if widget and category == "warning" then
-			local style = widget.style
+		local background_widget = self._widgets_by_name.background
 
-			if alert then
-				style.hazard_above.color = HudElementMissionObjectiveFeedSettings.alert_color
+		for _, pass_style in pairs(background_widget.style) do
+			local default_color = pass_style.default_color or pass_style.base_color
+			local alert_color = pass_style.alert_color
+			local critical_color = pass_style.critical_color or HudElementMissionObjectiveFeedSettings.critical_color
+
+			if default_color and alert_color and critical_color then
+				if state == "alert" then
+					pass_style.color = alert_color
+				elseif state == "critical" then
+					pass_style.color = critical_color
+				else
+					pass_style.color = default_color
+				end
+			end
+		end
+
+		if self._hazard_objective_top then
+			local widget = objective_widgets[self._hazard_objective_top]
+
+			widget.style.hazard_above.material_values.speed = in_altered_state and 1 or 0
+		end
+
+		if self._hazard_objective_bottom then
+			local widget = objective_widgets[self._hazard_objective_bottom]
+
+			widget.style.hazard_above.material_values.speed = in_altered_state and 1 or 0
+		end
+
+		local colors_by_category = HudElementMissionObjectiveFeedSettings.colors_by_category
+
+		for objective, hud_objective in pairs(self._hud_objectives) do
+			local locally_added = hud_objective:locally_added()
+
+			if locally_added then
+				local objective_category = hud_objective:objective_category()
+
+				if in_altered_state then
+					objective_category = state
+				end
+
+				local widget = objective_widgets[objective]
+
+				if widget then
+					local style = widget.style
+					local content = widget.content
+					local category_colors = colors_by_category[objective_category]
+
+					for style_id, color in pairs(category_colors) do
+						local pass_style = style[style_id]
+
+						if pass_style and (pass_style.text_color or pass_style.color) then
+							ColorUtilities.color_copy(color, pass_style.text_color or pass_style.color, true)
+						end
+					end
+				end
 			else
-				style.hazard_above.color = style.hazard_above.base_color
+				local objective_category = hud_objective:objective_category()
+
+				if in_altered_state then
+					objective_category = state
+				end
+
+				if self._alert_objective_info then
+					local widget = objective_widgets[self._alert_objective_info]
+
+					if widget then
+						local style = widget.style
+						local content = widget.content
+						local alert_message_by_state = HudElementMissionObjectiveFeedSettings.alert_text_by_state
+						local state_message = alert_message_by_state and alert_message_by_state[state] or ""
+
+						content.warning_text = state_message ~= "" and Utf8.upper(Localize(state_message)) or ""
+
+						local color_by_state = HudElementMissionObjectiveFeedSettings.color_by_state
+						local state_colors = color_by_state and color_by_state[state] or category_colors.default
+
+						if style.warning_background then
+							ColorUtilities.color_copy(state_colors.body, style.warning_background.color, true)
+						end
+
+						if style.warning_text then
+							local text_color = state_colors.text or state_colors.body
+
+							ColorUtilities.color_copy(text_color, style.warning_text.text_color, true)
+						end
+					end
+				end
 			end
 		end
 	end
+
+	return in_altered_state
 end
 
 HudElementMissionObjectiveFeed.update = function (self, dt, t, ui_renderer, render_settings, input_service)
@@ -207,15 +315,17 @@ HudElementMissionObjectiveFeed._update_widgets = function (self, dt, t)
 			local content = widget.content
 			local ui_state = hud_objective:state()
 
+			content.ui_state = ui_state
+
 			if ui_state == "alert" then
+				local style = widget.style
 				local neutral_color = HudElementMissionObjectiveFeedSettings.colors_by_category.default.bar
+				local alert_color = style.bar.alert_color or HudElementMissionObjectiveFeedSettings.alert_color
 				local lerp = math.sin(t * 10) / 2 + 0.5
 
-				ALERT_COLOR[2] = math.lerp(neutral_color[2], 255, lerp)
-				ALERT_COLOR[3] = math.lerp(neutral_color[3], 151, lerp)
-				ALERT_COLOR[4] = math.lerp(neutral_color[4], 29, lerp)
-
-				local style = widget.style
+				ALERT_COLOR[2] = math.lerp(neutral_color[2], alert_color[2], lerp)
+				ALERT_COLOR[3] = math.lerp(neutral_color[3], alert_color[3], lerp)
+				ALERT_COLOR[4] = math.lerp(neutral_color[4], alert_color[4], lerp)
 
 				if content.show_bar then
 					style.bar.color = ALERT_COLOR
@@ -355,15 +465,14 @@ HudElementMissionObjectiveFeed._update_widget_height = function (self, widget, o
 			1000,
 		}
 		local _, text_height = self:_text_size(ui_renderer, header_text, header_text_style, text_size)
+		local required_players = hud_objective:required_players() and hud_objective:required_players() > 0
 		local header_height = text_height + 5
 
 		if hud_objective:progress_bar() then
+			header_height = header_height + (required_players and 5 or 0)
+
 			local bar_height = style.bar.size[2] + 5
 			local text_y_offset_adjustment = -(bar_height / 2)
-
-			if content.show_alert then
-				text_y_offset_adjustment = text_y_offset_adjustment + 50
-			end
 
 			header_text_style.offset[2] = header_text_style.default_offset[2] + text_y_offset_adjustment
 
@@ -372,7 +481,20 @@ HudElementMissionObjectiveFeed._update_widget_height = function (self, widget, o
 			style.bar.offset[2] = style.bar.default_offset[2] + bar_y_offset_adjustment
 			style.bar_background.offset[2] = style.bar_background.default_offset[2] + bar_y_offset_adjustment
 			style.bar_icon.offset[2] = style.bar_icon.default_offset[2] + bar_y_offset_adjustment
+
+			if required_players and style.objective_progress_indicators and style.objective_progress_indicators_background then
+				style.objective_progress_indicators.offset[2] = style.bar.offset[2] + style.bar.size[2] + 5
+				style.objective_progress_indicators_background.offset[2] = style.bar.offset[2] + style.bar.size[2] + 5
+			end
+
 			header_height = header_height + bar_height + 10
+		end
+
+		if required_players and content.alert_text and style.alert_text then
+			local player_count_alert_text = content.alert_text
+			local _, player_count_alert_text_height = self:_text_size(ui_renderer, player_count_alert_text, style.alert_text, text_size)
+
+			header_height = header_height + player_count_alert_text_height + 12
 		end
 
 		widget_height = widget_height + math.max(header_size[2], header_height)
@@ -383,11 +505,6 @@ HudElementMissionObjectiveFeed._update_widget_height = function (self, widget, o
 	local widget_padding_by_category = HudElementMissionObjectiveFeedSettings.widget_padding_by_category
 
 	widget_height = widget_height + (widget_padding_by_category[objective_category] or 0)
-
-	if content.show_alert then
-		widget_height = widget_height + style.alert_background.size[2]
-	end
-
 	widget_height = widget_height + hud_objective:additional_height()
 	content.size[2] = widget_height
 end
@@ -441,6 +558,10 @@ HudElementMissionObjectiveFeed._synchronize_widget_with_hud_objective = function
 	content.description_text = hud_objective:description()
 	content.category = objective_category
 
+	if content.alert_text and content.alert_text == "" then
+		content.alert_text = hud_objective:alert_text()
+	end
+
 	local icon = hud_objective:icon()
 
 	if icon then
@@ -459,6 +580,17 @@ HudElementMissionObjectiveFeed._synchronize_widget_with_hud_objective = function
 		end
 	else
 		content.counter_text = ""
+	end
+
+	local required_players = hud_objective:required_players()
+
+	content.objective_require_players = required_players and required_players > 0
+
+	if required_players and required_players > 0 then
+		local available_players = hud_objective:available_players()
+
+		content.available_players = available_players
+		content.required_players = required_players
 	end
 
 	if hud_objective:progress_bar() then
@@ -494,8 +626,8 @@ HudElementMissionObjectiveFeed._synchronize_widget_with_hud_objective = function
 		content.timer_text = ""
 	end
 
-	if objective_category == "overarching" then
-		content.show_alert = state == "alert"
+	if required_players and required_players > 0 and style.player_icons_required then
+		style.player_icons_required.amount = required_players
 	end
 
 	local colors_by_category = HudElementMissionObjectiveFeedSettings.colors_by_category

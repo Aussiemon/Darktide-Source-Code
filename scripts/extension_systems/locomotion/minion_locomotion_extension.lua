@@ -111,9 +111,9 @@ MinionLocomotionExtension.set_movement_type = function (self, movement_type, ove
 		Unit._set_mover(unit, nil)
 	end
 
-	local kill = MinionLocomotion.set_movement_type(self._engine_extension_id, movement_types[movement_type], override_mover_separate_distance)
+	local on_navmesh = not MinionLocomotion.set_movement_type(self._engine_extension_id, movement_types[movement_type], override_mover_separate_distance) or Breed.can_fly(self._breed)
 
-	if kill and not ignore_forced_mover_kill then
+	if not on_navmesh and not ignore_forced_mover_kill then
 		if Breed.is_companion(self._breed) then
 			local blackboard = BLACKBOARDS[unit]
 			local behavior_component = blackboard and Blackboard.write_component(blackboard, "behavior")
@@ -128,7 +128,7 @@ MinionLocomotionExtension.set_movement_type = function (self, movement_type, ove
 		end
 	end
 
-	return not kill
+	return on_navmesh
 end
 
 MinionLocomotionExtension.current_velocity = function (self)

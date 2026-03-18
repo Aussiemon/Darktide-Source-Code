@@ -1291,7 +1291,7 @@ weapon_template.toughness_template = "assault"
 weapon_template.movement_curve_modifier_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.combat_knife
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
-weapon_template.haptic_trigger_template = HapticTriggerTemplates.melee.light
+weapon_template.haptic_trigger_template = HapticTriggerTemplates.melee.dual_shivs
 
 local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 

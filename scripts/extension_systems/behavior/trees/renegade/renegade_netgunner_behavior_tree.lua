@@ -2,6 +2,39 @@
 
 local BreedActions = require("scripts/settings/breed/breed_actions")
 local action_data = BreedActions.renegade_netgunner
+local DISABLE = {
+	"BtSelectorNode",
+	{
+		"BtMinionVortexGrabbedAction",
+		condition = "vortex_grabbed",
+		name = "vortex_grabbed",
+		action_data = action_data.vortex_grabbed,
+	},
+	{
+		"BtDisableAction",
+		condition = "is_minion_disabled",
+		name = "disable",
+		action_data = action_data.disable,
+	},
+	name = "disable_actions",
+}
+local WEAPON_MALFUNCTION = {
+	"BtConditionalSequenceNode",
+	{
+		"BtRunAwayAction",
+		condition = "has_combat_vector_position",
+		name = "run_away_weapon_malfunction",
+		action_data = action_data.run_away_weapon_malfunction,
+	},
+	{
+		"BtWeaponMalfunctionAction",
+		leave_hook = "netgunner_reset_cooldown",
+		name = "weapon_malfunction_loop",
+		action_data = action_data.weapon_malfunction_loop,
+	},
+	condition = "has_weapon_malfunction",
+	name = "weapon_malfunction",
+}
 local behavior_tree = {
 	"BtSelectorNode",
 	{
@@ -10,12 +43,7 @@ local behavior_tree = {
 		name = "death",
 		action_data = action_data.death,
 	},
-	{
-		"BtDisableAction",
-		condition = "is_minion_disabled",
-		name = "disable",
-		action_data = action_data.disable,
-	},
+	DISABLE,
 	{
 		"BtExitSpawnerAction",
 		condition = "is_exiting_spawner",
@@ -56,6 +84,7 @@ local behavior_tree = {
 		name = "stagger",
 		action_data = action_data.stagger,
 	},
+	WEAPON_MALFUNCTION,
 	{
 		"BtSelectorNode",
 		{

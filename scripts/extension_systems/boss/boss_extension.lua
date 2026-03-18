@@ -164,6 +164,14 @@ BossExtension.is_weakened = function (self)
 	return self._is_weakened
 end
 
+BossExtension.set_empowered = function (self, prefix)
+	self._is_empowered = prefix
+end
+
+BossExtension.is_empowered = function (self)
+	return self._is_empowered
+end
+
 BossExtension.boss_is_depleted_interrupter = function (self)
 	return self._boss_is_depleted_interrupter
 end
@@ -191,24 +199,26 @@ local ALLOWED_BREEDS = {
 }
 
 function _setup_twins_special_names(display_name, breed)
-	if not Managers.state.game_mode:game_mode():extension("havoc") and not Managers.state.mutator:mutator("mutator_enable_twin_havoc_inventory") then
+	local game_mode_name = Managers.state.game_mode:game_mode_name()
+
+	if Managers.state.game_mode:game_mode():extension("havoc") or Managers.state.mutator:mutator("mutator_enable_twin_havoc_inventory") or game_mode_name == "expedition" then
+		local name = breed.name
+
+		if ALLOWED_BREEDS[name] then
+			local concatenated_name = "havoc_" .. name
+			local possible_display_names = BossNameTemplates[concatenated_name]
+
+			if type(possible_display_names) == "table" then
+				local next_seed = math.random(1, #possible_display_names)
+
+				display_name = possible_display_names[next_seed]
+				breed.display_name = display_name
+			end
+
+			return display_name
+		end
+
 		return display_name
-	end
-
-	local name = breed.name
-
-	if not ALLOWED_BREEDS[name] then
-		return display_name
-	end
-
-	local concatenated_name = "havoc_" .. name
-	local possible_display_names = BossNameTemplates[concatenated_name]
-
-	if type(possible_display_names) == "table" then
-		local next_seed = math.random(1, #possible_display_names)
-
-		display_name = possible_display_names[next_seed]
-		breed.display_name = display_name
 	end
 
 	return display_name

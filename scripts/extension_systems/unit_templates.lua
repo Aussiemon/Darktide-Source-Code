@@ -2,9 +2,11 @@
 
 local Breeds = require("scripts/settings/breed/breeds")
 local Component = require("scripts/utilities/component")
+local Deployables = require("scripts/settings/deployables/deployables")
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local LevelProps = require("scripts/settings/level_prop/level_props")
 local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
+local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local MinionAttackSelection = require("scripts/utilities/minion_attack_selection/minion_attack_selection")
 local MinionAttackSelectionTemplates = require("scripts/settings/minion_attack_selection/minion_attack_selection_templates")
@@ -16,6 +18,7 @@ local PlayerCharacterConstants = require("scripts/settings/player_character/play
 local PlayerCharacterStates = require("scripts/settings/player_character/player_character_states")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local BreedBlackboardComponentTemplates = require("scripts/settings/breed/breed_blackboard_component_templates")
+local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
 local PLAYER_AIM_CONSTRAINT_DISTANCE = 5
 
 local function _position_rotation_from_game_object(session, object_id)
@@ -227,15 +230,22 @@ end
 local function _resolve_minion_inventory_and_attacks(init_data, breed, game_object_data, attack_selection_seed, inventory_seed)
 	local mission = Managers.state.mission:mission()
 	local zone_id = mission.zone_id
+	local game_mode_name = Managers.state.game_mode:game_mode_name()
 
-	if breed.has_havoc_inventory_override and (Managers.state.game_mode:game_mode():extension("havoc") or Managers.state.mutator:mutator("mutator_enable_twin_havoc_inventory")) then
+	if game_mode_name == "expedition" then
+		zone_id = "dust"
+	end
+
+	if breed.has_havoc_inventory_override and (Managers.state.game_mode:game_mode():extension("havoc") or Managers.state.mutator:mutator("mutator_enable_twin_havoc_inventory") or game_mode_name == "expedition") then
 		zone_id = breed.has_havoc_inventory_override
 	end
 
 	local attack_selection_template_name, selected_attack_names, used_weapon_slot_names, combat_range_multi_config_key = _resolve_minion_attacks(init_data, breed, game_object_data, attack_selection_seed)
 	local inventory
 
-	inventory, inventory_seed = _resolve_minion_inventory(breed.inventory, zone_id, used_weapon_slot_names, attack_selection_template_name, breed.name, inventory_seed)
+	if breed.inventory then
+		inventory, inventory_seed = _resolve_minion_inventory(breed.inventory, zone_id, used_weapon_slot_names, attack_selection_template_name, breed.name, inventory_seed)
+	end
 
 	local phase_template
 
@@ -254,6 +264,14 @@ local function _resolve_minion_husk_inventory(breed, game_session, game_object_i
 		zone_id = breed.has_havoc_inventory_override
 	end
 
+	local game_mode_manager = Managers.state.game_mode
+	local game_mode = game_mode_manager:game_mode()
+	local game_mode_name = game_mode:name()
+
+	if game_mode_name == "expedition" then
+		zone_id = "dust"
+	end
+
 	local used_weapon_slot_names
 
 	if GameSession.has_game_object_field(game_session, game_object_id, "minion_attack_selection_template_id") then
@@ -266,7 +284,9 @@ local function _resolve_minion_husk_inventory(breed, game_session, game_object_i
 
 	local inventory
 
-	inventory, inventory_seed = MinionVisualLoadout.resolve(breed.inventory, zone_id, used_weapon_slot_names, breed.name, inventory_seed)
+	if breed.inventory then
+		inventory, inventory_seed = MinionVisualLoadout.resolve(breed.inventory, zone_id, used_weapon_slot_names, breed.name, inventory_seed)
+	end
 
 	return inventory, inventory_seed
 end
@@ -310,6 +330,13 @@ local unit_templates = {
 			local profile = player:profile()
 			local archetype = profile.archetype
 			local talents = profile.talents
+
+			if not profile.is_local_profile then
+				local active_layouts = TalentLayoutParser.archetype_layouts(archetype)
+
+				talents = TalentLayoutParser.validate_talent_layouts(talents, active_layouts, false)
+			end
+
 			local game_mode_manager = Managers.state.game_mode
 			local initial_items = _player_character_initial_items(game_mode_manager, profile, player)
 			local mission = Managers.state.mission:mission()
@@ -1006,6 +1033,13 @@ local unit_templates = {
 			local profile = player:profile()
 			local archetype = profile.archetype
 			local talents = profile.talents
+
+			if not profile.is_local_profile then
+				local active_layouts = TalentLayoutParser.archetype_layouts(archetype)
+
+				talents = TalentLayoutParser.validate_talent_layouts(talents, active_layouts, false)
+			end
+
 			local game_mode_manager = Managers.state.game_mode
 			local initial_items = _player_character_initial_items(game_mode_manager, profile, player)
 			local mission = Managers.state.mission:mission()
@@ -1724,11 +1758,15 @@ local unit_templates = {
 				breed = breed,
 				random_seed = animation_seed,
 			})
-			config:add("MinionVisualLoadoutExtension", {
-				breed = breed,
-				random_seed = inventory_seed,
-				inventory = inventory,
-			})
+
+			if inventory then
+				config:add("MinionVisualLoadoutExtension", {
+					breed = breed,
+					random_seed = inventory_seed,
+					inventory = inventory,
+				})
+			end
+
 			config:add("MinionFxExtension", {
 				breed = breed,
 			})
@@ -1836,9 +1874,12 @@ local unit_templates = {
 				side_id = side_id,
 				breed = breed,
 			})
-			config:add("PhysicsUnitProximityActorExtension", {
-				time_caching_enabled = true,
-			})
+
+			if not breed.always_update_unit then
+				config:add("PhysicsUnitProximityActorExtension", {
+					time_caching_enabled = true,
+				})
+			end
 
 			if breed.look_at_tag then
 				config:add("PointOfInterestTargetExtension", {
@@ -1912,6 +1953,9 @@ local unit_templates = {
 				selected_attack_names = selected_attack_names,
 			}
 
+			behavior_extension_init_data.owning_auto_event_id = init_data.optional_owning_auto_event_id
+			behavior_extension_init_data.group_target = init_data.optional_group_target
+
 			if breed.combat_range_data then
 				behavior_extension_init_data.phase_template = phase_template
 				behavior_extension_init_data.combat_range_multi_config_key = combat_range_multi_config_key
@@ -1935,6 +1979,22 @@ local unit_templates = {
 
 			if breed.tokens then
 				config:add("TokenExtension", {
+					breed = breed,
+				})
+			end
+
+			if breed.flee_settings then
+				config:add("FleeExtension", {
+					breed = breed,
+				})
+			end
+
+			local scripted_animation_settings = breed.scripted_animation_settings
+
+			if scripted_animation_settings then
+				local extension_name = scripted_animation_settings.extension_name
+
+				config:add(extension_name, {
 					breed = breed,
 				})
 			end
@@ -2000,17 +2060,22 @@ local unit_templates = {
 				breed = breed,
 				random_seed = animation_seed,
 			})
-			config:add("MinionVisualLoadoutExtension", {
-				breed = breed,
-				random_seed = inventory_seed,
-				inventory = inventory,
-			})
+
+			if inventory then
+				config:add("MinionVisualLoadoutExtension", {
+					breed = breed,
+					random_seed = inventory_seed,
+					inventory = inventory,
+				})
+			end
+
 			config:add("MinionFxExtension", {
 				breed = breed,
 			})
 			config:add("MinionHuskLocomotionExtension", {
 				breed = breed,
 			})
+			config:add("MinionHuskNavigationExtension")
 			config:add("SideExtension", {
 				side_id = side_id,
 				breed = breed,
@@ -2070,9 +2135,13 @@ local unit_templates = {
 				side_id = side_id,
 				breed = breed,
 			})
-			config:add("PhysicsUnitProximityActorExtension", {
-				time_caching_enabled = false,
-			})
+
+			if not breed.always_update_unit then
+				config:add("PhysicsUnitProximityActorExtension", {
+					time_caching_enabled = false,
+				})
+			end
+
 			config:add("MissionObjectiveTargetExtension")
 
 			if breed.uses_script_components then
@@ -2099,6 +2168,16 @@ local unit_templates = {
 
 			if breed.tokens then
 				config:add("TokenExtension", {
+					breed = breed,
+				})
+			end
+
+			local scripted_animation_settings = breed.scripted_animation_settings
+
+			if scripted_animation_settings then
+				local extension_name = scripted_animation_settings.extension_name
+
+				config:add(extension_name, {
 					breed = breed,
 				})
 			end
@@ -2280,11 +2359,25 @@ local unit_templates = {
 				config:add("PickupAnimationExtension")
 			end
 
+			local luggable_explosion_component_data = pickup_settings.luggable_explosion_component_data
+
+			if luggable_explosion_component_data then
+				config:add("PropHealthExtension", {
+					health = luggable_explosion_component_data.max_health,
+					has_health_bar = luggable_explosion_component_data.has_health_bar,
+					hit_mass = luggable_explosion_component_data.hit_mass,
+					is_unkillable = luggable_explosion_component_data.unkillable,
+					is_invulnerable = luggable_explosion_component_data.invulnerable,
+					invulnerable_when_carried = luggable_explosion_component_data.invulnerable_when_carried,
+				})
+			end
+
 			config:add("InteracteeExtension", {
 				interaction_type = pickup_settings.interaction_type,
 				spawn_interaction_cooldown = optional_spawn_interaction_cooldown,
 				override_context = {
 					description = pickup_settings.description,
+					extra_description = pickup_settings.extra_description,
 					interaction_icon = pickup_settings.interaction_icon,
 				},
 			})
@@ -2309,7 +2402,9 @@ local unit_templates = {
 			game_object_data.position = Unit.local_position(unit, 1)
 
 			if pickup_group ~= "luggable" then
-				game_object_data.charges = pickup_settings.num_charges or 1
+				local num_charges = pickup_settings.num_charges or 1
+
+				game_object_data.charges = num_charges == math.huge and -1 or num_charges
 			elseif pickup_group == "luggable" then
 				game_object_data.projectile_template_id = projectile_template_name_id
 			end
@@ -2369,10 +2464,19 @@ local unit_templates = {
 				config:add("PickupAnimationExtension")
 			end
 
+			local luggable_explosion_component_data = pickup_settings.luggable_explosion_component_data
+
+			if luggable_explosion_component_data then
+				config:add("PropHealthExtension", {
+					has_health_bar = luggable_explosion_component_data.has_health_bar,
+				})
+			end
+
 			config:add("InteracteeExtension", {
 				interaction_type = pickup_settings.interaction_type,
 				override_context = {
 					description = pickup_settings.description,
+					extra_description = pickup_settings.extra_description,
 					interaction_icon = pickup_settings.interaction_icon,
 				},
 			})
@@ -2383,6 +2487,100 @@ local unit_templates = {
 				})
 			end
 
+			config:add("ComponentExtension")
+		end,
+		local_unit_spawned = function (unit, template_context, game_object_data, pickup_settings, optional_placed_on_unit, optional_spawn_interaction_cooldown, optional_origin_player)
+			if pickup_settings and pickup_settings.spawn_unit_component_event then
+				Component.event(unit, pickup_settings.spawn_unit_component_event, pickup_settings)
+			end
+
+			if pickup_settings and pickup_settings.spawn_flow_event then
+				Unit.flow_event(unit, pickup_settings.spawn_flow_event)
+			end
+
+			local luggable_explosion_component_data = pickup_settings.luggable_explosion_component_data
+
+			if luggable_explosion_component_data then
+				local starts_enabled = true
+				local component_ext = ScriptUnit.extension(unit, "component_system")
+
+				component_ext:add_component("PropHealth", unit, starts_enabled, luggable_explosion_component_data)
+				component_ext:add_component("ExplosiveLuggable", unit, starts_enabled, luggable_explosion_component_data)
+			end
+		end,
+		husk_unit_spawned = function (unit, template_context, game_session, game_object_id, owner_id)
+			local pickup_name = Unit.get_data(unit, "pickup_type")
+			local pickup_settings = Pickups.by_name[pickup_name]
+
+			if pickup_settings and pickup_settings.spawn_unit_component_event then
+				Component.event(unit, pickup_settings.spawn_unit_component_event, pickup_settings)
+			end
+
+			if pickup_settings and pickup_settings.spawn_flow_event then
+				Unit.flow_event(unit, pickup_settings.spawn_flow_event)
+			end
+
+			local luggable_explosion_component_data = pickup_settings.luggable_explosion_component_data
+
+			if luggable_explosion_component_data then
+				local starts_enabled = true
+				local component_ext = ScriptUnit.extension(unit, "component_system")
+
+				component_ext:add_component("PropHealth", unit, starts_enabled, luggable_explosion_component_data)
+				component_ext:add_component("ExplosiveLuggable", unit, starts_enabled, luggable_explosion_component_data)
+			end
+		end,
+	},
+	decoy = {
+		local_unit = function (unit_name, position, rotation, material, pickup_settings, ...)
+			unit_name = unit_name or pickup_settings.unit_name
+
+			return unit_name, position, rotation, material
+		end,
+		husk_unit = function (session, object_id)
+			local pickup_id = GameSession.game_object_field(session, object_id, "pickup_id")
+			local pickup_name = NetworkLookup.pickup_names[pickup_id]
+			local pickup_settings = Pickups.by_name[pickup_name]
+			local unit_name = pickup_settings.unit_name
+			local position, rotation = _position_rotation_from_game_object(session, object_id)
+
+			return unit_name, position, rotation
+		end,
+		game_object_type = function (pickup_settings)
+			local game_object_type = pickup_settings.game_object_type
+
+			return game_object_type
+		end,
+		local_init = function (unit, config, template_context, game_object_data, pickup_settings, optional_placed_on_unit, optional_spawn_interaction_cooldown, optional_origin_player)
+			local is_server = template_context.is_server
+			local pickup_name = pickup_settings.name
+
+			Unit.set_data(unit, "pickup_type", pickup_name)
+			Unit.set_data(unit, "is_pickup", true)
+			config:add("ComponentExtension")
+
+			local pickup_id = NetworkLookup.pickup_names[pickup_name]
+
+			game_object_data.pickup_id = pickup_id
+			game_object_data.position = Unit.local_position(unit, 1)
+
+			local rotation = Unit.local_rotation(unit, 1)
+			local game_object_type = pickup_settings.game_object_type
+
+			if Network.object_has_field(game_object_type, "rotation") then
+				game_object_data.rotation = rotation
+			else
+				game_object_data.yaw = Quaternion.yaw(rotation)
+				game_object_data.pitch = Quaternion.pitch(rotation)
+			end
+		end,
+		husk_init = function (unit, config, template_context, game_session, game_object_id, owner_id)
+			local go_field = GameSession.game_object_field
+			local pickup_id = go_field(game_session, game_object_id, "pickup_id")
+			local pickup_name = NetworkLookup.pickup_names[pickup_id]
+
+			Unit.set_data(unit, "pickup_type", pickup_name)
+			Unit.set_data(unit, "is_pickup", true)
 			config:add("ComponentExtension")
 		end,
 		local_unit_spawned = function (unit, template_context, game_object_data, pickup_settings, optional_placed_on_unit, optional_spawn_interaction_cooldown, optional_origin_player)
@@ -2408,17 +2606,31 @@ local unit_templates = {
 		end,
 	},
 	item_projectile = {
-		local_unit = function (unit_name, position, rotation, material, item)
-			unit_name = unit_name or item.base_unit
+		local_unit = function (unit_name, position, rotation, material, item, projectile_template, starting_state, direction, speed, momentum, owner_unit)
+			local unit_data_extension = ScriptUnit.has_extension(owner_unit, "unit_data_system")
+			local breed = unit_data_extension and unit_data_extension:breed()
+			local breed_name_or_nil = breed and breed.name or nil
+
+			unit_name = unit_name or Items.base_unit(item, breed_name_or_nil)
 
 			return unit_name, position, rotation
 		end,
 		husk_unit = function (session, object_id)
 			local item_definitions = MasterItems.get_cached()
+			local owner_unit_id = GameSession.game_object_field(session, object_id, "owner_unit_id")
+			local owner_unit
+
+			if owner_unit_id ~= NetworkConstants.invalid_game_object_id then
+				owner_unit = Managers.state.unit_spawner:unit(owner_unit_id)
+			end
+
+			local unit_data_extension = ScriptUnit.has_extension(owner_unit, "unit_data_system")
+			local breed = unit_data_extension and unit_data_extension:breed()
+			local breed_name_or_nil = breed and breed.name or nil
 			local item_id = GameSession.game_object_field(session, object_id, "item_id")
 			local item_name = NetworkLookup.player_item_names[item_id]
 			local item = item_definitions[item_name]
-			local unit_name = item.base_unit
+			local unit_name = Items.base_unit(item, breed_name_or_nil)
 			local position, rotation = _position_rotation_from_game_object(session, object_id)
 
 			return unit_name, position, rotation
@@ -2589,9 +2801,9 @@ local unit_templates = {
 			end
 		end,
 	},
-	item_deployable_projectile = {
+	item_deployable_side_relation_projectile = {
 		local_unit = function (unit_name, position, rotation, material, item)
-			unit_name = unit_name or item.base_unit
+			unit_name = unit_name or Items.base_unit(item)
 
 			return unit_name, position, rotation
 		end,
@@ -2600,13 +2812,13 @@ local unit_templates = {
 			local item_id = GameSession.game_object_field(session, object_id, "item_id")
 			local item_name = NetworkLookup.player_item_names[item_id]
 			local item = item_definitions[item_name]
-			local unit_name = item.base_unit
+			local unit_name = Items.base_unit(item)
 			local position, rotation = _position_rotation_from_game_object(session, object_id)
 
 			return unit_name, position, rotation
 		end,
 		game_object_type = function ()
-			return "item_deployable_projectile"
+			return "item_deployable_side_relation_projectile"
 		end,
 		local_init = function (unit, config, template_context, game_object_data, item, projectile_template, starting_state, direction, speed, momentum_or_angular_velocity, owner_unit, is_critical_strike, origin_item_slot, charge_level, target_unit, target_position, weapon_item_or_nil, fuse_override_time_or_nil, owner_side_or_nil)
 			local is_server = template_context.is_server
@@ -2693,15 +2905,18 @@ local unit_templates = {
 				optional_item = item,
 			})
 
-			local broadphase_system = Managers.state.extension:system("broadphase_system")
-			local broadphase = broadphase_system.broadphase
 			local relation_init_data = projectile_template.deployable.relation_init_data
 
-			config:add("SideRelationProximityExtension", {
-				owner_unit_or_nil = owner_unit,
-				broadphase = broadphase,
-				relation_init_data = relation_init_data,
-			})
+			if relation_init_data then
+				local broadphase_system = Managers.state.extension:system("broadphase_system")
+				local broadphase = broadphase_system.broadphase
+
+				config:add("SideRelationProximityExtension", {
+					owner_unit_or_nil = owner_unit,
+					broadphase = broadphase,
+					relation_init_data = relation_init_data,
+				})
+			end
 
 			if projectile_template.uses_script_components then
 				config:add("ComponentExtension")
@@ -2968,7 +3183,7 @@ local unit_templates = {
 			end
 		end,
 	},
-	force_field = {
+	psyker_force_field = {
 		local_unit = function (unit_name, position, rotation, ...)
 			local yaw_rotation = Quaternion.from_yaw_pitch_roll(Quaternion.yaw(rotation), 0, 0)
 
@@ -2982,9 +3197,9 @@ local unit_templates = {
 			return unit_name, position, rotation
 		end,
 		game_object_type = function ()
-			return "force_field"
+			return "psyker_force_field"
 		end,
-		local_init = function (unit, config, template_context, game_object_data, husk_unit_name, placed_on_unit, owner_unit, shape_override)
+		local_init = function (unit, config, template_context, game_object_data, husk_unit_name, placed_on_unit, owner_unit, shape_override, ability_type, deployable_settings)
 			local is_server = template_context.is_server
 
 			if shape_override == nil then
@@ -2994,12 +3209,15 @@ local unit_templates = {
 			config:add("DeployableUnitLocomotionExtension", {
 				placed_on_unit = placed_on_unit,
 			})
-			config:add("ForceFieldExtension", {
+			config:add("PsykerForceFieldUnitExtension", {
 				owner_unit = owner_unit,
 				shape_override = shape_override,
+				deployable_settings = deployable_settings,
 			})
-			config:add("ForceFieldHealthExtension", {
+			config:add("PsykerForceFieldUnitHealthExtension", {
 				owner_unit = owner_unit,
+				ability_type = ability_type,
+				deployable_settings = deployable_settings,
 			})
 
 			local rotation = Unit.local_rotation(unit, 1)
@@ -3023,6 +3241,8 @@ local unit_templates = {
 			else
 				game_object_data.owner_unit_id = NetworkConstants.invalid_game_object_id
 			end
+
+			game_object_data.deployable_settings_id = NetworkLookup.deployable_settings[deployable_settings and deployable_settings.name or "n/a"]
 		end,
 		husk_init = function (unit, config, template_context, game_session, game_object_id, owner_id)
 			local owner_unit_id = GameSession.game_object_field(game_session, game_object_id, "owner_unit_id")
@@ -3034,13 +3254,17 @@ local unit_templates = {
 
 			local shape_override_id = GameSession.game_object_field(game_session, game_object_id, "shape_override")
 			local shape_override = NetworkLookup.force_field_shape_overrides[shape_override_id]
+			local deplyable_settings_id = GameSession.game_object_field(game_session, game_object_id, "deployable_settings_id")
+			local deployable_settings_name = NetworkLookup.deployable_settings[deplyable_settings_id]
+			local deployable_settings = deployable_settings_name ~= "n/a" and Deployables[deployable_settings_name] or nil
 
 			config:add("DeployableHuskLocomotionExtension", {})
-			config:add("ForceFieldExtension", {
+			config:add("PsykerForceFieldUnitExtension", {
 				owner_unit = owner_unit,
 				shape_override = shape_override,
+				deployable_settings = deployable_settings,
 			})
-			config:add("ForceFieldHuskHealthExtension", {})
+			config:add("PsykerForceFieldHuskHealthExtension", {})
 		end,
 	},
 	health_station = {
@@ -3444,6 +3668,7 @@ local unit_templates = {
 			config:add("MinionHuskLocomotionExtension", {
 				breed = breed,
 			})
+			config:add("MinionHuskNavigationExtension")
 			config:add("SideExtension", {
 				side_id = side_id,
 				breed = breed,
@@ -3516,6 +3741,343 @@ local unit_templates = {
 			if has_owner then
 				player_unit_spawn_manager:relinquish_unit_ownership(unit)
 			end
+		end,
+	},
+	spineless_breed_unit = {
+		local_unit = function (unit_name, position, rotation, material, init_data, ...)
+			local breed, random_seed = init_data.breed, init_data.random_seed
+
+			unit_name = unit_name or breed.base_unit
+
+			local size_variation_range = breed.size_variation_range
+
+			if size_variation_range then
+				local pose = _size_variation_pose_from_breed(position, rotation, size_variation_range, random_seed)
+
+				return unit_name, pose, material
+			else
+				return unit_name, position, rotation, material
+			end
+		end,
+		husk_unit = _breed_unit_name_position_rotation_from_game_object,
+		game_object_type = function (init_data, ...)
+			local breed = init_data.breed
+			local game_object_type = breed.game_object_type
+
+			return game_object_type
+		end,
+		local_init = function (unit, config, template_context, game_object_data, init_data, ...)
+			local breed, side_id = init_data.breed, init_data.side_id
+			local broadphase_radius, broadphase_categories = _broadphase_radius_and_categories(breed, side_id)
+			local blackboard_component_config = breed.blackboard_component_config
+			local breed_name, behavior_tree_name = breed.name, breed.behavior_tree_name
+			local spawn_buffs = breed.spawn_buffs
+			local random_seed = init_data.random_seed
+			local game_object_type = breed.game_object_type
+			local breed_id = NetworkLookup.breed_names[breed_name]
+			local rotation = Unit.local_rotation(unit, 1)
+
+			game_object_data.breed_id = breed_id
+			game_object_data.position = Unit.local_position(unit, 1)
+
+			if Network.object_has_field(game_object_type, "rotation") then
+				game_object_data.rotation = rotation
+			end
+
+			local game_time = Managers.time:time("gameplay")
+
+			game_object_data.spawn_time = game_time
+			game_object_data.side_id = side_id
+			game_object_data.has_teleported = 1
+			game_object_data.random_seed = random_seed
+			game_object_data.target_unit_id = NetworkConstants.invalid_game_object_id
+
+			config:add("BlackboardExtension", {
+				component_config = blackboard_component_config,
+			})
+			config:add("BroadphaseExtension", {
+				moving = true,
+				radius = broadphase_radius,
+				categories = broadphase_categories,
+			})
+			config:add("MinionUnitDataExtension", {
+				breed = breed,
+			})
+			config:add("MinionNavigationExtension", {
+				breed = breed,
+			})
+			config:add("SideExtension", {
+				side_id = side_id,
+				breed = breed,
+			})
+			config:add("MinionLocomotionExtension", {
+				breed = breed,
+			})
+
+			local has_health_bar = breed.has_health_bar
+
+			has_health_bar = has_health_bar or DevParameters.show_health_bars_on_elite_and_specials and (breed.tags.elite or breed.tags.special)
+
+			local health_modifier = init_data.optional_health_modifier or 1
+			local health = Managers.state.difficulty:get_minion_max_health(breed_name) * health_modifier
+			local hit_mass = breed.hit_mass
+
+			if type(hit_mass) == "table" then
+				hit_mass = Managers.state.difficulty:get_table_entry_by_challenge(hit_mass)
+			end
+
+			local is_unkillable, is_invulnerable = false, false
+
+			config:add("HealthExtension", {
+				health = health,
+				has_health_bar = has_health_bar,
+				hit_mass = hit_mass,
+				is_unkillable = is_unkillable,
+				is_invulnerable = is_invulnerable,
+			})
+
+			local behavior_extension_init_data = {
+				selected_attack_names = nil,
+				breed = breed,
+				behavior_tree_name = behavior_tree_name,
+			}
+
+			config:add("MinionBehaviorExtension", behavior_extension_init_data)
+
+			local optional_target_unit = init_data.optional_target_unit
+
+			if breed.vortex_template then
+				config:add("MinionVortexExtension", {
+					breed = breed,
+					target_unit = optional_target_unit,
+					spawn_time = game_time,
+				})
+			end
+
+			if breed.name == "nurgle_flies" then
+				config:add("MinionNurgleFliesExtension", {
+					breed = breed,
+					target_unit = optional_target_unit,
+					spawn_time = game_time,
+				})
+			end
+
+			config:add("ComponentExtension")
+			config:parse_unit(unit)
+		end,
+		husk_init = function (unit, config, template_context, game_session, game_object_id, owner_id)
+			local go_field = GameSession.game_object_field
+			local side_id = go_field(game_session, game_object_id, "side_id")
+			local breed_id = go_field(game_session, game_object_id, "breed_id")
+			local breed_name = NetworkLookup.breed_names[breed_id]
+			local breed = Breeds[breed_name]
+			local broadphase_radius, broadphase_categories = _broadphase_radius_and_categories(breed, side_id)
+
+			config:add("BroadphaseExtension", {
+				moving = true,
+				radius = broadphase_radius,
+				categories = broadphase_categories,
+			})
+			config:add("MinionUnitDataExtension", {
+				breed = breed,
+			})
+			config:add("SideExtension", {
+				side_id = side_id,
+				breed = breed,
+			})
+			config:add("MinionHuskLocomotionExtension", {
+				breed = breed,
+			})
+			config:add("MinionHuskNavigationExtension")
+
+			local has_health_bar = breed.has_health_bar
+
+			config:add("HuskHealthExtension", {
+				has_health_bar = has_health_bar,
+			})
+
+			local spawn_time = go_field(game_session, game_object_id, "spawn_time")
+
+			if breed.vortex_template then
+				config:add("MinionVortexExtension", {
+					breed = breed,
+					spawn_time = spawn_time,
+				})
+			end
+
+			if breed.name == "nurgle_flies" then
+				config:add("MinionNurgleFliesExtension", {
+					breed = breed,
+					spawn_time = spawn_time,
+				})
+			end
+
+			config:add("ComponentExtension")
+			config:parse_unit(unit)
+		end,
+	},
+	expedition_airstrike_bomb = {
+		local_unit = function (unit_name, position, rotation, material, prop_settings, placed_on_unit, spawn_interaction_cooldown)
+			unit_name = unit_name or prop_settings.unit_name
+
+			return unit_name, position, rotation, material
+		end,
+		husk_unit = function (session, object_id)
+			local unit_name = "content/environment/gameplay/valkyrie_bombs/valkyrie_bomb_01"
+			local position, rotation = _position_rotation_from_game_object(session, object_id)
+
+			return unit_name, position, rotation
+		end,
+		game_object_type = function ()
+			return "expedition_airstrike_bomb"
+		end,
+		local_init = function (unit, config, template_context, game_object_data, force_direction_boxed)
+			config:add("ComponentExtension")
+			config:parse_unit(unit)
+
+			game_object_data.position = Unit.local_position(unit, 1)
+			game_object_data.rotation = Unit.local_rotation(unit, 1)
+
+			local force_direction = force_direction_boxed:unbox()
+
+			game_object_data.force_direction = force_direction
+
+			local actor = Unit.actor(unit, "c_simple")
+			local mass = Unit.get_data(unit, "mass") or 1
+			local speed = Unit.get_data(unit, "speed_on_hit") or 2
+
+			Actor.add_impulse(actor, force_direction * mass * speed)
+			Actor.add_angular_velocity(actor, force_direction * mass * speed)
+		end,
+		husk_init = function (unit, config, template_context, game_session, game_object_id, owner_id)
+			config:add("ComponentExtension")
+			config:parse_unit(unit)
+
+			local force_direction = GameSession.game_object_field(game_session, game_object_id, "force_direction")
+			local actor = Unit.actor(unit, "c_simple")
+			local mass = Unit.get_data(unit, "mass") or 1
+			local speed = Unit.get_data(unit, "speed_on_hit") or 2
+
+			Actor.add_impulse(actor, force_direction * mass * speed)
+			Actor.add_angular_velocity(actor, force_direction * mass * speed)
+		end,
+	},
+	expedition_airstrike_supply = {
+		local_unit = function (unit_name, position, rotation, material, prop_settings, placed_on_unit, spawn_interaction_cooldown)
+			unit_name = unit_name or prop_settings.unit_name
+
+			return unit_name, position, rotation, material
+		end,
+		husk_unit = function (session, object_id)
+			local unit_name = "content/environment/artsets/imperial/expeditions/airstrike/supply_drop/stock_pallet_crates_supply_drop_01"
+			local position, rotation = _position_rotation_from_game_object(session, object_id)
+
+			return unit_name, position, rotation
+		end,
+		game_object_type = function ()
+			return "expedition_airstrike_supply"
+		end,
+		local_init = function (unit, config, template_context, game_object_data, force_direction_boxed)
+			local interaction_type = "chest"
+			local description = "airstrike_supply_drop"
+			local interaction_icon = "content/ui/materials/hud/interactions/icons/environment_generic"
+			local optional_spawn_interaction_cooldown
+			local start_inactive = true
+
+			config:add("InteracteeExtension", {
+				interaction_type = interaction_type,
+				spawn_interaction_cooldown = optional_spawn_interaction_cooldown,
+				start_inactive = start_inactive,
+				override_context = {
+					description = description,
+					interaction_icon = interaction_icon,
+				},
+			})
+			config:add("ChestExtension")
+			config:add("ComponentExtension")
+			config:parse_unit(unit)
+
+			game_object_data.position = Unit.local_position(unit, 1)
+			game_object_data.rotation = Unit.local_rotation(unit, 1)
+
+			local force_direction = force_direction_boxed:unbox()
+
+			game_object_data.force_direction = force_direction
+		end,
+		husk_init = function (unit, config, template_context, game_session, game_object_id, owner_id)
+			local interaction_type = "chest"
+			local description = "airstrike_supply_drop"
+			local interaction_icon = "content/ui/materials/hud/interactions/icons/environment_generic"
+			local optional_spawn_interaction_cooldown
+			local start_inactive = true
+
+			config:add("InteracteeExtension", {
+				interaction_type = interaction_type,
+				spawn_interaction_cooldown = optional_spawn_interaction_cooldown,
+				start_inactive = start_inactive,
+				override_context = {
+					description = description,
+					interaction_icon = interaction_icon,
+				},
+			})
+			config:add("ComponentExtension")
+			config:parse_unit(unit)
+
+			local force_direction = GameSession.game_object_field(game_session, game_object_id, "force_direction")
+		end,
+	},
+	area_of_effect_unit_spawner = {
+		local_unit = function (unit_name, position, rotation, material)
+			return unit_name, position, rotation, material
+		end,
+		husk_unit = function (session, object_id)
+			local unit_name = "content/empty_unit"
+			local position, rotation = _position_rotation_from_game_object(session, object_id)
+
+			return unit_name, position, rotation
+		end,
+		game_object_type = function ()
+			return "area_of_effect_unit_spawner"
+		end,
+		local_init = function (unit, config, template_context, game_object_data, husk_unit_name, placed_on_unit, owner_unit, unit_template_parameters)
+			local salvo_seed = math.random_seed()
+			local aoe_template_name = unit_template_parameters.aoe_template_name
+
+			config:add("AreaOfEffectUnitSpawnerExtension", {
+				aoe_template_name = aoe_template_name,
+				source_position = unit_template_parameters.source_position,
+				salvo_seed = salvo_seed,
+				owner_unit = owner_unit,
+			})
+			config:parse_unit(unit)
+
+			local owner_game_object_id = owner_unit and Managers.state.unit_spawner:game_object_id(owner_unit) or NetworkConstants.invalid_game_object_id
+
+			game_object_data.position = Unit.local_position(unit, 1)
+			game_object_data.rotation = Unit.local_rotation(unit, 1)
+			game_object_data.aoe_template_id = NetworkLookup.area_of_effect_unit_spawner_templates[aoe_template_name]
+			game_object_data.salvo_seed = salvo_seed
+			game_object_data.owner_unit_id = owner_game_object_id
+		end,
+		husk_init = function (unit, config, template_context, game_session, game_object_id, owner_id)
+			local aoe_template_id = GameSession.game_object_field(game_session, game_object_id, "aoe_template_id")
+			local aoe_template_name = NetworkLookup.area_of_effect_unit_spawner_templates[aoe_template_id]
+			local salvo_seed = GameSession.game_object_field(game_session, game_object_id, "salvo_seed")
+			local source_position = GameSession.game_object_field(game_session, game_object_id, "source_position")
+			local owner_unit_id = GameSession.game_object_field(game_session, game_object_id, "owner_unit_id")
+			local owner_unit
+
+			if owner_unit_id ~= NetworkConstants.invalid_game_object_id then
+				owner_unit = Managers.state.unit_spawner:unit(owner_unit_id)
+			end
+
+			config:add("AreaOfEffectUnitSpawnerExtension", {
+				aoe_template_name = aoe_template_name,
+				source_position = source_position,
+				salvo_seed = salvo_seed,
+				owner_unit = owner_unit,
+			})
+			config:parse_unit(unit)
 		end,
 	},
 	broker_stimm_field_crate_deployable = {
@@ -3651,6 +4213,91 @@ local unit_templates = {
 			if has_owner then
 				player_unit_spawn_manager:relinquish_unit_ownership(unit)
 			end
+		end,
+	},
+	deployable_mine = {
+		local_unit = function (unit_name, position, rotation, material, item)
+			unit_name = unit_name or Items.base_unit(item)
+
+			return unit_name, position, rotation
+		end,
+		husk_unit = function (session, object_id)
+			local item_definitions = MasterItems.get_cached()
+			local item_id = GameSession.game_object_field(session, object_id, "item_id")
+			local item_name = NetworkLookup.player_item_names[item_id]
+			local item = item_definitions[item_name]
+			local unit_name = Items.base_unit(item)
+			local position, rotation = _position_rotation_from_game_object(session, object_id)
+
+			return unit_name, position, rotation
+		end,
+		game_object_type = function ()
+			return "deployable_mine"
+		end,
+		local_unit_spawned = function (unit, template_context, game_object_data, item, projectile_template, starting_state, direction, speed, momentum_or_angular_velocity, owner_unit, is_critical_strike, origin_item_slot, charge_level, target_unit, target_position, weapon_item_or_nil, fuse_override_time_or_nil, owner_side_or_nil)
+			local mine_settings_id = game_object_data.mine_settings_id
+			local mine_settings_name = NetworkLookup.motion_triggered_explosives_settings[mine_settings_id]
+			local optional_component_data = {
+				setting_name = mine_settings_name,
+			}
+			local component_init_data = {
+				owner_unit = owner_unit,
+			}
+			local starts_enabled = true
+			local component_ext = ScriptUnit.extension(unit, "component_system")
+
+			component_ext:add_component("MotionTriggeredExplosive", unit, starts_enabled, optional_component_data, component_init_data)
+		end,
+		husk_unit_spawned = function (unit, template_context, game_session, game_object_id, owner_id)
+			local mine_settings_id = GameSession.game_object_field(game_session, game_object_id, "mine_settings_id")
+			local mine_settings_name = NetworkLookup.motion_triggered_explosives_settings[mine_settings_id]
+			local optional_component_data = {
+				setting_name = mine_settings_name,
+			}
+			local owner_unit_id = GameSession.game_object_field(game_session, game_object_id, "owner_unit_id")
+			local owner_unit
+
+			if owner_unit_id ~= NetworkConstants.invalid_game_object_id then
+				owner_unit = Managers.state.unit_spawner:unit(owner_unit_id)
+			end
+
+			local component_init_data = {
+				owner_unit = owner_unit,
+			}
+			local starts_enabled = true
+			local component_ext = ScriptUnit.extension(unit, "component_system")
+
+			component_ext:add_component("MotionTriggeredExplosive", unit, starts_enabled, optional_component_data, component_init_data)
+		end,
+		local_init = function (unit, config, template_context, game_object_data, item, owner_side_or_nil, mine_settings_name, _, _, _, owner_unit)
+			config:add("ComponentExtension")
+
+			local side_system = Managers.state.extension:system("side_system")
+			local side = owner_side_or_nil and side_system:get_side_from_name(owner_side_or_nil)
+			local side_id = side and side.side_id
+
+			game_object_data.side_id = side_id
+			game_object_data.position = Unit.local_position(unit, 1)
+			game_object_data.rotation = Unit.local_rotation(unit, 1)
+
+			local mine_settings_id = NetworkLookup.motion_triggered_explosives_settings[mine_settings_name]
+
+			game_object_data.mine_settings_id = mine_settings_id
+
+			local owner_unit_id = owner_unit and Managers.state.unit_spawner:game_object_id(owner_unit) or NetworkConstants.invalid_game_object_idend
+
+			game_object_data.owner_unit_id = owner_unit_id
+
+			local item_name = item.name
+			local item_id = NetworkLookup.player_item_names[item_name]
+
+			game_object_data.item_id = item_id
+
+			config:parse_unit(unit)
+		end,
+		husk_init = function (unit, config, template_context, game_session, game_object_id, owner_id)
+			config:add("ComponentExtension")
+			config:parse_unit(unit)
 		end,
 	},
 }

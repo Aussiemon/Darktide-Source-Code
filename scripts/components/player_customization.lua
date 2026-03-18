@@ -87,7 +87,6 @@ PlayerCustomization._customize = function (self, unit, item_definitions)
 	local item_names = self:get_data(unit, "attachment_items")
 	local face_item_name = self:get_data(unit, "face_item")
 	local face_attachment_items = self:get_data(unit, "face_attachments")
-	local global_material_override_table = self:get_data(unit, "global_material_override")
 	local global_material_override_items_table = self:get_data(unit, "global_material_override_items")
 	local item_defs = item_definitions or attach_settings.item_definitions
 
@@ -130,10 +129,6 @@ PlayerCustomization._customize = function (self, unit, item_definitions)
 		if bounding_volume then
 			LODGroup.override_bounding_volume(attach_settings.lod_shadow_group, bounding_volume)
 		end
-	end
-
-	for _, material_override in pairs(global_material_override_table) do
-		VisualLoadoutCustomization.apply_material_override(unit, unit, false, material_override, self._in_editor)
 	end
 
 	for _, material_override in pairs(global_material_override_items_table) do
@@ -232,14 +227,6 @@ PlayerCustomization.spawn_items = function (self, items, optional_mission_templa
 					end
 				end
 
-				local deform_overrides = item.deform_overrides
-
-				if deform_overrides then
-					for _, deform_override in pairs(deform_overrides) do
-						VisualLoadoutCustomization.apply_material_override(item_unit, unit, false, deform_override, false)
-					end
-				end
-
 				local deform_override_items = item.deform_override_items
 
 				if deform_override_items then
@@ -247,13 +234,6 @@ PlayerCustomization.spawn_items = function (self, items, optional_mission_templa
 						VisualLoadoutCustomization.apply_material_override_item(item_unit, unit, false, deform_override_item, false, attach_settings.item_definitions)
 					end
 				end
-
-				VisualLoadoutCustomization.apply_material_override(item_unit, unit, false, self:get_data(unit, "attachment_material_override_1", i), in_editor)
-				VisualLoadoutCustomization.apply_material_override(item_unit, unit, false, self:get_data(unit, "attachment_material_override_2", i), in_editor)
-				VisualLoadoutCustomization.apply_material_override(item_unit, unit, false, self:get_data(unit, "attachment_material_override_3", i), in_editor)
-				VisualLoadoutCustomization.apply_material_override(item_unit, unit, false, self:get_data(unit, "attachment_material_override_4", i), in_editor)
-				VisualLoadoutCustomization.apply_material_override(item_unit, unit, false, self:get_data(unit, "attachment_material_override_5", i), in_editor)
-				VisualLoadoutCustomization.apply_material_override(item_unit, unit, false, self:get_data(unit, "attachment_material_override_6", i), in_editor)
 
 				local material_override_items = self:get_data(unit, "attachment_material_override_items")
 
@@ -319,12 +299,6 @@ PlayerCustomization._spawn_facial_items = function (self, face_item_name, face_a
 			local units_by_slot_name = self._units_by_slot_name
 
 			units_by_slot_name[face_slot] = face_unit
-		end
-
-		local face_material_overrides = self:get_data(self._unit, "face_material_overrides")
-
-		for i = 1, #face_material_overrides do
-			VisualLoadoutCustomization.apply_material_override(face_unit, self._unit, false, face_material_overrides[i], self._in_editor)
 		end
 
 		local face_material_override_items = self:get_data(self._unit, "face_material_override_items")
@@ -456,15 +430,8 @@ PlayerCustomization.component_data = {
 		ui_name = "Face Attachment",
 		ui_type = "resource_array",
 	},
-	face_material_overrides = {
-		category = "Facial Attachments",
-		size = 1,
-		ui_name = "Face Material Overrides",
-		ui_type = "text_box_array",
-		validator = "contentpathsallowed",
-	},
 	face_material_override_items = {
-		category = "Attachment Item Material Overrides",
+		category = "Facial Attachments",
 		filter = "item",
 		size = 1,
 		ui_name = "Face Material Override Items",
@@ -490,57 +457,8 @@ PlayerCustomization.component_data = {
 		ui_name = "Item",
 		ui_type = "resource_array",
 	},
-	attachment_material_override_1 = {
-		category = "Attachments",
-		size = 1,
-		ui_name = "Material Override 1 for Item",
-		ui_type = "text_box_array",
-		validator = "contentpathsallowed",
-	},
-	attachment_material_override_2 = {
-		category = "Attachments",
-		size = 1,
-		ui_name = "Material Override 2 for Item",
-		ui_type = "text_box_array",
-		validator = "contentpathsallowed",
-	},
-	attachment_material_override_3 = {
-		category = "Attachments",
-		size = 1,
-		ui_name = "Material Override 3 for Item",
-		ui_type = "text_box_array",
-		validator = "contentpathsallowed",
-	},
-	attachment_material_override_4 = {
-		category = "Attachments",
-		size = 1,
-		ui_name = "Material Override 4 for Item",
-		ui_type = "text_box_array",
-		validator = "contentpathsallowed",
-	},
-	attachment_material_override_5 = {
-		category = "Attachments",
-		size = 1,
-		ui_name = "Material Override 5 for Item",
-		ui_type = "text_box_array",
-		validator = "contentpathsallowed",
-	},
-	attachment_material_override_6 = {
-		category = "Attachments",
-		size = 1,
-		ui_name = "Material Override 6 for Item",
-		ui_type = "text_box_array",
-		validator = "contentpathsallowed",
-	},
-	global_material_override = {
-		category = "Attachments",
-		size = 1,
-		ui_name = "Global Material Override",
-		ui_type = "text_box_array",
-		validator = "contentpathsallowed",
-	},
 	attachment_material_override_items = {
-		category = "Attachment Item Material Overrides",
+		category = "Attachments",
 		ui_name = "Item Material Overrides",
 		ui_type = "struct_array",
 		definition = {
@@ -561,7 +479,7 @@ PlayerCustomization.component_data = {
 		},
 	},
 	global_material_override_items = {
-		category = "Attachment Item Material Overrides",
+		category = "Attachments",
 		filter = "item",
 		size = 1,
 		ui_name = "Global Material Override Items",

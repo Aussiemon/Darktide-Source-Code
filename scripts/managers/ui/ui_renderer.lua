@@ -58,18 +58,23 @@ UIRenderer.clear_render_pass_queue = function (ui_renderer)
 	table.clear(ui_renderer.render_passes)
 end
 
-UIRenderer.create_viewport_renderer = function (world, ...)
+UIRenderer.create_viewport_renderer = function (world, name, ...)
 	local gui_retained = World.create_screen_gui(world, ...)
 	local gui = World.create_screen_gui(world, "immediate", ...)
 
-	return UIRenderer.create_ui_renderer(world, gui, gui_retained)
+	return UIRenderer.create_ui_renderer(world, gui, gui_retained, name)
 end
 
 UIRenderer.create_resource_renderer = function (world, gui, gui_retained, reference_name, material_name, optional_width, optional_height, ignore_back_buffer)
+	ResourceReferenceContext.push("UIRenderer.create_resource_renderer")
+	ResourceReferenceContext.push(reference_name)
+
 	local render_target = Renderer.create_resource("render_target", "R8G8B8A8", not ignore_back_buffer and "back_buffer" or nil, optional_width or 1, optional_height or 1, reference_name)
 	local render_target_material = Gui.create_material(gui, material_name, GuiMaterialFlag.GUI_RENDER_PASS_LAYER)
 
 	Material.set_resource(render_target_material, "source", render_target)
+	ResourceReferenceContext.pop(reference_name)
+	ResourceReferenceContext.pop("UIRenderer.create_resource_renderer")
 
 	return UIRenderer.create_ui_renderer(world, gui, gui_retained, reference_name, render_target, render_target_material)
 end
@@ -136,11 +141,17 @@ UIRenderer.create_material = function (self, material_name, retained_mode)
 	local material_flags = _get_material_flag(render_settings, nil, self.render_pass_flag)
 	local material
 
+	ResourceReferenceContext.push("UIRenderer.create_material")
+	ResourceReferenceContext.push(self.name)
+
 	if material_flags then
 		material = Gui.create_material(gui, material_name, material_flags)
 	else
 		material = Gui.create_material(gui, material_name)
 	end
+
+	ResourceReferenceContext.pop(self.name)
+	ResourceReferenceContext.pop("UIRenderer.create_material")
 
 	return material
 end

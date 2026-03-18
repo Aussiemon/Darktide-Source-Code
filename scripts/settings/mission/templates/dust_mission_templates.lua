@@ -13,9 +13,9 @@ local mission_templates = {
 		mission_name = "loc_mission_name_lm_scavenge",
 		mission_type = "investigation",
 		objectives = "lm_scavenge",
-		texture_big = "content/ui/textures/pj_missions/lm_scavenge_big",
-		texture_medium = "content/ui/textures/pj_missions/lm_scavenge_medium",
-		texture_small = "content/ui/textures/pj_missions/lm_scavenge_small",
+		texture_big = "content/ui/textures/missions/lm_scavenge_big",
+		texture_medium = "content/ui/textures/missions/lm_scavenge_medium",
+		texture_small = "content/ui/textures/missions/lm_scavenge_small",
 		wwise_state = "zone_4",
 		zone_id = "dust",
 		cinematics = {
@@ -49,7 +49,6 @@ local mission_templates = {
 			},
 		},
 		dialogue_settings = {
-			npc_story_ticker_enabled = false,
 			short_story_ticker_enabled = true,
 			story_ticker_enabled = true,
 		},
@@ -70,9 +69,9 @@ local mission_templates = {
 		mission_name = "loc_mission_name_dm_propaganda",
 		mission_type = "disruption",
 		objectives = "dm_propaganda",
-		texture_big = "content/ui/textures/pj_missions/dm_propaganda_big",
-		texture_medium = "content/ui/textures/pj_missions/dm_propaganda_medium",
-		texture_small = "content/ui/textures/pj_missions/dm_propaganda_small",
+		texture_big = "content/ui/textures/missions/dm_propaganda_big",
+		texture_medium = "content/ui/textures/missions/dm_propaganda_medium",
+		texture_small = "content/ui/textures/missions/dm_propaganda_small",
 		wwise_state = "zone_4",
 		zone_id = "dust",
 		cinematics = {
@@ -122,7 +121,6 @@ local mission_templates = {
 			},
 		},
 		dialogue_settings = {
-			npc_story_ticker_enabled = false,
 			short_story_ticker_enabled = true,
 			story_ticker_enabled = true,
 		},
@@ -144,9 +142,9 @@ local mission_templates = {
 		mission_name = "loc_mission_name_hm_strain",
 		mission_type = "disruption",
 		objectives = "hm_strain",
-		texture_big = "content/ui/textures/pj_missions/hm_strain_big",
-		texture_medium = "content/ui/textures/pj_missions/hm_strain_medium",
-		texture_small = "content/ui/textures/pj_missions/hm_strain_small",
+		texture_big = "content/ui/textures/missions/hm_strain_big",
+		texture_medium = "content/ui/textures/missions/hm_strain_medium",
+		texture_small = "content/ui/textures/missions/hm_strain_small",
 		wwise_state = "zone_4",
 		zone_id = "dust",
 		cinematics = {
@@ -183,9 +181,11 @@ local mission_templates = {
 				sergeant_a = {
 					"sergeant",
 					"tech_priest",
+					"pilot",
 				},
 				tech_priest_a = {
 					"tech_priest",
+					"pilot",
 				},
 				pilot_a = {
 					"tech_priest",
@@ -198,7 +198,6 @@ local mission_templates = {
 			},
 		},
 		dialogue_settings = {
-			npc_story_ticker_enabled = false,
 			short_story_ticker_enabled = true,
 			story_ticker_enabled = true,
 		},

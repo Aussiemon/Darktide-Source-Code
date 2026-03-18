@@ -7,9 +7,10 @@ local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/arc
 local ArchetypeToughnessTemplates = require("scripts/settings/toughness/archetype_toughness_templates")
 local ArchetypeWarpChargeTemplates = require("scripts/settings/warp_charge/archetype_warp_charge_templates")
 local UiSoundEvents = require("scripts/settings/ui/ui_sound_events")
+local CompanionSpawnConditions = require("scripts/utilities/companion_spawn_conditions")
 local archetype_data = {
 	archetype_background_large = "content/ui/materials/icons/classes/large/adamant",
-	archetype_badge = "content/ui/materials/icons/class_badges/adamant_01_01",
+	archetype_badge = "content/ui/materials/icons/class_badges/adamant_01",
 	archetype_description = "loc_class_adamant_description",
 	archetype_icon_large = "content/ui/materials/icons/classes/adamant",
 	archetype_icon_selection_large = "content/ui/materials/icons/classes/adamant_terminal",
@@ -25,14 +26,17 @@ local archetype_data = {
 	base_critical_strike_chance = 0.075,
 	breed = "human",
 	companion_breed = "companion_dog",
+	companions_number = 1,
 	deluxe_dlc = "adamant_deluxe",
 	health = 200,
 	knocked_down_health = 1000,
 	onboarding_intro_video_template_name = "adamant_intro",
 	requires_dlc = "adamant",
 	requires_dlc_reconciliation = nil,
+	spawn_companions_from_talent_func = nil,
 	talent_layout_file_path = "scripts/ui/views/talent_builder_view/layouts/adamant_tree",
 	talents_package_path = "packages/ui/views/talent_builder_view/adamant",
+	companions_spawn_condition_func = CompanionSpawnConditions.adamant_companion_spawn_conditions,
 	toughness = ArchetypeToughnessTemplates.adamant,
 	dodge = ArchetypeDodgeTemplates.adamant,
 	sprint = ArchetypeSprintTemplates.default,
@@ -54,7 +58,24 @@ local archetype_data = {
 		visit_chapel = true,
 	},
 	selection_sound_event = UiSoundEvents.character_create_archetype_adamant,
-	unique_weapons = {},
+	defining_weapons = {
+		{
+			display_name = "loc_weapon_family_powermaul_p2_m1",
+			item = "content/items/weapons/player/melee/powermaul_p2_m1",
+		},
+		{
+			display_name = "loc_weapon_family_powermaul_shield_p1_m1",
+			item = "content/items/weapons/player/melee/powermaul_shield_p1_m1",
+		},
+		{
+			display_name = "loc_weapon_family_shotgun_p4_m1",
+			item = "content/items/weapons/player/ranged/shotgun_p4_m1",
+		},
+		{
+			display_name = "loc_weapon_family_shotpistol_shield_p1_m1",
+			item = "content/items/weapons/player/ranged/shotpistol_shield_p1_m1",
+		},
+	},
 }
 
 return archetype_data

@@ -125,6 +125,14 @@ local weapon_component_config = {
 		default_value = 0,
 		network_type = "fixed_frame_offset_end_t_9bit",
 	},
+	unequip_slot = {
+		default_value = false,
+		network_type = "bool",
+	},
+	unwield_slot = {
+		default_value = false,
+		network_type = "bool",
+	},
 }
 local constants = {
 	acceleration = 19,
@@ -143,7 +151,7 @@ local constants = {
 	hang_ledge_spawn_offset = 0.5,
 	horizontal_climb_scale = 0.25,
 	hub_gravity = 35.46,
-	husk_position_lerp_speed = 20,
+	husk_rotation_lerp_speed_3p = 20,
 	jump_speed = 4,
 	jump_step_up_speed = 2,
 	knocked_down_damage_reduction_buff = "knocked_down_damage_reduction",
@@ -172,6 +180,7 @@ local constants = {
 	respawn_hot_join_height = 2.65,
 	respawn_hot_join_margin = 0.01,
 	respawn_hot_join_radius = 0.65,
+	rotation_lerp_speed_3p = 5,
 	slide_commit_time = 0.65,
 	slide_move_speed_threshold = 4.2,
 	sprint_jump_speed_threshold = 4.8,
@@ -584,6 +593,12 @@ local constants = {
 			wield_inputs = {
 				"wield_2",
 			},
+		},
+		slot_timed = {
+			mispredict_packages = false,
+			priority = 1,
+			slot_type = "weapon",
+			wieldable = true,
 		},
 		slot_pocketable = {
 			mispredict_packages = false,

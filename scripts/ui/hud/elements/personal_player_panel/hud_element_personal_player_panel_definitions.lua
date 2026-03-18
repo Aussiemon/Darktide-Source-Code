@@ -79,6 +79,20 @@ local scenegraph_definition = {
 			3,
 		},
 	},
+	expedition_currency = {
+		horizontal_alignment = "left",
+		parent = "panel_background",
+		vertical_alignment = "top",
+		size = {
+			200,
+			35,
+		},
+		position = {
+			415,
+			0,
+			2,
+		},
+	},
 }
 local hud_body_font_setting_name = "hud_body"
 local hud_body_font_settings = UIFontSettings[hud_body_font_setting_name]
@@ -502,6 +516,35 @@ local widget_definitions = {
 			},
 		},
 	}, "player_icon"),
+	expedition_currency = UIWidget.create_definition({
+		{
+			pass_type = "text",
+			style_id = "text",
+			value = "",
+			value_id = "text",
+			style = {
+				drop_shadow = true,
+				font_size = 22,
+				font_type = "machine_medium",
+				horizontal_alignment = "left",
+				material = "content/ui/materials/font_gradients/slug_font_gradient_header",
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "center",
+				vertical_alignment = "center",
+				text_color = {
+					255,
+					255,
+					255,
+					255,
+				},
+				offset = {
+					0,
+					0,
+					2,
+				},
+			},
+		},
+	}, "expedition_currency"),
 }
 local health_bar_segment_definition = UIWidget.create_definition({
 	{

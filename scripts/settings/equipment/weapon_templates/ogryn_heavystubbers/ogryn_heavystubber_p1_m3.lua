@@ -276,6 +276,7 @@ weapon_template.actions = {
 		abort_sprint = false,
 		allowed_during_sprint = false,
 		ammunition_usage = 1,
+		anim_end_event = "attack_finished",
 		anim_event = nil,
 		kind = "shoot_hit_scan",
 		minimum_hold_time = 0.025,

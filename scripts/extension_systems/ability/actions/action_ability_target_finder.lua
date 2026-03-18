@@ -3,7 +3,6 @@
 require("scripts/extension_systems/weapon/actions/action_ability_base")
 
 local ActionModules = require("scripts/extension_systems/weapon/actions/modules/action_modules")
-local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local ActionAbilityTargetFinder = class("ActionAbilityTargetFinder", "ActionAbilityBase")
 
 ActionAbilityTargetFinder.init = function (self, action_context, action_params, action_settings)
@@ -26,38 +25,23 @@ end
 
 ActionAbilityTargetFinder.start = function (self, action_settings, t, time_scale, action_start_params)
 	ActionAbilityTargetFinder.super.start(self, action_settings, t, time_scale, action_start_params)
+
+	local weapon_extension = ScriptUnit.extension(self._player_unit, "weapon_system")
+
+	weapon_extension:block_actions("weapon_action")
 	self._target_finder_module:start(t)
 end
 
 ActionAbilityTargetFinder.fixed_update = function (self, dt, t, time_in_action)
 	self._target_finder_module:fixed_update(dt, t)
-
-	if self._is_server then
-		local new_target_unit = self._action_module_target_finder_component.target_unit_1
-		local companion_spawner_extension = ScriptUnit.extension(self._player_unit, "companion_spawner_system")
-		local companion_unit = companion_spawner_extension:companion_unit()
-
-		if companion_unit and ALIVE[companion_unit] then
-			local companion_blackboard = BLACKBOARDS[companion_unit]
-			local whistle_component = Blackboard.write_component(companion_blackboard, "whistle")
-
-			whistle_component.current_target = new_target_unit
-
-			local sound_event = action_settings.companion_sound_event
-
-			if sound_event then
-				local fx_system = Managers.state.extension:system("fx_system")
-				local fx_node_name = "fx_jaw"
-				local fx_node = Unit.node(companion_unit, fx_node_name)
-
-				fx_system:trigger_wwise_event(sound_event, nil, companion_unit, fx_node)
-			end
-		end
-	end
 end
 
 ActionAbilityTargetFinder.finish = function (self, reason, data, t, time_in_action)
 	ActionAbilityTargetFinder.super.finish(self, reason, data, t, time_in_action)
+
+	local weapon_extension = ScriptUnit.extension(self._player_unit, "weapon_system")
+
+	weapon_extension:unblock_actions("weapon_action")
 	self._target_finder_module:finish(reason, data, t)
 end
 

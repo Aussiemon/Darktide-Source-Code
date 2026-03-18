@@ -9,7 +9,7 @@ local ArchetypeWarpChargeTemplates = require("scripts/settings/warp_charge/arche
 local UiSoundEvents = require("scripts/settings/ui/ui_sound_events")
 local archetype_data = {
 	archetype_background_large = "content/ui/materials/icons/classes/large/veteran",
-	archetype_badge = "content/ui/materials/icons/class_badges/veteran_01_01",
+	archetype_badge = "content/ui/materials/icons/class_badges/veteran_01",
 	archetype_description = "loc_class_veteran_description",
 	archetype_icon_large = "content/ui/materials/icons/classes/veteran",
 	archetype_icon_selection_large = "content/ui/materials/icons/classes/veteran_terminal",
@@ -24,11 +24,14 @@ local archetype_data = {
 	base_critical_strike_chance = 0.1,
 	breed = "human",
 	companion_breed = nil,
+	companions_number = 0,
+	companions_spawn_condition_func = nil,
 	deluxe_dlc = nil,
 	health = 150,
 	knocked_down_health = 1000,
 	requires_dlc = nil,
 	requires_dlc_reconciliation = nil,
+	spawn_companions_from_talent_func = nil,
 	talent_layout_file_path = "scripts/ui/views/talent_builder_view/layouts/veteran_tree",
 	talents_package_path = "packages/ui/views/talent_builder_view/veteran",
 	toughness = ArchetypeToughnessTemplates.veteran,
@@ -45,13 +48,25 @@ local archetype_data = {
 		veteran_supression_immunity = 1,
 	},
 	selection_sound_event = UiSoundEvents.character_create_archetype_veteran,
-	unique_weapons = {
+	defining_weapons = {
 		{
-			display_name = "loc_class_selection_unique_weapon_veteran_melee_1",
+			display_name = "loc_weapon_family_combataxe_p3_m1",
 			item = "content/items/weapons/player/melee/combataxe_p3_m1",
 		},
 		{
-			display_name = "loc_class_selection_unique_weapon_veteran_ranged_1",
+			display_name = "loc_weapon_family_chainsword_p1_m1",
+			item = "content/items/weapons/player/melee/chainsword_p1_m1",
+		},
+		{
+			display_name = "loc_weapon_family_lasgun_p1_m1",
+			item = "content/items/weapons/player/ranged/lasgun_p1_m1",
+		},
+		{
+			display_name = "loc_weapon_family_lasgun_p2_m2",
+			item = "content/items/weapons/player/ranged/lasgun_p2_m2",
+		},
+		{
+			display_name = "loc_weapon_family_plasmagun_p1_m1",
 			item = "content/items/weapons/player/ranged/plasmagun_p1_m1",
 		},
 	},

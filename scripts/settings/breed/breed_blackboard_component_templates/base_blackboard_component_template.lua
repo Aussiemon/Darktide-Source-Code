@@ -7,10 +7,15 @@ local base_template = {
 		game_session = "GameSession",
 		is_exiting_spawner = "boolean",
 		physics_world = "PhysicsWorld",
+		spawn_source = "string",
 		spawner_spawn_index = "number",
 		spawner_unit = "Unit",
 		unit = "Unit",
 		world = "World",
+	},
+	group_data = {
+		group_target = "Unit",
+		owning_auto_event_id = "string",
 	},
 	death = {
 		attack_direction = "Vector3Box",

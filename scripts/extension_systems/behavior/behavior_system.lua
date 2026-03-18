@@ -30,6 +30,10 @@ BehaviorSystem.on_gameplay_post_init = function (self, level)
 	self:call_gameplay_post_init_on_extensions(level)
 end
 
+BehaviorSystem.on_location_setup = function (self)
+	self:call_gameplay_post_init_on_extensions()
+end
+
 BehaviorSystem.on_reload = function (self, refreshed_resources)
 	self:_create_behavior_trees()
 	BehaviorSystem.super.on_reload(self, refreshed_resources)

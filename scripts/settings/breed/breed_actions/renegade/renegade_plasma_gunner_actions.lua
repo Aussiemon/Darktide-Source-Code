@@ -3,7 +3,6 @@
 local BreedShootTemplates = require("scripts/settings/breed/breed_shoot_templates")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local UtilityConsiderations = require("scripts/extension_systems/behavior/utility_considerations")
@@ -1124,6 +1123,7 @@ local action_data = {
 	},
 	shoot = {
 		attack_intensity_type = "elite_shotgun",
+		before_shoot_effect_template_name = "renegade_plasma_gunner_charge_up",
 		before_shoot_effect_template_timing = 2,
 		can_strafe_shoot = true,
 		clear_shot_line_of_sight_id = "eyes",
@@ -1216,7 +1216,6 @@ local action_data = {
 			left = "move_left_walk_aim",
 			right = "move_right_walk_aim",
 		},
-		before_shoot_effect_template = EffectTemplates.renegade_plasma_gunner_charge_up,
 		apply_buff_to_target_unit = {
 			buff_keyword = "reduced_toughness_generation",
 			buff_template_name = "renegade_plasma_gunner_toughness_reduction",
@@ -1225,12 +1224,27 @@ local action_data = {
 	use_stim = {
 		anim_event = "use_syringe",
 		duration = 1.6666666666666667,
+		effect_template_name = "minion_stim_effect",
 		exit_state = "to_riflemen",
-		effect_template = EffectTemplates.minion_stim_effect,
 		stim_buffs = {
 			"mutator_stimmed_minion_red",
 			"mutator_stimmed_minion_green",
 			"mutator_stimmed_minion_blue",
+		},
+	},
+	vortex_grabbed = {
+		ignore_rotate_towards_target = false,
+		anim_events = {
+			loop = {
+				"vortex_loop",
+			},
+			landing = {
+				"vortex_landing",
+			},
+		},
+		anim_durations = {
+			vortex_landing = 5.666666666666667,
+			vortex_loop = 0.3333333333333333,
 		},
 	},
 }

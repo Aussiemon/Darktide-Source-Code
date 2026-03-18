@@ -4,6 +4,8 @@ local talent_settings = {
 	ogryn_shared = {
 		tank = {
 			damage_taken_multiplier = 0.8,
+			damage_taken_while_dodging = 0.5,
+			dodge_linger_duration = 0.25,
 			static_movement_reduction_multiplier = 0,
 			toughness_damage_taken_multiplier = 0.75,
 		},
@@ -126,7 +128,7 @@ local talent_settings = {
 			sway_modifier = 0.4,
 		},
 		ogryn_wield_speed_increase = {
-			wield_speed = 0.2,
+			wield_speed = 0.35,
 		},
 		ogryn_ranged_damage_immunity = {
 			cooldown = 4,
@@ -178,7 +180,7 @@ local talent_settings = {
 		},
 		ogryn_thrust = {
 			max_stacks = 4,
-			melee_damage = 0.0375,
+			melee_damage = 0.075,
 			melee_impact_modifier = 0.075,
 		},
 		ogryn_suppression_increase = {
@@ -187,8 +189,10 @@ local talent_settings = {
 	},
 	ogryn_1 = {
 		combat_ability = {
+			ammo_return = 0.5,
 			clip_size_visualizer = 3,
 			cooldown = 80,
+			duration = 12,
 			max_charges = 1,
 			resistance_duration = 5,
 		},
@@ -293,7 +297,7 @@ local talent_settings = {
 			melee_damage_improved = 0.1,
 		},
 		passive_1 = {
-			cooldown = 1,
+			cooldown = 0.75,
 			impact_modifier = 0.25,
 			stamina = 0.05,
 		},

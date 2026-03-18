@@ -6,8 +6,8 @@ local ConstantElementOnboardingHandler = class("ConstantElementOnboardingHandler
 ConstantElementOnboardingHandler.init = function (self, parent, draw_layer, start_scale)
 	self:_initialize_settings()
 
-	self._current_state_name = nil
 	self._once_per_state_tracker = {}
+	self._active = false
 end
 
 ConstantElementOnboardingHandler._initialize_settings = function (self)
@@ -20,64 +20,26 @@ ConstantElementOnboardingHandler._initialize_settings = function (self)
 		tutorial_settings[#tutorial_settings + 1] = settings
 	end
 
-	local tutorial_settings_by_state = {}
-
-	for i = 1, #tutorial_settings do
-		local setting = tutorial_settings[i]
-		local valid_states = setting.valid_states
-
-		for j = 1, #valid_states do
-			local state = valid_states[j]
-			local settings = tutorial_settings_by_state[state]
-
-			if not settings then
-				settings = {}
-				tutorial_settings_by_state[state] = settings
-			end
-
-			settings[#settings + 1] = setting
-		end
-	end
-
 	self._tutorial_settings = tutorial_settings
-	self._tutorial_settings_by_state = tutorial_settings_by_state
 end
 
 ConstantElementOnboardingHandler.update = function (self, dt, t, ui_renderer, render_settings, input_service)
 	local current_sub_state_name = Managers.ui:get_current_sub_state_name()
 	local current_state_name = current_sub_state_name == "" and Managers.ui:get_current_state_name() or current_sub_state_name
+	local valid_state = "GameplayStateRun"
 
-	if current_state_name ~= self._current_state_name then
-		self:_on_state_changed(current_state_name)
-	end
-
-	local game_mode_name = Managers.state.game_mode and Managers.state.game_mode:game_mode_name()
-
-	if game_mode_name == "hub" or game_mode_name == "prologue_hub" then
-		self:_sync_state_settings()
+	if current_state_name == valid_state then
+		self:_sync_onboarding_settings()
 	end
 end
 
-ConstantElementOnboardingHandler._on_state_changed = function (self, new_state_name)
-	local tutorial_settings_by_state = self._tutorial_settings_by_state
-	local current_tutorial_settings = self._current_state_tutorial_settings
-	local new_tutorial_settings = tutorial_settings_by_state[new_state_name]
-
-	Log.info("ConstantElementOnboardingHandler", "State changed %s -> %s", self._current_state_name, new_state_name)
-
-	self._current_state_name = new_state_name
-	self._current_state_tutorial_settings = new_tutorial_settings
-
-	table.clear(self._once_per_state_tracker)
-end
-
-ConstantElementOnboardingHandler._sync_state_settings = function (self, on_destroy)
+ConstantElementOnboardingHandler._sync_onboarding_settings = function (self, on_destroy)
 	local once_per_state_tracker = self._once_per_state_tracker
-	local current_state_tutorial_settings = self._current_state_tutorial_settings
+	local tutorial_settings = self._tutorial_settings
 
-	if current_state_tutorial_settings then
-		for i = 1, #current_state_tutorial_settings do
-			local settings = current_state_tutorial_settings[i]
+	if not on_destroy then
+		for i = 1, #tutorial_settings do
+			local settings = tutorial_settings[i]
 
 			if settings.validation_func(settings) then
 				local settings_name = settings.name
@@ -89,9 +51,9 @@ ConstantElementOnboardingHandler._sync_state_settings = function (self, on_destr
 				settings.synced = true
 			end
 		end
+	else
+		table.clear(self._once_per_state_tracker)
 	end
-
-	local tutorial_settings = self._tutorial_settings
 
 	for i = 1, #tutorial_settings do
 		local settings = tutorial_settings[i]
@@ -138,9 +100,9 @@ ConstantElementOnboardingHandler._sync_state_settings = function (self, on_destr
 		settings.synced = nil
 	end
 
-	if current_state_tutorial_settings then
-		for i = 1, #current_state_tutorial_settings do
-			local settings = current_state_tutorial_settings[i]
+	if not on_destroy then
+		for i = 1, #tutorial_settings do
+			local settings = tutorial_settings[i]
 
 			if settings.should_activate then
 				settings.should_activate = nil
@@ -180,7 +142,16 @@ ConstantElementOnboardingHandler.set_visible = function (self, visible, optional
 end
 
 ConstantElementOnboardingHandler.should_update = function (self)
-	return true
+	local game_mode_name = Managers.state.game_mode and Managers.state.game_mode:game_mode_name()
+	local in_hub = game_mode_name == "hub" or game_mode_name == "prologue_hub"
+
+	if self._active and not in_hub then
+		self:_sync_onboarding_settings(true)
+	end
+
+	self._active = in_hub
+
+	return in_hub
 end
 
 ConstantElementOnboardingHandler.should_draw = function (self)
@@ -188,8 +159,7 @@ ConstantElementOnboardingHandler.should_draw = function (self)
 end
 
 ConstantElementOnboardingHandler.destroy = function (self)
-	self:_on_state_changed("")
-	self:_sync_state_settings(true)
+	self:_sync_onboarding_settings(true)
 end
 
 return ConstantElementOnboardingHandler

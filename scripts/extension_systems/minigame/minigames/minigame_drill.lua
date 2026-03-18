@@ -41,8 +41,8 @@ MinigameDrill.hot_join_sync = function (self, sender, channel)
 	end
 end
 
-MinigameDrill.start = function (self, player)
-	MinigameDrill.super.start(self, player)
+MinigameDrill.start = function (self, player, send_to_self_client)
+	MinigameDrill.super.start(self, player, send_to_self_client)
 	Unit.flow_event(self._minigame_unit, "lua_minigame_start")
 
 	if player then

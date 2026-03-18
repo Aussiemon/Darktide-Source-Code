@@ -320,6 +320,18 @@ BtChaosSpawnGrabAction._update_grabbing = function (self, unit, scratchpad, acti
 
 		Health.add(unit, heal_amount, heal_type)
 
+		if not scratchpad.loot_stolen_from_target_unit then
+			scratchpad.loot_stolen_from_target_unit = true
+
+			local game_mode_manager = Managers.state.game_mode
+			local game_mode = game_mode_manager:game_mode()
+			local game_mode_name = game_mode:name()
+
+			if game_mode_name == "expedition" then
+				game_mode:minion_steal(target_unit, unit)
+			end
+		end
+
 		local damage_timings = action_data.damage_timings[scratchpad.grabbed_unit_breed_name]
 		local damage_index = scratchpad.damage_timing_index + 1
 
@@ -485,11 +497,15 @@ BtChaosSpawnGrabAction._update_smashing = function (self, unit, scratchpad, acti
 	end
 end
 
+local HUMANOID_BREEDS = {
+	human = true,
+}
+
 BtChaosSpawnGrabAction._start_throwing_target = function (self, unit, scratchpad, action_data, t)
 	local throw_direction = Quaternion.forward(scratchpad.throw_rotation:unbox())
 	local relative_direction_name = "fwd"
 
-	if scratchpad.throw_type == "from_smashing" and scratchpad.grabbed_unit_breed_name ~= "human" then
+	if scratchpad.throw_type == "from_smashing" and not HUMANOID_BREEDS[scratchpad.grabbed_unit_breed_name] then
 		local fwd = Quaternion.forward(Unit.local_rotation(unit, 1))
 		local right = Vector3.cross(fwd, Vector3.up())
 

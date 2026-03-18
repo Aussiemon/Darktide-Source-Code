@@ -60,6 +60,10 @@ local lobby_view_settings = {
 			level_name = "content/levels/ui/horde_lobby/horde_lobby",
 			shading_environment = "content/shading_environments/ui/lobby",
 		},
+		expeditions = {
+			level_name = "content/levels/ui/expeditions_lobby/expeditions_lobby",
+			shading_environment = "content/shading_environments/ui/lobby",
+		},
 	},
 	ignored_slots = {
 		"slot_pocketable",

@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/mission_objective/utilities/mission_objective_base.lua
 
 local MissionSoundEvents = require("scripts/settings/sound/mission_sound_events")
+local Vo = require("scripts/utilities/vo")
 local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_game_sync_settings")
 local MissionObjectiveBase = class("MissionObjectiveBase")
 local last_activation_order = 1
@@ -43,6 +44,8 @@ MissionObjectiveBase.init = function (self)
 	self._hide_widget = false
 	self._additional_height = 0
 	self._use_counter = true
+	self._required_players = nil
+	self._available_players = 0
 	self._progress_bar = false
 	self._progress_bar_icon = nil
 	self._progress_timer = false
@@ -75,6 +78,7 @@ MissionObjectiveBase.start_objective = function (self, mission_objective_data, g
 	self._mission_giver_voice_profile = mission_objective_data.mission_giver_voice_profile
 	self._use_hud = mission_objective_data.hidden ~= true
 	self._use_counter = mission_objective_data.progress_bar ~= true and mission_objective_data.progress_timer ~= true
+	self._required_players = mission_objective_data.required_players or 0
 	self._hide_widget = mission_objective_data.hide_widget or false
 	self._additional_height = mission_objective_data.additional_height or 0
 	self._progress_bar = mission_objective_data.progress_bar or false
@@ -85,11 +89,18 @@ MissionObjectiveBase.start_objective = function (self, mission_objective_data, g
 	self._is_side_mission = mission_objective_data.objective_category == "side_mission"
 	self._popups_enabled = mission_objective_data.popups_enabled ~= false
 	self._evaluate_at_level_end = mission_objective_data.evaluate_at_level_end or false
+	self._persistent_between_locations = mission_objective_data.persistent_between_locations or false
 	self._event_type = mission_objective_data.event_type or OBJECTIVE_EVENT_TYPES.None
 	self._icon = mission_objective_data.icon
 	self._marker_type = mission_objective_data.marker_type or self._marker_type
 	self._hud_sort_order = mission_objective_data.hud_sort_order or nil
 	self._hide_max_increment = mission_objective_data.hide_max_increment or false
+	self._vo_trigger_id_start = mission_objective_data.vo_trigger_id_start or false
+	self._vo_trigger_id_end = mission_objective_data.vo_trigger_id_end or false
+	self._vo_trigger_on_string = mission_objective_data.vo_trigger_on_string or false
+	self._vo_mission_giver = mission_objective_data.vo_mission_giver or false
+	self._alert_text = mission_objective_data.alert_text and Localize(mission_objective_data.alert_text) or ""
+	self._title_text = mission_objective_data.title_text and Localize(mission_objective_data.title_text) or ""
 	self._turn_off_backfill = mission_objective_data.turn_off_backfill == true
 	self._locally_added = mission_objective_data.locally_added or false
 	self._stage = 1
@@ -126,6 +137,10 @@ MissionObjectiveBase.start_objective = function (self, mission_objective_data, g
 		if MissionSoundEvents[event] and not mission_objective_data.music_ignore_start_event then
 			self._mission_objective_system:sound_event(MissionSoundEvents[event])
 		end
+	end
+
+	if self._vo_trigger_id_start and not self._vo_trigger_on_string then
+		self:_trigger_vo(self._vo_trigger_id_start)
 	end
 
 	if self._large_progress_bar then
@@ -211,6 +226,20 @@ MissionObjectiveBase._sort_units_by_id = function (self, units)
 	return units
 end
 
+MissionObjectiveBase._trigger_vo = function (self, vo_trigger)
+	Vo.mission_giver_mission_info_vo("mission_default", nil, vo_trigger)
+
+	local additional_mission_giver = self._vo_mission_giver
+
+	if additional_mission_giver then
+		Vo.mission_giver_mission_info_vo("selected_voice", additional_mission_giver, vo_trigger)
+	end
+
+	if vo_trigger == self._vo_trigger_id_start then
+		Vo.set_story_ticker(false)
+	end
+end
+
 MissionObjectiveBase.end_objective = function (self)
 	local units = self._objective_units
 	local ALIVE = ALIVE
@@ -230,6 +259,14 @@ MissionObjectiveBase.end_objective = function (self)
 
 	if self._large_progress_bar then
 		Managers.event:trigger("objective_progress_bar_close", self)
+	end
+
+	if self._vo_trigger_id_end then
+		self:_trigger_vo(self._vo_trigger_id_end)
+	end
+
+	if self._vo_trigger_id_start then
+		Vo.set_story_ticker(true)
 	end
 end
 
@@ -403,6 +440,10 @@ MissionObjectiveBase.evaluate_at_level_end = function (self)
 	return self._evaluate_at_level_end
 end
 
+MissionObjectiveBase.persistent_between_locations = function (self)
+	return self._persistent_between_locations
+end
+
 MissionObjectiveBase.event_type = function (self)
 	return self._event_type
 end
@@ -556,6 +597,14 @@ MissionObjectiveBase.set_use_counter = function (self, use_counter)
 	self._use_counter = use_counter
 end
 
+MissionObjectiveBase.required_players = function (self)
+	return self._required_players
+end
+
+MissionObjectiveBase.available_players = function (self)
+	return self._available_players
+end
+
 MissionObjectiveBase.progress_bar = function (self)
 	return self._progress_bar
 end
@@ -590,6 +639,14 @@ end
 
 MissionObjectiveBase.set_header = function (self, header)
 	self._override_header = header
+
+	local trigger_on_string = self._vo_trigger_on_string and Managers.localization:localize(self._vo_trigger_on_string) == header
+
+	if trigger_on_string then
+		self:_trigger_vo(self._vo_trigger_id_start)
+
+		self._vo_trigger_on_string = false
+	end
 end
 
 MissionObjectiveBase.description = function (self)
@@ -622,6 +679,14 @@ end
 
 MissionObjectiveBase.set_marker_type = function (self, marker_type)
 	self._marker_type = marker_type
+end
+
+MissionObjectiveBase.alert_text = function (self)
+	return self._alert_text
+end
+
+MissionObjectiveBase.title_text = function (self)
+	return self._title_text
 end
 
 return MissionObjectiveBase

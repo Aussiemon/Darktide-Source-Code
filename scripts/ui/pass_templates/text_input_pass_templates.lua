@@ -247,7 +247,7 @@ local text_input_base = {
 				for _, keystroke in ipairs(keystrokes) do
 					is_selecting = false
 
-					if type(keystroke) == "string" then
+					if type(keystroke) == "string" and keystroke ~= "\x7F" then
 						updated_input_text = Utf8.string_insert(updated_input_text, caret_position, keystroke)
 						caret_position = caret_position + 1
 						last_input = last_input and last_input .. keystroke or keystroke

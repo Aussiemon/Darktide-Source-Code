@@ -4,6 +4,21 @@ local MasterItems = require("scripts/backend/master_items")
 local Pickups = require("scripts/settings/pickup/pickups")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+
+local function _is_expedition_store_product(unit)
+	local mechanism_manager = Managers.mechanism
+	local mechanism_name = mechanism_manager:mechanism_name()
+
+	if mechanism_name == "expedition" then
+		local game_mode_manager = Managers.state.game_mode
+		local game_mode = game_mode_manager:game_mode()
+
+		if game_mode:in_safe_zone() and game_mode:is_store_product(unit) then
+			return true
+		end
+	end
+end
+
 local Pocketable = {}
 local abort_data = {}
 local _drop_pickup
@@ -54,7 +69,7 @@ Pocketable.drop_pocketable = function (t, physics_world, is_server, player_unit,
 	PlayerUnitVisualLoadout.unequip_item_from_slot(player_unit, slot_name, t)
 end
 
-Pocketable.equip_pocketable = function (t, is_server, player_unit, pickup_unit, inventory_item, slot_name)
+Pocketable.equip_pocketable = function (t, is_server, player_unit, pickup_unit, inventory_item, slot_name, wield_on_equip)
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 	local inventory_component = unit_data_extension:read_component("inventory")
 	local pocketable_wielded = inventory_component.wielded_slot == slot_name
@@ -80,6 +95,12 @@ Pocketable.equip_pocketable = function (t, is_server, player_unit, pickup_unit, 
 	if swap_item and is_server and want_to_swap_item then
 		local position = Unit.world_position(pickup_unit, 1)
 		local rotation = Unit.world_rotation(pickup_unit, 1)
+
+		if _is_expedition_store_product(pickup_unit) then
+			position = Unit.world_position(player_unit, 1)
+			rotation = Unit.world_rotation(player_unit, 1)
+		end
+
 		local spawned_unit = _drop_pickup(item_name, position, rotation, player_unit)
 		local pickup_animation_system = Managers.state.extension:system("pickup_animation_system")
 
@@ -88,7 +109,7 @@ Pocketable.equip_pocketable = function (t, is_server, player_unit, pickup_unit, 
 		end
 	end
 
-	if swap_item and pocketable_wielded then
+	if swap_item and pocketable_wielded or wield_on_equip then
 		PlayerUnitVisualLoadout.wield_slot(slot_name, player_unit, t)
 	end
 end

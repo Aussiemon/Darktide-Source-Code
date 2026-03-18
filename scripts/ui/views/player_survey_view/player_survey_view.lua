@@ -259,11 +259,11 @@ PlayerSurveyView._cb_on_option_pressed = function (self, widget, is_selected)
 	self:_update_info_text_for_option(widget.question, #current_answers)
 end
 
-function _add_option_to_answers(current_answers, option_id)
+local function _add_option_to_answers(current_answers, option_id)
 	table.insert(current_answers, option_id)
 end
 
-function _remove_option_from_answers(current_answers, option_id)
+local function _remove_option_from_answers(current_answers, option_id)
 	table.array_remove_if(current_answers, function (v)
 		return v == option_id
 	end)

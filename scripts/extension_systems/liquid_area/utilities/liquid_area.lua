@@ -22,6 +22,10 @@ LiquidArea.try_create = function (position, flow_direction, nav_world, liquid_ar
 		end
 	end
 
+	if liquid_area_template and liquid_area_template.optional_source_side then
+		optional_source_side = liquid_area_template.optional_source_side
+	end
+
 	local liquid_unit = Managers.state.unit_spawner:spawn_network_unit(nil, UNIT_TEMPLATE_NAME, nav_mesh_position, nil, nil, liquid_area_template, flow_direction, optional_source_unit, optional_max_liquid, nil, optional_source_item, optional_source_side)
 
 	return liquid_unit

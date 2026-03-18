@@ -10,6 +10,7 @@ MissionObjectiveTarget.init = function (self, unit)
 
 	if mission_objective_target_extension then
 		local objective_name = self:_retrieve_objective_name(unit)
+		local use_global_group = self:get_data(unit, "use_global_group")
 		local ui_target_type = self:get_data(unit, "ui_target_type")
 		local objective_stage = self:get_data(unit, "objective_stage")
 		local register_self = self:get_data(unit, "register_self")
@@ -18,7 +19,7 @@ MissionObjectiveTarget.init = function (self, unit)
 		local unit_enabled = self:get_data(unit, "unit_enabled")
 		local enabled_only_during_mission = unit_enabled == "only_mission"
 
-		mission_objective_target_extension:setup_from_component(objective_name, ui_target_type, objective_stage, register_self, add_marker_on_registration, add_marker_on_objective_start, enabled_only_during_mission)
+		mission_objective_target_extension:setup_from_component(objective_name, use_global_group, ui_target_type, objective_stage, register_self, add_marker_on_registration, add_marker_on_objective_start, enabled_only_during_mission)
 
 		self._mission_objective_target_extension = mission_objective_target_extension
 
@@ -165,6 +166,11 @@ MissionObjectiveTarget.component_data = {
 		ui_type = "check_box",
 		value = true,
 	},
+	use_global_group = {
+		ui_name = "Lock to Global Objective",
+		ui_type = "check_box",
+		value = false,
+	},
 	add_marker_on_registration = {
 		ui_name = "Add Marker on Registration",
 		ui_type = "check_box",
@@ -196,7 +202,7 @@ MissionObjectiveTarget.component_data = {
 		},
 	},
 	start_visible = {
-		ui_name = "Starts visible",
+		ui_name = "Starts Visible",
 		ui_type = "check_box",
 		value = true,
 	},

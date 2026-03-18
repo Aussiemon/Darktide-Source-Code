@@ -1,18 +1,14 @@
 ﻿-- chunkname: @scripts/utilities/items.lua
 
 local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
-local Archetypes = require("scripts/settings/archetype/archetypes")
-local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ItemSourceSettings = require("scripts/settings/item/item_source_settings")
 local LiveEvents = require("scripts/settings/live_event/live_events")
 local MasterItems = require("scripts/backend/master_items")
 local RankSettings = require("scripts/settings/item/rank_settings")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
-local TraitValueParser = require("scripts/utilities/trait_value_parser")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local Promise = require("scripts/foundation/utilities/promise")
 local unit_alive = Unit.alive
 local expertise_multiplier = 10
@@ -70,6 +66,7 @@ Items.is_character_bound = function (item_type)
 end
 
 Items.mark_item_id_as_new = function (item, skip_notification)
+	local Archetypes = require("scripts/settings/archetype/archetypes")
 	local gear_id = item.gear_id
 	local item_type = item.item_type
 	local is_character_bound = Items.is_character_bound(item_type)
@@ -617,6 +614,7 @@ Items.max_expertise_level = function ()
 end
 
 Items.is_weapon_template_ranged = function (item)
+	local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 	local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 	local keywords = weapon_template and weapon_template.keywords
 	local search_result = keywords and table.find(keywords, "ranged")
@@ -815,6 +813,7 @@ Items.rarity_color = function (item)
 end
 
 Items.keywords_text = function (item)
+	local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 	local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 	local displayed_keywords = weapon_template.displayed_keywords
 	local text = ""
@@ -891,6 +890,8 @@ end
 local _temp_archetype_restriction_list = {}
 
 Items.set_item_class_requirement_text = function (item)
+	local Archetypes = require("scripts/settings/archetype/archetypes")
+
 	table.clear(_temp_archetype_restriction_list)
 
 	local text = ""
@@ -959,6 +960,7 @@ local function _class_requirement_entries(item, available_archetypes)
 end
 
 Items.class_requirement_text = function (item, prefer_iconography)
+	local Archetypes = require("scripts/settings/archetype/archetypes")
 	local entries = _class_requirement_entries(item, table.keys(Archetypes))
 
 	if #entries == 0 or #entries == table.size(Archetypes) then
@@ -1569,6 +1571,8 @@ Items.compare_item_level = function (a, b)
 end
 
 Items.trait_description = function (item, rarity, lerp_value)
+	local TraitValueParser = require("scripts/utilities/trait_value_parser")
+
 	return TraitValueParser.trait_description(item, rarity, lerp_value)
 end
 
@@ -1866,6 +1870,7 @@ Items.preview_stats_change = function (item, expertise_increase, stats, max_stat
 end
 
 Items.create_mannequin_profile_by_item = function (item, preferred_gender, preferred_archetype, preferred_breed)
+	local Archetypes = require("scripts/settings/archetype/archetypes")
 	local item_gender, item_breed, item_archetype, item_slot_name
 
 	if item.archetypes and not table.is_empty(item.archetypes) then
@@ -2044,6 +2049,24 @@ Items.is_item_id_favorited = function (item_gear_id)
 	local favorite_items = character_data.favorite_items
 
 	return favorite_items and favorite_items[item_gear_id]
+end
+
+Items.base_unit = function (item, optional_breed_name, optional_is_first_person)
+	if optional_is_first_person then
+		local unit_1p = item.base_unit_1p
+
+		if unit_1p then
+			return unit_1p
+		end
+	end
+
+	local breed_base_unit = item.breed_base_unit and item.breed_base_unit[optional_breed_name]
+
+	if breed_base_unit and breed_base_unit ~= "" then
+		return breed_base_unit
+	end
+
+	return item.base_unit
 end
 
 return Items

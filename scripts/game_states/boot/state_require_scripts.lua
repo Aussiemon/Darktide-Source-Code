@@ -54,6 +54,10 @@ StateRequireScripts._init_crashify = function (self)
 	Crashify.print_property("game_resume_count", 0)
 
 	if PLATFORM == "win32" then
+		if self:_get_is_modded() then
+			Script.disable_low_memory_lua_state_dumps()
+		end
+
 		if HAS_STEAM then
 			Crashify.print_property("steam", true)
 			Crashify.print_property("steam_id", Steam.user_id())
@@ -113,6 +117,7 @@ end
 
 StateRequireScripts._foundation_scripts = function (self)
 	require("scripts/foundation/utilities/vector3")
+	require("scripts/foundation/utilities/quaternion")
 	require("scripts/foundation/utilities/utf8")
 	require("scripts/foundation/utilities/color")
 	require("scripts/foundation/utilities/math")

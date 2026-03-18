@@ -687,7 +687,7 @@ weapon_template.actions = {
 				},
 			},
 		},
-		damage_profile = DamageProfileTemplates.dual_shivs_light_ninja_stabby,
+		damage_profile = DamageProfileTemplates.dual_shivs_light_ninja_stabby_m2,
 		damage_type = damage_types.metal_slashing_light,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
@@ -745,7 +745,7 @@ weapon_template.actions = {
 				},
 			},
 		},
-		damage_profile = DamageProfileTemplates.dual_shivs_light_ninja_stabby,
+		damage_profile = DamageProfileTemplates.dual_shivs_light_ninja_stabby_m2,
 		damage_type = damage_types.metal_slashing_light,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,

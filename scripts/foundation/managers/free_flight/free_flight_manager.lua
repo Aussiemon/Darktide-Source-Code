@@ -40,6 +40,7 @@ FreeFlightManager.init = function (self)
 	self:_create_global_camera()
 
 	self._look_input_enabled = true
+	self._block_enter_free_flight = false
 	self._follow_path = FreeFlightFollowPath:new()
 	self._camera_bounds = nil
 end
@@ -123,7 +124,7 @@ FreeFlightManager.update = function (self, dt, t)
 	end
 end
 
-FreeFlightManager._camera = function (self, camera_id)
+FreeFlightManager.camera = function (self, camera_id)
 	local data = self._free_flight_cameras[camera_id]
 	local name = data.viewport_world_name
 
@@ -145,7 +146,7 @@ FreeFlightManager._debug_print = function (self, str, ...)
 end
 
 FreeFlightManager.teleport_camera = function (self, camera_id, pos, rot)
-	local camera = self:_camera(camera_id)
+	local camera = self:camera(camera_id)
 
 	if not camera then
 		return
@@ -161,7 +162,7 @@ FreeFlightManager.teleport_camera = function (self, camera_id, pos, rot)
 end
 
 FreeFlightManager.camera_position_rotation = function (self, camera_id)
-	local camera = self:_camera(camera_id)
+	local camera = self:camera(camera_id)
 
 	if not camera then
 		return
@@ -266,6 +267,10 @@ end
 
 FreeFlightManager.set_follow_path_speed = function (self, speed)
 	self._follow_path:set_speed(speed)
+end
+
+FreeFlightManager.set_block_enter_free_flight = function (self, block)
+	self._block_enter_free_flight = block
 end
 
 FreeFlightManager._update_camera = function (self, input, dt, camera_data)
@@ -564,6 +569,10 @@ FreeFlightManager._handle_dof = function (self, dt, input, data, world)
 end
 
 FreeFlightManager._enter_global_free_flight = function (self, camera_data)
+	if self._block_enter_free_flight then
+		return
+	end
+
 	local world = Application.main_world()
 
 	if not world then

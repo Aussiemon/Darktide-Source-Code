@@ -26,6 +26,42 @@ local archetype_talents = {
 }
 
 archetype_talents.talents = {
+	broker_passive_improved_sprint_dodge = {
+		description = "loc_talent_broker_iconic_improved_sprint_dodge_desc",
+		display_name = "loc_talent_broker_passive_improved_sprint_dodge",
+		name = "",
+		format_values = {
+			dodge_angle = {
+				format_type = "number",
+				num_decimals = 0,
+				prefix = "+",
+				value = talent_settings.broker_passive_improved_sprint_dodge.sprint_dodge_reduce_angle_threshold_rad,
+				value_manipulation = function (value)
+					return math_round(math.radians_to_degrees(value))
+				end,
+			},
+		},
+		passive = {
+			buff_template_name = "broker_passive_improved_sprint_dodge",
+			identifier = "broker_passive_improved_sprint_dodge",
+		},
+	},
+	broker_passive_increased_dodges = {
+		description = "loc_talent_broker_iconic_increased_dodges_desc",
+		display_name = "",
+		name = "",
+		format_values = {
+			dodge_count = {
+				format_type = "number",
+				prefix = "+",
+				value = talent_settings.broker_passive_increased_dodges.extra_consecutive_dodges,
+			},
+		},
+		passive = {
+			buff_template_name = "broker_passive_increased_dodges",
+			identifier = "broker_passive_increased_dodges",
+		},
+	},
 	broker_ability_focus = {
 		description = "loc_talent_broker_ability_focus_desc",
 		display_name = "loc_talent_broker_ability_focus",
@@ -1063,6 +1099,29 @@ archetype_talents.talents = {
 			identifier = "broker_passive_improved_dodges",
 		},
 	},
+	broker_passive_longer_dodges = {
+		description = "loc_talent_broker_passive_longer_dodges_desc",
+		display_name = "loc_talent_broker_passive_longer_dodges",
+		name = "",
+		format_values = {
+			dodge_distance_modifier = {
+				format_type = "percentage",
+				prefix = "+",
+				find_value = {
+					buff_template_name = "broker_passive_longer_dodges",
+					find_value_type = "buff_template",
+					path = {
+						"stat_buffs",
+						stat_buffs.dodge_distance_modifier,
+					},
+				},
+			},
+		},
+		passive = {
+			buff_template_name = "broker_passive_longer_dodges",
+			identifier = "broker_passive_longer_dodges",
+		},
+	},
 	broker_passive_dodge_melee_on_slide = {
 		description = "loc_talent_broker_passive_dodge_melee_on_slide_desc",
 		display_name = "loc_talent_broker_passive_dodge_melee_on_slide",
@@ -1259,26 +1318,6 @@ archetype_talents.talents = {
 		passive = {
 			buff_template_name = "broker_passive_strength_vs_aggroed",
 			identifier = "broker_passive_strength_vs_aggroed",
-		},
-	},
-	broker_passive_improved_sprint_dodge = {
-		description = "loc_talent_broker_passive_improved_sprint_dodge_desc",
-		display_name = "loc_talent_broker_passive_improved_sprint_dodge",
-		name = "",
-		format_values = {
-			angle = {
-				format_type = "number",
-				num_decimals = 0,
-				prefix = "+",
-				value = talent_settings.broker_passive_improved_sprint_dodge.sprint_dodge_reduce_angle_threshold_rad,
-				value_manipulation = function (value)
-					return math_round(math.radians_to_degrees(value))
-				end,
-			},
-		},
-		passive = {
-			buff_template_name = "broker_passive_improved_sprint_dodge",
-			identifier = "broker_passive_improved_sprint_dodge",
 		},
 	},
 	broker_passive_extra_consecutive_dodges = {
@@ -2039,7 +2078,7 @@ archetype_talents.talents = {
 		},
 	},
 	broker_passive_toughness_on_toxined_kill = {
-		description = "loc_talent_broker_toughness_on_toxined_kill_desc",
+		description = "loc_talent_broker_toughness_on_toxined_kill_desc_02",
 		display_name = "loc_talent_broker_toughness_on_toxined_kill",
 		name = "broker_passive_toughness_on_toxined_kill",
 		format_values = {
@@ -2051,6 +2090,11 @@ archetype_talents.talents = {
 				format_type = "percentage",
 				prefix = "+",
 				value = talent_settings.broker_passive_toughness_on_toxined_kill.toughness_replenish,
+			},
+			radius = {
+				format_type = "percentage",
+				prefix = "+",
+				value = talent_settings.broker_passive_toughness_on_toxined_kill.range,
 			},
 		},
 		passive = {
@@ -2075,7 +2119,7 @@ archetype_talents.talents = {
 		},
 	},
 	broker_passive_low_ammo_regen = {
-		description = "loc_talent_broker_passive_low_ammo_regen_desc",
+		description = "loc_talent_broker_passive_low_ammo_regen_desc_04",
 		display_name = "loc_talent_broker_passive_low_ammo_regen",
 		name = "broker_passive_low_ammo_regen",
 		format_values = {
@@ -2086,6 +2130,17 @@ archetype_talents.talents = {
 					find_value_type = "buff_template",
 					path = {
 						"ammo_threshold",
+					},
+				},
+			},
+			ammo_return = {
+				format_type = "percentage",
+				prefix = "+",
+				find_value = {
+					buff_template_name = "broker_passive_low_ammo_regen",
+					find_value_type = "buff_template",
+					path = {
+						"ammo_return",
 					},
 				},
 			},
@@ -2178,6 +2233,154 @@ archetype_talents.talents = {
 		passive = {
 			buff_template_name = "broker_passive_blitz_inflicts_toxin",
 			identifier = "broker_passive_blitz_inflicts_toxin",
+		},
+	},
+	broker_passive_toxin_spread_on_kills = {
+		description = "loc_talent_broker_passive_toxin_spread_on_kills_desc_02",
+		display_name = "loc_talent_broker_passive_toxin_spread_on_kills",
+		name = "broker_passive_toxin_spread_on_kills",
+		format_values = {
+			radius = {
+				format_type = "number",
+				find_value = {
+					buff_template_name = "broker_passive_toxin_spread_on_kills",
+					find_value_type = "buff_template",
+					path = {
+						"radius",
+					},
+				},
+			},
+			toxin_stacks = {
+				format_type = "number",
+				find_value = {
+					buff_template_name = "broker_passive_toxin_spread_on_kills",
+					find_value_type = "buff_template",
+					path = {
+						"stacks_to_add",
+					},
+				},
+			},
+			toxin = {
+				format_type = "loc_string",
+				value = "loc_term_glossary_broker_toxin",
+			},
+			max_targets = {
+				format_type = "number",
+				find_value = {
+					buff_template_name = "broker_passive_toxin_spread_on_kills",
+					find_value_type = "buff_template",
+					path = {
+						"max_targets",
+					},
+				},
+			},
+		},
+		passive = {
+			buff_template_name = "broker_passive_toxin_spread_on_kills",
+			identifier = "broker_passive_toxin_spread_on_kills",
+		},
+	},
+	broker_passive_toxin_infected_enemies_take_increased_damage = {
+		description = "loc_talent_broker_passive_toxin_infected_enemies_take_increased_damage_desc",
+		display_name = "loc_talent_broker_passive_toxin_infected_enemies_take_increased_damage",
+		name = "broker_passive_toxin_infected_enemies_take_increased_damage",
+		format_values = {
+			toxin = {
+				format_type = "loc_string",
+				value = "loc_term_glossary_broker_toxin",
+			},
+			damage_taken = {
+				format_type = "percentage",
+				prefix = "+",
+				find_value = {
+					buff_template_name = "broker_passive_toxin_infected_enemies_take_increased_damage_debuff",
+					find_value_type = "buff_template",
+					path = {
+						"stat_buffs",
+						stat_buffs.damage_taken_modifier,
+					},
+				},
+			},
+			duration = {
+				format_type = "number",
+				find_value = {
+					buff_template_name = "broker_passive_toxin_infected_enemies_take_increased_damage_debuff",
+					find_value_type = "buff_template",
+					path = {
+						"duration",
+					},
+				},
+			},
+		},
+		passive = {
+			buff_template_name = "broker_passive_toxin_infected_enemies_take_increased_damage",
+			identifier = "broker_passive_toxin_infected_enemies_take_increased_damage",
+		},
+	},
+	broker_passive_non_crits_increase_crit = {
+		description = "loc_talent_broker_passive_non_crits_increase_crit_desc",
+		display_name = "loc_talent_broker_passive_non_crits_increase_crit",
+		name = "broker_passive_non_crits_increase_crit",
+		format_values = {
+			critical_chance = {
+				format_type = "percentage",
+				prefix = "+",
+				find_value = {
+					buff_template_name = "broker_passive_non_crits_increase_crit_stack",
+					find_value_type = "buff_template",
+					path = {
+						"stat_buffs",
+						stat_buffs.melee_critical_strike_chance,
+					},
+				},
+			},
+		},
+		passive = {
+			buff_template_name = "broker_passive_non_crits_increase_crit",
+			identifier = "broker_passive_non_crits_increase_crit",
+		},
+	},
+	broker_passive_knockback_on_taking_melee_damage = {
+		description = "loc_talent_broker_passive_knockback_on_taking_melee_damage_desc_02",
+		display_name = "loc_talent_broker_passive_knockback_on_taking_melee_damage",
+		name = "broker_passive_knockback_on_taking_melee_damage",
+		format_values = {
+			movement_speed = {
+				format_type = "percentage",
+				prefix = "+",
+				find_value = {
+					buff_template_name = "broker_passive_knockback_on_taking_melee_damage_proc",
+					find_value_type = "buff_template",
+					path = {
+						"stat_buffs",
+						stat_buffs.movement_speed,
+					},
+				},
+			},
+			duration = {
+				format_type = "number",
+				find_value = {
+					buff_template_name = "broker_passive_knockback_on_taking_melee_damage_proc",
+					find_value_type = "buff_template",
+					path = {
+						"duration",
+					},
+				},
+			},
+			cooldown = {
+				format_type = "number",
+				find_value = {
+					buff_template_name = "broker_passive_knockback_on_taking_melee_damage",
+					find_value_type = "buff_template",
+					path = {
+						"cooldown_duration",
+					},
+				},
+			},
+		},
+		passive = {
+			buff_template_name = "broker_passive_knockback_on_taking_melee_damage",
+			identifier = "broker_passive_knockback_on_taking_melee_damage",
 		},
 	},
 	broker_keystone_vultures_mark_on_kill = {
@@ -2646,6 +2849,322 @@ archetype_talents.talents = {
 			special_rule_name = {
 				special_rules.broker_keystone_adrenaline_junkie_restore_toughness,
 			},
+		},
+	},
+	broker_keystone_adrenaline_junkie_sub_6 = {
+		description = "loc_talent_broker_keystone_adrenaline_junkie_sub_6_desc",
+		display_name = "loc_talent_broker_keystone_adrenaline_junkie_sub_6",
+		name = "broker_keystone_adrenaline_junkie_sub_6",
+		format_values = {
+			adrenaline_frenzy = {
+				format_type = "loc_string",
+				value = "loc_talent_broker_keystone_adrenaline_junkie",
+			},
+			reduced_move_penalty = {
+				format_type = "percentage",
+				find_value = {
+					buff_template_name = "broker_keystone_adrenaline_junkie_proc",
+					find_value_type = "buff_template",
+					path = {
+						"conditional_stat_buffs",
+						stat_buffs.alternate_fire_movement_speed_reduction_modifier,
+					},
+				},
+				value_manipulation = function (value)
+					return (1 - value) * 100
+				end,
+			},
+		},
+		special_rule = {
+			identifier = {
+				"broker_keystone_adrenaline_junkie_no_movement_penalty",
+			},
+			special_rule_name = {
+				special_rules.broker_keystone_adrenaline_junkie_no_movement_penalty,
+			},
+		},
+	},
+	broker_keystone_adrenaline_junkie_sub_7 = {
+		description = "loc_talent_broker_keystone_adrenaline_junkie_sub_7_desc",
+		display_name = "loc_talent_broker_keystone_adrenaline_junkie_sub_7",
+		name = "broker_keystone_adrenaline_junkie_sub_7",
+		format_values = {
+			crit_chance = {
+				format_type = "percentage",
+				prefix = "+",
+				find_value = {
+					buff_template_name = "broker_keystone_adrenaline_junkie_stack",
+					find_value_type = "buff_template",
+					path = {
+						"stat_buffs",
+						stat_buffs.critical_strike_chance,
+					},
+				},
+			},
+			movement_speed = {
+				format_type = "percentage",
+				prefix = "+",
+				find_value = {
+					buff_template_name = "broker_keystone_adrenaline_junkie_stack",
+					find_value_type = "buff_template",
+					path = {
+						"stat_buffs",
+						stat_buffs.movement_speed,
+					},
+				},
+			},
+			adrenaline = {
+				format_type = "loc_string",
+				value = "loc_term_glossary_adrenaline",
+			},
+			adrenaline_frenzy = {
+				format_type = "loc_string",
+				value = "loc_talent_broker_keystone_adrenaline_junkie",
+			},
+		},
+		special_rule = {
+			identifier = {
+				"broker_keystone_adrenaline_junkie_scaling_ms_crit",
+			},
+			special_rule_name = {
+				special_rules.broker_keystone_adrenaline_junkie_scaling_ms_crit,
+			},
+		},
+	},
+	broker_keystone_adrenaline_junkie_sub_8 = {
+		description = "loc_talent_broker_keystone_adrenaline_junkie_sub_8_desc",
+		display_name = "loc_talent_broker_keystone_adrenaline_junkie_sub_8",
+		name = "broker_keystone_adrenaline_junkie_sub_8",
+		format_values = {
+			adrenaline_frenzy = {
+				format_type = "loc_string",
+				value = "loc_talent_broker_keystone_adrenaline_junkie",
+			},
+			stamina = {
+				format_type = "percentage",
+				find_value = {
+					buff_template_name = "broker_keystone_adrenaline_junkie_proc",
+					find_value_type = "buff_template",
+					path = {
+						"sub_8_stamina_regain",
+					},
+				},
+			},
+			toughness_damage_reduction = {
+				format_type = "percentage",
+				prefix = "+",
+				find_value = {
+					buff_template_name = "broker_keystone_adrenaline_junkie_proc",
+					find_value_type = "buff_template",
+					path = {
+						"conditional_stat_buffs",
+						stat_buffs.toughness_damage_taken_multiplier,
+					},
+				},
+				value_manipulation = function (value)
+					return math.round((1 - value) * 100)
+				end,
+			},
+		},
+		special_rule = {
+			identifier = {
+				"broker_keystone_adrenaline_junkie_stamina_burst",
+			},
+			special_rule_name = {
+				special_rules.broker_keystone_adrenaline_junkie_stamina_burst,
+			},
+		},
+	},
+	broker_passive_ranged_apply_brittleness = {
+		description = "loc_talent_broker_passive_ranged_apply_brittleness_desc",
+		display_name = "loc_talent_broker_passive_ranged_apply_brittleness",
+		name = "broker_passive_ranged_apply_brittleness",
+		format_values = {
+			brittleness = {
+				format_type = "percentage",
+				find_value = {
+					buff_template_name = "broker_passive_ranged_apply_brittleness_stack",
+					find_value_type = "buff_template",
+					path = {
+						"stat_buffs",
+						stat_buffs.rending_multiplier,
+					},
+				},
+			},
+			duration = {
+				format_type = "number",
+				find_value = {
+					buff_template_name = "broker_passive_ranged_apply_brittleness_stack",
+					find_value_type = "buff_template",
+					path = {
+						"duration",
+					},
+				},
+			},
+			max_stacks = {
+				format_type = "number",
+				find_value = {
+					buff_template_name = "broker_passive_ranged_apply_brittleness_stack",
+					find_value_type = "buff_template",
+					path = {
+						"max_stacks",
+					},
+				},
+			},
+		},
+		passive = {
+			buff_template_name = "broker_passive_ranged_apply_brittleness",
+			identifier = "broker_passive_ranged_apply_brittleness",
+		},
+	},
+	broker_passive_melee_apply_brittleness = {
+		description = "loc_talent_broker_passive_melee_apply_brittleness_desc",
+		display_name = "loc_talent_broker_passive_melee_apply_brittleness",
+		name = "broker_passive_melee_apply_brittleness",
+		format_values = {
+			brittleness = {
+				format_type = "percentage",
+				find_value = {
+					buff_template_name = "broker_passive_melee_apply_brittleness_stack",
+					find_value_type = "buff_template",
+					path = {
+						"stat_buffs",
+						stat_buffs.rending_multiplier,
+					},
+				},
+			},
+			duration = {
+				format_type = "number",
+				find_value = {
+					buff_template_name = "broker_passive_melee_apply_brittleness_stack",
+					find_value_type = "buff_template",
+					path = {
+						"duration",
+					},
+				},
+			},
+			max_stacks = {
+				format_type = "number",
+				find_value = {
+					buff_template_name = "broker_passive_melee_apply_brittleness_stack",
+					find_value_type = "buff_template",
+					path = {
+						"max_stacks",
+					},
+				},
+			},
+		},
+		passive = {
+			buff_template_name = "broker_passive_melee_apply_brittleness",
+			identifier = "broker_passive_melee_apply_brittleness",
+		},
+	},
+	broker_passive_crit_grants_damage = {
+		description = "loc_talent_broker_passive_crit_grants_damage_desc",
+		display_name = "loc_talent_broker_passive_crit_grants_damage",
+		name = "broker_passive_crit_grants_damage",
+		format_values = {
+			critical_chance = {
+				format_type = "percentage",
+				find_value = {
+					buff_template_name = "broker_passive_crit_grants_damage",
+					find_value_type = "buff_template",
+					path = {
+						"crit_per_stack",
+					},
+				},
+			},
+			melee_damage = {
+				format_type = "percentage",
+				prefix = "+",
+				find_value = {
+					buff_template_name = "broker_passive_crit_grants_damage",
+					find_value_type = "buff_template",
+					path = {
+						"melee_damage_per_stack",
+					},
+				},
+			},
+			max_stacks = {
+				format_type = "number",
+				find_value = {
+					buff_template_name = "broker_passive_crit_grants_damage",
+					find_value_type = "buff_template",
+					path = {
+						"crit_cap",
+					},
+				},
+			},
+			max_melee_damage = {
+				format_type = "percentage",
+				prefix = "+",
+				find_value = {
+					buff_template_name = "broker_passive_crit_grants_damage",
+					find_value_type = "buff_template",
+					path = {
+						"max_melee_damage",
+					},
+				},
+			},
+		},
+		passive = {
+			buff_template_name = "broker_passive_crit_grants_damage",
+			identifier = "broker_passive_crit_grants_damage",
+		},
+	},
+	broker_passive_replenish_toughness_while_toxined_enemies_in_proximity = {
+		description = "loc_talent_broker_passive_replenish_toughness_while_toxined_enemies_in_proximity_desc",
+		display_name = "loc_talent_broker_toughness_on_toxined_kill",
+		name = "broker_passive_replenish_toughness_while_toxined_enemies_in_proximity",
+		format_values = {
+			toughness_amount = {
+				format_type = "percentage",
+				find_value = {
+					buff_template_name = "broker_passive_replenish_toughness_while_toxined_enemies_in_proximity",
+					find_value_type = "buff_template",
+					path = {
+						"toughness_amount",
+					},
+				},
+			},
+			interval = {
+				format_type = "number",
+				find_value = {
+					buff_template_name = "broker_passive_replenish_toughness_while_toxined_enemies_in_proximity",
+					find_value_type = "buff_template",
+					path = {
+						"interval",
+					},
+				},
+			},
+			toxin = {
+				format_type = "loc_string",
+				value = "loc_term_glossary_broker_toxin",
+			},
+			range = {
+				format_type = "number",
+				find_value = {
+					buff_template_name = "broker_passive_replenish_toughness_while_toxined_enemies_in_proximity",
+					find_value_type = "buff_template",
+					path = {
+						"range",
+					},
+				},
+			},
+			max_enemies = {
+				format_type = "number",
+				find_value = {
+					buff_template_name = "broker_passive_replenish_toughness_while_toxined_enemies_in_proximity",
+					find_value_type = "buff_template",
+					path = {
+						"max_enemies",
+					},
+				},
+			},
+		},
+		passive = {
+			buff_template_name = "broker_passive_replenish_toughness_while_toxined_enemies_in_proximity",
+			identifier = "broker_passive_replenish_toughness_while_toxined_enemies_in_proximity",
 		},
 	},
 	broker_stimm_description_talent = {

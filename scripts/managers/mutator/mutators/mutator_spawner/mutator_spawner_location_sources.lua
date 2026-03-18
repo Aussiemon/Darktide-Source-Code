@@ -3,17 +3,25 @@
 local MutatorMonsterSpawnerSettings = require("scripts/settings/mutator/mutator_monster_spawner_settings")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local MutatorSpawnerLocationSources = {}
+local MISSION_SKIP_TESTIFY = {
+	km_enforcer_twins = true,
+	op_no_mans_land = true,
+	op_train = true,
+	psykhanium = true,
+}
 
 MutatorSpawnerLocationSources.prebaked_mission_locations = function (spawn_locations)
 	return function ()
-		local game_mode_manager = Managers.state.game_mode
-		local game_mode = game_mode_manager:game_mode()
-
 		spawn_locations = spawn_locations or "default_locations"
 
 		local mission_name
+		local game_mode_name = Managers.state.game_mode:game_mode_name()
 
-		mission_name = Managers.state.mission:mission_name()
+		if game_mode_name == "expedition" then
+			mission_name = Managers.state.game_mode:get_current_level_name()
+		else
+			mission_name = Managers.state.mission:mission_name()
+		end
 
 		if not MutatorMonsterSpawnerSettings[spawn_locations] then
 			return

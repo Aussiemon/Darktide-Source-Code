@@ -82,6 +82,10 @@ ComponentSystem.on_gameplay_post_init = function (self, level)
 	self:call_gameplay_post_init_on_extensions(level)
 end
 
+ComponentSystem.on_location_setup = function (self)
+	self:call_gameplay_post_init_on_extensions()
+end
+
 ComponentSystem.enable_component = function (self, unit, guid)
 	local extension = self._unit_to_extension_map[unit]
 

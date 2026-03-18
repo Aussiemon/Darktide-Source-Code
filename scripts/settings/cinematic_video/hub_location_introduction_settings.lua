@@ -28,6 +28,10 @@ local hub_location_introduction_settings = {
 		narrative_event_name = "hli_penances_viewed",
 		video_template = "hli_penances",
 	},
+	expedition_view = {
+		narrative_event_name = "hli_expeditions_viewed",
+		video_template = "hli_expeditions",
+	},
 }
 
 return settings("HubLocationIntroductionSettings", hub_location_introduction_settings)

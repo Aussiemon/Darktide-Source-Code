@@ -99,6 +99,7 @@ local ui_hud_settings = {
 		mutant_charged = "content/ui/materials/icons/player_states/incapacitated",
 		netted = "content/ui/materials/icons/player_states/incapacitated",
 		pounced = "content/ui/materials/icons/player_states/incapacitated",
+		vortex_grabbed = "content/ui/materials/icons/player_states/incapacitated",
 		warp_grabbed = "content/ui/materials/icons/player_states/incapacitated",
 	},
 	player_status_colors = {
@@ -107,6 +108,7 @@ local ui_hud_settings = {
 		pounced = Color.ui_hud_red_light(255, true),
 		netted = Color.ui_hud_red_light(255, true),
 		warp_grabbed = Color.ui_hud_red_light(255, true),
+		vortex_grabbed = Color.ui_hud_red_light(255, true),
 		mutant_charged = Color.ui_orange_light(255, true),
 		consumed = Color.ui_orange_light(255, true),
 		grabbed = Color.ui_orange_light(255, true),

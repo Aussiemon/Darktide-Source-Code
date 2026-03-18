@@ -10,56 +10,6 @@ local color_by_mission_type = Settings.colors.color_by_mission_type
 MissionBoardViewStyles.colors = {}
 MissionBoardViewStyles.colors.default = default_colors
 MissionBoardViewStyles.colors.color_by_mission_type = color_by_mission_type
-MissionBoardViewStyles.difficulty_progress_tooltip = {}
-MissionBoardViewStyles.difficulty_progress_tooltip.background = {
-	scale_to_material = true,
-	size = {
-		Dimensions.threat_tooltip_size[1],
-		Dimensions.threat_tooltip_size[2],
-	},
-	offset = {
-		0,
-		0,
-		3,
-	},
-	color = Color.black(255, true),
-}
-MissionBoardViewStyles.difficulty_progress_tooltip.frame = {
-	scale_to_material = true,
-	size = {
-		Dimensions.threat_tooltip_size[1],
-		Dimensions.threat_tooltip_size[2],
-	},
-	offset = {
-		0,
-		0,
-		4,
-	},
-	color = {
-		255,
-		169,
-		211,
-		158,
-	},
-}
-MissionBoardViewStyles.difficulty_progress_tooltip.text = {
-	font_size = 14,
-	font_type = "kode_mono_medium",
-	horizontal_alignment = "center",
-	text_horizontal_alignment = "center",
-	text_vertical_alignment = "center",
-	vertical_alignment = "center",
-	size = {
-		Dimensions.threat_tooltip_size[1] - 20,
-		Dimensions.threat_tooltip_size[2] - 10,
-	},
-	text_color = table.shallow_copy(default_colors.terminal_text_dark),
-	offset = {
-		0,
-		0,
-		5,
-	},
-}
 MissionBoardViewStyles.screen_frame = {
 	scale_to_material = true,
 	size = {},
@@ -82,37 +32,6 @@ MissionBoardViewStyles.screen_frame_glow = {
 		-705,
 		0,
 		1,
-	},
-	color = Color.white(nil, true),
-}
-MissionBoardViewStyles.difficulty_progress_bar = {}
-MissionBoardViewStyles.difficulty_progress_bar.frame = {
-	scale_to_material = true,
-	size = {
-		nil,
-		8,
-	},
-	offset = {
-		0,
-		0,
-		5,
-	},
-	color = Color.white(nil, true),
-}
-MissionBoardViewStyles.difficulty_progress_bar.progress_bar = {
-	scale_to_material = true,
-	size = {
-		Dimensions.threat_level_progress_bar_size[1],
-		Dimensions.threat_level_progress_bar_size[2],
-	},
-	default_size = {
-		Dimensions.threat_level_progress_bar_size[1],
-		Dimensions.threat_level_progress_bar_size[2],
-	},
-	offset = {
-		0,
-		0,
-		4,
 	},
 	color = Color.white(nil, true),
 }
@@ -173,7 +92,7 @@ MissionBoardViewStyles.play_button.disabled = {
 }
 MissionBoardViewStyles.play_button.default_text = {
 	font_size = 28,
-	font_type = "kode_mono_medium",
+	font_type = "mono_tide_medium",
 	horizontal_alignment = "center",
 	text_horizontal_alignment = "center",
 	text_vertical_alignment = "center",
@@ -228,127 +147,6 @@ MissionBoardViewStyles.play_button.disabled_text = {
 		0,
 	},
 	text_color = Color.ui_interaction_critical(255, true),
-}
-MissionBoardViewStyles.threat_level_progress = {}
-MissionBoardViewStyles.threat_level_progress.background = {
-	scale_to_material = true,
-	offset = {
-		0,
-		0,
-		3,
-	},
-	color = Color.black(95, true),
-}
-MissionBoardViewStyles.threat_level_progress.background_frame = {
-	scale_to_material = true,
-	offset = {
-		0,
-		0,
-		4,
-	},
-	color = {
-		255,
-		169,
-		211,
-		158,
-	},
-}
-MissionBoardViewStyles.threat_level_progress.background_frame_corner = {
-	scale_to_material = true,
-	offset = {
-		0,
-		0,
-		5,
-	},
-	size_addition = {
-		5,
-		5,
-	},
-	color = Color.terminal_text_header(nil, true),
-}
-MissionBoardViewStyles.threat_level_progress.threat_level_text = {
-	font_size = 18,
-	font_type = "proxima_nova_bold",
-	horizontal_alignment = "left",
-	text_horizontal_alignment = "left",
-	text_vertical_alignment = "top",
-	vertical_alignment = "top",
-	offset = {
-		10,
-		10,
-		5,
-	},
-	text_color = {
-		255,
-		169,
-		211,
-		158,
-	},
-}
-MissionBoardViewStyles.threat_level_progress.threat_level_progression_text = {
-	font_size = 18,
-	font_type = "proxima_nova_bold",
-	horizontal_alignment = "left",
-	text_horizontal_alignment = "left",
-	text_vertical_alignment = "center",
-	vertical_alignment = "center",
-	offset = {
-		10,
-		0,
-		5,
-	},
-	text_color = {
-		255,
-		169,
-		211,
-		158,
-	},
-}
-MissionBoardViewStyles.threat_level_progress.threat_level_exp_text = {
-	font_size = 18,
-	font_type = "proxima_nova_bold",
-	horizontal_alignment = "right",
-	text_horizontal_alignment = "right",
-	text_vertical_alignment = "bottom",
-	vertical_alignment = "bottom",
-	offset = {
-		-5,
-		-5,
-		5,
-	},
-	text_color = {
-		255,
-		169,
-		211,
-		158,
-	},
-}
-MissionBoardViewStyles.threat_level_progress.progress_bar = {
-	horizontal_alignment = "left",
-	scale_to_material = true,
-	vertical_alignment = "bottom",
-	size = {
-		0,
-		Dimensions.threat_level_progress_bar_size[2],
-	},
-	offset = {
-		10,
-		-10,
-		5,
-	},
-	color = Color.golden_rod(nil, true),
-}
-MissionBoardViewStyles.threat_level_progress.progress_bar_bg = {
-	horizontal_alignment = "left",
-	scale_to_material = true,
-	vertical_alignment = "bottom",
-	size = Dimensions.threat_level_progress_bar_size,
-	offset = {
-		10,
-		-10,
-		4,
-	},
-	color = Color.gray(185, true),
 }
 MissionBoardViewStyles.gradient_by_category = {
 	default = {
@@ -489,7 +287,5 @@ MissionBoardViewStyles.info_box_widget_style_function = function (mission_type)
 		},
 	}
 end
-
-MissionBoardViewStyles.adjust_color = _adjust_color
 
 return settings("MissionBoardViewStyles", MissionBoardViewStyles)

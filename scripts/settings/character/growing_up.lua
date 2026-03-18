@@ -404,14 +404,14 @@ local growing_up_options = {
 		},
 	},
 }
-local growing_up_options_by_id = {}
+local growing_up = {}
 
-for i = 1, #growing_up_options do
-	local growing_up_option = growing_up_options[i]
-	local id = string.format("option_%d", i)
+for ii = 1, #growing_up_options do
+	local growing_up_option = growing_up_options[ii]
+	local id = string.format("option_%d", ii)
 
 	growing_up_option.id = id
-	growing_up_options_by_id[id] = growing_up_option
+	growing_up[id] = growing_up_option
 end
 
-return settings("GrowingUp", growing_up_options_by_id)
+return settings("GrowingUp", growing_up)

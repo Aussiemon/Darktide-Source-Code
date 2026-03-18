@@ -102,11 +102,6 @@ base_template_settings.action_inputs = {
 			},
 		},
 	},
-	adamant_whistle_command = {
-		buffer_time = 0,
-		dont_queue = true,
-		input_sequence = nil,
-	},
 }
 
 table.add_missing(base_template_settings.action_inputs, base_template_settings.combat_ability_action_inputs)
@@ -222,10 +217,6 @@ base_template_settings.action_input_hierarchy = {
 	},
 	{
 		input = "grenade_ability",
-		transition = "stay",
-	},
-	{
-		input = "adamant_whistle_command",
 		transition = "stay",
 	},
 	{

@@ -227,16 +227,10 @@ UIProfileSpawner._apply_pending_animation_data = function (self)
 		self:assign_animation_event(animation_event)
 	end
 
-	if self._pending_companion_state_machine then
-		local state_machine = self._pending_companion_state_machine
+	if self._pending_face_state_machine_key then
+		local face_state_machine_key = self._pending_face_state_machine_key
 
-		self:assign_companion_state_machine(state_machine)
-	end
-
-	if self._pending_companion_animation_event then
-		local animation_event = self._pending_companion_animation_event
-
-		self:assign_companion_animation_event(animation_event)
+		self:assign_face_state_machine(face_state_machine_key)
 	end
 
 	if self._pending_face_animation_event then
@@ -250,6 +244,18 @@ UIProfileSpawner._apply_pending_animation_data = function (self)
 		local value = self._pending_animation_variable_data.value
 
 		self:assign_animation_variable(index, value)
+	end
+
+	if self._pending_companion_state_machine then
+		local state_machine = self._pending_companion_state_machine
+
+		self:assign_companion_state_machine(state_machine)
+	end
+
+	if self._pending_companion_animation_event then
+		local animation_event = self._pending_companion_animation_event
+
+		self:assign_companion_animation_event(animation_event)
 	end
 
 	if self._pending_companion_animation_variable_data then
@@ -283,7 +289,7 @@ end
 UIProfileSpawner.assign_animation_event = function (self, animation_event)
 	local character_spawn_data = self._character_spawn_data
 
-	if character_spawn_data then
+	if character_spawn_data and character_spawn_data.streaming_complete then
 		if animation_event then
 			local unit_3p = character_spawn_data.unit_3p
 
@@ -294,12 +300,16 @@ UIProfileSpawner.assign_animation_event = function (self, animation_event)
 	else
 		self._pending_animation_event = animation_event
 	end
+
+	if self._loading_profile_data then
+		self._loading_profile_data.animation_event = animation_event
+	end
 end
 
 UIProfileSpawner.assign_face_animation_event = function (self, face_animation_event)
 	local character_spawn_data = self._character_spawn_data
 
-	if character_spawn_data then
+	if character_spawn_data and character_spawn_data.streaming_complete then
 		if face_animation_event then
 			local slots = self._character_spawn_data.slots
 			local face_unit = slots.slot_body_face.unit_3p
@@ -317,12 +327,16 @@ UIProfileSpawner.assign_face_animation_event = function (self, face_animation_ev
 	else
 		self._pending_face_animation_event = face_animation_event
 	end
+
+	if self._loading_profile_data then
+		self._loading_profile_data.face_animation_event = face_animation_event
+	end
 end
 
 UIProfileSpawner.assign_state_machine = function (self, state_machine, optional_animation_event, optional_face_animation_event)
 	local character_spawn_data = self._character_spawn_data
 
-	if character_spawn_data then
+	if character_spawn_data and character_spawn_data.streaming_complete then
 		if state_machine then
 			local unit_3p = character_spawn_data.unit_3p
 
@@ -332,6 +346,10 @@ UIProfileSpawner.assign_state_machine = function (self, state_machine, optional_
 		end
 	else
 		self._pending_state_machine = state_machine
+	end
+
+	if self._loading_profile_data then
+		self._loading_profile_data.state_machine = state_machine
 	end
 
 	if optional_animation_event then
@@ -346,7 +364,7 @@ end
 UIProfileSpawner.assign_companion_animation_variable = function (self, index, value)
 	local character_spawn_data = self._character_spawn_data
 
-	if character_spawn_data then
+	if character_spawn_data and character_spawn_data.streaming_complete then
 		local companion_unit_3p = character_spawn_data.companion_unit_3p
 		local variable_id = Unit.animation_find_variable(companion_unit_3p, index)
 
@@ -366,7 +384,7 @@ end
 UIProfileSpawner.assign_companion_state_machine = function (self, state_machine, optional_animation_event)
 	local character_spawn_data = self._character_spawn_data
 
-	if character_spawn_data then
+	if character_spawn_data and character_spawn_data.streaming_complete then
 		if state_machine then
 			local companion_unit_3p = character_spawn_data.companion_unit_3p
 
@@ -380,6 +398,10 @@ UIProfileSpawner.assign_companion_state_machine = function (self, state_machine,
 		self._pending_companion_state_machine = state_machine
 	end
 
+	if self._loading_profile_data and self._loading_profile_data.companion_data then
+		self._loading_profile_data.companion_data.state_machine = state_machine
+	end
+
 	if optional_animation_event then
 		self:assign_companion_animation_event(optional_animation_event)
 	end
@@ -388,7 +410,7 @@ end
 UIProfileSpawner.assign_companion_animation_event = function (self, animation_event)
 	local character_spawn_data = self._character_spawn_data
 
-	if character_spawn_data then
+	if character_spawn_data and character_spawn_data.streaming_complete then
 		if animation_event then
 			local unit_3p = character_spawn_data.companion_unit_3p
 
@@ -401,15 +423,34 @@ UIProfileSpawner.assign_companion_animation_event = function (self, animation_ev
 	else
 		self._pending_companion_animation_event = animation_event
 	end
+
+	if self._loading_profile_data and self._loading_profile_data.companion_data then
+		self._loading_profile_data.companion_data.animation_event = animation_event
+	end
 end
 
-UIProfileSpawner._assign_face_state_machine = function (self, loadout, slots, face_state_machine_key)
-	local head_item_data = loadout.slot_body_face
-	local state_machine_name = head_item_data[face_state_machine_key]
-	local face_unit = slots.slot_body_face.unit_3p
+UIProfileSpawner.assign_face_state_machine = function (self, face_state_machine_key)
+	local character_spawn_data = self._character_spawn_data
 
-	if head_item_data and face_unit and state_machine_name and state_machine_name ~= "" then
-		Unit.set_animation_state_machine(face_unit, state_machine_name)
+	if character_spawn_data and character_spawn_data.streaming_complete then
+		local profile = character_spawn_data.profile
+		local loadout = profile.loadout
+		local slots = character_spawn_data.slots
+		local head_item_data = loadout.slot_body_face
+		local state_machine_name = head_item_data[face_state_machine_key]
+		local face_unit = slots.slot_body_face.unit_3p
+
+		if head_item_data and face_unit and state_machine_name and state_machine_name ~= "" then
+			Unit.set_animation_state_machine(face_unit, state_machine_name)
+		end
+
+		self._pending_face_state_machine_key = nil
+	else
+		self._pending_face_state_machine_key = face_state_machine_key
+	end
+
+	if self._loading_profile_data then
+		self._loading_profile_data.face_state_machine_key = face_state_machine_key
 	end
 end
 
@@ -640,12 +681,18 @@ end
 UIProfileSpawner.update = function (self, dt, t, input_service)
 	self:_sync_profile_changes()
 
-	if self._character_spawn_data then
-		self:_apply_pending_animation_data()
-
+	if self._character_spawn_data and self._character_spawn_data.streaming_complete then
 		if input_service then
 			self:_handle_input(input_service, dt)
 			self:_update_input_rotation(dt)
+		end
+
+		if not self._character_spawn_data.is_ready then
+			self._character_spawn_data.is_ready = true
+
+			if self._visible then
+				self:_update_items_visibility()
+			end
 		end
 	end
 
@@ -738,7 +785,7 @@ UIProfileSpawner.spawned = function (self, bypass_check_streaming)
 	local character_spawn_data = self._character_spawn_data
 
 	if character_spawn_data then
-		return bypass_check_streaming or character_spawn_data.streaming_complete
+		return bypass_check_streaming or character_spawn_data.is_ready
 	end
 
 	return false
@@ -908,7 +955,7 @@ UIProfileSpawner._equip_item_for_spawned_character = function (self, slot_id, it
 	local slot_equip_order = PlayerCharacterConstants.slot_equip_order
 	local slot_dependency_items
 
-	if slot.equipped then
+	if slot and slot.equipped then
 		slot_dependency_items = equipment_component:unequip_slot_dependencies(slot_config, slots, slot_equip_order)
 
 		equipment_component:unequip_item(slot)
@@ -951,11 +998,9 @@ UIProfileSpawner._equip_item_for_spawned_character = function (self, slot_id, it
 		end
 
 		local gender = profile.gender
-		local deform_overrides = {}
 		local deform_override_items = {}
 
 		if gender == "female" then
-			deform_overrides[#deform_overrides + 1] = "wrap_deform_human_body_female"
 			deform_override_items[#deform_override_items + 1] = "content/items/material_overrides/player_wrap_deform/wrap_deform_human_body_female"
 		end
 
@@ -965,12 +1010,6 @@ UIProfileSpawner._equip_item_for_spawned_character = function (self, slot_id, it
 		for _, parent_slot_name in pairs(parent_slot_names) do
 			local parent_slot_unit_3p = slots[parent_slot_name].unit_3p
 			local parent_item = slots[parent_slot_name].item
-			local parent_item_deform_overrides = parent_item and parent_item.deform_overrides or {}
-
-			for _, deform_override in pairs(parent_item_deform_overrides) do
-				deform_overrides[#deform_overrides + 1] = deform_override
-			end
-
 			local parent_item_deform_override_items = parent_item and parent_item.deform_override_items or {}
 
 			for _, deform_override_item in pairs(parent_item_deform_override_items) do
@@ -984,12 +1023,6 @@ UIProfileSpawner._equip_item_for_spawned_character = function (self, slot_id, it
 				local apply_to_parent = display_item.material_override_apply_to_parent
 
 				if apply_to_parent then
-					local material_overrides = display_item.material_overrides
-
-					for _, material_override in ipairs(material_overrides) do
-						VisualLoadoutCustomization.apply_material_override(parent_unit_3p, nil, false, material_override, false)
-					end
-
 					local material_override_items = display_item.material_override_items
 
 					for _, material_override_item in ipairs(material_override_items) do
@@ -1001,22 +1034,16 @@ UIProfileSpawner._equip_item_for_spawned_character = function (self, slot_id, it
 			end
 		end
 
-		local item_deform_overrides = item.deform_overrides or {}
-
-		for _, deform_override in pairs(item_deform_overrides) do
-			deform_overrides[#deform_overrides + 1] = deform_override
-		end
-
 		local item_deform_override_items = item.deform_override_items or {}
 
 		for _, deform_override_item in pairs(item_deform_override_items) do
 			deform_override_items[#deform_override_items + 1] = deform_override_item
 		end
 
-		equipment_component:equip_item(parent_unit_3p, nil, slot, display_item, nil, deform_overrides, deform_override_items, breed_name, nil, nil, companion_unit_3p)
+		equipment_component:equip_item(parent_unit_3p, nil, slot, display_item, nil, deform_override_items, breed_name, nil, nil, companion_unit_3p)
 
 		if slot_dependency_items then
-			equipment_component:equip_slot_dependencies(slots, slot_equip_order, slot_dependency_items, deform_overrides, deform_override_items, breed_name, unit_3p, nil, companion_unit_3p)
+			equipment_component:equip_slot_dependencies(slots, slot_equip_order, slot_dependency_items, deform_override_items, breed_name, unit_3p, nil, companion_unit_3p)
 		end
 
 		if parent_item_unit then
@@ -1159,11 +1186,9 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 
 			if not skip_slot then
 				local gender = profile.gender
-				local deform_overrides = {}
 				local deform_override_items = {}
 
 				if gender == "female" then
-					deform_overrides[#deform_overrides + 1] = "wrap_deform_human_body_female"
 					deform_override_items[#deform_override_items + 1] = "content/items/material_overrides/player_wrap_deform/wrap_deform_human_body_female"
 				end
 
@@ -1174,12 +1199,6 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 					local slot = slots[parent_slot_name]
 					local parent_slot_unit_3p = slot and slot.unit_3p
 					local parent_item = slot and slot.item
-					local parent_item_deform_overrides = parent_item and parent_item.deform_overrides or {}
-
-					for _, parent_item_deform_override in pairs(parent_item_deform_overrides) do
-						deform_overrides[#deform_overrides + 1] = parent_item_deform_override
-					end
-
 					local parent_item_deform_override_items = parent_item and parent_item.deform_override_items or {}
 
 					for _, deform_override_item in pairs(parent_item_deform_override_items) do
@@ -1192,12 +1211,6 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 						local apply_to_parent = item.material_override_apply_to_parent
 
 						if apply_to_parent then
-							local material_overrides = item.material_overrides
-
-							for _, material_override in ipairs(material_overrides) do
-								VisualLoadoutCustomization.apply_material_override(parent_unit_3p, nil, false, material_override, false)
-							end
-
 							local material_override_items = display_item.material_override_items
 
 							for _, material_override_item in ipairs(material_override_items) do
@@ -1209,19 +1222,13 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 					end
 				end
 
-				local item_deform_overrides = display_item.deform_overrides or {}
-
-				for _, deform_override in pairs(item_deform_overrides) do
-					deform_overrides[#deform_overrides + 1] = deform_override
-				end
-
 				local item_deform_override_items = item.deform_override_items or {}
 
 				for _, deform_override_item in pairs(item_deform_override_items) do
 					deform_override_items[#deform_override_items + 1] = deform_override_item
 				end
 
-				equipment_component:equip_item(parent_unit_3p, nil, slot, display_item, nil, deform_overrides, deform_override_items, breed_name, nil, nil, companion_unit_3p)
+				equipment_component:equip_item(parent_unit_3p, nil, slot, display_item, nil, deform_override_items, breed_name, nil, nil, companion_unit_3p)
 			end
 		end
 
@@ -1231,41 +1238,33 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 	end
 
 	if state_machine and not optional_ignore_state_machine then
-		Unit.set_animation_state_machine(unit_3p, state_machine)
+		self:assign_state_machine(state_machine)
 	end
 
 	if animation_event then
-		Unit.animation_event(unit_3p, animation_event)
+		self:assign_animation_event(animation_event)
+	end
+
+	if face_state_machine_key then
+		self:assign_face_state_machine(face_state_machine_key)
+	end
+
+	if face_animation_event then
+		self:assign_face_animation_event(face_animation_event)
 	end
 
 	if companion_unit_3p then
 		if companion_state_machine and not companion_optional_ignore_state_machine then
-			Unit.set_animation_state_machine(companion_unit_3p, companion_state_machine)
+			self:assign_companion_state_machine(companion_state_machine)
 		end
 
 		if companion_animation_event then
-			Unit.animation_event(companion_unit_3p, companion_animation_event)
-		end
-	end
-
-	if face_state_machine_key then
-		self:_assign_face_state_machine(loadout, slots, face_state_machine_key)
-	end
-
-	local face_unit = table.nested_get(slots, "slot_body_face", "unit_3p")
-	local has_animation_state_machine = face_unit ~= nil and Unit.has_animation_state_machine(face_unit)
-
-	if face_animation_event and has_animation_state_machine then
-		if Unit.has_animation_event(face_unit, "no_anim") then
-			Unit.animation_event(face_unit, "no_anim")
-		end
-
-		if Unit.has_animation_event(face_unit, face_animation_event) then
-			Unit.animation_event(face_unit, face_animation_event)
+			self:assign_companion_animation_event(companion_animation_event)
 		end
 	end
 
 	local character_spawn_data = {
+		is_ready = false,
 		streaming_complete = false,
 		slots = slots,
 		archetype_name = archetype_name,
@@ -1356,6 +1355,8 @@ UIProfileSpawner.cb_on_unit_3p_streaming_complete = function (self, unit_3p, tim
 	if character_spawn_data and character_spawn_data.unit_3p == unit_3p then
 		character_spawn_data.streaming_complete = true
 
+		self:_apply_pending_animation_data()
+
 		local disable_hair_state_machine = character_spawn_data.disable_hair_state_machine
 
 		if disable_hair_state_machine then
@@ -1366,10 +1367,6 @@ UIProfileSpawner.cb_on_unit_3p_streaming_complete = function (self, unit_3p, tim
 				Unit.disable_animation_state_machine(hair_unit)
 			end
 		end
-	end
-
-	if self._visible then
-		self:_update_items_visibility()
 	end
 end
 

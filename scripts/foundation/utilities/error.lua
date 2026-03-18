@@ -40,12 +40,12 @@ end
 
 function fassert(condition, message, ...)
 	if not condition then
-		local message = format_error_message(message, ...)
+		local error_message = format_error_message(message, ...)
 	end
 end
 
 function ferror(message, ...)
-	local message = format_error_message(message, ...)
+	local error_message = format_error_message(message, ...)
 
-	error(message)
+	error(error_message)
 end

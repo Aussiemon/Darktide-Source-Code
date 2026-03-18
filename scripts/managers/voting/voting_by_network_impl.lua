@@ -18,6 +18,7 @@ local CLIENT_RPCS = {
 	"rpc_start_voting_mission_lobby_ready",
 	"rpc_start_voting_kick_player",
 	"rpc_start_voting_stay_in_party",
+	"rpc_start_voting_flow",
 	"rpc_voting_accepted",
 	"rpc_voting_completed",
 	"rpc_voting_aborted",
@@ -230,7 +231,7 @@ VotingByNetworkImpl.update = function (self, dt, t)
 
 			local template = voting:template()
 
-			template.on_aborted(voting_id, template, table.clone(voting:params()), abort_reason)
+			template.on_aborted(voting_id, template, table.clone(voting:params()), abort_reason, table.clone(voting:votes()))
 
 			delete_votings[#delete_votings + 1] = voting_id
 		end
@@ -512,6 +513,10 @@ end
 
 VotingByNetworkImpl.rpc_start_voting_stay_in_party = function (self, channel_id, voting_id, template_id, initiator_peer, member_list, initial_votes_list, time_left, new_party_id, new_party_invite_token)
 	self:_rpc_start_voting(voting_id, template_id, initiator_peer, member_list, initial_votes_list, time_left, new_party_id, new_party_invite_token)
+end
+
+VotingByNetworkImpl.rpc_start_voting_flow = function (self, channel_id, voting_id, template_id, initiator_peer, member_list, initial_votes_list, time_left, voting_flow_setting_id)
+	self:_rpc_start_voting(voting_id, template_id, initiator_peer, member_list, initial_votes_list, time_left, voting_flow_setting_id)
 end
 
 VotingByNetworkImpl.rpc_register_vote = function (self, channel_id, voting_id, voter_peer_id, option_id)

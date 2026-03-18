@@ -17,7 +17,7 @@ local function generate_base_template(buff_name, validate_target_func, hud_icon_
 			input_sequence = {
 				{
 					input = "action_one_pressed",
-					value = not auto_use and true or false,
+					value = not auto_use,
 				},
 			},
 		},

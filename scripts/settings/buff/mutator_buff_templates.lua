@@ -1073,7 +1073,7 @@ templates.mutant_mutator = {
 		},
 	},
 }
-templates.drop_pickup_on_death = {
+templates.drop_skull_pickup_on_death = {
 	class_name = "buff",
 	predicted = false,
 	stop_func = function (template_data, template_context)
@@ -1192,6 +1192,81 @@ templates.drop_stolen_rations_01_pickup_medium_many_on_death = {
 		end
 	end,
 }
+templates.drop_many_pickups_on_death = {
+	class_name = "buff",
+	pickup_name = "invalid_pickup_name",
+	predicted = false,
+	placement_settings = {
+		circle_radius = 0.75,
+		num_slots = 3,
+		position_offset = 0.2,
+		randomize_rotation = true,
+	},
+	stop_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local base_position_boxed = Vector3Box(Unit.world_position(unit, 1))
+
+		Promise.delay(0):next(function ()
+			if not Managers.state then
+				return
+			end
+
+			if not Managers.state.extension then
+				return
+			end
+
+			local pickup_system = Managers.state.extension:system("pickup_system")
+
+			if not pickup_system then
+				return
+			end
+
+			local nav_world = Managers.state.nav_mesh:nav_world()
+
+			if not nav_world then
+				return
+			end
+
+			local spawn_locations = RoamerSlotPlacementFunctions.circle_placement_guaranteed(nav_world, base_position_boxed, template_context.template.placement_settings, nil)
+
+			for i = 1, #spawn_locations do
+				local spawn_location = spawn_locations[i].position:unbox()
+				local spawn_rotation = spawn_locations[i].rotation:unbox()
+
+				pickup_system:spawn_pickup(template_context.template.pickup_name, spawn_location, spawn_rotation, nil, nil, nil, nil, "stolen_rations")
+			end
+		end)
+	end,
+	conditional_exit_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return true
+		end
+	end,
+}
+templates.drop_single_skull_on_death = table.add_missing({
+	pickup_name = "skulls_01_pickup",
+	placement_settings = {
+		circle_radius = 0.75,
+		num_slots = 1,
+		position_offset = 0.2,
+		randomize_rotation = true,
+	},
+}, table.clone(templates.drop_many_pickups_on_death))
+templates.drop_many_skulls_on_death = table.add_missing({
+	pickup_name = "skulls_01_pickup",
+	placement_settings = {
+		circle_radius = 0.75,
+		num_slots = 3,
+		position_offset = 0.2,
+		randomize_rotation = true,
+	},
+}, table.clone(templates.drop_many_pickups_on_death))
 templates.drop_shocktrooper_grenade_on_death = {
 	class_name = "buff",
 	predicted = false,

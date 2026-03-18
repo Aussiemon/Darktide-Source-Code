@@ -158,7 +158,7 @@ VotingManagerImmateriumParty.update = function (self, dt, t)
 			self._current_vote_state = "finished"
 
 			_info("Party Vote Aborted: %s", abort_reason)
-			template.on_aborted(current_vote.id, template, current_vote.params, abort_reason)
+			template.on_aborted(current_vote.id, template, current_vote.params, abort_reason, current_vote.votes)
 		end
 
 		return
@@ -203,7 +203,7 @@ VotingManagerImmateriumParty.update = function (self, dt, t)
 					template.on_completed(vote_id, template, current_vote, result)
 				else
 					_info("Party Vote Aborted: %s:%s", result, abort_reason)
-					template.on_aborted(vote_id, template, current_vote.params, abort_reason)
+					template.on_aborted(vote_id, template, current_vote.params, abort_reason, current_vote.votes)
 				end
 			end
 		end
@@ -257,7 +257,7 @@ VotingManagerImmateriumParty.time_left = function (self, voting_id)
 		local time_left = vote_timeout - server_time
 		local time_left_normalized = time_left and math.max(time_left / voting_duration, 0)
 
-		return time_left, time_left_normalized
+		return time_left / 1000, time_left_normalized
 	end
 end
 

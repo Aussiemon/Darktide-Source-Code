@@ -123,7 +123,8 @@ ChainLightning.depth_first_validation_functions = {
 ChainLightning.jump_validation_functions = {
 	target_alive_and_electrocuted = function (target_unit)
 		local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
-		local valid_target = buff_extension and buff_extension:has_keyword(BUFF_KEYWORDS.electrocuted)
+		local is_electrocuted = buff_extension and buff_extension:has_keyword(BUFF_KEYWORDS.electrocuted)
+		local valid_target = buff_extension and is_electrocuted
 
 		return valid_target
 	end,
@@ -166,6 +167,7 @@ ChainLightning.jump = function (t, physics_world, source_node, hit_units, broadp
 	table.clear(BROADPHASE_RESULTS)
 
 	local num_results = broadphase.query(broadphase, query_position, radius, BROADPHASE_RESULTS, enemy_side_names)
+	local found_valid_jump = false
 
 	for i = 1, num_results do
 		local target_unit = BROADPHASE_RESULTS[i]
@@ -176,12 +178,16 @@ ChainLightning.jump = function (t, physics_world, source_node, hit_units, broadp
 			if valid_target then
 				source_node:add_child(on_add_func, add_func_context, "unit", target_unit, "start_t", t)
 
+				found_valid_jump = true
+
 				if source_node:is_full() then
-					return
+					return true
 				end
 			end
 		end
 	end
+
+	return found_valid_jump
 end
 
 ChainLightning.is_valid_target = function (physics_world, source_unit, target_unit, query_position, travel_direction, max_angle, close_max_angle, max_vertical_angle, max_z_diff, jump_validation_func, min_distance)
@@ -193,10 +199,18 @@ ChainLightning.is_valid_target = function (physics_world, source_unit, target_un
 		return false, "same_unit"
 	end
 
-	local valid_target = not jump_validation_func or jump_validation_func(target_unit)
+	local valid_target = not jump_validation_func or jump_validation_func(target_unit, source_unit)
 
 	if not valid_target then
 		return false, "validation"
+	end
+
+	local unit_data_extension = ScriptUnit.has_extension(target_unit, "unit_data_system")
+	local breed = unit_data_extension and unit_data_extension:breed()
+	local untargetable = breed and breed.is_untargetable
+
+	if untargetable then
+		return false, "untargetable"
 	end
 
 	local target_position = POSITION_LOOKUP[target_unit]

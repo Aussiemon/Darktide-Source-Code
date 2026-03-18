@@ -9,7 +9,7 @@ local Interrupt = require("scripts/utilities/attack/interrupt")
 local Luggable = require("scripts/utilities/luggable")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
-local ShoutAbilityImplementation = require("scripts/extension_systems/ability/utilities/shout_ability_implementation")
+local ShoutAbility = require("scripts/extension_systems/ability/utilities/shout_ability")
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local Vo = require("scripts/utilities/vo")
@@ -146,7 +146,7 @@ ActionVeteranCombatAbility.start = function (self, action_settings, t, time_scal
 			local radius = action_settings.radius
 			local shout_target_template_name = self._ability_template_tweak_data.shout_target_template or action_settings.shout_target_template
 
-			ShoutAbilityImplementation.execute(radius, shout_target_template_name, player_unit, t, self._locomotion_component, forward)
+			ShoutAbility.execute(radius, shout_target_template_name, player_unit, t, self._locomotion_component, forward)
 		end
 
 		local source_name = action_settings.sound_source or "head"

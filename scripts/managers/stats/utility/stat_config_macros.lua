@@ -22,19 +22,11 @@ StatConfigMacros.is_story = function (config)
 end
 
 StatConfigMacros.has_mutator = function (config, mutator_name)
-	local circumstance_name = config.circumstance_name
-
-	if not circumstance_name then
-		return false
+	if Managers.state.mutator:mutator(mutator_name) then
+		return true
 	end
 
-	local mutators = table.nested_get(CircumstanceTemplates, circumstance_name, "mutators")
-
-	if not mutators then
-		return false
-	end
-
-	return table.array_contains(mutators, mutator_name)
+	return false
 end
 
 return StatConfigMacros

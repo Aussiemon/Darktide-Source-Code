@@ -115,8 +115,9 @@ Spread.target_style_spread = function (current_rotation, num_shots_fired, num_sh
 	return final_rotation, seed
 end
 
-Spread.uniform_circle = function (rotation, spread_angle, seed)
-	spread_angle = math.degrees_to_radians(spread_angle)
+Spread.uniform_circle = function (rotation, spread_angle_pitch, spread_angle_yaw, seed)
+	spread_angle_pitch = math.degrees_to_radians(spread_angle_pitch)
+	spread_angle_yaw = math.degrees_to_radians(spread_angle_yaw)
 
 	local random_value_1, random_value_2, random_value_3
 
@@ -127,8 +128,8 @@ Spread.uniform_circle = function (rotation, spread_angle, seed)
 	local k = PI_2 * random_value_1
 	local u = random_value_2 + random_value_3
 	local r = u > 1 and 2 - u or u
-	local pitch = math.cos(k) * r * spread_angle
-	local yaw = math.sin(k) * r * spread_angle
+	local pitch = math.cos(k) * r * spread_angle_pitch
+	local yaw = math.sin(k) * r * spread_angle_yaw
 	local spread = Quaternion.from_yaw_pitch_roll(yaw, pitch, 0)
 	local spread_rotation = Quaternion.multiply(rotation, spread)
 

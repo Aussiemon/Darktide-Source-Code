@@ -265,12 +265,12 @@ PickupOverrides.add_skulls_pickup = {
 	pickup_settings = {
 		primary = {
 			rewards = {
-				skulls_01_pickup = flat(35),
+				skulls_01_pickup = flat(10),
 			},
 		},
 		secondary = {
 			rewards = {
-				skulls_01_pickup = flat(35),
+				skulls_01_pickup = flat(5),
 			},
 		},
 	},

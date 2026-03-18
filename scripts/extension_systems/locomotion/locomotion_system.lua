@@ -4,15 +4,15 @@ require("scripts/extension_systems/locomotion/deployable_husk_locomotion_extensi
 require("scripts/extension_systems/locomotion/deployable_unit_locomotion_extension")
 require("scripts/extension_systems/locomotion/minion_husk_locomotion_extension")
 require("scripts/extension_systems/locomotion/minion_locomotion_extension")
-require("scripts/extension_systems/locomotion/player_husk_locomotion")
+require("scripts/extension_systems/locomotion/player_husk_locomotion_extension")
 require("scripts/extension_systems/locomotion/player_unit_locomotion_extension")
 require("scripts/extension_systems/locomotion/projectile_husk_locomotion_extension")
 require("scripts/extension_systems/locomotion/projectile_unit_locomotion_extension")
 
 local Attack = require("scripts/utilities/attack/attack")
+local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breed = require("scripts/utilities/breed")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
-local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local LocomotionSystem = class("LocomotionSystem", "ExtensionSystemBase")
 
 LocomotionSystem.init = function (self, extension_system_creation_context, ...)
@@ -49,6 +49,16 @@ LocomotionSystem.on_remove_extension = function (self, unit, extension_name)
 	end
 
 	LocomotionSystem.super.on_remove_extension(self, unit, extension_name)
+end
+
+LocomotionSystem.get_deployables_for_location_transition = function (self, register_func)
+	local spawned_deployables = self._spawned_deployables
+
+	for unit, _ in pairs(self._spawned_deployables) do
+		register_func(unit, "soft", "LocomotionSystem")
+	end
+
+	table.clear(spawned_deployables)
 end
 
 LocomotionSystem.register_deployable = function (self, deployable_unit)

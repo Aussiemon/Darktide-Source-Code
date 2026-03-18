@@ -4,6 +4,7 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local BtErraticFollowAction = class("BtErraticFollowAction", "BtNode")
 
@@ -37,7 +38,7 @@ BtErraticFollowAction.enter = function (self, unit, breed, blackboard, scratchpa
 
 	scratchpad.time_to_next_evaluate = t + BtErraticFollowAction.TIME_TO_FIRST_EVALUATE
 
-	if action_data.effect_template then
+	if action_data.effect_template_name then
 		local fx_system = Managers.state.extension:system("fx_system")
 
 		scratchpad.fx_system = fx_system
@@ -126,7 +127,7 @@ BtErraticFollowAction.run = function (self, unit, breed, blackboard, scratchpad,
 		MinionMovement.apply_animation_wanted_movement_speed(unit, navigation_extension, dt)
 	end
 
-	local effect_template = action_data.effect_template
+	local effect_template = action_data.effect_template_name and EffectTemplates[action_data.effect_template_name]
 
 	if effect_template then
 		self:_update_effect_template(unit, scratchpad, action_data, target_unit)
@@ -395,7 +396,9 @@ BtErraticFollowAction._update_effect_template = function (self, unit, scratchpad
 		local start_distance = action_data.effect_template_start_distance
 
 		if distance <= start_distance then
-			scratchpad.global_effect_id = fx_system:start_template_effect(action_data.effect_template, unit)
+			local effect_template = EffectTemplates[action_data.effect_template_name]
+
+			scratchpad.global_effect_id = fx_system:start_template_effect(effect_template, unit)
 		end
 	end
 end

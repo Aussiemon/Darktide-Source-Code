@@ -50,6 +50,9 @@ local mutator_templates = {
 			required_horde_travel_distance = 1,
 		},
 	},
+	mutator_depleted_captain_shields = {
+		class = "scripts/managers/mutator/mutators/mutator_base",
+	},
 	mutator_more_hordes_02 = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		modify_pacing = {
@@ -110,6 +113,22 @@ local mutator_templates = {
 			monster_breed_name = {
 				"chaos_plague_ogryn",
 			},
+		},
+	},
+	mutator_always_allow_elites_in_terror_events = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			replace_excluded_terror_event_tags = {
+				villains = {
+					elite = true,
+				},
+			},
+		},
+	},
+	mutator_havoc_more_points_allowed_terror_event = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			terror_event_max_point_multiplier = 1.5,
 		},
 	},
 	mutator_live_abhuman_replacement = {
@@ -207,6 +226,9 @@ local mutator_templates = {
 		},
 	},
 	mutator_decreased_horde_pacing_stinger = {
+		class = "scripts/managers/mutator/mutators/mutator_base",
+	},
+	mutator_ignore_roamer_limits = {
 		class = "scripts/managers/mutator/mutators/mutator_base",
 	},
 	mutator_more_boss_patrols = {

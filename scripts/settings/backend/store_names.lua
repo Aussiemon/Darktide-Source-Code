@@ -1,56 +1,29 @@
 ﻿-- chunkname: @scripts/settings/backend/store_names.lua
 
-local store_names = {}
-
-store_names.by_archetype = {
-	credit = {
-		adamant = "get_adamant_credits_store",
-		broker = "get_broker_credits_store",
-		ogryn = "get_ogryn_credits_store",
-		psyker = "get_psyker_credits_store",
-		veteran = "get_veteran_credits_store",
-		zealot = "get_zealot_credits_store",
-	},
-	credit_goods = {
-		adamant = "get_adamant_credits_goods_store",
-		broker = "get_broker_credits_goods_store",
-		ogryn = "get_ogryn_credits_goods_store",
-		psyker = "get_psyker_credits_goods_store",
-		veteran = "get_veteran_credits_goods_store",
-		zealot = "get_zealot_credits_goods_store",
-	},
-	credit_cosmetics = {
-		adamant = "get_adamant_credits_cosmetics_store",
-		broker = "get_broker_credits_cosmetics_store",
-		ogryn = "get_ogryn_credits_cosmetics_store",
-		psyker = "get_psyker_credits_cosmetics_store",
-		veteran = "get_veteran_credits_cosmetics_store",
-		zealot = "get_zealot_credits_cosmetics_store",
-	},
-	credit_weapon_cosmetics = {
-		adamant = "get_adamant_credits_weapon_cosmetics_store",
-		broker = "get_broker_credits_cosmetics_store",
-		ogryn = "get_ogryn_credits_weapon_cosmetics_store",
-		psyker = "get_psyker_credits_weapon_cosmetics_store",
-		veteran = "get_veteran_credits_weapon_cosmetics_store",
-		zealot = "get_zealot_credits_weapon_cosmetics_store",
-	},
-	mark = {
-		adamant = "get_adamant_marks_store",
-		broker = "get_broker_marks_store",
-		ogryn = "get_ogryn_marks_store",
-		psyker = "get_psyker_marks_store",
-		veteran = "get_veteran_marks_store",
-		zealot = "get_zealot_marks_store",
-	},
-	premium = {
-		adamant = "premium_store_skins_adamant",
-		broker = "premium_store_skins_broker",
-		ogryn = "premium_store_skins_ogryn",
-		psyker = "premium_store_skins_psyker",
-		veteran = "premium_store_skins_veteran",
-		zealot = "premium_store_skins_zealot",
-	},
+local ArchetypeSettings = require("scripts/settings/archetype/archetype_settings")
+local archetype_names_array = ArchetypeSettings.archetype_names_array
+local STORES_FORMAT_STRINGS = {
+	credit = "get_%s_credits_store",
+	credit_cosmetics = "get_%s_credits_cosmetics_store",
+	credit_goods = "get_%s_credits_goods_store",
+	credit_weapon_cosmetics = "get_%s_credits_weapon_cosmetics_store",
+	mark = "get_%s_marks_store",
+	premium = "premium_store_skins_%s",
 }
+local store_names = {
+	by_archetype = {},
+}
+
+for store_name, format_string in pairs(STORES_FORMAT_STRINGS) do
+	local store = {}
+
+	for ii = 1, #archetype_names_array do
+		local archetype_name = archetype_names_array[ii]
+
+		store[archetype_name] = string.format(format_string, archetype_name)
+	end
+
+	store_names.by_archetype[store_name] = store
+end
 
 return settings("StoreNames", store_names)

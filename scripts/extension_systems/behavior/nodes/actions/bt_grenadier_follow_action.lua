@@ -257,8 +257,10 @@ BtGrenadierFollowAction._get_throw_position = function (self, unit, target_posit
 	end
 
 	local target_is_obscured = self:_ray_cast(physics_world, wanted_position, target_position)
+	local game_mode_name = Managers.state.game_mode:game_mode_name()
+	local ignore_target_obscured = action_data.ignore_target_obscured and game_mode_name == "expedition"
 
-	if not target_is_obscured then
+	if ignore_target_obscured or not target_is_obscured then
 		return wanted_position
 	end
 end

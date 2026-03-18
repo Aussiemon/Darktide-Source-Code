@@ -244,6 +244,92 @@ local weapon_projectile_locomotion_templates = {
 			},
 		},
 	},
+	attack_valkyrie_missile = {
+		trajectory_parameters = {
+			shoot = {
+				aim_max_iterations = 40,
+				aim_max_number_of_bounces = 0,
+				aim_time_step_multiplier = 0,
+				initial_angular_velocity = nil,
+				offset_forward = 0.5,
+				offset_right = 0,
+				offset_up = 0,
+				rotation_charge_duration = 0,
+				speed_charge_duration = 0,
+				speed_initial = 76,
+				speed_maximal = 76,
+				locomotion_state = locomotion_states.manual_physics,
+				rotation_offset_initial = Vector3Box(0, 0, 0),
+				rotation_offset_maximal = Vector3Box(0, 0, 0),
+				randomized_angular_velocity = {
+					x = math.pi * 2.2,
+					y = math.pi * 1.1,
+					z = math.pi * 2.2,
+				},
+			},
+		},
+		integrator_parameters = {
+			air_density = 0.8,
+			coefficient_of_restitution = 0.05,
+			collision_filter = "filter_player_character_shooting_projectile",
+			collision_types = "both",
+			drag_coefficient = 0,
+			gravity = 0,
+			mass = 24,
+			max_hit_count = 100,
+			radius = 0.125,
+			rotate_towards_direction = true,
+			use_actor_mass_radius = false,
+			use_generous_bouncing = true,
+		},
+		vfx = {
+			trajectory = {
+				material_name = "content/fx/materials/master/trajectory",
+			},
+		},
+	},
+	attack_valkyrie_bomb = {
+		trajectory_parameters = {
+			shoot = {
+				aim_max_iterations = 40,
+				aim_max_number_of_bounces = 0,
+				aim_time_step_multiplier = 0,
+				initial_angular_velocity = nil,
+				offset_forward = 0.5,
+				offset_right = 0,
+				offset_up = 0,
+				rotation_charge_duration = 0,
+				speed_charge_duration = 0,
+				speed_initial = 76,
+				speed_maximal = 76,
+				locomotion_state = locomotion_states.manual_physics,
+				rotation_offset_initial = Vector3Box(0, 0, 0),
+				rotation_offset_maximal = Vector3Box(0, 0, 0),
+				randomized_angular_velocity = {
+					x = math.pi * 2.2,
+					y = math.pi * 1.1,
+					z = math.pi * 2.2,
+				},
+			},
+		},
+		integrator_parameters = {
+			air_density = 1,
+			coefficient_of_restitution = 0.2,
+			collision_filter = "filter_player_character_shooting_projectile",
+			collision_types = "both",
+			drag_coefficient = 0.3,
+			gravity = 12,
+			mass = 0.8,
+			max_hit_count = 10,
+			radius = 0.125,
+			use_actor_mass_radius = false,
+		},
+		vfx = {
+			trajectory = {
+				material_name = "content/fx/materials/master/trajectory",
+			},
+		},
+	},
 }
 
 return weapon_projectile_locomotion_templates

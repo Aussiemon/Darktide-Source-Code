@@ -48,6 +48,11 @@ local mission_types = {
 		mission_board_icon = "content/ui/materials/icons/mission_types_pj/mission_type_operations",
 		name = "loc_mission_type_operations_name",
 	},
+	expeditions = {
+		icon = "content/ui/materials/icons/mission_types/mission_type_expeditions",
+		mission_board_icon = "content/ui/materials/icons/mission_types_pj/mission_type_expeditions",
+		name = "loc_mission_name_exp_wastes",
+	},
 	horde = {
 		icon = "content/ui/materials/icons/mission_types/mission_type_horde",
 		mission_board_icon = "content/ui/materials/icons/mission_types_pj/mission_type_horde",

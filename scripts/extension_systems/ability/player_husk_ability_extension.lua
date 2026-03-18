@@ -310,6 +310,10 @@ PlayerHuskAbilityExtension.get_current_grenade_ability_name = function (self)
 	error("not allowed to call on husk")
 end
 
+PlayerHuskAbilityExtension.ability_name = function (self, ability_type)
+	error("not allowed to call on husk")
+end
+
 PlayerHuskAbilityExtension.ability_pause_cooldown_settings = function (self)
 	error("not allowed to call on husk")
 end

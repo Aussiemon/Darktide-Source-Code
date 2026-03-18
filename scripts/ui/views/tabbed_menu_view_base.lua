@@ -441,8 +441,9 @@ TabbedMenuViewBase._switch_tab = function (self, index)
 	local story_name = tab_params.level_story_event
 	local story_event_speed = tab_params.level_story_event_speed or 1
 	local level_story_complete_callback_time_fraction = tab_params.level_story_complete_callback_time_fraction
-	local active_view_callback = callback(function ()
-		self._active_view_on_enter_callback = self._active_view and view_function and callback(function ()
+
+	local function active_view_callback()
+		self._active_view_on_enter_callback = self._active_view and view_function and function ()
 			if self._active_view == view then
 				local view_instance = ui_manager:view_instance(self._active_view)
 
@@ -454,8 +455,9 @@ TabbedMenuViewBase._switch_tab = function (self, index)
 			end
 
 			return false
-		end)
-	end)
+		end
+	end
+
 	local level_story_complete_callback
 
 	if story_name and view_function_on_level_story_complete then

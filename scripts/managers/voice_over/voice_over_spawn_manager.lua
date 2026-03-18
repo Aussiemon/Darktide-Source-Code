@@ -35,7 +35,7 @@ VoiceOverSpawnManager.on_gameplay_post_init = function (self, level)
 	end
 
 	local circumstance_info = Managers.state.circumstance:template()
-	local additional_vo_units = circumstance_info.vo_units
+	local additional_vo_units = circumstance_info and circumstance_info.vo_units
 
 	if additional_vo_units then
 		for _, vo_class in pairs(additional_vo_units) do

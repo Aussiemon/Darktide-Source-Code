@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/player_character/player_character_creator_presets.lua
 
-local presets = {
+local player_character_creator_presets = {
 	human = {
 		male = {
 			preset_1 = {
@@ -941,4 +941,4 @@ local presets = {
 	},
 }
 
-return presets
+return settings("PlayerCharacterCreatorPresets", player_character_creator_presets)

@@ -236,12 +236,14 @@ local StateGameTestify = {
 		return weapons
 	end,
 	change_dev_parameter = function (_, parameter)
-		ParameterResolver.set_dev_parameter(parameter.name, parameter.value)
+		local skip_save = parameter.skip_save
+
+		ParameterResolver.set_dev_parameter(parameter.name, parameter.value, skip_save)
 	end,
 	circumstance_theme = function (_, circumstance_name)
-		local circumstance_template = CircumstanceTemplates[circumstance_name]
+		local circumstance_template = circumstance_name and CircumstanceTemplates[circumstance_name]
 
-		return circumstance_template.theme_tag
+		return circumstance_template and circumstance_template.theme_tag
 	end,
 	circumstances = function ()
 		return CircumstanceTemplates

@@ -1,9 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/event_synchronizer/mission_objective_zone_synchronizer_extension.lua
 
 local LevelProps = require("scripts/settings/level_prop/level_props")
-local MissionObjectiveZoneUtilites = require("scripts/extension_systems/mission_objective/utilities/mission_objective_zone")
 local MissionObjectiveZoneSynchronizerExtension = class("MissionObjectiveZoneSynchronizerExtension", "EventSynchronizerBaseExtension")
-local ZONE_TYPES = MissionObjectiveZoneUtilites.ZONE_TYPES
 
 MissionObjectiveZoneSynchronizerExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	MissionObjectiveZoneSynchronizerExtension.super.init(self, extension_init_context, unit, extension_init_data, ...)
@@ -12,8 +10,7 @@ MissionObjectiveZoneSynchronizerExtension.init = function (self, extension_init_
 	self._num_zones_in_mission_objective = 0
 	self._objective_name = "default"
 	self._mission_objective_zone_system = nil
-	self._zone_type = ZONE_TYPES.none
-	self._servor_skull_activator_extension = nil
+	self._servo_skull_activator_extension = nil
 	self._servo_skull_unit = nil
 	self._servo_skull_target_extension = nil
 	self._spline_follower_extension = nil
@@ -23,13 +20,22 @@ MissionObjectiveZoneSynchronizerExtension.init = function (self, extension_init_
 	Unit.flow_event(unit, "lua_unit_visibility_disable")
 end
 
-MissionObjectiveZoneSynchronizerExtension.setup_from_component = function (self, num_zones_in_mission_objective, objective_name, auto_start)
+MissionObjectiveZoneSynchronizerExtension.setup_from_component = function (self, num_zones_in_mission_objective, objective_name, auto_start, register_on_spawn)
 	local unit = self._unit
 
 	self._num_zones_in_mission_objective = num_zones_in_mission_objective
 	self._objective_name = objective_name
 	self._auto_start = auto_start
-	self._group_id = self._mission_objective_system:register_objective_synchronizer(objective_name, nil, unit)
+
+	if register_on_spawn then
+		self._group_id = self._mission_objective_system:register_objective_synchronizer(objective_name, nil, unit)
+	end
+end
+
+MissionObjectiveZoneSynchronizerExtension.register = function (self)
+	local unit = self._unit
+
+	self._group_id = self._mission_objective_system:register_objective_synchronizer(self._objective_name, nil, unit)
 end
 
 MissionObjectiveZoneSynchronizerExtension.destroy = function (self)
@@ -148,6 +154,7 @@ MissionObjectiveZoneSynchronizerExtension._unregister_servo_skull = function (se
 		end
 
 		self._servo_skull_target_extension = nil
+		self._servo_skull_activator_extension = nil
 	end
 end
 
@@ -158,26 +165,34 @@ MissionObjectiveZoneSynchronizerExtension.register_connected_units = function (s
 	return selected_units
 end
 
-MissionObjectiveZoneSynchronizerExtension.register_zone_type = function (self, zone_type)
-	self._zone_type = zone_type
-end
-
-MissionObjectiveZoneSynchronizerExtension.register_servor_skull_activator_extension = function (self, servor_skull_activator_extension)
-	self._servor_skull_activator_extension = servor_skull_activator_extension
+MissionObjectiveZoneSynchronizerExtension.register_servo_skull_activator_extension = function (self, servo_skull_activator_extension)
+	self._servo_skull_activator_extension = servo_skull_activator_extension
 end
 
 MissionObjectiveZoneSynchronizerExtension.start_event = function (self)
 	if self._is_server then
-		if self._servor_skull_activator_extension then
-			self._servor_skull_activator_extension:on_start_event()
-		end
-
-		if self._zone_type == ZONE_TYPES.capture then
+		if self._servo_skull_activator_extension then
+			self._servo_skull_activator_extension:on_start_event()
+		else
 			self:_evaluate_next_step()
 		end
 	end
 
 	MissionObjectiveZoneSynchronizerExtension.super.start_event(self)
+end
+
+MissionObjectiveZoneSynchronizerExtension.update = function (self, unit, dt, t)
+	if self._mission_active then
+		local objective_name = self._objective_name
+		local objective_group = self._group_id
+		local mission_objective = self._mission_objective_system:active_objective(objective_name, objective_group)
+
+		if mission_objective then
+			local mission_objective_zone_system = self._mission_objective_zone_system
+
+			mission_objective:update_player_state(mission_objective_zone_system:players_inside_status(objective_name, objective_group))
+		end
+	end
 end
 
 MissionObjectiveZoneSynchronizerExtension.register_finished_zone = function (self)
@@ -196,13 +211,6 @@ MissionObjectiveZoneSynchronizerExtension._evaluate_next_step = function (self, 
 		if current_index > #selected_zone_units then
 			self:_event_completed()
 		elseif self:_has_connected_spline() and not self._on_last_spline and not activate_zone then
-			if not self._servo_skull_unit then
-				local spline_follower_system = self._spline_follower_system
-				local position, rotation = spline_follower_system:objective_spline_path_start_position_and_rotation(objective_name, objective_group)
-
-				self:spawn_servo_skull(position, rotation)
-			end
-
 			self:follow_spline()
 		else
 			local unit = selected_zone_units[current_index]
@@ -221,18 +229,16 @@ MissionObjectiveZoneSynchronizerExtension._event_completed = function (self)
 	self._on_last_spline = false
 end
 
-MissionObjectiveZoneSynchronizerExtension.num_zones_in_mission_objective = function (self)
-	return self._num_zones_in_mission_objective
+MissionObjectiveZoneSynchronizerExtension.finished_event = function (self)
+	if self:uses_servo_skull() then
+		self:_unregister_servo_skull()
+	end
+
+	MissionObjectiveZoneSynchronizerExtension.super.finished_event(self)
 end
 
-MissionObjectiveZoneSynchronizerExtension._num_scannables_in_zone = function (self)
-	local objective_name = self._objective_name
-	local objective_group = self._group_id
-	local mission_objective_zone_system = self._mission_objective_zone_system
-	local current_active_zone_extension = mission_objective_zone_system:current_active_zone(objective_name, objective_group)
-	local start_num_active_units = current_active_zone_extension:num_scannables_in_zone()
-
-	return start_num_active_units
+MissionObjectiveZoneSynchronizerExtension.num_zones_in_mission_objective = function (self)
+	return self._num_zones_in_mission_objective
 end
 
 MissionObjectiveZoneSynchronizerExtension._has_connected_spline = function (self)
@@ -252,12 +258,16 @@ MissionObjectiveZoneSynchronizerExtension.has_current_active_zone = function (se
 	return current_active_zone ~= nil
 end
 
-MissionObjectiveZoneSynchronizerExtension.uses_servo_skull = function (self)
-	return self._servo_skull_unit ~= nil
+MissionObjectiveZoneSynchronizerExtension.current_active_zone_count = function (self)
+	local objective_name = self._objective_name
+	local objective_group = self._group_id
+	local mission_objective_zone_system = self._mission_objective_zone_system
+
+	return mission_objective_zone_system:current_active_zone_count(objective_name, objective_group)
 end
 
-MissionObjectiveZoneSynchronizerExtension.zone_type = function (self)
-	return self._zone_type
+MissionObjectiveZoneSynchronizerExtension.uses_servo_skull = function (self)
+	return self._servo_skull_unit or self._servo_skull_activator_extension
 end
 
 MissionObjectiveZoneSynchronizerExtension.zone_progression = function (self)
@@ -268,16 +278,12 @@ MissionObjectiveZoneSynchronizerExtension.zone_progression = function (self)
 	return mission_objective_zone_system:zone_progression(objective_name, objective_group)
 end
 
-MissionObjectiveZoneSynchronizerExtension.start_num_active_units = function (self)
-	local start_num_active_units = 0
+MissionObjectiveZoneSynchronizerExtension.max_progression = function (self)
+	local objective_name = self._objective_name
+	local objective_group = self._group_id
+	local mission_objective_zone_system = self._mission_objective_zone_system
 
-	if self._zone_type == ZONE_TYPES.scan then
-		start_num_active_units = self:_num_scannables_in_zone()
-	elseif self._zone_type == ZONE_TYPES.capture then
-		start_num_active_units = self:num_zones_in_mission_objective()
-	end
-
-	return start_num_active_units
+	return mission_objective_zone_system:current_active_zone_objective_max_progression(objective_name, objective_group)
 end
 
 MissionObjectiveZoneSynchronizerExtension.progression = function (self)
@@ -293,6 +299,26 @@ MissionObjectiveZoneSynchronizerExtension.second_progression = function (self)
 	local second_progression = mission_objective_zone_system:second_progression()
 
 	return second_progression
+end
+
+MissionObjectiveZoneSynchronizerExtension.reset = function (self)
+	MissionObjectiveZoneSynchronizerExtension.super.reset(self)
+
+	self._current_zone_index = 1
+	self._on_last_spline = false
+
+	while true do
+		local objective_name = self._objective_name
+		local objective_group = self._group_id
+		local mission_objective_zone_system = self._mission_objective_zone_system
+		local current_active_zone = mission_objective_zone_system:current_active_zone(objective_name, objective_group)
+
+		if current_active_zone then
+			current_active_zone:reset()
+		else
+			break
+		end
+	end
 end
 
 return MissionObjectiveZoneSynchronizerExtension

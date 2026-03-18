@@ -1,6 +1,23 @@
 ﻿-- chunkname: @scripts/foundation/utilities/table.lua
 
 local table = table
+local pairs, next, type = pairs, next, type
+local Profiler_start = _G.Profiler and Profiler.start or function ()
+	return
+end
+local Profiler_stop = _G.Profiler and Profiler.stop or function ()
+	return
+end
+
+table.ensure_not_nil = function (t)
+	local table_type = type(t)
+
+	if table_type == "nil" then
+		return {}
+	elseif table_type == "table" then
+		return t
+	end
+end
 
 table.is_empty = function (t)
 	return next(t) == nil
@@ -16,14 +33,14 @@ table.size = function (t)
 	return elements
 end
 
-table.clone = function (t)
+local function _table_clone(t)
 	local clone = {}
 
 	for key, value in pairs(t) do
 		if value == t then
 			clone[key] = clone
 		elseif type(value) == "table" then
-			clone[key] = table.clone(value)
+			clone[key] = _table_clone(value)
 		else
 			clone[key] = value
 		end
@@ -32,26 +49,36 @@ table.clone = function (t)
 	return clone
 end
 
-table.clone_instance = function (t, lookup)
-	lookup = lookup or {}
-
+local function _table_clone_instance(t, lookup)
 	if lookup[t] then
 		return lookup[t]
 	end
 
-	lookup[t] = {}
+	local clone = {}
 
-	local clone = lookup[t]
+	lookup[t] = clone
 
 	for key, value in pairs(t) do
 		if type(value) == "table" then
-			clone[key] = table.clone_instance(value, lookup)
+			clone[key] = _table_clone_instance(value, lookup)
 		else
 			clone[key] = value
 		end
 	end
 
 	setmetatable(clone, getmetatable(t))
+
+	return clone
+end
+
+table.clone = function (t)
+	local clone = _table_clone(t)
+
+	return clone
+end
+
+table.clone_instance = function (t, lookup)
+	local clone = _table_clone_instance(t, lookup or {})
 
 	return clone
 end
@@ -543,10 +570,10 @@ end
 
 local _value_to_string_array, _table_tostring_array
 
-function _value_to_string_array(v, depth, max_depth, skip_private, sort_keys)
+function _value_to_string_array(v, depth, max_depth, skip_private, sort_keys, print_array_indices)
 	if type(v) == "table" then
 		if depth <= max_depth then
-			return _table_tostring_array(v, depth + 1, max_depth, skip_private, sort_keys)
+			return _table_tostring_array(v, depth + 1, max_depth, skip_private, sort_keys, print_array_indices)
 		else
 			return {
 				"(rec-limit)",
@@ -565,7 +592,7 @@ function _value_to_string_array(v, depth, max_depth, skip_private, sort_keys)
 	end
 end
 
-function _table_tostring_array(t, depth, max_depth, skip_private, sort_keys)
+function _table_tostring_array(t, depth, max_depth, skip_private, sort_keys, print_array_indices)
 	local str = {
 		"{\n",
 	}
@@ -576,7 +603,11 @@ function _table_tostring_array(t, depth, max_depth, skip_private, sort_keys)
 	for i = 1, len do
 		str[#str + 1] = tabs
 
-		table.append(str, _value_to_string_array(t[i], depth, max_depth, skip_private, sort_keys))
+		if print_array_indices then
+			str[#str + 1] = string.format("[%i] = ", i)
+		end
+
+		table.append(str, _value_to_string_array(t[i], depth, max_depth, skip_private, sort_keys, print_array_indices))
 
 		str[#str + 1] = ",\n"
 	end
@@ -609,7 +640,7 @@ function _table_tostring_array(t, depth, max_depth, skip_private, sort_keys)
 			str[#str + 1] = key_str
 			str[#str + 1] = " = "
 
-			table.append(str, _value_to_string_array(value, depth, max_depth, skip_private, sort_keys))
+			table.append(str, _value_to_string_array(value, depth, max_depth, skip_private, sort_keys, print_array_indices))
 
 			str[#str + 1] = ",\n"
 		end
@@ -627,7 +658,7 @@ function _table_tostring_array(t, depth, max_depth, skip_private, sort_keys)
 		str[#str + 1] = key_str
 		str[#str + 1] = " = "
 
-		table.append(str, _value_to_string_array(value, depth, max_depth, skip_private, sort_keys))
+		table.append(str, _value_to_string_array(value, depth, max_depth, skip_private, sort_keys, print_array_indices))
 
 		str[#str + 1] = ",\n"
 	end
@@ -638,8 +669,8 @@ function _table_tostring_array(t, depth, max_depth, skip_private, sort_keys)
 	return str
 end
 
-table.tostring = function (t, max_depth, skip_private, sort_keys)
-	return table.concat(_table_tostring_array(t, 1, max_depth or 1, skip_private, sort_keys ~= false))
+table.tostring = function (t, max_depth, skip_private, sort_keys, print_array_indices)
+	return table.concat(_table_tostring_array(t, 1, max_depth or 1, skip_private, sort_keys ~= false, print_array_indices == true))
 end
 
 local _buffer = {}
@@ -1181,8 +1212,8 @@ table.make_strict_readonly = function (data, name, optional_interface, optional_
 		__data = data,
 		__interface = interface,
 	}
-	local __index_error_msg = optional_error_message__index or ""
-	local __newindex_error_msg = optional_error_message__newindex or ""
+	local __index_error_msg = optional_error_message__index or optional_error_message_interface
+	local __newindex_error_msg = optional_error_message__newindex or optional_error_message_interface
 	local metatable = {
 		__index = function (t, field_name)
 			local __interface = rawget(t, "__interface")
@@ -1518,10 +1549,10 @@ end
 if pcall(require, "table.fatshark") then
 	table.size = table.fatshark.count
 
-	local _t_fs_any = table.fatshark.any
+	local _t_fs_empty = table.fatshark.empty
 
 	table.is_empty = function (t)
-		return not _t_fs_any(t)
+		return _t_fs_empty(t)
 	end
 
 	local _t_fs_keys = table.fatshark.keys

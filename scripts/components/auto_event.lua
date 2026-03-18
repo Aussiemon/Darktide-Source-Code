@@ -10,6 +10,7 @@ AutoEvent.init = function (self, unit, is_server, nav_world)
 	end
 
 	self._unit = unit
+	self._owning_level = Unit.level(unit)
 
 	local start_enabled = self:get_data(unit, "start_enabled")
 
@@ -39,16 +40,41 @@ AutoEvent.start_auto_event = function (self, unit)
 
 	unit = self._unit
 
+	if not self._node_id then
+		self._node_id = math.uuid()
+	end
+
+	local force_inject_captain = self:get_data(unit, "force_inject_captain")
+	local should_inject_captain = force_inject_captain
+	local force_inject_monster = self:get_data(unit, "force_inject_monster")
+	local should_inject_monster = force_inject_monster
+	local force_inject_twins = self:get_data(unit, "force_inject_twins")
+	local should_inject_twin
+
+	if force_inject_twins > 0 then
+		should_inject_twin = force_inject_twins
+	end
+
 	local position = Unit.world_position(unit, 1) or Vector3(0, 0, 0)
 	local auto_event_context = {
 		worldposition = position,
 		intial_cooldown_multiplier_value = self:get_data(unit, "inital_cooldown_type"),
 		size = self:get_data(unit, "size"),
 		composition = self:get_data(unit, "composition"),
-		node_id = math.uuid(),
+		node_id = self._node_id,
+		owning_level = self._owning_level,
+		inject_captain = should_inject_captain,
+		inject_monster = should_inject_monster,
+		inject_twin = should_inject_twin,
 	}
 
 	self._auto_event_id = Managers.state.pacing:request_auto_event(auto_event_context)
+
+	local expedition_extraction_event = self:get_data(unit, "expedition_extraction_event")
+
+	if expedition_extraction_event then
+		Managers.event:trigger("expedition_extraction_music_trigger")
+	end
 end
 
 AutoEvent.stop_auto_event = function (self, unit)
@@ -153,6 +179,36 @@ AutoEvent.component_data = {
 		ui_name = "start_enabled",
 		ui_type = "check_box",
 		value = true,
+	},
+	force_inject_captain = {
+		ui_name = "force_inject_captain",
+		ui_type = "check_box",
+		value = false,
+	},
+	force_inject_monster = {
+		ui_name = "force_inject_monster",
+		ui_type = "check_box",
+		value = false,
+	},
+	force_inject_twins = {
+		ui_name = "force_inject_twins",
+		ui_type = "combo_box",
+		value = 0,
+		options_keys = {
+			0,
+			1,
+			2,
+		},
+		options_values = {
+			0,
+			1,
+			2,
+		},
+	},
+	expedition_extraction_event = {
+		ui_name = "expedition_extraction_event",
+		ui_type = "check_box",
+		value = false,
 	},
 	size = {
 		ui_name = "Size",

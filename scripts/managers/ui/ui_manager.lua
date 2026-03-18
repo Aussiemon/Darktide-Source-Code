@@ -258,6 +258,8 @@ UIManager.get_time = function (self)
 end
 
 UIManager.create_renderer = function (self, name, world, create_resource_target, gui, gui_retained, material_name, optional_width, optional_height, ignore_back_buffer)
+	ResourceReferenceContext.push("UIManager:create_renderer")
+
 	world = world or self._world
 
 	local renderer
@@ -265,15 +267,17 @@ UIManager.create_renderer = function (self, name, world, create_resource_target,
 	if create_resource_target then
 		renderer = UIRenderer.create_resource_renderer(world, gui, gui_retained, name, material_name, optional_width, optional_height, ignore_back_buffer)
 	elseif optional_width and optional_height then
-		renderer = UIRenderer.create_viewport_renderer(world, "custom_size", optional_width, optional_height)
+		renderer = UIRenderer.create_viewport_renderer(world, name, "custom_size", optional_width, optional_height)
 	else
-		renderer = UIRenderer.create_viewport_renderer(world)
+		renderer = UIRenderer.create_viewport_renderer(world, name)
 	end
 
 	self._renderers[name] = {
 		renderer = renderer,
 		world = world,
 	}
+
+	ResourceReferenceContext.pop("UIManager:create_renderer")
 
 	return renderer
 end
@@ -707,7 +711,13 @@ end
 UIManager.create_viewport = function (self, world, viewport_name, viewport_type, viewport_layer, shading_environment_name, shading_callback, optional_render_targets)
 	shading_environment_name = shading_environment_name or GameParameters.default_ui_shading_environment
 
+	ResourceReferenceContext.push("UIManager:create_viewport")
+	ResourceReferenceContext.push(viewport_name)
+
 	local viewport = ScriptWorld.create_viewport(world, viewport_name, viewport_type, viewport_layer, nil, nil, nil, nil, shading_environment_name, shading_callback, nil, optional_render_targets)
+
+	ResourceReferenceContext.pop(viewport_name)
+	ResourceReferenceContext.pop("UIManager:create_viewport")
 
 	return viewport
 end
@@ -724,7 +734,14 @@ UIManager.create_world = function (self, world_name, optional_layer, optional_ti
 		Application.ENABLE_RAY_TRACING,
 	}
 	local world_manager = Managers.world
+
+	ResourceReferenceContext.push("UIManager:create_world")
+	ResourceReferenceContext.push(world_name)
+
 	local world = world_manager:create_world(world_name, parameters, unpack(flags))
+
+	ResourceReferenceContext.pop(world_name)
+	ResourceReferenceContext.pop("UIManager:create_world")
 
 	if optional_view_connection_name then
 		self._view_handler:register_view_world(optional_view_connection_name, world_name, layer)
@@ -762,15 +779,7 @@ UIManager.using_input = function (self, ignore_hud, ignore_views, ignore_constan
 		return self._hud:using_input()
 	end
 
-	if self._interaction_using_input then
-		return true
-	end
-
 	return false
-end
-
-UIManager.set_interaction_using_input = function (self, is_using)
-	self._interaction_using_input = is_using
 end
 
 UIManager.inputs_in_use = function (self)
@@ -1118,12 +1127,23 @@ UIManager.load_view = function (self, view_name, reference_name, loaded_callback
 	local levels = settings.levels
 
 	if package_name then
-		local package_reference_name = reference_name .. #packages_to_load_data
+		if type(package_name) == "table" then
+			for i = 1, #package_name do
+				local package_reference_name = reference_name .. #packages_to_load_data
 
-		packages_to_load_data[#packages_to_load_data + 1] = {
-			package_name = package_name,
-			reference_name = package_reference_name,
-		}
+				packages_to_load_data[#packages_to_load_data + 1] = {
+					package_name = package_name[i],
+					reference_name = package_reference_name,
+				}
+			end
+		else
+			local package_reference_name = reference_name .. #packages_to_load_data
+
+			packages_to_load_data[#packages_to_load_data + 1] = {
+				package_name = package_name,
+				reference_name = package_reference_name,
+			}
+		end
 	end
 
 	if levels then
@@ -1141,7 +1161,11 @@ UIManager.load_view = function (self, view_name, reference_name, loaded_callback
 
 	if #packages_to_load_data <= 0 then
 		if loaded_callback then
+			ResourceReferenceContext.push("UIManager:load_view")
+			ResourceReferenceContext.push(reference_name)
 			loaded_callback()
+			ResourceReferenceContext.pop(reference_name)
+			ResourceReferenceContext.pop("UIManager:load_view")
 		end
 
 		return false
@@ -1161,6 +1185,8 @@ UIManager.load_view = function (self, view_name, reference_name, loaded_callback
 		self._views_loading_data[view_name][reference_name] = view_loading_data
 
 		local function callback_fn(package_data, view_loading_data)
+			ResourceReferenceContext.push("UIManager:load_view.cb")
+
 			package_data.loaded = true
 
 			local packages_load_data = view_loading_data.packages_load_data
@@ -1208,6 +1234,8 @@ UIManager.load_view = function (self, view_name, reference_name, loaded_callback
 			if completed and view_loading_data.loaded_callback then
 				view_loading_data.loaded_callback()
 			end
+
+			ResourceReferenceContext.pop("UIManager:load_view.cb")
 		end
 
 		for i = #packages_to_load_data, 1, -1 do

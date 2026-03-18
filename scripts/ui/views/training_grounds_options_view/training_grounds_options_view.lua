@@ -11,6 +11,7 @@ local StepperPassTemplates = require("scripts/ui/pass_templates/stepper_pass_tem
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local Text = require("scripts/utilities/ui/text")
+local ViewElementDifficultySelector = require("scripts/ui/view_elements/view_element_mission_board_difficulty_selector/view_element_mission_board_difficulty_selector")
 local TrainingGroundsOptionsView = class("TrainingGroundsOptionsView", "BaseView")
 local view_settings = TrainingGroundsOptionsViewSettings
 
@@ -35,6 +36,7 @@ end
 
 TrainingGroundsOptionsView.on_enter = function (self)
 	TrainingGroundsOptionsView.super.on_enter(self)
+	self:_add_element(ViewElementDifficultySelector, "difficulty_selector", 100, view_settings.difficulty_selector_context)
 	self:_register_button_callbacks()
 	self:_setup_info()
 
@@ -127,9 +129,9 @@ TrainingGroundsOptionsView._start_training_grounds = function (self, mechanism_c
 		Level.trigger_event(level, "training_grounds_started")
 	end
 
-	local widgets_by_name = self._widgets_by_name
-	local difficulty_stepper = widgets_by_name.difficulty_stepper
-	local difficulty_setting = DangerSettings[difficulty_stepper.content.danger]
+	local difficulty_stepper = self:_element("difficulty_selector")
+	local danger_level = difficulty_stepper and difficulty_stepper:get_current_selected_difficulty() or 1
+	local difficulty_setting = DangerSettings[danger_level]
 	local challenge_level = difficulty_setting and difficulty_setting.challenge
 
 	if not challenge_level then
@@ -164,7 +166,8 @@ end
 
 TrainingGroundsOptionsView.on_exit = function (self)
 	local save_data = Managers.save:character_data()
-	local danger = self._widgets_by_name.difficulty_stepper and self._widgets_by_name.difficulty_stepper.content.danger
+	local difficulty_stepper = self:_element("difficulty_selector")
+	local danger = difficulty_stepper and difficulty_stepper:get_current_selected_difficulty()
 
 	if danger then
 		save_data.training_grounds_danger = danger
@@ -200,10 +203,13 @@ TrainingGroundsOptionsView._setup_info = function (self)
 	local save_data = Managers.save:character_data()
 	local danger = save_data and save_data.training_grounds_danger or 3
 
-	widgets_by_name.difficulty_stepper.content.danger = danger
-
 	if show_difficulty_stepper then
-		self:_create_difficulty_stepper_indicators(danger)
+		local difficulty_selector = self:_element("difficulty_selector")
+
+		if difficulty_selector then
+			difficulty_selector:initialize_data(danger)
+			difficulty_selector:set_visibility(true)
+		end
 
 		local panel_size_large = view_settings.panel_size.large
 
@@ -211,7 +217,6 @@ TrainingGroundsOptionsView._setup_info = function (self)
 	end
 
 	widgets_by_name.select_difficulty_text.content.text = Localize("loc_mission_board_select_difficulty")
-	widgets_by_name.difficulty_stepper.content.visible = show_difficulty_stepper
 	widgets_by_name.select_difficulty_text.content.visible = show_difficulty_stepper
 
 	if Managers.narrative:is_chapter_complete("onboarding", "play_training") then
@@ -279,81 +284,18 @@ end
 TrainingGroundsOptionsView.draw = function (self, dt, t, input_service, layer)
 	local ui_renderer = self._ui_renderer
 
-	UIRenderer.begin_pass(ui_renderer, self._ui_scenegraph, input_service, dt, self._render_settings)
-
-	if self._difficulty_indicator_widgets then
-		for i = 1, #self._difficulty_indicator_widgets do
-			local widget = self._difficulty_indicator_widgets[i]
-
-			UIWidget.draw(widget, ui_renderer)
-		end
-	end
-
-	UIRenderer.end_pass(ui_renderer)
 	TrainingGroundsOptionsView.super.draw(self, dt, t, input_service, layer)
 end
 
 TrainingGroundsOptionsView.post_update = function (self, dt, t, input_service)
-	local difficulty_selector = self._widgets_by_name.difficulty_stepper
-	local content = difficulty_selector.content
-	local danger = content.danger
+	local difficulty_selector = self:_element("difficulty_selector")
 
-	if self._selected_danger ~= danger then
-		self._selected_danger = danger
+	if difficulty_selector then
+		local danger = difficulty_selector:get_current_selected_difficulty()
 
-		self:_update_difficulty_stepper(danger)
-	end
-end
-
-TrainingGroundsOptionsView._create_difficulty_stepper_indicators = function (self, current_difficulty_index)
-	local stepper_indicators = {}
-	local num_settings = #DangerSettings
-
-	for i = 1, num_settings do
-		local danger_settings = DangerSettings[i]
-		local indicator_pass_templates = StepperPassTemplates.difficulty_stepper_indicator.passes
-		local content_overrides = {
-			is_unlocked = true,
-			icon = danger_settings.icon,
-			internal_selected_difficulty = i,
-			current_selected_difficulty = current_difficulty_index,
-			active = i == current_difficulty_index,
-		}
-		local indicator = UIWidget.create_definition(indicator_pass_templates, "difficulty_stepper", content_overrides)
-		local widget = UIWidget.init("difficulty_indicator_" .. i, indicator)
-
-		widget.content.hotspot.pressed_callback = callback(self, "_update_difficulty_stepper", i)
-		widget.offset[1] = 56 + (i - 1) * (280 / num_settings)
-		stepper_indicators[#stepper_indicators + 1] = widget
-	end
-
-	self._difficulty_indicator_widgets = stepper_indicators
-
-	self:_update_difficulty_stepper(current_difficulty_index)
-end
-
-TrainingGroundsOptionsView._update_difficulty_stepper = function (self, current_difficulty_index)
-	local difficulty_selector = self._widgets_by_name.difficulty_stepper
-	local content = difficulty_selector.content
-
-	content.danger = current_difficulty_index
-	self._selected_danger = current_difficulty_index
-	content.difficulty_text = Text.localize_to_upper(DangerSettings[current_difficulty_index].display_name)
-	content.target_color = DangerSettings[current_difficulty_index].color
-
-	local difficulty_indicators = self._difficulty_indicator_widgets
-
-	if not difficulty_indicators then
-		return
-	end
-
-	for i = 1, #difficulty_indicators do
-		local indicator = difficulty_indicators[i]
-		local indicator_content = indicator.content
-
-		indicator_content.current_selected_difficulty = current_difficulty_index
-		indicator_content.active = i == current_difficulty_index
-		indicator_content.target_color = DangerSettings[current_difficulty_index].color
+		if self._selected_danger ~= danger then
+			self._selected_danger = danger
+		end
 	end
 end
 

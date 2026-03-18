@@ -68,6 +68,14 @@ local function _find_new_target(integration_data, position, dt, t)
 		integration_data.raycast_timer = t + time_between_raycasts
 
 		local function is_valid_and_legitimate_target_func(integration_data, unit, position)
+			local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+			local breed = unit_data_extension and unit_data_extension:breed()
+			local untargetable = breed and breed.is_untargetable
+
+			if untargetable then
+				return false
+			end
+
 			local legitimate_target_func = _find_true_flight_function(true_flight_template, "legitimate_target_function")
 			local target_hit_zone = true_flight_template.target_hit_zone
 			local target_position = TrueFlightDefaults.get_unit_position(unit, target_hit_zone)

@@ -86,6 +86,22 @@ local SPECIAL_ACTION = {
 	condition = "minion_can_use_special_action",
 	name = "use_special_action",
 }
+local DISABLE = {
+	"BtSelectorNode",
+	{
+		"BtMinionVortexGrabbedAction",
+		condition = "vortex_grabbed",
+		name = "vortex_grabbed",
+		action_data = action_data.vortex_grabbed,
+	},
+	{
+		"BtDisableAction",
+		condition = "is_minion_disabled",
+		name = "disable",
+		action_data = action_data.disable,
+	},
+	name = "disable_actions",
+}
 local behavior_tree = {
 	"BtSelectorNode",
 	{
@@ -94,12 +110,7 @@ local behavior_tree = {
 		name = "death",
 		action_data = action_data.death,
 	},
-	{
-		"BtDisableAction",
-		condition = "is_minion_disabled",
-		name = "disable",
-		action_data = action_data.disable,
-	},
+	DISABLE,
 	{
 		"BtExitSpawnerAction",
 		condition = "is_exiting_spawner",

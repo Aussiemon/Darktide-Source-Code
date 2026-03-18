@@ -90,16 +90,19 @@ MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_dir
 		_trigger_kill_vo(unit, attacking_unit_or_nil, hit_zone_name_or_nil, attack_type_or_nil, damage_profile)
 		_trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_or_nil, damage_profile, damage_type_or_nil, self._unit_id_or_level_index)
 
-		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-		local inventory_slots = visual_loadout_extension:inventory_slots()
+		local visual_loadout_extension = ScriptUnit.has_extension(unit, "visual_loadout_system")
 
-		for slot_name, slot_data in pairs(inventory_slots) do
-			if slot_data.drop_on_death and visual_loadout_extension:can_drop_slot(slot_name) then
-				visual_loadout_extension:drop_slot(slot_name)
+		if visual_loadout_extension then
+			local inventory_slots = visual_loadout_extension:inventory_slots()
+
+			for slot_name, slot_data in pairs(inventory_slots) do
+				if slot_data.drop_on_death and visual_loadout_extension:can_drop_slot(slot_name) then
+					visual_loadout_extension:drop_slot(slot_name)
+				end
 			end
-		end
 
-		visual_loadout_extension:send_on_death_event()
+			visual_loadout_extension:send_on_death_event()
+		end
 
 		local hit_zones = breed.hit_zones
 
@@ -154,6 +157,7 @@ MinionDeathManager.set_dead = function (self, unit, attack_direction, hit_zone_n
 		do_ragdoll_push = do_ragdoll_push,
 		herding_template_name = herding_template_name,
 		death_velocity = death_velocity,
+		no_ragdoll = breed.no_ragdoll,
 	}
 
 	Unit.flow_event(unit, "on_death")
@@ -204,7 +208,7 @@ MinionDeathManager._server_finalize_death = function (self, death_data)
 
 	if DEDICATED_SERVER then
 		Managers.state.unit_spawner:mark_for_deletion(unit)
-	else
+	elseif not death_data.no_ragdoll then
 		self._minion_ragdoll:create_ragdoll(death_data)
 	end
 end
@@ -230,11 +234,11 @@ MinionDeathManager.client_finalize_death = function (self, unit, unit_id)
 
 	if death_data.despawn_on_death then
 		Managers.state.unit_spawner:mark_for_deletion(unit)
-	else
+	elseif not death_data.no_ragdoll then
 		self._minion_ragdoll:create_ragdoll(death_data)
-
-		self._minions_awaiting_death[unit] = nil
 	end
+
+	self._minions_awaiting_death[unit] = nil
 end
 
 MinionDeathManager.rpc_minion_set_dead = function (self, channel_id, unit_id, attack_direction, hit_zone_id, damage_profile_id, do_ragdoll_push, herding_template_id_or_nil)
@@ -331,7 +335,8 @@ function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_
 
 	local victim_side = side_system.side_by_unit[unit]
 	local victim_buff_extension = ScriptUnit.has_extension(unit, "buff_system")
-	local victim_is_bleeding = victim_buff_extension:has_keyword(buff_keywords.bleeding)
+	local victim_is_bleeding = victim_buff_extension and victim_buff_extension:has_keyword(buff_keywords.bleeding)
+	local victim_keywords_on_death_or_nil = victim_buff_extension and table.shallow_copy(victim_buff_extension:keywords()) or nil
 
 	if victim_buff_extension then
 		local param_table = victim_buff_extension:request_proc_event_param_table()
@@ -369,6 +374,7 @@ function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_
 				param_table.damage_profile_name = damage_profile.name
 				param_table.damage_type = damage_type_or_nil
 				param_table.breed_name = breed.name
+				param_table.keywords_on_death_or_nil = victim_keywords_on_death_or_nil
 				param_table.side_name = victim_side:name()
 				param_table.position = Vector3Box(victim_position)
 				param_table.tags = breed.tags

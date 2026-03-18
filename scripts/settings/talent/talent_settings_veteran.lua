@@ -4,7 +4,7 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local talent_settings = {
 	veteran_1 = {
 		combat_ability = {
-			cooldown = 45,
+			cooldown = 40,
 		},
 		grenade = {
 			max_charges = 3,
@@ -58,6 +58,9 @@ local talent_settings = {
 		clip_size = {
 			clip_size_modifier = 0.25,
 		},
+		veteran_increased_ranged_cleave = {
+			cleave = 0.5,
+		},
 	},
 	veteran_2 = {
 		combat_ability_base = {
@@ -68,8 +71,8 @@ local talent_settings = {
 		combat_ability = {
 			cooldown = 30,
 			damage_vs_ogryn_and_monsters = 0.25,
-			duration = 5,
-			duration_increased = 8,
+			duration = 6,
+			duration_increased = 9,
 			fov_multiplier = 0.85,
 			max_charges = 1,
 			max_stacks = 1,
@@ -77,7 +80,7 @@ local talent_settings = {
 			on_hit_proc_chance = 1,
 			outline_angle = 0.5,
 			outline_distance = 50,
-			outline_duration = 5,
+			outline_duration = 6,
 			outline_highlight_offset = 0.15,
 			outline_highlight_offset_total_max_time = 0.6,
 			push_speed_modifier = -0.5,
@@ -180,7 +183,7 @@ local talent_settings = {
 	},
 	veteran_3 = {
 		combat_ability = {
-			cooldown = 30,
+			cooldown = 40,
 			max_charges = 1,
 			radius = 9,
 			toughness_replenish_percent = 0.5,

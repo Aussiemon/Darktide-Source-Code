@@ -38,9 +38,11 @@ LevelLoader.start_loading = function (self, context)
 
 		self._theme_tag = parsed_data.theme
 	else
-		local circumstance_template = CircumstanceTemplates[circumstance_name]
+		local circumstance_template = circumstance_name and CircumstanceTemplates[circumstance_name]
 
-		self._theme_tag = circumstance_template.theme_tag
+		if circumstance_template then
+			self._theme_tag = circumstance_template.theme_tag
+		end
 	end
 
 	local item_definitions = MasterItems.get_cached()

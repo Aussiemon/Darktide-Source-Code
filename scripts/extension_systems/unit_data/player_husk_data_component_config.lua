@@ -111,6 +111,9 @@ local husk_data_component_config = {
 		"num_special_charges",
 		"max_num_special_charges",
 	},
+	slot_combat_ability = {
+		"special_active",
+	},
 	minigame_character_state = {
 		"interface_game_object_id",
 		"interface_is_level_unit",

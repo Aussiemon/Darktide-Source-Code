@@ -9,6 +9,7 @@ local RPCS = {
 	"rpc_networked_timer_pause",
 	"rpc_networked_timer_stop",
 	"rpc_networked_timer_fast_forward",
+	"rpc_networked_timer_set_duration",
 	"rpc_networked_timer_set_speed_modifier",
 	"rpc_networked_timer_rewind",
 	"rpc_networked_timer_finished",
@@ -65,6 +66,14 @@ NetworkedTimerSystem.rpc_networked_timer_fast_forward = function (self, channel_
 	local extension = ScriptUnit.extension(unit, "networked_timer_system")
 
 	extension:fast_forward()
+end
+
+NetworkedTimerSystem.rpc_networked_timer_set_duration = function (self, channel_id, unit_id, duration)
+	local is_level_unit = true
+	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
+	local extension = ScriptUnit.extension(unit, "networked_timer_system")
+
+	extension:set_duration(duration)
 end
 
 NetworkedTimerSystem.rpc_networked_timer_set_speed_modifier = function (self, channel_id, unit_id, speed_modifier_normalized)

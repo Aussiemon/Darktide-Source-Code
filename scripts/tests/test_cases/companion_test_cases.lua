@@ -121,6 +121,6 @@ CompanionTestCases.adamant_target_enemy_and_attack_with_companion_dog = function
 
 		Testify:make_request("companion_tag_enemy", player_unit, target_unit)
 		TestifySnippets.wait(settings.duration)
-		Testify:make_request("exit_to_main_menu")
+		TestifySnippets.exit_to_main_menu_and_wait()
 	end)
 end

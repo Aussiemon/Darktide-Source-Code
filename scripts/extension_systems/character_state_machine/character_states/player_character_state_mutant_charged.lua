@@ -97,6 +97,10 @@ PlayerCharacterStateMutantCharged.on_enter = function (self, unit, dt, t, previo
 	end
 end
 
+local INVERT_DIRECTION = {
+	ogryn = true,
+}
+
 PlayerCharacterStateMutantCharged.on_exit = function (self, unit, t, next_state)
 	PlayerCharacterStateMutantCharged.super.on_exit(self, unit, t, next_state)
 
@@ -113,13 +117,13 @@ PlayerCharacterStateMutantCharged.on_exit = function (self, unit, t, next_state)
 
 	if ALIVE[disabling_unit] then
 		local breed_name = self._breed.name
-		local is_human = breed_name == "human"
 
 		teleport_position = disabled_character_state_component.target_drag_position
 
 		local unit_rotation = Unit.local_rotation(disabling_unit, 1)
 		local disabling_unit_forward = Quaternion.forward(unit_rotation)
-		local direction = is_human and disabling_unit_forward or -disabling_unit_forward
+		local invert_direction = INVERT_DIRECTION[breed_name]
+		local direction = invert_direction and -disabling_unit_forward or disabling_unit_forward
 		local teleport_rotation = Quaternion.look(direction)
 
 		PlayerMovement.teleport_fixed_update(unit, teleport_position, teleport_rotation)

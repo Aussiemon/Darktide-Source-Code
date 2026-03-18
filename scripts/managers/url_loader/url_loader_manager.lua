@@ -12,6 +12,7 @@ end
 
 UrlLoaderManager._on_load_texture_ok = function (self, url, backend_data)
 	local texture_data = {
+		is_ok = true,
 		url = url,
 		texture = backend_data.texture,
 		width = backend_data.texture_width,
@@ -39,6 +40,7 @@ UrlLoaderManager._on_load_texture_error = function (self, url, backend_error)
 	end
 
 	local texture_data = {
+		is_ok = false,
 		url = url,
 	}
 
@@ -46,7 +48,7 @@ UrlLoaderManager._on_load_texture_error = function (self, url, backend_error)
 	self._url_to_context[url] = nil
 	self._cached_textures[url] = texture_data
 
-	return texture_data
+	return Promise.rejected(texture_data)
 end
 
 UrlLoaderManager.load_texture = function (self, url, require_auth, optional_reason)
@@ -61,7 +63,9 @@ UrlLoaderManager.load_texture = function (self, url, require_auth, optional_reas
 	local texture_data = self._cached_textures[url]
 
 	if texture_data then
-		return Promise.resolved(texture_data)
+		local create_promise = texture_data.is_ok and Promise.resolved or Promise.rejected
+
+		return create_promise(texture_data)
 	end
 
 	self._url_to_context[url] = {

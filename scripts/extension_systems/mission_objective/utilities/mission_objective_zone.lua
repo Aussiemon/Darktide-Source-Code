@@ -4,8 +4,6 @@ require("scripts/extension_systems/mission_objective/utilities/mission_objective
 
 local MissionObjectiveZone = class("MissionObjectiveZone", "MissionObjectiveBase")
 
-MissionObjectiveZone.ZONE_TYPES = table.enum("none", "capture", "scan")
-
 MissionObjectiveZone.init = function (self, peer_id)
 	MissionObjectiveZone.super.init(self, peer_id)
 
@@ -16,6 +14,9 @@ end
 
 MissionObjectiveZone.start_objective = function (self, mission_objective_data, group_id, registered_units, synchronizer_unit)
 	MissionObjectiveZone.super.start_objective(self, mission_objective_data, group_id, registered_units, synchronizer_unit)
+
+	self._use_counter = false
+	self._progress_bar = false
 
 	local zone_synchronizer_extension = self:synchronizer_extension()
 	local stages = zone_synchronizer_extension:num_zones_in_mission_objective()
@@ -32,7 +33,7 @@ MissionObjectiveZone.start_stage = function (self, stage)
 		local start_num_active_units = self:max_incremented_progression()
 
 		if start_num_active_units == 0 then
-			start_num_active_units = mission_objective_zone_synchronizer_extension:start_num_active_units()
+			start_num_active_units = mission_objective_zone_synchronizer_extension:max_progression()
 
 			self:set_max_increment(start_num_active_units)
 		end
@@ -46,7 +47,7 @@ MissionObjectiveZone.update_progression = function (self)
 	local start_num_active_units = self:max_incremented_progression()
 
 	if mission_objective_zone_synchronizer_extension:has_current_active_zone() and start_num_active_units == 0 then
-		start_num_active_units = mission_objective_zone_synchronizer_extension:start_num_active_units()
+		start_num_active_units = mission_objective_zone_synchronizer_extension:max_progression()
 
 		self:set_max_increment(start_num_active_units)
 		self:propagate_objective_increment()
@@ -65,6 +66,18 @@ MissionObjectiveZone.update_progression = function (self)
 		if self:max_progression_achieved() then
 			self:stage_done()
 		end
+	end
+end
+
+MissionObjectiveZone.update_player_state = function (self, fulfill_in_zone_check, players_in_zone, required_players)
+	if fulfill_in_zone_check ~= nil then
+		self._ui_state = fulfill_in_zone_check and "default" or "alert"
+		self._required_players = required_players
+		self._available_players = players_in_zone
+	else
+		self._ui_state = "default"
+		self._required_players = nil
+		self._available_players = nil
 	end
 end
 

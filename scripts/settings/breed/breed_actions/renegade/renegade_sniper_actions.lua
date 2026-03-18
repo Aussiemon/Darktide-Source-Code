@@ -3,7 +3,6 @@
 local BreedShootTemplates = require("scripts/settings/breed/breed_shoot_templates")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local UtilityConsiderations = require("scripts/extension_systems/behavior/utility_considerations")
 local damage_types = DamageSettings.damage_types
@@ -12,6 +11,16 @@ local action_data = {
 	name = "renegade_sniper",
 	idle = {
 		anim_events = "idle",
+	},
+	weapon_malfunction_loop = {
+		rotate_towards_target = false,
+		anim_events = {
+			"suppressed_loop_01",
+		},
+		end_anim_events = {
+			"stagger_finished",
+			"idle",
+		},
 	},
 	death = {
 		instant_ragdoll_chance = 0.5,
@@ -290,6 +299,104 @@ local action_data = {
 			sprinting = 6.2,
 		},
 	},
+	move_to_cover_weapon_malfunction = {
+		anim_driven_min_distance = 3,
+		idle_anim_events = "idle",
+		move_type_switch_stickiness = 2,
+		sprint_anim_event = "assault_fwd",
+		sprint_target_distance = 15,
+		utility_weight = 2,
+		considerations = UtilityConsiderations.sniper_movement,
+		start_move_anim_events = {
+			bwd = "move_start_bwd",
+			fwd = "move_start_fwd",
+			left = "move_start_left",
+			right = "move_start_right",
+		},
+		start_move_anim_data = {
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
+			move_start_bwd = {
+				sign = -1,
+				rad = math.pi,
+			},
+			move_start_left = {
+				sign = 1,
+				rad = math.pi / 2,
+			},
+			move_start_right = {
+				sign = -1,
+				rad = math.pi / 2,
+			},
+		},
+		start_move_rotation_timings = {
+			move_start_bwd = 0,
+			move_start_fwd = 0,
+			move_start_left = 0,
+			move_start_right = 0,
+		},
+		start_rotation_durations = {
+			move_start_bwd = 0.26666666666666666,
+			move_start_fwd = 0.26666666666666666,
+			move_start_left = 0.26666666666666666,
+			move_start_right = 0.26666666666666666,
+		},
+		speeds = {
+			jogging = 4.2,
+			sprinting = 6.2,
+		},
+	},
+	escape_to_combat_vector_weapon_malfunction = {
+		degree_per_direction = 10,
+		idle_anim_events = "idle",
+		max_distance_to_target = 40,
+		min_distance_to_target = 20,
+		move_anim_events = "move_fwd",
+		move_to_cooldown = 0.25,
+		move_to_fail_cooldown = 1,
+		randomized_direction_degree_range = 120,
+		speed = 4.2,
+		utility_weight = 1,
+		considerations = UtilityConsiderations.escape_to_combat_vector_far,
+		start_move_anim_events = {
+			bwd = "move_start_bwd",
+			fwd = "move_start_fwd",
+			left = "move_start_left",
+			right = "move_start_right",
+		},
+		start_move_anim_data = {
+			move_start_fwd = {
+				rad = nil,
+				sign = nil,
+			},
+			move_start_bwd = {
+				sign = -1,
+				rad = math.pi,
+			},
+			move_start_left = {
+				sign = 1,
+				rad = math.pi / 2,
+			},
+			move_start_right = {
+				sign = -1,
+				rad = math.pi / 2,
+			},
+		},
+		start_move_rotation_timings = {
+			move_start_bwd = 0,
+			move_start_fwd = 0,
+			move_start_left = 0,
+			move_start_right = 0,
+		},
+		start_rotation_durations = {
+			move_start_bwd = 0.26666666666666666,
+			move_start_fwd = 0.26666666666666666,
+			move_start_left = 0.26666666666666666,
+			move_start_right = 0.26666666666666666,
+		},
+	},
 	melee_attack = {
 		ignore_blocked = true,
 		weapon_reach = 4,
@@ -316,6 +423,7 @@ local action_data = {
 		after_shoot_reevaluate_distance = 15,
 		attack_intensity_type = "ranged",
 		default_lerp_speed = 4,
+		effect_template_name = "renegade_sniper_laser",
 		fx_source_name = "muzzle",
 		inventory_slot = "slot_ranged_weapon",
 		leave_locked_distance = 3,
@@ -370,7 +478,6 @@ local action_data = {
 			1.5,
 			1.5,
 		},
-		effect_template = EffectTemplates.renegade_sniper_laser,
 		shoot_template = BreedShootTemplates.renegade_sniper_default,
 	},
 	stagger = {

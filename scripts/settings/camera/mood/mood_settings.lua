@@ -2,7 +2,7 @@
 
 local WarpCharge = require("scripts/utilities/warp_charge")
 local mood_settings = {}
-local types = table.enum("corruption_taken", "corruption", "corruptor_proximity", "critical_health", "damage_taken", "knocked_down", "last_wound", "no_toughness", "sprinting_overtime", "sprinting", "suppression_high", "suppression_low", "suppression_ongoing", "toughness_absorbed_melee", "toughness_absorbed", "toughness_broken", "warped_critical", "warped_high_to_critical", "warped_low_to_high", "warped", "adamant_combat_ability_charge", "broker_combat_ability_focus", "broker_combat_ability_punk_rage", "ogryn_combat_ability_charge", "ogryn_combat_ability_shout", "ogryn_combat_ability_stance", "psyker_combat_ability_shout", "psyker_force_field_sphere", "stealth", "veteran_combat_ability_stance", "veteran_stealth_and_stance", "veteran_stealth", "zealot_combat_ability_dash", "generic_stealth", "story_echo", "syringe_ability", "syringe_power", "syringe_speed", "syringe_broker")
+local types = table.enum("corruption_taken", "corruption", "corruptor_proximity", "critical_health", "damage_taken", "expeditions_death_imminent", "knocked_down", "last_wound", "no_toughness", "sprinting_overtime", "sprinting", "suppression_high", "suppression_low", "suppression_ongoing", "toughness_absorbed_melee", "toughness_absorbed", "toughness_broken", "warped_critical", "warped_high_to_critical", "warped_low_to_high", "warped", "adamant_combat_ability_charge", "broker_combat_ability_focus", "broker_combat_ability_punk_rage", "ogryn_combat_ability_charge", "ogryn_combat_ability_shout", "ogryn_combat_ability_stance", "psyker_combat_ability_shout", "psyker_force_field_sphere", "stealth", "veteran_combat_ability_stance", "veteran_stealth_and_stance", "veteran_stealth", "zealot_combat_ability_dash", "generic_stealth", "story_echo", "syringe_ability", "syringe_power", "syringe_speed", "syringe_broker")
 local status = table.enum("active", "inactive", "removing")
 
 mood_settings.mood_types = types
@@ -39,6 +39,7 @@ mood_settings.priority = {
 	types.psyker_combat_ability_shout,
 	types.veteran_combat_ability_stance,
 	types.zealot_combat_ability_dash,
+	types.expeditions_death_imminent,
 	types.corruptor_proximity,
 	types.syringe_ability,
 	types.syringe_power,
@@ -214,6 +215,13 @@ mood_settings.moods = {
 		blend_out_time = 0.1,
 		particle_effects_on_enter = {
 			"content/fx/particles/screenspace/toughness",
+		},
+	},
+	[types.expeditions_death_imminent] = {
+		blend_in_time = 0.35,
+		blend_out_time = 0.8,
+		particle_effects_looping = {
+			"content/fx/particles/screenspace/player_screen_exp_death_imminent",
 		},
 	},
 	[types.corruption_taken] = {

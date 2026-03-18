@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/ui/views/talent_builder_view/utilities/talent_layout_parser.lua
 
+local Archetypes = require("scripts/settings/archetype/archetypes")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local DamageCalculation = require("scripts/utilities/attack/damage_calculation")
@@ -57,40 +58,43 @@ TalentLayoutParser.unpack_backend_data = function (talent_layout, backend_data, 
 		return
 	end
 
-	local version = tonumber(string.sub(backend_data, 1, version_length - 1))
-	local correct_version = talent_layout.version == version
+	local missing_nodes = false
+	local nodes = talent_layout.nodes
+	local cost_s = string.sub(backend_data, version_length + 1)
+	local has_any_points_spent = string.len(cost_s) > 0
 
-	if correct_version then
-		local nodes = talent_layout.nodes
-		local cost_s = string.sub(backend_data, version_length + 1)
-		local has_any_points_spent = string.len(cost_s) > 0
+	if has_any_points_spent then
+		local first_char_is_a_number = tonumber(string.sub(cost_s, 1, 1)) ~= nil
 
-		if has_any_points_spent then
-			local first_char_is_a_number = tonumber(string.sub(cost_s, 1, 1)) ~= nil
+		if first_char_is_a_number then
+			for backend_node_index, cost_in_node in string.gmatch(cost_s, "(%d+)|(%d+)") do
+				local node_index = tonumber(backend_node_index) + 1
+				local node = nodes[node_index]
 
-			if first_char_is_a_number then
-				for backend_node_index, cost_in_node in string.gmatch(cost_s, "(%d+)|(%d+)") do
-					local node_index = tonumber(backend_node_index) + 1
-					local node = nodes[node_index]
+				if not node then
+					Log.info("TalentLayoutParser", "Failed parsing talent string, found node_index(%i) not present in current layout.", node_index)
 
-					if not node then
-						Log.info("TalentLayoutParser", "Failed parsing talent string, found node_index(%i) not present in current layout.", node_index)
-						table.clear(node_tiers)
-
-						break
-					end
-
+					missing_nodes = true
+				else
 					local tier = node.cost == 0 and 1 or tonumber(cost_in_node) / (node.cost or 1)
 
 					if tier % 1 == 0 then
 						node_tiers[node.widget_name] = tier
 					end
 				end
-			else
-				Log.info("TalentLayoutParser", "Failed parsing talent string, first character of selected talents part (after ;) was not a number. %s", backend_data)
 			end
+		else
+			Log.info("TalentLayoutParser", "Failed parsing talent string, first character of selected talents part (after ;) was not a number. %s", backend_data)
 		end
-	else
+	end
+
+	local version = tonumber(string.sub(backend_data, 1, version_length - 1))
+	local correct_version = talent_layout.version == version
+
+	if not correct_version or missing_nodes then
+		TalentLayoutParser.validate_talent_layouts(node_tiers, {
+			talent_layout,
+		}, true)
 		Log.info("TalentLayoutParser", "Failed parsing talent string, mismatching version numbers (layout:%i backend:%i)", talent_layout.version, version)
 	end
 end
@@ -191,7 +195,7 @@ local function _can_node_traverse_to_start(node, selected_talents, layout, ignor
 			local parent_node = _node_by_name(parent_name, layout)
 
 			if parent_node then
-				if parent_node.type == "start" then
+				if parent_node.type == "start" or parent_node.type == "start_center" then
 					return true, step_count
 				elseif selected_talents[parent_name] then
 					local could_traverse_parent, parent_step_count = _can_node_traverse_to_start(parent_node, selected_talents, layout, ignore_list, step_count)
@@ -230,6 +234,89 @@ TalentLayoutParser.is_talent_selection_valid = function (profile, layout_key, se
 	end
 
 	return true
+end
+
+local function _talents_to_nodes(selected_talents, layout, base_talents)
+	local selected_nodes = {}
+	local nodes = layout.nodes
+
+	for i = 1, #nodes do
+		local node = nodes[i]
+
+		if selected_talents[node.talent] then
+			selected_nodes[node.widget_name] = selected_talents[node.talent]
+		end
+	end
+
+	return selected_nodes
+end
+
+local function _nodes_to_talents(selected_nodes, layout)
+	local selected_talents = {}
+	local nodes = layout.nodes
+
+	for i = 1, #nodes do
+		local node = nodes[i]
+
+		if selected_nodes[node.widget_name] then
+			selected_talents[node.talent] = selected_nodes[node.widget_name]
+		end
+	end
+
+	return selected_talents
+end
+
+TalentLayoutParser.validate_talent_layouts = function (selected_talents, layouts, is_node_format)
+	local out_nodes = {}
+	local archetype
+
+	for i = 1, #layouts do
+		local layout = layouts[i]
+
+		archetype = archetype or Archetypes[layout.archetype_name]
+
+		local layout_nodes = is_node_format and table.shallow_copy(selected_talents) or _talents_to_nodes(selected_talents, layout)
+		local nodes = layout.nodes
+
+		for node_i = 1, #nodes do
+			local node = nodes[node_i]
+
+			if layout_nodes[node.widget_name] then
+				local valid_node = _can_node_traverse_to_start(node, layout_nodes, layout)
+
+				if not valid_node then
+					layout_nodes[node.widget_name] = nil
+				end
+			end
+		end
+
+		table.merge(out_nodes, layout_nodes)
+	end
+
+	if not is_node_format then
+		local out_talents = table.shallow_copy(archetype.base_talents)
+
+		for i = 1, #layouts do
+			local layout = layouts[i]
+			local layout_talents = _nodes_to_talents(out_nodes, layout)
+
+			table.merge(out_talents, layout_talents)
+		end
+
+		out_nodes = out_talents
+	end
+
+	table.clear(selected_talents)
+	table.merge(selected_talents, out_nodes)
+
+	return out_nodes
+end
+
+TalentLayoutParser.archetype_layouts = function (archetype)
+	return {
+		require(archetype.talent_layout_file_path),
+		archetype.specialization_talent_layout_file_path and require(archetype.specialization_talent_layout_file_path) or nil,
+	}
 end
 
 local function _num_decimals(value)

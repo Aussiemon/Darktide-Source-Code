@@ -3964,7 +3964,7 @@ local material_overrides = {
 	body_tattoo_ogryn_labour_03_tier_02 = {
 		texture_overrides = {
 			tatoo_mask = {
-				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/body_tattoo_labour_03/body_tattoo__labour_03_tier_02",
+				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/body_tattoo_labour_03/body_tattoo_labour_03_tier_02",
 			},
 		},
 		property_overrides = {

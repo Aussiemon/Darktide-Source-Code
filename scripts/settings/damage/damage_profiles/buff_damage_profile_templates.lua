@@ -313,6 +313,44 @@ damage_templates.burning = {
 		"burning_damage",
 	},
 }
+
+local PROMETHIUM_ADM = burninating_adm
+
+damage_templates.promethium = {
+	ignore_shield = true,
+	stagger_category = "flamer",
+	armor_damage_modifier = {
+		attack = PROMETHIUM_ADM,
+		impact = PROMETHIUM_ADM,
+	},
+	power_distribution = {
+		attack = 450,
+		impact = 0,
+	},
+	cleave_distribution = {
+		attack = 0.125,
+		impact = 0,
+	},
+	suppression_value = {
+		100,
+		100,
+	},
+	on_kill_area_suppression = {
+		suppression_value = {
+			1,
+			2,
+		},
+		distance = {
+			3,
+			5,
+		},
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+}
 damage_templates.corruptor_liquid_corruption = {
 	ignore_toughness = true,
 	permanent_damage_ratio = 1,
@@ -556,6 +594,7 @@ damage_templates.live_event_saints_out_of_area_debuff_damage_template = {
 }
 damage_templates.toxin_variant_1 = {
 	disorientation_type = "burninating",
+	ignore_rending = true,
 	ignore_shield = true,
 	is_buff_damage = true,
 	ogryn_disorientation_type = "burninating",
@@ -587,6 +626,7 @@ damage_templates.toxin_variant_1 = {
 }
 damage_templates.toxin_variant_2 = {
 	disorientation_type = "burninating",
+	ignore_rending = true,
 	ignore_shield = true,
 	is_buff_damage = true,
 	ogryn_disorientation_type = "burninating",
@@ -618,6 +658,7 @@ damage_templates.toxin_variant_2 = {
 }
 damage_templates.toxin_variant_3 = {
 	disorientation_type = "burninating",
+	ignore_rending = true,
 	ignore_shield = false,
 	is_buff_damage = true,
 	ogryn_disorientation_type = "burninating",
@@ -650,6 +691,7 @@ damage_templates.toxin_variant_3 = {
 }
 damage_templates.horde_mode_self_propagating_toxin = {
 	disorientation_type = "burninating",
+	ignore_rending = true,
 	ignore_shield = true,
 	is_buff_damage = true,
 	ogryn_disorientation_type = "burninating",

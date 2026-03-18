@@ -179,8 +179,8 @@ StoreView._update_store_page = function (self)
 
 			local found_element
 
-			for i = 1, #self._grid_widgets do
-				local element = self._grid_widgets[i].content.element
+			for i = 1, #self._store_elements do
+				local element = self._store_elements[i]
 
 				if element.offer.offerId == self._selected_store_item_offerId then
 					found_element = element
@@ -333,6 +333,12 @@ StoreView._register_button_callbacks = function (self)
 			self._store_promise:cancel()
 
 			self._store_promise = nil
+		end
+
+		if self._dlc_promise and self._dlc_promise:is_pending() then
+			self._dlc_promise:cancel()
+
+			self._dlc_promise = nil
 		end
 
 		if self._debounce_tab_switch then
@@ -529,9 +535,9 @@ StoreView._open_navigation_path = function (self, path)
 		self._category_panel:set_selected_index(category_index)
 	end
 
-	local page_callback = callback(function ()
+	local function page_callback()
 		self:_on_page_index_selected(page_index)
-	end)
+	end
 
 	return self:_on_category_index_selected(category_index, page_callback)
 end
@@ -547,10 +553,18 @@ StoreView._on_category_index_selected = function (self, index, on_complete_callb
 	widgets_by_name.get_dlc_button.content.hotspot.disabled = true
 	widgets_by_name.get_dlc_button.content.visible = false
 
+	if self._dlc_promise and self._dlc_promise:is_pending() then
+		self._dlc_promise:cancel()
+
+		self._dlc_promise = nil
+	end
+
 	local archetype = category_layout.require_archetype_ownership
 
 	if archetype then
-		DLCUtils.is_archetype_available(archetype):next(function (result)
+		self._dlc_promise = DLCUtils.is_archetype_available(archetype)
+
+		self._dlc_promise:next(function (result)
 			widgets_by_name.get_dlc_button.content.hotspot.disabled = result.available
 			widgets_by_name.get_dlc_button.content.visible = not result.available
 
@@ -612,9 +626,6 @@ StoreView._on_page_index_selected = function (self, page_index)
 	local category_index = self._selected_category_index
 	local category_layout = STORE_LAYOUT[category_index]
 	local category_name = category_layout.telemetry_name
-
-	self:_set_telemetry_name(category_name, page_index)
-
 	local category_pages_layout_data = self._category_pages_layout_data
 
 	if not category_pages_layout_data then
@@ -630,6 +641,11 @@ StoreView._on_page_index_selected = function (self, page_index)
 	local previous_page_index = self._selected_page_index
 
 	self._selected_page_index = page_index
+
+	self:_set_telemetry_name(category_name, page_index)
+
+	self._widgets_by_name.navigation_arrow_left.content.visible = page_index > 1
+	self._widgets_by_name.navigation_arrow_right.content.visible = page_index < #self._category_pages_layout_data
 
 	if self._page_panel then
 		self._page_panel:set_selected_index(page_index)
@@ -696,9 +712,6 @@ StoreView._show_grid_entries = function (self, page_index, previous_page_index)
 	if not self._using_cursor_navigation and grid_index then
 		self:_set_selected_grid_index(grid_index)
 	end
-
-	self._widgets_by_name.navigation_arrow_left.content.visible = page_index > 1
-	self._widgets_by_name.navigation_arrow_right.content.visible = page_index < #self._category_pages_layout_data
 end
 
 local function sum(arr, from, to)
@@ -1083,6 +1096,8 @@ StoreView._fetch_storefront = function (self, storefront, on_complete_callback)
 
 		self._category_pages_layout_data = category_pages_layout_data
 		self._store_promise = Promise.all(unpack(self:_fill_layout_with_offers(category_pages_layout_data, valid_offers, data.bundle_rules))):next(function (elements)
+			self._store_elements = elements
+
 			if self._destroyed or not self._store_promise then
 				return
 			end
@@ -1279,9 +1294,18 @@ StoreView.on_exit = function (self)
 		self._wallet_promise:cancel()
 	end
 
+	if self._dlc_promise and self._dlc_promise:is_pending() then
+		self._dlc_promise:cancel()
+
+		self._dlc_promise = nil
+	end
+
 	self:_destroy_offscreen_gui()
 	self:_destroy_current_grid()
 	self:_unload_url_textures()
+
+	self._store_elements = nil
+
 	StoreView.super.on_exit(self)
 
 	if self._hub_interaction then
@@ -1323,7 +1347,7 @@ StoreView._handle_input = function (self, input_service)
 	local using_cursor = self._using_cursor_navigation
 
 	if not using_cursor then
-		if input_service:get("hotkey_menu_special_2") and not self._aquila_open and not self._widgets_by_name.get_dlc_button.content.hotspot.disabled then
+		if input_service:get("hotkey_menu_special_2") and not self._aquila_open and self._widgets_by_name.get_dlc_button.content.hotspot.disabled == false then
 			self._widgets_by_name.get_dlc_button.content.hotspot.pressed_callback()
 		end
 

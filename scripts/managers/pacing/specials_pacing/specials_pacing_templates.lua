@@ -10,6 +10,7 @@ local function _create_specials_pacing_template_entry(path)
 end
 
 _create_specials_pacing_template_entry("scripts/managers/pacing/specials_pacing/templates/default_specials_pacing_template")
+_create_specials_pacing_template_entry("scripts/managers/pacing/specials_pacing/templates/expedition_specials_pacing_template")
 _create_specials_pacing_template_entry("scripts/managers/pacing/specials_pacing/templates/havoc_specials_pacing_template")
 
 return settings("SpecialsPacingTemplates", specials_pacing_templates)

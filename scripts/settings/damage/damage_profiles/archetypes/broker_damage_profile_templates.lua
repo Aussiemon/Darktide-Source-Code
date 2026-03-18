@@ -529,6 +529,40 @@ damage_templates.broker_vultures_mark_aoe_stagger = {
 		default_target = {},
 	},
 }
+damage_templates.broker_passive_knockback_on_taking_melee_damage = {
+	ignore_stagger_reduction = true,
+	stagger_category = "ranged",
+	stagger_override = "medium",
+	power_distribution = {
+		attack = 0,
+		impact = 1,
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 0,
+			[armor_types.armored] = 0,
+			[armor_types.resistant] = 0,
+			[armor_types.player] = 0,
+			[armor_types.berserker] = 0,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0,
+			[armor_types.void_shield] = 0,
+		},
+		impact = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 0.1,
+			[armor_types.disgustingly_resilient] = 0.4,
+			[armor_types.void_shield] = 0.1,
+		},
+	},
+	targets = {
+		default_target = {},
+	},
+}
 damage_templates.broker_punk_rage_shout = {
 	gibbing_power = 0,
 	stagger_category = "melee",

@@ -5,7 +5,7 @@ require("scripts/extension_systems/weapon/actions/action_ability_base")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local ShoutAbilityImplementation = require("scripts/extension_systems/ability/utilities/shout_ability_implementation")
+local ShoutAbility = require("scripts/extension_systems/ability/utilities/shout_ability")
 local Stagger = require("scripts/utilities/attack/stagger")
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local Vo = require("scripts/utilities/vo")
@@ -77,17 +77,18 @@ ActionAdamantShout.start = function (self, action_settings, t, time_scale, actio
 	local radius = action_settings.radius
 	local shout_target_template_name = self._ability_template_tweak_data.shout_target_template or action_settings.shout_target_template
 
-	ShoutAbilityImplementation.execute(radius, shout_target_template_name, player_unit, t, locomotion_component, shout_direction)
+	ShoutAbility.execute(radius, shout_target_template_name, player_unit, t, locomotion_component, shout_direction)
 
 	local companion_spawner_extension = ScriptUnit.has_extension(player_unit, "companion_spawner_system")
-	local companion_unit = companion_spawner_extension and companion_spawner_extension:companion_unit()
+	local companion_units = companion_spawner_extension and companion_spawner_extension:companion_units()
+	local companion_unit = companion_units and #companion_units > 0 and companion_units[1] or nil
 
 	if companion_unit then
 		local dog_position = Unit.local_position(companion_unit, 1)
 		local dog_rotation = Unit.local_rotation(companion_unit, 1)
 		local dog_forward = Vector3.normalize(Vector3.flat(Quaternion.forward(dog_rotation)))
 
-		ShoutAbilityImplementation.execute(radius, shout_target_template_name, player_unit, t, nil, dog_forward, dog_position, dog_rotation)
+		ShoutAbility.execute(radius, shout_target_template_name, player_unit, t, nil, dog_forward, dog_position, dog_rotation)
 	end
 
 	local broadphase_system = Managers.state.extension:system("broadphase_system")

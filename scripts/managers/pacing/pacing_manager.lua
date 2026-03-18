@@ -2,6 +2,7 @@
 
 local AutoEvent = require("scripts/managers/pacing/auto_event/auto_event")
 local HordePacing = require("scripts/managers/pacing/horde_pacing/horde_pacing")
+local HeatPacing = require("scripts/managers/pacing/heat_pacing/heat_pacing")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local MonsterPacing = require("scripts/managers/pacing/monster_pacing/monster_pacing")
@@ -11,10 +12,14 @@ local RoamerPacing = require("scripts/managers/pacing/roamer_pacing/roamer_pacin
 local SpecialsPacing = require("scripts/managers/pacing/specials_pacing/specials_pacing")
 local PacingManager = class("PacingManager")
 
-PacingManager.init = function (self, world, nav_world, level_seed, pacing_control)
+PacingManager.init = function (self, world, nav_world, level_seed, pacing_control, pacing_template)
 	self._tension = 0
 	self._total_challenge_rating = 0
 	self._num_aggroed_minions = 0
+	self._mission_progression = 0
+	self._time_since_forward_mission_progressed = 0
+	self._time_since_behind_mission_progressed = 0
+	self._last_mission_progressed_time = 0
 	self._aggroed_minions = {}
 	self._ramp_up_enabled = true
 	self._switch_state_conditions = {
@@ -23,7 +28,7 @@ PacingManager.init = function (self, world, nav_world, level_seed, pacing_contro
 	}
 	self._world = world
 
-	local template = PacingTemplates.default
+	local template = PacingTemplates[pacing_template] or PacingTemplates.default
 	local is_havoc = Managers.state.difficulty:get_parsed_havoc_data()
 
 	if is_havoc then
@@ -43,6 +48,7 @@ PacingManager.init = function (self, world, nav_world, level_seed, pacing_contro
 	local side_sub_faction_types = game_mode_settings.side_sub_faction_types
 	local sub_faction_types = side_sub_faction_types[side_name]
 
+	self._heat_pacing = HeatPacing:new(template, world, side_id, target_side_id)
 	self._roamer_pacing = RoamerPacing:new(nav_world, template.roamer_pacing_template, level_seed, sub_faction_types)
 	self._horde_pacing = HordePacing:new(nav_world)
 	self._specials_pacing = SpecialsPacing:new(nav_world)
@@ -64,10 +70,14 @@ PacingManager.init = function (self, world, nav_world, level_seed, pacing_contro
 	self._saved_challenge_ratings = {}
 	self._ramp_duration_modifier = 1
 	self._frozen_spawn_types = {}
+	self._nav_world, self._level_seed, self._sub_faction_types = nav_world, level_seed, sub_faction_types
 end
 
 PacingManager.on_gameplay_post_init = function (self, level_name)
 	local template = self._template
+
+	self._progression_type = template.progression_type
+
 	local combat_state_settings = Managers.state.difficulty:get_table_entry_by_challenge(template.combat_state_settings)
 
 	self._combat_state_settings = combat_state_settings
@@ -95,6 +105,7 @@ PacingManager.on_gameplay_post_init = function (self, level_name)
 
 	self._challenge_rating_thresholds = challenge_rating_thresholds
 
+	self._heat_pacing:on_gameplay_post_init()
 	self._roamer_pacing:on_gameplay_post_init(level_name)
 
 	local horde_resistance_templates = template.horde_pacing_template.resistance_templates
@@ -124,6 +135,8 @@ PacingManager.on_gameplay_post_init = function (self, level_name)
 end
 
 PacingManager.on_spawn_points_generated = function (self)
+	self._roamer_pacing:on_spawn_points_generated()
+
 	local template = self._template
 	local specials_resistance_templates = template.specials_pacing_template.resistance_templates
 	local specials_pacing_template = Managers.state.difficulty:get_table_entry_by_resistance(specials_resistance_templates)
@@ -131,11 +144,22 @@ PacingManager.on_spawn_points_generated = function (self)
 	self._specials_pacing:on_spawn_points_generated(specials_pacing_template)
 end
 
+PacingManager.reset = function (self)
+	self._roamer_pacing:delete()
+
+	self._roamer_pacing = RoamerPacing:new(self._nav_world, self._template.roamer_pacing_template, self._level_seed, self._sub_faction_types)
+end
+
 PacingManager.destroy = function (self)
 	Managers.event:unregister(self, "intro_cinematic_started")
 	Managers.event:unregister(self, "intro_cinematic_played")
 	self._roamer_pacing:delete()
 	self._monster_pacing:delete()
+	self._heat_pacing:delete()
+end
+
+PacingManager.update_auto_event_frame_tables = function (self)
+	self._auto_event:update_auto_event_frame_tables()
 end
 
 PacingManager.update = function (self, dt, t)
@@ -172,7 +196,10 @@ PacingManager.update = function (self, dt, t)
 		end
 	end
 
+	self._heat_pacing:update(dt, t, side_id, target_side_id)
+
 	if not self._disabled then
+		self:_update_mission_progression(dt, t, side_id, target_side_id)
 		self._roamer_pacing:update(dt, t, side_id, target_side_id)
 		self._horde_pacing:update(dt, t, side_id, target_side_id)
 		self._specials_pacing:update(dt, t, side_id, target_side_id)
@@ -311,6 +338,8 @@ end
 
 PacingManager.set_enabled = function (self, enabled)
 	self._disabled = not enabled
+
+	self._heat_pacing:update_paused(not enabled)
 end
 
 PacingManager.set_in_safe_zone = function (self, in_safe_zone)
@@ -327,6 +356,10 @@ end
 
 PacingManager.is_enabled = function (self)
 	return not self._disabled
+end
+
+PacingManager.auto_event_active = function (self)
+	return self._auto_event:auto_event_active()
 end
 
 PacingManager.request_auto_event = function (self, params)
@@ -351,10 +384,55 @@ PacingManager.kill_remaining_enemies = function (self, uuid)
 	return self._auto_event:kill_remaining_enemies(uuid)
 end
 
+PacingManager.get_all_valid_units_in_event = function (self, uuid)
+	return self._auto_event:get_all_valid_units_in_event(uuid)
+end
+
 PacingManager._event_intro_cinematic_played = function (self, cinematic_name)
 	if self._disabled then
 		self._disabled = not Managers.state.main_path:is_main_path_available()
 	end
+end
+
+PacingManager.progression_type = function (self)
+	return self._progression_type
+end
+
+PacingManager.get_mission_progression = function (self)
+	return self._mission_progression, self._time_since_forward_mission_progressed, self._time_since_behind_mission_progressed
+end
+
+PacingManager._update_mission_progression = function (self, dt, t, side_id, target_side_id)
+	if self._progression_type == "main_path" then
+		local main_path_manager = Managers.state.main_path
+
+		self._mission_progression = main_path_manager:furthest_travel_distance(target_side_id)
+		self._time_since_forward_mission_progressed = main_path_manager:time_since_forward_travel_changed(target_side_id)
+		self._time_since_behind_mission_progressed = main_path_manager:time_since_behind_travel_changed(target_side_id)
+
+		return
+	end
+
+	if self._progression_type == "expedition" then
+		self._time_since_forward_mission_progressed = t - self._last_mission_progressed_time
+		self._time_since_behind_mission_progressed = t - self._last_mission_progressed_time
+
+		if not self._disabled then
+			local old_progress = self._mission_progression
+			local game_mode_manager = Managers.state.game_mode
+			local game_mode = game_mode_manager:game_mode()
+
+			self._mission_progression = self._mission_progression + game_mode:pacing_update(dt, t)
+
+			if old_progress ~= self._mission_progression then
+				self._last_mission_progressed_time = t
+			end
+		end
+
+		return
+	end
+
+	Log.error("PacingManager", "Trying to update mission progression but there is no handeling of progressiontype: %s", self._progression_type)
 end
 
 PacingManager.spawn_type_enabled = function (self, spawn_type)
@@ -374,8 +452,17 @@ PacingManager.spawn_type_enabled = function (self, spawn_type)
 		return false, "paused"
 	end
 
-	if not self._allowed_spawn_types or not self._allowed_spawn_types[spawn_type] then
+	if not self._allowed_spawn_types or not self._allowed_spawn_types[spawn_type] and not self._heat_pacing:active() then
 		return false, "not_allowed"
+	end
+
+	if self._heat_pacing:active() then
+		local current_heat_stage_settings = self._heat_pacing:current_stage_settings()
+		local allowed_spawn_types = current_heat_stage_settings.allowed_spawn_types
+
+		if not allowed_spawn_types[spawn_type] then
+			return false, "disabled_by_heat_stage"
+		end
 	end
 
 	return true
@@ -758,6 +845,10 @@ PacingManager.add_aggroed_minion = function (self, unit)
 			self._first_aggro = nil
 		end
 
+		if self._heat_pacing:active() then
+			self:add_on_aggro_heat("Aggro", unit)
+		end
+
 		if self._should_send_aggro_event then
 			Managers.event:trigger("minion_aggroed", unit)
 		end
@@ -979,6 +1070,12 @@ PacingManager.add_pacing_modifiers = function (self, modify_settings)
 		Managers.state.terror_event:replace_terror_event_tags(replace_terror_event_tags)
 	end
 
+	local replace_excluded_terror_event_tags = modify_settings.replace_excluded_terror_event_tags
+
+	if replace_excluded_terror_event_tags then
+		Managers.state.terror_event:replace_excluded_terror_event_tags(replace_excluded_terror_event_tags)
+	end
+
 	local specials_required_challenge_rating = modify_settings.specials_required_challenge_rating
 
 	if specials_required_challenge_rating then
@@ -1025,6 +1122,12 @@ PacingManager.add_pacing_modifiers = function (self, modify_settings)
 
 	if terror_event_point_multiplier then
 		Managers.state.terror_event:set_terror_event_point_modifier(terror_event_point_multiplier)
+	end
+
+	local terror_event_max_point_multiplier = modify_settings.terror_event_max_point_multiplier
+
+	if terror_event_max_point_multiplier then
+		Managers.state.terror_event:set_max_points_modifer(terror_event_max_point_multiplier)
 	end
 
 	local override_allowed_spawn_types = modify_settings.override_allowed_spawn_types
@@ -1077,9 +1180,11 @@ PacingManager.aggro_all_within_radius = function (self, position, radius)
 
 	for i = 1, num_results do
 		local enemy = RADIUS_RESULT[i]
-		local perception_extension = ScriptUnit.extension(enemy, "perception_system")
+		local perception_extension = ScriptUnit.has_extension(enemy, "perception_system")
 
-		MinionPerception.attempt_aggro(perception_extension)
+		if perception_extension then
+			MinionPerception.attempt_aggro(perception_extension)
+		end
 	end
 end
 
@@ -1113,10 +1218,18 @@ PacingManager.current_density_type = function (self)
 	return self._roamer_pacing:current_density_type()
 end
 
-PacingManager.try_inject_special = function (self, breed_name, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group)
-	local success = self._specials_pacing:try_inject_special(breed_name, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group)
+PacingManager.try_inject_special = function (self, breed_name, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group, optional_ignore_allowance, optional_is_prevention, optional_is_loner_prevention, optional_auto_event_id)
+	local success = self._specials_pacing:try_inject_special(breed_name, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group, optional_ignore_allowance, optional_is_prevention, optional_is_loner_prevention, optional_auto_event_id)
 
 	return success
+end
+
+PacingManager.max_num_specials = function (self)
+	return self._specials_pacing:max_num_specials()
+end
+
+PacingManager.get_num_specials_owned_by_auto_event = function (self, auto_event_id)
+	return self._specials_pacing:get_num_specials_owned_by_auto_event(auto_event_id)
 end
 
 PacingManager.refund_special_slot = function (self)
@@ -1127,6 +1240,10 @@ PacingManager.freeze_specials_pacing = function (self, enabled)
 	self._specials_pacing:freeze(enabled)
 
 	self._frozen_spawn_types.specials = enabled
+end
+
+PacingManager.update_only_injected_slots = function (self, should_update_only_injected)
+	return self._specials_pacing:update_only_injected_slots(should_update_only_injected)
 end
 
 PacingManager.roamer_traverse_logic = function (self)
@@ -1220,6 +1337,121 @@ end
 PacingManager.reset_traveled_this_frame = function (self)
 	self._horde_pacing:reset_traveled_this_frame()
 	self._specials_pacing:reset_traveled_this_frame()
+end
+
+PacingManager.is_currently_decaying_heat = function (self)
+	return self._heat_pacing:is_currently_decaying_heat()
+end
+
+PacingManager.level_seed = function (self)
+	return self._level_seed
+end
+
+PacingManager.heat = function (self)
+	return self._heat_pacing:heat()
+end
+
+PacingManager.max_heat = function (self)
+	return self._heat_pacing:max_heat()
+end
+
+PacingManager.set_new_heat_stage = function (self, section)
+	self._heat_pacing:set_new_heat_stage(section)
+end
+
+PacingManager.disable_heat_decay = function (self)
+	return self._heat_pacing:disable_heat_decay()
+end
+
+PacingManager.current_stage_name = function (self)
+	return self._heat_pacing:current_stage_name()
+end
+
+PacingManager.set_heat_decay_rate = function (self, new_decay_rate)
+	self._heat_pacing:set_heat_decay_rate(new_decay_rate)
+end
+
+PacingManager.request_extraction_wait_time = function (self, extraction_type)
+	return self._heat_pacing:request_extraction_wait_time(extraction_type)
+end
+
+PacingManager.get_table_entry_by_heat_stage = function (self, t)
+	return self._heat_pacing:get_table_entry_by_heat_stage(t)
+end
+
+PacingManager.add_heat_on_oppertunity = function (self, oppertunity_type, level, sub_type)
+	self._heat_pacing:add_heat_on_oppertunity(oppertunity_type, level, sub_type)
+end
+
+PacingManager.add_heat_by_type = function (self, lookup_type, unit, reason, optional_player_unit)
+	self._heat_pacing:add_heat_by_type(lookup_type, unit, reason, optional_player_unit)
+end
+
+PacingManager.add_on_aggro_heat = function (self, heat_type, unit)
+	self._heat_pacing:add_on_aggro_heat(heat_type, unit)
+end
+
+PacingManager.get_random_heat_generating_player = function (self)
+	return self._heat_pacing:get_random_heat_generating_player()
+end
+
+PacingManager.get_target_player_heat = function (self, target_unit)
+	return self._heat_pacing:_get_target_player_heat(target_unit)
+end
+
+PacingManager.heat_active = function (self)
+	return self._heat_pacing:active()
+end
+
+PacingManager.heat_horde_allowance = function (self)
+	return self._heat_pacing:heat_horde_allowance()
+end
+
+PacingManager.expedition_extraction_status = function (self)
+	return self._heat_pacing:expedition_extraction_status()
+end
+
+PacingManager.get_minimum_roamer_groups = function (self)
+	if not self:heat_active() then
+		return 30
+	end
+
+	local heat_settings = self._heat_pacing:heat_settings()
+	local roamer_minimum_settings = heat_settings.roamer_minimum_settings
+	local current_stage_name = self:current_stage_name() or "none"
+	local stage_multiplier = roamer_minimum_settings.multiplier_per_stage[current_stage_name]
+	local amount_indexed_by_resistance = Managers.state.difficulty:get_table_entry_by_challenge(roamer_minimum_settings.base_value)
+	local value = math.round(amount_indexed_by_resistance * stage_multiplier)
+
+	return value
+end
+
+PacingManager.heat_trickle_should_patrol = function (self)
+	local should_patrol = self._heat_pacing:heat_trickle_should_patrol()
+
+	return should_patrol
+end
+
+PacingManager.exp_random_position_away_from_players = function (self, side_id)
+	local furthest_location = self._heat_pacing:exp_random_position_away_from_players(1)
+
+	return furthest_location
+end
+
+PacingManager.lower_heat_on_oppertunity = function (self, heat_reduction_type)
+	self._heat_pacing:lower_heat_on_oppertunity(heat_reduction_type)
+end
+
+PacingManager.set_horde_pacing_rate_modifier = function (self, modifier)
+	self._horde_pacing:set_rate_modifier(modifier)
+end
+
+PacingManager.set_horde_pacing_timer_modifier = function (self, modifier)
+	self._horde_pacing:set_timer_modifier(modifier)
+end
+
+PacingManager.set_trickle_horde_modifers = function (self, params)
+	self._horde_pacing:set_trickle_horde_modifers(params)
 end
 
 return PacingManager

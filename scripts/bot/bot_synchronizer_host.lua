@@ -54,7 +54,7 @@ BotSynchronizerHost.update = function (self)
 			local mission_manager = Managers.mission_server or Managers.hub_server
 
 			if mission_manager and mission_manager.bot_joined then
-				mission_manager:bot_joined(local_player_id)
+				mission_manager:bot_joined(self._peer_id, local_player_id)
 			end
 
 			spawn_item.state = SPAWN_STATES.syncing_profile

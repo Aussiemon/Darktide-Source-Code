@@ -3,7 +3,7 @@
 local HexGrid = require("scripts/foundation/utilities/hex_grid")
 local LiquidAreaDrawer = class("LiquidAreaDrawer")
 
-LiquidAreaDrawer.init = function (self, world, liquid_template)
+LiquidAreaDrawer.init = function (self, world, liquid_template, liquid_particle_group)
 	self._name = liquid_template.name
 	self._template = liquid_template
 	self._world = world
@@ -19,16 +19,14 @@ LiquidAreaDrawer.init = function (self, world, liquid_template)
 	self._hex_grid = HexGrid:new(center, xy_extents, z_extents, x_cell_size, z_cell_size)
 	self._particles = {}
 	self._particle_count = {}
-	self._particle_group = World.create_particle_group(self._world)
+
+	if GameParameters.destroy_unmanaged_particles then
+		self._liquid_particle_group = liquid_particle_group
+	end
 end
 
 LiquidAreaDrawer.add_cell = function (self, position, rotation)
-	local particle_group
-
-	if GameParameters.destroy_unmanaged_particles then
-		particle_group = self._particle_group
-	end
-
+	local liquid_particle_group_or_nil = self._liquid_particle_group
 	local index = self._hex_grid:real_index_from_position(position)
 
 	if self._particles[index] then
@@ -38,12 +36,12 @@ LiquidAreaDrawer.add_cell = function (self, position, rotation)
 
 		World.stop_spawning_particles(self._world, particle_id)
 
-		particle_id = World.create_particles(self._world, self._vfx_name_filled, position, rotation, nil, particle_group)
+		particle_id = World.create_particles(self._world, self._vfx_name_filled, position, rotation, nil, liquid_particle_group_or_nil)
 		self._particles[index] = particle_id
 	else
 		self._particle_count[index] = 1
 
-		local particle_id = World.create_particles(self._world, self._vfx_name_filled, position, rotation, nil, particle_group)
+		local particle_id = World.create_particles(self._world, self._vfx_name_filled, position, rotation, nil, liquid_particle_group_or_nil)
 
 		self._particles[index] = particle_id
 	end
@@ -72,8 +70,6 @@ LiquidAreaDrawer.destroy = function (self)
 	for _, particle_id in pairs(self._particles) do
 		World.stop_spawning_particles(self._world, particle_id)
 	end
-
-	World.destroy_particle_group(self._world, self._particle_group)
 end
 
 return LiquidAreaDrawer

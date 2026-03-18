@@ -1183,11 +1183,16 @@ templates.havoc_enraged_enemies_trigger = {
 		end
 
 		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return
+		end
+
 		local health_extension = ScriptUnit.extension(unit, "health_system")
 		local current_health_percent = health_extension:current_health_percent()
 		local is_under_threshold = current_health_percent < MUTATOR_ENRAGED_DEFAULT_DAMAGE_REQUIRED
 
-		if is_under_threshold and HEALTH_ALIVE[unit] and not template_data.triggered then
+		if is_under_threshold and not template_data.triggered then
 			template_data.triggered = true
 
 			local current_time = FixedFrame.get_latest_fixed_time()
@@ -1258,17 +1263,6 @@ templates.havoc_enraged_enemies = {
 		if attack_intensity_extension then
 			attack_intensity_extension:set_allow_all_attacks_duration(999)
 		end
-
-		local tags = breed.tags
-		local scale
-
-		if tags.ogryn then
-			scale = mutator_havoc_enraged_config_settings.scale.ogryn
-		else
-			scale = mutator_havoc_enraged_config_settings.scale.human
-		end
-
-		Unit.set_local_scale(unit, 1, Vector3(1, 1, 1) * scale)
 
 		local position = POSITION_LOOKUP[unit]
 		local fx_system = Managers.state.extension:system("fx_system")

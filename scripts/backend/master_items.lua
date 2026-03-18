@@ -75,7 +75,7 @@ local FALLBACK_ITEMS_BY_SLOT = {
 	slot_portrait_frame = "content/items/2d/portrait_frames/portrait_frame_default",
 	slot_primary = "content/items/weapons/player/melee/unarmed",
 	slot_secondary = "content/items/weapons/player/melee/unarmed",
-	slot_skin_set = "content/items/characters/player/sets/empty_set",
+	slot_timed = "content/items/weapons/player/melee/unarmed",
 	slot_trinket_1 = "content/items/weapons/player/trinkets/empty_trinket",
 	slot_unarmed = "content/items/weapons/player/melee/unarmed",
 	slot_weapon_skin = "content/items/weapons/player/skins/lasgun/lasgun_p1_m001",
@@ -502,7 +502,9 @@ end
 MasterItems.refresh = function ()
 	assert_backend()
 
-	return Managers.backend.interfaces.master_data:items_cache():refresh()
+	return Managers.backend.interfaces.master_data:items_cache():refresh():next(function ()
+		return true
+	end)
 end
 
 MasterItems.get_cached = function ()

@@ -115,6 +115,7 @@ local function _fetch_client_data()
 	promises[#promises + 1] = player_journey_promise
 	promises[#promises + 1] = campaign_skip_promise
 	promises[#promises + 1] = Managers.data_service.news:claim_rewards()
+	promises[#promises + 1] = Managers.data_service.expedition:fetch_nodes()
 
 	Managers.data_service.store:invalidate_wallets_cache()
 

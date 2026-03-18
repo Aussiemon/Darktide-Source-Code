@@ -28,6 +28,7 @@ local WWISE_STATE_GROUP_SETTINGS = {
 	options = WwiseStateGroupOptions,
 	player_state = WwiseStateGroupPlayerState,
 	suppression_state = WwiseStateGroupSuppressionState,
+	expeditions_intensity = WwiseStateGroupCombat,
 }
 
 WwiseGameSyncManager.init = function (self, world_manager)

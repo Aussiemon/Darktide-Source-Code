@@ -15,7 +15,7 @@ local function _circle_placement_base(position_nav_query_func)
 		local spawn_position = spawn_position_boxed:unbox()
 
 		if num_slots == 1 then
-			local random_radians = roamer_pacing:_random(0, TWO_PI)
+			local random_radians = roamer_pacing and roamer_pacing:_random(0, TWO_PI) or 0
 			local random_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
 			local position_on_navmesh = position_nav_query_func(nav_world, spawn_position + random_direction * position_offset, ABOVE, BELOW, traverse_logic)
 
@@ -73,13 +73,13 @@ roamer_slot_placement_functions.random_circle_placement = function (nav_world, s
 		local min_range, max_range = position_offset_range[1], position_offset_range[2]
 
 		for j = 1, max_tries do
-			local position_offset = roamer_pacing:_random(min_range, max_range)
+			local position_offset = roamer_pacing and roamer_pacing:_random(min_range, max_range) or 0
 			local distance = math.min(position_offset + i % 2 * position_offset + roamer_pacing:_random(0, position_offset), half_circle_radius)
 			local pos = spawn_position + dir * distance
 			local position_on_navmesh = NavQueries.position_on_mesh(nav_world, pos, ABOVE, BELOW, traverse_logic)
 
 			if position_on_navmesh then
-				local random_radians = roamer_pacing:_random(0, TWO_PI)
+				local random_radians = roamer_pacing and roamer_pacing:_random(0, TWO_PI) or 0
 				local random_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
 				local roamer_slot = {
 					position = Vector3Box(position_on_navmesh),
@@ -105,7 +105,7 @@ roamer_slot_placement_functions.flood_fill = function (nav_world, spawn_position
 
 	for i = 1, num_positions do
 		local position = flood_fill_positions[i]
-		local random_radians = roamer_pacing:_random(0, TWO_PI)
+		local random_radians = roamer_pacing and roamer_pacing:_random(0, TWO_PI) or 0
 		local random_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
 		local roamer_slot = {
 			position = Vector3Box(position),

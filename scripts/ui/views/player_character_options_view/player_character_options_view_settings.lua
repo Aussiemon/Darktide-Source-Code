@@ -25,12 +25,12 @@ local player_character_options_view_settings = {
 		zealot = "human_zealot_inspect_pose",
 	},
 	archetype_badge_texture_by_name = {
-		adamant = "content/ui/textures/icons/class_badges/adamant_01_01",
-		broker = "content/ui/textures/icons/class_badges/broker_01_01",
-		ogryn = "content/ui/textures/icons/class_badges/ogryn_01_01",
-		psyker = "content/ui/textures/icons/class_badges/psyker_01_01",
-		veteran = "content/ui/textures/icons/class_badges/veteran_01_01",
-		zealot = "content/ui/textures/icons/class_badges/zealot_01_01",
+		adamant = "content/ui/textures/icons/class_badges/adamant_01",
+		broker = "content/ui/textures/icons/class_badges/broker_01",
+		ogryn = "content/ui/textures/icons/class_badges/ogryn_01",
+		psyker = "content/ui/textures/icons/class_badges/psyker_01",
+		veteran = "content/ui/textures/icons/class_badges/veteran_01",
+		zealot = "content/ui/textures/icons/class_badges/zealot_01",
 	},
 }
 

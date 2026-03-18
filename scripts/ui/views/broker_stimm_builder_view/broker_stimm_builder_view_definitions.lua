@@ -781,7 +781,7 @@ local widget_definitions = {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
 				material_values = {
-					badge = "content/ui/textures/icons/class_badges/broker_01_01",
+					badge = "content/ui/textures/icons/class_badges/broker_01",
 					effect_progress = 0,
 				},
 				size = {

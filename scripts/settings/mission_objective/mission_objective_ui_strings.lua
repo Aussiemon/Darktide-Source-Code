@@ -5,6 +5,7 @@ local mission_objective_ui_strings = {
 	"loc_objective_debug_locate_scanner_header",
 	"loc_objective_debug_locate_scanner_desc",
 	"loc_objective_follow_servo_skull",
+	"loc_objective_wait_for_servo_skull",
 	"loc_objective_survive_desc",
 	"loc_objective_survive_header",
 	"loc_objective_find_corruptor_header",

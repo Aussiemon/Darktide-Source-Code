@@ -1,8 +1,8 @@
 ﻿-- chunkname: @scripts/managers/pacing/auto_event/templates/dummy_auto_event_template.lua
 
-template = {}
+local template = {}
+
 template.dummy_auto_event_template = {
-	monster_limit_per_event = 1,
 	name = "dummy_auto_event_template",
 	cooldown = {
 		{
@@ -60,22 +60,6 @@ template.dummy_auto_event_template = {
 	},
 	pause_pacing_on_event = {
 		all = {},
-	},
-	monster_chance = {
-		challenge = {
-			0,
-			0,
-			0.7,
-			0.8,
-			0.9,
-		},
-		heat = {
-			0.1,
-			0.2,
-			0.3,
-			0.4,
-			0.5,
-		},
 	},
 	resistance_multiplier = {
 		0.5,
@@ -881,20 +865,9 @@ template.dummy_auto_event_template = {
 			},
 		},
 	},
-	monster_composition = {
-		{
-			breed_amount = 1,
-			breed_name = "chaos_beast_of_nurgle",
-		},
-		{
-			breed_amount = 1,
-			breed_name = "chaos_spawn",
-		},
-		{
-			breed_amount = 1,
-			breed_name = "chaos_plague_ogryn",
-		},
-	},
+	conditional_function = function (t)
+		return t[1]
+	end,
 }
 
 return template

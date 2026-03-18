@@ -250,12 +250,12 @@ local talent_builder_view_settings = {
 		},
 	},
 	archetype_badge_texture_by_name = {
-		adamant = "content/ui/textures/icons/class_badges/adamant_01_01",
-		broker = "content/ui/textures/icons/class_badges/broker_01_01",
-		ogryn = "content/ui/textures/icons/class_badges/ogryn_01_01",
-		psyker = "content/ui/textures/icons/class_badges/psyker_01_01",
-		veteran = "content/ui/textures/icons/class_badges/veteran_01_01",
-		zealot = "content/ui/textures/icons/class_badges/zealot_01_01",
+		adamant = "content/ui/textures/icons/class_badges/adamant_01",
+		broker = "content/ui/textures/icons/class_badges/broker_01",
+		ogryn = "content/ui/textures/icons/class_badges/ogryn_01",
+		psyker = "content/ui/textures/icons/class_badges/psyker_01",
+		veteran = "content/ui/textures/icons/class_badges/veteran_01",
+		zealot = "content/ui/textures/icons/class_badges/zealot_01",
 	},
 	archetype_backgrounds_by_name = {
 		adamant = "content/ui/materials/frames/talents/talent_bg_top_gradient_adamant",

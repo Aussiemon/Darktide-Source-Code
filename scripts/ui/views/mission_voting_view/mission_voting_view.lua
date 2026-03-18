@@ -18,6 +18,7 @@ local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local ViewStyles = require("scripts/ui/views/mission_voting_view/mission_voting_view_styles")
 local Zones = require("scripts/settings/zones/zones")
 local Text = require("scripts/utilities/ui/text")
+local QPCode = require("scripts/utilities/qp_code")
 local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
 local MissionVotingViewTestify = GameParameters.testify and require("scripts/ui/views/mission_voting_view/mission_voting_view_testify")
 
@@ -80,7 +81,7 @@ MissionVotingView.init = function (self, settings, context)
 		self._mission_data = context.mission_data
 	end
 
-	self._load_complete_callback = callback(function ()
+	self._load_complete_callback = function ()
 		self._loading = nil
 
 		if self:is_view_requirements_complete() then
@@ -88,7 +89,7 @@ MissionVotingView.init = function (self, settings, context)
 
 			self._load_complete_callback = nil
 		end
-	end)
+	end
 
 	if self._mission_data and self._mission_data.category and self._mission_data.category == "havoc" then
 		self._havoc_promise = Managers.data_service.havoc:summary():next(function (data)
@@ -149,7 +150,7 @@ MissionVotingView.on_enter = function (self)
 	self:_create_offscreen_renderer()
 
 	if self._is_quickplay then
-		self:_populate_quickplay_data()
+		self:_populate_quickplay_data(self._backend_mission_id)
 	else
 		self:_populate_data(self._mission_data)
 	end
@@ -452,7 +453,7 @@ MissionVotingView._setup_main_page_widgets = function (self)
 
 	self._mission_info_widgets = {}
 
-	self:_setup_mission_info_icons(self._mission_data)
+	self:_setup_mission_info_icons(self._mission_data, self._backend_mission_id)
 	self:_create_widgets(definitions, self._mission_info_widgets, self._widgets_by_name)
 end
 
@@ -580,13 +581,20 @@ local function _calculate_quickplay_danger_level(qp_string)
 	return danger_setting.index, danger_setting.display_name
 end
 
-MissionVotingView._populate_quickplay_data = function (self)
+MissionVotingView._populate_quickplay_data = function (self, qp_data)
 	local widgets_by_name = self._widgets_by_name
-	local quickplay_settings = MissionDetailsBlueprints.quickplay_data
+	local quickplay_ui_data = MissionDetailsBlueprints.quickplay_data
+	local quickplay_settings = quickplay_ui_data.default
+	local qp_keys = QPCode.decode(qp_data)
+
+	if qp_keys.category and qp_keys.category == "expedition" then
+		quickplay_settings = quickplay_ui_data.expedition
+	end
+
 	local zone_image_widget = widgets_by_name.zone_image
 	local zone_image_material_values = zone_image_widget.style.zone_image.material_values
 
-	zone_image_material_values.texture_map = "content/ui/textures/icons/zones/zone_quickplay"
+	zone_image_material_values.texture_map = quickplay_settings.image
 
 	local details_button = widgets_by_name.toggle_details_button
 
@@ -745,14 +753,24 @@ MissionVotingView._create_mission_icons_info = function (self, scenegraph_id, ic
 	return icon_definition
 end
 
-MissionVotingView._setup_mission_info_icons = function (self, mission_data)
+MissionVotingView._setup_mission_info_icons = function (self, mission_data, qp_data)
 	table.clear(self._mission_icons_widgets)
 
 	local mission_icon_settings = {}
 
 	if self._is_quickplay then
+		local quickplay_ui_data = MissionDetailsBlueprints.quickplay_data
+		local quickplay_settings = quickplay_ui_data.default
+		local qp_keys = QPCode.decode(qp_data)
+
+		if qp_keys.category and qp_keys.category == "expedition" then
+			quickplay_settings = quickplay_ui_data.expedition
+		end
+
+		local icon = quickplay_settings.icon
+
 		mission_icon_settings[#mission_icon_settings + 1] = {
-			icon = MissionDetailsBlueprints.quickplay_data.icon,
+			icon = icon,
 			color = {
 				255,
 				169,

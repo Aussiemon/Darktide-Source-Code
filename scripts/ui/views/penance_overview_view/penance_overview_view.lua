@@ -107,6 +107,8 @@ PenanceOverviewView.init = function (self, settings, context)
 end
 
 PenanceOverviewView._on_backend_error = function (self, error)
+	Log.warning("PenanceOverviewView", "Can't open penance overview view. Got backend error: %s", table.tostring(error))
+
 	local view_name = self.view_name
 
 	Managers.ui:close_view(view_name)
@@ -427,19 +429,20 @@ PenanceOverviewView._build_achievements_cache = function (self)
 		local achievement_id = achievement_config.id
 		local category = achievement_config.category
 		local is_completed = Managers.achievements:achievement_completed(player, achievement_id)
+		local should_show = true
 
-		do
+		if should_show then
 			local _achievements_by_category = achievements_by_category[category] or {}
 
 			_achievements_by_category[#_achievements_by_category + 1] = achievement_id
 			achievements_by_category[category] = _achievements_by_category
 		end
 
-		if not is_completed then
+		if should_show and not is_completed then
 			achievements_by_progress[#achievements_by_progress + 1] = achievement_id
 		end
 
-		if is_completed then
+		if should_show and is_completed then
 			local achievement_score = achievement_config.score or 0
 
 			total_score = total_score + achievement_score
@@ -553,25 +556,33 @@ PenanceOverviewView._get_carousel_layouts = function (self, max_amount, blocked_
 
 				if not definition then
 					-- Nothing
-				elseif definition.flags and definition.flags.hide_from_carousel then
-					-- Nothing
 				else
-					local layout = self:_get_carousel_card_layout(id)
+					local can_claim = self:_can_claim_achievement_by_id(id)
+					local flags = definition.flags
+					local hide_from_carousel = not can_claim and flags and flags.hide_from_carousel
 
-					if not layout then
+					if hide_from_carousel then
 						-- Nothing
 					else
-						result_ids[#result_ids + 1] = layout
-						blocked_ids[id] = true
+						local layout = self:_get_carousel_card_layout(id)
 
-						if #result_ids == max_amount then
-							return result_ids
+						if not layout then
+							-- Nothing
+						else
+							result_ids[#result_ids + 1] = layout
+							blocked_ids[id] = true
+
+							if #result_ids == max_amount then
+								return result_ids
+							end
 						end
 					end
 				end
 			end
 		end
 	end
+
+	Log.warning("PenanceOverviewView", "Failed to find %d penances to display. Found %d penances.", max_amount, #result_ids)
 
 	return result_ids
 end
@@ -1777,7 +1788,7 @@ PenanceOverviewView._update_wintrack = function (self, dt, t)
 	if not self._wintrack_initialized and wintrack_element:is_initialized() then
 		self._wintrack_initialized = true
 
-		local rewarded_tiers = self._rewarded_tiers
+		local rewarded_tiers = self._rewarded_tiers or 0
 
 		for i = 1, rewarded_tiers do
 			wintrack_element:set_index_claimed(i)
@@ -1835,9 +1846,10 @@ PenanceOverviewView._remove_completed_favorites = function (self)
 	for i = 1, #favorite_achievements do
 		local achievement_id = favorite_achievements[i]
 		local achievement_definition = Managers.achievements:achievement_definition(achievement_id)
+		local hide_missing = achievement_definition.flags and achievement_definition.flags.hide_missing
 		local can_claim = self:_can_claim_achievement_by_id(achievement_id)
 		local is_complete = Managers.achievements:achievement_completed(player, achievement_id)
-		local should_remove = not achievement_definition or not can_claim and is_complete
+		local should_remove = not achievement_definition or not can_claim and is_complete or hide_missing
 
 		if should_remove then
 			self:request_achievement_favorite_remove(achievement_id)
@@ -1925,6 +1937,17 @@ PenanceOverviewView.on_exit = function (self)
 		save_manager:queue_save()
 	end
 
+	local achievements_manager = Managers.achievements
+
+	if self._backend_ready and achievements_manager then
+		local has_claimable_penances = not table.is_empty(self._penance_to_reward_bundle_map)
+		local has_claimable_wintrack = self._wintrack_element and self._wintrack_element:can_claim_reward()
+
+		if not has_claimable_penances and not has_claimable_wintrack then
+			achievements_manager:deactive_reward_claim_state()
+		end
+	end
+
 	self:_on_panel_option_pressed(nil)
 
 	if self._world_spawner then
@@ -1963,10 +1986,6 @@ PenanceOverviewView.on_exit = function (self)
 
 	if level and self._hub_interaction then
 		Level.trigger_event(level, "lua_penances_store_closed")
-	end
-
-	if Managers.achievements then
-		Managers.achievements:deactive_reward_claim_state()
 	end
 
 	if self._entered then
@@ -2453,11 +2472,7 @@ PenanceOverviewView._penance_comparator = function (self, favorite_comparator, c
 	end
 end
 
-local temp_layout = {}
-
 PenanceOverviewView._add_category_to_penance_grid_layout = function (self, layout, show_header, category_id, comparator)
-	table.clear(temp_layout)
-
 	local category = AchievementCategories[category_id]
 
 	if not category then
@@ -2480,42 +2495,36 @@ PenanceOverviewView._add_category_to_penance_grid_layout = function (self, layou
 
 	table.sort(achievements, comparator)
 
-	for ii = 1, achievement_count do
-		local achievement_id = achievements[ii]
+	layout[#layout + 1] = {
+		widget_type = "dynamic_spacing",
+		size = {
+			grid_size[1],
+			10,
+		},
+	}
 
-		temp_layout[#temp_layout + 1] = self:_get_penance_layout_entry_by_achievement_id(achievement_id)
-	end
-
-	if #temp_layout > 0 then
-		layout[#layout + 1] = {
-			widget_type = "dynamic_spacing",
-			size = {
-				grid_size[1],
-				10,
-			},
-		}
-
+	if show_header then
 		local display_name = category.display_name
 
-		if show_header then
-			layout[#layout + 1] = {
-				widget_type = "header",
-				text = Localize(display_name),
-			}
-		end
-
-		for ii = 1, #temp_layout do
-			layout[#layout + 1] = table.shallow_copy(temp_layout[ii])
-		end
-
 		layout[#layout + 1] = {
-			widget_type = "dynamic_spacing",
-			size = {
-				grid_size[1],
-				10,
-			},
+			widget_type = "header",
+			text = Localize(display_name),
 		}
 	end
+
+	for i = 1, achievement_count do
+		local achievement_id = achievements[i]
+
+		layout[#layout + 1] = self:_get_penance_layout_entry_by_achievement_id(achievement_id)
+	end
+
+	layout[#layout + 1] = {
+		widget_type = "dynamic_spacing",
+		size = {
+			grid_size[1],
+			10,
+		},
+	}
 end
 
 PenanceOverviewView._get_penance_grid_layout = function (self, display_name, category_id, child_categories)

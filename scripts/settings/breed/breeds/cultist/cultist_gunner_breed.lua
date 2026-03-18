@@ -39,6 +39,7 @@ local breed_data = {
 	fx_proximity_culling_weight = 4,
 	game_object_type = "minion_elite_ranged",
 	has_direct_ragdoll_flow_event = true,
+	heat = 1,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	player_locomotion_constrain_radius = 0.5,
 	psyker_mark_target = true,
@@ -68,6 +69,9 @@ local breed_data = {
 		elite = true,
 		far = true,
 		minion = true,
+	},
+	vortex_settings = {
+		die_on_vortex_land = false,
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.armored,

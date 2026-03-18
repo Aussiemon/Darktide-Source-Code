@@ -2,7 +2,6 @@
 
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
@@ -177,6 +176,7 @@ local action_data = {
 	follow = {
 		check_grenade_trajectory_frequency = 0.25,
 		idle_anim_events = "idle",
+		ignore_target_obscured = true,
 		min_distance_from_target = 6,
 		move_anim_events = "move_fwd",
 		new_location_combat_range = "close",
@@ -302,8 +302,8 @@ local action_data = {
 		},
 	},
 	throw_grenade = {
+		effect_template_name = "renegade_grenadier_grenade",
 		vo_event = "throwing_grenade",
-		effect_template = EffectTemplates.renegade_grenadier_grenade,
 		effect_template_timings = {
 			attack_throw_backhand_01 = 0.28205128205128205,
 			attack_throw_long_01 = 0.2564102564102564,
@@ -335,6 +335,7 @@ local action_data = {
 		},
 	},
 	quick_throw_grenade = {
+		effect_template_name = "renegade_grenadier_grenade",
 		utility_weight = 20,
 		vo_event = "throwing_grenade",
 		considerations = UtilityConsiderations.grenadier_quick_throw,
@@ -350,7 +351,6 @@ local action_data = {
 		start_drop_grenade_timing = {
 			attack_throw_low_01 = 1.0769230769230769,
 		},
-		effect_template = EffectTemplates.renegade_grenadier_grenade,
 		effect_template_timings = {
 			attack_throw_low_01 = 0.358974358974359,
 		},
@@ -644,6 +644,21 @@ local action_data = {
 	},
 	exit_spawner = {
 		run_anim_event = "move_fwd",
+	},
+	vortex_grabbed = {
+		ignore_rotate_towards_target = false,
+		anim_events = {
+			loop = {
+				"vortex_loop",
+			},
+			landing = {
+				"vortex_landing",
+			},
+		},
+		anim_durations = {
+			vortex_landing = 5.666666666666667,
+			vortex_loop = 0.3333333333333333,
+		},
 	},
 }
 

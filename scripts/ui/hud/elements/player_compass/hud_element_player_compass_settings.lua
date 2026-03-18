@@ -3,7 +3,7 @@
 local hud_element_player_compass_settings = {
 	edge_offset = 15,
 	font_size_big = 24,
-	font_size_small = 16,
+	font_size_small = 8,
 	step_fade_start = 0.6,
 	step_font_type = "proxima_nova_bold",
 	step_height_large = 12,
@@ -11,7 +11,12 @@ local hud_element_player_compass_settings = {
 	step_width = 2,
 	steps = 24,
 	visible_steps = 12,
-	step_color = Color.ui_hud_green_super_light(255, true),
+	step_color = {
+		255,
+		114,
+		247,
+		119,
+	},
 	direction_icon_color = {
 		255,
 		255,

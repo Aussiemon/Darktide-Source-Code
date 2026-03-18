@@ -29,6 +29,39 @@ local COMBAT = {
 	condition = "is_aggroed",
 	name = "COMBAT",
 }
+local WEAPON_MALFUNCTION = {
+	"BtConditionalSequenceNode",
+	{
+		"BtSelectorNode",
+		{
+			"BtMoveToCoverAction",
+			condition = "has_cover",
+			name = "move_to_cover_weapon_malfunction",
+			condition_args = {
+				combat_ranges = {
+					close = true,
+					far = true,
+					melee = true,
+				},
+			},
+			action_data = action_data.move_to_cover_weapon_malfunction,
+		},
+		{
+			"BtMoveToCombatVectorAction",
+			condition = "has_combat_vector_position",
+			name = "escape_to_combat_vector_weapon_malfunction",
+			action_data = action_data.escape_to_combat_vector_weapon_malfunction,
+		},
+		name = "weapon_malfunction_reaction",
+	},
+	{
+		"BtWeaponMalfunctionAction",
+		name = "weapon_malfunction_loop",
+		action_data = action_data.weapon_malfunction_loop,
+	},
+	condition = "has_weapon_malfunction",
+	name = "weapon_malfunction",
+}
 local behavior_tree = {
 	"BtSelectorNode",
 	{
@@ -83,6 +116,7 @@ local behavior_tree = {
 		name = "stagger",
 		action_data = action_data.stagger,
 	},
+	WEAPON_MALFUNCTION,
 	MELEE_COMBAT,
 	COMBAT,
 	{

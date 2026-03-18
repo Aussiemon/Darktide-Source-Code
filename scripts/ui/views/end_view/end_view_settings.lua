@@ -30,6 +30,10 @@ local end_view_settings = {
 			level_name = "content/levels/ui/horde_end_of_round/horde_end_of_round",
 			shading_environment = "content/shading_environments/ui/ui_eor_background",
 		},
+		expeditions = {
+			level_name = "content/levels/ui/expeditions_end_of_round/expeditions_end_of_round",
+			shading_environment = "content/shading_environments/ui/ui_eor_background",
+		},
 	},
 	ignored_slots = {
 		"slot_pocketable",

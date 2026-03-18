@@ -311,45 +311,58 @@ do
 			{},
 			{},
 		})
-
-		local rank_and_difficulties = {
+		family({
+			target = 2,
+			type = AchievementTypesLookup.meta,
+			description = string.format("loc_achievement_group_%s_2_description", archetype_name),
+			icon = achievement_icons.group_rank_and_difficulty,
+			category = category_progression,
+			flags = {},
+		}, {
+			title = "loc_achievement_group_rank_{rank:%d}_difficulty_{difficulty:%d}_name",
+			id = "group_" .. archetype_name .. "_2_rank_{rank:%d}_difficulty_{difficulty:%d}",
+			achievements = function (index, config, definition, key)
+				return table.set({
+					string.format("rank_%s_2_%d", archetype_name, config.rank),
+					string.format("missions_%s_2_easy_difficulty_%d", archetype_name, config.difficulty),
+				})
+			end,
+		}, {
 			{
-				1,
-				1,
+				difficulty = 1,
+				rank = 1,
 			},
 			{
-				2,
-				2,
+				difficulty = 2,
+				rank = 2,
+			},
+		})
+		family({
+			target = 2,
+			type = AchievementTypesLookup.meta,
+			description = string.format("loc_achievement_group_%s_2_description", archetype_name),
+			icon = achievement_icons.group_rank_and_difficulty_b,
+			category = category_progression,
+			flags = {},
+		}, {
+			title = "loc_achievement_group_rank_{rank:%d}_difficulty_{difficulty:%d}_name",
+			id = "group_" .. archetype_name .. "_2_rank_{rank:%d}_difficulty_{difficulty:%d}",
+			achievements = function (index, config, definition, key)
+				return table.set({
+					string.format("rank_%s_2_%d", archetype_name, config.rank),
+					string.format("missions_%s_2_easy_difficulty_%d", archetype_name, config.difficulty),
+				})
+			end,
+		}, {
+			{
+				difficulty = 3,
+				rank = 4,
 			},
 			{
-				4,
-				3,
+				difficulty = 4,
+				rank = 5,
 			},
-			{
-				5,
-				4,
-			},
-		}
-
-		for index, rank_and_difficulty in ipairs(rank_and_difficulties) do
-			local rank = rank_and_difficulty[1]
-			local difficulty = rank_and_difficulty[2]
-			local group_achievement_name = string.format("group_%s_2_rank_%d_difficulty_%d", archetype_name, rank, difficulty)
-
-			achievement_definitions[group_achievement_name] = {
-				target = 2,
-				type = AchievementTypesLookup.meta,
-				title = string.format("loc_achievement_group_rank_%d_difficulty_%d_name", rank, difficulty),
-				description = string.format("loc_achievement_group_%s_2_description", archetype_name),
-				icon = index > 2 and achievement_icons.group_rank_and_difficulty_b or achievement_icons.group_rank_and_difficulty,
-				achievements = table.set({
-					string.format("rank_%s_2_%d", archetype_name, rank),
-					string.format("missions_%s_2_easy_difficulty_%d", archetype_name, difficulty),
-				}),
-				category = category_progression,
-				flags = {},
-			}
-		end
+		})
 
 		if legacy_group_class_targets then
 			family({
@@ -396,12 +409,12 @@ do
 		local category_progression = "veteran_progression"
 		local category_abilites = "veteran_abilites"
 		local base_achievement_icons = {
-			class_group = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_12",
+			class_group = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement_12",
 			class_group_legacy = "content/ui/textures/icons/achievements/achievement_icon_0096",
-			group_rank_and_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_10",
-			group_rank_and_difficulty_b = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_11",
-			mission_easy_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_02",
-			mission_medium_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_09",
+			group_rank_and_difficulty = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement_10",
+			group_rank_and_difficulty_b = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement_11",
+			mission_easy_difficulty = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement_02",
+			mission_medium_difficulty = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement_09",
 			missions = "content/ui/textures/icons/achievements/achievement_icon_0012",
 			missions_objective = "content/ui/textures/icons/achievements/achievement_icon_0013",
 			rank = "content/ui/textures/icons/achievements/achievement_icon_0011",
@@ -427,7 +440,7 @@ do
 
 		achievement_definitions.veteran_2_easy_1 = {
 			description = "loc_achievement_veteran_2_easy_1_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_03",
+			icon = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement_03",
 			stat_name = "veteran_2_weakspot_kills",
 			target = 350,
 			title = "loc_achievement_veteran_2_easy_1_name",
@@ -436,8 +449,8 @@ do
 			flags = {},
 		}
 		achievement_definitions.veteran_2_easy_2 = {
-			description = "loc_achievement_veteran_2_easy_2_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_04",
+			description = "loc_achievement_veteran_2_easy_2_fix_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement_04",
 			stat_name = "veteran_2_ammo_given",
 			target = 5000,
 			title = "loc_achievement_veteran_2_easy_2_name",
@@ -447,7 +460,7 @@ do
 		}
 		achievement_definitions.veteran_infiltrate_supress = {
 			description = "loc_achievement_veteran_infiltrate_supress_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_18",
+			icon = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement_18",
 			stat_name = "veteran_infiltrate_stagger",
 			target = 750,
 			title = "loc_achievement_veteran_infiltrate_supress_name",
@@ -457,7 +470,7 @@ do
 		}
 		achievement_definitions.veteran_voice_of_command_toughness_given = {
 			description = "loc_achievement_veteran_voice_of_command_toughness_given_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_17",
+			icon = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement_17",
 			stat_name = "veteran_voice_of_command_toughness_given",
 			target = 7500,
 			title = "loc_achievement_veteran_voice_of_command_toughness_given_name",
@@ -467,7 +480,7 @@ do
 		}
 		achievement_definitions.veteran_enemies_killed_with_max_focus_fire = {
 			description = "loc_achievement_veteran_enemies_killed_with_max_focus_fire_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_19",
+			icon = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement_19",
 			stat_name = "kills_during_max_focus_fire_stack",
 			target = 2500,
 			title = "loc_achievement_veteran_enemies_killed_with_max_focus_fire_name",
@@ -477,7 +490,7 @@ do
 		}
 		achievement_definitions.veteran_krak_grenade_kills = {
 			description = "loc_achievement_veteran_krak_grenade_kills_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_13",
+			icon = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement_13",
 			stat_name = "veteran_krak_grenade_kills",
 			target = 500,
 			title = "loc_achievement_veteran_krak_grenade_kills_name",
@@ -487,7 +500,7 @@ do
 		}
 		achievement_definitions.veteran_smoke_grenade_engulfed = {
 			description = "loc_achievement_veteran_smoke_grenade_engulfed_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_14",
+			icon = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement_14",
 			stat_name = "veteran_smoke_grenade_engulfed",
 			target = 2000,
 			title = "loc_achievement_veteran_smoke_grenade_engulfed_name",
@@ -497,7 +510,7 @@ do
 		}
 		achievement_definitions.veteran_kills_with_improved_tag = {
 			description = "loc_achievement_veteran_kills_with_improved_tag_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_20",
+			icon = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement_20",
 			stat_name = "veteran_kills_with_improved_tag",
 			target = 500,
 			title = "loc_achievement_veteran_kills_with_improved_tag_name",
@@ -507,7 +520,7 @@ do
 		}
 		achievement_definitions.veteran_weapon_switch_passive_keystone_kills = {
 			description = "loc_achievement_veteran_weapon_switch_passive_keystone_kills_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_21",
+			icon = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement_21",
 			stat_name = "veteran_weapon_switch_passive_keystone_kills",
 			target = 250,
 			title = "loc_achievement_veteran_weapon_switch_passive_keystone_kills_name",
@@ -517,7 +530,7 @@ do
 		}
 		achievement_definitions.veteran_team_damage_aura_amplified = {
 			description = "loc_achievement_veteran_team_damage_amplified_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_15",
+			icon = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement_15",
 			stat_name = "veteran_team_damage_amplified",
 			target = 7500,
 			title = "loc_achievement_veteran_team_damage_amplified_name",
@@ -527,7 +540,7 @@ do
 		}
 		achievement_definitions.veteran_team_movement_aura_amplified = {
 			description = "loc_achievement_veteran_team_movement_amplifed_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_16",
+			icon = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement_16",
 			stat_name = "veteran_team_movement_amplifed",
 			target = 10000,
 			title = "loc_achievement_veteran_team_movement_amplifed_name",
@@ -537,7 +550,7 @@ do
 		}
 		achievement_definitions.veteran_2_medium_1 = {
 			description = "loc_achievement_veteran_2_medium_1_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_05",
+			icon = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement_05",
 			stat_name = "veteran_2_kill_volley_fire_target_malice",
 			target = 150,
 			title = "loc_achievement_veteran_2_medium_1_name",
@@ -547,7 +560,7 @@ do
 		}
 		achievement_definitions.veteran_2_medium_2 = {
 			description = "loc_achievement_veteran_2_medium_2_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_06",
+			icon = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement_06",
 			stat_name = "veteran_2_long_range_kills",
 			target = 100,
 			title = "loc_achievement_veteran_2_medium_2_name",
@@ -559,8 +572,8 @@ do
 			},
 		}
 		achievement_definitions.veteran_2_hard_1 = {
-			description = "loc_achievement_veteran_2_hard_1_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_07",
+			description = "loc_achievement_veteran_2_hard_1_fix_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement_07",
 			stat_name = "max_multiple_elite_or_special_kills_during_volley_fire_heresy",
 			target = 50,
 			title = "loc_achievement_veteran_2_hard_1_name",
@@ -572,8 +585,8 @@ do
 			},
 		}
 		achievement_definitions.veteran_2_hard_2 = {
-			description = "loc_achievement_veteran_2_hard_2_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_08",
+			description = "loc_achievement_veteran_2_hard_2_fix_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement_08",
 			stat_name = "veteran_2_extended_volley_fire_duration",
 			target = 5,
 			title = "loc_achievement_veteran_2_hard_2_name",
@@ -587,7 +600,7 @@ do
 
 		family({
 			description = "loc_achievement_group_class_veteran_2_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_12",
+			icon = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement_12",
 			type = AchievementTypesLookup.meta,
 			category = category_progression,
 			flags = {},
@@ -632,12 +645,12 @@ do
 		local category_progression = "zealot_progression"
 		local category_abilites = "zealot_abilites"
 		local base_achievement_icons = {
-			class_group = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_12",
+			class_group = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement_12",
 			class_group_legacy = "content/ui/textures/icons/achievements/achievement_icon_0096",
-			group_rank_and_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_10",
-			group_rank_and_difficulty_b = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_11",
-			mission_easy_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_02",
-			mission_medium_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_09",
+			group_rank_and_difficulty = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement_10",
+			group_rank_and_difficulty_b = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement_11",
+			mission_easy_difficulty = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement_02",
+			mission_medium_difficulty = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement_09",
 			missions = "content/ui/textures/icons/achievements/achievement_icon_0032",
 			missions_objective = "content/ui/textures/icons/achievements/achievement_icon_0033",
 			rank = "content/ui/textures/icons/achievements/achievement_icon_0031",
@@ -662,8 +675,8 @@ do
 		_generate_base_archetype_penances("zealot", category_name, category_progression, category_abilites, base_achievement_icons, legacy_group_class_targets)
 
 		achievement_definitions.zealot_2_easy_1 = {
-			description = "loc_achievement_zealot_2_easy_1_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_03",
+			description = "loc_achievement_zealot_2_easy_1_fix_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement_03",
 			stat_name = "zealot_2_number_of_shocked_enemies",
 			target = 1500,
 			title = "loc_achievement_zealot_2_easy_1_name",
@@ -672,8 +685,8 @@ do
 			flags = {},
 		}
 		achievement_definitions.zealot_2_easy_2 = {
-			description = "loc_achievement_zealot_2_easy_2_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_04",
+			description = "loc_achievement_zealot_2_easy_2_fix_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement_04",
 			stat_name = "zealot_2_toughness_gained_from_chastise_the_wicked",
 			target = 7500,
 			title = "loc_achievement_zealot_2_easy_2_name",
@@ -683,7 +696,7 @@ do
 		}
 		achievement_definitions.zealot_elite_or_special_kills_with_shroudfield = {
 			description = "loc_achievement_zealot_elite_or_special_kills_with_shroudfield_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_19",
+			icon = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement_19",
 			stat_name = "zealot_elite_or_special_kills_with_shroudfield",
 			target = 150,
 			title = "loc_achievement_zealot_elite_or_special_kills_with_shroudfield_name",
@@ -693,7 +706,7 @@ do
 		}
 		achievement_definitions.zealot_team_toughness_restored_with_chorus = {
 			description = "loc_achievement_zealot_team_toughness_restored_with_chorus_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_18",
+			icon = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement_18",
 			stat_name = "zealot_team_toughness_restored_with_chorus",
 			target = 7500,
 			title = "loc_achievement_zealot_team_toughness_restored_with_chorus_name",
@@ -703,7 +716,7 @@ do
 		}
 		achievement_definitions.zealot_elite_or_special_kills_during_fanatic_rage = {
 			description = "loc_achievement_zealot_elite_or_special_kills_during_fanatic_rage_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_20",
+			icon = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement_20",
 			stat_name = "zealot_elite_or_special_kills_during_fanatic_rage",
 			target = 2000,
 			title = "loc_achievement_zealot_elite_or_special_kills_during_fanatic_rage_name",
@@ -713,7 +726,7 @@ do
 		}
 		achievement_definitions.zealot_kills_during_movement_keystone_activated = {
 			description = "loc_achievement_zealot_kills_during_movement_keystone_activated_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_21",
+			icon = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement_21",
 			stat_name = "zealot_kills_during_movement_keystone_activated",
 			target = 250,
 			title = "loc_achievement_zealot_kills_during_movement_keystone_activated_name",
@@ -723,7 +736,7 @@ do
 		}
 		achievement_definitions.zealot_elite_or_special_kills_with_blade_of_faith = {
 			description = "loc_achievement_zealot_elite_or_special_kills_with_blade_of_faith_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_14",
+			icon = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement_14",
 			stat_name = "zealot_elite_or_special_kills_with_blade_of_faith",
 			target = 500,
 			title = "loc_achievement_zealot_elite_or_special_kills_with_blade_of_faith_name",
@@ -733,7 +746,7 @@ do
 		}
 		achievement_definitions.zealot_kills_with_fire_grenade = {
 			description = "loc_achievement_zealot_kills_with_fire_grenade_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_13",
+			icon = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement_13",
 			stat_name = "zealot_kills_with_fire_grenade",
 			target = 2000,
 			title = "loc_achievement_zealot_kills_with_fire_grenade_name",
@@ -743,7 +756,7 @@ do
 		}
 		achievement_definitions.zealot_aura_backstab_kills_while_alone = {
 			description = "loc_achievement_zealot_aura_stamina_kills_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_17",
+			icon = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement_17",
 			stat_name = "zealot_aura_backstab_kills_while_alone",
 			target = 7500,
 			title = "loc_achievement_zealot_aura_backstab_kills_while_alone_name",
@@ -753,7 +766,7 @@ do
 		}
 		achievement_definitions.zealot_aura_toughness_damage_reduced = {
 			description = "loc_achievement_zealot_aura_toughness_damage_reduced_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_15",
+			icon = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement_15",
 			stat_name = "zealot_aura_toughness_damage_reduced",
 			target = 1500,
 			title = "loc_achievement_zealot_aura_toughness_damage_reduced_name",
@@ -763,7 +776,7 @@ do
 		}
 		achievement_definitions.zealot_aura_corruption_healed = {
 			description = "loc_achievement_zealot_aura_corruption_healed_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_16",
+			icon = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement_16",
 			stat_name = "zealot_aura_corruption_healed",
 			target = 5000,
 			title = "loc_achievement_zealot_aura_corruption_healed_name",
@@ -773,7 +786,7 @@ do
 		}
 		achievement_definitions.zealot_2_medium_1 = {
 			description = "loc_achievement_zealot_2_medium_1_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_05",
+			icon = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement_05",
 			stat_name = "zealot_2_number_of_critical_hits_kills_when_stunned",
 			target = 75,
 			title = "loc_achievement_zealot_2_medium_1_name",
@@ -783,7 +796,7 @@ do
 		}
 		achievement_definitions.zealot_2_medium_2 = {
 			description = "loc_achievement_zealot_2_medium_2_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_06",
+			icon = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement_06",
 			stat_name = "zealot_2_kills_with_martyrdoom_stacks",
 			target = 1000,
 			title = "loc_achievement_zealot_2_medium_2_name",
@@ -796,7 +809,7 @@ do
 		}
 		achievement_definitions.zealot_2_hard_1 = {
 			description = "loc_achievement_zealot_2_hard_1_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_07",
+			icon = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement_07",
 			stat_name = "zealot_2_killed_elites_and_specials_with_activated_attacks",
 			target = 75,
 			title = "loc_achievement_zealot_2_hard_1_name",
@@ -805,8 +818,8 @@ do
 			flags = {},
 		}
 		achievement_definitions.zealot_2_hard_2 = {
-			description = "loc_achievement_zealot_2_hard_2_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_08",
+			description = "loc_achievement_zealot_2_hard_2_fix_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement_08",
 			stat_name = "zealot_2_charged_enemy_wielding_ranged_weapon",
 			target = 40,
 			title = "loc_achievement_zealot_2_hard_2_name",
@@ -817,7 +830,7 @@ do
 
 		family({
 			description = "loc_achievement_group_class_zealot_2_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_12",
+			icon = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement_12",
 			type = AchievementTypesLookup.meta,
 			category = category_progression,
 			flags = {},
@@ -862,12 +875,12 @@ do
 		local category_progression = "psyker_progression"
 		local category_abilites = "psyker_abilites"
 		local base_achievement_icons = {
-			class_group = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_12",
+			class_group = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement_12",
 			class_group_legacy = "content/ui/textures/icons/achievements/achievement_icon_0096",
-			group_rank_and_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_10",
-			group_rank_and_difficulty_b = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_11",
-			mission_easy_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_02",
-			mission_medium_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_09",
+			group_rank_and_difficulty = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement_10",
+			group_rank_and_difficulty_b = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement_11",
+			mission_easy_difficulty = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement_02",
+			mission_medium_difficulty = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement_09",
 			missions = "content/ui/textures/icons/achievements/achievement_icon_0022",
 			missions_objective = "content/ui/textures/icons/achievements/achievement_icon_0023",
 			rank = "content/ui/textures/icons/achievements/achievement_icon_0021",
@@ -892,8 +905,8 @@ do
 		_generate_base_archetype_penances("psyker", category_name, category_progression, category_abilites, base_achievement_icons, legacy_group_class_targets)
 
 		achievement_definitions.psyker_2_easy_1 = {
-			description = "loc_achievement_psyker_2_easy_1_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_03",
+			description = "loc_achievement_psyker_2_easy_1_fix_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement_03",
 			stat_name = "psyker_2_elite_or_special_kills_with_smite",
 			target = 200,
 			title = "loc_achievement_psyker_2_easy_1_name",
@@ -902,8 +915,8 @@ do
 			flags = {},
 		}
 		achievement_definitions.psyker_2_easy_2 = {
-			description = "loc_achievement_psyker_2_easy_2_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_04",
+			description = "loc_achievement_psyker_2_easy_2_tweaked_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement_04",
 			stat_name = "psyker_2_survived_perils",
 			target = 50,
 			title = "loc_achievement_psyker_2_easy_2_name",
@@ -912,8 +925,8 @@ do
 			flags = {},
 		}
 		achievement_definitions.psyker_2_medium_1 = {
-			description = "loc_achievement_psyker_2_medium_1_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_05",
+			description = "loc_achievement_psyker_2_medium_1_fix_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement_05",
 			stat_name = "psyker_2_smite_kills_at_max_souls",
 			target = 100,
 			title = "loc_achievement_psyker_2_medium_1_name",
@@ -923,7 +936,7 @@ do
 		}
 		achievement_definitions.psyker_2_medium_2 = {
 			description = "loc_achievement_psyker_2_medium_2_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_06",
+			icon = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement_06",
 			stat_name = "psyker_2_warp_kills",
 			target = 2500,
 			title = "loc_achievement_psyker_2_medium_2_name",
@@ -932,8 +945,8 @@ do
 			flags = {},
 		}
 		achievement_definitions.psyker_2_hard_1 = {
-			description = "loc_achievement_psyker_2_hard_1_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_07",
+			description = "loc_achievement_psyker_2_hard_1_fix_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement_07",
 			stat_name = "psyker_2_killed_disablers_before_disabling",
 			target = 25,
 			title = "loc_achievement_psyker_2_hard_1_name",
@@ -943,7 +956,7 @@ do
 		}
 		achievement_definitions.psyker_2_hard_2 = {
 			description = "loc_achievement_psyker_2_hard_2_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_08",
+			icon = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement_08",
 			stat_name = "psyker_2_x_missions_no_elite_melee_damage_taken",
 			target = 3,
 			title = "loc_achievement_psyker_2_hard_2_name",
@@ -953,7 +966,7 @@ do
 		}
 		achievement_definitions.psyker_elite_or_special_kills_with_assail = {
 			description = "loc_achievement_psyker_elite_or_special_kills_with_assail_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_14",
+			icon = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement_14",
 			stat_name = "psyker_elite_or_special_kills_with_assail",
 			target = 250,
 			title = "loc_achievement_psyker_elite_or_special_kills_with_assail_name",
@@ -963,7 +976,7 @@ do
 		}
 		achievement_definitions.psyker_kills_during_overcharge_stance = {
 			description = "loc_achievement_psyker_kills_during_overcharge_stance_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_19",
+			icon = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement_19",
 			stat_name = "max_psyker_kills_during_overcharge_stance",
 			target = 40,
 			title = "loc_achievement_psyker_kills_during_overcharge_stance_name",
@@ -973,7 +986,7 @@ do
 		}
 		achievement_definitions.psyker_kills_with_empowered_abilites = {
 			description = "loc_achievement_psyker_kills_with_empowered_abilites_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_20",
+			icon = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement_20",
 			stat_name = "psyker_kills_with_empowered_abilites",
 			target = 250,
 			title = "loc_achievement_psyker_kills_with_empowered_abilites_name",
@@ -983,7 +996,7 @@ do
 		}
 		achievement_definitions.psyker_time_at_max_unnatural = {
 			description = "loc_achievement_psyker_time_at_max_unnatural_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_21",
+			icon = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement_21",
 			stat_name = "psyker_time_at_max_unnatural",
 			target = 1800,
 			title = "loc_achievement_psyker_time_at_max_unnatural_name",
@@ -993,7 +1006,7 @@ do
 		}
 		achievement_definitions.psyker_damage_blocked_with_shield = {
 			description = "loc_achievement_psyker_damage_blocked_with_shield_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_18",
+			icon = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement_18",
 			stat_name = "psyker_shield_total_damage_taken",
 			target = 150000,
 			title = "loc_achievement_psyker_damage_blocked_with_shield_name",
@@ -1003,7 +1016,7 @@ do
 		}
 		achievement_definitions.psyker_team_elite_aura_kills = {
 			description = "loc_achievement_psyker_team_elite_aura_kills_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_15",
+			icon = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement_15",
 			stat_name = "psyker_team_elite_aura_kills",
 			target = 2500,
 			title = "loc_achievement_psyker_team_elite_aura_kills_name",
@@ -1013,7 +1026,7 @@ do
 		}
 		achievement_definitions.psyker_team_cooldown_reduced = {
 			description = "loc_achievement_psyker_team_cooldown_reduced_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_16",
+			icon = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement_16",
 			stat_name = "psyker_team_cooldown_reduced",
 			target = 2000,
 			title = "loc_achievement_psyker_team_cooldown_reduced_name",
@@ -1023,7 +1036,7 @@ do
 		}
 		achievement_definitions.psyker_team_critical_hits = {
 			description = "loc_achievement_psyker_team_critical_hits_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_17",
+			icon = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement_17",
 			stat_name = "psyker_team_critical_hits",
 			target = 7500,
 			title = "loc_achievement_psyker_team_critical_hits_name",
@@ -1033,7 +1046,7 @@ do
 		}
 		achievement_definitions.psyker_threshold_kills_reached_with_grenade_chain = {
 			description = "loc_achievement_psyker_threshold_kills_reached_with_grenade_chain_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_13",
+			icon = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement_13",
 			stat_name = "psyker_threshold_kills_reached_with_grenade_chain",
 			target = 2500,
 			title = "loc_achievement_psyker_threshold_kills_reached_with_grenade_chain_name",
@@ -1044,7 +1057,7 @@ do
 
 		family({
 			description = "loc_achievement_group_class_psyker_2_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_12",
+			icon = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement_12",
 			type = AchievementTypesLookup.meta,
 			category = category_progression,
 			flags = {},
@@ -1089,12 +1102,12 @@ do
 		local category_progression = "ogryn_progression"
 		local category_abilites = "ogryn_abilites"
 		local base_achievement_icons = {
-			class_group = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_12",
+			class_group = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_12",
 			class_group_legacy = "content/ui/textures/icons/achievements/achievement_icon_0096",
-			group_rank_and_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_10",
-			group_rank_and_difficulty_b = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_11",
-			mission_easy_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_02",
-			mission_medium_difficulty = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_09",
+			group_rank_and_difficulty = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_10",
+			group_rank_and_difficulty_b = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_11",
+			mission_easy_difficulty = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_02",
+			mission_medium_difficulty = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_09",
 			missions = "content/ui/textures/icons/achievements/achievement_icon_0002",
 			missions_objective = "content/ui/textures/icons/achievements/achievement_icon_0003",
 			rank = "content/ui/textures/icons/achievements/achievement_icon_0001",
@@ -1120,7 +1133,7 @@ do
 
 		achievement_definitions.ogryn_2_easy_1 = {
 			description = "loc_achievement_ogryn_2_easy_1_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_03",
+			icon = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_03",
 			stat_name = "ogryn_2_number_of_revived_or_assisted_allies",
 			target = 40,
 			title = "loc_achievement_ogryn_2_easy_1_name",
@@ -1130,7 +1143,7 @@ do
 		}
 		achievement_definitions.ogryn_2_easy_2 = {
 			description = "loc_achievement_ogryn_2_easy_2_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_04",
+			icon = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_04",
 			stat_name = "ogryn_2_number_of_knocked_down_enemies",
 			target = 5000,
 			title = "loc_achievement_ogryn_2_easy_2_name",
@@ -1139,8 +1152,8 @@ do
 			flags = {},
 		}
 		achievement_definitions.ogryn_2_medium_1 = {
-			description = "loc_achievement_ogryn_2_medium_1_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_05",
+			description = "loc_achievement_ogryn_2_medium_1_fix_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_05",
 			stat_name = "ogryn_2_bullrushed_group_of_ranged_enemies",
 			target = 25,
 			title = "loc_achievement_ogryn_2_medium_1_name",
@@ -1153,7 +1166,7 @@ do
 		}
 		achievement_definitions.ogryn_2_medium_2 = {
 			description = "loc_achievement_ogryn_2_medium_2_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_06",
+			icon = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_06",
 			stat_name = "ogryn_2_killed_multiple_enemies_with_sweep",
 			target = 250,
 			title = "loc_achievement_ogryn_2_medium_2_name",
@@ -1166,7 +1179,7 @@ do
 		}
 		achievement_definitions.ogryn_2_hard_1 = {
 			description = "loc_achievement_ogryn_2_hard_1_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_07",
+			icon = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_07",
 			stat_name = "ogryn_2_number_of_missions_with_no_deaths_and_all_revives_within_x_seconds",
 			target = 3,
 			title = "loc_achievement_ogryn_2_hard_1_name",
@@ -1178,8 +1191,8 @@ do
 			},
 		}
 		achievement_definitions.ogryn_2_hard_2 = {
-			description = "loc_achievement_ogryn_2_hard_2_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_08",
+			description = "loc_achievement_ogryn_2_hard_2_fix_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_08",
 			stat_name = "ogryn_2_grenade_box_kills_without_missing",
 			target = 5,
 			title = "loc_achievement_ogryn_2_hard_2_name",
@@ -1192,7 +1205,7 @@ do
 		}
 		achievement_definitions.ogryn_taunt_shout_hit = {
 			description = "loc_achievement_ogryn_taunt_shout_hit_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_18",
+			icon = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_18",
 			stat_name = "ogryn_taunt_shout_hit",
 			target = 1000,
 			title = "loc_achievement_ogryn_taunt_shout_hit_name",
@@ -1202,7 +1215,7 @@ do
 		}
 		achievement_definitions.ogryn_grenade_rock_elites_or_specialists = {
 			description = "loc_achievement_ogryn_grenade_rock_elites_or_specialists_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_13",
+			icon = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_13",
 			stat_name = "ogryn_grenade_rock_elites_or_specialists",
 			target = 75,
 			title = "loc_achievement_ogryn_grenade_rock_elites_or_specialists_name",
@@ -1212,7 +1225,7 @@ do
 		}
 		achievement_definitions.ogryn_grenade_frag_group_of_enemies = {
 			description = "loc_achievement_ogryn_grenade_frag_group_of_enemies_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_14",
+			icon = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_14",
 			stat_name = "ogryn_grenade_frag_group_of_enemies_killed",
 			target = 25,
 			title = "loc_achievement_ogryn_grenade_frag_group_of_enemies_name",
@@ -1225,7 +1238,7 @@ do
 		}
 		achievement_definitions.ogryn_kills_during_max_stacks_heavy_hitter = {
 			description = "loc_achievement_ogryn_kills_during_max_stacks_heavy_hitter_new_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_20",
+			icon = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_20",
 			stat_name = "ogryn_kills_during_max_stacks_heavy_hitter",
 			target = 5000,
 			title = "loc_achievement_ogryn_kills_during_max_stacks_heavy_hitter_name",
@@ -1235,7 +1248,7 @@ do
 		}
 		achievement_definitions.ogryn_kills_during_barrage_threshold = {
 			description = "loc_achievement_ogryn_kills_during_barrage_threshold_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_19",
+			icon = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_19",
 			stat_name = "kills_achieved_group_barrage_threshold",
 			target = 50,
 			title = "loc_achievement_ogryn_kills_during_barrage_threshold_name",
@@ -1248,7 +1261,7 @@ do
 		}
 		achievement_definitions.ogryn_feel_no_pain_kills_at_max = {
 			description = "loc_achievement_ogryn_feel_no_pain_kills_at_max_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_21",
+			icon = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_21",
 			stat_name = "ogryn_feel_no_pain_kills_at_max",
 			target = 2500,
 			title = "loc_achievement_ogryn_ogryn_feel_no_pain_kills_at_max_name",
@@ -1261,7 +1274,7 @@ do
 		}
 		achievement_definitions.ogryn_leadbelcher_free_shot = {
 			description = "loc_achievement_ogryn_leadbelcher_free_shot_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_22",
+			icon = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_22",
 			stat_name = "ogryn_leadbelcher_free_shot",
 			target = 4500,
 			title = "loc_achievement_ogryn_leadbelcher_free_shot_name",
@@ -1271,7 +1284,7 @@ do
 		}
 		achievement_definitions.ogryn_team_heavy_aura_kills = {
 			description = "loc_achievement_ogryn_team_heavy_aura_kills_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_15",
+			icon = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_15",
 			stat_name = "ogryn_team_heavy_aura_kills",
 			target = 5000,
 			title = "loc_achievement_ogryn_team_heavy_aura_kills_name",
@@ -1281,7 +1294,7 @@ do
 		}
 		achievement_definitions.ogryn_team_suppressed_aura_kills = {
 			description = "loc_achievement_ogryn_team_suppressed_aura_kills_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_17",
+			icon = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_17",
 			stat_name = "ogryn_team_suppressed_aura_kills",
 			target = 7500,
 			title = "loc_achievement_ogryn_team_suppressed_aura_kills_name",
@@ -1291,7 +1304,7 @@ do
 		}
 		achievement_definitions.ogryn_team_toughness_restored_aura = {
 			description = "loc_achievement_ogryn_team_toughness_restored_aura_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_16",
+			icon = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_16",
 			stat_name = "ogryn_team_toughness_restored_aura",
 			target = 15000,
 			title = "loc_achievement_ogryn_team_toughness_restored_aura_name",
@@ -1302,7 +1315,7 @@ do
 
 		family({
 			description = "loc_achievement_group_class_ogryn_2_description",
-			icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_12",
+			icon = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_12",
 			type = AchievementTypesLookup.meta,
 			category = category_progression,
 			flags = {},
@@ -2074,12 +2087,12 @@ do
 			description = "loc_achievement_broker_stimm_heavy_attack_kills_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0028",
 			stat_name = "broker_stimm_heavy_attack_kills",
-			target = 1000,
+			target = 650,
 			title = "loc_achievement_broker_stimm_heavy_attack_kills_name",
 			type = AchievementTypesLookup.increasing_stat,
 			category = category_abilites,
 			loc_variables = {
-				target = 1000,
+				target = 650,
 				broker_stimm = Localize("loc_talent_broker_stimm"),
 			},
 			flags = {},
@@ -2088,12 +2101,12 @@ do
 			description = "loc_achievement_broker_stimm_durability_potency_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0029",
 			stat_name = "broker_stimm_toughness_restored_from_stimm",
-			target = 2600,
+			target = 1500,
 			title = "loc_achievement_broker_stimm_durability_potency_name",
 			type = AchievementTypesLookup.increasing_stat,
 			category = category_abilites,
 			loc_variables = {
-				target = 2600,
+				target = 1500,
 				viscosity_target = AchievementTweakData.broker_stimm_combat_potency.min_potency * 100,
 				viscosity_name = Localize("loc_stimm_lab_viscosity"),
 				broker_stimm = Localize("loc_talent_broker_stimm"),
@@ -2121,7 +2134,7 @@ do
 		local category_abilites = "veteran_abilites"
 
 		achievement_definitions.veteran_2_weakspot_hits_during_volley_fire_alternate_fire = {
-			description = "loc_achievement_veteran_2_weakspot_hits_during_volley_fire_alternate_fire_description",
+			description = "loc_achievement_veteran_2_weakspot_hits_during_volley_fire_alternate_fire_fix_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0015",
 			stat_name = "max_weakspot_hit_during_volley_fire_alternate_fire",
 			target = 4,
@@ -2133,7 +2146,7 @@ do
 			},
 		}
 		achievement_definitions.veteran_2_unbounced_grenade_kills = {
-			description = "loc_achievement_veteran_2_unbounced_grenade_kills_description",
+			description = "loc_achievement_veteran_2_unbounced_grenade_kills_fix_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0014",
 			title = "loc_achievement_veteran_2_unbounced_grenade_kills_name",
 			type = AchievementTypesLookup.direct_unlock,
@@ -2166,7 +2179,7 @@ do
 			flags = {},
 		}
 		achievement_definitions.veteran_2_elite_weakspot_kills_during_volley_fire_alternate_fire = {
-			description = "loc_achievement_veteran_2_elite_weakspot_kills_during_volley_fire_alternate_fire_description",
+			description = "loc_achievement_veteran_2_elite_weakspot_kills_during_volley_fire_alternate_fire_fix_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0018",
 			stat_name = "max_elite_weakspot_kill_during_volley_fire_alternate_fire",
 			target = 5,
@@ -2199,7 +2212,7 @@ do
 		local category_abilites = "zealot_abilites"
 
 		achievement_definitions.zealot_2_stagger_sniper_with_grenade_distance = {
-			description = "loc_achievement_zealot_2_stagger_sniper_with_grenade_distance_description",
+			description = "loc_achievement_zealot_2_stagger_sniper_with_grenade_distance_fix_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0035",
 			stat_name = "max_zealot_2_stagger_sniper_with_grenade_distance",
 			target = 40,
@@ -2211,7 +2224,7 @@ do
 			},
 		}
 		achievement_definitions.zelot_2_kill_mutant_charger_with_melee_while_dashing = {
-			description = "loc_achievement_zelot_2_kill_mutant_charger_with_melee_while_dashing_description",
+			description = "loc_achievement_zealot_2_kill_mutant_charger_with_melee_while_dashing_fix_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0039",
 			stat_name = "zelot_2_kill_mutant_charger_with_melee_while_dashing",
 			target = 1,
@@ -2223,7 +2236,7 @@ do
 			},
 		}
 		achievement_definitions.zealot_2_kills_of_shocked_enemies_last_15 = {
-			description = "loc_achievement_zealot_2_kills_of_shocked_enemies_last_15_description",
+			description = "loc_achievement_zealot_2_kills_of_shocked_enemies_last_15_fix_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0037",
 			stat_name = "max_zealot_2_kills_of_shocked_enemies_last_15",
 			target = 40,
@@ -2282,7 +2295,7 @@ do
 		local category_abilites = "psyker_abilites"
 
 		achievement_definitions.psyker_2_smite_hound_mid_leap = {
-			description = "loc_achievement_psyker_2_smite_hound_mid_leap_description",
+			description = "loc_achievement_psyker_2_smite_hound_mid_leap_fix_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0024",
 			stat_name = "smite_hound_mid_leap",
 			target = 1,
@@ -2332,7 +2345,7 @@ do
 			},
 		}
 		achievement_definitions.psyker_2_elite_or_special_kills_with_smite_last_10_sec = {
-			description = "loc_achievement_psyker_2_elite_or_special_kills_with_smite_last_10_sec_description",
+			description = "loc_achievement_psyker_2_elite_or_special_kills_with_smite_last_10_sec_description_rework",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0027",
 			stat_name = "max_elite_or_special_kills_with_smite_last_12_sec",
 			target = 4,
@@ -2347,7 +2360,7 @@ do
 			},
 		}
 		achievement_definitions.psyker_2_kill_boss_solo_with_smite = {
-			description = "loc_achievement_psyker_2_kill_boss_solo_with_smite_description",
+			description = "loc_achievement_psyker_2_kill_boss_solo_with_smite_fix_description",
 			icon = "content/ui/textures/icons/achievements/achievement_icon_0029",
 			stat_name = "max_smite_damage_done_to_boss",
 			target = 50,
@@ -2364,7 +2377,7 @@ do
 	local category_abilites = "ogryn_abilites"
 
 	achievement_definitions.ogryn_2_bull_rushed_charging_ogryn = {
-		description = "loc_achievement_ogryn_2_bull_rushed_charging_ogryn_description",
+		description = "loc_achievement_ogryn_2_bull_rushed_charging_ogryn_fix_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0004",
 		title = "loc_achievement_ogryn_2_bull_rushed_charging_ogryn_name",
 		type = AchievementTypesLookup.direct_unlock,
@@ -2399,7 +2412,7 @@ do
 		},
 	}
 	achievement_definitions.ogryn_2_bull_rushed_100_enemies = {
-		description = "loc_achievement_ogryn_2_bull_rushed_100_enemies_description",
+		description = "loc_achievement_ogryn_2_bull_rushed_100_enemies_fix_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0006",
 		stat_name = "max_ogryn_2_lunge_number_of_enemies_hit",
 		target = 60,
@@ -2411,7 +2424,7 @@ do
 		},
 	}
 	achievement_definitions.ogryn_2_bull_rushed_70_within_25_seconds = {
-		description = "loc_achievement_ogryn_2_bull_rushed_70_within_25_seconds_description",
+		description = "loc_achievement_ogryn_2_bull_rushed_70_within_25_seconds_fix_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0007",
 		stat_name = "max_ogryn_2_lunge_distance_last_x_seconds",
 		target = 40,
@@ -2426,7 +2439,7 @@ do
 		},
 	}
 	achievement_definitions.ogryn_2_bull_rushed_4_ogryns = {
-		description = "loc_achievement_ogryn_2_bull_rushed_4_ogryns_description",
+		description = "loc_achievement_ogryn_2_bull_rushed_4_ogryns_fix_description",
 		icon = "content/ui/textures/icons/achievements/achievement_icon_0005",
 		stat_name = "max_ogryns_bullrushed",
 		target = 4,
@@ -3036,6 +3049,18 @@ do
 		title = "loc_achievement_team_chaos_spawned_killed_no_players_grabbed_name",
 		type = AchievementTypesLookup.increasing_stat,
 		icon = path .. "achievement_icon_0127",
+		category = category_name,
+		flags = {
+			AchievementFlags.hide_progress,
+		},
+	}
+	achievement_definitions.team_houndmaster_killed_no_one_pounced = {
+		description = "loc_achievement_team_houndmaster_killed_no_one_pounced_description",
+		stat_name = "team_houndmaster_killed_no_one_pounced",
+		target = 1,
+		title = "loc_achievement_team_houndmaster_killed_no_one_pounced_name",
+		type = AchievementTypesLookup.increasing_stat,
+		icon = path .. "achievement_icon_houndmaster",
 		category = category_name,
 		flags = {
 			AchievementFlags.hide_progress,
@@ -3949,6 +3974,194 @@ do
 			}),
 			flags = {},
 		}
+
+		tiered_target_family("expeditions_extract_loot_total_{index:%d}", {
+			category = "mission_expeditions",
+			description = "loc_achievement_extract_loot_total_description",
+			stat_name = "expedition_total_loot_extracted",
+			title = "loc_achievement_extract_loot_total_name",
+			type = AchievementTypesLookup.increasing_stat,
+			icon = path .. "expeditions_achievements/expeditions_extract_loot_total",
+			flags = {},
+		}, {
+			40000,
+			100000,
+			250000,
+		})
+		tiered_target_family("expeditions_luggable_loot_deposit_{index:%d}", {
+			category = "mission_expeditions",
+			description = "loc_expeditions_luggable_loot_deposit_description",
+			stat_name = "expedition_total_luggables_retrieved",
+			title = "loc_expeditions_luggable_loot_deposit_name",
+			type = AchievementTypesLookup.increasing_stat,
+			icon = path .. "expeditions_achievements/expeditions_luggable_loot_deposit",
+			flags = {},
+		}, {
+			10,
+			50,
+			100,
+		})
+
+		achievement_definitions.expeditions_use_loot_converter = {
+			category = "mission_expeditions",
+			description = "loc_achievement_expeditions_use_loot_converter_description",
+			title = "loc_achievement_expeditions_use_loot_converter_name",
+			type = AchievementTypesLookup.direct_unlock,
+			icon = path .. "expeditions_achievements/expeditions_use_loot_converter",
+			flags = {},
+		}
+		achievement_definitions.expeditions_extract_with_luggable_loot = {
+			category = "mission_expeditions",
+			description = "loc_achievement_expeditions_extract_with_luggable_loot_description",
+			title = "loc_achievement_expeditions_extract_with_luggable_loot_name",
+			type = AchievementTypesLookup.direct_unlock,
+			icon = path .. "expeditions_achievements/expeditions_extract_with_luggable_loot",
+			flags = {},
+		}
+		achievement_definitions.expeditions_extract_at_last_location = {
+			category = "mission_expeditions",
+			description = "loc_achievement_expeditions_extract_at_last_location_description",
+			stat_name = "expedition_last_location_extraction",
+			target = 10,
+			title = "loc_achievement_expeditions_extract_at_last_location_name",
+			type = AchievementTypesLookup.increasing_stat,
+			icon = path .. "expeditions_achievements/expeditions_extract_at_last_location",
+			flags = {},
+		}
+		achievement_definitions.expeditions_extract_at_last_location_full_team = {
+			category = "mission_expeditions",
+			description = "loc_achievement_expeditions_extract_at_last_location_full_team_description",
+			stat_name = "expedition_last_location_extraction_full_team",
+			target = 1,
+			title = "loc_achievement_expeditions_extract_at_last_location_full_team_name",
+			type = AchievementTypesLookup.increasing_stat,
+			icon = path .. "expeditions_achievements/expeditions_extract_at_last_location_full_team",
+			flags = {
+				AchievementFlags.hide_progress,
+			},
+		}
+		achievement_definitions.expeditions_complete_exit_within = {
+			category = "mission_expeditions",
+			description = "loc_achievement_expeditions_complete_exit_within_description",
+			title = "loc_achievement_expeditions_complete_exit_within_name",
+			type = AchievementTypesLookup.direct_unlock,
+			icon = path .. "expeditions_achievements/expeditions_complete_exit_within",
+			flags = {},
+		}
+		achievement_definitions.expeditions_complete_extract_within = {
+			category = "mission_expeditions",
+			description = "loc_achievement_expeditions_complete_extract_within_description",
+			title = "loc_achievement_expeditions_complete_extract_within_name",
+			type = AchievementTypesLookup.direct_unlock,
+			icon = path .. "expeditions_achievements/expeditions_complete_extract_within",
+			flags = {},
+		}
+
+		tiered_target_family("expeditions_complete_opportunities_total_{index:%d}", {
+			category = "mission_expeditions",
+			description = "loc_achievement_expeditions_complete_opportunities_total_description",
+			stat_name = "expedition_total_opportunities_completed",
+			title = "loc_achievement_expeditions_complete_opportunities_total_name",
+			type = AchievementTypesLookup.increasing_stat,
+			icon = path .. "expeditions_achievements/expeditions_complete_opportunities_total",
+			flags = {},
+		}, {
+			5,
+			25,
+			50,
+			200,
+			500,
+		})
+
+		achievement_definitions.expeditions_return_stolen_loot = {
+			category = "mission_expeditions",
+			description = "loc_achievement_expeditions_return_stolen_loot_description",
+			stat_name = "session_team_expedition_stolen_loot_recovered",
+			target = 15,
+			title = "loc_achievement_expeditions_return_stolen_loot_name",
+			type = AchievementTypesLookup.increasing_stat,
+			icon = path .. "expeditions_achievements/expeditions_return_stolen_loot",
+			flags = {},
+		}
+		achievement_definitions.expeditions_return_dropped_loot = {
+			category = "mission_expeditions",
+			description = "loc_achievement_expeditions_return_dropped_loot_description",
+			stat_name = "session_team_expedition_dropped_loot_recovered",
+			target = 15,
+			title = "loc_achievement_expeditions_return_dropped_loot_name",
+			type = AchievementTypesLookup.increasing_stat,
+			icon = path .. "expeditions_achievements/expeditions_return_dropped_loot",
+			flags = {},
+		}
+		achievement_definitions.expeditions_complete_self_marked_opportunities = {
+			category = "mission_expeditions",
+			description = "loc_achievement_expeditions_complete_self_marked_opportunities_description",
+			title = "loc_achievement_expeditions_complete_self_marked_opportunities_name",
+			type = AchievementTypesLookup.direct_unlock,
+			icon = path .. "expeditions_achievements/expeditions_complete_self_marked_opportunities",
+			flags = {},
+		}
+
+		tiered_target_family("expeditions_spend_in_shop_{index:%d}", {
+			category = "mission_expeditions",
+			description = "loc_achievement_expeditions_spend_in_shop_description",
+			stat_name = "expedition_total_spent_in_store",
+			title = "loc_achievement_expeditions_spend_in_shop_name",
+			type = AchievementTypesLookup.increasing_stat,
+			icon = path .. "expeditions_achievements/expeditions_spend_in_shop",
+			flags = {},
+		}, {
+			100,
+			500,
+			1000,
+			10000,
+			100000,
+		})
+		tiered_target_family("expedition_unlock_nodes_{index:%d}", {
+			category = "mission_expeditions",
+			description = "loc_achievement_expeditions_unlock_nodes_description",
+			stat_name = "expedition_meta_nodes_unlocked",
+			title = "loc_achievement_expeditions_unlock_nodes_name",
+			type = AchievementTypesLookup.increasing_stat,
+			icon = path .. "expeditions_achievements/expedition_unlock_nodes",
+			flags = {},
+		}, {
+			1,
+			6,
+			18,
+		})
+
+		local expeditions_tutorial_penances = {
+			expeditions_complete_exit_within = true,
+			expeditions_complete_extract_within = true,
+			expeditions_complete_opportunities_total_3 = true,
+			expeditions_complete_self_marked_opportunities = true,
+			expeditions_extract_at_last_location = true,
+			expeditions_extract_at_last_location_full_team = true,
+			expeditions_extract_with_luggable_loot = true,
+			expeditions_luggable_loot_deposit_2 = true,
+			expeditions_return_dropped_loot = true,
+			expeditions_return_stolen_loot = true,
+			expeditions_use_loot_converter = true,
+		}
+
+		family({
+			category = "mission_expeditions",
+			description = "loc_achievement_expeditions_expeditions_meta_tutorial_description",
+			title = "loc_achievement_expeditions_meta_tutorial_name",
+			type = AchievementTypesLookup.meta,
+			icon = path .. "expeditions_achievements/expeditions_meta_tutorial",
+			achievements = expeditions_tutorial_penances,
+			flags = {},
+		}, {
+			id = "expeditions_meta_tutorial_{index:%d}",
+			target = function (self, config)
+				return config
+			end,
+		}, {
+			6,
+			10,
+		})
 	end
 
 	achievement_definitions.mission_scavenge_samples = {

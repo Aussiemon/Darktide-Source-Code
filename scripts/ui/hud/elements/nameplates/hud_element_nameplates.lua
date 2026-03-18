@@ -223,6 +223,13 @@ HudElementNameplates._on_companion_nameplate_marker_spawned = function (self, un
 end
 
 HudElementNameplates._add_companion_nameplate = function (self, marker_type, companion_unit, player)
+	local unit_data = ScriptUnit.has_extension(companion_unit, "unit_data_system")
+	local breed = unit_data and unit_data:breed()
+
+	if not ALIVE[companion_unit] or not breed.use_nameplate then
+		return
+	end
+
 	local event_manager = Managers.event
 	local companion_nameplates = self._companion_nameplates
 
@@ -237,6 +244,13 @@ HudElementNameplates._add_companion_nameplate = function (self, marker_type, com
 end
 
 HudElementNameplates._remove_companion_nameplate = function (self, companion_unit)
+	local unit_data = ScriptUnit.has_extension(companion_unit, "unit_data_system")
+	local breed = unit_data and unit_data:breed()
+
+	if not ALIVE[companion_unit] or not breed.use_nameplate then
+		return
+	end
+
 	local event_manager = Managers.event
 	local companion_nameplates = self._companion_nameplates
 	local companion_marker_id = companion_nameplates[companion_unit] and companion_nameplates[companion_unit].marker_id

@@ -18,6 +18,13 @@ SessionStats.team_deaths = {
 		none = "team_deaths",
 	},
 }
+SessionStats.team_expedition_loot_retrieved = {
+	always_push = false,
+	type = BackendTypes.statistic_by,
+	stats = {
+		none = "session_team_expedition_loot_retrieved",
+	},
+}
 
 do
 	local stats = {}

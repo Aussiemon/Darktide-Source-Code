@@ -30,7 +30,8 @@ AdamantWhistleTargetingActionModule.fixed_update = function (self, dt, t)
 	if self._is_server then
 		local new_target_unit = self._component.target_unit_1
 		local companion_spawner_extension = ScriptUnit.extension(self._player_unit, "companion_spawner_system")
-		local companion_unit = companion_spawner_extension:companion_unit()
+		local companion_units = companion_spawner_extension and companion_spawner_extension:companion_units()
+		local companion_unit = companion_units and #companion_units > 0 and companion_units[1] or nil
 
 		if companion_unit and ALIVE[companion_unit] then
 			local companion_blackboard = BLACKBOARDS[companion_unit]

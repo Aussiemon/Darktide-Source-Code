@@ -27,7 +27,7 @@ local TOUGHNESS_BROKEN_ATTACK_INTENSITIES = {
 local Damage = {}
 local _trigger_player_hurt_vo
 
-Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_unit_owner_unit, attack_result, attack_type, damage_profile, damage, permanent_damage, tougness_damage, hit_actor, attack_direction, hit_zone_name, herding_template_or_nil, is_critical_strike, damage_type, hit_world_position_or_nil, wounds_shape_or_nil, instakill)
+Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_unit_owner_unit, attack_result, attack_type, damage_profile, damage, permanent_damage, tougness_damage, hit_actor, attack_direction, hit_zone_name, herding_template_or_nil, is_critical_strike, damage_type, hit_world_position_or_nil, wounds_shape_or_nil, instakill, damage_absorbed)
 	local health_extension = ScriptUnit.extension(unit, "health_system")
 	local toughness_extension = ScriptUnit.has_extension(unit, "toughness_system")
 	local was_alive = health_extension:is_alive()

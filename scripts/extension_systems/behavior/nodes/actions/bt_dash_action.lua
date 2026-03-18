@@ -8,6 +8,7 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breed = require("scripts/utilities/breed")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local MinionAttack = require("scripts/utilities/minion_attack")
 local MinionMovement = require("scripts/utilities/minion_movement")
@@ -260,7 +261,7 @@ BtDashAction._start_dashing = function (self, unit, scratchpad, action_data, t)
 	behavior_component.move_state = "moving"
 	scratchpad.target_dodged_during_attack = nil
 
-	local effect_template = action_data.dash_effect_template
+	local effect_template = action_data.dash_effect_template_name and EffectTemplates[action_data.dash_effect_template_name]
 
 	if effect_template then
 		local fx_system = scratchpad.fx_system

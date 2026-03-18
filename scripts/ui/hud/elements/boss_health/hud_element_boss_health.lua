@@ -89,8 +89,14 @@ HudElementBossHealth.event_boss_encounter_start = function (self, unit, boss_ext
 	if not breed.ignore_weakened_boss_name then
 		local initial_max_health = math.floor(Managers.state.difficulty:get_minion_max_health(breed_name))
 
-		if max_health < initial_max_health then
+		if max_health < initial_max_health and not boss_extension:is_empowered() then
 			localized_display_name = Localize("loc_weakened_monster_prefix", true, {
+				breed = localized_display_name,
+			})
+		elseif boss_extension:is_empowered() then
+			local empowered_prefix = boss_extension:is_empowered()
+
+			localized_display_name = Localize(empowered_prefix, true, {
 				breed = localized_display_name,
 			})
 		else

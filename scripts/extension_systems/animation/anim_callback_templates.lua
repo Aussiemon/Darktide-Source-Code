@@ -1,10 +1,13 @@
 ﻿-- chunkname: @scripts/extension_systems/animation/anim_callback_templates.lua
 
-local THIS_WHOLE_FILE_SHOULD_BE_REMOVED
+local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local AnimCallbackTemplates = {
 	server = {
-		anim_cb_new_random_variation = function (unit)
-			ScriptUnit.extension(unit, "animation_system"):anim_event("random_anim")
+		anim_cb_landing_finished = function (unit)
+			local blackboard = BLACKBOARDS[unit]
+			local vortex_grabbed_component = Blackboard.write_component(blackboard, "vortex_grabbed")
+
+			vortex_grabbed_component.landing_finished = true
 		end,
 	},
 	client = {},

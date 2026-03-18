@@ -15,12 +15,8 @@ local hud_element_mission_objective_popup_settings = {
 			"event_mission_objective_complete",
 		},
 		{
-			"event_show_live_event_notification",
-			"event_show_live_event_notification",
-		},
-		{
 			"event_show_objective_popup",
-			"event_show_live_event_notification",
+			"on_event_show_objective_popup",
 		},
 	},
 }

@@ -173,6 +173,14 @@ PlayerManager.player_from_unique_id = function (self, unique_id)
 	return self._players[unique_id]
 end
 
+PlayerManager.player_from_channel_id = function (self, channel_id)
+	for k, player in pairs(self._players) do
+		if player:channel_id() == channel_id then
+			return player
+		end
+	end
+end
+
 PlayerManager.on_game_state_enter = function (self, game_state_class, mapping, context)
 	self._game_state = game_state_class
 	self._game_state_mapping = mapping
@@ -626,6 +634,7 @@ PlayerManager.create_sync_data = function (self, peer_id, include_profile_chunks
 		character_id_array = {},
 		profile_chunks_array = profile_chunks_array,
 		slot_array = {},
+		player_instance_id_array = {},
 		has_last_mission = not not self._last_mission_name,
 		last_mission_id = self:_last_mission_id(),
 	}
@@ -650,6 +659,7 @@ PlayerManager.create_sync_data = function (self, peer_id, include_profile_chunks
 		end
 
 		sync_data.player_session_id_array[i] = player:telemetry_game_session()
+		sync_data.player_instance_id_array[i] = player:telemetry_current_instance()
 		sync_data.slot_array[i] = player:slot()
 		i = i + 1
 	end
@@ -657,7 +667,7 @@ PlayerManager.create_sync_data = function (self, peer_id, include_profile_chunks
 	return sync_data
 end
 
-PlayerManager.create_players_from_sync_data = function (self, player_class, channel_id, peer_id, is_server, local_player_id_array, is_human_controlled_array, account_id_array, profile_chunks_array, player_session_id_array, slot_array, last_mission_id)
+PlayerManager.create_players_from_sync_data = function (self, player_class, channel_id, peer_id, is_server, local_player_id_array, is_human_controlled_array, account_id_array, profile_chunks_array, player_session_id_array, slot_array, player_instance_id_array, last_mission_id)
 	for i = 1, #local_player_id_array do
 		local local_player_id = local_player_id_array[i]
 		local is_human_controlled = is_human_controlled_array[i]
@@ -665,11 +675,14 @@ PlayerManager.create_players_from_sync_data = function (self, player_class, chan
 		local profile_chunks = profile_chunks_array[i]
 		local profile_json = ProfileUtils.combine_network_chunks(profile_chunks)
 		local profile = ProfileUtils.unpack_profile(profile_json)
-		local player_session_id = player_session_id_array[i]
 		local slot = slot_array[i]
+		local telemetry_ids = {
+			session = player_session_id_array[i],
+			instance = player_instance_id_array[i],
+		}
 
 		if is_human_controlled then
-			self:add_human_player(player_class, channel_id, peer_id, local_player_id, profile, slot, account_id, is_human_controlled, is_server, player_session_id, last_mission_id)
+			self:add_human_player(player_class, channel_id, peer_id, local_player_id, profile, slot, account_id, is_human_controlled, is_server, telemetry_ids, last_mission_id)
 		else
 			self:add_bot_player(player_class, channel_id, peer_id, local_player_id, profile, slot, is_human_controlled, is_server)
 		end

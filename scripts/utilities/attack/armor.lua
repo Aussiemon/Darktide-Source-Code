@@ -1,10 +1,8 @@
 ﻿-- chunkname: @scripts/utilities/attack/armor.lua
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
-local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Armor = {}
 local armor_types = ArmorSettings.types
-local buff_keywords = BuffSettings.keywords
 local default_armor = armor_types.unarmored
 local _check_toughness, _character_armor_type
 
@@ -25,13 +23,13 @@ end
 function _character_armor_type(unit, breed, hit_zone_name_or_nil, attack_type_or_nil)
 	if not hit_zone_name_or_nil == "captain_void_shield" then
 		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
-		local buff_armor_override = buff_extension and buff_extension:has_keyword(buff_keywords.super_armor_override)
+		local buff_armor_override = buff_extension and buff_extension:has_keyword("super_armor_override")
 
 		if buff_armor_override then
 			return armor_types.super_armor
 		end
 
-		local havoc_infested_override = buff_extension and buff_extension:has_keyword(buff_keywords.infested_head_armor_override)
+		local havoc_infested_override = buff_extension and buff_extension:has_keyword("infested_head_armor_override")
 
 		if havoc_infested_override and hit_zone_name_or_nil == "head" then
 			return armor_types.disgustingly_resilient

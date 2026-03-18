@@ -2371,13 +2371,13 @@ local color_definitions = {
 		255,
 		180,
 		88,
-		108,
+		162,
 	},
 	player_slot_3 = {
 		255,
-		84,
-		172,
-		121,
+		209,
+		136,
+		88,
 	},
 	player_slot_4 = {
 		255,
@@ -2511,7 +2511,7 @@ local color_definitions = {
 		229,
 		207,
 	},
-	termianl_icon_dark = {
+	terminal_icon_dark = {
 		255,
 		161,
 		174,

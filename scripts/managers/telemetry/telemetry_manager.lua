@@ -40,8 +40,20 @@ TelemetryManager.apply_backend_game_settings = function (self)
 	end
 end
 
+TelemetryManager.set_allocators_to_track = function (self, to_track)
+	self._allocators_to_track = to_track
+end
+
+TelemetryManager.set_allocators_to_track_testify = function (self, to_track)
+	self._allocators_to_track_testify = to_track
+end
+
 TelemetryManager.allocators_to_track = function (self)
-	return self._allocators_to_track
+	if self._allocators_to_track_testify then
+		return self._allocators_to_track_testify
+	else
+		return self._allocators_to_track
+	end
 end
 
 local log_cache = {}

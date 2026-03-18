@@ -40,6 +40,19 @@ local hud_element_mission_objective_feed_settings = {
 		151,
 		29,
 	},
+	critical_color = {
+		230,
+		255,
+		0,
+		0,
+	},
+	alert_text_color = {
+		255,
+		70,
+		38,
+		0,
+	},
+	critical_text_color = Color.ui_hud_red_super_light(255, true),
 	colors_by_category = {
 		overarching = {
 			bar = UIHudSettings.color_tint_main_2,
@@ -48,6 +61,7 @@ local hud_element_mission_objective_feed_settings = {
 			icon = UIHudSettings.color_tint_main_1,
 			header_text = UIHudSettings.color_tint_main_1,
 			counter_text = UIHudSettings.color_tint_main_1,
+			hazard_above = UIHudSettings.color_tint_main_1,
 		},
 		default = {
 			bar = UIHudSettings.color_tint_main_1,
@@ -56,6 +70,20 @@ local hud_element_mission_objective_feed_settings = {
 			icon = UIHudSettings.color_tint_main_1,
 			header_text = UIHudSettings.color_tint_main_1,
 			counter_text = UIHudSettings.color_tint_main_1,
+			player_icons_background = {
+				125,
+				0,
+				0,
+				0,
+			},
+			player_icons = Color.terminal_text_header(255, true),
+			objective_progress_indicators_background = {
+				125,
+				0,
+				0,
+				0,
+			},
+			objective_progress_indicators = Color.terminal_text_header(255, true),
 		},
 		side_mission = {
 			bar = UIHudSettings.color_tint_6,
@@ -72,6 +100,50 @@ local hud_element_mission_objective_feed_settings = {
 			icon = UIHudSettings.color_tint_main_1,
 			header_text = UIHudSettings.color_tint_main_1,
 			counter_text = UIHudSettings.color_tint_main_1,
+			hazard_above = UIHudSettings.color_tint_main_2,
+		},
+		alert_info = {
+			bar = UIHudSettings.color_tint_main_2,
+			bar_frame = UIHudSettings.color_tint_main_2,
+			bar_background = UIHudSettings.color_tint_0,
+			icon = UIHudSettings.color_tint_main_1,
+			header_text = UIHudSettings.color_tint_main_1,
+			counter_text = UIHudSettings.color_tint_main_1,
+			hazard_above = UIHudSettings.color_tint_main_1,
+		},
+		alert = {
+			bar = UIHudSettings.color_tint_main_1,
+			bar_frame = UIHudSettings.color_tint_main_1,
+			bar_background = UIHudSettings.color_tint_0,
+			icon = UIHudSettings.color_tint_1,
+			header_text = UIHudSettings.color_tint_1,
+			counter_text = UIHudSettings.color_tint_1,
+			hazard_above = {
+				230,
+				255,
+				151,
+				29,
+			},
+		},
+		critical = {
+			bar = UIHudSettings.color_tint_main_1,
+			bar_frame = UIHudSettings.color_tint_main_1,
+			bar_background = UIHudSettings.color_tint_0,
+			icon = UIHudSettings.color_tint_1,
+			header_text = UIHudSettings.color_tint_1,
+			counter_text = UIHudSettings.color_tint_1,
+			hazard_above = {
+				230,
+				255,
+				0,
+				0,
+			},
+			alert_background = {
+				230,
+				255,
+				0,
+				0,
+			},
 		},
 	},
 	size_by_category = {
@@ -97,6 +169,12 @@ local hud_element_mission_objective_feed_settings = {
 			icon = {
 				0,
 				0,
+			},
+		},
+		alert_info = {
+			icon = {
+				32,
+				32,
 			},
 		},
 	},
@@ -128,6 +206,47 @@ local hud_element_mission_objective_feed_settings = {
 				0,
 				6,
 			},
+		},
+		alert_info = {
+			icon = {
+				10,
+				0,
+				6,
+			},
+		},
+	},
+	alert_text_by_state = {
+		alert = "loc_objective_op_train_alert_header",
+		critical = "loc_game_mode_expedition_timer_popup_warning_title_final",
+		default = "",
+	},
+	color_by_state = {
+		default = {
+			body = UIHudSettings.color_tint_main_1,
+			text = UIHudSettings.color_tint_main_1,
+		},
+		alert = {
+			body = {
+				230,
+				255,
+				151,
+				29,
+			},
+			text = {
+				255,
+				70,
+				38,
+				0,
+			},
+		},
+		critical = {
+			body = {
+				230,
+				255,
+				0,
+				0,
+			},
+			text = Color.ui_hud_red_super_light(255, true),
 		},
 	},
 }

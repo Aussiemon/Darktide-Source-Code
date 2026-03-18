@@ -46,6 +46,9 @@ local training_grounds_options_view_settings = {
 		288,
 		153.6,
 	},
+	difficulty_selector_context = {
+		show_progress = false,
+	},
 }
 
 return settings("TrainingGroundsOptionsViewSettings", training_grounds_options_view_settings)

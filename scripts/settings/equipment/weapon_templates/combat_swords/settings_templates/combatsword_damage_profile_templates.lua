@@ -294,6 +294,10 @@ damage_templates.light_combatsword_linesman_tank_p2 = {
 	},
 	targets = {
 		{
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1,
+			},
 			power_level_multiplier = {
 				0.5,
 				1.5,
@@ -372,10 +376,91 @@ damage_templates.light_combatsword_linesman_tank_p2 = {
 		},
 	},
 }
+damage_templates.light_combatsword_p2_special_followup = {
+	ignore_stagger_reduction = true,
+	ragdoll_push_force = 100,
+	stagger_category = "melee",
+	cleave_distribution = medium_cleave,
+	damage_type = damage_types.metal_slashing_light,
+	gibbing_power = gibbing_power.light,
+	gibbing_type = gibbing_types.sawing,
+	melee_attack_strength = melee_attack_strengths.light,
+	wounds_template = WoundsTemplates.combat_sword,
+	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
+	armor_damage_modifier = cutting_am,
+	targets = {
+		{
+			armor_damage_modifier = cutting_am,
+			boost_curve_multiplier_finesse = {
+				1,
+				2,
+			},
+			power_level_multiplier = {
+				0.5,
+				1.5,
+			},
+			power_distribution = {
+				attack = {
+					70,
+					120,
+				},
+				impact = {
+					5,
+					9,
+				},
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					35,
+					75,
+				},
+				impact = {
+					3,
+					6,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.75,
+				1.5,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					30,
+					60,
+				},
+				impact = {
+					2,
+					4,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.75,
+				1.5,
+			},
+		},
+		default_target = {
+			power_distribution = {
+				attack = {
+					15,
+					30,
+				},
+				impact = {
+					2,
+					4,
+				},
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+}
 damage_templates.heavy_combatsword_p2_smiter = {
 	ragdoll_push_force = 200,
 	stagger_category = "melee",
-	cleave_distribution = big_cleave,
+	cleave_distribution = medium_cleave,
 	damage_type = damage_types.metal_slashing_light,
 	critical_strike = {
 		gibbing_power = gibbing_power.light,
@@ -412,12 +497,12 @@ damage_templates.heavy_combatsword_p2_smiter = {
 		{
 			power_distribution = {
 				attack = {
-					180,
-					360,
+					110,
+					220,
 				},
 				impact = {
-					6,
-					12,
+					4,
+					8,
 				},
 			},
 			boost_curve_multiplier_finesse = {
@@ -821,6 +906,7 @@ damage_templates.light_combatsword_p3_stab = {
 damage_templates.light_combatsword_p2_special = {
 	ignore_stagger_reduction = true,
 	stagger_category = "killshot",
+	weapon_special = true,
 	cleave_distribution = single_cleave,
 	damage_type = damage_types.metal_slashing_light,
 	critical_strike = {
@@ -837,11 +923,11 @@ damage_templates.light_combatsword_p2_special = {
 			armor_damage_modifier = {
 				attack = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
-					[armor_types.armored] = damage_lerp_values.lerp_1_25,
-					[armor_types.resistant] = damage_lerp_values.lerp_1_1,
+					[armor_types.armored] = damage_lerp_values.lerp_1_1,
+					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.no_damage,
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
-					[armor_types.super_armor] = damage_lerp_values.lerp_0_65,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
 				},
@@ -1546,12 +1632,16 @@ overrides.heavy_combatsword_p3_smiter = {
 }
 damage_templates.heavy_combatsword_p3_smiter_stab = {
 	ignore_gib_push = true,
-	ragdoll_push_force = 500,
+	ragdoll_push_force = 50,
 	stagger_category = "melee",
 	cleave_distribution = single_cleave,
 	damage_type = damage_types.metal_slashing_medium,
-	gibbing_power = gibbing_power.medium,
+	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.sawing,
+	critical_strike = {
+		gibbing_power = gibbing_power.medium,
+		gibbing_type = gibbing_types.sawing,
+	},
 	melee_attack_strength = melee_attack_strengths.heavy,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
 	wounds_template = WoundsTemplates.combat_sword,

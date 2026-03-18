@@ -268,11 +268,13 @@ local monster_pacing_template = {
 			},
 			spawn_stingers = SPAWN_STINGERS,
 			force_horde_condition = function ()
+				local mutator_manager = Managers.state.mutator
+				local no_hordes_allowed = mutator_manager:mutator("mutator_no_hordes")
 				local difficulty_manager = Managers.state.difficulty
 				local resistance = difficulty_manager:get_resistance()
 				local required_resistance = 6
 
-				if resistance == required_resistance then
+				if resistance == required_resistance and not no_hordes_allowed then
 					return true
 				else
 					return false

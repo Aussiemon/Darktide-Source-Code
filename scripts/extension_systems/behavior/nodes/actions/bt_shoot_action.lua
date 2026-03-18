@@ -22,14 +22,22 @@ BtShootAction.enter = function (self, unit, breed, blackboard, scratchpad, actio
 
 	scratchpad.animation_extension = animation_extension
 	scratchpad.locomotion_extension = locomotion_extension
-	scratchpad.navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+	scratchpad.navigation_extension = ScriptUnit.has_extension(unit, "navigation_system")
 	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
 
 	local perception_component = Blackboard.write_component(blackboard, "perception")
 
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.perception_component = perception_component
-	scratchpad.combat_vector_component = blackboard.combat_vector
+
+	local buff_extension = ScriptUnit.extension(unit, "buff_system")
+
+	scratchpad.stat_buffs = buff_extension:stat_buffs()
+	scratchpad.buff_extension = buff_extension
+
+	if Blackboard.has_component(blackboard, "combat_vector") then
+		scratchpad.combat_vector_component = blackboard.combat_vector
+	end
 
 	MinionAttack.init_scratchpad_shooting_variables(unit, scratchpad, action_data, blackboard, breed)
 
@@ -100,7 +108,11 @@ BtShootAction.leave = function (self, unit, breed, blackboard, scratchpad, actio
 		MinionMovement.set_anim_rotation_driven(scratchpad, false)
 	end
 
-	scratchpad.navigation_extension:set_enabled(false)
+	local navigation_extension = scratchpad.navigation_extension
+
+	if navigation_extension then
+		navigation_extension:set_enabled(false)
+	end
 
 	local reposition_if_not_clear_shot = action_data.reposition_if_not_clear_shot
 
@@ -677,6 +689,12 @@ BtShootAction._start_cooldown = function (self, unit, t, scratchpad, action_data
 		end
 	end
 
+	local minion_shoot_cooldown_modifier = scratchpad.stat_buffs.minion_shoot_cooldown_modifier or 1
+
+	cooldown = math.max(0, cooldown * minion_shoot_cooldown_modifier)
+	scratchpad._current_minion_shoot_cooldown_modifier = minion_shoot_cooldown_modifier
+	scratchpad._cooldown_amount = cooldown
+	scratchpad._cooldown_starting_t = t
 	scratchpad.cooldown = t + cooldown
 	scratchpad.state = "cooldown"
 
@@ -722,7 +740,18 @@ BtShootAction._update_cooldown = function (self, unit, t, scratchpad, action_dat
 		scratchpad.locomotion_extension:set_wanted_rotation(flat_rotation)
 	end
 
-	if t > scratchpad.cooldown then
+	local current_minion_shoot_cooldown_modifier = scratchpad._current_minion_shoot_cooldown_modifier
+	local new_minion_shoot_cooldown_modifier = scratchpad.stat_buffs.minion_shoot_cooldown_modifier or 1
+
+	if current_minion_shoot_cooldown_modifier ~= new_minion_shoot_cooldown_modifier then
+		local cooldown_amount = scratchpad._cooldown_amount
+		local cooldown_starting_t = scratchpad._cooldown_starting_t
+
+		scratchpad.cooldown = cooldown_starting_t + cooldown_amount * new_minion_shoot_cooldown_modifier
+		scratchpad._current_minion_shoot_cooldown_modifier = new_minion_shoot_cooldown_modifier
+	end
+
+	if t >= scratchpad.cooldown then
 		local attack_allowed = AttackIntensity.minion_can_attack(unit, action_data.attack_intensity_type, target_unit)
 
 		if attack_allowed then

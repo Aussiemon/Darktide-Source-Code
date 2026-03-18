@@ -1267,8 +1267,8 @@ damage_templates.light_sword_active_p2 = {
 			},
 			power_distribution = {
 				attack = {
-					160,
-					240,
+					170,
+					250,
 				},
 				impact = {
 					6,
@@ -1477,8 +1477,8 @@ damage_templates.light_sword_tank_active_p2 = {
 			},
 			power_distribution = {
 				attack = {
-					130,
-					220,
+					140,
+					230,
 				},
 				impact = {
 					8,
@@ -1670,8 +1670,8 @@ damage_templates.light_sword_smiter_active_p2 = {
 			},
 			power_distribution = {
 				attack = {
-					190,
-					330,
+					195,
+					340,
 				},
 				impact = {
 					7,
@@ -1825,8 +1825,8 @@ damage_templates.light_sword_stab_active_p2 = {
 			armor_damage_modifier = power_stab_am_p2,
 			power_distribution = {
 				attack = {
-					190,
-					380,
+					200,
+					390,
 				},
 				impact = {
 					7,
@@ -2004,8 +2004,8 @@ damage_templates.heavy_sword_active_p2 = {
 			},
 			power_distribution = {
 				attack = {
-					250,
-					350,
+					260,
+					360,
 				},
 				impact = {
 					10,
@@ -2021,8 +2021,8 @@ damage_templates.heavy_sword_active_p2 = {
 			},
 			power_distribution = {
 				attack = {
-					200,
-					280,
+					205,
+					290,
 				},
 				impact = {
 					6,
@@ -2218,8 +2218,8 @@ damage_templates.heavy_sword_tank_active_p2 = {
 			},
 			power_distribution = {
 				attack = {
-					240,
-					330,
+					245,
+					340,
 				},
 				impact = {
 					11,
@@ -2420,8 +2420,8 @@ damage_templates.heavy_sword_smiter_active_p2 = {
 			},
 			power_distribution = {
 				attack = {
-					280,
-					480,
+					290,
+					490,
 				},
 				impact = {
 					11,

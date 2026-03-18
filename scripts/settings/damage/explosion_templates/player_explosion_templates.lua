@@ -218,6 +218,18 @@ local explosion_templates = {
 			"villains",
 		},
 	},
+	broker_passive_knockback_on_taking_melee_damage = {
+		collision_filter = "filter_player_character_explosion",
+		min_radius = 3,
+		radius = 3,
+		scalable_radius = true,
+		skip_ragdoll_interaction = true,
+		damage_profile = DamageProfileTemplates.broker_passive_knockback_on_taking_melee_damage,
+		damage_type = damage_types.grenade_frag,
+		broadphase_explosion_filter = {
+			"villains",
+		},
+	},
 }
 
 return explosion_templates

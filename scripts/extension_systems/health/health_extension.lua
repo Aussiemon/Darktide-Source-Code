@@ -71,6 +71,17 @@ HealthExtension.damage_taken = function (self)
 	return self._damage
 end
 
+HealthExtension.has_taken_damage_over_percentage = function (self, optional_target_percentage)
+	local damage_percentage = self:current_health_percent()
+	local target_percentage = optional_target_percentage or 1
+
+	if damage_percentage < target_percentage then
+		return true
+	else
+		return false
+	end
+end
+
 HealthExtension.permanent_damage_taken = function (self)
 	return 0
 end

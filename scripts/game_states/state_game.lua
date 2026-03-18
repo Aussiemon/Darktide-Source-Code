@@ -152,6 +152,8 @@ StateGame.on_enter = function (self, parent, params)
 
 	Profiler.set_program_name(program_name)
 	Managers.event:register(self, "on_pre_suspend", "_on_pre_suspend")
+
+	self._update_running = false
 end
 
 local function _connection_options(is_dedicated_hub_server, is_dedicated_mission_server)
@@ -348,7 +350,17 @@ StateGame.on_reload = function (self, refreshed_resources)
 	self._sm:on_reload(refreshed_resources)
 end
 
+StateGame._on_recover = function (self)
+	self._sm:on_recover()
+end
+
 StateGame.update = function (self, dt)
+	if self._update_running then
+		self:_on_recover()
+	end
+
+	self._update_running = true
+
 	local network_is_active = Network.is_active()
 
 	UPDATE_RESOLUTION_LOOKUP()
@@ -465,6 +477,8 @@ StateGame.update = function (self, dt)
 	end
 
 	FlowCallbacks.clear_return_value()
+
+	self._update_running = false
 end
 
 local time_name = "main"

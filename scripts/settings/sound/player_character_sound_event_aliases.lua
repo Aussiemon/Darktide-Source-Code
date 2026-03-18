@@ -1504,6 +1504,7 @@ local events = {
 		},
 		events = {
 			default = "wwise/events/weapon/play_grenade_pull_pin",
+			expedition_grenade_artillery_strike_pocketable = "wwise/events/player/play_expeditions_pick_up_artillery_button",
 			fire_grenade = "wwise/events/weapon/play_grenade_pull_pin",
 			frag_grenade = "wwise/events/weapon/play_grenade_pull_pin",
 			krak_grenade = "wwise/events/weapon/play_grenade_pull_pin",
@@ -1571,10 +1572,13 @@ local events = {
 			combatsword_p3_m3 = "wwise/events/weapon/play_weapon_equip_medium_sword",
 			crowbar_p1_m1 = "wwise/events/weapon/play_crowbar_equip",
 			default = "wwise/events/weapon/play_autopistol_equip",
+			deployable_force_field_pocketable = "wwise/events/player/play_stimm_field_cratre_equip",
 			dual_autopistols_p1_m1 = "wwise/events/weapon/play_dual_autopistols_equip",
 			dual_shivs_p1_m1 = "wwise/events/weapon/play_shivs_1h_equip",
 			dual_shivs_p1_m2 = "wwise/events/weapon/play_shivs_1h_equip",
 			dual_stubpistols_p1_m1 = "wwise/events/weapon/play_dual_stubpistols_equip",
+			expedition_grenade_artillery_strike_pocketable = "wwise/events/weapon/play_grenade_equip",
+			expeditions_big_grenade = "wwise/events/player/play_expeditions_pick_up_big_grenade_equip",
 			fire_grenade = "wwise/events/weapon/play_grenade_equip",
 			flamer_p1_m1 = "wwise/events/weapon/play_flametrower_equip_var_1",
 			forcestaff_p1_m1 = "wwise/events/weapon/play_force_staff_equip",
@@ -1604,6 +1608,9 @@ local events = {
 			laspistol_p1_m3 = "wwise/events/weapon/play_autopistol_equip",
 			luggable = "wwise/events/player/play_foley_melee_equip_gen_short",
 			missile_launcher = "wwise/events/weapon/play_outlaw_missile_launcher_equip",
+			motion_detection_mine_explosive_pocketable = "wwise/events/player/play_expeditions_pick_up_mine_equip",
+			motion_detection_mine_fire_pocketable = "wwise/events/player/play_expeditions_pick_up_mine_equip",
+			motion_detection_mine_shock_pocketable = "wwise/events/player/play_expeditions_pick_up_mine_equip",
 			needlepistol_p1_m1 = "wwise/events/weapon/play_autopistol_equip",
 			needlepistol_p1_m2 = "wwise/events/weapon/play_autopistol_equip",
 			needlepistol_p1_m3 = "wwise/events/weapon/play_autopistol_equip",
@@ -1873,6 +1880,7 @@ local events = {
 			bot_zola_laspistol = "wwise/events/weapon/play_rifle_ads_up",
 			default = "wwise/events/weapon/play_rifle_ads_up",
 			dual_autopistols_p1_m1 = "wwise/events/weapon/play_dual_autopistols_ads_up",
+			expedition_grenade_artillery_strike_pocketable = "wwise/events/player/play_expeditions_pick_up_artillery_button_ogryn_thumb",
 			flamer_p1_m1 = "wwise/events/weapon/play_flametrower_alt_fire_on",
 			high_bot_lasgun_killshot = "wwise/events/weapon/play_rifle_ads_up",
 			lasgun_p1_m1 = "wwise/events/weapon/play_rifle_ads_up",
@@ -1919,6 +1927,7 @@ local events = {
 			bot_zola_laspistol = "wwise/events/weapon/play_rifle_ads_down",
 			default = "wwise/events/weapon/play_rifle_ads_down",
 			dual_autopistols_p1_m1 = "wwise/events/weapon/play_dual_autopistols_ads_down",
+			expedition_grenade_artillery_strike_pocketable = "wwise/events/player/play_expeditions_pick_up_artillery_button_ogryn_slap",
 			flamer_p1_m1 = "wwise/events/weapon/play_rifle_heavy_subtle",
 			high_bot_lasgun_killshot = "wwise/events/weapon/play_rifle_ads_down",
 			lasgun_p1_m1 = "wwise/events/weapon/play_rifle_ads_down",
@@ -2833,6 +2842,7 @@ local events = {
 			combatsword_p3_m3 = "wwise/events/weapon/play_sword_swing_falchion",
 			crowbar_p1_m1 = "wwise/events/weapon/play_crowbar_swing",
 			default = "wwise/events/player/play_swing_light_gen",
+			deployable_force_field_pocketable = "wwise/events/weapon/play_adamant_shockmine_foley_throw_light",
 			dual_shivs_p1_m1 = "wwise/events/weapon/play_shivs_1h_swing",
 			dual_shivs_p1_m2 = "wwise/events/weapon/play_shivs_1h_swing",
 			forcesword_2h_p1_m1 = "wwise/events/weapon/play_force_sword_2h_swing",
@@ -3628,6 +3638,43 @@ local events = {
 			skull_decoder_02 = "wwise/events/player/play_event_poison_servitor_cancel",
 		},
 	},
+	sfx_minigame_move = {
+		switch = {
+			"wielded_weapon_template",
+		},
+		events = {
+			auspex_scanner = "wwise/events/player/play_device_auspex_scanner_minigame_find_button",
+			communications_hack_device_pocketable = "wwise/events/player/play_device_auspex_scanner_minigame_find_button",
+			default = "wwise/events/weapon/play_weapon_silence",
+		},
+	},
+	sfx_minigame_map_move = {
+		switch = {
+			"wielded_weapon_template",
+		},
+		events = {
+			auspex_map = "wwise/events/player/play_device_auspex_exps_cursor_move",
+			default = "wwise/events/weapon/play_weapon_silence",
+		},
+	},
+	sfx_minigame_map_select = {
+		switch = {
+			"wielded_weapon_template",
+		},
+		events = {
+			auspex_map = "wwise/events/player/play_device_auspex_exps_cursor_select",
+			default = "wwise/events/weapon/play_weapon_silence",
+		},
+	},
+	sfx_minigame_map_deselect = {
+		switch = {
+			"wielded_weapon_template",
+		},
+		events = {
+			auspex_map = "wwise/events/player/play_device_auspex_exps_cursor_deselect",
+			default = "wwise/events/weapon/play_weapon_silence",
+		},
+	},
 	sfx_minigame_success = {
 		has_husk_events = true,
 		switch = {
@@ -4197,6 +4244,7 @@ local events = {
 			pounced = "wwise/events/player/play_hud_player_states_chaos_hound_downed",
 			teammate_died = "wwise/events/player/play_teammate_died",
 			teammate_knocked_down = "wwise/events/player/play_teammate_knocked_down",
+			vortex_grabbed = "wwise/events/player/play_player_vortex_grabbed_enter",
 			warp_grabbed = "wwise/events/player/play_enemy_daemonhost_grab_stinger",
 		},
 	},
@@ -4212,6 +4260,7 @@ local events = {
 			netted = "wwise/events/player/play_player_disabled_exit",
 			pounced = "wwise/events/player/play_player_disabled_exit",
 			teammate_knocked_down = "wwise/events/player/play_player_disabled_exit",
+			vortex_grabbed = "wwise/events/player/play_player_vortex_grabbed_exit",
 		},
 	},
 	veteran_ranger_highlight = {
@@ -4734,6 +4783,7 @@ local looping_events = {
 			"loop_type",
 		},
 		events = {
+			auspex_map = "wwise/events/player/%s_device_auspex_scanner_minigame_loop",
 			auspex_scanner = "wwise/events/player/%s_device_auspex_scanner_minigame_loop",
 			communications_hack_device_pocketable = "wwise/events/player/%s_device_auspex_scanner_minigame_loop",
 			default = "wwise/events/weapon/%s_weapon_silence",

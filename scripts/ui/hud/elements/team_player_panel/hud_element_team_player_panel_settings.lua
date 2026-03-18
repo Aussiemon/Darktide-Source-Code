@@ -58,6 +58,7 @@ local hud_element_team_player_panel_settings = {
 	feature_list = {
 		ammo = true,
 		coherency = true,
+		expedition_currency = true,
 		health = true,
 		name = true,
 		player_color = true,

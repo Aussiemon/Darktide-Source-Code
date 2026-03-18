@@ -129,8 +129,22 @@ NetworkedTimerExtension.set_speed_modifier_with_normalized_value = function (sel
 	self._speed_modifier = self._max_speed_modifier * speed_modifier_normalized
 end
 
+NetworkedTimerExtension.set_duration = function (self, value)
+	self._duration = value
+
+	if self._is_server then
+		local unit_id = Managers.state.unit_spawner:level_index(self._unit)
+
+		Managers.state.game_session:send_rpc_clients("rpc_networked_timer_set_duration", unit_id, value)
+	end
+end
+
 NetworkedTimerExtension.set_speed_modifier = function (self, new_speed_modifier)
 	if not self._is_server then
+		return
+	end
+
+	if new_speed_modifier == self._speed_modifier then
 		return
 	end
 
@@ -185,6 +199,14 @@ end
 
 NetworkedTimerExtension.get_timer = function (self)
 	return self._total_timer
+end
+
+NetworkedTimerExtension.set_timer = function (self, value)
+	self._total_timer = value
+end
+
+NetworkedTimerExtension.duration = function (self)
+	return self._duration
 end
 
 NetworkedTimerExtension.get_remaining_time = function (self)

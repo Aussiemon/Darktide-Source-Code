@@ -20,10 +20,15 @@ PropHealthExtension.init = function (self, extension_init_context, unit, extensi
 	self._is_unkillable = false
 	self._is_invulnerable = false
 	self._regenerate_health = false
+	self._invulnerable_when_carried = extension_init_data.invulnerable_when_carried
 	self._breed_white_list = nil
 	self._ignored_colliders = {}
 	self._update_enabled = not PropHealthExtension.UPDATE_DISABLED_BY_DEFAULT
 	self._speed_on_hit = 0
+end
+
+PropHealthExtension.extensions_ready = function (self, world, unit)
+	self._luggable_extension = ScriptUnit.has_extension(unit, "luggable_system")
 end
 
 PropHealthExtension.setup_from_component = function (self, create_health_game_object, health, difficulty_scaling, invulnerable, unkillable, regenerate_health, breed_white_list, ignored_collider_actor_names, speed_on_hit)
@@ -387,6 +392,17 @@ PropHealthExtension._can_receive_damage = function (self, attacking_unit, attack
 	end
 
 	if self._is_dead or self._is_invulnerable then
+		return false
+	end
+
+	local game_mode = Managers.state.game_mode:game_mode()
+	local in_safe_zone = game_mode:in_safe_zone()
+
+	if in_safe_zone then
+		return false
+	end
+
+	if self._invulnerable_when_carried and self._luggable_extension and self._luggable_extension:is_currently_carried() then
 		return false
 	end
 

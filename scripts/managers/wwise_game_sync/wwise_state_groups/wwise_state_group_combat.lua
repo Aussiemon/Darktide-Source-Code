@@ -4,6 +4,7 @@ require("scripts/managers/wwise_game_sync/wwise_state_groups/wwise_state_group_b
 
 local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_game_sync_settings")
 local STATES = WwiseGameSyncSettings.state_groups.music_combat
+local EXPEDITION_STATES = WwiseGameSyncSettings.state_groups.music_expedition_combat
 local HORDE_HIGH_MINIMUM_AGGROED_MINIONS = WwiseGameSyncSettings.combat_state_horde_high_minimum_aggroed_minions
 local HORDE_LOW_MINIMUM_AGGROED_MINIONS = WwiseGameSyncSettings.combat_state_horde_low_minimum_aggroed_minions
 local FAST_PARAMETER_UPDATE_RATE = 0.25
@@ -31,6 +32,10 @@ WwiseStateGroupCombat.update = function (self, dt, t)
 
 	if not player_unit or not ALIVE[player_unit] then
 		return
+	end
+
+	if not self._is_expedition_init then
+		self:_init_game_mode_name()
 	end
 
 	if t > self._next_fast_parameter_update then
@@ -64,7 +69,27 @@ WwiseStateGroupCombat.set_followed_player_unit = function (self, player_unit)
 	end
 end
 
+WwiseStateGroupCombat._init_game_mode_name = function (self)
+	local game_mode_name = Managers.state.game_mode:game_mode_name()
+	local is_expedition = game_mode_name == "expedition"
+
+	self._is_expedition = is_expedition
+	self._is_expedition_init = true
+end
+
 WwiseStateGroupCombat._wwise_state = function (self)
+	local state
+
+	if self._is_expedition then
+		state = self:_expedition_wwise_state()
+	else
+		state = self:_default_wwise_state()
+	end
+
+	return state
+end
+
+WwiseStateGroupCombat._default_wwise_state = function (self)
 	local music_parameter_extension = self._music_parameter_extension
 	local intensity_percent = music_parameter_extension:intensity_percent()
 	local num_aggroed_minions = music_parameter_extension:num_aggroed_minions() or 0
@@ -90,6 +115,36 @@ WwiseStateGroupCombat._wwise_state = function (self)
 	end
 
 	return STATES.none
+end
+
+WwiseStateGroupCombat._expedition_wwise_state = function (self)
+	local music_parameter_extension = self._music_parameter_extension
+	local intensity_percent = music_parameter_extension:intensity_percent()
+	local num_aggroed_minions = music_parameter_extension:num_aggroed_minions() or 0
+	local current_stage_name = music_parameter_extension:current_heat_stage_name()
+	local is_currently_in_combat = num_aggroed_minions > 2 and intensity_percent > 0
+	local is_currently_in_safe_zone = current_stage_name == "safe_room"
+	local is_extracting = music_parameter_extension:expedition_extraction_status()
+
+	if is_extracting then
+		return EXPEDITION_STATES.extraction
+	end
+
+	if is_currently_in_combat then
+		if current_stage_name == "none" then
+			return EXPEDITION_STATES.low_combat
+		elseif current_stage_name == "alert" or current_stage_name == "undetected" then
+			return EXPEDITION_STATES.med_combat
+		elseif current_stage_name == "max" or current_stage_name == "detected" then
+			return EXPEDITION_STATES.high_combat
+		else
+			return EXPEDITION_STATES.no_combat
+		end
+	elseif is_currently_in_safe_zone then
+		return EXPEDITION_STATES.safe_room
+	else
+		return EXPEDITION_STATES.no_combat
+	end
 end
 
 WwiseStateGroupCombat._update_health = function (self)

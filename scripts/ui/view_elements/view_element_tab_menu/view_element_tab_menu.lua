@@ -83,7 +83,7 @@ ViewElementTabMenu.set_selected_index = function (self, index)
 	self._selected_index = index
 end
 
-ViewElementTabMenu.selected_index = function (self, index)
+ViewElementTabMenu.selected_index = function (self)
 	return self._selected_index
 end
 

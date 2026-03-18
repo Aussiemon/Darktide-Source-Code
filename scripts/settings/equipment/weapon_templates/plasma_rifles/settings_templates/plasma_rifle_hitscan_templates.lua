@@ -74,6 +74,38 @@ hitscan_templates.default_plasma_rifle_bfg = {
 		},
 	},
 }
+hitscan_templates.default_plasma_rifle_bfg_light = {
+	range = 100,
+	damage = {
+		impact = {
+			destroy_on_impact = false,
+			explosion_template = nil,
+			damage_profile = DamageProfileTemplates.default_plasma_bfg_light,
+			armor_explosion = {
+				[armor_types.super_armor] = ExplosionTemplates.plasma_rifle_exit,
+			},
+		},
+		penetration = {
+			depth = 1.25,
+			destroy_on_exit = false,
+			target_index_increase = 2,
+			exit_explosion_template = ExplosionTemplates.plasma_rifle_exit,
+		},
+	},
+	collision_tests = {
+		{
+			against = "statics",
+			collision_filter = "filter_player_character_shooting_raycast_statics",
+			test = "ray",
+		},
+		{
+			against = "dynamics",
+			collision_filter = "filter_player_character_shooting_raycast_dynamics",
+			radius = 0.1,
+			test = "sphere",
+		},
+	},
+}
 hitscan_templates.default_plasma_rifle_demolition = {
 	range = 100,
 	damage = {

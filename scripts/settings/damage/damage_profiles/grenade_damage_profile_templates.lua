@@ -466,6 +466,7 @@ damage_templates.ogryn_friendly_rock_impact = {
 	gibbing_type = 0,
 	ignore_shield = true,
 	ignore_stagger_reduction = true,
+	instakill_specials = true,
 	ragdoll_only = true,
 	ragdoll_push_force = 2500,
 	shield_override_stagger_strength = 200,

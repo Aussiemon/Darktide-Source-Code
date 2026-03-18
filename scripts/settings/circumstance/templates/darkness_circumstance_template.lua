@@ -19,6 +19,27 @@ local circumstance_templates = {
 			"mutator_darkness_los",
 		},
 	},
+	darkness_expedition_lightning_storm_01 = {
+		dialogue_id = "circumstance_vo_darkness",
+		theme_tag = "darkness",
+		wwise_state = "darkness_01",
+		ui = {
+			background = "content/ui/materials/backgrounds/mutators/mutator_lights_out",
+			description = "loc_circumstance_darkness_description",
+			display_name = "loc_circumstance_darkness_title",
+			happening_display_name = "loc_happening_darkness",
+			icon = "content/ui/materials/icons/circumstances/darkness_01",
+			mission_board_icon = "content/ui/materials/mission_board/circumstances/darkness_01",
+		},
+		mutators = {
+			"mutator_more_witches",
+			"mutator_more_encampments",
+			"mutator_darkness_los",
+		},
+		expedition_events = {
+			"lightning_strikes_looping",
+		},
+	},
 	darkness_hunting_grounds_01 = {
 		dialogue_id = "circumstance_vo_darkness",
 		theme_tag = "darkness",

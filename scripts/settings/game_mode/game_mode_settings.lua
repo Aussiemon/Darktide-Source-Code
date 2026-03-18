@@ -58,6 +58,7 @@ end
 
 _add_game_mode_settings("scripts/settings/game_mode/game_mode_settings_coop_complete_objective")
 _add_game_mode_settings("scripts/settings/game_mode/game_mode_settings_default")
+_add_game_mode_settings("scripts/settings/game_mode/game_mode_settings_expedition")
 _add_game_mode_settings("scripts/settings/game_mode/game_mode_settings_hub")
 _add_game_mode_settings("scripts/settings/game_mode/game_mode_settings_prologue")
 _add_game_mode_settings("scripts/settings/game_mode/game_mode_settings_prologue_hub")

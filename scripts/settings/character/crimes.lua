@@ -13,14 +13,14 @@ table.append(crime_options, CRIMES_OGRYN)
 table.append(crime_options, CRIMES_ADAMANT)
 table.append(crime_options, CRIMES_BROKER)
 
-local crime_options_by_id = {}
+local crimes = {}
 
-for i = 1, #crime_options do
-	local crime_option = crime_options[i]
-	local id = string.format("option_%d", i)
+for ii = 1, #crime_options do
+	local crime_option = crime_options[ii]
+	local id = string.format("option_%d", ii)
 
 	crime_option.id = id
-	crime_options_by_id[id] = crime_option
+	crimes[id] = crime_option
 end
 
-return settings("Crimes", crime_options_by_id)
+return settings("Crimes", crimes)

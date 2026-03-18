@@ -544,6 +544,7 @@ MiscTestCases.play_all_vfx = function (case_settings)
 		end
 
 		TestifySnippets.wait(particle_life_time)
+		TestifySnippets.exit_to_main_menu_and_wait()
 	end)
 end
 
@@ -599,10 +600,6 @@ MiscTestCases.spawn_all_units = function (case_settings)
 				if (not folder or string.starts_with(unit_name, folder)) and bucket_size > #unit_names then
 					unit_names[#unit_names + 1] = unit_name
 
-					if i == 15100 then
-						Script.do_break()
-					end
-
 					if bucket_size <= #unit_names or num_units <= i then
 						Log.info("Testify", "%s/%s Spawning units", i, num_units)
 
@@ -622,6 +619,8 @@ MiscTestCases.spawn_all_units = function (case_settings)
 				i = i + 1
 			end
 		end
+
+		TestifySnippets.exit_to_main_menu_and_wait()
 	end)
 end
 

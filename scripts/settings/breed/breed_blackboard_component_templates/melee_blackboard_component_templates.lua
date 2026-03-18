@@ -7,7 +7,9 @@ local melee_base = {
 		combat_range_sticky_time = "number",
 		enter_combat_range_flag = "boolean",
 		lock_combat_range_switch = "boolean",
+		move_medium = "string",
 		move_state = "string",
+		restricted_combat_range = "string",
 	},
 	slot = {
 		has_ghost_slot = "boolean",
@@ -34,6 +36,13 @@ local melee_base = {
 		attacker_unit = "Unit",
 		is_disabled = "boolean",
 		type = "string",
+	},
+	vortex_grabbed = {
+		eject_height = "number",
+		ejected_from_vortex = "Vector3Box",
+		in_vortex = "boolean",
+		in_vortex_state = "string",
+		landing_finished = "boolean",
 	},
 }
 
@@ -77,6 +86,15 @@ melee_patroller.stim = {
 	t_til_use = "number",
 }
 
+local melee_summoner_patroller = table.clone(melee_patroller)
+
+melee_summoner_patroller.summon = {
+	amount = "number",
+	next_summon_t = "number",
+	num_pounced = "number",
+}
+melee_summoner_patroller.stim = nil
+
 local melee_can_be_suppressed = table.clone(melee_base)
 
 melee_can_be_suppressed.suppression = {
@@ -103,6 +121,7 @@ melee_patroller_can_be_suppressed.patrol = {
 
 local unarmed = {
 	behavior = {
+		move_medium = "string",
 		move_state = "string",
 	},
 	disable = {
@@ -118,6 +137,7 @@ local templates = {
 	melee_base = melee_base,
 	melee_shield = melee_shield,
 	melee_patroller = melee_patroller,
+	melee_summoner_patroller = melee_summoner_patroller,
 	melee_shield_patroller = melee_shield_patroller,
 	melee_can_be_suppressed = melee_can_be_suppressed,
 	melee_patroller_can_be_suppressed = melee_patroller_can_be_suppressed,

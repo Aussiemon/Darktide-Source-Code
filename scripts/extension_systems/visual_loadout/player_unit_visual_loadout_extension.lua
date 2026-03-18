@@ -408,30 +408,39 @@ PlayerUnitVisualLoadoutExtension.fixed_update = function (self, unit, dt, t, fra
 	end
 end
 
+local deferred_unequippable_slot_types = {
+	"pocketable",
+	"weapon",
+}
+
 PlayerUnitVisualLoadoutExtension.update_delayed_unequipped_slots = function (self, unit, dt, t, frame)
 	local inventory = self._inventory_component
 	local wieldable_slot_components = self._wieldable_slot_components
 	local equipment = self._equipment
-	local pocketable_slots = self._slot_configuration_by_type.pocketable
 
-	for slot_name, slot_config in pairs(pocketable_slots) do
-		local slot_component = wieldable_slot_components[slot_name]
-		local slot = equipment[slot_name]
-		local item = slot.item
+	for i = 1, #deferred_unequippable_slot_types do
+		local slot_type = deferred_unequippable_slot_types[i]
+		local unequippable_slots = self._slot_configuration_by_type[slot_type]
 
-		if item ~= nil then
-			if slot_component.unwield_slot or slot_component.unequip_slot then
-				if inventory.wielded_slot == slot_name then
-					PlayerUnitVisualLoadout.wield_previous_weapon_slot(inventory, unit, t)
+		for slot_name, slot_config in pairs(unequippable_slots) do
+			local slot_component = wieldable_slot_components[slot_name]
+			local slot = equipment[slot_name]
+			local item = slot.item
+
+			if item ~= nil then
+				if slot_component.unwield_slot or slot_component.unequip_slot then
+					if inventory.wielded_slot == slot_name then
+						PlayerUnitVisualLoadout.wield_previous_weapon_slot(inventory, unit, t)
+					end
+
+					slot_component.unwield_slot = false
 				end
 
-				slot_component.unwield_slot = false
-			end
+				if slot_component.unequip_slot then
+					PlayerUnitVisualLoadout.unequip_item_from_slot(unit, slot_name, t)
 
-			if slot_component.unequip_slot then
-				PlayerUnitVisualLoadout.unequip_item_from_slot(unit, slot_name, t)
-
-				slot_component.unequip_slot = false
+					slot_component.unequip_slot = false
+				end
 			end
 		end
 	end
@@ -648,12 +657,10 @@ PlayerUnitVisualLoadoutExtension._equip_item_to_slot = function (self, item, slo
 	local slot = equipment[slot_name]
 	local parent_unit_3p = self._unit
 	local parent_unit_1p = self._first_person_unit
-	local deform_overrides = item.deform_overrides and table.clone(item.deform_overrides) or {}
 	local deform_override_items = item.deform_override_items and table.clone(item.deform_override_items) or {}
 	local profile = self._player:profile()
 
 	if profile.gender == "female" then
-		deform_overrides[#deform_overrides + 1] = "wrap_deform_human_body_female"
 		deform_override_items[#deform_override_items + 1] = "content/items/material_overrides/player_wrap_deform/wrap_deform_human_body_female"
 	end
 
@@ -662,7 +669,7 @@ PlayerUnitVisualLoadoutExtension._equip_item_to_slot = function (self, item, slo
 	local mission = self._mission
 	local equipment_component = self._equipment_component
 
-	equipment_component:equip_item(parent_unit_3p, parent_unit_1p, slot, item, optional_existing_unit_3p, deform_overrides, deform_override_items, breed_name, mission, equipment)
+	equipment_component:equip_item(parent_unit_3p, parent_unit_1p, slot, item, optional_existing_unit_3p, deform_override_items, breed_name, mission, equipment)
 
 	if slot_config.slot_type == "luggable" then
 		local luggable_extension = ScriptUnit.extension(optional_existing_unit_3p, "luggable_system")

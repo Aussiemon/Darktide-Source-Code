@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/loading/loaders/breed_loader.lua
 
+local BreedQueries = require("scripts/utilities/breed_queries")
 local BreedResourceDependencies = require("scripts/utilities/breed_resource_dependencies")
 local Breeds = require("scripts/settings/breed/breeds")
 local Loader = require("scripts/loading/loader")
@@ -28,8 +29,11 @@ BreedLoader.start_loading = function (self, context)
 	local is_hub = mission_settings.is_hub
 
 	if is_hub then
-		chosen_breeds.human = Breeds.human
-		chosen_breeds.ogryn = Breeds.ogryn
+		local player_breeds = BreedQueries.player_breeds_by_name()
+
+		for breed_name, breed in pairs(player_breeds) do
+			chosen_breeds[breed_name] = breed
+		end
 	else
 		chosen_breeds = Breeds
 	end

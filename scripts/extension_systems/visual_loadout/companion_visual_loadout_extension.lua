@@ -193,7 +193,7 @@ CompanionVisualLoadoutExtension.ailment_effect = function (self)
 	return self._ailment_effect_template
 end
 
-CompanionVisualLoadoutExtension.slot_material_override = function (self, slot_name)
+CompanionVisualLoadoutExtension.slot_material_override_items = function (self, slot_name)
 	local slot_data = self._slots[slot_name] or self._material_override_slots[slot_name]
 	local item_data = slot_data and slot_data.item_data
 
@@ -201,7 +201,7 @@ CompanionVisualLoadoutExtension.slot_material_override = function (self, slot_na
 		return nil, nil
 	end
 
-	return item_data.material_override_apply_to_parent, item_data.material_overrides
+	return item_data.material_override_apply_to_parent, item_data.material_override_items
 end
 
 CompanionVisualLoadoutExtension.telemetry_wielded_weapon = function (self)

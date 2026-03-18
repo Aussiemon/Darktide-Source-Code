@@ -3,9 +3,9 @@
 local mission_objective_scanning = {}
 
 mission_objective_scanning.servo_skull = {
+	active_check_interval = 0.5,
 	pulse_fx_interval = 2,
 	pulse_fx_travel_time_per_meter = 0.07,
-	scannable_check_interval = 0.5,
 	vo_trigger_time = 5,
 	wandering_distance = 15,
 }

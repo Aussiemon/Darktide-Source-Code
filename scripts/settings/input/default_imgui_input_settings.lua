@@ -31,9 +31,6 @@ local default_imgui_input_settings = {
 		hotkey_simple_graph_gui = {
 			"keyboard_right shift+keyboard_k",
 		},
-		hotkey_package_gui = {
-			"keyboard_left shift+keyboard_p",
-		},
 		hotkey_flamegraph_gui = {
 			"keyboard_left alt+keyboard_f",
 		},
@@ -63,7 +60,7 @@ local default_imgui_input_settings = {
 		hotkey_denoising_gui = {
 			"keyboard_f11",
 		},
-		hotkey_weapon_trait_debug_gui = {
+		hotkey_weapon_debug_gui = {
 			"keyboard_right shift+keyboard_m",
 		},
 		hotkey_minion_gibbing_gui = {
@@ -99,10 +96,6 @@ local default_imgui_input_settings = {
 		},
 		hotkey_simple_graph = {
 			key_alias = "hotkey_simple_graph_gui",
-			type = "pressed",
-		},
-		hotkey_package_gui = {
-			key_alias = "hotkey_package_gui",
 			type = "pressed",
 		},
 		hotkey_flamegraph_gui = {
@@ -141,8 +134,8 @@ local default_imgui_input_settings = {
 			key_alias = "hotkey_denoising_gui",
 			type = "pressed",
 		},
-		hotkey_weapon_trait_debug_gui = {
-			key_alias = "hotkey_weapon_trait_debug_gui",
+		hotkey_weapon_debug_gui = {
+			key_alias = "hotkey_weapon_debug_gui",
 			type = "pressed",
 		},
 		hotkey_minion_gibbing_gui = {

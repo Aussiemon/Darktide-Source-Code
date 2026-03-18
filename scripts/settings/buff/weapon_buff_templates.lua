@@ -177,12 +177,14 @@ templates.warp_fire = {
 							local valid_target = false
 
 							if HEALTH_ALIVE[target_unit] then
-								local enemy_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
-								local enemy_breed = enemy_unit_data_extension:breed()
+								local enemy_unit_data_extension = ScriptUnit.has_extension(target_unit, "unit_data_system")
+								local enemy_breed = enemy_unit_data_extension and enemy_unit_data_extension:breed()
+								local is_witch = enemy_breed and enemy_breed.tags.witch
+								local is_untargetable = enemy_breed and enemy_breed.is_untargetable
 
-								if not enemy_breed.tags.witch then
+								if not is_witch and not is_untargetable then
 									valid_target = true
-								else
+								elseif not is_untargetable then
 									local blackboard = BLACKBOARDS[target_unit]
 
 									if blackboard then
@@ -314,8 +316,9 @@ templates.increase_damage_received_while_electrocuted = {
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		local unit = template_context.unit
+		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 
-		return MinionState.is_electrocuted(unit)
+		return MinionState.is_electrocuted(buff_extension)
 	end,
 }
 templates.rending_debuff = {
@@ -333,6 +336,7 @@ templates.rending_debuff_medium = {
 	class_name = "buff",
 	duration = 5,
 	max_stacks = 2,
+	max_stacks_cap = 2,
 	predicted = false,
 	refresh_duration_on_stack = true,
 	stat_buffs = {
@@ -782,6 +786,22 @@ templates.ogryn_pick_axe_weapon_special_debuff = {
 	start_func = BuffUtils.add_debuff_on_hit_start,
 	proc_func = BuffUtils.add_debuff_on_hit_proc,
 }
+templates.combatsword_p2_weapon_special_debuff = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[buff_proc_events.on_hit] = 1,
+	},
+	target_buff_data = {
+		internal_buff_name = "rending_debuff_medium",
+		max_stacks = 1,
+		num_stacks_on_proc = 1,
+	},
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_melee_weapon_special_hit),
+	start_func = BuffUtils.add_debuff_on_hit_start,
+	proc_func = BuffUtils.add_debuff_on_hit_proc,
+}
 templates.power_maul_stun = {
 	buff_id = "power_maul_stun",
 	class_name = "interval_buff",
@@ -1046,34 +1066,39 @@ templates.psyker_heavy_swings_shock_improved.interval_attack_damage_profile = Da
 templates.adamant_whistle_electrocution = table.clone(templates.psyker_protectorate_spread_chain_lightning_interval_temporary_improved)
 templates.adamant_whistle_electrocution.interval_attack_damage_profile = DamageProfileTemplates.psyker_heavy_swings_shock
 templates.adamant_whistle_electrocution.attack_type = attack_types.buff
-templates.shock_effect = {
-	class_name = "buff",
-	duration = 2,
-	max_stacks = 1,
-	max_stacks_cap = 1,
-	predicted = false,
-	refresh_duration_on_stack = true,
-	keywords = {
-		buff_keywords.electrocuted,
-	},
-	minion_effects = {
-		node_effects = {
-			{
-				node_name = "j_spine",
-				vfx = {
-					material_emission = true,
-					orphaned_policy = "destroy",
-					particle_effect = "content/fx/particles/enemies/buff_chainlightning",
-					stop_type = "stop",
-				},
-				sfx = {
-					looping_wwise_start_event = "wwise/events/weapon/play_psyker_chain_lightning_hit",
-					looping_wwise_stop_event = "wwise/events/weapon/stop_psyker_chain_lightning_hit",
+
+local function _shock_effect_buff_generator(duration)
+	return {
+		class_name = "buff",
+		max_stacks = 1,
+		max_stacks_cap = 1,
+		predicted = false,
+		refresh_duration_on_stack = true,
+		keywords = {
+			buff_keywords.electrocuted,
+		},
+		duration = duration,
+		minion_effects = {
+			node_effects = {
+				{
+					node_name = "j_spine",
+					vfx = {
+						material_emission = true,
+						orphaned_policy = "destroy",
+						particle_effect = "content/fx/particles/enemies/buff_chainlightning",
+						stop_type = "stop",
+					},
+					sfx = {
+						looping_wwise_start_event = "wwise/events/weapon/play_psyker_chain_lightning_hit",
+						looping_wwise_stop_event = "wwise/events/weapon/stop_psyker_chain_lightning_hit",
+					},
 				},
 			},
 		},
-	},
-}
+	}
+end
+
+templates.shock_effect = _shock_effect_buff_generator(2)
 templates.taunted = {
 	buff_id = "taunted",
 	class_name = "buff",

@@ -11,7 +11,7 @@ Settings.currency_reward_icons = {
 }
 Settings.ui_item_display_materials = {
 	CHARACTER_INSIGNIA = "content/ui/materials/nameplates/insignias/default",
-	PORTRAIT_FRAME = "content/ui/materials/base/ui_portrait_frame_base",
+	PORTRAIT_FRAME = "content/ui/materials/icons/items/containers/item_container_square",
 	default = "content/ui/materials/icons/items/containers/item_container_square",
 }
 Settings.ui_item_display_sizes = {
@@ -76,6 +76,18 @@ Settings.input_legend_entries = {
 			return active_view_instance and active_view_instance._show_reward_tooltip
 		end,
 	},
+}
+Settings.default_progress_bar_size = {
+	1200,
+	20,
+}
+Settings.live_events_history_limit = 5
+Settings.live_events_history_entries = {
+	"elite_army",
+	"play_expeditions",
+	"abhuman_explosions",
+	"broker_stimms",
+	"saints",
 }
 
 return settings("LiveEventsViewSettings", Settings)

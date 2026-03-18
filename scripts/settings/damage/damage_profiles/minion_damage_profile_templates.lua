@@ -324,6 +324,62 @@ damage_templates.renegade_captain_charge = {
 		},
 	},
 }
+damage_templates.chaos_ogryn_houndmaster_charge = {
+	disorientation_type = "medium",
+	interrupt_alternate_fire = true,
+	ogryn_disorientation_type = "ogryn_medium",
+	stagger_category = "melee",
+	toughness_multiplier = 2,
+	armor_damage_modifier = {
+		attack = default_armor_mod,
+		impact = default_armor_mod,
+	},
+	power_distribution = {
+		attack = 15,
+		impact = 0.5,
+	},
+	cleave_distribution = {
+		attack = 0.25,
+		impact = 0.25,
+	},
+	force_look_function = ForcedLookSettings.look_functions.medium,
+	push_template = push_templates.chaos_ogryn_houndmaster_charge,
+	catapulting_template = CatapultingTemplates.houndmaster_catapult,
+	ogryn_push_template = push_templates.chaos_ogryn_houndmaster_charge_ogrym,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+}
+damage_templates.chaos_ogryn_houndmaster_standing_combo = {
+	disorientation_type = "medium",
+	interrupt_alternate_fire = true,
+	ogryn_disorientation_type = "ogryn_medium",
+	stagger_category = "melee",
+	toughness_multiplier = 2,
+	armor_damage_modifier = {
+		attack = default_armor_mod,
+		impact = default_armor_mod,
+	},
+	power_distribution = {
+		attack = 15,
+		impact = 0.5,
+	},
+	cleave_distribution = {
+		attack = 0.25,
+		impact = 0.25,
+	},
+	force_look_function = ForcedLookSettings.look_functions.medium,
+	push_template = push_templates.chaos_ogryn_houndmaster_light_charge,
+	catapulting_template = CatapultingTemplates.houndmaster_catapult_standing,
+	ogryn_push_template = push_templates.chaos_ogryn_houndmaster_light_charge,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+}
 damage_templates.twin_dash = {
 	disorientation_type = "medium",
 	interrupt_alternate_fire = true,
@@ -2462,6 +2518,64 @@ damage_templates.chaos_ogryn_executor_cleave = {
 	force_look_function = ForcedLookSettings.look_functions.heavy,
 	push_template = push_templates.heavy,
 	ogryn_push_template = push_templates.heavy,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+}
+damage_templates.chaos_ogryn_houndmaster_default = {
+	block_cost_multiplier = 4.5,
+	disorientation_type = "heavy",
+	ignore_stun_immunity = true,
+	interrupt_alternate_fire = true,
+	melee_toughness_multiplier = 1.5,
+	ogryn_disorientation_type = "medium",
+	stagger_category = "melee",
+	armor_damage_modifier = {
+		attack = default_armor_mod,
+		impact = default_armor_mod,
+	},
+	power_distribution = {
+		attack = 35,
+		impact = 10,
+	},
+	cleave_distribution = {
+		attack = 0.25,
+		impact = 0.25,
+	},
+	force_look_function = ForcedLookSettings.look_functions.heavy,
+	push_template = push_templates.chaos_ogryn_houndmaster_push,
+	ogryn_push_template = push_templates.chaos_ogryn_houndmaster_push_ogryn,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+}
+damage_templates.chaos_ogryn_houndmaster_moving = {
+	block_cost_multiplier = 4.5,
+	disorientation_type = "heavy",
+	ignore_stun_immunity = true,
+	interrupt_alternate_fire = true,
+	melee_toughness_multiplier = 1.5,
+	ogryn_disorientation_type = "medium",
+	stagger_category = "melee",
+	armor_damage_modifier = {
+		attack = default_armor_mod,
+		impact = default_armor_mod,
+	},
+	power_distribution = {
+		attack = 35,
+		impact = 10,
+	},
+	cleave_distribution = {
+		attack = 0.25,
+		impact = 0.25,
+	},
+	force_look_function = ForcedLookSettings.look_functions.heavy,
+	push_template = push_templates.chaos_ogryn_houndmaster_push_moving,
+	ogryn_push_template = push_templates.chaos_ogryn_houndmaster_push_moving_ogryn,
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default,

@@ -676,9 +676,9 @@ return {
 		},
 		{
 			cost = 1,
-			icon = "content/ui/textures/icons/talents/veteran/veteran_movement_speed_on_toughness_broken",
+			icon = "content/ui/textures/icons/talents/veteran/veteran_combat_ability_increased_ranged_and_weakspot_damage",
 			max_points = 1,
-			talent = "veteran_movement_bonuses_on_toughness_broken",
+			talent = "veteran_increased_ranged_cleave",
 			type = "default",
 			widget_name = "node_92ce0aa9-e7c8-4620-9ad3-de2cedbf9431",
 			x = 755,

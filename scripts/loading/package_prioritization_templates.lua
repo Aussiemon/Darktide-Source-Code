@@ -46,6 +46,7 @@ package_prioritization_templates.default = {
 		"slot_combat_ability",
 		"slot_grenade_ability",
 		"slot_net",
+		"slot_timed",
 	},
 }
 package_prioritization_templates.hub = {
@@ -55,8 +56,6 @@ package_prioritization_templates.hub = {
 		"sound_dependencies",
 		"particle_dependencies",
 		"decal_dependencies",
-		"slot_grenade_ability",
-		"slot_combat_ability",
 	},
 }
 

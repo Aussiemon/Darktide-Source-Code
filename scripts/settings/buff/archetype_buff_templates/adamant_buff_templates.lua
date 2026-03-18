@@ -447,7 +447,7 @@ templates.adamant_drone_improved_buff = {
 	keywords = {
 		keywords.suppression_immune,
 		keywords.slowdown_immune,
-		keywords.ranged_alternate_fire_interrupt_immune,
+		keywords.stun_immune,
 	},
 	stat_buffs = {
 		[stat_buffs.suppression_dealt] = talent_settings.blitz_ability.drone.suppression,
@@ -726,6 +726,7 @@ templates.adamant_hunt_stance = {
 		[stat_buffs.alternate_fire_movement_speed_reduction_modifier] = talent_settings.combat_ability.stance.movement_speed_reduction_multiplier,
 		[stat_buffs.weapon_action_movespeed_reduction_multiplier] = talent_settings.combat_ability.stance.movement_speed_reduction_multiplier,
 		[stat_buffs.damage_taken_multiplier] = talent_settings.combat_ability.stance.damage_taken_multiplier,
+		[stat_buffs.power_level_modifier] = talent_settings.combat_ability.stance.damage,
 	},
 	keywords = {
 		keywords.no_sprint,
@@ -754,10 +755,10 @@ templates.adamant_hunt_stance = {
 
 		template_data.damage_talent = talent_extension:has_special_rule(special_rules.adamant_stance_elite_kills_stack_damage)
 		template_data.ammo_talent = talent_extension:has_special_rule(special_rules.adamant_stance_ammo_from_reserve)
-		template_data.next_ammo_t = 0
+		template_data.last_ammo_t = 0
 	end,
 	proc_func = function (params, template_data, template_context, t)
-		if CheckProcFunctions.on_ranged_hit(params, template_data, template_context) and template_data.ammo_talent and t >= template_data.next_ammo_t then
+		if CheckProcFunctions.on_ranged_hit(params, template_data, template_context) and template_data.ammo_talent and t > template_data.last_ammo_t then
 			local inventory_slot_secondary_component = template_data.inventory_slot_secondary_component
 			local max_ammo_in_clip = Ammo.max_ammo_in_clips(inventory_slot_secondary_component)
 			local missing_ammo_in_clip = Ammo.missing_ammo_in_clips(inventory_slot_secondary_component)
@@ -774,7 +775,7 @@ templates.adamant_hunt_stance = {
 				ReloadStates.reset(reload_template, inventory_slot_secondary_component)
 			end
 
-			template_data.next_ammo_t = t + talent_settings.combat_ability.stance.ammo_icd
+			template_data.last_ammo_t = t
 		end
 
 		if template_data.damage_talent and CheckProcFunctions.on_elite_or_special_kill(params, template_data, template_context) then
@@ -833,7 +834,7 @@ templates.adamant_hunt_stance_dog_bloodlust = {
 	},
 }
 
-function _adamant_mark_enemies_select_unit(template_data, template_context, last_unit_pos, t)
+local function _adamant_mark_enemies_select_unit(template_data, template_context, last_unit_pos, t)
 	local player_unit = template_context.unit
 	local player_rotation = template_data.first_person_component.rotation
 	local player_horizontal_look_direction = Vector3.normalize(Vector3.flat(Quaternion.forward(player_rotation)))
@@ -1573,7 +1574,6 @@ templates.adamant_terminus_warrant = {
 		[proc_events.on_hit] = 1,
 		[proc_events.on_wield_melee] = 1,
 		[proc_events.on_wield_ranged] = 1,
-		[proc_events.on_sweep_finish] = 1,
 		[proc_events.on_shoot] = 1,
 	},
 	start_func = function (template_data, template_context)
@@ -1581,8 +1581,20 @@ templates.adamant_terminus_warrant = {
 		local talent_extension = ScriptUnit.extension(unit, "talent_system")
 
 		template_data.has_upgrade_talent = talent_extension:has_special_rule(special_rules.adamant_terminus_warrant_upgrade_talent)
-		template_data.has_talent = talent_extension:has_special_rule(special_rules.adamant_terminus_warrant_improved_talent)
+		template_data.has_cdr_talent = talent_extension:has_special_rule(special_rules.adamant_terminus_warrant_cdr_talent)
+		template_data.has_support_talent = talent_extension:has_special_rule(special_rules.adamant_terminus_warrant_support_talent)
+		template_data.has_ranged_talent = talent_extension:has_special_rule(special_rules.adamant_terminus_warrant_ranged_talent)
 		template_data.max_stacks = talent_settings.terminus_warrant.max_stacks
+
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
+		template_data.inventory_component = unit_data_extension:read_component("inventory")
+		template_data.inventory_slot_secondary_component = unit_data_extension:write_component("slot_secondary")
+
+		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+
+		template_data.visual_loadout_extension = visual_loadout_extension
+		template_data.coherency_extension = ScriptUnit.has_extension(unit, "coherency_system")
 	end,
 	specific_proc_func = {
 		on_hit = function (params, template_data, template_context, t)
@@ -1600,9 +1612,15 @@ templates.adamant_terminus_warrant = {
 				local attacked_unit = params.attacked_unit
 
 				if not teminus_warrant_attacked_units[attacked_unit] then
-					local _, buff_id = template_context.buff_extension:add_externally_controlled_buff("adamant_terminus_warrant_melee", t)
+					local weakspot_hit = params.hit_weakspot
+					local stacks = weakspot_hit and talent_settings.terminus_warrant.ranged_stacks_on_weakspot or 1
 
-					template_data.melee_buff_id = buff_id
+					for i = 1, stacks do
+						local _, buff_id = template_context.buff_extension:add_externally_controlled_buff("adamant_terminus_warrant_melee", t)
+
+						template_data.melee_buff_id = buff_id
+					end
+
 					teminus_warrant_attacked_units[attacked_unit] = true
 				end
 			end
@@ -1622,12 +1640,29 @@ templates.adamant_terminus_warrant = {
 
 			local current_stacks = template_context.buff_extension:current_stacks("adamant_terminus_warrant_melee")
 
-			if template_data.has_upgrade_talent and current_stacks >= talent_settings.terminus_warrant.swap_stacks then
-				template_context.buff_extension:add_internally_controlled_buff("adamant_terminus_warrant_melee_temporary", t)
-			end
+			if template_data.melee_buff_id then
+				local stat_buff_name = "adamant_terminus_warrant_melee_stat_buff"
 
-			if template_data.has_talent and current_stacks >= talent_settings.terminus_warrant.swap_stacks_talent then
-				template_context.buff_extension:add_internally_controlled_buff("adamant_terminus_warrant_melee_rending", t)
+				template_context.buff_extension:add_internally_controlled_buff(stat_buff_name, t)
+
+				template_data.melee_buff_id = nil
+
+				if template_data.has_upgrade_talent and current_stacks >= template_data.max_stacks then
+					template_context.buff_extension:add_internally_controlled_buff("adamant_terminus_warrant_upgrade_stat_buff", t)
+				end
+
+				if template_data.has_cdr_talent and current_stacks >= template_data.max_stacks then
+					template_context.buff_extension:add_internally_controlled_buff("adamant_terminus_warrant_cdr_buff", t)
+				end
+
+				if template_data.has_support_talent and current_stacks > 0 then
+					local toughness_percent = talent_settings.terminus_warrant.toughness_replenish * math.clamp(current_stacks, 0, template_data.max_stacks)
+					local units_in_coherence = template_data.coherency_extension:in_coherence_units()
+
+					for coherency_unit, _ in pairs(units_in_coherence) do
+						Toughness.replenish_percentage(coherency_unit, toughness_percent)
+					end
+				end
 			end
 		end,
 		on_wield_ranged = function (params, template_data, template_context, t)
@@ -1637,16 +1672,34 @@ templates.adamant_terminus_warrant = {
 
 			local current_stacks = template_context.buff_extension:current_stacks("adamant_terminus_warrant_ranged")
 
-			if template_data.has_upgrade_talent and current_stacks >= talent_settings.terminus_warrant.swap_stacks then
-				template_context.buff_extension:add_internally_controlled_buff("adamant_terminus_warrant_ranged_temporary", t)
-			end
+			if template_data.ranged_buff_id then
+				local stat_buff_name = "adamant_terminus_warrant_ranged_stat_buff"
 
-			if template_data.has_talent and current_stacks >= talent_settings.terminus_warrant.swap_stacks_talent then
-				template_context.buff_extension:add_internally_controlled_buff("adamant_terminus_warrant_ranged_rending", t)
+				template_context.buff_extension:add_internally_controlled_buff(stat_buff_name, t)
+
+				template_data.ranged_buff_id = nil
+
+				if template_data.has_upgrade_talent and current_stacks >= template_data.max_stacks then
+					template_context.buff_extension:add_internally_controlled_buff("adamant_terminus_warrant_upgrade_stat_buff", t)
+				end
+
+				if template_data.has_cdr_talent and current_stacks >= template_data.max_stacks then
+					template_context.buff_extension:add_internally_controlled_buff("adamant_terminus_warrant_cdr_buff", t)
+				end
+
+				if template_data.has_support_talent and current_stacks > 0 then
+					local toughness_percent = talent_settings.terminus_warrant.toughness_replenish * math.clamp(current_stacks, 0, template_data.max_stacks)
+					local units_in_coherence = template_data.coherency_extension:in_coherence_units()
+
+					for coherency_unit, _ in pairs(units_in_coherence) do
+						Toughness.replenish_percentage(coherency_unit, toughness_percent)
+					end
+				end
+
+				if template_data.has_ranged_talent and current_stacks >= talent_settings.terminus_warrant.ranged_swap_stacks then
+					template_context.buff_extension:add_internally_controlled_buff("adamant_terminus_warrant_ranged_attack_speed", t)
+				end
 			end
-		end,
-		on_sweep_finish = function (params, template_data, template_context, t)
-			return
 		end,
 		on_shoot = function (params, template_data, template_context, t)
 			table.clear(teminus_warrant_attacked_units)
@@ -1670,17 +1723,112 @@ templates.adamant_terminus_warrant = {
 		end
 	end,
 }
+templates.adamant_terminus_warrant_upgrade_stat_buff = {
+	class_name = "buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/adamant/adamant_terminus_warrant_fire_rate",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
+	hud_priority = 3,
+	max_stacks = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	duration = talent_settings.terminus_warrant.upgrade_duration,
+	stat_buffs = {
+		[stat_buffs.melee_attack_speed] = talent_settings.terminus_warrant.ranged_attack_speed,
+		[stat_buffs.ranged_attack_speed] = talent_settings.terminus_warrant.melee_attack_speed,
+		[stat_buffs.critical_strike_chance] = talent_settings.terminus_warrant.crit_chance,
+	},
+}
+templates.adamant_terminus_warrant_cdr_buff = {
+	class_name = "buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/adamant/adamant_terminus_warrant_ranged",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
+	hud_priority = 3,
+	max_stacks = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	duration = talent_settings.terminus_warrant.cdr_duration,
+	start_func = function (template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local fixed_t = FixedFrame.get_latest_fixed_time()
+
+		template_data.timer = fixed_t + 1
+
+		local unit = template_context.unit
+
+		template_data.ability_extension = ScriptUnit.has_extension(unit, "ability_system")
+	end,
+	update_func = function (template_data, template_context, dt, t)
+		if not template_context.is_server then
+			return
+		end
+
+		if t > template_data.timer then
+			template_data.timer = template_data.timer + 1
+
+			template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", talent_settings.terminus_warrant.cdr)
+		end
+	end,
+}
+templates.adamant_terminus_warrant_melee = {
+	always_show_in_hud = true,
+	class_name = "buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/psyker/psyker_default_offensive_talent",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
+	hud_priority = 1,
+	predicted = false,
+	skip_tactical_overlay = true,
+	max_stacks = talent_settings.terminus_warrant.max_stacks,
+	max_stacks_cap = talent_settings.terminus_warrant.max_stacks,
+	check_active_func = function ()
+		return false
+	end,
+	conditional_exit_func = function (template_data, template_context)
+		local wielding_melee = template_context.buff_extension:has_buff_using_buff_template("adamant_terminus_warrant_melee_stat_buff") or template_context.buff_extension:has_buff_using_buff_template("adamant_terminus_warrant_melee_stat_buff_improved")
+		local using_keystone = template_context.buff_extension:has_buff_using_buff_template("adamant_terminus_warrant")
+
+		return wielding_melee or not using_keystone
+	end,
+}
+templates.adamant_terminus_warrant_ranged = {
+	always_show_in_hud = true,
+	class_name = "buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/adamant/adamant_weapon_handling",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
+	hud_priority = 1,
+	predicted = false,
+	skip_tactical_overlay = true,
+	max_stacks = talent_settings.terminus_warrant.max_stacks,
+	max_stacks_cap = talent_settings.terminus_warrant.max_stacks,
+	check_active_func = function ()
+		return false
+	end,
+	conditional_exit_func = function (template_data, template_context)
+		local wielding_ranged = template_context.buff_extension:has_buff_using_buff_template("adamant_terminus_warrant_ranged_stat_buff") or template_context.buff_extension:has_buff_using_buff_template("adamant_terminus_warrant_ranged_stat_buff_improved")
+		local using_keystone = template_context.buff_extension:has_buff_using_buff_template("adamant_terminus_warrant")
+
+		return wielding_ranged or not using_keystone
+	end,
+}
 templates.adamant_terminus_warrant_melee_stat_buff = {
+	always_active = true,
+	always_show_in_hud = true,
 	class_name = "proc_buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/psyker/psyker_default_offensive_talent",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
 	max_stacks = 1,
 	predicted = false,
 	skip_tactical_overlay = true,
+	duration = talent_settings.terminus_warrant.melee_duration,
 	proc_events = {
 		[proc_events.on_toughness_replenished] = 1,
+		[proc_events.on_wield_ranged] = 1,
 	},
 	stat_buffs = {
-		[stat_buffs.melee_damage] = talent_settings.terminus_warrant.melee_damage,
-		[stat_buffs.melee_impact_modifier] = talent_settings.terminus_warrant.melee_impact,
+		[stat_buffs.melee_power_level_modifier] = talent_settings.terminus_warrant.melee_power_level_modifier,
+		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings.terminus_warrant.toughness_damage_taken_multiplier,
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -1692,274 +1840,112 @@ templates.adamant_terminus_warrant_melee_stat_buff = {
 
 		template_data.has_talent = talent_extension:has_special_rule(special_rules.adamant_terminus_warrant_melee_talent)
 	end,
-	proc_func = function (params, template_data, template_context)
-		if not template_data.has_talent then
-			return
-		end
-
-		local reason = params.reason
-
-		if reason == "shared" then
-			return
-		end
-
-		local amount = params.amount
-		local percent = talent_settings.terminus_warrant.toughness_shared
-		local toughness_to_restore = amount * percent
-		local units_in_coherency = template_data.coherency_extension:in_coherence_units()
-
-		for unit, _ in pairs(units_in_coherency) do
-			if unit ~= template_context.unit then
-				Toughness.replenish_flat(unit, toughness_to_restore, false, "shared")
+	specific_proc_func = {
+		on_toughness_replenished = function (params, template_data, template_context, t)
+			if not template_data.has_talent then
+				return
 			end
-		end
-	end,
+
+			local reason = params.reason
+
+			if reason == "shared" then
+				return
+			end
+
+			local amount = params.amount
+			local percent = talent_settings.terminus_warrant.toughness_shared
+			local toughness_to_restore = amount * percent
+			local units_in_coherency = template_data.coherency_extension:in_coherence_units()
+
+			for unit, _ in pairs(units_in_coherency) do
+				if unit ~= template_context.unit then
+					Toughness.replenish_flat(unit, toughness_to_restore, false, "shared")
+				end
+			end
+		end,
+		on_wield_ranged = function (params, template_data, template_context, t)
+			template_data.finish = true
+		end,
+	},
 	conditional_stat_buffs = {
 		[stat_buffs.toughness_melee_replenish] = talent_settings.terminus_warrant.melee_toughness,
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return template_data.has_talent
 	end,
+	conditional_exit_func = function (template_data, template_context)
+		return template_data.finish
+	end,
 }
+templates.adamant_terminus_warrant_melee_stat_buff_improved = table.clone(templates.adamant_terminus_warrant_melee_stat_buff)
+templates.adamant_terminus_warrant_melee_stat_buff_improved.stat_buffs[stat_buffs.melee_rending_multiplier] = talent_settings.terminus_warrant.melee_rending
+templates.adamant_terminus_warrant_melee_stat_buff_improved.stat_buffs[stat_buffs.melee_attack_speed] = talent_settings.terminus_warrant.melee_attack_speed
 templates.adamant_terminus_warrant_ranged_stat_buff = {
-	class_name = "buff",
+	always_active = true,
+	always_show_in_hud = true,
+	class_name = "proc_buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/adamant/adamant_weapon_handling",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
 	max_stacks = 1,
 	predicted = false,
 	skip_tactical_overlay = true,
+	duration = talent_settings.terminus_warrant.ranged_duration,
 	stat_buffs = {
-		[stat_buffs.ranged_damage] = talent_settings.terminus_warrant.ranged_damage,
+		[stat_buffs.ranged_power_level_modifier] = talent_settings.terminus_warrant.ranged_power_level_modifier,
 		[stat_buffs.suppression_dealt] = talent_settings.terminus_warrant.suppression_dealt,
 		[stat_buffs.ranged_max_hit_mass_attack_modifier] = talent_settings.terminus_warrant.ranged_max_hit_mass_attack_modifier,
+	},
+	proc_events = {
+		[proc_events.on_wield_melee] = 1,
 	},
 	conditional_stat_buffs = {
 		[stat_buffs.reload_speed] = talent_settings.terminus_warrant.reload_speed,
 	},
+	conditional_stat_buffs_func = function (template_data, template_context)
+		return template_data.has_talent
+	end,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local talent_extension = ScriptUnit.extension(unit, "talent_system")
 
 		template_data.has_talent = talent_extension:has_special_rule(special_rules.adamant_terminus_warrant_ranged_talent)
 	end,
-	conditional_stat_buffs_func = function (template_data, template_context)
-		return template_data.has_talent
+	proc_func = function (params, template_data, template_context, t)
+		template_data.finish = true
+	end,
+	conditional_exit_func = function (template_data, template_context)
+		return template_data.finish
 	end,
 }
-
-local teminus_warrant_ranged_attacked_units = {}
-
-templates.adamant_terminus_warrant_ranged = {
+templates.adamant_terminus_warrant_ranged_stat_buff_improved = table.clone(templates.adamant_terminus_warrant_ranged_stat_buff)
+templates.adamant_terminus_warrant_ranged_stat_buff_improved.stat_buffs[stat_buffs.finesse_modifier_bonus] = talent_settings.terminus_warrant.crit_damage
+templates.adamant_terminus_warrant_ranged_attack_speed = {
 	always_active = true,
 	always_show_in_hud = true,
-	class_name = "proc_buff",
-	hud_icon = "content/ui/textures/icons/buffs/hud/adamant/adamant_weapon_handling",
+	class_name = "buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/adamant/adamant_terminus_warrant_ranged",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
-	hud_priority = 1,
-	max_stat_stacks = 1,
+	max_stacks = 1,
 	predicted = false,
 	skip_tactical_overlay = true,
-	max_stacks = talent_settings.terminus_warrant.max_stacks,
-	max_stacks_cap = talent_settings.terminus_warrant.max_stacks,
-	proc_events = {
-		[proc_events.on_hit] = 1,
-		[proc_events.on_shoot] = 1,
+	duration = talent_settings.terminus_warrant.ranged_duration,
+	stat_buffs = {
+		[stat_buffs.ranged_attack_speed] = talent_settings.terminus_warrant.ranged_attack_speed,
 	},
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local t = FixedFrame.get_latest_fixed_time()
-		local _, id = template_context.buff_extension:add_externally_controlled_buff("adamant_terminus_warrant_ranged_stat_buff", t)
-
-		template_data.ranged_stat_id = id
-		template_data.wanted_stacks = 1
-	end,
-	specific_proc_func = {
-		on_hit = function (params, template_data, template_context)
-			if not template_context.is_server then
-				return
-			end
-
-			if CheckProcFunctions.attacker_is_my_companion(params, template_data, template_context) then
-				return
-			end
-
-			local is_ranged_attack = params.attack_type == attack_types.ranged or params.damage_profile and params.damage_profile.count_as_ranged_attack
-
-			if is_ranged_attack then
-				local attacked_unit = params.attacked_unit
-
-				if not teminus_warrant_ranged_attacked_units[attacked_unit] then
-					teminus_warrant_ranged_attacked_units[attacked_unit] = true
-					template_data.wanted_stacks = template_data.wanted_stacks - 1
-				end
-			end
-		end,
-		on_shoot = function (params, template_data, template_context)
-			table.clear(teminus_warrant_ranged_attacked_units)
-		end,
-	},
-	on_add_stack_func = function (template_data, template_context)
-		template_data.wanted_stacks = math.min(template_context.stack_count, talent_settings.terminus_warrant.max_stacks)
-	end,
-	visual_stack_count = function (template_data, template_context)
-		return math.min(template_context.template.max_stacks_cap, template_context.stack_count)
-	end,
-	conditional_stack_exit_func = function (template_data, template_context)
-		if template_data.wanted_stacks < template_context.stack_count and template_context.stack_count > 0 then
-			return true
-		end
-	end,
-	conditional_exit_func = function (template_data, template_context)
-		if template_data.wanted_stacks < 1 or template_context.stack_count < 1 then
-			if template_data.ranged_stat_id then
-				template_context.buff_extension:mark_buff_finished(template_data.ranged_stat_id)
-
-				template_data.ranged_stat_id = nil
-			end
-
-			return true
-		end
-
-		return false
-	end,
 }
-templates.adamant_terminus_warrant_melee = {
+templates.adamant_terminus_warrant_no_ammo_consumption = {
 	always_active = true,
 	always_show_in_hud = true,
-	class_name = "proc_buff",
-	hud_icon = "content/ui/textures/icons/buffs/hud/psyker/psyker_default_offensive_talent",
+	class_name = "buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/adamant/adamant_terminus_warrant_ranged",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
-	hud_priority = 1,
-	max_stat_stacks = 1,
+	max_stacks = 1,
 	predicted = false,
 	skip_tactical_overlay = true,
-	max_stacks = talent_settings.terminus_warrant.max_stacks,
-	max_stacks_cap = talent_settings.terminus_warrant.max_stacks,
-	proc_events = {
-		[proc_events.on_hit] = 1,
+	duration = talent_settings.terminus_warrant.no_ammo_duration,
+	keywords = {
+		keywords.no_ammo_consumption,
 	},
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local t = FixedFrame.get_latest_fixed_time()
-		local _, id = template_context.buff_extension:add_externally_controlled_buff("adamant_terminus_warrant_melee_stat_buff", t)
-
-		template_data.melee_stat_id = id
-		template_data.wanted_stacks = 1
-	end,
-	proc_func = function (params, template_data, template_context)
-		if not template_context.is_server then
-			return
-		end
-
-		if CheckProcFunctions.attacker_is_my_companion(params, template_data, template_context) then
-			return
-		end
-
-		local is_melee_attack = params.attack_type == attack_types.melee
-
-		if is_melee_attack then
-			template_data.wanted_stacks = template_data.wanted_stacks - 1
-		end
-	end,
-	on_add_stack_func = function (template_data, template_context)
-		template_data.wanted_stacks = math.min(template_context.stack_count, talent_settings.terminus_warrant.max_stacks)
-	end,
-	visual_stack_count = function (template_data, template_context)
-		return math.min(template_context.template.max_stacks_cap, template_context.stack_count)
-	end,
-	conditional_stack_exit_func = function (template_data, template_context)
-		if template_data.wanted_stacks < template_context.stack_count and template_context.stack_count > 0 then
-			return true
-		end
-	end,
-	conditional_exit_func = function (template_data, template_context)
-		if template_data.wanted_stacks < 1 or template_context.stack_count < 1 then
-			if template_data.melee_stat_id then
-				template_context.buff_extension:mark_buff_finished(template_data.melee_stat_id)
-
-				template_data.melee_stat_id = nil
-			end
-
-			return true
-		end
-
-		return false
-	end,
-}
-templates.adamant_terminus_warrant_ranged_temporary = {
-	class_name = "proc_buff",
-	max_stacks = 1,
-	predicted = false,
-	proc_events = {
-		[proc_events.on_wield_melee] = 1,
-	},
-	proc_func = function (params, template_data, template_context)
-		template_data.finish = true
-	end,
-	stat_buffs = {
-		[stat_buffs.ranged_attack_speed] = talent_settings.terminus_warrant.fire_rate,
-	},
-	conditional_exit_func = function (template_data, template_context)
-		local has_no_stacks = not template_context.buff_extension:has_buff_using_buff_template("adamant_terminus_warrant_ranged")
-
-		return has_no_stacks or template_data.finish
-	end,
-}
-templates.adamant_terminus_warrant_melee_temporary = {
-	class_name = "proc_buff",
-	max_stacks = 1,
-	predicted = false,
-	proc_events = {
-		[proc_events.on_wield_ranged] = 1,
-	},
-	proc_func = function (params, template_data, template_context)
-		template_data.finish = true
-	end,
-	stat_buffs = {
-		[stat_buffs.melee_attack_speed] = talent_settings.terminus_warrant.melee_attack_speed,
-	},
-	conditional_exit_func = function (template_data, template_context)
-		local has_no_stacks = not template_context.buff_extension:has_buff_using_buff_template("adamant_terminus_warrant_melee")
-
-		return has_no_stacks or template_data.finish
-	end,
-}
-templates.adamant_terminus_warrant_ranged_rending = {
-	class_name = "proc_buff",
-	max_stacks = 1,
-	predicted = false,
-	proc_events = {
-		[proc_events.on_wield_melee] = 1,
-	},
-	proc_func = function (params, template_data, template_context)
-		template_data.finish = true
-	end,
-	stat_buffs = {
-		[stat_buffs.critical_strike_damage] = talent_settings.terminus_warrant.crit_damage,
-		[stat_buffs.weakspot_damage] = talent_settings.terminus_warrant.weakspot_damage,
-	},
-	conditional_exit_func = function (template_data, template_context)
-		local has_no_stacks = not template_context.buff_extension:has_buff_using_buff_template("adamant_terminus_warrant_ranged")
-
-		return has_no_stacks or template_data.finish
-	end,
-}
-templates.adamant_terminus_warrant_melee_rending = {
-	class_name = "proc_buff",
-	max_stacks = 1,
-	predicted = false,
-	proc_events = {
-		[proc_events.on_wield_ranged] = 1,
-	},
-	proc_func = function (params, template_data, template_context)
-		template_data.finish = true
-	end,
-	stat_buffs = {
-		[stat_buffs.melee_rending_multiplier] = talent_settings.terminus_warrant.melee_rending,
-	},
-	conditional_exit_func = function (template_data, template_context)
-		local has_no_stacks = not template_context.buff_extension:has_buff_using_buff_template("adamant_terminus_warrant_melee")
-
-		return has_no_stacks or template_data.finish
-	end,
 }
 templates.adamant_melee_weakspot_hits_count_as_stagger = {
 	class_name = "proc_buff",
@@ -2156,7 +2142,7 @@ templates.adamant_disable_companion_buff = {
 			local companion_spawner_extension = ScriptUnit.has_extension(unit, "companion_spawner_system")
 
 			if companion_spawner_extension then
-				companion_spawner_extension:despawn_unit()
+				companion_spawner_extension:despawn_units()
 			end
 		end
 	end,
@@ -2713,7 +2699,8 @@ templates.adamant_dog_pounces_bleed_nearby = {
 	proc_func = function (params, template_data, template_context, t)
 		if not template_data.companion_unit then
 			local companion_spawner_extension = ScriptUnit.has_extension(template_context.unit, "companion_spawner_system")
-			local companion_unit = companion_spawner_extension and companion_spawner_extension:companion_unit()
+			local companion_units = companion_spawner_extension and companion_spawner_extension:companion_units()
+			local companion_unit = companion_units and #companion_units > 0 and companion_units[1] or nil
 
 			template_data.companion_unit = companion_unit
 		end
@@ -3273,6 +3260,13 @@ templates.dog_attacks_electrocute_electrocute_buff = {
 		end
 
 		local unit = template_context.unit
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local breed = unit_data_extension:breed()
+		local tags = breed.tags
+
+		if tags.interrupter then
+			return
+		end
 
 		if HEALTH_ALIVE[unit] then
 			local damage_template = DamageProfileTemplates.shockmaul_stun_interval_damage
@@ -3353,9 +3347,10 @@ templates.adamant_toughness_regen_near_companion = {
 		local player_unit = template_context.unit
 		local player_position = POSITION_LOOKUP[player_unit]
 		local companion_spawner_extension = ScriptUnit.has_extension(player_unit, "companion_spawner_system")
-		local companion_unit = companion_spawner_extension and companion_spawner_extension:companion_unit()
+		local companion_units = companion_spawner_extension and companion_spawner_extension:companion_units()
+		local companion_unit = companion_units and #companion_units > 0 and companion_units[1] or nil
 
-		if companion_unit then
+		if ALIVE[companion_unit] then
 			local companion_position = POSITION_LOOKUP[companion_unit]
 			local distance = Vector3.distance_squared(player_position, companion_position)
 			local is_active = distance <= toughness_range_sq

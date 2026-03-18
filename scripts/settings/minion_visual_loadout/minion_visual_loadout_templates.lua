@@ -16,6 +16,7 @@ local function _extract_templates(path)
 	end
 end
 
+_extract_templates("scripts/settings/minion_visual_loadout/templates/chaos/chaos_armored_hound_visual_loadout_templates")
 _extract_templates("scripts/settings/minion_visual_loadout/templates/chaos/chaos_armored_infected_visual_loadout_templates")
 _extract_templates("scripts/settings/minion_visual_loadout/templates/chaos/chaos_beast_of_nurgle_visual_loadout_templates")
 _extract_templates("scripts/settings/minion_visual_loadout/templates/chaos/chaos_daemonhost_visual_loadout_templates")
@@ -27,6 +28,7 @@ _extract_templates("scripts/settings/minion_visual_loadout/templates/chaos/chaos
 _extract_templates("scripts/settings/minion_visual_loadout/templates/chaos/chaos_ogryn_bulwark_visual_loadout_template")
 _extract_templates("scripts/settings/minion_visual_loadout/templates/chaos/chaos_ogryn_executor_visual_loadout_templates")
 _extract_templates("scripts/settings/minion_visual_loadout/templates/chaos/chaos_ogryn_gunner_visual_loadout_template")
+_extract_templates("scripts/settings/minion_visual_loadout/templates/chaos/chaos_ogryn_houndmaster_visual_loadout_templates")
 _extract_templates("scripts/settings/minion_visual_loadout/templates/chaos/chaos_plague_ogryn_sprayer_visual_loadout_templates")
 _extract_templates("scripts/settings/minion_visual_loadout/templates/chaos/chaos_plague_ogryn_visual_loadout_templates")
 _extract_templates("scripts/settings/minion_visual_loadout/templates/chaos/chaos_poxwalker_bomber_visual_loadout_templates")

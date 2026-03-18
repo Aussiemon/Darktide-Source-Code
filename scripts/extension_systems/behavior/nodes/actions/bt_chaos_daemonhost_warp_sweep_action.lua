@@ -6,6 +6,7 @@ local Animation = require("scripts/utilities/animation")
 local Attack = require("scripts/utilities/attack/attack")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local Suppression = require("scripts/utilities/attack/suppression")
 local MINION_BREED_TYPE = BreedSettings.types.minion
@@ -34,7 +35,7 @@ BtChaosDaemonhostWarpSweepAction.enter = function (self, unit, breed, blackboard
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.broadphase_config = breed.nearby_units_broadphase_config
 
-	local effect_template = action_data.effect_template
+	local effect_template = EffectTemplates[action_data.effect_template_name]
 	local fx_system = Managers.state.extension:system("fx_system")
 
 	scratchpad.global_effect_id = fx_system:start_template_effect(effect_template, unit)

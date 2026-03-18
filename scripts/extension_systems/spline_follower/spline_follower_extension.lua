@@ -162,12 +162,10 @@ SplineFollowerExtension.update = function (self, unit, dt, t)
 
 		self:_set_state(state)
 
-		if self._is_server then
-			local servo_skull_extension = ScriptUnit.has_extension(self._unit, "servo_skull_system")
+		local servo_skull_extension = ScriptUnit.has_extension(self._unit, "servo_skull_system")
 
-			if servo_skull_extension then
-				servo_skull_extension:at_end_of_spline(last_spline)
-			end
+		if servo_skull_extension then
+			servo_skull_extension:at_end_of_spline(last_spline)
 		end
 
 		Unit.flow_event(self._unit, "lua_end_of_spline")

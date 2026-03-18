@@ -14,13 +14,6 @@ DialogueContextSystem.init = function (self, extension_system_creation_context, 
 	self._is_server = extension_system_creation_context.is_server
 	self._next_player_key = nil
 	self._unit_extension_data = {}
-	self._start_dialogue_modifier = nil
-
-	local mission = system_init_data.mission
-
-	if mission and mission.dialogue_settings and mission.dialogue_settings.on_start_dialogue_modifier then
-		self._start_dialogue_modifier = system_init_data.mission.dialogue_settings.on_start_dialogue_modifier
-	end
 end
 
 DialogueContextSystem.destroy = function (self)
@@ -73,10 +66,6 @@ end
 
 DialogueContextSystem.hot_join_sync = function (self, sender, channel)
 	return
-end
-
-DialogueContextSystem.get_start_dialogue_modifier = function (self)
-	return self._start_dialogue_modifier
 end
 
 return DialogueContextSystem

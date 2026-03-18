@@ -74,13 +74,11 @@ local TIME_SINCE_FORWARD_TRAVEL_CHANGE_MOVE_TIMER_OVERRIDE = {
 local CHALLENGE_RATING_FOR_NO_MOVE_TIMER_OVERRIDE = 0
 
 HordePacing._update_horde_allowance = function (self, t, dt, side_id, target_side_id)
-	local main_path_manager = Managers.state.main_path
 	local pacing_manager = Managers.state.pacing
 	local template = self._template
 	local total_minions_spawned = Managers.state.minion_spawn:num_spawned_minions()
 	local minion_spawn_limit_reached = total_minions_spawned >= template.max_active_minions
-	local furthest_travel_distance = main_path_manager:furthest_travel_distance(target_side_id)
-	local time_since_forward_travel_changed = main_path_manager:time_since_forward_travel_changed(target_side_id)
+	local furthest_travel_distance, time_since_forward_travel_changed = pacing_manager:get_mission_progression()
 	local allowed_hordes_per_travel_distance = math.ceil(furthest_travel_distance / self._required_travel_distance) - self._triggered_hordes
 	local hordes_enabled = pacing_manager:spawn_type_enabled("hordes") and allowed_hordes_per_travel_distance > 0
 	local travel_distance_allowed = time_since_forward_travel_changed < TRAVEL_DISTANCE_CHANGE_ALLOWANCE_MIN or time_since_forward_travel_changed > TRAVEL_DISTANCE_CHANGE_ALLOWANCE_MAX
@@ -136,6 +134,7 @@ HordePacing._update_horde_pacing = function (self, t, dt, side_id, target_side_i
 
 			if self._current_wave == 1 then
 				self:_first_horde_wave_spawn(template, horde_position, target_unit)
+				Managers.event:trigger("horde_spawned")
 			end
 
 			if group_id then
@@ -339,6 +338,10 @@ HordePacing._start_coordinated_horde_strike = function (self, setting, target_si
 			}
 		end
 
+		local coordinated_strike_type = horde_type
+
+		Managers.event:trigger("coordinated_horde_spawned", coordinated_strike_type)
+
 		local trigger_special_coordinated_attack_on_first_wave = setup.trigger_special_coordinated_attack_on_first_wave
 
 		if trigger_special_coordinated_attack_on_first_wave then
@@ -476,6 +479,12 @@ end
 
 HordePacing._spawn_horde_wave = function (self, template, side_id, target_side_id, current_wave, horde_type, horde_template, compositions, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit, optional_skip_spawners)
 	local challenge_scaled_compositions = Managers.state.difficulty:get_table_entry_by_challenge(compositions)
+	local using_heat = Managers.state.pacing:heat_active()
+
+	if using_heat then
+		optional_target_unit = Managers.state.pacing:get_random_heat_generating_player()
+	end
+
 	local success, horde_position, target_unit, group_id, spawned_direction = self:_spawn_horde(horde_type, horde_template, challenge_scaled_compositions, side_id, target_side_id, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit, optional_skip_spawners)
 
 	if success then
@@ -489,13 +498,13 @@ HordePacing._spawn_horde_wave = function (self, template, side_id, target_side_i
 	return success, horde_position, target_unit, group_id, spawned_direction
 end
 
-HordePacing._spawn_horde = function (self, horde_type, horde_template, composition, side_id, target_side_id, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit, optional_skip_spawners)
+HordePacing._spawn_horde = function (self, horde_type, horde_template, composition, side_id, target_side_id, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit, optional_skip_spawners, optional_mutator_params)
 	local main_path_available = Managers.state.main_path:is_main_path_available()
 
 	if horde_template.requires_main_path and main_path_available or not horde_template.requires_main_path then
 		local horde_manager = Managers.state.horde
 		local towards_combat_vector = true
-		local success, horde_position, target_unit, group_id, spawned_direction = horde_manager:horde(horde_type, horde_template.name, side_id, target_side_id, composition, towards_combat_vector, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit, optional_skip_spawners)
+		local success, horde_position, target_unit, group_id, spawned_direction = horde_manager:horde(horde_type, horde_template.name, side_id, target_side_id, composition, towards_combat_vector, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit, optional_skip_spawners, optional_mutator_params)
 
 		return success, horde_position, target_unit, group_id, spawned_direction
 	end
@@ -577,6 +586,22 @@ HordePacing.set_timer_modifier = function (self, modifier)
 	end
 end
 
+HordePacing.set_trickle_horde_modifers = function (self, params)
+	local trickle_travel_distance_modifer, trickle_horde_cooldown_modifer, num_trickle_hordes_active_for_cooldown_modifer = params.travel_distance_modifer, params.trickle_horde_cooldown_modifer, params.num_trickle_hordes_active_for_cooldown_modifer
+
+	if trickle_travel_distance_modifer then
+		self._trickle_travel_distance_modifer = trickle_travel_distance_modifer
+	end
+
+	if trickle_horde_cooldown_modifer then
+		self._trickle_horde_cooldown_modifer = trickle_horde_cooldown_modifer
+	end
+
+	if num_trickle_hordes_active_for_cooldown_modifer then
+		self._num_trickle_hordes_active_for_cooldown_modifer = num_trickle_hordes_active_for_cooldown_modifer
+	end
+end
+
 HordePacing.set_override_required_travel_distance = function (self, required_travel_distance)
 	self._override_required_travel_distance = required_travel_distance
 end
@@ -585,8 +610,19 @@ HordePacing.override_trickle_horde_compositions = function (self, compositions)
 	self._override_trickle_horde_compositions = compositions
 end
 
+HordePacing._allowed_horde_from_heat = function (self)
+	return Managers.state.pacing:heat_horde_allowance()
+end
+
 HordePacing._trigger_pre_stinger = function (self, template, side_id, optional_stinger_event_name)
-	local stinger_sound_event = optional_stinger_event_name or template.pre_stinger_sound_events[self._current_compositions.name]
+	local heat_active = Managers.state.pacing:heat_active()
+	local stinger_sound_event
+
+	if heat_active then
+		stinger_sound_event = optional_stinger_event_name or Managers.state.pacing:get_table_entry_by_heat_stage(template.pre_stinger_sound_events)
+	else
+		stinger_sound_event = optional_stinger_event_name or template.pre_stinger_sound_events[self._current_compositions.name]
+	end
 
 	if not stinger_sound_event then
 		return
@@ -607,8 +643,7 @@ HordePacing.force_next_horde = function (self)
 	local target_side_id = 1
 	local pacing_manager = Managers.state.pacing
 	local main_path_manager = Managers.state.main_path
-	local furthest_travel_distance = main_path_manager:furthest_travel_distance(target_side_id)
-	local time_since_forward_travel_changed = main_path_manager:time_since_forward_travel_changed(target_side_id)
+	local furthest_travel_distance, time_since_forward_travel_changed = pacing_manager:get_mission_progression()
 	local allowed_hordes_per_travel_distance = math.ceil(furthest_travel_distance / self._required_travel_distance) - self._triggered_hordes
 
 	if allowed_hordes_per_travel_distance == 0 then
@@ -635,8 +670,7 @@ local FAILED_TRAVEL_RANGE = {
 
 HordePacing._update_trickle_horde_pacing = function (self, t, dt, side_id, target_side_id)
 	local pacing_manager = Managers.state.pacing
-	local main_path_manager = Managers.state.main_path
-	local furthest_travel_distance = main_path_manager:furthest_travel_distance(target_side_id)
+	local furthest_travel_distance, _ = pacing_manager:get_mission_progression()
 	local trickle_hordes = self._trickle_hordes
 	local ramp_up_timer_modifier = pacing_manager:get_ramp_up_frequency_modifier("trickle_hordes") or 1
 
@@ -649,6 +683,11 @@ HordePacing._update_trickle_horde_pacing = function (self, t, dt, side_id, targe
 			end
 
 			local template = trickle_horde.template
+			local skip_heat_override
+
+			if template.optional_mutator_params and template.optional_mutator_params.skip_heat_override then
+				skip_heat_override = true
+			end
 
 			if trickle_horde.num_waves then
 				if t > trickle_horde.next_wave_at_t then
@@ -682,13 +721,17 @@ HordePacing._update_trickle_horde_pacing = function (self, t, dt, side_id, targe
 
 			local cooldown = trickle_horde.cooldown
 			local horde_manager = Managers.state.horde
-			local num_active_trickle_hordes = horde_manager:num_active_hordes(HORDE_TYPES.trickle_horde)
-			local should_trigger_cooldown = num_active_trickle_hordes >= template.num_trickle_hordes_active_for_cooldown
+			local horde_type = template.optional_mutator_params and template.optional_mutator_params.optional_horde_type and HORDE_TYPES[template.optional_mutator_params.optional_horde_type] or HORDE_TYPES.trickle_horde
+			local num_active_trickle_hordes = horde_manager:num_active_hordes(horde_type)
+			local num_trickle_hordes_active_for_cooldown = skip_heat_override and template.num_trickle_hordes_active_for_cooldown or self._num_trickle_hordes_active_for_cooldown_modifer or template.num_trickle_hordes_active_for_cooldown
+			local should_trigger_cooldown = num_trickle_hordes_active_for_cooldown <= num_active_trickle_hordes
 
 			if should_trigger_cooldown and t < cooldown then
 				break
 			elseif should_trigger_cooldown then
-				trickle_horde.cooldown = t + math.random(template.trickle_horde_cooldown[1], template.trickle_horde_cooldown[2])
+				local trickle_horde_cooldown = skip_heat_override and template.trickle_horde_cooldown or self._trickle_horde_cooldown_modifer or template.trickle_horde_cooldown
+
+				trickle_horde.cooldown = t + math.random(trickle_horde_cooldown[1], trickle_horde_cooldown[2])
 
 				break
 			elseif not should_trigger_cooldown then
@@ -743,9 +786,10 @@ HordePacing._update_trickle_horde_pacing = function (self, t, dt, side_id, targe
 					local trickle_horde_compositions = self._override_trickle_horde_compositions or template.horde_compositions.trickle_horde
 					local current_faction = Managers.state.pacing:current_faction()
 					local current_density_type = Managers.state.pacing:current_density_type()
+					local current_heat_stage = Managers.state.pacing:current_stage_name()
 					local waiting_for_ramp_clear = Managers.state.pacing:waiting_for_ramp_clear()
 					local faction_compositions = trickle_horde_compositions[current_faction]
-					local faction_composition = faction_compositions[current_density_type]
+					local faction_composition = faction_compositions[current_heat_stage or current_density_type]
 
 					if waiting_for_ramp_clear and faction_compositions.waiting_for_ramp_clear then
 						faction_composition = faction_compositions.waiting_for_ramp_clear
@@ -796,7 +840,8 @@ HordePacing._update_trickle_horde_pacing = function (self, t, dt, side_id, targe
 					end
 				end
 
-				local trickle_horde_travel_distance_range = success and template.trickle_horde_travel_distance_range or FAILED_TRAVEL_RANGE
+				local trickle_horde_distance_range = skip_heat_override and template.trickle_horde_travel_distance_range or self._trickle_travel_distance_modifer or template.trickle_horde_travel_distance_range
+				local trickle_horde_travel_distance_range = success and trickle_horde_distance_range or FAILED_TRAVEL_RANGE
 				local next_trickle_horde_at = math.random_range(trickle_horde_travel_distance_range[1], trickle_horde_travel_distance_range[2])
 
 				trickle_horde.next_trickle_horde_travel_distance_trigger = next_trickle_horde_at
@@ -810,10 +855,11 @@ HordePacing._spawn_trickle_horde_wave = function (self, side_id, target_side_id,
 	local trickle_horde_template = HordeTemplates.trickle_horde
 	local trickle_horde_compositions = self._override_trickle_horde_compositions or template.horde_compositions.trickle_horde
 	local current_faction = Managers.state.pacing:current_faction()
+	local current_heat_stage = Managers.state.pacing:current_stage_name()
 	local current_density_type = Managers.state.pacing:current_density_type()
 	local waiting_for_ramp_clear = Managers.state.pacing:waiting_for_ramp_clear()
 	local faction_compositions = trickle_horde_compositions[current_faction]
-	local faction_composition = faction_compositions[current_density_type]
+	local faction_composition = faction_compositions[current_heat_stage or current_density_type]
 
 	if waiting_for_ramp_clear and faction_compositions.waiting_for_ramp_clear then
 		faction_composition = faction_compositions.waiting_for_ramp_clear
@@ -823,9 +869,13 @@ HordePacing._spawn_trickle_horde_wave = function (self, side_id, target_side_id,
 	local resistance_scaled_composition = Managers.state.difficulty:get_table_entry_by_resistance(chosen_compositions)
 	local optional_disallowed_positions = trickle_horde.disallowed_spawn_positions
 	local spawn_max_health_modifier = template.spawn_max_health_modifier
-	local success, horde_position, target_unit, group_id = self:_spawn_horde(HORDE_TYPES.trickle_horde, trickle_horde_template, resistance_scaled_composition, side_id, target_side_id, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, spawn_max_health_modifier)
+	local optional_mutator_params = template.optional_mutator_params
+	local horde_type = template.optional_mutator_params and template.optional_mutator_params.optional_horde_type and HORDE_TYPES[template.optional_mutator_params.optional_horde_type] or HORDE_TYPES.trickle_horde
+	local success, horde_position, target_unit, group_id = self:_spawn_horde(horde_type, trickle_horde_template, resistance_scaled_composition, side_id, target_side_id, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, nil, nil, nil, nil, optional_mutator_params)
 
 	if success then
+		Managers.event:trigger("trickle_horde_spawned")
+
 		local horde_group_sound_event_names = template.group_sound_event_names
 		local group_system = Managers.state.extension:system("group_system")
 		local group = group_system:group_from_id(group_id)

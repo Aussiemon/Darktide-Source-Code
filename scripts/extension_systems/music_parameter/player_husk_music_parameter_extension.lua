@@ -13,6 +13,9 @@ PlayerHuskMusicParameterExtension.init = function (self, extension_init_context,
 	self._tension_percent = 0
 	self._locked_in_melee = false
 	self._update_timer = 0
+	self._current_heat_stage = "none"
+	self._is_expedition = false
+	self._expedition_extraction_started = false
 end
 
 PlayerHuskMusicParameterExtension.on_game_object_created = function (self, game_session, game_object_id)
@@ -36,6 +39,9 @@ PlayerHuskMusicParameterExtension.update = function (self, unit, dt, t)
 	self._boss_near = GameSession.game_object_field(game_session, game_object_id, "boss_near")
 	self._health_percent = self._health_extension:current_health_percent()
 	self._intensity_percent = GameSession.game_object_field(game_session, game_object_id, "intensity_percent")
+	self._is_expedition = GameSession.game_object_field(game_session, game_object_id, "is_expedition")
+	self._current_heat_stage = GameSession.game_object_field(game_session, game_object_id, "heat_stage")
+	self._expedition_extraction_started = GameSession.game_object_field(game_session, game_object_id, "exp_extraction_started")
 	self._tension_percent = GameSession.game_object_field(game_session, game_object_id, "tension_percent")
 	self._num_aggroed_minions_near = GameSession.game_object_field(game_session, game_object_id, "num_aggroed_minions_near")
 	self._locked_in_melee = GameSession.game_object_field(game_session, game_object_id, "locked_in_melee")
@@ -57,6 +63,18 @@ end
 
 PlayerHuskMusicParameterExtension.ambush_horde_near = function (self)
 	return self._ambush_horde_near
+end
+
+PlayerHuskMusicParameterExtension.is_expedition = function (self)
+	return self._is_expedition
+end
+
+PlayerHuskMusicParameterExtension.current_heat_stage_name = function (self)
+	return NetworkLookup.heat_stages[self._current_heat_stage]
+end
+
+PlayerHuskMusicParameterExtension.expedition_extraction_status = function (self)
+	return self._expedition_extraction_started
 end
 
 PlayerHuskMusicParameterExtension.last_man_standing = function (self)

@@ -39,6 +39,13 @@ talent_blueprint_title_style.text_horizontal_alignment = "left"
 talent_blueprint_title_style.text_vertical_alignment = "top"
 talent_blueprint_title_style.text_color = Color.terminal_text_header(255, true)
 
+local function get_style_text_height(text, style, ui_renderer)
+	local text_size = style.size
+	local text_height = Text.text_height(ui_renderer, text, style)
+
+	return text_height
+end
+
 local grid_blueprints = {
 	talent_info = {
 		size = {
@@ -194,6 +201,72 @@ local grid_blueprints = {
 			local height = Text.text_height(ui_renderer, text, text_style, size)
 
 			size[2] = height + 0
+		end,
+		update = function (parent, widget, input_service, dt, t, ui_renderer)
+			local content = widget.content
+			local element = content.element
+		end,
+	},
+	iconic = {
+		size = {
+			summary_grid_size[1],
+			100,
+		},
+		size_function = function (parent, element, ui_renderer)
+			local description = element.description
+			local description_height = get_style_text_height(description, talent_blueprint_description_style, ui_renderer)
+			local entry_height = math.max(68, description_height + 25)
+
+			return {
+				summary_grid_size[1],
+				entry_height,
+			}
+		end,
+		pass_template = {
+			{
+				pass_type = "text",
+				style_id = "text",
+				value = "n/a",
+				value_id = "text",
+				style = {
+					font_size = 20,
+					font_type = "proxima_nova_bold",
+					text_horizontal_alignment = "left",
+					text_vertical_alignment = "top",
+					text_color = Color.terminal_text_body(255, true),
+					offset = {
+						98,
+						0,
+						8,
+					},
+					size = {
+						summary_grid_size[1] - 106,
+					},
+				},
+			},
+			{
+				pass_type = "text",
+				value = "•",
+				style = {
+					font_size = 24,
+					font_type = "proxima_nova_bold",
+					text_horizontal_alignment = "left",
+					text_vertical_alignment = "top",
+					text_color = Color.terminal_text_body(255, true),
+					offset = {
+						72,
+						-3,
+						3,
+					},
+				},
+			},
+		},
+		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer)
+			local content = widget.content
+			local description = element.description
+
+			content.element = element
+			content.text = description
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content

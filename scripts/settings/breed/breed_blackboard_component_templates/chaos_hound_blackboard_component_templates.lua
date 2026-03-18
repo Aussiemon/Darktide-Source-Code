@@ -7,7 +7,9 @@ local chaos_hound = {
 		combat_range_sticky_time = "number",
 		enter_combat_range_flag = "boolean",
 		lock_combat_range_switch = "boolean",
+		move_medium = "string",
 		move_state = "string",
+		restricted_combat_range = "string",
 	},
 	aim = {
 		controlled_aim_position = "Vector3Box",
@@ -37,6 +39,14 @@ local chaos_hound = {
 	summon_unit = {
 		last_owner_position = "Vector3Box",
 		owner = "Unit",
+	},
+	patrol = {
+		auto_patrol = "boolean",
+		patrol_id = "number",
+		patrol_index = "number",
+		patrol_leader_unit = "Unit",
+		should_patrol = "boolean",
+		walk_position = "Vector3Box",
 	},
 }
 

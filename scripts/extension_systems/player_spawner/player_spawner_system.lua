@@ -127,6 +127,12 @@ PlayerSpawnerSystem.remove_spawn_point = function (self, unit, spawn_identifier)
 			if spawn_point_data.unit == unit then
 				table.remove(spawn_points, i)
 
+				local identifier_index = self._next_spawn_point_index_by_identifier[spawn_identifier]
+
+				if i < identifier_index then
+					self._next_spawn_point_index_by_identifier[spawn_identifier] = identifier_index - 1
+				end
+
 				return
 			end
 		end
@@ -203,18 +209,20 @@ end
 
 PlayerSpawnerSystem._find_spawner_spawn_point = function (self, spawn_identifier)
 	local spawn_points = self._spawn_points_by_identifier[spawn_identifier]
+	local num_spawn_points = spawn_points and #spawn_points or 0
 
-	if spawn_points == nil then
+	if num_spawn_points == 0 then
 		return false
 	end
 
 	local next_spawn_point_index_by_identifier = self._next_spawn_point_index_by_identifier
 	local spawn_point_index = next_spawn_point_index_by_identifier[spawn_identifier]
-	local num_spawn_points = #spawn_points
 
 	next_spawn_point_index_by_identifier[spawn_identifier] = spawn_point_index % num_spawn_points + 1
 
 	local spawn_point = spawn_points[spawn_point_index]
+
+	Unit.flow_event(spawn_point.unit, "lua_spawner_used")
 
 	return true, spawn_point.position:unbox(), spawn_point.rotation:unbox(), spawn_point.parent, spawn_point.side
 end

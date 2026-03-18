@@ -13,6 +13,7 @@ local Progression = require("scripts/backend/progression")
 local Promise = require("scripts/foundation/utilities/promise")
 local SessionStats = require("scripts/settings/stats/session_stats")
 local WeaponUnlockSettings = require("scripts/settings/weapon_unlock/weapon_unlock_settings")
+local ExpeditionService = require("scripts/managers/data_service/services/expedition_service")
 
 local function _info(...)
 	Log.info("ProgressionManager", ...)
@@ -266,16 +267,7 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 
 	local credits_reward = self:_get_credits_reward(account_data.missionRewards)
 
-	self._session_report.character.mastery_rewards = self:_get_mastery_rewards(account_data)
 	self._session_report.credits_reward = credits_reward
-
-	if not self._session_report.character.mastery_rewards and not self._session_report_is_dummy then
-		local dummy_session_report = DummySessionReport.fetch_session_report(player:account_id())
-		local dummy_account_data = dummy_session_report.team.participants[1]
-		local dummy_mastery_rewards = self:_get_mastery_rewards(account_data)
-
-		self._session_report.character.mastery_rewards = dummy_mastery_rewards
-	end
 
 	if account_wallets then
 		self._session_report.character.wallets = account_wallets
@@ -292,105 +284,49 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 
 	table.insert(promise_list, account_level_up_promise)
 
-	local is_owner, rank_played
+	local mastery_rewards = self:_get_mastery_rewards(account_data)
 
-	if self._session_report.eor.mission.gameModeDetails and self._session_report.eor.mission.gameModeDetails.type == "havoc" then
-		is_owner = self._session_report.eor.mission.gameModeDetails.ownerId == account_data.accountId
-		rank_played = self._session_report.eor.mission.gameModeDetails.rankPlayed
-		self._session_report.character.havoc_highest_rank = self:_get_havoc_highest_rank(account_data)
-		self._session_report.character.havoc_week_rank = self:_get_havoc_week_rank(account_data)
-
-		local havoc_history_promise = Managers.data_service.havoc:history() or Promise.resolved()
-
-		table.insert(promise_list, havoc_history_promise)
-	end
-
-	return Promise.all(unpack(promise_list)):next(function (results)
-		local havoc_data = results[3]
-
-		if havoc_data and havoc_data.items then
-			local promises = {
-				Managers.data_service.havoc:order_by_id(havoc_data.items[1].orderId),
-			}
-
-			if havoc_data.items[2] then
-				promises[#promises + 1] = Managers.data_service.havoc:order_by_id(havoc_data.items[2].orderId)
-			end
-
-			return Promise.all(unpack(promises)):next(function (orders)
-				local cached_havoc_settings = Managers.data_service.havoc:get_settings()
-				local havoc_settings = {
-					min_charges = 1,
-					min_rank = 1,
-					max_rank = cached_havoc_settings.max_rank or 40,
-					max_charges = cached_havoc_settings.max_charges or 3,
-				}
-				local havoc_order_reward, havoc_session = self:_get_havoc_order_rewards(account_data, havoc_data, orders, havoc_settings, is_owner, rank_played)
-				local rank_changed = havoc_order_reward.current_rank ~= havoc_order_reward.previous_rank or false
-				local charges_changed = havoc_order_reward.current_charges ~= havoc_order_reward.previous_charges or false
-				local should_present_reward = charges_changed or rank_changed
-
-				if should_present_reward then
-					self._session_report.character.havoc_order_reward = havoc_order_reward
-
-					Managers.data_service.havoc:set_show_promotion_info(havoc_session)
-				end
-
-				return Promise.resolved()
-			end)
-		end
-
-		return Promise.resolved()
-	end):catch(function ()
-		return Promise.resolved()
-	end):next(function ()
-		if GameParameters.testify or self._session_report_is_dummy then
-			return Promise.resolved()
-		end
+	if mastery_rewards then
+		self._session_report.character.mastery_rewards = mastery_rewards
 
 		local weapon_slots = {
 			slot_primary = true,
 			slot_secondary = true,
 		}
-		local has_mastery_rewards = false
-		local promises = {}
+		local mastery_promises = {}
 
 		for i = 1, #self._session_report.character.mastery_rewards do
-			has_mastery_rewards = true
-
 			local mastery_reward = self._session_report.character.mastery_rewards[i]
 			local mastery_data = Managers.data_service.mastery:get_mastery(mastery_reward.trackId)
 
 			weapon_slots[mastery_reward.weapon_slot] = nil
 
-			table.insert(promises, mastery_data)
+			table.insert(mastery_promises, mastery_data)
 		end
 
-		if has_mastery_rewards then
-			local profile = self:_get_profile()
+		local profile = self:_get_profile()
 
-			for slot, _ in pairs(weapon_slots) do
-				local item = profile.loadout[slot]
-				local pattern = item and item.parent_pattern
-				local missing_weapon_promise = Managers.data_service.mastery:get_mastery_by_pattern(pattern):next(function (mastery_data)
-					local mastery_rewards = self._session_report.character.mastery_rewards
+		for slot, _ in pairs(weapon_slots) do
+			local item = profile.loadout[slot]
+			local pattern = item and item.parent_pattern
+			local missing_weapon_promise = Managers.data_service.mastery:get_mastery_by_pattern(pattern):next(function (mastery_data)
+				local mastery_rewards = self._session_report.character.mastery_rewards
 
-					self._session_report.character.mastery_rewards[#mastery_rewards + 1] = {
-						gainedXp = 0,
-						weapon_slot = slot,
-						startXp = mastery_data.current_xp,
-						trackId = mastery_data.id,
-						masteryId = item.trait_category,
-					}
+				self._session_report.character.mastery_rewards[#mastery_rewards + 1] = {
+					gainedXp = 0,
+					weapon_slot = slot,
+					startXp = mastery_data.current_xp,
+					trackId = mastery_data.id,
+					masteryId = item.trait_category,
+				}
 
-					return Promise.resolved(mastery_data)
-				end)
+				return Promise.resolved(mastery_data)
+			end)
 
-				table.insert(promises, missing_weapon_promise)
-			end
+			table.insert(mastery_promises, missing_weapon_promise)
 		end
 
-		return Promise.all(unpack(promises)):next(function (masteries_data)
+		local masteries_and_claim_promise = Promise.all(unpack(mastery_promises)):next(function (masteries_data)
 			local claim_promises = {}
 
 			for i = 1, #masteries_data do
@@ -414,6 +350,81 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 
 			return Promise.all(unpack(claim_promises))
 		end)
+
+		table.insert(promise_list, masteries_and_claim_promise)
+	end
+
+	local is_owner, rank_played
+
+	if self._session_report.eor.mission.gameModeDetails and self._session_report.eor.mission.gameModeDetails.type == "havoc" then
+		is_owner = self._session_report.eor.mission.gameModeDetails.ownerId == account_data.accountId
+		rank_played = self._session_report.eor.mission.gameModeDetails.rankPlayed
+		self._session_report.character.havoc_highest_rank = self:_get_havoc_highest_rank(account_data)
+		self._session_report.character.havoc_week_rank = self:_get_havoc_week_rank(account_data)
+
+		local havoc_history_promise = Managers.data_service.havoc:history() or Promise.resolved()
+
+		havoc_history_promise:next(function (havoc_data)
+			if havoc_data and havoc_data.items then
+				local promises = {
+					Managers.data_service.havoc:order_by_id(havoc_data.items[1].orderId),
+				}
+
+				if havoc_data.items[2] then
+					promises[#promises + 1] = Managers.data_service.havoc:order_by_id(havoc_data.items[2].orderId)
+				end
+
+				return Promise.all(unpack(promises)):next(function (orders)
+					local cached_havoc_settings = Managers.data_service.havoc:get_settings()
+					local havoc_settings = {
+						min_charges = 1,
+						min_rank = 1,
+						max_rank = cached_havoc_settings.max_rank or 40,
+						max_charges = cached_havoc_settings.max_charges or 3,
+					}
+					local havoc_order_reward, havoc_session = self:_get_havoc_order_rewards(account_data, havoc_data, orders, havoc_settings, is_owner, rank_played)
+					local rank_changed = havoc_order_reward.current_rank ~= havoc_order_reward.previous_rank or false
+					local charges_changed = havoc_order_reward.current_charges ~= havoc_order_reward.previous_charges or false
+					local should_present_reward = charges_changed or rank_changed
+
+					if should_present_reward then
+						self._session_report.character.havoc_order_reward = havoc_order_reward
+
+						Managers.data_service.havoc:set_show_promotion_info(havoc_session)
+					end
+
+					return Promise.resolved()
+				end)
+			end
+
+			return Promise.resolved()
+		end)
+		table.insert(promise_list, havoc_history_promise)
+	end
+
+	if self._session_report.eor.mission.gameModeDetails and self._session_report.eor.mission.gameModeDetails.type == "expedition" then
+		local node_id_played = self._session_report.eor.mission.gameModeDetails.expeditionNodeIdPlayed
+		local reward = self:_get_expedition_rewards(account_data)
+
+		if reward then
+			local all_updated_progress = reward.statChanges or {}
+			local update_expedition_progress_promise = Managers.data_service.expedition:update_node_personal_progress(node_id_played, all_updated_progress)
+
+			update_expedition_progress_promise:next(function (expedition_progress_data)
+				self._session_report.character.expedition_reward = {
+					loot_collected = reward.lootRetrieved,
+					all_unlock_progress = expedition_progress_data.all_unlock_progress,
+					node_name_played = expedition_progress_data.node_name_played,
+				}
+			end)
+			table.insert(promise_list, update_expedition_progress_promise)
+		end
+	end
+
+	return Promise.all(unpack(promise_list)):next(function ()
+		if GameParameters.testify or self._session_report_is_dummy then
+			return Promise.resolved()
+		end
 	end):next(function ()
 		if self._session_report_is_dummy then
 			self._session_report_state = SESSION_REPORT_STATES.success
@@ -481,11 +492,12 @@ end
 
 ProgressionManager._get_mastery_rewards = function (self, account_data)
 	local reward_cards = account_data.rewardCards
-	local weapons = {}
 
 	if not reward_cards then
-		return weapons
+		return
 	end
+
+	local weapons = {}
 
 	for i = 1, #reward_cards do
 		local reward_card = reward_cards[i]
@@ -513,7 +525,23 @@ ProgressionManager._get_mastery_rewards = function (self, account_data)
 		end
 	end
 
-	return weapons
+	return not table.is_empty(weapons) and weapons or nil
+end
+
+ProgressionManager._get_expedition_rewards = function (self, account_data)
+	local reward_cards = account_data.rewardCards
+
+	if not reward_cards then
+		return
+	end
+
+	for i = 1, #reward_cards do
+		local reward_card = reward_cards[i]
+
+		if reward_card.kind == "expeditionStats" then
+			return reward_card.rewards[1]
+		end
+	end
 end
 
 ProgressionManager._has_won_mission = function (self, account_data)
@@ -1147,7 +1175,7 @@ end
 
 ProgressionManager._sync_game_score_end_time = function (self)
 	local mechanism_name = Managers.mechanism:mechanism_name()
-	local is_valid_mechanism = mechanism_name == "adventure"
+	local is_valid_mechanism = mechanism_name == "adventure" or mechanism_name == "expedition"
 
 	if is_valid_mechanism then
 		local game_score_end_time = self._game_score_end_time
@@ -1162,6 +1190,7 @@ local _card_animations = {
 	salary = EndPlayerViewAnimations.salary_card_show_content,
 	weaponDrop = EndPlayerViewAnimations.item_reward_show_content,
 	havocOrder = EndPlayerViewAnimations.havoc_card_show_content,
+	expedition = EndPlayerViewAnimations.expedition_card_show_content,
 	track = EndPlayerViewAnimations.weapon_card_show_content,
 }
 
@@ -1315,6 +1344,32 @@ ProgressionManager._fetch_dummy_session_report = function (self)
 	}
 	self._session_report.character.havoc_highest_rank = {
 		rank = 13,
+	}
+	self._session_report.character.expedition_reward = {
+		loot_collected = 2000,
+		node_name_played = "loc_expeditions_map_alpha",
+		all_unlock_progress = {
+			{
+				affected_node = "node_b",
+				affected_node_name = "loc_expeditions_map_beta",
+				key = "total_loot",
+				limit = 5000,
+				previous_progress = 1000,
+				progress = 3000,
+				progress_node_name = "loc_expeditions_map_alpha",
+				type = ExpeditionService.UNLOCK_TYPE.personal_total_loot,
+			},
+			{
+				affected_node = "node_c",
+				affected_node_name = "loc_expeditions_map_gamma",
+				key = "total_loot",
+				limit = 4000,
+				previous_progress = 3000,
+				progress = 4000,
+				progress_node_name = "loc_expeditions_map_alpha",
+				type = ExpeditionService.UNLOCK_TYPE.personal_total_loot,
+			},
+		},
 	}
 
 	self:_parse_report(session_report, dummy_wallet)

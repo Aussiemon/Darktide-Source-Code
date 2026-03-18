@@ -25,6 +25,8 @@ _add_live_event("stolen_rations")
 _add_live_event("saints")
 _add_live_event("broker_stimms")
 _add_live_event("survival")
+_add_live_event("play_expeditions")
 _add_live_event("abhuman_explosions")
+_add_live_event("elite_army")
 
 return settings("LiveEvents", live_events)

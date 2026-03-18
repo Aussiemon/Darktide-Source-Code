@@ -49,7 +49,7 @@ BotNavigationExtension.destroy = function (self)
 	GwNavCostMapMultiplierTable.destroy(self._nav_cost_map_multiplier_table)
 end
 
-BotNavigationExtension.update = function (self, unit, t)
+BotNavigationExtension.update = function (self, unit, dt, t)
 	self:_update_destination(unit, t)
 end
 
@@ -537,6 +537,10 @@ BotNavigationExtension.set_nav_tag_layer_cost = function (self, layer_name, laye
 	local layer_id = Managers.state.nav_mesh:nav_tag_layer_id(layer_name)
 
 	GwNavTagLayerCostTable.set_layer_cost_multiplier(self._nav_tag_cost_table, layer_id, layer_cost)
+end
+
+BotNavigationExtension.move_medium = function (self)
+	return "ground"
 end
 
 return BotNavigationExtension

@@ -115,12 +115,12 @@ ParameterResolver.resolve_command_line = function ()
 			local no_value_exists_for_param = has_more_args_after_current() and next_is_parameter() or not has_more_args_after_current()
 
 			if no_value_exists_for_param then
-				parameters[param] = true
-
 				if param == "game" then
 					parameters = ParameterResolver._command_line_parameters.game
 				elseif param == "dev" then
 					parameters = ParameterResolver._command_line_parameters.dev
+				else
+					parameters[param] = true
 				end
 
 				step_to_next_arg()

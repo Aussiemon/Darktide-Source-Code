@@ -32,7 +32,7 @@ ServoSkullActivatorExtension.on_gameplay_post_init = function (self, unit)
 
 	self._synchronizer_extension = synchronizer_unit_extension
 
-	synchronizer_unit_extension:register_servor_skull_activator_extension(self)
+	synchronizer_unit_extension:register_servo_skull_activator_extension(self)
 	self._interactee_extension:set_active(false)
 end
 

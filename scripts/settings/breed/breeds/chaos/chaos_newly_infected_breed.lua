@@ -36,6 +36,7 @@ local breed_data = {
 	fx_proximity_culling_weight = 1,
 	game_object_type = "minion_melee",
 	has_direct_ragdoll_flow_event = true,
+	heat = 0.2,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	player_locomotion_constrain_radius = 0.3,
 	power_level_type = "horde_default_melee",

@@ -559,6 +559,29 @@ math.ease_in_out_cubic = function (t)
 	end
 end
 
+math.get_uniformly_random_point_inside_sector = function (radius1, radius2, angle1, angle2)
+	local radius1_squared = radius1 * radius1
+	local radius2_squared = radius2 * radius2
+	local angle = angle1 + (angle2 - angle1) * math_random()
+	local r = math_sqrt(radius1_squared + (radius2_squared - radius1_squared) * math_random())
+
+	return r * math_sin(angle), r * math_cos(angle)
+end
+
+math.get_uniformly_random_point_inside_sector_seeded = function (seed, radius1, radius2, angle1, angle2)
+	local radius1_squared = radius1 * radius1
+	local radius2_squared = radius2 * radius2
+	local rnd1, rnd2
+
+	seed, rnd1 = math.next_random(seed)
+	seed, rnd2 = math.next_random(seed)
+
+	local angle = angle1 + (angle2 - angle1) * rnd1
+	local r = math_sqrt(radius1_squared + (radius2_squared - radius1_squared) * rnd2)
+
+	return seed, r * math_sin(angle), r * math_cos(angle)
+end
+
 local MAX_SEED = 2147483647
 
 math.random_seed = function (seed)

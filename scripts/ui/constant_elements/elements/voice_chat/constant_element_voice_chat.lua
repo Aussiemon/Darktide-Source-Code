@@ -1,11 +1,6 @@
 ﻿-- chunkname: @scripts/ui/constant_elements/elements/voice_chat/constant_element_voice_chat.lua
 
 local ConstantElementVoiceChatDefinitions = require("scripts/ui/constant_elements/elements/voice_chat/constant_element_voice_chat_definitions")
-local ProfileUtils = require("scripts/utilities/profile_utils")
-local UISettings = require("scripts/settings/ui/ui_settings")
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local PlayerCompositions = require("scripts/utilities/players/player_compositions")
-local PlayerInfo = require("scripts/managers/data_service/services/social/player_info")
 local ChatManagerConstants = require("scripts/foundation/managers/chat/chat_manager_constants")
 local ConstantElementVoiceChat = class("ConstantElementVoiceChat", "ConstantElementBase")
 
@@ -122,20 +117,14 @@ ConstantElementVoiceChat._chat_manager_participant_update = function (self, chan
 		if is_speaking and account_id then
 			self._players_speaking[account_id] = true
 
-			local account_is_speaking = false
-
-			for i = 1, #self._players_speaking_order do
-				local speaking_account = self._players_speaking_order[i]
-
-				if speaking_account == account_id then
-					account_is_speaking = true
-
-					break
-				end
-			end
+			local account_is_speaking = table.array_contains(self._players_speaking_order, account_id)
 
 			if not account_is_speaking then
 				self._players_speaking_order[#self._players_speaking_order + 1] = account_id
+
+				local player_info = Managers.data_service.social:get_player_info_by_account_id(account_id)
+
+				self._available_players[account_id] = string.format("%s - %s", player_info:character_name(), player_info:user_display_name())
 			end
 		elseif account_id then
 			self:_remove_speaking_player(account_id)

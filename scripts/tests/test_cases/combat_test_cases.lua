@@ -140,6 +140,7 @@ CombatTestCases.run_through_mission = function (case_settings)
 		end
 
 		if num_peers == 0 then
+			TestifySnippets.skip_main_menu()
 			TestifySnippets.load_mission(mission_key)
 		end
 
@@ -147,6 +148,12 @@ CombatTestCases.run_through_mission = function (case_settings)
 		TestifySnippets.wait_for_peers(num_peers)
 		TestifySnippets.wait_for_all_peers_reach_gameplay_state()
 		TestifySnippets.wait_for_mission_intro()
+
+		local mechanism_name = Testify:make_request("mechanism_name", mission_key)
+
+		if mechanism_name == "expedition" then
+			Testify:make_request("expedition_wait_until_location_ready")
+		end
 
 		local num_bots = Testify:make_request("num_bots")
 
@@ -243,6 +250,8 @@ CombatTestCases.run_through_mission = function (case_settings)
 		if back_to_hub_after_runthrough then
 			Testify:make_request("wait_for_in_hub")
 		end
+
+		TestifySnippets.exit_to_main_menu_and_wait()
 
 		return result
 	end)

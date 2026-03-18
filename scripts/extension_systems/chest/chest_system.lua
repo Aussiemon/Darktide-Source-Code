@@ -30,6 +30,10 @@ ChestSystem.on_gameplay_post_init = function (self, level)
 	self:call_gameplay_post_init_on_extensions(level)
 end
 
+ChestSystem.on_location_setup = function (self)
+	self:call_gameplay_post_init_on_extensions()
+end
+
 ChestSystem.rpc_chest_set_state = function (self, channel_id, level_unit_id, state_id)
 	local unit = Managers.state.unit_spawner:unit(level_unit_id, true)
 	local extension = self._unit_to_extension_map[unit]

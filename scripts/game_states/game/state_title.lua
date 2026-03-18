@@ -34,8 +34,12 @@ local function _create_player(account_id, selected_profile)
 	if not local_player then
 		local telemetry_game_session = Managers.telemetry_events._session.game
 		local slot = 0
+		local telemetry_ids = {
+			instance = nil,
+			session = telemetry_game_session,
+		}
 
-		local_player = Managers.player:add_human_player(HumanPlayer, nil, Network.peer_id(), local_player_id, selected_profile, slot, account_id, "player1", telemetry_game_session)
+		local_player = Managers.player:add_human_player(HumanPlayer, nil, Network.peer_id(), local_player_id, selected_profile, slot, account_id, "player1", telemetry_ids)
 
 		Managers.telemetry_events:local_player_spawned(local_player)
 	end
@@ -636,10 +640,6 @@ StateTitle._signin = function (self)
 		end):next(function ()
 			self._backend_promise = nil
 			self._backend_data_synced = true
-
-			if IS_XBS or IS_GDK then
-				XboxLiveUtils.check_premium_currency_discount()
-			end
 		end):catch(function ()
 			Managers.event:trigger("event_add_notification_message", "alert", {
 				text = Localize("loc_popup_description_backend_error"),
@@ -678,7 +678,7 @@ StateTitle._signin = function (self)
 		Managers.account:fetch_crossplay_restrictions()
 
 		if GameParameters.prod_like_backend then
-			Managers.presence:initialize()
+			Managers.presence:initialize(Managers.telemetry_events._session.game)
 		end
 
 		if GameParameters.prod_like_backend then

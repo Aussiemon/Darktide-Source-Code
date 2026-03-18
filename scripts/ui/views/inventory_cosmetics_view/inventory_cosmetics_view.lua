@@ -2,8 +2,9 @@
 
 require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
 
-local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
-local CrimesCompabilityMap = require("scripts/settings/character/crimes_compability_mapping")
+local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
+local AchievementUiHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
+local CrimesCompabilityMapping = require("scripts/settings/character/crimes_compability_mapping")
 local Definitions = require("scripts/ui/views/inventory_cosmetics_view/inventory_cosmetics_view_definitions")
 local InventoryCosmeticsViewSettings = require("scripts/ui/views/inventory_cosmetics_view/inventory_cosmetics_view_settings")
 local Items = require("scripts/utilities/items")
@@ -24,7 +25,6 @@ local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local Vo = require("scripts/utilities/vo")
 local VoiceFxPresetSettings = require("scripts/settings/dialogue/voice_fx_preset_settings")
-local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
 local WIDGET_TYPE_BY_SLOT = {
 	slot_animation_emote_1 = "ui_item",
 	slot_animation_emote_2 = "ui_item",
@@ -885,7 +885,7 @@ InventoryCosmeticsView._achievement_items = function (self, selected_slot_name)
 	local achievements = Managers.achievements:achievement_definitions()
 
 	for _, achievement in pairs(achievements) do
-		local reward_items = AchievementUIHelper.get_all_reward_items(achievement)
+		local reward_items = AchievementUiHelper.get_all_reward_items(achievement)
 
 		for i = 1, #reward_items do
 			local reward_item = reward_items[i].reward_item
@@ -900,7 +900,7 @@ InventoryCosmeticsView._achievement_items = function (self, selected_slot_name)
 						penance_amount = sub_penances_count,
 					})
 				else
-					description_text = AchievementUIHelper.localized_description(achievement)
+					description_text = AchievementUiHelper.localized_description(achievement)
 				end
 
 				local is_visible_before_unlock = not achievement.flags.hide_missing
@@ -909,7 +909,7 @@ InventoryCosmeticsView._achievement_items = function (self, selected_slot_name)
 				if valid and is_visible_before_unlock then
 					achievement_items[#achievement_items + 1] = {
 						item = reward_item,
-						label = AchievementUIHelper.localized_title(achievement),
+						label = AchievementUiHelper.localized_title(achievement),
 						description = description_text,
 					}
 				end
@@ -1099,7 +1099,7 @@ InventoryCosmeticsView._item_valid_by_current_profile = function (self, item)
 	local archetype = profile.archetype
 	local lore = profile.lore
 	local backstory = lore.backstory
-	local crime = CrimesCompabilityMap[backstory.crime] or backstory.crime
+	local crime = CrimesCompabilityMapping[backstory.crime] or backstory.crime
 	local archetype_name = archetype.name
 	local breed_name = archetype.breed
 	local breed_valid = not item.breeds or table.contains(item.breeds, breed_name)
@@ -1425,7 +1425,7 @@ InventoryCosmeticsView._setup_background_world = function (self)
 	local player = self._preview_player
 	local player_profile = player:profile()
 	local archetype = player_profile.archetype
-	local breed_name = archetype.breed
+	local breed_name = archetype.ui_breed or archetype.breed or "human"
 	local default_camera_event_id = "event_register_cosmetics_preview_default_camera_" .. breed_name
 
 	self[default_camera_event_id] = function (instance, camera_unit)

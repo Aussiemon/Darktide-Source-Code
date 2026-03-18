@@ -62,6 +62,16 @@ local interaction_templates = {
 		ui_interaction_type = "mission",
 		wield_slot = "slot_device",
 	},
+	gamemode_expeditions = {
+		action_text = "loc_action_interaction_view",
+		description = "loc_expeditions_view",
+		duration = 0,
+		interaction_class_name = "gamemode_expeditions",
+		interaction_icon = "content/ui/materials/hud/interactions/icons/expeditions",
+		interaction_priority = 1,
+		ui_interaction_type = "point_of_interest",
+		ui_view_name = "expedition_view",
+	},
 	gamemode_havoc = {
 		action_text = "loc_action_interaction_view",
 		description = "loc_havoc_view",
@@ -100,6 +110,16 @@ local interaction_templates = {
 		start_anim_event_3p = "interaction_revive",
 		stop_anim_event = "arms_down",
 		stop_anim_event_3p = "interaction_end",
+		taggable = true,
+		ui_interaction_type = "point_of_interest",
+	},
+	expedition_loot_converter = {
+		action_text = "loc_action_interaction_use",
+		duration = 0,
+		extra_description = "loc_extra_description_expedition_loot_converter",
+		interaction_class_name = "expedition_loot_converter",
+		interaction_icon = "content/ui/materials/hud/interactions/icons/default",
+		interaction_priority = 1,
 		taggable = true,
 		ui_interaction_type = "point_of_interest",
 	},
@@ -251,16 +271,17 @@ local interaction_templates = {
 		stop_anim_event_3p = "interaction_end",
 		taggable = true,
 		ui_interaction_type = "critical",
-		start_anim_event_func = function (interactee_unit, interactor_unit)
+		breed_anim_events_3p = {
+			human = "interaction_revive_human",
+			ogryn = "interaction_revive_ogryn",
+		},
+		start_anim_event_func = function (template, interactee_unit, interactor_unit)
 			local interactee_unit_data_extension = ScriptUnit.extension(interactee_unit, "unit_data_system")
 			local breed = interactee_unit_data_extension:breed()
 			local breed_name = breed.name
+			local anim_event_3p = template.breed_anim_events_3p[breed_name]
 
-			if breed_name == "human" then
-				return "arms_down", "interaction_revive_human"
-			end
-
-			return "arms_down", "interaction_revive_ogryn"
+			return "arms_down", anim_event_3p
 		end,
 	},
 	remove_net = {
@@ -278,16 +299,17 @@ local interaction_templates = {
 		taggable = true,
 		ui_interaction_type = "critical",
 		vo_event = "start_revive",
-		start_anim_event_func = function (interactee_unit, interactor_unit)
+		breed_anim_events_3p = {
+			human = "interaction_revive_human",
+			ogryn = "interaction_revive_ogryn",
+		},
+		start_anim_event_func = function (template, interactee_unit, interactor_unit)
 			local interactee_unit_data_extension = ScriptUnit.extension(interactee_unit, "unit_data_system")
 			local breed = interactee_unit_data_extension:breed()
 			local breed_name = breed.name
+			local anim_event_3p = template.breed_anim_events_3p[breed_name]
 
-			if breed_name == "human" then
-				return "arms_down", "interaction_revive_human"
-			end
-
-			return "arms_down", "interaction_revive_ogryn"
+			return "arms_down", anim_event_3p
 		end,
 	},
 	revive = {
@@ -305,16 +327,17 @@ local interaction_templates = {
 		taggable = false,
 		ui_interaction_type = "critical",
 		vo_event = "start_revive",
-		start_anim_event_func = function (interactee_unit, interactor_unit)
+		breed_anim_events_3p = {
+			human = "interaction_revive_human",
+			ogryn = "interaction_revive_ogryn",
+		},
+		start_anim_event_func = function (template, interactee_unit, interactor_unit)
 			local interactee_unit_data_extension = ScriptUnit.extension(interactee_unit, "unit_data_system")
 			local breed = interactee_unit_data_extension:breed()
 			local breed_name = breed.name
+			local anim_event_3p = template.breed_anim_events_3p[breed_name]
 
-			if breed_name == "human" then
-				return "arms_down", "interaction_revive_human"
-			end
-
-			return "arms_down", "interaction_revive_ogryn"
+			return "arms_down", anim_event_3p
 		end,
 	},
 	rescue = {
@@ -332,16 +355,17 @@ local interaction_templates = {
 		taggable = false,
 		ui_interaction_type = "critical",
 		vo_event = "start_revive",
-		start_anim_event_func = function (interactee_unit, interactor_unit)
+		breed_anim_events_3p = {
+			human = "interaction_revive_human",
+			ogryn = "interaction_revive_ogryn",
+		},
+		start_anim_event_func = function (template, interactee_unit, interactor_unit)
 			local interactee_unit_data_extension = ScriptUnit.extension(interactee_unit, "unit_data_system")
 			local breed = interactee_unit_data_extension:breed()
 			local breed_name = breed.name
+			local anim_event_3p = template.breed_anim_events_3p[breed_name]
 
-			if breed_name == "human" then
-				return "arms_down", "interaction_revive_human"
-			end
-
-			return "arms_down", "interaction_revive_ogryn"
+			return "arms_down", anim_event_3p
 		end,
 	},
 	scanning = {
@@ -396,11 +420,36 @@ local interaction_templates = {
 		ui_interaction_type = "mission",
 		wield_slot = "slot_device",
 	},
+	pickup = {
+		action_text = "loc_action_interaction_pickup",
+		duration = 0,
+		interaction_class_name = "pickup",
+		interaction_icon = "content/ui/materials/hud/interactions/icons/default",
+		interaction_priority = 1,
+		taggable = true,
+		ui_interaction_type = "pickup",
+	},
 	side_mission = {
 		action_text = "loc_action_interaction_pickup",
 		duration = 0,
 		interaction_class_name = "pickup",
 		interaction_icon = "content/ui/materials/hud/interactions/icons/objective_side",
+		interaction_priority = 1,
+		ui_interaction_type = "pickup",
+	},
+	expeditions_loot = {
+		action_text = "loc_action_interaction_pickup",
+		duration = 0,
+		interaction_class_name = "pickup",
+		interaction_icon = "content/ui/materials/hud/interactions/icons/expeditions_loot",
+		interaction_priority = 1,
+		ui_interaction_type = "pickup",
+	},
+	expeditions_currency = {
+		action_text = "loc_action_interaction_pickup",
+		duration = 0,
+		interaction_class_name = "pickup",
+		interaction_icon = "content/ui/materials/hud/interactions/icons/expeditions_salvage",
 		interaction_priority = 1,
 		ui_interaction_type = "pickup",
 	},
@@ -510,10 +559,7 @@ local interaction_templates = {
 		duration = 0,
 		interaction_class_name = "pickup",
 		interaction_icon = "content/ui/materials/hud/interactions/icons/default",
-		interaction_input = "interact_primary_pressed",
 		interaction_priority = 1,
-		secondary_action_text = "loc_action_interaction_stolen_rations_destroy",
-		secondary_interaction_input = "interact_secondary_pressed",
 		taggable = false,
 		ui_interaction_type = "pickup",
 	},

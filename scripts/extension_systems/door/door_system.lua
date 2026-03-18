@@ -19,12 +19,12 @@ DoorSystem.init = function (self, extension_system_creation_context, ...)
 	Managers.state.level_props_broadphase:register_extension_system(self)
 end
 
-DoorSystem.rpc_sync_door_state = function (self, channel_id, unit_level_index, state_lookup_id, anim_time_normalized)
+DoorSystem.rpc_sync_door_state = function (self, channel_id, unit_level_index, state_lookup_id, animate)
 	local unit = Managers.state.unit_spawner:unit(unit_level_index, true)
 	local state = NetworkLookup.door_states[state_lookup_id]
 	local extension = self._unit_to_extension_map[unit]
 
-	extension:rpc_sync_door_state(state, anim_time_normalized)
+	extension:rpc_sync_door_state(state, animate)
 end
 
 DoorSystem.destroy = function (self, ...)

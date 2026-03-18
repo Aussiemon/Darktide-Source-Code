@@ -9,8 +9,9 @@ MissionObjectiveZoneSynchronizer.init = function (self, unit)
 		local num_zones_in_mission_objective = self:get_data(unit, "num_zones_in_mission_objective")
 		local objective_name = self:get_data(unit, "objective_name")
 		local automatic_start = self:get_data(unit, "automatic_start")
+		local register_on_spawn = self:get_data(unit, "register_on_spawn")
 
-		mission_objective_zone_synchronizer_extension:setup_from_component(num_zones_in_mission_objective, objective_name, automatic_start)
+		mission_objective_zone_synchronizer_extension:setup_from_component(num_zones_in_mission_objective, objective_name, automatic_start, register_on_spawn)
 
 		self._mission_objective_zone_synchronizer_extension = mission_objective_zone_synchronizer_extension
 	end
@@ -26,6 +27,10 @@ end
 
 MissionObjectiveZoneSynchronizer.start_mission_objective_zone_event = function (self)
 	self._mission_objective_zone_synchronizer_extension:start_event()
+end
+
+MissionObjectiveZoneSynchronizer.synchronizer_register = function (self)
+	self._mission_objective_zone_synchronizer_extension:register()
 end
 
 MissionObjectiveZoneSynchronizer.enable = function (self, unit)
@@ -56,8 +61,17 @@ MissionObjectiveZoneSynchronizer.component_data = {
 		ui_type = "check_box",
 		value = false,
 	},
+	register_on_spawn = {
+		ui_name = "Register on Spawn",
+		ui_type = "check_box",
+		value = true,
+	},
 	inputs = {
 		start_mission_objective_zone_event = {
+			accessibility = "public",
+			type = "event",
+		},
+		synchronizer_register = {
 			accessibility = "public",
 			type = "event",
 		},

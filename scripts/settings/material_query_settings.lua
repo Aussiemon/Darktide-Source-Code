@@ -21,6 +21,7 @@ local surface_materials = {
 	"metal_sheet",
 	"metal_solid",
 	"psychic_shield",
+	"void_shell",
 	"vegetation",
 	"water_deep",
 	"water_puddle",
@@ -49,6 +50,7 @@ local surface_material_groups = {
 		"concrete",
 		"ice_solid",
 		"psychic_shield",
+		"void_shell",
 	},
 	dirt = {
 		"dirt_sand",

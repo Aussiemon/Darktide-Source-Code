@@ -3,7 +3,7 @@
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local grenade_weapon_template_generator = require("scripts/settings/equipment/weapon_templates/weapon_template_generators/grenade_weapon_template_generator")
-local weapon_template = grenade_weapon_template_generator()
+local weapon_template = grenade_weapon_template_generator("grenade_ability")
 
 weapon_template.anim_state_machine_3p = "content/characters/player/ogryn/third_person/animations/grenade"
 weapon_template.anim_state_machine_1p = "content/characters/player/ogryn/first_person/animations/grenade_equipable"

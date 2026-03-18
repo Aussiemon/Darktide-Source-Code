@@ -204,6 +204,14 @@ GameModeExtensionHavoc.get_minion_health_modifier = function (self, breed)
 		modifier = modifier + special_health_modifier
 	end
 
+	local interrupter = tags.interrupter
+
+	if interrupter then
+		local special_health_modifier = self:get_modifier_value("modify_special_health") or 0
+
+		modifier = modifier + special_health_modifier
+	end
+
 	local monster = tags.monster
 
 	if monster then

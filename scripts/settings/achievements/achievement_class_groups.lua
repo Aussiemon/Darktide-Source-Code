@@ -5,7 +5,7 @@ local AchievementClassGroups = {}
 AchievementClassGroups.classes = {
 	{
 		category = "veteran_progression",
-		icon = "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement",
+		icon = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement",
 		local_variable = "loc_class_veteran_name",
 		name = "veteran_meta_numeric_achievement",
 		achievements = {
@@ -58,7 +58,7 @@ AchievementClassGroups.classes = {
 	},
 	{
 		category = "zealot_progression",
-		icon = "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement",
+		icon = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement",
 		local_variable = "loc_class_zealot_name",
 		name = "zealot_meta_numeric_achievement",
 		achievements = {
@@ -111,7 +111,7 @@ AchievementClassGroups.classes = {
 	},
 	{
 		category = "psyker_progression",
-		icon = "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement",
+		icon = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement",
 		local_variable = "loc_class_psyker_title",
 		name = "psyker_meta_numeric_achievement",
 		achievements = {
@@ -164,7 +164,7 @@ AchievementClassGroups.classes = {
 	},
 	{
 		category = "ogryn_progression",
-		icon = "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement",
+		icon = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement",
 		local_variable = "loc_class_ogryn_name",
 		name = "ogryn_meta_numeric_achievement",
 		achievements = {

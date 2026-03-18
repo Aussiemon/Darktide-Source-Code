@@ -367,17 +367,31 @@ Characters._pop_data_queue = function (self, character_id, section)
 	end
 
 	if next_request.mode == DATA_MODES.set then
+		local num_bundled_requests = 1
+
 		return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/data/" .. section), {
 			method = "PUT",
 			body = {
 				data = next_request.data,
 			},
 		}):next(function (data)
-			next_request.promise:resolve(data)
-			table.remove(section_queue, 1)
-			self:_pop_data_queue(character_id, section)
+			for i = 1, num_bundled_requests do
+				next_request.promise:resolve(data)
+				table.remove(section_queue, 1)
 
-			return nil
+				next_request = section_queue[1]
+			end
+
+			self:_pop_data_queue(character_id, section)
+		end):catch(function (...)
+			for i = 1, num_bundled_requests do
+				next_request.promise:reject(...)
+				table.remove(section_queue, 1)
+
+				next_request = section_queue[1]
+			end
+
+			self:_pop_data_queue(character_id, section)
 		end)
 	elseif next_request.mode == DATA_MODES.get then
 		local optional_account_id = next_request.optional_account_id
@@ -393,6 +407,10 @@ Characters._pop_data_queue = function (self, character_id, section)
 			end
 
 			next_request.promise:resolve(data)
+			table.remove(section_queue, 1)
+			self:_pop_data_queue(character_id, section)
+		end):catch(function (...)
+			next_request.promise:reject(...)
 			table.remove(section_queue, 1)
 			self:_pop_data_queue(character_id, section)
 		end)

@@ -6,7 +6,7 @@ local CircumstanceManager = class("CircumstanceManager")
 CircumstanceManager.DEBUG_TAG = "Circumstance"
 
 CircumstanceManager.init = function (self, circumstance_name)
-	local template = CircumstanceTemplates[circumstance_name]
+	local template = circumstance_name and CircumstanceTemplates[circumstance_name]
 
 	self._circumstance_name = circumstance_name
 end
@@ -16,7 +16,10 @@ CircumstanceManager.destroy = function (self)
 end
 
 CircumstanceManager.active_theme_tag = function (self)
-	return CircumstanceTemplates[self._circumstance_name].theme_tag
+	local circumstance_name = self._circumstance_name
+	local circumstance_template = circumstance_name and CircumstanceTemplates[circumstance_name]
+
+	return circumstance_template.theme_tag
 end
 
 CircumstanceManager.circumstance_name = function (self)
@@ -24,7 +27,10 @@ CircumstanceManager.circumstance_name = function (self)
 end
 
 CircumstanceManager.template = function (self)
-	return CircumstanceTemplates[self._circumstance_name]
+	local circumstance_name = self._circumstance_name
+	local circumstance_template = circumstance_name and CircumstanceTemplates[circumstance_name]
+
+	return circumstance_template
 end
 
 return CircumstanceManager

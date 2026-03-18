@@ -27,6 +27,7 @@ BreachChargeAddon.init = function (self, unit, is_server)
 	self._unit = unit
 	self._is_server = is_server
 	self._delay = nil
+	self._particle_id = nil
 
 	local duration = 3
 	local networked_timer_extension = ScriptUnit.fetch_component_extension(unit, "networked_timer_system")
@@ -101,7 +102,7 @@ BreachChargeAddon.lua_timer_finished = function (self)
 	if self:get_data(unit, "use_particle_effect") then
 		local particle_name = self:get_data(unit, "particle_effect_resource")
 
-		World.create_particles(world, particle_name, world_position, world_rotation, world_scale)
+		self._particle_id = World.create_particles(world, particle_name, world_position, world_rotation, world_scale)
 	end
 
 	if self:get_data(unit, "use_wwise_event") then
@@ -151,6 +152,19 @@ BreachChargeAddon.destroy = function (self, unit)
 				unit_spawner_manager:mark_for_deletion(breach_charge_unit)
 			end
 		end
+	end
+
+	local world = Unit.world(unit)
+	local particle_id = self._particle_id
+
+	if particle_id then
+		local alive = World.are_particles_playing(world, particle_id)
+
+		if alive then
+			World.destroy_particles(world, particle_id)
+		end
+
+		self._particle_id = nil
 	end
 end
 

@@ -1340,11 +1340,11 @@ recoil_templates.lasgun_p1_m2_ads_killshot = {
 		},
 		decay = {
 			shooting = {
-				lerp_basic = 0.25,
-				lerp_perfect = 1,
+				lerp_basic = 0.85,
+				lerp_perfect = 1.35,
 			},
 			idle = {
-				lerp_basic = 1,
+				lerp_basic = 1.5,
 				lerp_perfect = 3,
 			},
 		},

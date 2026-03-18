@@ -325,13 +325,15 @@ function _calculate_health_damage_player(damage_amount, damage_profile, damage_t
 		end
 	end
 
-	local has_max_damage_taken_buff = attacked_unit_keywords and attacked_unit_keywords[buff_keywords.limit_health_damage_taken]
+	if not instakill then
+		local has_max_damage_taken_buff = attacked_unit_keywords and attacked_unit_keywords[buff_keywords.limit_health_damage_taken]
 
-	if not instakill and has_max_damage_taken_buff then
-		local limit = attacked_unit_stat_buffs.max_health_damage_taken_per_hit
+		if has_max_damage_taken_buff then
+			local limit = attacked_unit_stat_buffs.max_health_damage_taken_per_hit
 
-		permanent_damage = math.min(permanent_damage, limit)
-		health_damage = math.min(health_damage, limit)
+			permanent_damage = math.min(permanent_damage, limit)
+			health_damage = math.min(health_damage, limit)
+		end
 	end
 
 	local remaining_health = max_health - current_health_damage - health_damage

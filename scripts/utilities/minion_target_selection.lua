@@ -2,6 +2,7 @@
 
 local AttackIntensity = require("scripts/utilities/attack_intensity")
 local Breed = require("scripts/utilities/breed")
+local MutatorSettings = require("scripts/settings/mutator/mutator_settings")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local MinionTargetSelection = {}
 local DEFAULT_TARGETED_BY_MONSTER_WEIGHT = -5
@@ -262,6 +263,10 @@ local CIRCUMSTANCE_DETECTION_RADIUS_MODIFIERS = {
 	mutator_darkness_los = 0.5,
 	mutator_ventilation_purge_los = 0.7,
 }
+
+for i = 1, #MutatorSettings.dark_mutators do
+	local mutator_name = MutatorSettings.dark_mutators[i]
+end
 
 MinionTargetSelection.detection_radius = function (breed)
 	local detection_radius = breed.detection_radius

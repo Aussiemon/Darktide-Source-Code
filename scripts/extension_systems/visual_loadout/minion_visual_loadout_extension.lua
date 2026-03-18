@@ -30,13 +30,14 @@ end
 local _attach_settings = {
 	attach_pose = nil,
 	character_unit = nil,
+	extension_manager = nil,
 	from_script_component = false,
 	from_ui_profile_spawner = false,
 	is_minion = true,
 	item_definitions = nil,
 	lod_group = nil,
 	lod_shadow_group = nil,
-	spawn_with_extensions = false,
+	spawn_with_extensions = nil,
 	unit_spawner = nil,
 	world = nil,
 }
@@ -81,6 +82,15 @@ local function _create_slot_entry(unit, lod_group, lod_shadow_group, world, item
 		local mission_template, equipment
 
 		item_unit, attachments = VisualLoadoutCustomization.spawn_item(item_data, _attach_settings, unit, false, false, false, mission_template, equipment)
+		_attach_settings.world = nil
+		_attach_settings.unit_spawner = nil
+		_attach_settings.character_unit = nil
+		_attach_settings.item_definitions = nil
+		_attach_settings.attach_pose = nil
+		_attach_settings.lod_group = nil
+		_attach_settings.lod_shadow_group = nil
+		_attach_settings.extension_manager = nil
+		_attach_settings.spawn_with_extensions = nil
 	end
 
 	local drop_on_death = item_slot_data.drop_on_death
@@ -114,11 +124,6 @@ local function _create_material_override_slot_entry(unit, item_slot_data, random
 	local new_seed, item_index = math.next_random(random_seed, 1, num_items)
 	local item_name = items[item_index]
 	local item_data = item_definitions[item_name]
-
-	for i, material_override in pairs(item_data.material_overrides) do
-		VisualLoadoutCustomization.apply_material_override(unit, unit, false, material_override, false)
-	end
-
 	local material_override_items = item_data.material_override_items
 
 	if material_override_items then
@@ -154,7 +159,9 @@ MinionVisualLoadoutExtension.init = function (self, extension_init_context, unit
 
 	local lod_group = VisualLoadoutLodGroup.try_init_and_fetch_lod_group(unit, "lod")
 	local lod_shadow_group = VisualLoadoutLodGroup.try_init_and_fetch_lod_group(unit, "lod_shadow")
-	local item_definitions = MasterItems.get_cached()
+
+	self._item_definitions = MasterItems.get_cached()
+
 	local random_seed, inventory = extension_init_data.random_seed, extension_init_data.inventory
 
 	self._random_seed = random_seed
@@ -172,10 +179,10 @@ MinionVisualLoadoutExtension.init = function (self, extension_init_context, unit
 		if slot_data.is_material_override_slot then
 			material_override_slots[slot_name] = slot_data
 		elseif slot_data.is_weapon then
-			slots[slot_name], random_seed = _create_slot_entry(unit, nil, nil, world, slot_data, random_seed, item_definitions)
+			slots[slot_name], random_seed = _create_slot_entry(unit, nil, nil, world, slot_data, random_seed, self._item_definitions)
 			slot_unit = slots[slot_name].unit
 		else
-			slots[slot_name], random_seed = _create_slot_entry(unit, lod_group, lod_shadow_group, world, slot_data, random_seed, item_definitions)
+			slots[slot_name], random_seed = _create_slot_entry(unit, lod_group, lod_shadow_group, world, slot_data, random_seed, self._item_definitions)
 			slot_unit = slots[slot_name].unit
 		end
 
@@ -189,7 +196,7 @@ MinionVisualLoadoutExtension.init = function (self, extension_init_context, unit
 	end
 
 	for slot_name, slot_data in pairs(material_override_slots) do
-		material_override_slots[slot_name], random_seed = _create_material_override_slot_entry(unit, slot_data, random_seed, item_definitions)
+		material_override_slots[slot_name], random_seed = _create_material_override_slot_entry(unit, slot_data, random_seed, self._item_definitions)
 	end
 
 	if not is_server then
@@ -230,7 +237,7 @@ MinionVisualLoadoutExtension.extensions_ready = function (self, world, unit)
 		local random_seed = self._random_seed
 		local wounds_extension_or_nil = use_wounds and ScriptUnit.extension(unit, "wounds_system") or nil
 
-		self._minion_gibbing = MinionGibbing:new(unit, breed, world, self._wwise_world, gib_template, self, random_seed, gib_variations_or_nil, wounds_extension_or_nil)
+		self._minion_gibbing = MinionGibbing:new(unit, breed, world, self._wwise_world, gib_template, self, random_seed, gib_variations_or_nil, wounds_extension_or_nil, self._item_definitions)
 	end
 end
 
@@ -805,7 +812,7 @@ MinionVisualLoadoutExtension.inventory = function (self)
 	return self._inventory
 end
 
-MinionVisualLoadoutExtension.slot_material_override = function (self, slot_name)
+MinionVisualLoadoutExtension.slot_material_override_items = function (self, slot_name)
 	local slot_data = self._slots[slot_name] or self._material_override_slots[slot_name]
 	local item_data = slot_data and slot_data.item_data
 
@@ -813,7 +820,7 @@ MinionVisualLoadoutExtension.slot_material_override = function (self, slot_name)
 		return nil, nil
 	end
 
-	return item_data.material_override_apply_to_parent, item_data.material_overrides
+	return item_data.material_override_apply_to_parent, item_data.material_override_items
 end
 
 MinionVisualLoadoutExtension.gib = function (self, hit_zone_name_or_nil, attack_direction, damage_profile, optional_is_critical_strike)
@@ -909,7 +916,7 @@ MinionVisualLoadoutExtension.rpc_minion_unequip_slot = function (self, channel_i
 end
 
 MinionVisualLoadoutExtension.override_slot = function (self, override_name, template)
-	self:_override_slot(template)
+	self:_override_slot(template, "overriden")
 
 	local override_id = NetworkLookup.MutatorMinionVisualOverrideSettings[override_name]
 
@@ -947,10 +954,10 @@ MinionVisualLoadoutExtension.rpc_minion_override_slot = function (self, channel_
 
 	local chosen_template = overrides
 
-	self:_override_slot(chosen_template)
+	self:_override_slot(chosen_template, "overriden")
 end
 
-MinionVisualLoadoutExtension._override_slot = function (self, template)
+MinionVisualLoadoutExtension._override_slot = function (self, template, new_state, optional_slot_template_name_reference, allow_dedicated_server)
 	local slots = self._slots
 	local unit = self._unit
 
@@ -987,11 +994,12 @@ MinionVisualLoadoutExtension._override_slot = function (self, template)
 			Managers.state.out_of_bounds:unregister_soft_oob_unit(item_unit, self)
 		end
 
-		if not DEDICATED_SERVER then
+		if not DEDICATED_SERVER or allow_dedicated_server then
 			slot_data = self:create_slot_entry(unit, items)
 		end
 
-		slot_data.state = "overriden"
+		slot_data.state = new_state
+		slot_data.optional_slot_template_name_reference = optional_slot_template_name_reference
 		slots[slot] = slot_data
 	end
 end

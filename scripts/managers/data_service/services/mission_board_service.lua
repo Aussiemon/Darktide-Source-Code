@@ -124,6 +124,10 @@ MissionBoardService.get_new_difficulty_unlocked = function (self, character_id)
 	return self._backend_interface.mission_board:get_new_difficulty_unlocked(character_id)
 end
 
+MissionBoardService.get_highest_difficulty_unlocked = function (self, character_id)
+	return self._backend_interface.mission_board:get_highest_difficulty_unlocked(character_id)
+end
+
 MissionBoardService.is_difficulty_unlocked = function (self, difficulty_name)
 	local difficulty_progression_data = self:get_difficulty_progression_data()
 

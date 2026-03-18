@@ -3,6 +3,7 @@
 local BaseBlackboardComponentTemplate = require("scripts/settings/breed/breed_blackboard_component_templates/base_blackboard_component_template")
 local monster = {
 	behavior = {
+		move_medium = "string",
 		move_state = "string",
 	},
 	slot = {
@@ -21,6 +22,7 @@ local chaos_spawn = table.clone(monster)
 chaos_spawn.behavior = {
 	grab_cooldown = "number",
 	grabbed_unit = "Unit",
+	move_medium = "string",
 	move_state = "string",
 	should_leap = "boolean",
 	wants_to_catapult_grabbed_unit = "boolean",

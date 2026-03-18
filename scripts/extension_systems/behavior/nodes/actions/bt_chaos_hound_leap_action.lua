@@ -363,7 +363,7 @@ BtChaosHoundLeapAction._check_colliding_players = function (self, unit, scratchp
 	local radius, dodge_radius = ChaosHoundSettings.collision_radius, ChaosHoundSettings.dodge_collision_radius
 	local hit_actors, actor_count = PhysicsWorld.immediate_overlap(physics_world, "shape", "sphere", "position", attacking_unit_pos, "size", radius, "types", "dynamics", "collision_filter", "filter_player_detection")
 	local side = scratchpad.side_system.side_by_unit[unit]
-	local ai_target_units = side.ai_target_units
+	local ai_ground_target_units = side.ai_ground_target_units
 	local direction = Quaternion.forward(Unit.world_rotation(unit, 1))
 
 	for i = 1, actor_count do
@@ -399,7 +399,7 @@ BtChaosHoundLeapAction._check_colliding_players = function (self, unit, scratchp
 			local character_state_component = hit_unit_data_extension:read_component("character_state")
 			local is_on_ladder = PlayerUnitStatus.is_climbing_ladder(character_state_component)
 
-			if ai_target_units[hit_unit] and not is_pounced and not is_on_ladder then
+			if ai_ground_target_units[hit_unit] and not is_pounced and not is_on_ladder then
 				return hit_unit
 			end
 		until true
@@ -444,6 +444,7 @@ BtChaosHoundLeapAction._update_stopping_state = function (self, scratchpad, t)
 end
 
 local cooldown_by_breed = {
+	chaos_armored_hound = "chaos_armored_hound_pounce",
 	chaos_hound = "chaos_hound_pounce",
 	chaos_hound_mutator = "chaos_hound_pounce",
 }

@@ -95,6 +95,12 @@ GameSessionManager.num_clients = function (self)
 	return session_host and session_host:num_clients() or 0
 end
 
+GameSessionManager.num_approved_channel_clients = function (self)
+	local session_host = self._session_host
+
+	return session_host and session_host:num_approved_channel_clients() or 0
+end
+
 GameSessionManager.disconnect = function (self)
 	if self._session_host then
 		for peer_id, _ in pairs(self._joined_peers_cache) do
@@ -491,6 +497,15 @@ GameSessionManager._client_joined = function (self, channel_id, peer_id)
 
 	local player_spawner_system = Managers.state.extension:system("player_spawner_system")
 	local wanted_spawn_point = player:wanted_spawn_point()
+
+	if not wanted_spawn_point then
+		local game_mode_manager = Managers.state.game_mode
+		local game_mode = game_mode_manager:game_mode()
+
+		if game_mode.next_spawn_point_identifier then
+			wanted_spawn_point = game_mode:next_spawn_point_identifier()
+		end
+	end
 
 	player:set_wanted_spawn_point(nil)
 

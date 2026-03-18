@@ -1411,7 +1411,7 @@ local archetype_talents = {
 			},
 		},
 		psyker_2_tier_3_name_2 = {
-			description = "loc_talent_psyker_cooldown_on_allied_elite_kills_desc",
+			description = "loc_talent_psyker_cooldown_on_allied_elite_kills_fixed_desc",
 			display_name = "loc_talent_psyker_elite_kills_give_combat_ability_cd_coherency",
 			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_5_3",
 			name = "Killing an elite enemy restores combat ability cooldown to allies in coherency",
@@ -1893,7 +1893,7 @@ local archetype_talents = {
 			},
 		},
 		psyker_shield_extra_charge = {
-			description = "loc_talent_psyker_force_field_charges_cooldown_description",
+			description = "loc_talent_psyker_force_field_charges_description",
 			display_name = "loc_talent_psyker_force_field_charges",
 			icon = "content/ui/textures/icons/talents/psyker_3/psyker_3_tier_6_1",
 			name = "Increase charges of your combat ability by 1",
@@ -1921,7 +1921,7 @@ local archetype_talents = {
 			},
 		},
 		psyker_sphere_shield = {
-			description = "loc_talent_psyker_force_field_dome_new_desc",
+			description = "loc_talent_psyker_force_field_dome_increased_cd_desc",
 			display_name = "loc_talent_psyker_force_field_dome",
 			icon = "content/ui/textures/icons/talents/psyker_3/psyker_3_tier_6_3",
 			name = "Your shield takes the shape of a sphere and forms around you",
@@ -1933,6 +1933,10 @@ local archetype_talents = {
 				duration = {
 					format_type = "number",
 					value = talent_settings_3.combat_ability.sphere_duration,
+				},
+				cooldown = {
+					format_type = "number",
+					value = talent_settings_3.combat_ability.cooldown_sphere,
 				},
 			},
 			player_ability = {

@@ -208,6 +208,7 @@ local default_colors = {
 		88,
 		27,
 	},
+	terminal_base = Color.mb_terminal_base(nil, true),
 }
 local color_by_mission_type = {
 	default = {
@@ -415,6 +416,20 @@ MissionBoardViewSettings.view_elements = {
 		file_path = "scripts/ui/view_elements/view_element_mission_board_objectives_info/view_element_mission_board_objectives_info",
 		load_on_enter = true,
 		name = "mission_objectives",
+	},
+	difficulty_selector = {
+		class_name = "ViewElementMissionBoardDifficultySelector",
+		file_path = "scripts/ui/view_elements/view_element_mission_board_difficulty_selector/view_element_mission_board_difficulty_selector",
+		load_on_enter = true,
+		name = "difficulty_selector",
+		context = {
+			show_progress = true,
+			callbacks = {
+				on_indicator_pressed = "_request_page_at",
+				on_left_pressed = "_request_prev_page",
+				on_right_pressed = "_request_next_page",
+			},
+		},
 	},
 	mission_list = {
 		class_name = "ViewElementCampaignMissionList",

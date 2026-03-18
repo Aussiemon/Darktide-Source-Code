@@ -117,7 +117,7 @@ CutsceneCharacterSystem.get_cutscene_companion_for_slot = function (self, cinema
 end
 
 CutsceneCharacterSystem.initialize_characters_for_cinematic = function (self, cinematic_name)
-	local player_loadouts, sorted_player_unique_ids = self:_fetch_players_loadout(cinematic_name)
+	local player_loadouts, sorted_player_unique_ids = self:_player_loadouts(cinematic_name)
 	local template = CinematicSceneTemplates[cinematic_name]
 
 	Managers.event:register(self, "player_unit_spawned", "_on_player_unit_spawned")
@@ -127,8 +127,8 @@ CutsceneCharacterSystem.initialize_characters_for_cinematic = function (self, ci
 	local extensions_per_level = {}
 	local unit_level = Unit.level
 
-	for i = 1, #extensions do
-		local extension = extensions[i]
+	for ii = 1, #extensions do
+		local extension = extensions[ii]
 
 		extension:unassign_player_loadout()
 
@@ -146,12 +146,12 @@ CutsceneCharacterSystem.initialize_characters_for_cinematic = function (self, ci
 	local randomize_cutscene_weapon = template.randomize_equipped_weapon
 
 	if randomize_cutscene_weapon then
-		for i = 1, num_players do
-			local unique_id = sorted_player_unique_ids[i]
+		for ii = 1, num_players do
+			local unique_id = sorted_player_unique_ids[ii]
 
-			if i <= 2 then
+			if ii <= 2 then
 				player_loadouts[unique_id].items.slot_primary = nil
-			elseif i <= 4 then
+			elseif ii <= 4 then
 				player_loadouts[unique_id].items.slot_secondary = nil
 			else
 				Log.warning("CutsceneCharacterSystem", "More than 4 players added to cutscene. This could cause duplicate walking animations")
@@ -172,13 +172,13 @@ CutsceneCharacterSystem.initialize_characters_for_cinematic = function (self, ci
 	local slots_taken = {}
 	local none_slot = "none"
 
-	for i = 1, num_players do
-		local unique_id = sorted_player_unique_ids[i]
+	for ii = 1, num_players do
+		local unique_id = sorted_player_unique_ids[ii]
 		local loadout_info = player_loadouts[unique_id]
 
 		for level, extensions_list in pairs(extensions_per_level) do
-			for j = 1, #extensions_list do
-				local extension = extensions_list[j]
+			for jj = 1, #extensions_list do
+				local extension = extensions_list[jj]
 				local slot = extension:slot()
 				local slot_companion_inclusion_setting = extension:companion_inclusion_setting()
 				local slot_prohibits_companion = slot_companion_inclusion_setting == "without_companion"
@@ -214,7 +214,7 @@ CutsceneCharacterSystem.initialize_characters_for_cinematic = function (self, ci
 					end
 
 					if template.set_random_weapon_event then
-						extension:set_weapon_animation_event(weapon_specific_walk_animations[i % 2 + 1])
+						extension:set_weapon_animation_event(weapon_specific_walk_animations[ii % 2 + 1])
 					end
 
 					break
@@ -285,7 +285,7 @@ local function _player_has_companion_enabled(player)
 	return true, archetype.companion_breed
 end
 
-local function create_loadout(cinematic_name, player)
+local function _create_loadout(cinematic_name, player)
 	local new_player_loadout = {}
 	local should_show_companion, companion_breed_name = _player_has_companion_enabled(player)
 	local items = CutscenePlayerLoadout.fetch_player_items(cinematic_name, player)
@@ -299,7 +299,7 @@ local function create_loadout(cinematic_name, player)
 	return new_player_loadout
 end
 
-CutsceneCharacterSystem._fetch_players_loadout = function (self, cinematic_name)
+CutsceneCharacterSystem._player_loadouts = function (self, cinematic_name)
 	local player_manager = Managers.player
 	local player_loadouts = {}
 	local template = CinematicSceneTemplates[cinematic_name]
@@ -314,7 +314,7 @@ CutsceneCharacterSystem._fetch_players_loadout = function (self, cinematic_name)
 
 	for unique_id, player in pairs(human_players) do
 		if (not local_player_only or unique_id == local_unique_id) and package_synchronizer_client:peer_enabled(player:peer_id()) then
-			player_loadouts[unique_id] = create_loadout(cinematic_name, player)
+			player_loadouts[unique_id] = _create_loadout(cinematic_name, player)
 			slots_taken = slots_taken + 1
 			sorted_unique_ids[slots_taken] = unique_id
 		end
@@ -324,7 +324,7 @@ CutsceneCharacterSystem._fetch_players_loadout = function (self, cinematic_name)
 		local bot_players = player_manager:bot_players()
 
 		for unique_id, player in pairs(bot_players) do
-			player_loadouts[unique_id] = create_loadout(cinematic_name, player)
+			player_loadouts[unique_id] = _create_loadout(cinematic_name, player)
 			slots_taken = slots_taken + 1
 			sorted_unique_ids[slots_taken] = unique_id
 

@@ -443,19 +443,19 @@ HavocPlayView._cb_on_mission_revoke_pressed = function (self)
 			template_type = "terminal_button_hold_small",
 			text = "loc_main_menu_delete_character_popup_confirm",
 			on_complete_sound = UISoundEvents.delete_character_confirm,
-			callback = callback(function ()
+			callback = function ()
 				self._revoke_popup_id = nil
 				self._revoke_mission_on_update = true
-			end),
+			end,
 		},
 		{
 			close_on_pressed = true,
 			hotkey = "back",
 			template_type = "terminal_button_small",
 			text = "loc_main_menu_delete_character_popup_cancel",
-			callback = callback(function ()
+			callback = function ()
 				self._revoke_popup_id = nil
-			end),
+			end,
 		},
 	}
 

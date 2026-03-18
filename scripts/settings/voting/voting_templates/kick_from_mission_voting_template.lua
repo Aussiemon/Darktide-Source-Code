@@ -21,7 +21,7 @@ local function _cast_kick_vote(voting_id, vote)
 end
 
 local function _close_voting_popup(voting_id)
-	Managers.voting:remove_notification(voting_id)
+	Managers.voting:unset_notification(voting_id)
 end
 
 local function _player_name(kicked_peer_id)
@@ -55,18 +55,17 @@ local function _show_voting_popup(voting_id, kicked_peer_id)
 		player_name = InputUtils.apply_color_to_input_text(player_name, highlight_color),
 	}
 	local data = {
+		keep_alive = false,
 		show_timer = true,
 		title = Localize("loc_party_kick_instructions_header", true, context),
-		lines = {
-			instructions_text,
-		},
+		description = instructions_text,
 		inputs = {
 			notification_option_a = callback(_cast_kick_vote, voting_id, OPTIONS.yes),
 			notification_option_b = callback(_cast_kick_vote, voting_id, OPTIONS.no),
 		},
 	}
 
-	Managers.voting:create_notification(voting_id, data)
+	Managers.voting:set_notification(voting_id, data)
 end
 
 local function _update_voting_popup(voting_id, kicked_peer_id)
@@ -76,15 +75,14 @@ local function _update_voting_popup(voting_id, kicked_peer_id)
 		player_name = InputUtils.apply_color_to_input_text(player_name, highlight_color),
 	}
 	local data = {
+		keep_alive = false,
 		show_timer = true,
 		title = Localize("loc_party_kick_instructions_header", true, context),
-		lines = {
-			post_vote_message,
-		},
+		description = post_vote_message,
 		inputs = {},
 	}
 
-	Managers.voting:modify_notification(voting_id, data)
+	Managers.voting:set_notification(voting_id, data)
 end
 
 local kick_from_mission_voting_template = {

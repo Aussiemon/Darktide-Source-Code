@@ -86,12 +86,16 @@ PlayerSpawner.component_data = {
 			"Bots",
 			"Recent Mission",
 			"Shooting Range",
+			"Expedition Recent",
+			"Expedition Store",
 		},
 		options_values = {
 			"default",
 			"bots",
 			"recent_mission",
 			"tg_shooting_range",
+			"recent_expedition_mission",
+			"expedition_store",
 		},
 	},
 	spawn_priority = {

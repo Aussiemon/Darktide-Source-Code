@@ -73,11 +73,11 @@ ScriptedScenarioSystem.destroy = function (self)
 	local parallel_scenarios = self._parallel_scenarios
 
 	for alias, scenarios in pairs(parallel_scenarios) do
-		for name, scenario in pairs(scenarios) do
-			local events = scenario.current_step_template.events
+		for name, parallel_scenario in pairs(scenarios) do
+			local events = parallel_scenario.current_step_template.events
 
 			if events then
-				self:_unregister_events(scenario, events)
+				self:_unregister_events(parallel_scenario, events)
 			end
 		end
 	end
@@ -378,8 +378,6 @@ ScriptedScenarioSystem._handle_condition_step = function (self, scenario, condit
 		end
 	end
 
-	local condition_success = false
-
 	repeat
 		if condition_type == "end" then
 			break
@@ -442,6 +440,7 @@ ScriptedScenarioSystem._create_scenario = function (self, alias, name)
 		scenario_data = {
 			step_data = {},
 		},
+		unique_buffs = {},
 	}
 
 	return scenario
@@ -512,6 +511,20 @@ ScriptedScenarioSystem._stop_scenario = function (self, scenario, ignore_cleanup
 
 			self:_start_step(scenario, cleanup_step_template, player, scenario_data, step_data, t)
 		end
+
+		local scenario_buffs = scenario.unique_buffs
+
+		for unit, buffs in pairs(scenario_buffs) do
+			local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+			if buff_extension then
+				for _, buff_ids in pairs(buffs) do
+					buff_extension:remove_externally_controlled_buff(buff_ids.local_id, buff_ids.component_index)
+				end
+			end
+		end
+
+		table.clear(scenario_buffs)
 	end
 end
 
@@ -632,7 +645,6 @@ ScriptedScenarioSystem.dissolve_unit = function (self, unit, t)
 	end
 
 	if ALIVE[unit] then
-		local duration = 2
 		local dissolve_data = MinionDissolveUtility.start_dissolve(unit, t, false)
 
 		Managers.ui:play_3d_sound(TrainingGroundsSoundEvents.tg_enemy_dissolve_start, Unit.local_position(unit, 1))
@@ -940,8 +952,6 @@ ScriptedScenarioSystem._handle_parallel_scenarios = function (self, t)
 end
 
 ScriptedScenarioSystem.start_parallel_scenario = function (self, alias, name, t)
-	local scenario_template = ScriptedScenarios[alias][name]
-	local first_step_template = scenario_template.steps[1]
 	local parallel_scenarios = self._parallel_scenarios
 
 	parallel_scenarios[alias] = parallel_scenarios[alias] or {}
@@ -964,6 +974,72 @@ ScriptedScenarioSystem.stop_parallel_scenario = function (self, alias, name, t, 
 	parallel_scenarios[alias][name] = nil
 
 	self:_stop_scenario(scenario, ignore_cleanup_steps, t)
+end
+
+ScriptedScenarioSystem.add_scenario_buff = function (self, unit, buff_name, t)
+	local all_buffs = self._current_scenario.unique_buffs
+	local unit_buffs = all_buffs[unit]
+
+	if not unit_buffs then
+		unit_buffs = {}
+		all_buffs[unit] = unit_buffs
+	end
+
+	local buff_extension = ScriptUnit.extension(unit, "buff_system")
+	local _, local_id, component_index = buff_extension:add_externally_controlled_buff(buff_name, t)
+
+	unit_buffs[buff_name] = {
+		local_id = local_id,
+		component_index = component_index,
+	}
+end
+
+ScriptedScenarioSystem.remove_scenario_buff = function (self, unit, buff_name)
+	local all_buffs = self._current_scenario.unique_buffs
+	local unit_buffs = all_buffs[unit]
+
+	if not unit_buffs then
+		return
+	end
+
+	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+	if not buff_extension then
+		all_buffs[unit] = nil
+
+		return
+	end
+
+	local buff_data = unit_buffs[buff_name]
+
+	if buff_data then
+		buff_extension:remove_externally_controlled_buff(buff_data.local_id, buff_data.component_index)
+
+		unit_buffs[buff_name] = nil
+	end
+end
+
+ScriptedScenarioSystem.has_scenario_buff = function (self, unit, buff_name)
+	local all_buffs = self._current_scenario.unique_buffs
+	local unit_buffs = all_buffs[unit]
+
+	if not unit_buffs then
+		return false
+	end
+
+	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+	if not buff_extension then
+		return false
+	end
+
+	local buff_data = unit_buffs[buff_name]
+
+	if buff_data then
+		return unit_buffs[buff_name]
+	end
+
+	return false
 end
 
 return ScriptedScenarioSystem

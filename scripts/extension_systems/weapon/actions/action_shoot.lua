@@ -19,7 +19,7 @@ local Spread = require("scripts/utilities/spread")
 local Suppression = require("scripts/utilities/attack/suppression")
 local Sway = require("scripts/utilities/sway")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
-local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
+local VisualLoadoutExtractData = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_extract_data")
 local Vo = require("scripts/utilities/vo")
 local ActionShoot = class("ActionShoot", "ActionWeaponBase")
 local buff_keywords = BuffSettings.keywords
@@ -57,6 +57,8 @@ ActionShoot.init = function (self, action_context, action_params, action_setting
 	self._spread_control_component = unit_data_extension:write_component("spread_control")
 	self._sway_control_component = unit_data_extension:write_component("sway_control")
 	self._weapon_action_component = unit_data_extension:write_component("weapon_action")
+	self._combat_ability_action_component = unit_data_extension:read_component("combat_ability_action")
+	self._grenade_ability_action_component = unit_data_extension:read_component("grenade_ability_action")
 	self._ability_extension = ScriptUnit.extension(self._player_unit, "ability_system")
 	self._buff_extension = ScriptUnit.extension(self._player_unit, "buff_system")
 	self._talent_extension = ScriptUnit.has_extension(self._player_unit, "talent_system")
@@ -405,6 +407,8 @@ ActionShoot._prepare_shooting = function (self, dt, t)
 	local shooting_status_component = self._shooting_status_component
 	local sway_component = self._sway_component
 	local weapon_action_component = self._weapon_action_component
+	local combat_ability_action_component = self._combat_ability_action_component
+	local grenade_ability_action_component = self._grenade_ability_action_component
 	local position = first_person_component.position
 	local rotation = first_person_component.rotation
 	local fire_config = self:_fire_configurations()[action_component.current_fire_config]
@@ -421,7 +425,7 @@ ActionShoot._prepare_shooting = function (self, dt, t)
 	local is_first_combo_bullet = self._multi_fire_mode ~= MultiFireModes.simultaneous or (action_component.num_shots_fired + 1) % #self._base_fire_configurations == 1
 
 	if is_first_combo_bullet then
-		local smart_targeting_template = SmartTargeting.smart_targeting_template(t, weapon_action_component)
+		local smart_targeting_template = SmartTargeting.smart_targeting_template(t, weapon_action_component, combat_ability_action_component, grenade_ability_action_component)
 
 		rotation = Recoil.apply_weapon_recoil_rotation(recoil_template, recoil_component, movement_state_component, locomotion_component, inair_state_component, rotation)
 		rotation = Sway.apply_sway_rotation(sway_template, sway_component, rotation)
@@ -477,22 +481,6 @@ ActionShoot._spend_ammunition = function (self, dt, t, charge_level, fire_config
 
 	trigger_proc = trigger_proc or is_critical_strike and has_no_ammo_on_crit_keyword
 
-	if trigger_proc then
-		local param_table = buff_extension:request_proc_event_param_table()
-
-		if param_table then
-			param_table.t = t
-			param_table.ammo_usage = 0
-			param_table.charged_ammo = use_charge
-			param_table.is_critical_strike = is_critical_strike
-			param_table.is_leadbelcher_shot = self._leadbelcher_shot
-
-			buff_extension:add_proc_event(proc_events.on_ammo_consumed, param_table)
-		end
-
-		return
-	end
-
 	local ammo_usage
 
 	if use_charge then
@@ -506,6 +494,23 @@ ActionShoot._spend_ammunition = function (self, dt, t, charge_level, fire_config
 		end
 	else
 		ammo_usage = self._action_settings.ammunition_usage
+	end
+
+	if trigger_proc then
+		local param_table = buff_extension:request_proc_event_param_table()
+
+		if param_table then
+			param_table.t = t
+			param_table.ammo_usage = 0
+			param_table.charged_ammo = use_charge
+			param_table.is_critical_strike = is_critical_strike
+			param_table.is_leadbelcher_shot = self._leadbelcher_shot
+			param_table.saved_ammo = ammo_usage
+
+			buff_extension:add_proc_event(proc_events.on_ammo_consumed, param_table)
+		end
+
+		return
 	end
 
 	if not ammo_usage then
@@ -734,7 +739,7 @@ ActionShoot._play_shoot_sound = function (self, fire_config)
 	local reference_attachment_id = self:_reference_attachment_id(fire_config)
 
 	if self._multi_fire_mode == MultiFireModes.simultaneous then
-		reference_attachment_id = VisualLoadoutCustomization.ROOT_ATTACH_NAME
+		reference_attachment_id = VisualLoadoutExtractData.ROOT_ATTACH_NAME
 	end
 
 	if trigger_single_shot_sound then
@@ -804,7 +809,7 @@ ActionShoot._update_looping_shoot_sound = function (self, fire_config)
 	local reference_attachment_id, has_ammo
 
 	if self._multi_fire_mode == MultiFireModes.simultaneous then
-		reference_attachment_id = VisualLoadoutCustomization.ROOT_ATTACH_NAME
+		reference_attachment_id = VisualLoadoutExtractData.ROOT_ATTACH_NAME
 
 		for i = 1, #self._base_fire_configurations do
 			if self:_has_ammo(self._base_fire_configurations[i]) then

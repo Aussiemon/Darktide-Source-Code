@@ -30,6 +30,23 @@ local RPCS = {
 }
 local DialogueSystem = class("DialogueSystem", "ExtensionSystemBase")
 
+DialogueSystem.mission_dialogue_setting = function (self, setting_name)
+	local mission_settings_override = self._mission_settings_override
+	local setting_override = mission_settings_override and mission_settings_override[setting_name]
+
+	if setting_override ~= nil then
+		return setting_override
+	else
+		return DialogueSettings.mission_dialogue_settings[setting_name]
+	end
+end
+
+DialogueSystem.set_mission_dialogue_setting = function (self, setting_name, enabled)
+	if self._mission_settings_override[setting_name] ~= nil then
+		self._mission_settings_override[setting_name] = enabled
+	end
+end
+
 DialogueSystem.init = function (self, extension_system_creation_context, system_init_data, ...)
 	DialogueSystem.super.init(self, extension_system_creation_context, system_init_data, ...)
 
@@ -41,12 +58,11 @@ DialogueSystem.init = function (self, extension_system_creation_context, system_
 
 	local is_rule_db_enabled = system_init_data.is_rule_db_enabled
 	local vo_sources_cache = system_init_data.vo_sources_cache
+	local current_mission = system_init_data.mission
 
-	self._current_mission = system_init_data.mission
 	self._current_game_mode = nil
 	self._vo_sources_cache = vo_sources_cache
 	self._is_rule_db_enabled = is_rule_db_enabled
-	self._original_dialogue_settings = {}
 
 	local dialogue_templates = {}
 
@@ -74,27 +90,18 @@ DialogueSystem.init = function (self, extension_system_creation_context, system_
 
 	local auto_load_files = DialogueSettings.auto_load_files
 
-	if self._current_mission then
-		local mission_name = self._current_mission.name
+	if current_mission then
+		local mission_name = current_mission.name
 
 		self.global_context.current_mission = mission_name
 
-		local dialogue_settings_override = self._current_mission.dialogue_settings
-
-		if dialogue_settings_override then
-			for setting_name, value in pairs(dialogue_settings_override) do
-				self._original_dialogue_settings[setting_name] = DialogueSettings[setting_name]
-				DialogueSettings[setting_name] = value
-			end
-		end
-
-		local game_mode_name = self._current_mission.game_mode_name
+		local game_mode_name = current_mission.game_mode_name
 
 		self._current_game_mode = game_mode_name
 
 		self:_load_dialogue_resource(game_mode_name)
 
-		local blocked_auto_load = DialogueSettings.blocked_auto_load_files[self._current_mission.name]
+		local blocked_auto_load = DialogueSettings.blocked_auto_load_files[current_mission.name]
 
 		if not blocked_auto_load then
 			self:_load_dialogue_resources(auto_load_files)
@@ -108,8 +115,9 @@ DialogueSystem.init = function (self, extension_system_creation_context, system_
 
 		self.global_context.circumstance_vo_id = "default"
 
-		local circumstance_template = CircumstanceTemplates[self._circumstance_name]
-		local dialogue_id = circumstance_template.dialogue_id
+		local circumstance_name = self._circumstance_name
+		local circumstance_template = circumstance_name and CircumstanceTemplates[circumstance_name]
+		local dialogue_id = circumstance_template and circumstance_template.dialogue_id
 
 		if dialogue_id then
 			local circumstance_load_files = circumstance_template.dialogue_load_files
@@ -122,6 +130,8 @@ DialogueSystem.init = function (self, extension_system_creation_context, system_
 
 			self.global_context.circumstance_vo_id = dialogue_id
 		end
+
+		self._mission_settings_override = current_mission.dialogue_settings and table.clone(current_mission.dialogue_settings) or {}
 	else
 		local menu_vo_files = DialogueSettings.menu_vo_files
 
@@ -149,9 +159,9 @@ DialogueSystem.init = function (self, extension_system_creation_context, system_
 
 	self._extension_per_breed_wwise_voice_index = extension_per_breed_wwise_voice_index
 	self.global_context.level_time = 0
-	self._next_story_line_update_t = DialogueSettings.story_start_delay
-	self._next_short_story_line_update_t = DialogueSettings.short_story_start_delay
-	self._next_npc_story_line_update_t = DialogueSettings.npc_story_ticker_start_delay
+	self._next_story_line_update_t = self:mission_dialogue_setting("story_start_delay")
+	self._next_short_story_line_update_t = self:mission_dialogue_setting("short_story_start_delay")
+	self._next_npc_story_line_update_t = self:mission_dialogue_setting("npc_story_ticker_start_delay")
 	self._LOCAL_GAMETIME = 0
 
 	local extension_init_context = self._extension_init_context
@@ -177,6 +187,7 @@ DialogueSystem.init = function (self, extension_system_creation_context, system_
 	self._playing_dialogues = {}
 	self._playing_dialogues_array = {}
 	self._playing_units = {}
+	self._mission_giver_dialogue_playing = false
 
 	if self._is_server and is_rule_db_enabled then
 		self._event_queue = DialogueEventQueue:new(dialogue_templates, self._tagquery_database)
@@ -207,20 +218,18 @@ DialogueSystem.is_dialogue_playing = function (self)
 	return #self._playing_dialogues_array > 0
 end
 
+DialogueSystem.is_mission_giver_dialogue_playing = function (self)
+	return self._mission_giver_dialogue_playing
+end
+
 DialogueSystem.destroy = function (self)
 	if self._is_rule_db_enabled then
-		self._tagquery_loader:destroy()
-		self._tagquery_database:destroy()
+		self._tagquery_loader:delete()
+		self._tagquery_database:delete()
 	end
 
 	if self._network_event_delegate then
 		self._network_event_delegate:unregister_events(unpack(RPCS))
-	end
-
-	if next(self._original_dialogue_settings) then
-		for setting_name, value in pairs(self._original_dialogue_settings) do
-			DialogueSettings[setting_name] = value
-		end
 	end
 
 	if self._is_server then
@@ -781,39 +790,46 @@ end
 
 DialogueSystem._update_story_lines = function (self, t)
 	local padded_ticker_time = t + DialogueSettings.story_tickers_intensity_cooldown
-	local is_story_ticker = DialogueSettings.story_ticker_enabled
+	local is_story_ticker = self:mission_dialogue_setting("story_ticker_enabled")
 	local next_story_line_update_t = self._next_story_line_update_t
 
 	if is_story_ticker and next_story_line_update_t < t then
+		local story_tick_time = self:mission_dialogue_setting("story_tick_time")
+
 		if not self:_is_calm() then
-			self._next_story_line_update_t = padded_ticker_time + DialogueSettings.story_tick_time
+			self._next_story_line_update_t = padded_ticker_time + story_tick_time
 		else
-			self._next_story_line_update_t = t + DialogueSettings.story_tick_time
+			self._next_story_line_update_t = t + story_tick_time
 
 			Vo.player_vo_event_by_concept("story_talk")
 		end
 	end
 
-	local is_short_story_ticker = DialogueSettings.short_story_ticker_enabled
+	local is_short_story_ticker = self:mission_dialogue_setting("short_story_ticker_enabled")
 	local next_short_story_line_update_t = self._next_short_story_line_update_t
 
 	if is_short_story_ticker and next_short_story_line_update_t < t then
+		local short_story_tick_time = self:mission_dialogue_setting("short_story_tick_time")
+
 		if not self:_is_calm() then
-			self._next_short_story_line_update_t = padded_ticker_time + DialogueSettings.short_story_tick_time
+			self._next_short_story_line_update_t = padded_ticker_time + short_story_tick_time
 		else
-			self._next_short_story_line_update_t = t + DialogueSettings.short_story_tick_time
+			self._next_short_story_line_update_t = t + short_story_tick_time
 
 			Vo.player_vo_event_by_concept("short_story_talk")
 		end
 	end
 
-	local is_vox_stories = DialogueSettings.npc_story_ticker_enabled
+	local is_vox_stories = self:mission_dialogue_setting("npc_story_ticker_enabled")
+	local next_npc_story_line_update_t = self._next_npc_story_line_update_t
 
-	if is_vox_stories then
-		local next_npc_story_line_update_t = self._next_npc_story_line_update_t
+	if is_vox_stories and next_npc_story_line_update_t < t then
+		local npc_story_tick_time = self:mission_dialogue_setting("npc_story_tick_time")
 
-		if is_vox_stories and next_npc_story_line_update_t < t then
-			self._next_npc_story_line_update_t = t + DialogueSettings.npc_story_tick_time
+		if not self:_is_calm() then
+			self._next_npc_story_line_update_t = padded_ticker_time + npc_story_tick_time
+		else
+			self._next_npc_story_line_update_t = t + npc_story_tick_time
 
 			local trigger_id = "npc_story_talk"
 
@@ -1153,8 +1169,12 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 	local wwise_route_key = dialogue.wwise_route
 	local class_name = extension:get_context().class_name
 
-	if class_name == "tech_priest" and wwise_route_key == 1 then
-		wwise_route_key = 21
+	if wwise_route_key == 1 then
+		self._mission_giver_dialogue_playing = true
+
+		if class_name == "tech_priest" then
+			wwise_route_key = 21
+		end
 	end
 
 	if not DEDICATED_SERVER then
@@ -1361,6 +1381,11 @@ end
 
 DialogueSystem._remove_stopped_dialogue = function (self, unit, dialogue)
 	local index = table.index_of(self._playing_dialogues_array, dialogue)
+	local wwise_route = dialogue.wwise_route
+
+	if wwise_route == 1 or wwise_route == 21 then
+		self._mission_giver_dialogue_playing = false
+	end
 
 	table.remove(self._playing_dialogues_array, index)
 

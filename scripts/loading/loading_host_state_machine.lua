@@ -27,6 +27,7 @@ LoadingHostStateMachine.init = function (self, loading_context, level_editor_lev
 		level_name = Missions[mission_name].level or level_editor_level,
 		circumstance_name = circumstance_name,
 		havoc_data = loading_context.havoc_data,
+		current_chunk_index = loading_context.current_chunk_index,
 		spawn_queue = spawn_queue,
 		done_loading_level_func = done_loading_level_func,
 		loaders = loaders,

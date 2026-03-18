@@ -255,12 +255,22 @@ PackageSynchronizerClient._resolve_base_units = function (self, items, profile_p
 
 		if base_unit then
 			dependencies[base_unit] = false
+		end
 
-			local base_unit_1p = item.base_unit_1p
+		local breed_base_unit = item.breed_base_unit
 
-			if base_unit_1p then
-				dependencies[base_unit_1p] = false
+		if breed_base_unit then
+			for _, resource in pairs(breed_base_unit) do
+				if resource ~= "" then
+					dependencies[resource] = false
+				end
 			end
+		end
+
+		local base_unit_1p = item.base_unit_1p
+
+		if base_unit_1p then
+			dependencies[base_unit_1p] = false
 		end
 	end
 

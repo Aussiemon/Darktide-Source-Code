@@ -126,7 +126,21 @@ MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation
 		local circumstance_health_modifier = circumstance_template and circumstance_template.minion_health_modifier
 
 		if circumstance_health_modifier then
+			local difficulty_manager = Managers.state.difficulty
+			local circumstance_health_modifier = difficulty_manager:get_table_entry_by_challenge(circumstance_health_modifier)
+
 			additional_health_modifier = circumstance_health_modifier
+		end
+	end
+
+	local tags = breed.tags
+
+	if tags and tags.captain then
+		local mutator_manager = Managers.state.mutator
+		local should_spawn_depleted = mutator_manager:mutator("mutator_depleted_captain_shields")
+
+		if should_spawn_depleted then
+			temp_data.optional_void_shield_start_depleted = true
 		end
 	end
 
@@ -162,6 +176,12 @@ MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation
 	self:_initialize_inventory(unit, breed, blackboard, temp_data.optional_attack_selection_template_name)
 	self:_initialize_blackboard_components(breed, blackboard, seed, temp_data.optional_spawner_unit, temp_data.optional_spawner_spawn_index)
 
+	if temp_data.spawn_source then
+		local spawn_component = Blackboard.write_component(blackboard, "spawn")
+
+		spawn_component.spawn_source = temp_data.spawn_source
+	end
+
 	if temp_data.optional_mission_objective_id then
 		self:_register_minion_to_objective(unit, temp_data.optional_mission_objective_id)
 	end
@@ -187,6 +207,15 @@ MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation
 	end
 
 	Managers.event:trigger("minion_unit_spawned", unit)
+
+	if temp_data.optional_init_toughness then
+		local reactivation_override = true
+		local spawned_unit_toughness_extension = ScriptUnit.has_extension(unit, "toughness_system")
+
+		if spawned_unit_toughness_extension then
+			spawned_unit_toughness_extension:set_toughness_damage(0, reactivation_override)
+		end
+	end
 
 	return unit
 end

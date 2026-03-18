@@ -285,7 +285,7 @@ if IS_PLAYSTATION then
 	settings_definitions[#settings_definitions].display_name = "loc_settings_menu_group_controller_settings_sony"
 end
 
-function get_gamepad_input_layout_names(layouts)
+local function get_gamepad_input_layout_names(layouts)
 	local layout_names = {}
 
 	for name, values in pairs(layouts) do

@@ -5,6 +5,8 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 local Animation = require("scripts/utilities/animation")
 local AttackIntensity = require("scripts/utilities/attack_intensity")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
+local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local NavQueries = require("scripts/utilities/nav_queries")
@@ -53,7 +55,7 @@ BtQuickGrenadeThrowAction.leave = function (self, unit, breed, blackboard, scrat
 		local delta_position = Unit.delta_position(unit, unit_node)
 		local node_velocity = delta_position / dt
 
-		self:_throw_grenade(unit, scratchpad, action_data, "drop", throw_position, throw_direction, blackboard, t, node_velocity)
+		self:_throw_grenade(unit, breed, scratchpad, action_data, "drop", throw_position, throw_direction, blackboard, t, node_velocity)
 	end
 
 	if scratchpad.global_effect_id then
@@ -79,7 +81,7 @@ BtQuickGrenadeThrowAction.run = function (self, unit, breed, blackboard, scratch
 			return "failed"
 		end
 
-		self:_update_throw_timing(unit, t, blackboard, scratchpad, action_data)
+		self:_update_throw_timing(unit, breed, blackboard, scratchpad, action_data, t)
 	end
 
 	local done = t > scratchpad.action_duration
@@ -116,9 +118,7 @@ BtQuickGrenadeThrowAction._start_throwing = function (self, unit, t, scratchpad,
 	scratchpad.action_duration = t + action_duration
 	scratchpad.throw_event = throw_event
 
-	local effect_template = action_data.effect_template
-
-	if effect_template then
+	if action_data.effect_template_name then
 		local effect_template_timings = action_data.effect_template_timings
 		local effect_template_timing = effect_template_timings[throw_event]
 
@@ -133,11 +133,12 @@ BtQuickGrenadeThrowAction._start_throwing = function (self, unit, t, scratchpad,
 	end
 end
 
-BtQuickGrenadeThrowAction._update_throw_timing = function (self, unit, t, blackboard, scratchpad, action_data)
+BtQuickGrenadeThrowAction._update_throw_timing = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	self:_aim_at_target(unit, scratchpad)
 
 	if scratchpad.effect_template_timing and t > scratchpad.effect_template_timing and not scratchpad.global_effect_id then
-		local global_effect_id = scratchpad.fx_system:start_template_effect(action_data.effect_template, unit)
+		local effect_template = EffectTemplates[action_data.effect_template_name]
+		local global_effect_id = scratchpad.fx_system:start_template_effect(effect_template, unit)
 
 		scratchpad.global_effect_id = global_effect_id
 		scratchpad.effect_template_timing = nil
@@ -150,7 +151,7 @@ BtQuickGrenadeThrowAction._update_throw_timing = function (self, unit, t, blackb
 			local throw_position, throw_direction = self:_throw_position_and_direction(unit, scratchpad, action_data)
 
 			if throw_position and throw_direction then
-				self:_throw_grenade(unit, scratchpad, action_data, "throw", throw_position, throw_direction, blackboard, t)
+				self:_throw_grenade(unit, breed, scratchpad, action_data, "throw", throw_position, throw_direction, blackboard, t)
 
 				scratchpad.throw_timing = nil
 
@@ -171,7 +172,7 @@ BtQuickGrenadeThrowAction._update_throw_timing = function (self, unit, t, blackb
 		local throw_position, throw_direction = self:_throw_position_and_direction(unit, scratchpad, action_data)
 
 		if throw_position and throw_direction then
-			self:_throw_grenade(unit, scratchpad, action_data, "throw", throw_position, throw_direction, blackboard, t)
+			self:_throw_grenade(unit, breed, scratchpad, action_data, "throw", throw_position, throw_direction, blackboard, t)
 
 			scratchpad.throw_timing = nil
 
@@ -246,7 +247,7 @@ BtQuickGrenadeThrowAction._throw_position_and_direction = function (self, unit, 
 	return self_position, Vector3.normalize(velocity)
 end
 
-BtQuickGrenadeThrowAction._throw_grenade = function (self, unit, scratchpad, action_data, throw_type, throw_position, throw_direction, blackboard, t, optional_owner_velocity)
+BtQuickGrenadeThrowAction._throw_grenade = function (self, unit, breed, scratchpad, action_data, throw_type, throw_position, throw_direction, blackboard, t, optional_owner_velocity)
 	local throw_config = action_data.throw_config
 	local projectile_template = throw_config.projectile_template
 	local locomotion_template = projectile_template.locomotion_template
@@ -278,7 +279,7 @@ BtQuickGrenadeThrowAction._throw_grenade = function (self, unit, scratchpad, act
 	local item_name = throw_config.item
 	local item_definitions = MasterItems.get_cached()
 	local item = item_definitions[item_name]
-	local grenade_unit_name, locomotion_state = item.base_unit, trajectory_parameters.locomotion_state
+	local grenade_unit_name, locomotion_state = Items.base_unit(item, breed.name), trajectory_parameters.locomotion_state
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system.side_by_unit[unit]
 	local is_critical_strike, origin_item_slot, charge_level, target_unit, target_position, weapon_item_or_nil, fuse_override_time_or_nil

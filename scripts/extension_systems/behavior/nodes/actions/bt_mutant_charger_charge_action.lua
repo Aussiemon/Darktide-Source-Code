@@ -10,6 +10,7 @@ local Blackboard = require("scripts/extension_systems/blackboard/utilities/black
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local Catapulted = require("scripts/extension_systems/character_state_machine/character_states/utilities/catapulted")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local MinionPerception = require("scripts/utilities/minion_perception")
@@ -659,6 +660,20 @@ local SMASH_SPACE_NAV_ABOVE, SMASH_SPACE_NAV_BELOW = 1, 1
 
 BtMutantChargerChargeAction._update_grabbed_target = function (self, unit, scratchpad, action_data, t, dt)
 	if t > scratchpad.grab_target_duration then
+		if not scratchpad.loot_stolen_from_target_unit then
+			scratchpad.loot_stolen_from_target_unit = true
+
+			local game_mode_manager = Managers.state.game_mode
+			local game_mode = game_mode_manager:game_mode()
+			local game_mode_name = game_mode:name()
+
+			if game_mode_name == "expedition" then
+				local target = scratchpad.grabbed_target
+
+				game_mode:minion_steal(target, unit)
+			end
+		end
+
 		self:_align_throwing(unit, scratchpad, action_data)
 
 		scratchpad.grab_target_duration = nil
@@ -833,7 +848,7 @@ BtMutantChargerChargeAction._update_throwing = function (self, unit, scratchpad,
 			local hit_unit_breed_name = scratchpad.hit_unit_breed_name
 			local disabling_unit_position = POSITION_LOOKUP[unit]
 			local unit_rotation = Unit.local_rotation(unit, 1)
-			local up = Vector3.up() * (THROW_TELEPORT_UP_OFFSET[hit_unit_breed_name] or THROW_TELEPORT_UP_OFFSET.human)
+			local up = Vector3.up() * THROW_TELEPORT_UP_OFFSET[hit_unit_breed_name]
 			local disabling_unit_forward = Quaternion.forward(unit_rotation)
 			local teleport_position = disabling_unit_position + disabling_unit_forward + up
 			local target_unit = scratchpad.grabbed_target
@@ -921,7 +936,7 @@ BtMutantChargerChargeAction._test_throw_trajectory = function (self, unit, scrat
 	local force = action_data.catapult_force[hit_unit_breed_name]
 	local z_force = action_data.catapult_z_force[hit_unit_breed_name]
 	local physics_world = scratchpad.physics_world
-	local hit, segment_list, hit_position = Trajectory.test_throw_trajectory(unit, physics_world, force, z_force, test_direction, to, PlayerCharacterConstants.gravity, THROW_TELEPORT_UP_OFFSET[hit_unit_breed_name] or THROW_TELEPORT_UP_OFFSET_DEFAULT, MAX_STEPS, MAX_TIME)
+	local hit, segment_list, hit_position = Trajectory.test_throw_trajectory(unit, physics_world, force, z_force, test_direction, to, PlayerCharacterConstants.gravity, THROW_TELEPORT_UP_OFFSET[hit_unit_breed_name], MAX_STEPS, MAX_TIME)
 
 	if hit then
 		local navigation_extension = scratchpad.navigation_extension
@@ -1199,7 +1214,7 @@ end
 BtMutantChargerChargeAction._start_effect_template = function (self, unit, scratchpad, action_data)
 	if not scratchpad.global_effect_id then
 		local fx_system = scratchpad.fx_system
-		local effect_template = action_data.effect_template
+		local effect_template = EffectTemplates[action_data.effect_template_name]
 		local global_effect_id = fx_system:start_template_effect(effect_template, unit)
 
 		scratchpad.global_effect_id = global_effect_id

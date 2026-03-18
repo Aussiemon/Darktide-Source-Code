@@ -68,9 +68,10 @@ PresenceManager.destroy = function (self)
 	end
 end
 
-PresenceManager.initialize = function (self)
+PresenceManager.initialize = function (self, game_session_id)
 	self._initialized = true
 
+	self:_set_game_session_id(game_session_id)
 	self:_init_immaterium_presence()
 	self:_init_batched_get_presence(nil)
 end
@@ -197,6 +198,10 @@ PresenceManager.set_havoc_status = function (self, value)
 	self:_update_my_presence({
 		havoc_status = true,
 	})
+end
+
+PresenceManager._set_game_session_id = function (self, value)
+	self._myself:set_game_session_id(value)
 end
 
 PresenceManager.set_havoc_rank_cadence_high = function (self, value)

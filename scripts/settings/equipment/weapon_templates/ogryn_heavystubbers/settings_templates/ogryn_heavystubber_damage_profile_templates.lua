@@ -44,13 +44,13 @@ damage_templates.default_ogryn_heavystubber_assault_snp = {
 	armor_damage_modifier_ranged = {
 		near = {
 			attack = {
-				[armor_types.unarmored] = damage_lerp_values.lerp_1,
-				[armor_types.armored] = damage_lerp_values.lerp_0_5,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_6,
+				[armor_types.unarmored] = damage_lerp_values.lerp_1_1,
+				[armor_types.armored] = damage_lerp_values.lerp_0_7,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_7,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_1,
+				[armor_types.berserker] = damage_lerp_values.lerp_1_1,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
-				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_8,
 			},
 			impact = {
@@ -66,11 +66,11 @@ damage_templates.default_ogryn_heavystubber_assault_snp = {
 		},
 		far = {
 			attack = {
-				[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
-				[armor_types.armored] = damage_lerp_values.lerp_0_3,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_3,
+				[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
+				[armor_types.armored] = damage_lerp_values.lerp_0_5,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_5,
 				[armor_types.player] = damage_lerp_values.lerp_0_5,
-				[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+				[armor_types.berserker] = damage_lerp_values.lerp_0_9,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
@@ -89,8 +89,8 @@ damage_templates.default_ogryn_heavystubber_assault_snp = {
 	},
 	power_distribution = {
 		attack = {
-			100,
-			200,
+			110,
+			215,
 		},
 		impact = {
 			10,
@@ -132,11 +132,11 @@ damage_templates.default_ogryn_heavystubber_assault_snp_m2 = {
 		near = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
-				[armor_types.armored] = damage_lerp_values.lerp_0_75,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_6,
+				[armor_types.armored] = damage_lerp_values.lerp_0_9,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_7,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
-				[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_8,
 			},
@@ -155,10 +155,10 @@ damage_templates.default_ogryn_heavystubber_assault_snp_m2 = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
 				[armor_types.armored] = damage_lerp_values.lerp_0_5,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_3,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_4,
 				[armor_types.player] = damage_lerp_values.lerp_0_5,
 				[armor_types.berserker] = damage_lerp_values.lerp_0_8,
-				[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
 			},
@@ -176,8 +176,8 @@ damage_templates.default_ogryn_heavystubber_assault_snp_m2 = {
 	},
 	power_distribution = {
 		attack = {
-			140,
-			290,
+			150,
+			310,
 		},
 		impact = {
 			20,
@@ -219,12 +219,12 @@ damage_templates.default_ogryn_heavystubber_assault_snp_m3 = {
 		near = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
-				[armor_types.armored] = damage_lerp_values.lerp_0_5,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_75,
+				[armor_types.armored] = damage_lerp_values.lerp_0_6,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_8,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
-				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_2,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_8,
 			},
 			impact = {
@@ -234,15 +234,15 @@ damage_templates.default_ogryn_heavystubber_assault_snp_m3 = {
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
-				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_15,
 				[armor_types.void_shield] = damage_lerp_values.lerp_1,
 			},
 		},
 		far = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
-				[armor_types.armored] = damage_lerp_values.lerp_0_3,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_3,
+				[armor_types.armored] = damage_lerp_values.lerp_0_4,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_5,
 				[armor_types.player] = damage_lerp_values.lerp_0_5,
 				[armor_types.berserker] = damage_lerp_values.lerp_0_8,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
@@ -263,8 +263,8 @@ damage_templates.default_ogryn_heavystubber_assault_snp_m3 = {
 	},
 	power_distribution = {
 		attack = {
-			80,
-			160,
+			90,
+			170,
 		},
 		impact = {
 			8,

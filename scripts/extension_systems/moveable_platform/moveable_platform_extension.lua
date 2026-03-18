@@ -532,17 +532,26 @@ MoveablePlatformExtension.teleport_bots_to_node = function (self, node_name)
 
 		if human_unit then
 			local companion_spawner_extension = ScriptUnit.extension(human_unit, "companion_spawner_system")
-			local companion_unit = companion_spawner_extension:companion_unit()
+			local companion_units = companion_spawner_extension:companion_units()
 
-			if companion_unit then
-				local companion_blackboard = BLACKBOARDS[companion_unit]
-				local movable_platform_component = Blackboard.write_component(companion_blackboard, "movable_platform")
+			if companion_units then
+				for i = 1, #companion_units do
+					local companion_unit = companion_units[i]
 
-				movable_platform_component.has_leave_teleport_position = true
+					if companion_unit then
+						local companion_blackboard = BLACKBOARDS[companion_unit]
 
-				movable_platform_component.leave_teleport_position:store(node_position)
+						if Blackboard.has_component(companion_blackboard, "movable_platform") then
+							local movable_platform_component = Blackboard.write_component(companion_blackboard, "movable_platform")
 
-				movable_platform_component.unit_reference = unit
+							movable_platform_component.has_leave_teleport_position = true
+
+							movable_platform_component.leave_teleport_position:store(node_position)
+
+							movable_platform_component.unit_reference = unit
+						end
+					end
+				end
 			end
 		end
 	end
@@ -987,17 +996,26 @@ end
 MoveablePlatformExtension._set_companion_platform_reference = function (self, passenger_unit, platform_reference)
 	if self._is_server then
 		local companion_spawner_extension = ScriptUnit.extension(passenger_unit, "companion_spawner_system")
-		local companion_unit = companion_spawner_extension:companion_unit()
+		local companion_units = companion_spawner_extension:companion_units()
 
-		if companion_unit then
-			local companion_blackboard = BLACKBOARDS[companion_unit]
-			local movable_platform_component = Blackboard.write_component(companion_blackboard, "movable_platform")
+		if companion_units then
+			for i = 1, #companion_units do
+				local companion_unit = companion_units[i]
 
-			if platform_reference then
-				self:_teleport_companion_onboard(companion_unit, movable_platform_component)
+				if companion_unit then
+					local companion_blackboard = BLACKBOARDS[companion_unit]
+
+					if Blackboard.has_component(companion_blackboard, "movable_platform") then
+						local movable_platform_component = Blackboard.write_component(companion_blackboard, "movable_platform")
+
+						if platform_reference then
+							self:_teleport_companion_onboard(companion_unit, movable_platform_component)
+						end
+
+						movable_platform_component.unit_reference = platform_reference
+					end
+				end
 			end
-
-			movable_platform_component.unit_reference = platform_reference
 		end
 	end
 end

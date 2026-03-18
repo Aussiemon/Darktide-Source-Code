@@ -258,8 +258,8 @@ local assault_spread_range_m2_moving = generate_offset_range(90, 0.775, 0.825, 0
 spread_templates.default_ogryn_heavystubber_braced = {
 	still = {
 		max_spread = {
-			pitch = 4.2,
-			yaw = 4.2,
+			pitch = 3.1,
+			yaw = 3.1,
 		},
 		randomized_spread = {
 			first_shot_min_ratio = 0.3,
@@ -633,8 +633,8 @@ local yaw_spread = pitch_spread * 1.2
 spread_templates.ogryn_heavystubber_spread_spraynpray_hip = {
 	still = {
 		max_spread = {
-			pitch = 6.4,
-			yaw = 6,
+			pitch = 5,
+			yaw = 5,
 		},
 		decay = {
 			from_shooting_grace_time = 0.025,
@@ -1016,8 +1016,8 @@ spread_templates.ogryn_heavystubber_spread_spraynpray_hip = {
 spread_templates.ogryn_heavystubber_spread_spraynpray_hip_m2 = {
 	still = {
 		max_spread = {
-			pitch = 6.4,
-			yaw = 6,
+			pitch = 5,
+			yaw = 4.8,
 		},
 		randomized_spread = {
 			first_shot_min_ratio = 0.2,
@@ -1089,8 +1089,8 @@ spread_templates.ogryn_heavystubber_spread_spraynpray_hip_m2 = {
 spread_templates.default_ogryn_heavystubber_braced_m2 = {
 	still = {
 		max_spread = {
-			pitch = 3.6,
-			yaw = 3.6,
+			pitch = 3.1,
+			yaw = 3.1,
 		},
 		randomized_spread = {
 			first_shot_min_ratio = 0.3,
@@ -1189,8 +1189,8 @@ local yaw_spread_m3 = pitch_spread * 1.1
 spread_templates.ogryn_heavystubber_spread_spraynpray_hip_m3 = {
 	still = {
 		max_spread = {
-			pitch = 5.4,
-			yaw = 5,
+			pitch = 4.1,
+			yaw = 4,
 		},
 		decay = {
 			from_shooting_grace_time = 0.025,
@@ -1574,8 +1574,8 @@ yaw_spread_m3 = pitch_spread_m3
 spread_templates.ogryn_heavystubber_spread_spraynpray_braced_m3 = {
 	still = {
 		max_spread = {
-			pitch = 3.4,
-			yaw = 3,
+			pitch = 2.9,
+			yaw = 2.9,
 		},
 		decay = {
 			from_shooting_grace_time = 0.025,

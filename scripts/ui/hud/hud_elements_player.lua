@@ -8,6 +8,7 @@ local elements = {
 		use_hud_scale = true,
 		visibility_groups = {
 			"alive",
+			"player_in_danger_zone",
 		},
 	},
 	{
@@ -16,6 +17,7 @@ local elements = {
 		visibility_groups = {
 			"alive",
 			"communication_wheel",
+			"player_in_danger_zone",
 		},
 	},
 	{
@@ -29,6 +31,7 @@ local elements = {
 			"alive",
 			"communication_wheel",
 			"tactical_overlay",
+			"player_in_danger_zone",
 		},
 	},
 	{
@@ -40,6 +43,7 @@ local elements = {
 			"dead",
 			"alive",
 			"communication_wheel",
+			"player_in_danger_zone",
 		},
 	},
 	{
@@ -52,6 +56,7 @@ local elements = {
 			"alive",
 			"communication_wheel",
 			"tactical_overlay",
+			"player_in_danger_zone",
 		},
 	},
 	{
@@ -64,6 +69,7 @@ local elements = {
 			"alive",
 			"communication_wheel",
 			"tactical_overlay",
+			"player_in_danger_zone",
 		},
 	},
 	{
@@ -74,6 +80,7 @@ local elements = {
 		visibility_groups = {
 			"alive",
 			"communication_wheel",
+			"player_in_danger_zone",
 		},
 	},
 	{
@@ -84,6 +91,7 @@ local elements = {
 		visibility_groups = {
 			"alive",
 			"communication_wheel",
+			"player_in_danger_zone",
 		},
 	},
 	{
@@ -94,6 +102,7 @@ local elements = {
 		visibility_groups = {
 			"alive",
 			"communication_wheel",
+			"player_in_danger_zone",
 		},
 	},
 	{
@@ -104,6 +113,7 @@ local elements = {
 		use_retained_mode = true,
 		visibility_groups = {
 			"alive",
+			"player_in_danger_zone",
 		},
 	},
 	{
@@ -113,6 +123,21 @@ local elements = {
 		use_hud_scale = true,
 		visibility_groups = {
 			"alive",
+			"player_in_danger_zone",
+		},
+	},
+	{
+		class_name = "HudElementPlayerCompass",
+		filename = "scripts/ui/hud/elements/player_compass/hud_element_player_compass",
+		package = "packages/ui/hud/player_compass/player_compass",
+		use_hud_scale = true,
+		visibility_groups = {
+			"alive",
+			"communication_wheel",
+			"player_in_danger_zone",
+		},
+		allowed_game_modes = {
+			"expedition",
 		},
 	},
 	{
@@ -133,6 +158,7 @@ local elements = {
 		use_hud_scale = false,
 		visibility_groups = {
 			"alive",
+			"player_in_danger_zone",
 		},
 	},
 	{
@@ -143,6 +169,7 @@ local elements = {
 		visibility_groups = {
 			"alive",
 			"communication_wheel",
+			"player_in_danger_zone",
 		},
 	},
 	{
@@ -155,6 +182,7 @@ local elements = {
 			"alive",
 			"communication_wheel",
 			"tactical_overlay",
+			"player_in_danger_zone",
 		},
 	},
 	{
@@ -167,6 +195,7 @@ local elements = {
 			"alive",
 			"communication_wheel",
 			"tactical_overlay",
+			"player_in_danger_zone",
 		},
 	},
 	{
@@ -178,6 +207,7 @@ local elements = {
 			"dead",
 			"alive",
 			"communication_wheel",
+			"player_in_danger_zone",
 		},
 	},
 	{
@@ -189,6 +219,7 @@ local elements = {
 			"alive",
 			"communication_wheel",
 			"tactical_overlay",
+			"player_in_danger_zone",
 		},
 	},
 	{
@@ -201,6 +232,7 @@ local elements = {
 			"alive",
 			"communication_wheel",
 			"tactical_overlay",
+			"player_in_danger_zone",
 		},
 	},
 	{
@@ -214,6 +246,7 @@ local elements = {
 			"cutscene",
 			"communication_wheel",
 			"tactical_overlay",
+			"player_in_danger_zone",
 		},
 	},
 	{
@@ -226,6 +259,7 @@ local elements = {
 			"dead",
 			"alive",
 			"communication_wheel",
+			"player_in_danger_zone",
 		},
 	},
 	{
@@ -236,6 +270,7 @@ local elements = {
 		visibility_groups = {
 			"alive",
 			"communication_wheel",
+			"player_in_danger_zone",
 		},
 	},
 	{
@@ -246,6 +281,7 @@ local elements = {
 		visibility_groups = {
 			"alive",
 			"communication_wheel",
+			"player_in_danger_zone",
 		},
 	},
 	{
@@ -255,6 +291,7 @@ local elements = {
 		visibility_groups = {
 			"alive",
 			"communication_wheel",
+			"player_in_danger_zone",
 		},
 	},
 	{
@@ -289,6 +326,15 @@ local elements = {
 			"dead",
 			"alive",
 			"communication_wheel",
+			"player_in_danger_zone",
+		},
+	},
+	{
+		class_name = "HudElementDangerZoneOverlay",
+		filename = "scripts/ui/hud/elements/danger_zone_overlay/hud_element_danger_zone_overlay",
+		package = "packages/ui/hud/danger_zone_overlay/danger_zone_overlay",
+		visibility_groups = {
+			"player_in_danger_zone",
 		},
 	},
 }

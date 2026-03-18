@@ -1078,7 +1078,7 @@ templates.veteran_attack_speed = {
 }
 templates.veteran_damage_bonus_leaving_invisibility = {
 	class_name = "veteran_stealth_bonuses_buff",
-	duration = 5,
+	duration = 8,
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_damage_bonus_leaving_invisibility",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	predicted = false,
@@ -1155,6 +1155,13 @@ templates.veteran_invisibility = {
 
 		local buff_extension = template_context.buff_extension
 		local can_attack_during_invisibility = not not buff_extension:has_keyword(keywords.can_attack_during_invisibility)
+		local unit = template_context.unit
+		local attack_instigator_unit = params.attack_instigator_unit
+
+		if attack_instigator_unit and attack_instigator_unit ~= unit then
+			return
+		end
+
 		local damage_type = params.damage_type
 
 		if damage_type and (ALLOWED_INVISIBILITY_DAMAGE_TYPES[damage_type] or can_attack_during_invisibility) then
@@ -1215,6 +1222,12 @@ templates.veteran_invisibility = {
 
 		if talent_extension:has_special_rule(special_rules.veteran_increased_weakspot_power_after_combat_ability) then
 			buff_extension:add_internally_controlled_buff("veteran_increased_weakspot_power_after_combat_ability", t)
+		end
+
+		local event_manager = Managers.event
+
+		if event_manager then
+			event_manager:trigger("player_unit_stealth_entered")
 		end
 	end,
 	stop_func = function (template_data, template_context, extension_destroyed)
@@ -3475,6 +3488,13 @@ templates.veteran_flanking_damage = {
 	},
 	stat_buffs = {
 		[stat_buffs.flanking_damage] = 0.3,
+	},
+}
+templates.veteran_increased_ranged_cleave = {
+	class_name = "buff",
+	prediced = false,
+	stat_buffs = {
+		[stat_buffs.ranged_max_hit_mass_attack_modifier] = talent_settings.veteran_increased_ranged_cleave.cleave,
 	},
 }
 

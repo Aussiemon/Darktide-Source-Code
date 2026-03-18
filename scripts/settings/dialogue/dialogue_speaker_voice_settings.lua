@@ -616,6 +616,13 @@ local dialogue_speaker_voice_settings = {
 		short_name = "loc_npc_short_name_enemy_chaos_ogryn_armoured_executor",
 		subtitles_enabled = false,
 	},
+	enemy_hound_master_a = {
+		full_name = "loc_npc_full_name_enemy_chaos_ogryn_armoured_executor",
+		icon = nil,
+		player_voice = false,
+		short_name = "loc_npc_short_name_enemy_chaos_ogryn_armoured_executor",
+		subtitles_enabled = false,
+	},
 	enemy_chaos_ogryn_heavy_gunner_a = {
 		full_name = "loc_npc_full_name_enemy_chaos_ogryn_heavy_gunner",
 		icon = nil,
@@ -920,6 +927,13 @@ local dialogue_speaker_voice_settings = {
 		icon = "content/ui/textures/icons/npc_portraits/mission_givers/default",
 		player_voice = false,
 		short_name = "loc_npc_short_name_dreg_lector_a",
+		subtitles_enabled = true,
+	},
+	dreg_report_a = {
+		full_name = "loc_npc_full_name_dreg_report_a",
+		icon = "content/ui/textures/icons/npc_portraits/mission_givers/default",
+		player_voice = false,
+		short_name = "loc_npc_short_name_dreg_report_a",
 		subtitles_enabled = true,
 	},
 	commissar_a = {

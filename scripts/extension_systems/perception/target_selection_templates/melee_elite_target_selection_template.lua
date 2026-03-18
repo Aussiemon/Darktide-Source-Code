@@ -3,6 +3,7 @@
 local Breed = require("scripts/utilities/breed")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local MinionTargetSelection = require("scripts/utilities/minion_target_selection")
+local MinionTargetOverride = require("scripts/utilities/minion_target_override")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local aggro_states = PerceptionSettings.aggro_states
 
@@ -55,6 +56,8 @@ target_selection_template.melee_elite = function (unit, side, perception_compone
 	local detection_radius_sq = detection_radius^2
 	local vector3_distance_squared = Vector3.distance_squared
 
+	target_units = MinionTargetOverride.check_for_target_overrides(unit, target_units, buff_extension)
+
 	if target_units[current_target_unit] then
 		local stickiness = breed.target_stickiness_distance or DEFAULT_STICKINESS_DISTANCE
 		local target_position = POSITION_LOOKUP[current_target_unit]
@@ -92,7 +95,7 @@ target_selection_template.melee_elite = function (unit, side, perception_compone
 			for i = 1, #target_units do
 				local target_unit = target_units[i]
 
-				if target_unit ~= current_target_unit then
+				if target_unit ~= current_target_unit and ALIVE[target_unit] then
 					local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
 					local target_breed = unit_data_extension:breed()
 					local is_shooting = false

@@ -333,20 +333,18 @@ PlayerInteracteeExtension.hold_required = function (self)
 	return self:interaction_length() > 0
 end
 
-PlayerInteracteeExtension.started = function (self, interactor_unit, interaction_input_type)
+PlayerInteracteeExtension.started = function (self, interactor_unit)
 	if self._is_server then
 		local unit_id, is_level_unit = self._unit_id, false
 		local interactor_object_id = Managers.state.unit_spawner:game_object_id(interactor_unit)
 
-		Managers.state.game_session:send_rpc_clients("rpc_interaction_started", unit_id, is_level_unit, interactor_object_id, interaction_input_type == "secondary" and 2 or 1)
+		Managers.state.game_session:send_rpc_clients("rpc_interaction_started", unit_id, is_level_unit, interactor_object_id)
 	end
 
 	self._is_being_used = true
 	self._interactor_unit = interactor_unit
 
 	self:_trigger_flow_event("lua_interaction_start")
-
-	self._interaction_input_type = interaction_input_type
 
 	local interactee_component = self._interactee_component
 
@@ -372,7 +370,6 @@ PlayerInteracteeExtension.stopped = function (self, result)
 
 	self._interactor_unit = nil
 	self._is_being_used = false
-	self._interaction_input_type = nil
 
 	local interactee_component = self._interactee_component
 
@@ -384,46 +381,6 @@ end
 
 PlayerInteracteeExtension._trigger_flow_event = function (self, event_name)
 	Unit.flow_event(self._unit, event_name)
-end
-
-PlayerInteracteeExtension.set_secondary_action_text = function (self, text)
-	local active_interaction_type = self._active_interaction_type
-
-	if active_interaction_type then
-		local override_context = self._override_contexts[active_interaction_type]
-
-		override_context.secondary_action_text = text
-	end
-end
-
-PlayerInteracteeExtension.secondary_action_text = function (self)
-	local active_interaction_type = self._active_interaction_type
-
-	if not active_interaction_type then
-		return
-	end
-
-	local override_context = self._override_contexts[active_interaction_type]
-	local interaction = self._interactions[active_interaction_type]
-
-	return override_context.secondary_action_text or interaction:secondary_action_text()
-end
-
-PlayerInteracteeExtension.get_interaction_input_type = function (self)
-	return self._interaction_input_type
-end
-
-PlayerInteracteeExtension.secondary_interaction_input = function (self)
-	local active_interaction_type = self._active_interaction_type
-
-	if not active_interaction_type then
-		return
-	end
-
-	local override_context = self._override_contexts[active_interaction_type]
-	local interaction = self._interactions[active_interaction_type]
-
-	return override_context.secondary_interaction_input or interaction:secondary_interaction_input()
 end
 
 return PlayerInteracteeExtension

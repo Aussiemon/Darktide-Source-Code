@@ -2,7 +2,6 @@
 
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionPushFxTemplates = require("scripts/settings/fx/minion_push_fx_templates")
@@ -408,6 +407,7 @@ local action_data = {
 		attack_type = "oobb",
 		bot_power_level_modifier = 0.35,
 		collision_filter = "filter_minion_melee",
+		effect_template_name = "renegade_captain_power_sword_sweep",
 		height = 2.75,
 		ignore_blocked = true,
 		ignore_dodge = true,
@@ -499,7 +499,6 @@ local action_data = {
 				max_angle = math.degrees_to_radians(180),
 			},
 		},
-		effect_template = EffectTemplates.renegade_captain_power_sword_sweep,
 		effect_template_start_timings = {
 			attack_swing_combo_01 = 0.16666666666666666,
 			attack_swing_combo_02 = 0.16666666666666666,
@@ -546,6 +545,7 @@ local action_data = {
 	},
 	dash = {
 		collision_radius = 1.8,
+		dash_effect_template_name = "renegade_captain_power_sword_sweep",
 		dash_speed = 25,
 		max_duration = 5,
 		power_level = 150,
@@ -567,7 +567,6 @@ local action_data = {
 		reached_destination_durations = {
 			attack_charge_miss = 0.625,
 		},
-		dash_effect_template = EffectTemplates.renegade_captain_power_sword_sweep,
 		push_minions_damage_profile = DamageProfileTemplates.renegade_captain_minion_charge_push,
 		push_minions_fx_template = MinionPushFxTemplates.captain_charge_push,
 		push_minions_fx_cooldown = {
@@ -580,6 +579,7 @@ local action_data = {
 	},
 	dash_fast = {
 		collision_radius = 1.8,
+		dash_effect_template_name = "renegade_captain_power_sword_sweep",
 		dash_speed = 25,
 		max_duration = 5,
 		power_level = 150,
@@ -601,7 +601,6 @@ local action_data = {
 		reached_destination_durations = {
 			attack_charge_miss = 0.0625,
 		},
-		dash_effect_template = EffectTemplates.renegade_captain_power_sword_sweep,
 		push_minions_damage_profile = DamageProfileTemplates.renegade_captain_minion_charge_push,
 		push_minions_fx_template = MinionPushFxTemplates.captain_charge_push,
 		push_minions_fx_cooldown = {
@@ -614,6 +613,7 @@ local action_data = {
 	},
 	random_dash = {
 		collision_radius = 1.8,
+		dash_effect_template_name = "renegade_captain_power_sword_sweep",
 		dash_speed = 30,
 		max_duration = 5,
 		power_level = 150,
@@ -643,7 +643,6 @@ local action_data = {
 		reached_destination_durations = {
 			attack_charge_miss = 0.625,
 		},
-		dash_effect_template = EffectTemplates.renegade_captain_power_sword_sweep,
 		push_minions_damage_profile = DamageProfileTemplates.renegade_captain_minion_charge_push,
 		push_minions_fx_template = MinionPushFxTemplates.captain_charge_push,
 		push_minions_fx_cooldown = {
@@ -656,6 +655,7 @@ local action_data = {
 	},
 	random_dash_short = {
 		collision_radius = 1.8,
+		dash_effect_template_name = "renegade_captain_power_sword_sweep",
 		dash_speed = 30,
 		max_duration = 5,
 		power_level = 150,
@@ -685,7 +685,6 @@ local action_data = {
 		reached_destination_durations = {
 			attack_charge_miss = 0.0625,
 		},
-		dash_effect_template = EffectTemplates.renegade_captain_power_sword_sweep,
 		push_minions_damage_profile = DamageProfileTemplates.renegade_captain_minion_charge_push,
 		push_minions_fx_template = MinionPushFxTemplates.captain_charge_push,
 		push_minions_fx_cooldown = {
@@ -704,6 +703,7 @@ local action_data = {
 		attack_type = "sweep",
 		bot_power_level_modifier = 0.2,
 		collision_filter = "filter_minion_melee_friendly_fire",
+		effect_template_name = "renegade_twin_captain_power_sword_sweep",
 		hit_zone_name = "center_mass",
 		ignore_blocked = true,
 		move_speed_variable_lerp_speed = 4,
@@ -744,7 +744,6 @@ local action_data = {
 			ranged = 100,
 		},
 		damage_type = damage_types.minion_powered_sharp,
-		effect_template = EffectTemplates.renegade_twin_captain_power_sword_sweep,
 		effect_template_start_timings = {
 			attack_heavy_swing_fast = 0.16666666666666666,
 			attack_heavy_swing_fast_02 = 0.3333333333333333,
@@ -756,6 +755,7 @@ local action_data = {
 		attack_type = "sweep",
 		collision_filter = "filter_minion_melee_friendly_fire",
 		dodge_weapon_reach = 3.5,
+		effect_template_name = "renegade_twin_captain_power_sword_sweep",
 		hit_zone_name = "center_mass",
 		ignore_blocked = true,
 		move_speed_variable_lerp_speed = 4,
@@ -790,12 +790,12 @@ local action_data = {
 			ranged = 100,
 		},
 		damage_type = damage_types.minion_powered_sharp,
-		effect_template = EffectTemplates.renegade_twin_captain_power_sword_sweep,
 		effect_template_start_timings = {
 			attack_heavy_swing_moving = 0.3333333333333333,
 		},
 	},
 	shield_down_recharge = {
+		charge_effect_template_name = "linked_beam",
 		shield_break_duration = 10,
 		stand_up_anim_duration = 1.3333333333333333,
 		vo_event = "taunt_shield",
@@ -812,7 +812,6 @@ local action_data = {
 			600,
 			800,
 		},
-		charge_effect_template = EffectTemplates.linked_beam,
 		regenerate_full_delay = {
 			20,
 			18,

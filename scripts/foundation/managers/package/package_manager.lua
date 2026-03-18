@@ -496,9 +496,14 @@ PackageManager.update = function (self, dt, t)
 	for i = 1, #queued_callback_items do
 		local item = queued_callback_items[i]
 
+		ResourceReferenceContext.push("Load Callback")
+		ResourceReferenceContext.push(item.reference_name)
 		item.callback(item.id)
 
 		item.callback = nil
+
+		ResourceReferenceContext.pop(item.reference_name)
+		ResourceReferenceContext.pop("Load Callback")
 	end
 
 	table.clear(queued_callback_items)

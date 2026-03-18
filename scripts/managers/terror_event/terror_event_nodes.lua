@@ -323,6 +323,24 @@ TerrorEventNodes.spawn_by_points = {
 
 			local breed_tags = node.breed_tags
 			local excluded_breed_tags = node.excluded_breed_tags
+			local excluded_breed_tags_replacement = Managers.state.terror_event:get_excluded_tags_replacement(TEMP_SPAWN_SIDE_NAME)
+
+			if excluded_breed_tags and excluded_breed_tags_replacement then
+				excluded_breed_tags = table.clone(excluded_breed_tags)
+
+				for i = 1, #excluded_breed_tags do
+					local excluded_tag = excluded_breed_tags[i]
+
+					if excluded_breed_tags_replacement[excluded_tag] then
+						table.swap_delete(excluded_breed_tags, i)
+					end
+				end
+
+				if next(excluded_breed_tags) == nil then
+					excluded_breed_tags = nil
+				end
+			end
+
 			local spawn_side_name = node.side_name or TEMP_SPAWN_SIDE_NAME
 			local tags_replacement = Managers.state.terror_event:get_tags_replacement(spawn_side_name)
 
@@ -350,7 +368,7 @@ TerrorEventNodes.spawn_by_points = {
 			local difficulty_scale = Managers.state.difficulty:get_table_entry_by_resistance(MinionDifficultySettings.terror_event_point_costs)
 			local ramp_up_timer_modifier = Managers.state.pacing:get_ramp_up_frequency_modifier("terror_events")
 			local scaled_points = node.points * difficulty_scale * Managers.state.terror_event:get_terror_event_point_modifier() * ramp_up_timer_modifier
-			local points = math.min(scaled_points, MAX_POINTS)
+			local points = math.min(scaled_points, MAX_POINTS * Managers.state.terror_event:get_max_points_modifer())
 			local spawner_group = node.spawner_group
 			local proximity_spawners, limit_spawners, inverse_proximity_spawners = node.proximity_spawners, node.limit_spawners, node.inverse_proximity_spawners
 

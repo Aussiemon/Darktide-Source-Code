@@ -25,6 +25,8 @@ WeaponTweaks.extract_weapon_tweaks("scripts/settings/damage/damage_profiles/smit
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/damage/damage_profiles/tank_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/damage/damage_profiles/grenade_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/damage/damage_profiles/luggable_damage_profile_templates", templates, loaded_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/damage/damage_profiles/artillery_damage_profile_templates", templates, loaded_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/damage/damage_profiles/trap_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/autoguns/settings_templates/autogun_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/autopistols/settings_templates/autopistol_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/dual_autopistols/settings_templates/dual_autopistol_damage_profile_templates", templates, loaded_files)

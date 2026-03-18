@@ -90,29 +90,29 @@ PlayerUnitAnimationExtension.anim_event_1p = function (self, event_name)
 end
 
 PlayerUnitAnimationExtension.anim_event_with_variable_float_1p = function (self, event_name, variable_name, variable_value)
-	local first_person_unit = self._first_person_unit
-	local variable_index = Unit.animation_find_variable(first_person_unit, variable_name)
+	local fp_unit = self._first_person_unit
+	local variable_index = Unit.animation_find_variable(fp_unit, variable_name)
 
-	Unit.animation_set_variable(first_person_unit, variable_index, variable_value)
-	Unit.animation_event(first_person_unit, event_name)
-	PlayerUnitAnimationState.record_animation_state(self._animation_state_component, self._unit, first_person_unit)
+	Unit.animation_set_variable(fp_unit, variable_index, variable_value)
+	Unit.animation_event(fp_unit, event_name)
+	PlayerUnitAnimationState.record_animation_state(self._animation_state_component, self._unit, fp_unit)
 end
 
 PlayerUnitAnimationExtension.anim_event_with_variable_floats_1p = function (self, event_name, ...)
-	local first_person_unit = self._first_person_unit
+	local fp_unit = self._first_person_unit
 	local num_params = select("#", ...)
 
 	for ii = 1, num_params, 2 do
 		local variable_name, variable_value = select(ii, ...)
-		local variable_index = Unit.animation_find_variable(first_person_unit, variable_name)
+		local variable_index = Unit.animation_find_variable(fp_unit, variable_name)
 
 		if variable_value and variable_index then
-			Unit.animation_set_variable(first_person_unit, variable_index, variable_value)
+			Unit.animation_set_variable(fp_unit, variable_index, variable_value)
 		end
 	end
 
-	Unit.animation_event(first_person_unit, event_name)
-	PlayerUnitAnimationState.record_animation_state(self._animation_state_component, self._unit, first_person_unit)
+	Unit.animation_event(fp_unit, event_name)
+	PlayerUnitAnimationState.record_animation_state(self._animation_state_component, self._unit, fp_unit)
 end
 
 PlayerUnitAnimationExtension.inventory_slot_wielded = function (self, weapon_template, t)

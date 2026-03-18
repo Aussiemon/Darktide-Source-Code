@@ -596,6 +596,29 @@ local surface_fx = {
 		},
 		[hit_types.penetration_exit] = nil,
 	},
+	void_shell = {
+		[hit_types.stop] = {
+			sfx = {
+				{
+					event = "wwise/events/weapon/play_weapon_impact_bullet_material",
+					group = "surface_material",
+					normal_rotation = true,
+					only_3p = true,
+				},
+			},
+		},
+		[hit_types.penetration_entry] = {
+			sfx = {
+				{
+					event = "wwise/events/weapon/play_weapon_impact_bullet_material_husk",
+					group = "surface_material",
+					normal_rotation = true,
+					only_3p = true,
+				},
+			},
+		},
+		[hit_types.penetration_exit] = nil,
+	},
 }
 local default_surface_fx = {
 	[hit_types.stop] = {

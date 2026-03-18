@@ -87,6 +87,10 @@ CreditsVendorView._purchase_item = function (self, offer)
 	local promise = store_service:purchase_item(offer)
 
 	promise:next(function (result)
+		if self._destroyed then
+			return
+		end
+
 		self._purchase_promise = nil
 
 		local widgets_by_name = self._widgets_by_name
@@ -100,6 +104,10 @@ CreditsVendorView._purchase_item = function (self, offer)
 
 		self:_on_purchase_complete(result.items)
 	end):catch(function (error)
+		if self._destroyed then
+			return
+		end
+
 		self:_fetch_store_items()
 
 		self._purchase_promise = nil

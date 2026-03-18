@@ -9,12 +9,16 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewSettings = require("scripts/ui/views/end_player_view/end_player_view_settings")
 local ViewStyles = require("scripts/ui/views/end_player_view/end_player_view_styles")
 local WalletSettings = require("scripts/settings/wallet_settings")
+local Text = require("scripts/utilities/ui/text")
+local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local ExpeditionService = require("scripts/managers/data_service/services/expedition_service")
 local blueprint_styles = ViewStyles.blueprints
 local ITEM_TYPES = UISettings.ITEM_TYPES
 local folded_card_size = {
 	ViewStyles.card_width,
 	ViewStyles.card_folded_height,
 }
+local EXPEDITION_UNLOCK_TYPE = ExpeditionService.UNLOCK_TYPE
 local end_player_view_blueprints = {}
 
 local function _card_default_frame_visibility_function(content, style)
@@ -832,7 +836,7 @@ end_player_view_blueprints.empty_test_card = {
 	end,
 	style = blueprint_styles.empty_test_card,
 	size = folded_card_size,
-	init = function (parent, widget, index, config, content_animation)
+	init = function (parent, widget, index, config)
 		local content = widget.content
 
 		_card_default_frame_pass_template_init(widget, index)
@@ -1153,7 +1157,7 @@ end_player_view_blueprints.weapon = {
 		return full_pass
 	end,
 	style = blueprint_styles.empty_test_card,
-	init = function (parent, widget, index, config, content_animation)
+	init = function (parent, widget, index, config)
 		widget.alpha_multiplier = 0
 
 		local content = widget.content
@@ -1780,7 +1784,7 @@ end_player_view_blueprints.havoc = {
 		return full_pass
 	end,
 	style = blueprint_styles.empty_test_card,
-	init = function (parent, widget, index, config, content_animation)
+	init = function (parent, widget, index, config)
 		_card_default_frame_pass_template_init(widget, index)
 
 		local content = widget.content
@@ -1866,6 +1870,496 @@ end_player_view_blueprints.havoc = {
 
 		if week_rank_reward then
 			content.week_rank = week_rank_reward
+		end
+	end,
+}
+end_player_view_blueprints.expedition = {
+	size = folded_card_size,
+	pass_template_function = function (parent, config)
+		local pass_template = _get_card_default_frame_pass_template()
+		local next_index = #pass_template + 1
+		local all_unlock_progress = config.all_unlock_progress
+		local has_progress = all_unlock_progress and not table.is_empty(all_unlock_progress)
+		local offset_y = has_progress and 50 or ViewStyles.card_fully_expanded_height * 0.5 - 30
+		local offset_x = 55
+
+		pass_template[next_index] = {
+			pass_type = "texture",
+			style_id = "currency_background",
+			value = "content/ui/materials/masks/gradient_horizontal_sides_02",
+			value_id = "currency_background",
+			style = {
+				scale_to_material = true,
+				offset = {
+					10,
+					offset_y - 15 - 5,
+					1,
+				},
+				size_addition = {
+					-20,
+					10,
+				},
+				color = Color.white(0, true),
+				size = {
+					nil,
+					80,
+				},
+			},
+		}
+
+		local next_index = #pass_template + 1
+
+		pass_template[next_index] = {
+			pass_type = "texture",
+			style_id = "currency_icon_background",
+			value = "content/ui/materials/effects/end_of_round/reward_background",
+			value_id = "currency_icon_background",
+			style = {
+				size = {
+					170,
+					170,
+				},
+				offset = {
+					offset_x + 20 - 60,
+					offset_y - 60,
+					1,
+				},
+			},
+		}
+
+		local next_index = #pass_template + 1
+
+		pass_template[#pass_template + 1] = {
+			pass_type = "texture",
+			style_id = "currency_icon",
+			value = "content/ui/materials/icons/currencies/tech_remnant_big",
+			value_id = "currency_icon",
+			style = {
+				size = {
+					52,
+					44,
+				},
+				offset = {
+					offset_x + 20,
+					offset_y,
+					2,
+				},
+			},
+		}
+
+		local next_index = #pass_template + 1
+
+		offset_y = offset_y + 10
+
+		local new_main_color = {
+			255,
+			133,
+			216,
+			158,
+		}
+		local new_body_color = {
+			255,
+			225,
+			222,
+			207,
+		}
+		local new_body_color_glow = Color.white(255, true)
+		local next_index = #pass_template + 1
+		local card_content_styles = blueprint_styles.card_content
+		local label_style = table.clone(UIFontSettings.terminal_header_3)
+
+		label_style.offset = {
+			offset_x + 110,
+			offset_y - 24,
+			3,
+		}
+		label_style.text_color = table.clone(new_main_color)
+		label_style.font_size = 24
+		pass_template[next_index] = {
+			pass_type = "text",
+			style_id = "currency_label",
+			value_id = "currency_label",
+			value = Localize("loc_expedition_eor_collected"),
+			style = label_style,
+		}
+		next_index = next_index + 1
+		card_content_styles = blueprint_styles.card_content
+
+		local value_style = table.clone(UIFontSettings.terminal_header_3)
+
+		value_style.offset = {
+			offset_x + 110,
+			offset_y + 8,
+			3,
+		}
+		value_style.font_size = 36
+		value_style.text_color = table.clone(new_body_color)
+		value_style.text_color_glow = Color.white(255, true)
+		pass_template[next_index] = {
+			pass_type = "text",
+			style_id = "currency_text",
+			value = "0",
+			value_id = "currency_text",
+			style = value_style,
+		}
+		next_index = next_index + 1
+		offset_y = offset_y + 70
+
+		local complete_remaining_space = ViewStyles.card_fully_expanded_height - offset_y - 15
+		local remaining_space = complete_remaining_space
+		local remaining_all_progress_count = #all_unlock_progress
+		local used_indexes = {}
+		local affected_nodes = {}
+
+		if all_unlock_progress then
+			local progress_by_unlocked_node = {}
+
+			for i = 1, #all_unlock_progress do
+				local unlock_progress = all_unlock_progress[i]
+				local affected_node = unlock_progress.affected_node
+
+				if affected_node then
+					progress_by_unlocked_node[affected_node] = progress_by_unlocked_node[affected_node] or {
+						affected_node_name = unlock_progress.affected_node_name,
+						indexes = {},
+					}
+					progress_by_unlocked_node[affected_node].indexes[#progress_by_unlocked_node[affected_node].indexes + 1] = i
+				end
+			end
+
+			local pass_index = 1
+
+			for node_id, unlock_progresses_by_node in pairs(progress_by_unlocked_node) do
+				offset_y = offset_y + 15
+
+				local node_name_id = "node_name_" .. node_id
+				local node_text_style = table.clone(label_style)
+
+				node_text_style.offset = {
+					offset_x,
+					offset_y,
+					3,
+				}
+				node_text_style.font_size = 18
+
+				local node_id_height = Text.text_height(parent._ui_renderer, node_id, node_text_style, {
+					ViewStyles.card_width,
+					ViewStyles.card_fully_expanded_height,
+				}, true)
+
+				remaining_space = remaining_space - 25 - node_id_height
+
+				if remaining_space < 50 then
+					remaining_space = 0
+
+					break
+				end
+
+				affected_nodes[#affected_nodes + 1] = node_id
+
+				local node_name = unlock_progresses_by_node.affected_node_name and Localize(unlock_progresses_by_node.affected_node_name) or ""
+
+				pass_template[next_index] = {
+					pass_type = "text",
+					value_id = node_name_id,
+					style_id = node_name_id,
+					value = node_name,
+					style = node_text_style,
+				}
+				offset_y = offset_y + node_id_height
+				next_index = next_index + 1
+
+				for i = 1, #unlock_progresses_by_node.indexes do
+					remaining_all_progress_count = remaining_all_progress_count - 1
+
+					local unlock_progress_index = unlock_progresses_by_node.indexes[i]
+					local unlock_progress = all_unlock_progress[unlock_progress_index]
+					local limit = unlock_progress.limit or 0
+					local previous_progress = unlock_progress.previous_progress or 0
+					local progress = unlock_progress.progress or previous_progress
+					local key = unlock_progress.key
+					local unlock_type = unlock_progress.type
+					local progress_node_name = unlock_progress.progress_node_name
+					local progress_text = ""
+					local context = {
+						node_name = progress_node_name and Localize(progress_node_name) or "",
+						gathered = unlock_progress.previous_progress,
+						goal = unlock_progress.limit,
+					}
+
+					if unlock_type == EXPEDITION_UNLOCK_TYPE.personal_best_loot then
+						progress_text = Localize("loc_personal_best_loot", true, context)
+					elseif unlock_type == EXPEDITION_UNLOCK_TYPE.personal_total_loot then
+						progress_text = Localize("loc_personal_total_loot", true, context)
+					elseif unlock_type == EXPEDITION_UNLOCK_TYPE.personal_count then
+						progress_text = Localize("loc_personal_count", true, context)
+					elseif unlock_type == EXPEDITION_UNLOCK_TYPE.personal_total_loot_mapwide then
+						progress_text = Localize("loc_personal_total_loot_mapwide", true, context)
+					end
+
+					progress_text = string.gsub(progress_text, string.format("%d/%d", unlock_progress.previous_progress, unlock_progress.limit), "")
+
+					local progress_value = string.format("%s / %s", Text.format_currency(math.floor(previous_progress)), Text.format_currency(math.floor(limit)))
+					local progress_text_id = "progress_text_" .. pass_index
+
+					offset_y = offset_y + 10
+
+					local progress_square_background_id = "progress_square_background_" .. pass_index
+
+					pass_template[next_index] = {
+						pass_type = "rect",
+						style_id = progress_square_background_id,
+						style = {
+							scale_to_material = true,
+							size = {
+								20,
+								20,
+							},
+							color = Color.black(0, true),
+							offset = {
+								offset_x,
+								offset_y,
+								2,
+							},
+						},
+					}
+					next_index = next_index + 1
+
+					local progress_square_tile_id = "progress_square_tile_" .. pass_index
+
+					pass_template[next_index] = {
+						pass_type = "texture",
+						value = "content/ui/materials/frames/frame_tile_2px",
+						style_id = progress_square_tile_id,
+						value_id = progress_square_tile_id,
+						style = {
+							scale_to_material = true,
+							color = Color.terminal_frame(0, true),
+							size = {
+								20,
+								20,
+							},
+							offset = {
+								offset_x,
+								offset_y,
+								3,
+							},
+						},
+					}
+					next_index = next_index + 1
+
+					local progress_square_corner_id = "progress_square_corner_" .. pass_index
+
+					pass_template[next_index] = {
+						pass_type = "texture",
+						value = "content/ui/materials/frames/frame_corner_2px",
+						style_id = progress_square_corner_id,
+						value_id = progress_square_corner_id,
+						style = {
+							scale_to_material = true,
+							color = Color.terminal_corner_hover(0, true),
+							size = {
+								20,
+								20,
+							},
+							offset = {
+								offset_x,
+								offset_y,
+								4,
+							},
+						},
+					}
+					next_index = next_index + 1
+
+					local progress_text_style = table.clone(label_style)
+
+					progress_text_style.offset = {
+						offset_x + 30,
+						offset_y,
+						3,
+					}
+					progress_text_style.font_size = 20
+
+					local text_height = Text.text_height(parent._ui_renderer, progress_text, progress_text_style, {
+						ViewStyles.card_width - offset_x * 2,
+						ViewStyles.card_fully_expanded_height,
+					}, true)
+
+					pass_template[next_index] = {
+						pass_type = "text",
+						value_id = progress_text_id,
+						style_id = progress_text_id,
+						value = progress_text,
+						style = progress_text_style,
+					}
+					next_index = next_index + 1
+					offset_y = offset_y + text_height + 5
+
+					local value_text_style = table.clone(value_style)
+
+					value_text_style.offset = {
+						offset_x + 30,
+						offset_y,
+						3,
+					}
+					value_text_style.font_size = 24
+					value_text_style.size = {
+						ViewStyles.card_width - offset_x * 2,
+					}
+					value_text_style.text_color = Color.terminal_text_header(255, true)
+
+					local value_height = Text.text_height(parent._ui_renderer, progress_value, value_text_style, {
+						ViewStyles.card_width - offset_x * 2,
+						ViewStyles.card_fully_expanded_height,
+					}, true)
+					local progress_value_id = "progress_value_" .. pass_index
+
+					pass_template[next_index] = {
+						pass_type = "text",
+						value_id = progress_value_id,
+						style_id = progress_value_id,
+						value = progress_value,
+						style = value_text_style,
+					}
+					next_index = next_index + 1
+
+					local progress_complete_square_id = "progress_complete_square_" .. pass_index
+
+					pass_template[next_index] = {
+						pass_type = "rect",
+						value_id = progress_complete_square_id,
+						style_id = progress_complete_square_id,
+						style = {
+							offset = {
+								offset_x,
+								offset_y,
+								4,
+							},
+							size = {
+								0,
+								text_height,
+							},
+						},
+					}
+					next_index = next_index + 1
+					offset_y = offset_y + value_height
+
+					local progress_background_id = "progress_background_" .. pass_index
+
+					pass_template[next_index] = {
+						pass_type = "texture",
+						value = "content/ui/materials/masks/gradient_horizontal_sides_02",
+						value_id = progress_background_id,
+						style_id = progress_background_id,
+						style = {
+							scale_to_material = true,
+							offset = {
+								10,
+								progress_text_style.offset[2] - 5,
+								1,
+							},
+							size_addition = {
+								-20,
+								10,
+							},
+							color = Color.white(0, true),
+							size = {
+								[2] = text_height + 5 + value_height,
+							},
+						},
+					}
+					next_index = #pass_template + 1
+					remaining_space = remaining_space - text_height - 5 - value_height - 10
+					used_indexes[pass_index] = unlock_progress_index
+					pass_index = pass_index + 1
+
+					if remaining_space < text_height + 5 + value_height + 10 + 20 then
+						remaining_space = 0
+
+						break
+					end
+				end
+			end
+
+			local resume_text_style = table.clone(UIFontSettings.body)
+
+			resume_text_style.offset = {
+				offset_x,
+				-30,
+				3,
+			}
+			resume_text_style.vertical_alignment = "bottom"
+			resume_text_style.text_vertical_alignment = "bottom"
+			resume_text_style.text_horizontal_alignment = "center"
+			resume_text_style.size = {
+				ViewStyles.card_width - offset_x * 2,
+			}
+			resume_text_style.text_color = Color.terminal_text_body(255, true)
+			pass_template[next_index] = {
+				pass_type = "text",
+				style_id = "expedition_resume_text",
+				value_id = "expedition_resume_text",
+				value = remaining_all_progress_count > 0 and Localize("loc_expedition_eor_additional", true, {
+					requirements = remaining_all_progress_count,
+				}) or "",
+				style = resume_text_style,
+			}
+		end
+
+		config.affected_nodes = affected_nodes
+		config.used_indexes = used_indexes
+
+		return pass_template
+	end,
+	style = blueprint_styles.empty_test_card,
+	init = function (parent, widget, index, config)
+		_card_default_frame_pass_template_init(widget, index)
+
+		local content = widget.content
+		local style = widget.style
+		local node_name_played = config.node_name_played and Localize(config.node_name_played)
+
+		content.label = string.format("%s\n%s", Localize("loc_expedition_eor_title"), node_name_played)
+
+		local all_unlock_progress = config.all_unlock_progress
+		local loot_collected = config.loot_collected
+
+		content.loot_collected = loot_collected
+		content.all_unlock_progress = all_unlock_progress
+		content.affected_nodes = config.affected_nodes or {}
+		content.used_indexes = config.used_indexes or {}
+		content.content_animation = "expedition_card_show_content"
+		content.dim_out_animation = "expedition_card_dim_out_content"
+
+		local pass_styles = {
+			widget.style.currency_icon_background,
+			widget.style.currency_icon,
+			widget.style.currency_label,
+			widget.style.currency_text,
+			widget.style.expedition_resume_text,
+		}
+
+		for i = 1, #config.affected_nodes do
+			local affected_node = config.affected_nodes[i]
+
+			pass_styles[#pass_styles + 1] = widget.style["node_name_" .. affected_node]
+		end
+
+		for i = 1, #config.used_indexes do
+			pass_styles[#pass_styles + 1] = widget.style["progress_text_" .. i]
+			pass_styles[#pass_styles + 1] = widget.style["progress_value_" .. i]
+		end
+
+		for i = 1, #pass_styles do
+			local pass_style = pass_styles[i]
+
+			if pass_style.color then
+				pass_style.color[1] = 0
+			end
+
+			if pass_style.text_color then
+				pass_style.text_color[1] = 0
+			end
 		end
 	end,
 }

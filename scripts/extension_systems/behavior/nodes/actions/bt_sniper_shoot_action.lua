@@ -7,6 +7,7 @@ local AttackIntensity = require("scripts/utilities/attack_intensity")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local MinionAttack = require("scripts/utilities/minion_attack")
 local MinionBackstabSettings = require("scripts/settings/minion_backstab/minion_backstab_settings")
 local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
@@ -55,6 +56,8 @@ BtSniperShootAction.enter = function (self, unit, breed, blackboard, scratchpad,
 
 	scratchpad.shots_fired = 0
 	scratchpad.aim_node_name = aim_node_name
+	scratchpad.target_node_name = breed.aim_config.target_node
+	scratchpad.fallback_target_node_name = breed.aim_config.fallback_target_node
 
 	local aim_component = Blackboard.write_component(blackboard, "aim")
 
@@ -64,9 +67,10 @@ BtSniperShootAction.enter = function (self, unit, breed, blackboard, scratchpad,
 	aim_component.controlled_aim_position:store(start_aim_position)
 
 	local fx_system = Managers.state.extension:system("fx_system")
+	local effect_template = EffectTemplates[action_data.effect_template_name]
 
 	scratchpad.fx_system = fx_system
-	scratchpad.global_effect_id = fx_system:start_template_effect(action_data.effect_template, unit)
+	scratchpad.global_effect_id = fx_system:start_template_effect(effect_template, unit)
 	scratchpad.hit_distance_check_timer = t + 0.5
 
 	self:_start_aiming(unit, t, scratchpad, action_data)
@@ -301,7 +305,8 @@ BtSniperShootAction._aim = function (self, unit, t, dt, scratchpad, action_data)
 	local target_unit = scratchpad.perception_component.target_unit
 	local perception_extension = scratchpad.perception_extension
 	local has_line_of_sight = scratchpad.perception_component.has_line_of_sight
-	local shoot_node_position = Unit.world_position(target_unit, Unit.node(target_unit, scratchpad.aim_node_name))
+	local node = Unit.has_node(target_unit, scratchpad.target_node_name) and Unit.node(target_unit, scratchpad.target_node_name) or Unit.node(target_unit, scratchpad.fallback_target_node_name)
+	local shoot_node_position = Unit.world_position(target_unit, node)
 	local stored_target_position = scratchpad.stored_target_position and scratchpad.stored_target_position:unbox()
 	local last_los_position = stored_target_position or has_line_of_sight and shoot_node_position or perception_extension:last_los_position(target_unit)
 

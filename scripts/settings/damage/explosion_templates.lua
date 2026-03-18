@@ -19,6 +19,7 @@ _add_template_entries("scripts/settings/damage/explosion_templates/player_explos
 _add_template_entries("scripts/settings/damage/explosion_templates/player_grenade_explosion_templates")
 _add_template_entries("scripts/settings/damage/explosion_templates/player_weapon_explosion_templates")
 _add_template_entries("scripts/settings/damage/explosion_templates/prop_explosion_templates")
+_add_template_entries("scripts/settings/damage/explosion_templates/expedition_explosion_templates")
 extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/bolters/settings_templates/bolter_explosion_templates", explosion_templates, loaded_template_files)
 extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/force_staffs/settings_templates/force_staff_explosion_templates", explosion_templates, loaded_template_files)
 extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/grenadier_gauntlets/settings_templates/grenadier_gauntlet_explosion_templates", explosion_templates, loaded_template_files)

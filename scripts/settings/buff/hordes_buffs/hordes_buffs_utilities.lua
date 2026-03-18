@@ -14,11 +14,11 @@ local attack_types = AttackSettings.attack_types
 local damage_types = DamageSettings.damage_types
 local hit_zone_names = HitZone.hit_zone_names
 local stagger_types = StaggerSettings.stagger_types
-local BROADPHASE_RESULTS = {}
-local range_melee = DamageSettings.in_melee_range
 local range_close = DamageSettings.ranged_close
 local range_far = DamageSettings.ranged_far
-local hordes_buffs_utilities = {}
+local range_melee = DamageSettings.in_melee_range
+local BROADPHASE_RESULTS = {}
+local HordesBuffsUtilities = {}
 local VFX_NAMES = {
 	big_shock = "content/fx/particles/player_buffs/buff_electricity_grenade_01",
 	enchance_melee_screen_effect = "content/fx/particles/screenspace/screen_buff_enhanced_melee_attack_01",
@@ -64,10 +64,10 @@ local SFX_NAMES = {
 	super_crit = "wwise/events/player/play_horde_mode_buff_super_crit",
 }
 
-hordes_buffs_utilities.SFX_NAMES = SFX_NAMES
-hordes_buffs_utilities.VFX_NAMES = VFX_NAMES
+HordesBuffsUtilities.SFX_NAMES = SFX_NAMES
+HordesBuffsUtilities.VFX_NAMES = VFX_NAMES
 
-hordes_buffs_utilities.give_passive_grenade_replenishment_buff = function (unit)
+HordesBuffsUtilities.give_passive_grenade_replenishment_buff = function (unit)
 	local current_time = FixedFrame.get_latest_fixed_time()
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
 
@@ -76,7 +76,7 @@ hordes_buffs_utilities.give_passive_grenade_replenishment_buff = function (unit)
 	end
 end
 
-hordes_buffs_utilities.compute_enemy_pulse_and_apply_buff = function (is_server, player_unit, broadphase, enemy_side_names, t, buff_to_add, optional_stacks, optional_enemy_sfx, optional_pulse_vfx, optional_pulse_sfx, optional_pulse_sfx_stronger)
+HordesBuffsUtilities.compute_enemy_pulse_and_apply_buff = function (is_server, player_unit, broadphase, enemy_side_names, t, buff_to_add, optional_stacks, optional_enemy_sfx, optional_pulse_vfx, optional_pulse_sfx, optional_pulse_sfx_stronger)
 	if not is_server then
 		return
 	end
@@ -127,16 +127,16 @@ hordes_buffs_utilities.compute_enemy_pulse_and_apply_buff = function (is_server,
 	end
 end
 
-hordes_buffs_utilities.compute_fire_pulse = function (is_server, player_unit, broadphase, enemy_side_names, t, optional_stacks, optional_skip_effects)
-	local enemy_hit_sfx = hordes_buffs_utilities.SFX_NAMES.burning_proc
-	local pulse_vfx = not optional_skip_effects and hordes_buffs_utilities.VFX_NAMES.fire_pulse or nil
-	local pulse_sfx = not optional_skip_effects and hordes_buffs_utilities.SFX_NAMES.fire_pulse or nil
-	local pulse_sfx_stronger = not optional_skip_effects and hordes_buffs_utilities.SFX_NAMES.inferno or nil
+HordesBuffsUtilities.compute_fire_pulse = function (is_server, player_unit, broadphase, enemy_side_names, t, optional_stacks, optional_skip_effects)
+	local enemy_hit_sfx = HordesBuffsUtilities.SFX_NAMES.burning_proc
+	local pulse_vfx = not optional_skip_effects and HordesBuffsUtilities.VFX_NAMES.fire_pulse or nil
+	local pulse_sfx = not optional_skip_effects and HordesBuffsUtilities.SFX_NAMES.fire_pulse or nil
+	local pulse_sfx_stronger = not optional_skip_effects and HordesBuffsUtilities.SFX_NAMES.inferno or nil
 
-	hordes_buffs_utilities.compute_enemy_pulse_and_apply_buff(is_server, player_unit, broadphase, enemy_side_names, t, "flamer_assault", optional_stacks, enemy_hit_sfx, pulse_vfx, pulse_sfx, pulse_sfx_stronger)
+	HordesBuffsUtilities.compute_enemy_pulse_and_apply_buff(is_server, player_unit, broadphase, enemy_side_names, t, "flamer_assault", optional_stacks, enemy_hit_sfx, pulse_vfx, pulse_sfx, pulse_sfx_stronger)
 end
 
-hordes_buffs_utilities.compute_stagger_and_supression_pulse = function (is_server, player_unit, broadphase, enemy_side_names, t, optional_skip_effects)
+HordesBuffsUtilities.compute_stagger_and_supression_pulse = function (is_server, player_unit, broadphase, enemy_side_names, t, optional_skip_effects)
 	if not is_server then
 		return
 	end
@@ -167,25 +167,25 @@ hordes_buffs_utilities.compute_stagger_and_supression_pulse = function (is_serve
 			Stagger.force_stagger(enemy_unit, stagger_types.medium, attack_direction, random_duration_range, 1, 0.3333333333333333, player_unit)
 
 			if not optional_skip_effects and i <= 5 then
-				fx_system:trigger_wwise_event(hordes_buffs_utilities.SFX_NAMES.stagger_hit, enemy_position)
+				fx_system:trigger_wwise_event(HordesBuffsUtilities.SFX_NAMES.stagger_hit, enemy_position)
 			end
 		end
 	end
 
 	if not optional_skip_effects then
-		fx_system:trigger_wwise_event(hordes_buffs_utilities.SFX_NAMES.stagger_pulse, nil, player_unit)
+		fx_system:trigger_wwise_event(HordesBuffsUtilities.SFX_NAMES.stagger_pulse, nil, player_unit)
 
 		local player_fx_extension = ScriptUnit.extension(player_unit, "fx_system")
 
 		if player_fx_extension then
 			local vfx_position = player_position + Vector3(0, 0, 0.65)
 
-			player_fx_extension:spawn_particles(hordes_buffs_utilities.VFX_NAMES.stagger_pulse, vfx_position, nil, nil, nil, nil, true)
+			player_fx_extension:spawn_particles(HordesBuffsUtilities.VFX_NAMES.stagger_pulse, vfx_position, nil, nil, nil, nil, true)
 		end
 	end
 end
 
-hordes_buffs_utilities.pull_enemies_towards_position = function (player_unit, target_position, stagger_type, broadphase, target_side_names, range)
+HordesBuffsUtilities.pull_enemies_towards_position = function (player_unit, target_position, stagger_type, broadphase, target_side_names, range)
 	local num_hits = broadphase.query(broadphase, target_position, range, BROADPHASE_RESULTS, target_side_names)
 
 	for i = 1, num_hits do
@@ -202,7 +202,7 @@ hordes_buffs_utilities.pull_enemies_towards_position = function (player_unit, ta
 	end
 end
 
-hordes_buffs_utilities.pull_enemies_towards_target_unit = function (player_unit, target_unit, stagger_type, broadphase, target_side_names, range)
+HordesBuffsUtilities.pull_enemies_towards_target_unit = function (player_unit, target_unit, stagger_type, broadphase, target_side_names, range)
 	local target_position = POSITION_LOOKUP[target_unit]
 	local num_hits = broadphase.query(broadphase, target_position, range, BROADPHASE_RESULTS, target_side_names)
 
@@ -220,7 +220,7 @@ hordes_buffs_utilities.pull_enemies_towards_target_unit = function (player_unit,
 	end
 end
 
-hordes_buffs_utilities.trigger_aoe_shock_at_position = function (target_position, owner_unit, broadphase, target_side_names, range, t)
+HordesBuffsUtilities.trigger_aoe_shock_at_position = function (target_position, owner_unit, broadphase, target_side_names, range, t)
 	local num_hits = broadphase.query(broadphase, target_position, range, BROADPHASE_RESULTS, target_side_names)
 
 	for i = 1, num_hits do
@@ -238,7 +238,7 @@ hordes_buffs_utilities.trigger_aoe_shock_at_position = function (target_position
 	fx_system:trigger_vfx(VFX_NAMES.big_shock, target_position)
 end
 
-hordes_buffs_utilities.get_random_nearby_alive_enemy_from_position = function (target_position, broadphase, target_side_names, range)
+HordesBuffsUtilities.get_random_nearby_alive_enemy_from_position = function (target_position, broadphase, target_side_names, range)
 	local num_hits = broadphase.query(broadphase, target_position, range, BROADPHASE_RESULTS, target_side_names)
 
 	if num_hits == 0 then
@@ -267,7 +267,7 @@ hordes_buffs_utilities.get_random_nearby_alive_enemy_from_position = function (t
 	return picked_unit
 end
 
-hordes_buffs_utilities.spawn_telekine_dome_at_position = function (physics_world, owner_unit, target_position)
+HordesBuffsUtilities.spawn_telekine_dome_at_position = function (physics_world, owner_unit, target_position)
 	local ray_origin = target_position + Vector3.up()
 	local down_direction = Vector3.down()
 	local ray_distance = 10
@@ -279,13 +279,14 @@ hordes_buffs_utilities.spawn_telekine_dome_at_position = function (physics_world
 
 	local unit_name = "content/characters/player/human/attachments_combat/psyker_shield/shield_sphere_functional"
 	local husk_unit_name = "content/characters/player/human/attachments_combat/psyker_shield/shield_sphere_functional"
-	local unit_template = "force_field"
+	local unit_template = "psyker_force_field"
 	local material
 	local rotation = Quaternion.identity()
-	local unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, spawn_position, rotation, material, husk_unit_name, nil, owner_unit, "sphere")
+	local ability_type
+	local unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, spawn_position, rotation, material, husk_unit_name, nil, owner_unit, "sphere", ability_type)
 end
 
-hordes_buffs_utilities.trigger_brain_burst_on_target = function (target_unit, attacking_unit)
+HordesBuffsUtilities.trigger_brain_burst_on_target = function (target_unit, attacking_unit)
 	if not HEALTH_ALIVE[target_unit] then
 		return
 	end
@@ -320,4 +321,4 @@ hordes_buffs_utilities.trigger_brain_burst_on_target = function (target_unit, at
 	ImpactEffect.play(target_unit, hit_actor, damage_dealt, damage_types.smite, hit_zone_name, attack_result, hit_world_position, nil, attack_direction, player_unit, nil, nil, nil, damage_efficiency, damage_profile)
 end
 
-return hordes_buffs_utilities
+return HordesBuffsUtilities

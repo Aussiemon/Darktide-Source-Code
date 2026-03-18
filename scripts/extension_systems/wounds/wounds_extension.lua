@@ -15,7 +15,6 @@ WoundsExtension.init = function (self, extension_init_context, unit, extension_i
 	self._breed = extension_init_data.breed
 	self._unit = unit
 	self._wounds_data, self._max_num_wounds = WoundMaterials.create_data()
-	self._health_extension = ScriptUnit.extension(unit, "health_system")
 	self._unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	self._visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 
@@ -120,7 +119,8 @@ WoundsExtension.add_wounds = function (self, wounds_template, hit_world_position
 			local health_percent_throttle = wounds_config.health_percent_throttle
 
 			if health_percent_throttle then
-				local current_health_percent = self._health_extension:current_health_percent()
+				local health_extension = ScriptUnit.has_extension(self._unit, "health_system")
+				local current_health_percent = health_extension and health_extension:current_health_percent() or 0
 
 				if current_health_percent > self._next_wound_health_percent then
 					return

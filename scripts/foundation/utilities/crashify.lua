@@ -74,4 +74,10 @@ Crashify.print_exception = function (system, message, print_func)
 	print_func(exception)
 end
 
+Crashify.apply_backend_game_settings = function ()
+	if not GameParameters.enable_low_memory_lua_state_dumps then
+		Script.disable_low_memory_lua_state_dumps()
+	end
+end
+
 return Crashify

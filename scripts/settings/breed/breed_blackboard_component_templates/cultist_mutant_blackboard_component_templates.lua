@@ -3,6 +3,7 @@
 local base_template = require("scripts/settings/breed/breed_blackboard_component_templates/base_blackboard_component_template")
 local cultist_mutant = {
 	behavior = {
+		move_medium = "string",
 		move_state = "string",
 	},
 	record_state = {

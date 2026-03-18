@@ -4,7 +4,6 @@ local BreedShootTemplates = require("scripts/settings/breed/breed_shoot_template
 local CultistFlamerSettings = require("scripts/settings/specials/cultist_flamer_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
@@ -22,6 +21,16 @@ local action_data = {
 			"idle_2",
 			"idle_4",
 			"idle_5",
+		},
+	},
+	weapon_malfunction_loop = {
+		rotate_towards_target = false,
+		anim_events = {
+			"suppressed_loop_01",
+		},
+		end_anim_events = {
+			"stagger_finished",
+			"idle",
 		},
 	},
 	death = {
@@ -245,6 +254,7 @@ local action_data = {
 		attack_finished_grace_period = 0.3,
 		attack_intensity_type = "ranged",
 		collision_filter = "filter_minion_shooting_no_friendly_fire",
+		effect_template_name = "cultist_flamer",
 		exit_after_cooldown = true,
 		liquid_paint_brush_size = 2,
 		max_liquid_paint_distance = 3,
@@ -275,7 +285,6 @@ local action_data = {
 		attack_intensities = {
 			ranged = 0.1,
 		},
-		effect_template = EffectTemplates.cultist_flamer,
 		inventory_slot = CultistFlamerSettings.inventory_slot,
 		fx_source_name = CultistFlamerSettings.fx_source_name,
 		range = CultistFlamerSettings.range,
@@ -579,6 +588,21 @@ local action_data = {
 		considerations = UtilityConsiderations.chaos_poxwalker_bomber_explode,
 		explosion_template = ExplosionTemplates.explosion_settings_cultist_flamer,
 		interrupted_explosion_template = ExplosionTemplates.explosion_settings_interrupted_cultist_flamer,
+	},
+	vortex_grabbed = {
+		ignore_rotate_towards_target = false,
+		anim_events = {
+			loop = {
+				"vortex_loop",
+			},
+			landing = {
+				"vortex_landing",
+			},
+		},
+		anim_durations = {
+			vortex_landing = 5.666666666666667,
+			vortex_loop = 0.3333333333333333,
+		},
 	},
 }
 

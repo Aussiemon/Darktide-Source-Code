@@ -652,8 +652,10 @@ StatsManager.hot_join_sync = function (self, sender, channel, local_player_id)
 	end
 
 	local player_stats_config = {
+		peer_id = sender,
+		local_player_id = local_player_id,
 		archetype_name = player:archetype_name(),
-		account_id = player:character_id(),
+		account_id = player:account_id(),
 		character_id = player:character_id(),
 		joined_at = joined_at,
 	}

@@ -30,7 +30,9 @@ WeaponSpecialFakeSeparateAmmoPool.on_wieldable_slot_equipped = function (self)
 end
 
 WeaponSpecialFakeSeparateAmmoPool.fixed_update = function (self, dt, t)
-	return
+	if DevParameters.debug_weapon_special then
+		-- Nothing
+	end
 end
 
 WeaponSpecialFakeSeparateAmmoPool.process_hit = function (self, t, weapon, action_settings, num_hit_enemies, target_is_alive, target_unit, damage, result, damage_efficiency, stagger_result, hit_position, attack_direction, abort_attack, optional_origin_slot)

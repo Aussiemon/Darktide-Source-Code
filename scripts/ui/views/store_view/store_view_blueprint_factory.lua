@@ -781,8 +781,6 @@ local function _add_image(image_url)
 				style.texture.material_values.main_texture = data.texture
 			end, function (error)
 				content.hotspot.disabled = false
-
-				Log.error("StoreView", "fetching item image", error)
 			end)
 		end)
 		table.insert(blueprint.destroy_functions, function (parent, widget, element, ui_renderer)

@@ -3,7 +3,6 @@
 local CompanionDogLocomotionSettings = require("scripts/settings/companion/companion_dog_locomotion_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local GroundImpactFxTemplates = require("scripts/settings/fx/ground_impact_fx_templates")
 local damage_types = DamageSettings.damage_types
@@ -72,6 +71,7 @@ local move_to_position_default = {
 	push_enemies_damage_profile = DamageProfileTemplates.chaos_hound_push,
 	push_ignored_breeds = {
 		chaos_poxwalker_bomber = true,
+		sand_vortex = true,
 	},
 	dog_owner_follow_config = CompanionDogLocomotionSettings.dog_owner_follow_config,
 	dog_forward_follow_config = CompanionDogLocomotionSettings.dog_forward_follow_config,
@@ -134,8 +134,8 @@ local action_data = {
 	},
 	move_to_position = table.merge(table.clone(move_to_position_default), {
 		arrived_at_distance_threshold_sq = 1,
+		effect_template_name = "companion_dog_breath_effect",
 		stop_at_target_position = true,
-		effect_template = EffectTemplates.companion_dog_breath_effect,
 	}),
 	move_close_to_owner_action = table.merge(table.clone(move_to_position_default), {
 		arrived_at_distance_threshold_sq = 0.1,
@@ -209,6 +209,7 @@ local action_data = {
 		push_enemies_damage_profile = DamageProfileTemplates.chaos_hound_push,
 		push_ignored_breeds = {
 			chaos_poxwalker_bomber = true,
+			sand_vortex = true,
 		},
 		max_angle_for_fast_jump = math.pi / 6,
 	},
@@ -217,6 +218,7 @@ local action_data = {
 		aoe_bot_threat_timing = 0.5,
 		controlled_stagger = true,
 		controlled_stagger_min_distance = 0,
+		effect_template_name = "companion_dog_leap_attack_effect",
 		extra_push_wwise_event = "wwise/events/weapon/play_specials_push_unarmored",
 		in_air_stagger_duration = 0.9,
 		land_anim_event = "leap_land",
@@ -256,17 +258,16 @@ local action_data = {
 			"stagger_inair_bwd",
 		},
 		land_ground_impact_fx_template = GroundImpactFxTemplates.chaos_hound_leap_land,
-		effect_template = EffectTemplates.companion_dog_leap_attack_effect,
 	},
 	target_pounced = {
 		damage_frequency = 1.3333333333333333,
 		damage_start_time = 0.6666666666666666,
+		eeffect_template_name = "companion_dog_pounce_attack_effect",
 		explosion_power_level = 500,
 		hit_position_node = "j_jaw",
 		lerp_position_time = 0.06666666666666667,
 		damage_type = damage_types.chaos_hound_tearing,
 		enter_explosion_template = ExplosionTemplates.companion_dog_pounced_explosion,
-		effect_template = EffectTemplates.companion_dog_pounce_attack_effect,
 	},
 	target_pounced_and_escape = {
 		explosion_power_level = 500,
@@ -336,6 +337,7 @@ local action_data = {
 		push_enemies_damage_profile = DamageProfileTemplates.chaos_hound_push,
 		push_ignored_breeds = {
 			chaos_poxwalker_bomber = true,
+			sand_vortex = true,
 		},
 		rotation_angle = math.pi / 3,
 	},

@@ -278,6 +278,12 @@ ProjectileFxExtension.hot_join_sync = function (self, unit, sender, channel_id)
 	end
 end
 
+ProjectileFxExtension.try_start_fx = function (self, effect_type)
+	if self._effects[effect_type] then
+		self:start_fx(effect_type)
+	end
+end
+
 ProjectileFxExtension.start_fx = function (self, effect_type)
 	local effects = self._effects[effect_type]
 
@@ -320,7 +326,7 @@ ProjectileFxExtension.start_fx = function (self, effect_type)
 			local node_name = vfx.node_name
 			local node_index = node_name and Unit.node(unit, node_name) or 1
 			local position = Unit.world_position(unit, node_index)
-			local rotation = Quaternion.identity()
+			local rotation = vfx.rotate_inverse_of_parent and Quaternion.inverse(Unit.world_rotation(unit, 1)) or Quaternion.identity()
 			local optional_particle_group_id = self._optional_particle_group_id
 			local effect_id = World.create_particles(world, particle_name, position, rotation, nil, optional_particle_group_id)
 
@@ -328,7 +334,7 @@ ProjectileFxExtension.start_fx = function (self, effect_type)
 
 			if vfx.link then
 				local orphaned_policy = vfx.orphaned_policy
-				local pose = Matrix4x4.identity()
+				local pose = Matrix4x4.from_quaternion(rotation)
 
 				World.link_particles(world, effect_id, unit, node_index, pose, orphaned_policy)
 			end

@@ -35,6 +35,27 @@ HealthStationInteraction.hud_block_text = function (self, interactor_unit, inter
 		return "loc_health_station_full_health"
 	end
 
+	local player = Managers.state.player_unit_spawn:owner(interactor_unit)
+	local is_bot = not player:is_human_controlled()
+
+	if player and not is_bot then
+		local mechanism_manager = Managers.mechanism
+		local mechanism_name = mechanism_manager:mechanism_name()
+
+		if mechanism_name == "expedition" then
+			local game_mode_manager = Managers.state.game_mode
+			local game_mode = game_mode_manager:game_mode()
+
+			if game_mode:in_safe_zone() and game_mode:is_store_product(interactee_unit) then
+				local can_purchase_product, fail_reason = game_mode:can_purchase_product(interactee_unit, interactor_unit)
+
+				if not can_purchase_product then
+					return fail_reason
+				end
+			end
+		end
+	end
+
 	return HealthStationInteraction.super.hud_block_text(self, interactor_unit, interactee_unit)
 end
 

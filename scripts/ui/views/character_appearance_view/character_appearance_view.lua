@@ -21,10 +21,10 @@ local ContentBlueprints = require("scripts/ui/views/character_appearance_view/ch
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
 local CharacterAppearanceViewFontStyle = require("scripts/ui/views/character_appearance_view/character_appearance_view_font_style")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local ColorUtilities = require("scripts/utilities/ui/colors")
-local SkinMaterialOverrides = require("scripts/settings/equipment/item_material_overrides/player_material_overrides_skin_colors")
-local EyeMaterialOverrides = require("scripts/settings/equipment/item_material_overrides/player_material_overrides_eye_colors")
-local HairMaterialOverrides = require("scripts/settings/equipment/item_material_overrides/player_material_overrides_hair_colors")
+local Colors = require("scripts/utilities/ui/colors")
+local PlayerMaterialOverridesSkinColors = require("scripts/settings/equipment/item_material_overrides/player_material_overrides_skin_colors")
+local PlayerMaterialOverridesEyeColors = require("scripts/settings/equipment/item_material_overrides/player_material_overrides_eye_colors")
+local PlayerMaterialOverridesHairColors = require("scripts/settings/equipment/item_material_overrides/player_material_overrides_hair_colors")
 local HomePlanets = require("scripts/settings/character/home_planets")
 local Childhood = require("scripts/settings/character/childhood")
 local GrowingUp = require("scripts/settings/character/growing_up")
@@ -34,10 +34,10 @@ local Personalities = require("scripts/settings/character/personalities")
 local Promise = require("scripts/foundation/utilities/promise")
 local CharacterCreate = require("scripts/utilities/character_create")
 local Items = require("scripts/utilities/items")
-local DogFurOverrides = require("scripts/settings/equipment/item_material_overrides/player_material_overrides_dog_fur_color")
-local DogSkinOverrides = require("scripts/settings/equipment/item_material_overrides/player_material_overrides_dog_skin_colors")
-local DogCoatOverrides = require("scripts/settings/equipment/item_material_overrides/player_material_overrides_dog_coat_masks")
-local DogOptionRestrictions = require("scripts/settings/character/companion_dog_restrictrions")
+local PlayerMaterialOverridesDogFurColor = require("scripts/settings/equipment/item_material_overrides/player_material_overrides_dog_fur_color")
+local PlayerMaterialOverridesDogSkinColors = require("scripts/settings/equipment/item_material_overrides/player_material_overrides_dog_skin_colors")
+local PlayerMaterialOverridesDogCoatMasks = require("scripts/settings/equipment/item_material_overrides/player_material_overrides_dog_coat_masks")
+local CompanionDogRestrictrions = require("scripts/settings/character/companion_dog_restrictrions")
 local APPEARANCE_GRID_TEMPLATES = {
 	single = {
 		grid_columns = 1,
@@ -318,7 +318,7 @@ end
 
 local function get_eye_type_index_by_option(option)
 	local override_name = option.material_overrides[1]
-	local override_data = override_name and EyeMaterialOverrides[override_name] and EyeMaterialOverrides[override_name].property_overrides
+	local override_data = override_name and PlayerMaterialOverridesEyeColors[override_name] and PlayerMaterialOverridesEyeColors[override_name].property_overrides
 
 	if override_data then
 		for i = 1, #eye_types do
@@ -2593,7 +2593,7 @@ CharacterAppearanceView._show_final_popup = function (self)
 					stop_exit_sound = true,
 					text = "loc_barber_vendor_confirm_button",
 					on_pressed_sound = UISoundEvents.finalize_creation_confirm,
-					callback = callback(function ()
+					callback = function ()
 						if not self.__deleted then
 							local character_create = self._character_create
 							local height = character_create:height()
@@ -2608,16 +2608,16 @@ CharacterAppearanceView._show_final_popup = function (self)
 
 							self._waiting_for_transform = true
 						end
-					end),
+					end,
 				},
 				{
 					close_on_pressed = true,
 					hotkey = "back",
 					template_type = "terminal_button_small",
 					text = "loc_popup_button_cancel",
-					callback = callback(function ()
+					callback = function ()
 						self._confirm_popup_id = nil
-					end),
+					end,
 				},
 			},
 		}
@@ -2637,7 +2637,7 @@ CharacterAppearanceView._show_final_popup = function (self)
 					stop_exit_sound = true,
 					text = "loc_barber_vendor_confirm_button",
 					on_pressed_sound = UISoundEvents.finalize_creation_confirm,
-					callback = callback(function ()
+					callback = function ()
 						if not self.__deleted then
 							local character_create = self._character_create
 							local height = character_create:height()
@@ -2673,7 +2673,10 @@ CharacterAppearanceView._show_final_popup = function (self)
 								local character_id = real_profile.character_id
 
 								if height ~= self._original_height then
-									Managers.backend.interfaces.characters:set_character_height(character_id, height)
+									Managers.data_service.profiles:set_character_height(character_id, height)
+
+									real_profile.personal.character_height = height
+
 									Unit.set_local_scale(real_unit, 1, Vector3.one() * height)
 								end
 							end
@@ -2690,16 +2693,16 @@ CharacterAppearanceView._show_final_popup = function (self)
 
 							self._confirm_popup_id = nil
 						end
-					end),
+					end,
 				},
 				{
 					close_on_pressed = true,
 					hotkey = "back",
 					template_type = "terminal_button_small",
 					text = "loc_popup_button_cancel",
-					callback = callback(function ()
+					callback = function ()
 						self._confirm_popup_id = nil
-					end),
+					end,
 				},
 			},
 		}
@@ -2713,7 +2716,7 @@ CharacterAppearanceView._show_final_popup = function (self)
 					stop_exit_sound = true,
 					text = "loc_character_create_confirm_play_prologue",
 					on_pressed_sound = UISoundEvents.finalize_creation_confirm,
-					callback = callback(function ()
+					callback = function ()
 						if not self.__deleted then
 							local skip_onboarding = false
 
@@ -2721,7 +2724,7 @@ CharacterAppearanceView._show_final_popup = function (self)
 
 							Managers.event:trigger("event_create_new_character_continue", skip_onboarding)
 						end
-					end),
+					end,
 				},
 			},
 		}
@@ -2732,7 +2735,7 @@ CharacterAppearanceView._show_final_popup = function (self)
 				stop_exit_sound = true,
 				text = "loc_character_create_confirm_skip_prologue",
 				on_pressed_sound = UISoundEvents.finalize_creation_confirm,
-				callback = callback(function ()
+				callback = function ()
 					if not self.__deleted then
 						local skip_onboarding = true
 
@@ -2740,7 +2743,7 @@ CharacterAppearanceView._show_final_popup = function (self)
 
 						Managers.event:trigger("event_create_new_character_continue", skip_onboarding)
 					end
-				end),
+				end,
 			}
 		end
 
@@ -2749,11 +2752,11 @@ CharacterAppearanceView._show_final_popup = function (self)
 			hotkey = "back",
 			template_type = "terminal_button_small",
 			text = "loc_popup_button_cancel",
-			callback = callback(function ()
+			callback = function ()
 				if not self.__deleted then
 					self._confirm_popup_id = nil
 				end
-			end),
+			end,
 		}
 	end
 
@@ -4146,7 +4149,6 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 	local grid_content_scenegraph = grid_start_name .. "content"
 	local grid_scrollbar_scenegraph = grid_start_name .. "scrollbar"
 	local size = template.size
-	local pass_template = template.pass_template
 	local init = template.init
 	local options = grid_data.options()
 	local num_widgets = #options
@@ -4190,7 +4192,17 @@ CharacterAppearanceView._generate_main_grid_widgets = function (self, grid_index
 	for i = 1, num_widgets do
 		local option = options[i]
 		local name = grid_start_name .. "option_" .. i
-		local pass_template = template.pass_template
+		local pass_template_function = template.pass_template_function
+		local pass_template = pass_template_function and pass_template_function(self, template, size) or template.pass_template
+
+		if pass_template_function and template.pass_template then
+			local pass_template_extra = template.pass_template
+
+			for ii = 1, #pass_template_extra do
+				pass_template[#pass_template + 1] = pass_template_extra[ii]
+			end
+		end
+
 		local size = template.size
 		local widget_definition = UIWidget.create_definition(pass_template, grid_content_scenegraph, nil, size)
 		local widget = self:_create_widget(name, widget_definition)
@@ -5188,7 +5200,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 	local face_hair_options = self._character_create:slot_item_options("slot_body_face_hair")
 	local facial_hair_color_options = self._character_create:slot_item_options("slot_body_face_hair_color")
 
-	facial_hair_color_options = table.filter_array(facial_hair_color_options, function (option)
+	facial_hair_color_options = facial_hair_color_options and table.filter_array(facial_hair_color_options, function (option)
 		return table.contains(option.parent_slot_names, "slot_body_face_hair")
 	end)
 
@@ -5295,9 +5307,18 @@ CharacterAppearanceView._get_appearance_options = function (self)
 		}
 	end
 
-	local all_tattoos = table.append({}, self._character_create:slot_item_options("slot_body_face_tattoo"))
+	local all_tattoos = {}
+	local face_tattoo_options = self._character_create:slot_item_options("slot_body_face_tattoo")
 
-	table.append(all_tattoos, self._character_create:slot_item_options("slot_body_tattoo"))
+	if face_tattoo_options then
+		table.append(all_tattoos, face_tattoo_options)
+	end
+
+	local body_tattoo_options = self._character_create:slot_item_options("slot_body_tattoo")
+
+	if body_tattoo_options then
+		table.append(all_tattoos, body_tattoo_options)
+	end
 
 	local face_tattoos, body_tattoos, full_body_tattoos = table.partition(all_tattoos, 3, function (value, face_tattoos, body_tattoos, full_body_tattoos)
 		if value.tattoo_group and value.tattoo_group ~= "" then
@@ -5597,12 +5618,12 @@ CharacterAppearanceView._get_companion_appearance_options = function (self)
 	for i = 1, #dog_fur_options do
 		local dog_fur_option = dog_fur_options[i]
 
-		if DogOptionRestrictions[dog_fur_option.dev_name] then
+		if CompanionDogRestrictrions[dog_fur_option.dev_name] then
 			filtered_dog_fur_options[#filtered_dog_fur_options + 1] = dog_fur_option
 		end
 	end
 
-	local fur_skin_from_fur = DogOptionRestrictions[selected_fur_option.dev_name] or {}
+	local fur_skin_from_fur = CompanionDogRestrictrions[selected_fur_option.dev_name] or {}
 	local filtered_dog_skin_options = {}
 	local dog_skin_from_dev_name = {}
 
@@ -5779,13 +5800,13 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 		local ignored_params = current_option.search_params
 		local current_eye_option = self._character_create:slot_item("slot_body_eye_color")
 		local current_override_name = current_eye_option.material_overrides[1]
-		local current_override_data = current_override_name and EyeMaterialOverrides[current_override_name] and EyeMaterialOverrides[current_override_name].property_overrides
+		local current_override_data = current_override_name and PlayerMaterialOverridesEyeColors[current_override_name] and PlayerMaterialOverridesEyeColors[current_override_name].property_overrides
 
 		for k = 1, #eye_options do
 			local found = true
 			local eye_option = eye_options[k]
 			local override_name = eye_option.material_overrides[1]
-			local override_data = override_name and EyeMaterialOverrides[override_name] and EyeMaterialOverrides[override_name].property_overrides
+			local override_data = override_name and PlayerMaterialOverridesEyeColors[override_name] and PlayerMaterialOverridesEyeColors[override_name].property_overrides
 
 			for name, override_values in pairs(override_data) do
 				if not ignored_params[name] then
@@ -5848,7 +5869,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 
 	local function dog_skin_items_by_selected_pattern(selected_fur_option)
 		local dog_skin_options = self._character_create:slot_item_options("slot_companion_body_skin_color")
-		local fur_skin_from_fur = DogOptionRestrictions[selected_fur_option.dev_name] or {}
+		local fur_skin_from_fur = CompanionDogRestrictrions[selected_fur_option.dev_name] or {}
 		local filtered_dog_skin_options = {}
 		local dog_skin_from_dev_name = {}
 
@@ -5880,8 +5901,8 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 		local entry_leave = category_entry_option.on_leave
 		local continue_validation = category_entry_option.validation
 		local ignore_availability_reasons = category_entry_option.ignore_availability_reasons
-		local force_nil_item = category_entry_option.force_nil_item
 		local ignore_fallback_in_sorting = category_entry_option.ignore_fallback_in_sorting
+		local force_nil_item = category_entry_option.force_nil_item
 		local temp_option_a, temp_option_b = {
 			value = nil,
 		}, {
@@ -6071,7 +6092,8 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 		elseif entry_type == "skin_color" then
 			for j = 1, #entry_options do
 				local option = entry_options[j]
-				local skin_override = SkinMaterialOverrides[option.material_overrides[1]]
+				local override_name = option.material_overrides[1]
+				local skin_override = PlayerMaterialOverridesSkinColors[override_name]
 				local property_overrides = skin_override.property_overrides
 				local hsv_skin = property_overrides.hsv_skin
 
@@ -6172,7 +6194,8 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 		elseif entry_type == "eye_color" then
 			for j = 1, #entry_options do
 				local option = entry_options[j]
-				local eye_override = EyeMaterialOverrides[option.material_overrides[1]]
+				local override_name = option.material_overrides[1]
+				local eye_override = PlayerMaterialOverridesEyeColors[override_name]
 				local property_overrides = eye_override.property_overrides
 				local hsv_eye = property_overrides.hsv_eye
 
@@ -6224,7 +6247,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 				}
 
 				if option.material_overrides then
-					local skin_override = HairMaterialOverrides[option.material_overrides[1]]
+					local skin_override = PlayerMaterialOverridesHairColors[option.material_overrides[1]]
 					local property_overrides = skin_override.property_overrides
 					local hair_rgb = property_overrides.hair_rgb
 
@@ -6259,7 +6282,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 			grids[i].texture = "content/ui/materials/icons/appearances/hair_color"
 		elseif entry_type == "dog_fur" then
 			for name, option in pairs(entry_options) do
-				local overrides = option.material_overrides and DogFurOverrides[option.material_overrides[1]]
+				local overrides = option.material_overrides and PlayerMaterialOverridesDogFurColor[option.material_overrides[1]]
 				local texture_overrides = overrides and overrides.texture_overrides
 				local texture = texture_overrides and texture_overrides.fur_color_gradient.resource or ""
 
@@ -6317,7 +6340,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 			end
 		elseif entry_type == "dog_skin" then
 			for name, option in pairs(entry_options) do
-				local overrides = option.material_overrides and DogSkinOverrides[option.material_overrides[1]]
+				local overrides = option.material_overrides and PlayerMaterialOverridesDogSkinColors[option.material_overrides[1]]
 				local property_overrides = overrides and overrides.property_overrides
 				local hsv_skin = property_overrides and property_overrides.skin_hsv or {
 					0,
@@ -6997,7 +7020,7 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 						local hotspot = content.hotspot
 						local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
 
-						ColorUtilities.color_lerp(default_color, hover_color, progress, color)
+						Colors.color_lerp(default_color, hover_color, progress, color)
 
 						style.hdr = progress == 1
 					end,
@@ -7031,7 +7054,7 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 						local hotspot = content.hotspot
 						local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
 
-						ColorUtilities.color_lerp(default_color, hover_color, progress, color)
+						Colors.color_lerp(default_color, hover_color, progress, color)
 
 						style.hdr = progress == 1
 					end,
@@ -7067,7 +7090,7 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 						local hotspot = content.hotspot
 						local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
 
-						ColorUtilities.color_lerp(default_color, hover_color, progress, color)
+						Colors.color_lerp(default_color, hover_color, progress, color)
 
 						style.hdr = progress == 1
 					end,
@@ -7100,7 +7123,7 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 						local hotspot = content.hotspot
 						local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
 
-						ColorUtilities.color_lerp(default_color, hover_color, progress, color)
+						Colors.color_lerp(default_color, hover_color, progress, color)
 
 						style.hdr = progress == 1
 					end,

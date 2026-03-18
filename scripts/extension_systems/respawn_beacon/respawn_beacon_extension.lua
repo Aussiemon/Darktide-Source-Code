@@ -7,7 +7,6 @@ local PlayerMovement = require("scripts/utilities/player_movement")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local RespawnBeaconGuardSettings = require("scripts/extension_systems/respawn_beacon/respawn_beacon_guard_settings")
 local RespawnBeaconQueries = require("scripts/extension_systems/respawn_beacon/utilities/respawn_beacon_queries")
-local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local RespawnBeaconExtension = class("RespawnBeaconExtension")
 local _player_max_radius_height
 
@@ -19,12 +18,14 @@ RespawnBeaconExtension.init = function (self, extension_init_context, unit, exte
 	self._unit = unit
 	self._player_unit_spawn_manager = Managers.state.player_unit_spawn
 	self._side = nil
+	self._safe_zone = nil
 	self._has_spawned_guards = false
 	self._guards = {}
 end
 
-RespawnBeaconExtension.setup_from_component = function (self, side, debug_ignore_check_distances)
+RespawnBeaconExtension.setup_from_component = function (self, side, safe_zone, debug_ignore_check_distances)
 	self._side = side
+	self._safe_zone = safe_zone
 
 	local max_player_radius, max_player_height = _player_max_radius_height()
 	local valid_spawn_positions, _, _, _ = RespawnBeaconQueries.spawn_locations(self._nav_world, self._physics_world, self._unit, max_player_radius, max_player_height)
@@ -159,6 +160,10 @@ RespawnBeaconExtension.move_hogtied_players = function (self, players)
 	end
 end
 
+RespawnBeaconExtension.safe_zone = function (self)
+	return self._safe_zone
+end
+
 RespawnBeaconExtension.clear_occupied_units = function (self)
 	for i = 1, #self._valid_spawn_positions do
 		self._valid_spawn_positions[i].occupied_unit = nil
@@ -173,7 +178,7 @@ local NAV_ABOVE, NAV_BELOW = 1, 1
 local TOO_CLOSE_TO_SPAWN_POSITION_DISTANCE = 1
 
 RespawnBeaconExtension._try_spawn_guards = function (self, spawn_position, beacon_unit, valid_spawn_positions)
-	if self._has_spawned_guards then
+	if self._has_spawned_guards or self._safe_zone then
 		return
 	end
 

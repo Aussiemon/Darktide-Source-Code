@@ -52,6 +52,31 @@ local scenegraph_definition = {
 			1,
 		},
 	},
+	extra_info_pivot = {
+		horizontal_alignment = "left",
+		parent = "background",
+		vertical_alignment = "bottom",
+		size = {
+			0,
+			0,
+		},
+		position = {
+			0,
+			5,
+			1,
+		},
+	},
+	extra_info_background = {
+		horizontal_alignment = "left",
+		parent = "extra_info_pivot",
+		vertical_alignment = "top",
+		size = background_size,
+		position = {
+			0,
+			0,
+			1,
+		},
+	},
 }
 local input_interact_text_style = table.clone(UIFontSettings.hud_body)
 
@@ -68,18 +93,6 @@ input_interact_text_style.offset = {
 input_interact_text_style.size = {
 	background_size[1] - edge_spacing[1] * 2,
 	input_box_height,
-}
-
-local secondary_input_interact_text_style = table.clone(input_interact_text_style)
-
-secondary_input_interact_text_style.horizontal_alignment = "right"
-secondary_input_interact_text_style.vertical_alignment = "top"
-secondary_input_interact_text_style.text_horizontal_alignment = "right"
-secondary_input_interact_text_style.text_vertical_alignment = "center"
-secondary_input_interact_text_style.offset = {
-	-edge_spacing[1],
-	0,
-	6,
 }
 
 local input_tag_text_style = table.clone(UIFontSettings.hud_body)
@@ -111,6 +124,24 @@ description_text_style.offset = {
 	0,
 	6,
 }
+
+local extra_info_text_style = table.clone(UIFontSettings.hud_body)
+
+extra_info_text_style.horizontal_alignment = "center"
+extra_info_text_style.vertical_alignment = "center"
+extra_info_text_style.text_horizontal_alignment = "left"
+extra_info_text_style.text_vertical_alignment = "center"
+extra_info_text_style.font_size = 20
+extra_info_text_style.offset = {
+	0,
+	0,
+	6,
+}
+extra_info_text_style.size_addition = {
+	-edge_spacing[1] * 2,
+	0,
+}
+extra_info_text_style.text_color = get_hud_color("color_tint_main_2", 255)
 
 local type_description_text_style = table.clone(description_text_style)
 
@@ -352,6 +383,104 @@ local widget_definitions = {
 			},
 		},
 	}, "background"),
+	extra_info_background = UIWidget.create_definition({
+		{
+			pass_type = "texture",
+			style_id = "background",
+			value = "content/ui/materials/hud/backgrounds/interaction_background",
+			style = {
+				horizontal_alignment = "left",
+				scale_to_material = true,
+				vertical_alignment = "bottom",
+				offset = {
+					0,
+					0,
+					0,
+				},
+				size_addition = {
+					0,
+					-1,
+				},
+				color = get_hud_color("color_tint_main_4", 230),
+			},
+			visibility_function = function (content)
+				return not content.use_minimal_presentation
+			end,
+		},
+		{
+			pass_type = "texture",
+			style_id = "frame",
+			value = "content/ui/materials/frames/dropshadow_medium",
+			style = {
+				horizontal_alignment = "center",
+				scale_to_material = true,
+				vertical_alignment = "center",
+				color = {
+					255,
+					0,
+					0,
+					0,
+				},
+				size_addition = {
+					20,
+					20,
+				},
+				offset = {
+					0,
+					0,
+					3,
+				},
+			},
+			visibility_function = function (content)
+				return not content.use_minimal_presentation
+			end,
+		},
+		{
+			pass_type = "texture_uv",
+			style_id = "frame",
+			value = "content/ui/materials/frames/dropshadow_medium_gradient_fade_01",
+			style = {
+				horizontal_alignment = "center",
+				scale_to_material = true,
+				vertical_alignment = "center",
+				color = {
+					255,
+					0,
+					0,
+					0,
+				},
+				size_addition = {
+					20,
+					20,
+				},
+				uvs = {
+					{
+						1,
+						0,
+					},
+					{
+						0,
+						1,
+					},
+				},
+				offset = {
+					0,
+					0,
+					3,
+				},
+			},
+			visibility_function = function (content)
+				return content.use_minimal_presentation
+			end,
+		},
+		{
+			pass_type = "text",
+			style_id = "text",
+			value = "",
+			value_id = "text",
+			style = extra_info_text_style,
+		},
+	}, "extra_info_background"),
 	frame = UIWidget.create_definition({
 		{
 			pass_type = "texture",
@@ -506,15 +635,6 @@ local widget_definitions = {
 					20,
 				},
 			},
-		},
-	}, "background"),
-	secondary_interact_text = UIWidget.create_definition({
-		{
-			pass_type = "text",
-			style_id = "text",
-			value = "<text>",
-			value_id = "text",
-			style = secondary_input_interact_text_style,
 		},
 	}, "background"),
 }

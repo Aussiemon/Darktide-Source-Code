@@ -120,7 +120,7 @@ end
 
 local PATROL_CHALLENGE_RAITNG_THRESHOLD = 8
 
-horde_template.execute = function (physics_world, nav_world, side, target_side, composition, towards_combat_vector, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier)
+horde_template.execute = function (physics_world, nav_world, side, target_side, composition, towards_combat_vector, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit, optional_skip_spawners, optional_mutator_params)
 	local target_side_id = target_side.side_id
 	local main_path_manager = Managers.state.main_path
 	local _, ahead_travel_distance, ahead_position = main_path_manager:ahead_unit(target_side_id)
@@ -154,7 +154,8 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	local minion_spawn_manager = Managers.state.minion_spawn
 	local flood_fill_positions = {}
 	local below, above = 2, 2
-	local num_positions = GwNavQueries.flood_fill_from_position(nav_world, horde_position, above, below, num_to_spawn, flood_fill_positions)
+	local selected_position = Managers.state.pacing:exp_random_position_away_from_players(1) or horde_position
+	local num_positions = GwNavQueries.flood_fill_from_position(nav_world, selected_position, above, below, num_to_spawn, flood_fill_positions)
 	local breeds_can_patrol = true
 
 	for i = 1, num_positions do
@@ -173,7 +174,17 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	local pacing_manager = Managers.state.pacing
 	local challenge_rating = pacing_manager:total_challenge_rating()
 	local waiting_for_ramp_clear = Managers.state.pacing:waiting_for_ramp_clear()
-	local should_spawn_patrol = not waiting_for_ramp_clear and breeds_can_patrol and challenge_rating < PATROL_CHALLENGE_RAITNG_THRESHOLD
+	local should_auto_patrol, always_patrol = true
+
+	if optional_mutator_params and optional_mutator_params.externally_controlled_patrol then
+		should_auto_patrol = false
+	end
+
+	if optional_mutator_params and optional_mutator_params.always_patrol then
+		always_patrol = true
+	end
+
+	local should_spawn_patrol = always_patrol or Managers.state.pacing:heat_trickle_should_patrol() or not waiting_for_ramp_clear and breeds_can_patrol and challenge_rating < PATROL_CHALLENGE_RAITNG_THRESHOLD
 
 	if should_spawn_patrol then
 		for i = 1, num_positions do
@@ -184,6 +195,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 			param_table.optional_aggro_state = aggro_states.passive
 			param_table.optional_group_id = group_id
 			param_table.optional_health_modifier = optional_spawn_max_health_modifier
+			param_table.spawn_source = "trickle_patrol"
 
 			local unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, param_table)
 			local blackboard = BLACKBOARDS[unit]
@@ -192,19 +204,28 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 			if i == 1 then
 				patrol_component.walk_position:store(ahead_position)
 
-				patrol_component.should_patrol = true
+				patrol_component.should_patrol = should_auto_patrol
 				patrol_component.patrol_index = i
-				patrol_component.auto_patrol = true
+				patrol_component.auto_patrol = should_auto_patrol
 			else
 				local follow_index = MinionPatrols.get_follow_index(i)
 				local follow_unit = spawned_minions[follow_index]
 
 				patrol_component.patrol_leader_unit = follow_unit
 				patrol_component.patrol_index = i
-				patrol_component.should_patrol = true
+				patrol_component.should_patrol = should_auto_patrol
 			end
 
 			spawned_minions[i] = unit
+		end
+
+		if optional_mutator_params and optional_mutator_params.mutator_name then
+			local mutator_manager = Managers.state.mutator
+			local specified_mutator = mutator_manager:mutator(optional_mutator_params.mutator_name)
+
+			if specified_mutator then
+				specified_mutator:add_externally_controlled_patrol_leader(spawned_minions)
+			end
 		end
 	else
 		for i = 1, num_positions do

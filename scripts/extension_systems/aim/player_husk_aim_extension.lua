@@ -57,10 +57,10 @@ PlayerHuskAimExtension.update = function (self, unit, dt, t)
 	local action_sweep_component = self._action_sweep_component
 
 	if action_sweep_component.is_sticky then
-		local stycky_position = SweepStickyness.stick_to_position(action_sweep_component)
+		local sticky_position = SweepStickyness.stick_to_position(action_sweep_component)
 
-		if stycky_position then
-			sticky_aim_position = root_position + Vector3.normalize(stycky_position - root_position) * self._aim_contraint_distance
+		if sticky_position then
+			sticky_aim_position = root_position + Vector3.normalize(sticky_position - root_position) * self._aim_contraint_distance
 
 			self._sticky_aim_position:store(sticky_aim_position)
 

@@ -25,6 +25,7 @@ templates.weapon_trait_bespoke_lasgun_p1_increased_zoom = {
 	end,
 }
 templates.weapon_trait_bespoke_lasgun_p1_first_shot_ammo_cost_reduction = {
+	allow_proc_while_cooling_down = true,
 	always_show_in_hud = true,
 	class_name = "proc_buff",
 	cooldown_duration = 1,

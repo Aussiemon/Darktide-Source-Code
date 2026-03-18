@@ -4,8 +4,10 @@ require("scripts/extension_systems/weapon/actions/action_ability_base")
 
 local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
 local AimProjectile = require("scripts/utilities/aim_projectile")
+local Ammo = require("scripts/utilities/ammo")
 local LagCompensation = require("scripts/utilities/lag_compensation")
 local MasterItems = require("scripts/backend/master_items")
+local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
 local Vo = require("scripts/utilities/vo")
 local locomotion_states = ProjectileLocomotionSettings.states
@@ -55,6 +57,17 @@ ActionThrowGrenade.fixed_update = function (self, dt, t, time_in_action)
 		if use_ability_charge then
 			self:_use_ability_charge()
 		end
+
+		local ammunition_usage = action_settings.ammunition_usage
+
+		if (not ammunition_usage or ammunition_usage <= self:_current_ammo()) and ammunition_usage then
+			local inventory_slot_component = self._inventory_slot_component
+			local new_ammunition = math.max(Ammo.current_ammo_in_clips(inventory_slot_component) - ammunition_usage, 0)
+
+			Ammo.set_current_ammo_in_clips(inventory_slot_component, new_ammunition)
+
+			inventory_slot_component.last_ammunition_usage = t
+		end
 	end
 end
 
@@ -66,7 +79,15 @@ ActionThrowGrenade._spawn_projectile = function (self)
 	local ability_extension = self._ability_extension
 	local action_settings = self._action_settings
 	local weapon_template = self._weapon_template
-	local item, origin_item_slot = ActionUtility.ability_item(action_settings, ability_extension)
+	local item, origin_item_slot
+
+	if self._ability_type ~= nil then
+		item, origin_item_slot = ActionUtility.ability_item(action_settings, ability_extension)
+	else
+		item = self._weapon.item
+		origin_item_slot = self._wielded_slot
+	end
+
 	local projectile_template = ActionUtility.projectile_template(action_settings, weapon_template, ability_extension)
 	local locomotion_template = projectile_template.locomotion_template
 	local owner_unit = self._player_unit
@@ -145,6 +166,26 @@ end
 
 ActionThrowGrenade.finish = function (self, reason, data, t, time_in_action)
 	ActionThrowGrenade.super.finish(self, reason, data, t, time_in_action)
+
+	local did_use = self._spawn_at_time == nil
+
+	if did_use then
+		local ammunition_usage = self._action_settings.ammunition_usage
+
+		if ammunition_usage and ammunition_usage <= self:_current_ammo() then
+			return
+		end
+
+		if self._action_settings.remove_item_from_inventory then
+			self._inventory_slot_component.unequip_slot = true
+		end
+	end
+end
+
+ActionThrowGrenade._current_ammo = function (self, optional_fire_config)
+	local current_ammo = Ammo.current_ammo_in_clips(self._inventory_slot_component, optional_fire_config and optional_fire_config.ammo_pool_index)
+
+	return current_ammo
 end
 
 return ActionThrowGrenade

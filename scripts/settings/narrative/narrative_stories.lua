@@ -654,6 +654,9 @@ local narrative_stories = {
 		hli_crafting_station_underground_viewed = {},
 		hli_gun_shop_viewed = {},
 		hli_penances_viewed = {},
+		hli_expeditions_viewed = {
+			requirement = game_mode_unlocked(PlayerProgressionUnlocks.expeditions),
+		},
 		s1_intro_viewed = {},
 		core_research_intro_viewed = {},
 	},

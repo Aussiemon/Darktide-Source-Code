@@ -591,6 +591,10 @@ EndView.select_target_level = function (self)
 		level_name = "horde"
 	end
 
+	if string.find(played_mission, "exp_") then
+		level_name = "expeditions"
+	end
+
 	local level = EndViewSettings.levels_by_id[level_name] or EndViewSettings.levels_by_id.default
 	local level_packages = {
 		is_level_package = true,

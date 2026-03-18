@@ -15,6 +15,7 @@ EnemyEventSpawner.init = function (self, unit, is_server, nav_world)
 	local template_name = self:get_data(unit, "compositions")
 
 	self._compositions = EnemyEventSpawnerSettings[template_name]
+	self._horde_template = self:get_data(unit, "horde_template")
 	self._unit = unit
 	self._nav_world = nav_world
 end
@@ -50,8 +51,7 @@ EnemyEventSpawner.spawn_event_enemies = function (self)
 	local random_index = math.random(1, #compositions)
 	local chosen_compositions = compositions[random_index]
 	local chosen_compositions_by_resistance = Managers.state.difficulty:get_table_entry_by_resistance(chosen_compositions)
-	local horde_template_name = "ambush_horde"
-	local horde_template = HordeTemplates[horde_template_name]
+	local horde_template = HordeTemplates[self._horde_template]
 
 	self._world = Unit.world(unit)
 	self._physics_world = World.physics_world(self._world)
@@ -79,6 +79,21 @@ EnemyEventSpawner.component_data = {
 		},
 		options_values = {
 			"nurgle_totem",
+		},
+	},
+	horde_template = {
+		ui_name = "Horde Template",
+		ui_type = "combo_box",
+		value = "ambush_horde",
+		options_keys = {
+			"ambush_horde",
+			"flood_horde",
+			"trickle_horde",
+		},
+		options_values = {
+			"ambush_horde",
+			"flood_horde",
+			"trickle_horde",
 		},
 	},
 }

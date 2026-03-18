@@ -87,7 +87,12 @@ MutatorSpawner._setup = function (self)
 	local game_mode = game_mode_manager:game_mode()
 	local mission_name
 
-	mission_name = Managers.state.mission:mission_name()
+	if game_mode:name() == "expedition" then
+		mission_name = game_mode:get_current_level_name()
+	else
+		mission_name = Managers.state.mission:mission_name()
+	end
+
 	self._num_to_spawn = self._template_data.num_to_spawn or self._template_data.num_to_spawn_per_mission[mission_name]
 	self._spawners = {}
 
@@ -119,6 +124,22 @@ MutatorSpawner.reset = function (self)
 
 	self:_setup()
 	self:on_spawn_points_generated()
+end
+
+MutatorSpawner.deactivate = function (self)
+	MutatorSpawner.super.deactivate(self)
+
+	if not self._spawners then
+		return
+	end
+
+	local nodes = self._spawners
+
+	for i = 1, #nodes do
+		if nodes[i].destroy then
+			nodes[i]:destroy()
+		end
+	end
 end
 
 MutatorSpawner.on_gameplay_post_init = function (self, level, themes)
@@ -222,8 +243,16 @@ MutatorSpawner.on_spawn_points_generated = function (self, level, themes)
 		self._num_to_spawn = self._valid_spawn_points
 	end
 
-	self:_calculate_probabillity(nil, nil)
+	self:_initialize_probability()
 	self:_add_location_spawns()
+
+	if self._template.allowed_sections then
+		for i = #self._locations, 1, -1 do
+			if not table.array_contains(self._template.allowed_sections, self._locations[i].section) then
+				table.swap_delete(self._locations, i)
+			end
+		end
+	end
 end
 
 MutatorSpawner.update = function (self, dt, t)
@@ -302,61 +331,96 @@ MutatorSpawner.update = function (self, dt, t)
 	end
 end
 
-MutatorSpawner._calculate_probabillity = function (self, optional_probabillity_reroll, remove_chance)
-	if not self._chance_initialized then
-		self._chance_initialized = true
+MutatorSpawner._initialize_probability = function (self)
+	if self._chance_initialized then
+		return
+	end
 
-		local weights = self._section_probabillity
-		local num = 0
-		local initial_chance = 1
+	self._chance_initialized = true
+
+	local weights = self._section_probabillity
+	local num = 0
+	local initial_chance = 1
+
+	for i = 1, #weights do
+		num = num + 1
+	end
+
+	initial_chance = initial_chance / num
+
+	for i = 1, #weights do
+		weights[i] = math.floor(initial_chance * 100) / 100
+	end
+
+	if self._template.allowed_sections then
+		local redistribute_to_sections = 0
 
 		for i = 1, #weights do
-			num = num + 1
-		end
-
-		initial_chance = initial_chance / num
-
-		for ii = 1, #weights do
-			weights[ii] = math.floor(initial_chance * 100) / 100
-		end
-
-		local prob, alias = LoadedDice.create(weights, false)
-
-		self._section_probabillity = {
-			probability = prob,
-			alias = alias,
-		}
-	else
-		local weights = self._section_probabillity
-		local add_to_other_probabillites
-		local current_value = weights.probability[optional_probabillity_reroll]
-
-		current_value = current_value / 2
-
-		if remove_chance then
-			add_to_other_probabillites = current_value
-			current_value = 0
-		else
-			add_to_other_probabillites = current_value / 2
-		end
-
-		for i = 1, #weights.probability do
-			if i == optional_probabillity_reroll then
-				weights.probability[i] = current_value
-			elseif self._allowed_per_section[i] == 0 then
-				add_to_other_probabillites = add_to_other_probabillites + add_to_other_probabillites
-			else
-				weights.probability[i] = weights.probability[i] + add_to_other_probabillites
+			if not table.array_contains(self._template.allowed_sections, i) then
+				weights[i] = 0
+				redistribute_to_sections = redistribute_to_sections + self._allowed_per_section[i]
+				self._allowed_per_section[i] = 0
 			end
 		end
 
-		local prob, alias = LoadedDice.create(weights.probability, false)
+		redistribute_to_sections = redistribute_to_sections / #self._template.allowed_sections
 
-		self._section_probabillity = {
-			probability = prob,
-			alias = alias,
-		}
+		for i = 1, #self._template.allowed_sections do
+			local section_idx = self._template.allowed_sections[i]
+
+			self._allowed_per_section[section_idx] = self._allowed_per_section[section_idx] + redistribute_to_sections
+
+			if self._template.max_spawned_per_section then
+				self._allowed_per_section[section_idx] = math.clamp(self._allowed_per_section[section_idx], 0, self._template.max_spawned_per_section)
+			end
+
+			self._allowed_per_section[section_idx] = math.clamp(self._allowed_per_section[section_idx], 0, #self._spawn_point_sections[section_idx])
+		end
 	end
+
+	self._base_section_weights = weights
+
+	local prob, alias = LoadedDice.create(weights, false)
+
+	self._section_probabillity = {
+		probability = prob,
+		alias = alias,
+	}
+end
+
+MutatorSpawner._calculate_probabillity = function (self, optional_probabillity_reroll, remove_chance)
+	local weights = self._base_section_weights
+	local add_to_other_probabillites
+	local current_value = weights[optional_probabillity_reroll]
+
+	current_value = current_value / 2
+
+	if remove_chance then
+		add_to_other_probabillites = 0
+		current_value = 0
+	else
+		add_to_other_probabillites = current_value / 2
+	end
+
+	for i = 1, #weights do
+		if i == optional_probabillity_reroll then
+			weights[i] = current_value
+		elseif self._allowed_per_section[i] <= 0 then
+			weights[i] = 0
+			add_to_other_probabillites = add_to_other_probabillites + add_to_other_probabillites
+		else
+			weights[i] = weights[i] + add_to_other_probabillites
+		end
+	end
+
+	self._base_section_weights = weights
+
+	local prob, alias = LoadedDice.create(weights, false)
+
+	self._section_probabillity = {
+		probability = prob,
+		alias = alias,
+	}
 end
 
 MutatorSpawner._add_location_spawns = function (self)
@@ -367,32 +431,35 @@ MutatorSpawner._add_location_spawns = function (self)
 	for i = 1, num_to_spawn do
 		local weights = self._section_probabillity
 		local temp_section_index = LoadedDice.roll(weights.probability, weights.alias)
-		local section = spawn_point_sections[temp_section_index]
-		local spawn_point_index = math.random(#section)
-		local spawn_point = section[spawn_point_index]
-		local travel_distance = spawn_point.spawn_travel_distance
-		local position = spawn_point.position
-		local rotation = spawn_point.rotation
-		local level_size = spawn_point.level_size
-		local section_index = temp_section_index
-		local location = {
-			travel_distance = travel_distance,
-			position = position,
-			section = section_index,
-			rotation = rotation,
-			level_size = level_size,
-		}
 
-		locations[#locations + 1] = location
-		self._allowed_per_section[temp_section_index] = self._allowed_per_section[temp_section_index] - 1
+		if self._allowed_per_section[temp_section_index] > 0 then
+			local section = spawn_point_sections[temp_section_index]
+			local spawn_point_index = math.random(#section)
+			local spawn_point = section[spawn_point_index]
+			local travel_distance = spawn_point.spawn_travel_distance
+			local position = spawn_point.position
+			local rotation = spawn_point.rotation
+			local level_size = spawn_point.level_size
+			local section_index = temp_section_index
+			local location = {
+				travel_distance = travel_distance,
+				position = position,
+				section = section_index,
+				rotation = rotation,
+				level_size = level_size,
+			}
 
-		if self._allowed_per_section[temp_section_index] == 0 then
-			self:_calculate_probabillity(temp_section_index, true)
-		else
-			self:_calculate_probabillity(temp_section_index, false)
+			locations[#locations + 1] = location
+			self._allowed_per_section[temp_section_index] = self._allowed_per_section[temp_section_index] - 1
+
+			if self._allowed_per_section[temp_section_index] <= 0 then
+				self:_calculate_probabillity(temp_section_index, true)
+			else
+				self:_calculate_probabillity(temp_section_index, false)
+			end
+
+			table.swap_delete(section, spawn_point_index)
 		end
-
-		table.swap_delete(section, spawn_point_index)
 	end
 
 	self._locations = locations

@@ -50,8 +50,8 @@ HostThemeState.init = function (self, state_machine, shared_state)
 
 	if circumstance_name then
 		local level_name = shared_state.level_name
-		local circumstance_template = CircumstanceTemplates[circumstance_name]
-		local theme_tag = circumstance_template.theme_tag
+		local circumstance_template = circumstance_name and CircumstanceTemplates[circumstance_name]
+		local theme_tag = circumstance_template and circumstance_template.theme_tag
 		local theme_names = ThemePackage.level_resource_dependency_packages(level_name, theme_tag)
 
 		if GameParameters.testify then

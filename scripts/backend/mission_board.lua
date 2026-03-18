@@ -269,7 +269,7 @@ MissionBoard.fetch_player_journey_data = function (self, account_id, character_i
 		if not difficulty_progression_data or not progression_unlock_data then
 			Log.error("MissionBoard", "MissionBoard:fetch_player_journey_data: error fetching data")
 
-			return nil
+			return Promise.rejected("MissionBoard:fetch_player_journey_data: error fetching data")
 		end
 
 		self._difficulty_progression_data = difficulty_progression_data
@@ -326,6 +326,12 @@ end
 MissionBoard.get_new_difficulty_unlocked = function (self, character_id)
 	if self._difficulty_progression_data.current then
 		return self._cached_highest_difficulty[character_id] and self._cached_highest_difficulty[character_id] ~= self._difficulty_progression_data.current.name
+	end
+end
+
+MissionBoard.get_highest_difficulty_unlocked = function (self, character_id)
+	if self._difficulty_progression_data.current then
+		return self._cached_highest_difficulty[character_id]
 	end
 end
 

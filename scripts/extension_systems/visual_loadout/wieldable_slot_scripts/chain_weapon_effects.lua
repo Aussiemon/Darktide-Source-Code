@@ -1,11 +1,11 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_weapon_effects.lua
 
-require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/melee_idling_effects")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wielded_idling_effects")
 
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local _vfx_external_properties = {}
 local _sfx_external_properties = {}
-local ChainWeaponEffects = class("ChainWeaponEffects", "MeleeIdlingEffects")
+local ChainWeaponEffects = class("ChainWeaponEffects", "WieldedIdlingEffects")
 local SPECIAL_ACTIVE_LOOPING_VFX_ALIAS = "weapon_special_loop"
 local SPECIAL_OFF_SOUND_ALIAS = "weapon_special_end"
 local INTENSITY_DECAY_SPEED = 1
@@ -26,7 +26,7 @@ ChainWeaponEffects.init = function (self, context, slot, weapon_template, fx_sou
 
 	local owner_unit = context.owner_unit
 	local fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
-	local melee_idling_fx_source_name = fx_sources._melee_idling
+	local wielded_idling_fx_source_name = fx_sources._wielded_idling
 	local special_active_fx_source_name = fx_sources._special_active
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 
@@ -39,7 +39,7 @@ ChainWeaponEffects.init = function (self, context, slot, weapon_template, fx_sou
 
 	self._chain_speed_template = chain_speed_template
 	self._fx_extension = fx_extension
-	self._melee_idling_fx_source_name = melee_idling_fx_source_name
+	self._wielded_idling_fx_source_name = wielded_idling_fx_source_name
 	self._special_active_fx_source_name = special_active_fx_source_name
 	self._intensity = 0
 	self._base_intensity = 0
@@ -52,29 +52,29 @@ end
 
 ChainWeaponEffects.destroy = function (self)
 	local wwise_world = self._wwise_world
-	local melee_idling_source = self._fx_extension:sound_source(self._melee_idling_fx_source_name)
+	local wielded_idling_source = self._fx_extension:sound_source(self._wielded_idling_fx_source_name)
 
-	WwiseWorld.set_source_parameter(wwise_world, melee_idling_source, "combat_chainsword_throttle", 0)
-	WwiseWorld.set_source_parameter(wwise_world, melee_idling_source, "combat_chainsword_cut", 0)
+	WwiseWorld.set_source_parameter(wwise_world, wielded_idling_source, "combat_chainsword_throttle", 0)
+	WwiseWorld.set_source_parameter(wwise_world, wielded_idling_source, "combat_chainsword_cut", 0)
 	self:_stop_vfx_loop(true)
 	ChainWeaponEffects.super.destroy(self)
 end
 
 ChainWeaponEffects.wield = function (self)
 	local wwise_world = self._wwise_world
-	local melee_idling_source = self._fx_extension:sound_source(self._melee_idling_fx_source_name)
+	local wielded_idling_source = self._fx_extension:sound_source(self._wielded_idling_fx_source_name)
 
-	WwiseWorld.set_source_parameter(wwise_world, melee_idling_source, "combat_chainsword_throttle", 0)
-	WwiseWorld.set_source_parameter(wwise_world, melee_idling_source, "combat_chainsword_cut", 0)
+	WwiseWorld.set_source_parameter(wwise_world, wielded_idling_source, "combat_chainsword_throttle", 0)
+	WwiseWorld.set_source_parameter(wwise_world, wielded_idling_source, "combat_chainsword_cut", 0)
 	ChainWeaponEffects.super.wield(self)
 end
 
 ChainWeaponEffects.unwield = function (self)
 	local wwise_world = self._wwise_world
-	local melee_idling_source = self._fx_extension:sound_source(self._melee_idling_fx_source_name)
+	local wielded_idling_source = self._fx_extension:sound_source(self._wielded_idling_fx_source_name)
 
-	WwiseWorld.set_source_parameter(wwise_world, melee_idling_source, "combat_chainsword_throttle", 0)
-	WwiseWorld.set_source_parameter(wwise_world, melee_idling_source, "combat_chainsword_cut", 0)
+	WwiseWorld.set_source_parameter(wwise_world, wielded_idling_source, "combat_chainsword_throttle", 0)
+	WwiseWorld.set_source_parameter(wwise_world, wielded_idling_source, "combat_chainsword_cut", 0)
 
 	if self._inventory_slot_component.special_active then
 		self:_play_single_sfx(SPECIAL_OFF_SOUND_ALIAS, self._special_active_fx_source_name)
@@ -97,10 +97,10 @@ end
 
 ChainWeaponEffects.update_first_person_mode = function (self, first_person_mode)
 	local wwise_world = self._wwise_world
-	local melee_idling_source = self._fx_extension:sound_source(self._melee_idling_fx_source_name)
+	local wielded_idling_source = self._fx_extension:sound_source(self._wielded_idling_fx_source_name)
 
-	WwiseWorld.set_source_parameter(wwise_world, melee_idling_source, "combat_chainsword_throttle", 0)
-	WwiseWorld.set_source_parameter(wwise_world, melee_idling_source, "combat_chainsword_cut", 0)
+	WwiseWorld.set_source_parameter(wwise_world, wielded_idling_source, "combat_chainsword_throttle", 0)
+	WwiseWorld.set_source_parameter(wwise_world, wielded_idling_source, "combat_chainsword_cut", 0)
 	ChainWeaponEffects.super.update_first_person_mode(self, first_person_mode)
 end
 
@@ -175,7 +175,7 @@ ChainWeaponEffects._update_base_intensity = function (self, dt, t)
 end
 
 ChainWeaponEffects._update_intensity = function (self, dt, t)
-	local melee_idling_source, wwise_world = self._fx_extension:sound_source(self._melee_idling_fx_source_name), self._wwise_world
+	local wielded_idling_source, wwise_world = self._fx_extension:sound_source(self._wielded_idling_fx_source_name), self._wwise_world
 	local inventory_slot_component = self._inventory_slot_component
 	local first_person_unit = self._first_person_unit
 	local action_sweep_component = self._action_sweep_component
@@ -247,7 +247,7 @@ ChainWeaponEffects._update_intensity = function (self, dt, t)
 	if intensity_epsilon < intensity_delta or self._force_update then
 		self._intensity = intensity
 
-		WwiseWorld.set_source_parameter(wwise_world, melee_idling_source, "combat_chainsword_throttle", intensity)
+		WwiseWorld.set_source_parameter(wwise_world, wielded_idling_source, "combat_chainsword_throttle", intensity)
 
 		local anim_variable = Unit.animation_find_variable(first_person_unit, "throttle")
 
@@ -273,7 +273,7 @@ ChainWeaponEffects._update_intensity = function (self, dt, t)
 
 	local resistance = is_sawing and 1 - math.random() * 0.1 or 0
 
-	WwiseWorld.set_source_parameter(wwise_world, melee_idling_source, "combat_chainsword_cut", resistance)
+	WwiseWorld.set_source_parameter(wwise_world, wielded_idling_source, "combat_chainsword_cut", resistance)
 end
 
 ChainWeaponEffects._start_vfx_loop = function (self)
@@ -283,7 +283,7 @@ ChainWeaponEffects._start_vfx_loop = function (self)
 		local world = self._world
 		local fx_extension = self._fx_extension
 		local new_effect_id = fx_extension:spawn_particles_local(effect_name, Vector3.zero())
-		local vfx_link_unit, vfx_link_node = fx_extension:vfx_spawner_unit_and_node(self._melee_idling_fx_source_name)
+		local vfx_link_unit, vfx_link_node = fx_extension:vfx_spawner_unit_and_node(self._wielded_idling_fx_source_name)
 
 		World.link_particles(world, new_effect_id, vfx_link_unit, vfx_link_node, Matrix4x4.identity(), "stop")
 

@@ -3,6 +3,7 @@
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Breed = require("scripts/utilities/breed")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local CombatRangeUserBehaviorExtension = class("CombatRangeUserBehaviorExtension", "MinionBehaviorExtension")
 local buff_keywords = BuffSettings.keywords
@@ -19,7 +20,7 @@ CombatRangeUserBehaviorExtension.init = function (self, extension_init_context, 
 	local breed = self._breed
 	local combat_range_data = breed.combat_range_data
 
-	self._start_effect_template = combat_range_data.start_effect_template
+	self._start_effect_template = combat_range_data.start_effect_template_name and EffectTemplates[combat_range_data.start_effect_template_name]
 
 	local multi_config = combat_range_data.multi_config
 
@@ -63,6 +64,7 @@ CombatRangeUserBehaviorExtension._init_blackboard_components = function (self, b
 	local starting_combat_range = combat_range_data.starting_combat_range
 
 	behavior_component.combat_range = starting_combat_range
+	behavior_component.restricted_combat_range = "none"
 	behavior_component.combat_range_sticky_time = 0
 	behavior_component.enter_combat_range_flag = false
 	behavior_component.lock_combat_range_switch = false
@@ -165,7 +167,8 @@ CombatRangeUserBehaviorExtension.update_combat_range = function (self, unit, bla
 			end
 
 			local is_taunted = self._buff_extension:has_keyword(buff_keywords.taunted)
-			local should_switch_combat_range = _should_switch_combat_range(unit, blackboard, current_combat_range, target_distance, config, target_unit, self._target_velocity_dot_duration, is_taunted)
+			local force_switch_to_melee_range = is_taunted
+			local should_switch_combat_range = _should_switch_combat_range(unit, blackboard, current_combat_range, target_distance, config, target_unit, self._target_velocity_dot_duration, force_switch_to_melee_range)
 
 			if should_switch_combat_range then
 				self:_switch_combat_range(unit, blackboard, config, weapon_switch_component, behavior_component, t)
@@ -214,7 +217,8 @@ CombatRangeUserBehaviorExtension._switch_combat_range = function (self, unit, bl
 	end
 
 	local wanted_combat_range_config = self._combat_range_config[wanted_combat_range]
-	local effect_template = wanted_combat_range_config.effect_template
+	local effect_template_name = wanted_combat_range_config.effect_template_name
+	local effect_template = effect_template_name and EffectTemplates[effect_template_name]
 
 	if effect_template then
 		self._global_effect_id = fx_system:start_template_effect(effect_template, unit)
@@ -272,8 +276,8 @@ function _get_combat_range_switch_distance(config, target_unit)
 	return config.distance
 end
 
-function _should_switch_combat_range(unit, blackboard, current_combat_range, target_distance, config, target_unit, target_velocity_dot_duration, is_taunted)
-	if is_taunted then
+function _should_switch_combat_range(unit, blackboard, current_combat_range, target_distance, config, target_unit, target_velocity_dot_duration, force_switch_to_melee)
+	if force_switch_to_melee then
 		if current_combat_range == "melee" then
 			return false
 		elseif config.switch_combat_range == "melee" then

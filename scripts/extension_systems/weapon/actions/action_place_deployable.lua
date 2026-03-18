@@ -16,9 +16,14 @@ ActionPlaceDeployable._place_unit = function (self, action_settings, position, r
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system.side_by_unit[player_unit]
 	local side_id = side.side_id
-	local unit_name, material, placed_unit
+	local unit_name = deployable_settings.unit_name or nil
+	local material, placed_unit
 
-	placed_unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, position, rotation, material, side_id, deployable_settings, placed_on_unit, player_unit)
+	if deployable_settings.spawn_params then
+		Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, position, rotation, material, deployable_settings.spawn_params(player_unit, deployable_settings))
+	else
+		placed_unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, position, rotation, material, side_id, deployable_settings, placed_on_unit, player_unit)
+	end
 
 	local game_mode_name = Managers.state.game_mode:game_mode_name()
 
@@ -58,6 +63,16 @@ ActionPlaceDeployable._place_unit = function (self, action_settings, position, r
 
 			buff_extension:add_proc_event(buff_proc_events.on_deployable_placed, param_table)
 		end
+	end
+
+	local mission_info_vo = deployable_settings.mission_info_vo
+
+	if mission_info_vo then
+		local voice_selection = mission_info_vo.voice_selection
+		local selected_voice = mission_info_vo.selected_voice
+		local trigger_id = mission_info_vo.trigger_id
+
+		Vo.mission_giver_mission_info_vo(voice_selection, selected_voice, trigger_id)
 	end
 
 	self:_register_stats_and_telemetry(unit_template, player_or_nil)

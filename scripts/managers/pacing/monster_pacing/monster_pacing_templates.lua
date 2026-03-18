@@ -11,5 +11,6 @@ end
 
 _create_monster_pacing_template_entry("scripts/managers/pacing/monster_pacing/templates/default_monster_pacing_template")
 _create_monster_pacing_template_entry("scripts/managers/pacing/monster_pacing/templates/havoc_monster_pacing_template")
+_create_monster_pacing_template_entry("scripts/managers/pacing/monster_pacing/templates/expedition_monster_pacing_template")
 
 return settings("MonsterPacingTemplates", monster_pacing_templates)

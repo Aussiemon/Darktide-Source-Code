@@ -194,7 +194,59 @@ BtChaosHoundSelectorNode.evaluate = function (self, unit, blackboard, scratchpad
 	end
 
 	do
-		local node_roaming = children[6]
+		local node_patrol = children[6]
+		local is_running = last_leaf_node_running and last_running_node == node_patrol
+		local condition_result
+
+		repeat
+			local sub_condition_result_01
+
+			do
+				local condition_result
+
+				repeat
+					local perception_component = blackboard.perception
+
+					if not is_running and perception_component.lock_target then
+						condition_result = false
+
+						break
+					end
+
+					local target_unit = perception_component.target_unit
+
+					condition_result = HEALTH_ALIVE[target_unit]
+				until true
+
+				sub_condition_result_01 = condition_result
+			end
+
+			local has_target_unit = sub_condition_result_01
+
+			if has_target_unit then
+				condition_result = false
+
+				break
+			end
+
+			local patrol_component = blackboard.patrol
+			local should_patrol = patrol_component.should_patrol
+			local perception_component = blackboard.perception
+			local aggro_state = perception_component.aggro_state
+			local is_passive = aggro_state == "passive"
+
+			condition_result = is_passive and should_patrol
+		until true
+
+		if condition_result then
+			new_running_child_nodes[node_identifier] = node_patrol
+
+			return node_patrol
+		end
+	end
+
+	do
+		local node_roaming = children[7]
 		local perception_component = blackboard.perception
 		local aggro_state = perception_component.aggro_state
 		local is_passive = aggro_state == "passive"
@@ -207,7 +259,7 @@ BtChaosHoundSelectorNode.evaluate = function (self, unit, blackboard, scratchpad
 		end
 	end
 
-	local node_idle = children[7]
+	local node_idle = children[8]
 
 	new_running_child_nodes[node_identifier] = node_idle
 

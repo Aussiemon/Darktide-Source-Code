@@ -105,7 +105,7 @@ local function node_icon_change_function(content, style, _, dt, override_availab
 		local icon = node_data.icon
 
 		if icon and not style.ignore_icon then
-			if node_data.type == "start" then
+			if node_data.type == "start" or node_data.type == "start_center" then
 				if icon ~= content.icon then
 					content.icon = icon
 				end

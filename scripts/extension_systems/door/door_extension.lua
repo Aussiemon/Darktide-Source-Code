@@ -21,6 +21,7 @@ DoorExtension.init = function (self, extension_init_context, unit, extension_ini
 	self._start_state = nil
 	self._current_state = STATES.none
 	self._anim_data = table.clone(DoorSettings.anim)
+	self._is_animating = false
 	self._previous_anim_time_normalized = 0
 	self._entrance_nav_blocked = false
 	self._num_attackers = 0
@@ -63,7 +64,7 @@ DoorExtension.destroy = function (self)
 end
 
 DoorExtension.hot_join_sync = function (self, unit, sender)
-	self:_sync_server_state(sender, self._current_state)
+	self:_sync_server_state(sender, self._current_state, self._is_animating)
 end
 
 DoorExtension.setup_from_component = function (self, door_type, start_state, open_duration, close_duration, allow_closing, self_closing_time, blocked_time, use_advanced_blocking, advanced_blocking_time, advanced_unblocking_time, open_type, control_panel_props, control_panels_active, ignore_broadphase)
@@ -72,6 +73,7 @@ DoorExtension.setup_from_component = function (self, door_type, start_state, ope
 	self._type = door_type
 	self._open_type = open_type
 	self._start_state = start_state
+	self._is_animating = start_state ~= STATES.closed
 	self._blocked_time = blocked_time
 	self._use_advanced_blocking = use_advanced_blocking
 	self._advanced_blocking_time = advanced_blocking_time
@@ -189,7 +191,7 @@ end
 
 DoorExtension.instantiate_state = function (self)
 	if self._start_state ~= nil then
-		self:_set_server_state(self._start_state)
+		self:_set_server_state(self._start_state, self._is_animating)
 
 		self._start_state = nil
 	end
@@ -198,6 +200,10 @@ end
 local SELF_CLOSE_CHECK_COOLDOWN = 0.25
 
 DoorExtension.update = function (self, unit, dt, t)
+	if self._is_animating and self:_normalized_anim_time() == 1 then
+		self._is_animating = false
+	end
+
 	if self._is_server then
 		self:instantiate_state()
 
@@ -223,22 +229,22 @@ end
 
 DoorExtension._should_nav_block = function (self)
 	local current_state = self._current_state
+	local anim_time_normalized = self:_normalized_anim_time()
 	local closed = current_state == STATES.closed
-	local anim_time = self:_normalized_anim_time()
 	local blocked_time = self._blocked_time
 	local use_advanced_blocking = self._use_advanced_blocking
 	local should_nav_block
 
 	if not use_advanced_blocking then
 		if closed then
-			should_nav_block = blocked_time <= anim_time
+			should_nav_block = blocked_time <= anim_time_normalized
 		else
-			should_nav_block = anim_time <= 1 - blocked_time
+			should_nav_block = anim_time_normalized <= 1 - blocked_time
 		end
 	elseif closed then
-		should_nav_block = anim_time >= self._advanced_blocking_time
+		should_nav_block = anim_time_normalized >= self._advanced_blocking_time
 	else
-		should_nav_block = not (anim_time >= self._advanced_unblocking_time)
+		should_nav_block = not (anim_time_normalized >= self._advanced_unblocking_time)
 	end
 
 	return should_nav_block
@@ -260,20 +266,22 @@ DoorExtension._update_nav_block = function (self, unit)
 end
 
 DoorExtension._normalized_anim_time = function (self)
-	local anim_time_normalized = self:_anim_time() / self:_anim_duration()
+	if not self._is_animating then
+		return 1
+	end
+
+	local time, length = Unit.animation_layer_info(self._unit, 1)
+	local anim_time_normalized = time / length
 
 	anim_time_normalized = math.clamp(anim_time_normalized, 0, 1)
 
 	return anim_time_normalized
 end
 
-local _times_buffer = {}
-
 DoorExtension._anim_time = function (self)
-	local unit = self._unit
-	local times = Unit.animation_get_time(unit, _times_buffer)
+	local anim_time_normalized = self:_normalized_anim_time()
 	local anim_duration = self:_anim_duration()
-	local anim_time = math.min(times[1], anim_duration)
+	local anim_time = math.min(anim_time_normalized * anim_duration, anim_duration)
 
 	return anim_time
 end
@@ -285,10 +293,7 @@ DoorExtension._anim_duration = function (self)
 end
 
 DoorExtension._is_playing_anim = function (self)
-	local anim_time = self:_normalized_anim_time()
-	local is_playing = anim_time > 0 or anim_time < 1
-
-	return is_playing
+	return self._is_animating
 end
 
 DoorExtension._update_external_dependencies = function (self)
@@ -349,6 +354,8 @@ DoorExtension.set_start_state = function (self, state)
 	else
 		self._start_state = state
 	end
+
+	self._is_animating = true
 end
 
 DoorExtension.can_open = function (self, interactor_unit)
@@ -447,7 +454,7 @@ DoorExtension.open = function (self, state, interactor_unit, optional_closing_ti
 
 	local new_state = STATES[state]
 
-	self:_set_server_state(new_state)
+	self:_set_server_state(new_state, true)
 
 	self._self_closing_timer = optional_closing_time or self._self_closing_time
 end
@@ -480,7 +487,7 @@ DoorExtension.close = function (self)
 		return
 	end
 
-	self:_set_server_state(STATES.closed)
+	self:_set_server_state(STATES.closed, true)
 
 	self._self_closing_timer = 0
 end
@@ -529,7 +536,7 @@ DoorExtension.teleport_bots = function (self)
 	self:_teleport_companions(unit, index)
 end
 
-DoorExtension._set_current_state = function (self, state)
+DoorExtension._set_current_state = function (self, state, animate)
 	if state == self._current_state then
 		return
 	end
@@ -550,18 +557,20 @@ DoorExtension._set_current_state = function (self, state)
 			self._interactee_extension:set_active(false)
 		end
 	end
+
+	self._is_animating = animate
 end
 
-DoorExtension._set_server_state = function (self, new_state)
+DoorExtension._set_server_state = function (self, new_state, animate)
 	local current_state = self._current_state
 
 	if current_state ~= new_state then
 		local anim = self._anim_data[new_state]
 
-		self._animation_extension:anim_event_with_variable_float(anim.event, "anim_duration", anim.duration)
+		self._animation_extension:anim_event_with_variable_float(anim.event, "anim_duration", animate and anim.duration or 0.1)
 		self:_do_flow_calls(new_state)
-		self:_sync_server_state(nil, new_state)
-		self:_set_current_state(new_state)
+		self:_sync_server_state(nil, new_state, animate)
+		self:_set_current_state(new_state, animate)
 	end
 end
 
@@ -578,7 +587,7 @@ DoorExtension._do_flow_calls = function (self, state)
 	end
 end
 
-DoorExtension._sync_server_state = function (self, peer_id, state)
+DoorExtension._sync_server_state = function (self, peer_id, state, animate)
 	local unit = self._unit
 	local unit_level_index = Managers.state.unit_spawner:level_index(unit)
 	local state_lookup_id = NetworkLookup.door_states[state]
@@ -586,11 +595,11 @@ DoorExtension._sync_server_state = function (self, peer_id, state)
 	if peer_id then
 		local channel = Managers.state.game_session:peer_to_channel(peer_id)
 
-		RPC.rpc_sync_door_state(channel, unit_level_index, state_lookup_id)
+		RPC.rpc_sync_door_state(channel, unit_level_index, state_lookup_id, animate)
 	else
 		local game_session_manager = Managers.state.game_session
 
-		game_session_manager:send_rpc_clients("rpc_sync_door_state", unit_level_index, state_lookup_id)
+		game_session_manager:send_rpc_clients("rpc_sync_door_state", unit_level_index, state_lookup_id, animate)
 	end
 end
 
@@ -614,9 +623,9 @@ DoorExtension.ignore_broadphase = function (self)
 	return self._ignore_broadphase
 end
 
-DoorExtension.rpc_sync_door_state = function (self, new_state)
+DoorExtension.rpc_sync_door_state = function (self, new_state, animate)
 	self:_do_flow_calls(new_state)
-	self:_set_current_state(new_state)
+	self:_set_current_state(new_state, animate)
 end
 
 DoorExtension._teleport_companions = function (self, unit, start_index)
@@ -629,21 +638,30 @@ DoorExtension._teleport_companions = function (self, unit, start_index)
 
 		if human_unit then
 			local companion_spawner_extension = ScriptUnit.extension(human_unit, "companion_spawner_system")
-			local companion_unit = companion_spawner_extension:companion_unit()
+			local companion_units = companion_spawner_extension:companion_units()
 
-			if companion_unit then
-				local companion_blackboard = BLACKBOARDS[companion_unit]
-				local movable_platform_component = Blackboard.write_component(companion_blackboard, "movable_platform")
+			if companion_units then
+				for i = 1, #companion_units do
+					local companion_unit = companion_units[i]
 
-				current_node_name = bot_teleport_location_node_names[index]
-				index = index + 1
-				has_node = Unit.has_node(unit, current_node_name)
+					if companion_unit then
+						local companion_blackboard = BLACKBOARDS[companion_unit]
 
-				if has_node then
-					local node = Unit.node(unit, current_node_name)
+						if Blackboard.has_component(companion_blackboard, "movable_platform") then
+							local movable_platform_component = Blackboard.write_component(companion_blackboard, "movable_platform")
 
-					movable_platform_component.node = node
-					movable_platform_component.unit_reference = unit
+							current_node_name = bot_teleport_location_node_names[index]
+							index = index + 1
+							has_node = Unit.has_node(unit, current_node_name)
+
+							if has_node then
+								local node = Unit.node(unit, current_node_name)
+
+								movable_platform_component.node = node
+								movable_platform_component.unit_reference = unit
+							end
+						end
+					end
 				end
 			end
 		end
@@ -658,15 +676,24 @@ DoorExtension._free_companions = function (self, unit)
 
 		if human_unit then
 			local companion_spawner_extension = ScriptUnit.extension(human_unit, "companion_spawner_system")
-			local companion_unit = companion_spawner_extension:companion_unit()
+			local companion_units = companion_spawner_extension:companion_units()
 
-			if companion_unit then
-				local companion_blackboard = BLACKBOARDS[companion_unit]
-				local movable_platform_component = Blackboard.write_component(companion_blackboard, "movable_platform")
+			if companion_units then
+				for i = 1, #companion_units do
+					local companion_unit = companion_units[i]
 
-				if movable_platform_component.unit_reference == unit then
-					movable_platform_component.node = ""
-					movable_platform_component.unit_reference = nil
+					if companion_unit then
+						local companion_blackboard = BLACKBOARDS[companion_unit]
+
+						if Blackboard.has_component(companion_blackboard, "movable_platform") then
+							local movable_platform_component = Blackboard.write_component(companion_blackboard, "movable_platform")
+
+							if movable_platform_component.unit_reference == unit then
+								movable_platform_component.node = ""
+								movable_platform_component.unit_reference = nil
+							end
+						end
+					end
 				end
 			end
 		end

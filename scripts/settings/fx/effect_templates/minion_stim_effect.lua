@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/fx/effect_templates/minion_stim_effect.lua
 
+local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local GRENADE_ITEM_NAME = "content/items/weapons/minions/ranged/minion_stim"
 local resources = {
@@ -10,11 +11,13 @@ local sound_event_delay = 0.3
 local effect_template = {
 	name = "minion_stim_effect",
 	resources = resources,
-	start = function (template_data, template_context)
+	start = function (template_data, template_context, owner_unit_or_nil)
 		local unit, world = template_data.unit, template_context.world
+		local unit_data = ScriptUnit.has_extension(owner_unit_or_nil, "unit_data_system")
+		local breed_name = unit_data and unit_data:breed_name()
 		local item_definitions = MasterItems.get_cached()
 		local grenade_item = item_definitions[GRENADE_ITEM_NAME]
-		local base_unit_name = grenade_item.base_unit
+		local base_unit_name = Items.base_unit(grenade_item, breed_name)
 		local grenade_unit = Managers.state.unit_spawner:spawn_unit(base_unit_name)
 		local attach_node = grenade_item.wielded_attach_node
 		local node = Unit.node(unit, attach_node)

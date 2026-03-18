@@ -416,8 +416,8 @@ PackageSynchronizerHost._calculate_changed_inventory_items = function (self, pro
 end
 
 local function _find_modifier(modifier_list, modifier_key, modifier_id)
-	for i = 1, #modifier_list do
-		local modifier = modifier_list[i]
+	for ii = 1, #modifier_list do
+		local modifier = modifier_list[ii]
 
 		if modifier[modifier_key] == modifier_id then
 			return modifier
@@ -427,7 +427,7 @@ local function _find_modifier(modifier_list, modifier_key, modifier_id)
 	return false
 end
 
-local function _compare_modifier_list(modifier_list_a, modifier_list_b, idintifier_key, value_key)
+local function _compare_modifier_list(modifier_list_a, modifier_list_b, identifier_key, value_key)
 	if modifier_list_a == nil and modifier_list_b == nil then
 		return true
 	end
@@ -436,10 +436,10 @@ local function _compare_modifier_list(modifier_list_a, modifier_list_b, idintifi
 		return false
 	end
 
-	for i = 1, #modifier_list_a do
-		local modifier_a = modifier_list_a[i]
-		local modifier_a_id = modifier_a[idintifier_key]
-		local modifier_b = _find_modifier(modifier_list_b, idintifier_key, modifier_a_id)
+	for ii = 1, #modifier_list_a do
+		local modifier_a = modifier_list_a[ii]
+		local modifier_a_id = modifier_a[identifier_key]
+		local modifier_b = _find_modifier(modifier_list_b, identifier_key, modifier_a_id)
 		local modifier_a_value = modifier_a[value_key]
 		local modifier_b_value = modifier_b and modifier_b[value_key]
 
@@ -870,10 +870,9 @@ PackageSynchronizerHost._cleanup_owned_units = function (self, player)
 	end
 
 	local companion_spawner_extension = ScriptUnit.has_extension(player_unit, "companion_spawner_system")
-	local companion_unit = companion_spawner_extension and companion_spawner_extension:companion_unit()
 
 	for unit, _ in pairs(owned_units) do
-		if unit ~= player_unit and unit ~= companion_unit then
+		if unit ~= player_unit and not companion_spawner_extension:unit_is_companion(unit) then
 			unit_spawner_manager:mark_for_deletion(unit)
 		end
 	end

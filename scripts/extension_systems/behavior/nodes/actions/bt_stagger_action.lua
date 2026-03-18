@@ -20,7 +20,7 @@ local _disable_anim_driven_locomotion
 
 BtStaggerAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
-	local stagger_component = blackboard.stagger
+	local stagger_component = Blackboard.write_component(blackboard, "stagger")
 	local num_triggered_staggers = stagger_component.num_triggered_staggers
 
 	scratchpad.current_triggered_stagger = num_triggered_staggers
@@ -75,6 +75,13 @@ BtStaggerAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 	local stagger_type = stagger_component.type
 	local stagger_anims = action_data.stagger_anims[stagger_type]
 	local stagger_direction = stagger_component.direction:unbox()
+
+	if Vector3.length_squared(stagger_direction) == 0 then
+		stagger_direction = Vector3(0, 0, -1)
+
+		stagger_component.direction:store(stagger_direction)
+	end
+
 	local stagger_anim, stagger_rotation = self:_select_stagger_anim_and_rotation(unit, stagger_direction, stagger_anims, blackboard, action_data)
 
 	Unit.set_local_rotation(unit, 1, stagger_rotation)

@@ -19,6 +19,7 @@ local template_type_paths = {
 	[template_types.stamina] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/stamina_trait_templates",
 	[template_types.sway] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/sway_trait_templates",
 	[template_types.warp_charge] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/warp_charge_trait_templates",
+	[template_types.weapon_chain_lightning] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_chain_lightning_trait_templates",
 	[template_types.weapon_handling] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_handling_trait_templates",
 	[template_types.weapon_shout] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_shout_trait_templates",
 }

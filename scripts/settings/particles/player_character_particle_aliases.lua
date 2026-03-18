@@ -511,7 +511,7 @@ local particles = {
 				no_target = "content/fx/particles/weapons/force_staff/force_staff_chainlightning_attacking_link_01",
 			},
 			psyker_chain_lightning = {
-				high = "content/fx/particles/abilities/chainlightning/protectorate_chainlightning_bfg_01",
+				high = "content/fx/particles/abilities/chainlightning/protectorate_chainlightning_attack_looping_01",
 				low = "content/fx/particles/abilities/chainlightning/protectorate_chainlightning_attack_looping_01",
 				no_target = "content/fx/particles/abilities/chainlightning/protectorate_chainlightning_attack_looping_no_target",
 			},

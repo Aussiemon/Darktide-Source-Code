@@ -5,6 +5,7 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Explosion = require("scripts/utilities/attack/explosion")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local BtRenegadeTwinCaptainShieldDownAction = class("BtRenegadeTwinCaptainShieldDownAction", "BtNode")
 local Vo = require("scripts/utilities/vo")
 
@@ -122,7 +123,9 @@ BtRenegadeTwinCaptainShieldDownAction.run = function (self, unit, breed, blackbo
 
 				GameSession.set_game_object_field(game_session, game_object_id, "linked_object_id", other_twin_game_object_id)
 
-				scratchpad.global_effect_id = scratchpad.fx_system:start_template_effect(action_data.charge_effect_template, unit)
+				local charge_effect_template = EffectTemplates[action_data.charge_effect_template_name]
+
+				scratchpad.global_effect_id = scratchpad.fx_system:start_template_effect(charge_effect_template, unit)
 
 				local vo_event = action_data.vo_event
 

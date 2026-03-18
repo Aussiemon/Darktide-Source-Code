@@ -37,7 +37,7 @@ end
 local temp_ignore_list = {}
 
 NodeLayout._num_steps_to_start_recursive_internal = function (node_layout, node, ignore_list, step_count)
-	if node.type == "start" then
+	if node.type == "start" or node.type == "start_center" then
 		return true, 0
 	end
 
@@ -60,7 +60,7 @@ NodeLayout._num_steps_to_start_recursive_internal = function (node_layout, node,
 			local parent_node = NodeLayout.node_by_name(node_layout, parent_name)
 
 			if parent_node then
-				if parent_node.type == "start" then
+				if parent_node.type == "start" or parent_node.type == "start_center" then
 					return true, step_count
 				else
 					return NodeLayout._num_steps_to_start_recursive_internal(node_layout, parent_node, ignore_list, step_count)

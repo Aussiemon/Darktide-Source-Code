@@ -247,6 +247,9 @@ templates.weapon_trait_bespoke_combataxe_p3_power_bonus_scaled_on_stamina = {
 					stat_buffs.melee_power_level_modifier,
 				},
 			},
+			value_manipulation = function (value)
+				return value * 5 * 100
+			end,
 		},
 	},
 	buffs = {

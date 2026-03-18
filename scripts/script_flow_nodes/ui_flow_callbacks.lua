@@ -51,6 +51,10 @@ UIFlowCallbacks.player_material_fx = function (params)
 	return
 end
 
+UIFlowCallbacks.trigger_mission_giver_mission_info_vo = function (params)
+	return
+end
+
 UIFlowCallbacks.enable_script_component = function (params)
 	local guid = params.guid
 	local unit = params.unit

@@ -51,11 +51,11 @@ local scenegraph_definition = {
 		parent = "canvas",
 		vertical_alignment = "bottom",
 		size = {
-			430,
-			400,
+			0,
+			0,
 		},
 		position = {
-			-150,
+			-500,
 			-102,
 			3,
 		},

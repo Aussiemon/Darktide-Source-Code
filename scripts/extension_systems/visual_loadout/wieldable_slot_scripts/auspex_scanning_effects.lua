@@ -2,7 +2,6 @@
 
 local Action = require("scripts/utilities/action/action")
 local Component = require("scripts/utilities/component")
-local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local Scanning = require("scripts/utilities/scanning")
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local FX_SOURCE_NAME = "_speaker"

@@ -232,6 +232,15 @@ local elements = {
 			"in_mission",
 		},
 	},
+	{
+		class_name = "ConstantElementExpeditionContinue",
+		filename = "scripts/ui/constant_elements/elements/expedition_continue/constant_element_expedition_continue",
+		package = "packages/ui/constant_elements/expedition_continue/expedition_continue",
+		visibility_groups = {
+			"in_mission",
+			"default",
+		},
+	},
 }
 
 return elements

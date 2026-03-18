@@ -257,6 +257,14 @@ ExtensionSystemHolder.on_gameplay_post_init = function (self, level, themes)
 	end
 end
 
+ExtensionSystemHolder.on_location_setup = function (self)
+	for i, system in ipairs(self._systems) do
+		if system.on_location_setup then
+			system:on_location_setup()
+		end
+	end
+end
+
 ExtensionSystemHolder.is_init_ready = function (self)
 	local init_data = self._init_data
 
@@ -351,7 +359,7 @@ end
 
 ExtensionSystemHolder.destroy = function (self)
 	for _, system in ipairs(self._systems) do
-		system:destroy()
+		system:delete()
 	end
 end
 

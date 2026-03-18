@@ -41,9 +41,9 @@ MutatorManager._load_mutators = function (self, circumstance_name)
 			end
 		end
 	else
-		local circumstance_template = CircumstanceTemplates[circumstance_name]
+		local circumstance_template = circumstance_name and CircumstanceTemplates[circumstance_name]
 
-		mutators_to_load = circumstance_template.mutators
+		mutators_to_load = circumstance_template and circumstance_template.mutators
 	end
 
 	local is_server = self._is_server

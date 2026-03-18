@@ -102,7 +102,7 @@ PickupInteraction._use_charge = function (self, target_unit, interactor_unit)
 	if remaining_charges > 1 then
 		GameSession.set_game_object_field(game_session, game_object_id, "charges", remaining_charges - 1)
 		self:_interact_with(target_unit, interactor_session_id_or_nil)
-	else
+	elseif remaining_charges ~= -1 then
 		local interactee_extension = ScriptUnit.extension(target_unit, "interactee_system")
 
 		interactee_extension:set_used()
@@ -120,6 +120,26 @@ PickupInteraction._use_charge = function (self, target_unit, interactor_unit)
 end
 
 PickupInteraction.hud_block_text = function (self, interactor_unit, interactee_unit, target_node)
+	local player = Managers.state.player_unit_spawn:owner(interactor_unit)
+
+	if player then
+		local mechanism_manager = Managers.mechanism
+		local mechanism_name = mechanism_manager:mechanism_name()
+
+		if mechanism_name == "expedition" then
+			local game_mode_manager = Managers.state.game_mode
+			local game_mode = game_mode_manager:game_mode()
+
+			if game_mode:in_safe_zone() and game_mode:is_store_product(interactee_unit) then
+				local can_purchase_product, fail_reason = game_mode:can_purchase_product(interactee_unit, interactor_unit)
+
+				if not can_purchase_product then
+					return fail_reason
+				end
+			end
+		end
+	end
+
 	return PickupInteraction.super.hud_block_text(self, interactor_unit, interactee_unit, target_node)
 end
 

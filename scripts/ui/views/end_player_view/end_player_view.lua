@@ -9,8 +9,9 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewSettings = require("scripts/ui/views/end_player_view/end_player_view_settings")
 local ViewStyles = require("scripts/ui/views/end_player_view/end_player_view_styles")
+local Text = require("scripts/utilities/ui/text")
 local CARD_CAROUSEL_SCENEGRAPH_ID = "card_carousel"
-local CARD_TYPES = table.enum("xp", "levelUp", "salary", "weaponDrop", "weapon_unlock", "weapon", "havocOrder")
+local CARD_TYPES = table.enum("xp", "levelUp", "salary", "weaponDrop", "weapon_unlock", "weapon", "havocOrder", "expeditionStats")
 local item_type_group_lookup = UISettings.item_type_group_lookup
 local EndPlayerView = class("EndPlayerView", "BaseView")
 local animation_speed = 1
@@ -385,6 +386,17 @@ EndPlayerView._create_cards = function (self)
 					card_widgets[card_index] = widget
 				end
 			end
+		elseif card_type == CARD_TYPES.expeditionStats then
+			local reward = session_report.expedition_reward
+
+			if reward then
+				local widget = self:_create_card_widget(card_index + 1, card_type, reward)
+
+				if widget then
+					card_index = card_index + 1
+					card_widgets[card_index] = widget
+				end
+			end
 		elseif card_type == CARD_TYPES.havocOrder then
 			-- Nothing
 		else
@@ -490,6 +502,8 @@ EndPlayerView._create_card_widget = function (self, index, card_type, card_data)
 		blueprint_name = "weapon"
 	elseif card_type == CARD_TYPES.havocOrder then
 		blueprint_name = "havoc"
+	elseif card_type == CARD_TYPES.expeditionStats then
+		blueprint_name = "expedition"
 	else
 		return
 	end
@@ -859,6 +873,27 @@ EndPlayerView.update_weapon_values = function (self, added_exp, slot, widget)
 		local bar_progress = math.clamp(exp_progress, 0, 1)
 
 		bar_style.size[1] = bar_background_style.size[1] * bar_progress
+	end
+end
+
+EndPlayerView.update_expedition_progress = function (self, loot_collected_anim, all_unlock_progress_anim, widget)
+	if loot_collected_anim and widget.content.currency_text then
+		widget.content.currency_text = string.format("%s", Text.format_currency(math.floor(loot_collected_anim)))
+	end
+
+	if all_unlock_progress_anim then
+		for i = 1, #all_unlock_progress_anim do
+			local unlock_progress_anim = all_unlock_progress_anim[i]
+			local unlock_progress_data = widget.content.all_unlock_progress[i]
+			local progress_node = unlock_progress_data.progress_node
+			local limit = unlock_progress_data.limit
+			local key = unlock_progress_data.key
+			local progress_value = string.format("%s / %s", Text.format_currency(math.floor(unlock_progress_anim)), Text.format_currency(math.floor(limit)))
+
+			if widget.content["progress_value_" .. i] then
+				widget.content["progress_value_" .. i] = progress_value
+			end
+		end
 	end
 end
 

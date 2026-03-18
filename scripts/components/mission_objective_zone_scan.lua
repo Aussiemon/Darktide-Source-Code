@@ -6,10 +6,11 @@ MissionObjectiveZoneScan.init = function (self, unit)
 	local mission_objective_zone_extension = ScriptUnit.fetch_component_extension(unit, "mission_objective_zone_system")
 
 	if mission_objective_zone_extension then
+		local return_to_skull = self:get_data(unit, "return_to_skull")
 		local num_scannable_objects = self:get_data(unit, "num_scannable_objects")
 		local item_to_equip = self:get_data(unit, "item_to_equip")
 
-		mission_objective_zone_extension:setup_from_component(num_scannable_objects, item_to_equip)
+		mission_objective_zone_extension:setup_from_component(return_to_skull, num_scannable_objects, item_to_equip)
 	end
 end
 
@@ -52,6 +53,11 @@ MissionObjectiveZoneScan.component_data = {
 		ui_name = "Item to Equip (scanner, decoder...)",
 		ui_type = "resource",
 		value = "",
+	},
+	return_to_skull = {
+		ui_name = "Return to servo skull",
+		ui_type = "check_box",
+		value = true,
 	},
 	extensions = {
 		"MissionObjectiveZoneScanExtension",

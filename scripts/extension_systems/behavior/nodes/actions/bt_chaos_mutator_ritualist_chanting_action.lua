@@ -4,6 +4,7 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local Vo = require("scripts/utilities/vo")
 local BtChaosMutatorRitualistChantingAction = class("BtChaosMutatorRitualistChantingAction", "BtNode")
@@ -44,7 +45,8 @@ BtChaosMutatorRitualistChantingAction.enter = function (self, unit, breed, black
 		if not scratchpad.chanting_effect_id then
 			GameSession.set_game_object_field(game_session, game_object_id, "effect_template_variation_id", effect_template_variation_id)
 
-			local chanting_effect_id = fx_system:start_template_effect(action_data.effect_template, unit)
+			local effect_template = EffectTemplates[action_data.effect_template_name]
+			local chanting_effect_id = fx_system:start_template_effect(effect_template, unit)
 
 			scratchpad.chanting_effect_id = chanting_effect_id
 		end

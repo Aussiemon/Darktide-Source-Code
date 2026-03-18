@@ -1294,6 +1294,7 @@ BuffExtensionBase._proc_on_buff_event = function (self, template_name, buff_inst
 
 	if param_table then
 		param_table.template_name = template_name
+		param_table.template = buff_instance:template()
 		param_table.unit = self._unit
 
 		self:add_proc_event(proc_event_name, param_table)
@@ -1308,6 +1309,7 @@ BuffExtensionBase._proc_on_buff_event = function (self, template_name, buff_inst
 
 		if owner_param_table then
 			owner_param_table.template_name = template_name
+			owner_param_table.template = buff_instance:template()
 			owner_param_table.unit = self._unit
 
 			owner_buff_extension:add_proc_event(proc_event_name, owner_param_table)

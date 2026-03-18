@@ -164,7 +164,7 @@ OptionsView.cb_reset_category_to_default = function (self)
 			{
 				close_on_pressed = true,
 				text = "loc_popup_button_settings_reset_default",
-				callback = callback(function ()
+				callback = function ()
 					if reset_function then
 						reset_function()
 					else
@@ -183,7 +183,7 @@ OptionsView.cb_reset_category_to_default = function (self)
 					end
 
 					self._popup_id = nil
-				end),
+				end,
 			},
 			{
 				close_on_pressed = true,
@@ -210,7 +210,7 @@ OptionsView._restart_popup_info = function (self)
 			{
 				close_on_pressed = true,
 				text = "loc_confirm",
-				callback = callback(function ()
+				callback = function ()
 					self._popup_id = nil
 
 					local view_name = "options_view"
@@ -218,7 +218,7 @@ OptionsView._restart_popup_info = function (self)
 					self._require_restart = false
 
 					Managers.ui:close_view(view_name)
-				end),
+				end,
 			},
 		},
 	}

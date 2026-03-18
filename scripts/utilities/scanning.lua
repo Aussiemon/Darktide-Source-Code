@@ -3,17 +3,11 @@
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local Scanning = {}
 
-Scanning.get_scannable_units_position = function (scannable_unit, scannable_extension)
-	scannable_extension = scannable_extension or ScriptUnit.has_extension(scannable_unit, "mission_objective_zone_scannable_system")
-
-	return scannable_extension and scannable_extension:center_poisition() or POSITION_LOOKUP[scannable_unit]
-end
-
-Scanning.calculate_score = function (scannable_unit, first_person_component, scan_settings, scannable_extension)
+local function _calculate_score(scannable_unit, first_person_component, scan_settings, scannable_extension)
 	local rotation = first_person_component.rotation
 	local player_forward = rotation and Quaternion.forward(rotation)
 	local player_position = first_person_component.position
-	local scannable_unit_position = Scanning.get_scannable_units_position(scannable_unit, scannable_extension)
+	local scannable_unit_position = Scanning.scannable_units_position(scannable_unit, scannable_extension)
 	local from_player = scannable_unit_position - player_position
 	local distance = Vector3.length(from_player)
 	local near_distance = scan_settings.distance.near
@@ -30,6 +24,12 @@ Scanning.calculate_score = function (scannable_unit, first_person_component, sca
 	local total_score = angle_distribution * angle_score + distance_distribution * distance_score
 
 	return total_score, angle_score, distance_score, angle, distance
+end
+
+Scanning.scannable_units_position = function (scannable_unit, scannable_extension)
+	scannable_extension = scannable_extension or ScriptUnit.has_extension(scannable_unit, "mission_objective_zone_scannable_system")
+
+	return scannable_extension and scannable_extension:center_poisition() or POSITION_LOOKUP[scannable_unit]
 end
 
 local INDEX_DISTANCE = 2
@@ -71,7 +71,7 @@ Scanning.check_line_of_sight_to_unit = function (physics_world, first_person_com
 	local rotation = first_person_component.rotation
 	local look_forward = rotation and Quaternion.forward(rotation)
 	local look_right = rotation and Quaternion.right(rotation)
-	local scannable_unit_position = Scanning.get_scannable_units_position(scannable_unit, scannable_extension)
+	local scannable_unit_position = Scanning.scannable_units_position(scannable_unit, scannable_extension)
 	local to_scannable_unit = scannable_unit_position - look_pos
 	local to_scan_direction = Vector3.normalize(to_scannable_unit)
 	local check_angle_horizontal = scan_settings.angle.line_of_sight_check.horizontal
@@ -124,7 +124,7 @@ Scanning.find_scannable_unit = function (physics_world, first_person_component, 
 		local is_active = scannable_extension:is_active()
 
 		if is_active then
-			local total_score = Scanning.calculate_score(scannable_unit, first_person_component, scan_settings, scannable_extension)
+			local total_score = _calculate_score(scannable_unit, first_person_component, scan_settings, scannable_extension)
 
 			if best_score < total_score then
 				best_score = total_score
@@ -153,7 +153,7 @@ Scanning.calculate_current_scores = function (scanning_compomnent, weapon_action
 	if is_active and line_of_sight then
 		total_score, angle_score, distance_score, angle, distance = 1, 1, 1, 0, 0
 	elseif scan_settings and scannable_unit then
-		total_score, angle_score, distance_score, angle, distance = Scanning.calculate_score(scannable_unit, first_person_component, scan_settings)
+		total_score, angle_score, distance_score, angle, distance = _calculate_score(scannable_unit, first_person_component, scan_settings)
 	end
 
 	return is_active, line_of_sight, total_score, angle_score, distance_score, scannable_unit, angle, distance
@@ -184,10 +184,6 @@ Scanning.scan_confirm_progression = function (scanning_compomnent, weapon_action
 	end
 
 	return nil
-end
-
-Scanning.calculate_color_lerp = function (lerp_value)
-	return math.ilerp(0.25, 1, lerp_value)
 end
 
 Scanning.has_active_scanning_zone = function ()

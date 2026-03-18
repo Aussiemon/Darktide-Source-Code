@@ -5,6 +5,7 @@ local HudElementMissionObjectivePopupSettings = require("scripts/ui/hud/elements
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
+local ColorUtilities = require("scripts/utilities/ui/colors")
 local HudElementMissionObjectivePopup = class("HudElementMissionObjectivePopup", "HudElementBase")
 
 HudElementMissionObjectivePopup.init = function (self, parent, draw_layer, start_scale, definitions)
@@ -64,6 +65,18 @@ HudElementMissionObjectivePopup._present_popup = function (self, popup_data)
 
 	local alert = popup_data.alert
 
+	widget.style.title_text.text_color = alert and {
+		255,
+		255,
+		151,
+		29,
+	} or ColorUtilities.clone(UIHudSettings.color_tint_main_1)
+	widget.style.description_text.text_color = alert and {
+		255,
+		255,
+		151,
+		29,
+	} or ColorUtilities.clone(UIHudSettings.color_tint_main_1)
 	widget.style.frame.color = alert and {
 		255,
 		255,
@@ -108,7 +121,14 @@ HudElementMissionObjectivePopup.event_mission_objective_start = function (self, 
 	local alert = objective:ui_state() == "alert"
 	local description_text = objective:header()
 	local icon = objective:icon()
-	local title_text = self:_localize(alert and "loc_objective_op_train_alert_header" or "loc_hud_mission_objective_popup_title_start")
+	local title_text = ""
+
+	if objective:title_text() and objective:title_text() ~= "" then
+		title_text = objective:title_text()
+	else
+		title_text = alert and self:_localize("loc_objective_op_train_alert_header") or self:_localize("loc_hud_mission_objective_popup_title_start")
+	end
+
 	local widget = self._widgets_by_name.mission_popup
 	local popup_data = {
 		animation_event = "popup_start",
@@ -118,7 +138,7 @@ HudElementMissionObjectivePopup.event_mission_objective_start = function (self, 
 		title_text = title_text,
 		description_text = description_text,
 		icon = icon,
-		sound_event = UISoundEvents.mission_objective_popup_new,
+		sound_event = Managers.state.game_mode:game_mode_name() == "expedition" and UISoundEvents.mission_objective_popup_new_expeditions or UISoundEvents.mission_objective_popup_new,
 	}
 
 	if self._popup_animation_id then
@@ -128,7 +148,7 @@ HudElementMissionObjectivePopup.event_mission_objective_start = function (self, 
 	end
 end
 
-HudElementMissionObjectivePopup.event_show_live_event_notification = function (self, event_title, event_subtitle, ui_sound_event, style)
+HudElementMissionObjectivePopup.on_event_show_objective_popup = function (self, event_title, event_subtitle, ui_sound_event, style)
 	local widget = self._widgets_by_name.mission_popup
 	local popup_data = {
 		animation_event = "popup_start",

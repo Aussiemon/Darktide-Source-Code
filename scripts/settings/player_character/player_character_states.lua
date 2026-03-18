@@ -31,6 +31,7 @@ local PlayerCharacterStateSprinting = require("scripts/extension_systems/charact
 local PlayerCharacterStateStunned = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_stunned")
 local PlayerCharacterStateWalking = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_walking")
 local PlayerCharacterStateWarpGrabbed = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_warp_grabbed")
+local PlayerCharacterStateVortexGrabbed = require("scripts/extension_systems/character_state_machine/character_states/player_character_state_vortex_grabbed")
 local player_character_states = {
 	catapulted = PlayerCharacterStateCatapulted,
 	consumed = PlayerCharacterStateConsumed,
@@ -63,6 +64,7 @@ local player_character_states = {
 	stunned = PlayerCharacterStateStunned,
 	walking = PlayerCharacterStateWalking,
 	warp_grabbed = PlayerCharacterStateWarpGrabbed,
+	vortex_grabbed = PlayerCharacterStateVortexGrabbed,
 }
 
 return settings("PlayerCharacterStates", player_character_states)

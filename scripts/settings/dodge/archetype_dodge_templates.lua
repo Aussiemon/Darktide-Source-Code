@@ -112,6 +112,43 @@ local speed_curve_ogryn = {
 		speed = ogryn_average_speed * 0.75,
 	},
 }
+local broker_distance = 2.75
+local broker_time = 0.4
+local broker_average_speed = broker_distance / broker_time
+local broker_speed_curve = {
+	{
+		time_in_dodge = broker_time * 0,
+		speed = broker_average_speed * 1.5,
+	},
+	{
+		time_in_dodge = broker_time * 0.4,
+		speed = broker_average_speed * 1.5,
+	},
+	{
+		time_in_dodge = broker_time * 0.45,
+		speed = broker_average_speed * 1.25,
+	},
+	{
+		time_in_dodge = broker_time * 0.6,
+		speed = broker_average_speed * 1,
+	},
+	{
+		time_in_dodge = broker_time * 0.7,
+		speed = broker_average_speed * 0.9,
+	},
+	{
+		time_in_dodge = broker_time * 0.85,
+		speed = broker_average_speed * 0.675,
+	},
+	{
+		time_in_dodge = broker_time * 0.9,
+		speed = broker_average_speed * 0.495,
+	},
+	{
+		time_in_dodge = broker_time * 1,
+		speed = broker_average_speed * 0.45,
+	},
+}
 
 archetype_dodge_templates.default = {
 	base_distance = 2.5,
@@ -171,7 +208,7 @@ archetype_dodge_templates.broker = {
 	dodge_linger_time = 0.25,
 	minimum_dodge_input = 0.25,
 	stop_threshold = 0.25,
-	dodge_speed_at_times = default_speed_curve,
+	dodge_speed_at_times = broker_speed_curve,
 }
 
 return settings("ArchetypeDodgeTemplates", archetype_dodge_templates)

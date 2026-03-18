@@ -1,5 +1,7 @@
 ﻿-- chunkname: @scripts/ui/views/cosmetics_inspect_view/cosmetics_inspect_view.lua
 
+require("scripts/ui/views/base_view")
+
 local Definitions = require("scripts/ui/views/cosmetics_inspect_view/cosmetics_inspect_view_definitions")
 local CosmeticsInspectViewSettings = require("scripts/ui/views/cosmetics_inspect_view/cosmetics_inspect_view_settings")
 local Items = require("scripts/utilities/items")
@@ -38,6 +40,7 @@ CosmeticsInspectView.init = function (self, settings, context)
 
 	if context.bundle then
 		self._bundle_data = {
+			image_promise = context.bundle.image_promise,
 			image = context.bundle.image,
 			title = context.bundle.title,
 			description = context.bundle.description,
@@ -788,6 +791,32 @@ CosmeticsInspectView._destroy_description_grid = function (self)
 	end
 end
 
+local BUNDLE_BACKGROUND_SIZE = {
+	1200,
+	1080,
+}
+
+CosmeticsInspectView._adjust_background_image_size = function (self, bundle_background_widget, texture_data)
+	bundle_background_widget.style.bundle.material_values.texture_map = texture_data.texture
+
+	local image_size = {
+		texture_data.width,
+		texture_data.height,
+	}
+	local image_ratio = image_size[2] / image_size[1]
+
+	if image_ratio < 0.6 then
+		bundle_background_widget.style.bundle.size = {
+			BUNDLE_BACKGROUND_SIZE[1],
+			image_ratio * BUNDLE_BACKGROUND_SIZE[1],
+		}
+
+		return
+	end
+
+	bundle_background_widget.style.bundle.size = BUNDLE_BACKGROUND_SIZE
+end
+
 CosmeticsInspectView._start_preview_item = function (self)
 	local item = self._preview_item
 
@@ -907,16 +936,12 @@ CosmeticsInspectView._start_preview_item = function (self)
 
 		self:_setup_item_description(description)
 
-		local texture_data = self._bundle_data.image
-
-		if texture_data then
-			local url = texture_data.url
-
-			self._image_url = url
-
-			Managers.url_loader:load_texture(url)
-
-			self._widgets_by_name.bundle_background.style.bundle.material_values.texture_map = texture_data.texture
+		if self._bundle_data.image_promise then
+			self._bundle_data.image_promise:next(function (data)
+				self:_adjust_background_image_size(self._widgets_by_name.bundle_background, data)
+			end, function (error)
+				Log.error("CosmeticsInspectView", "error loading bundle image '%s'", tostring(error))
+			end)
 		end
 
 		local title_item_data = {
@@ -1308,7 +1333,7 @@ end
 CosmeticsInspectView._setup_background_world = function (self)
 	local profile = self._preview_profile or self._mannequin_profile
 	local archetype = profile and profile.archetype
-	local breed_name = profile and archetype.breed or "human"
+	local breed_name = archetype and (archetype.ui_breed or archetype.breed) or "human"
 	local default_camera_event_id = "event_register_cosmetics_preview_default_camera_" .. breed_name
 
 	self[default_camera_event_id] = function (instance, camera_unit)

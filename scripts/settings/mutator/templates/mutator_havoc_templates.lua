@@ -26,6 +26,12 @@ local mutator_templates = {
 	},
 	mutator_corrupted_enemies = {
 		class = "scripts/managers/mutator/mutators/mutator_minion_nurgle_blessing",
+		ui = {
+			category_name = "loc_expedition_map_heretic_intel",
+			description = "loc_expeditions_modifier_enemy_blight_spreads_description",
+			display_name = "loc_expeditions_modifier_enemy_blight_spreads",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_nurgle",
+		},
 		random_spawn_buff_templates = {
 			buffs = {
 				"havoc_corrupted_enemies",
@@ -36,6 +42,12 @@ local mutator_templates = {
 	mutator_rotten_armor = {
 		class = "scripts/managers/mutator/mutators/mutator_minion_visual_override",
 		template_name = "rotten_armor",
+		ui = {
+			category_name = "loc_expedition_map_heretic_intel",
+			description = "loc_expeditions_modifier_enemy_rotten_armour_description",
+			display_name = "loc_expeditions_modifier_enemy_rotten_armour",
+			icon = "content/ui/materials/icons/circumstances/havoc/havoc_mutator_nurgle",
+		},
 		random_spawn_buff_templates = {
 			buffs = {
 				"mutator_rotten_armor",

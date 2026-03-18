@@ -229,6 +229,9 @@ talent_settings.broker = {
 	broker_passive_increased_ranged_dodges = {
 		extra_consecutive_dodges = 1,
 	},
+	broker_passive_increased_dodges = {
+		extra_consecutive_dodges = 1,
+	},
 	broker_passive_close_ranged_damage = {
 		damage_far = 0.1,
 		damage_near = 0.25,
@@ -257,6 +260,9 @@ talent_settings.broker = {
 	broker_passive_improved_dodges = {
 		dodge_linger_time = 0.15,
 		dodge_speed_multiplier = 1.25,
+	},
+	broker_passive_longer_dodges = {
+		dodge_distance_modifier = 0.5,
 	},
 	broker_passive_dodge_melee_on_slide = {},
 	broker_passive_restore_toughness_on_close_ranged_kill = {
@@ -389,7 +395,15 @@ talent_settings.broker = {
 		range = DamageSettings.ranged_close,
 	},
 	broker_passive_toughness_on_toxined_kill = {
-		toughness_replenish = 0.15,
+		toughness_replenish = 0.05,
+		range = DamageSettings.ranged_close,
+	},
+	broker_passive_replenish_toughness_while_toxined_enemies_in_proximity = {
+		check_interval = 0.2,
+		interval = 1,
+		max_enemies = 10,
+		range = 15,
+		toughness_amount = 0.01,
 	},
 	broker_passive_increased_toxin_damage = {
 		increase = 0.1,
@@ -418,6 +432,11 @@ talent_settings.broker = {
 	broker_passive_stimm_cd_on_kill = {
 		restore = 0.01,
 		restore_toxined = 0.02,
+	},
+	broker_passive_crit_grants_damage = {
+		critical_chance = 0.01,
+		max_stacks = 30,
+		melee_damage = 0.005,
 	},
 	broker_keystone_vultures_mark_on_kill = {
 		crit_chance = 0.05,

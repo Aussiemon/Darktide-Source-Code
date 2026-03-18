@@ -147,7 +147,7 @@ local material_overrides = {
 	hair_blonde_04 = {
 		texture_overrides = {
 			hair_color_gradient = {
-				resource = "content/textures/colors/hair_color_blonde_04",
+				resource = "content/textures/colors/hair_color_blonde_03",
 			},
 		},
 		property_overrides = {

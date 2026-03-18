@@ -37,6 +37,7 @@ local breed_data = {
 	game_object_type = "minion_cultist_mutant",
 	half_extent_forward = 0.5,
 	half_extent_right = 0.5,
+	heat = 0.2,
 	hit_reacts_min_damage = 300,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	look_at_distance = 20,

@@ -25,6 +25,16 @@ local zones = {
 			mission_vote = "content/ui/textures/icons/zones/zone_operations",
 		},
 	},
+	expeditions = {
+		name = "loc_zone_expeditions",
+		name_short = "loc_zone_name_expeditions_short",
+		not_available_on_mission_board = true,
+		not_needed_for_penance = true,
+		images = {
+			default = "content/ui/textures/icons/zones/zone_deadside",
+			mission_vote = "content/ui/textures/icons/zones/zone_deadside",
+		},
+	},
 	hub = {
 		name = "loc_zone_hub",
 		not_available_on_mission_board = true,

@@ -3,6 +3,7 @@
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local Health = require("scripts/utilities/health")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local BtBeastOfNurgleConsumeMinionAction = class("BtBeastOfNurgleConsumeMinionAction", "BtNode")
@@ -259,7 +260,7 @@ BtBeastOfNurgleConsumeMinionAction._rotate_towards_target_unit = function (self,
 end
 
 BtBeastOfNurgleConsumeMinionAction._start_effect_template = function (self, unit, scratchpad, action_data)
-	local effect_template = action_data.effect_template
+	local effect_template = EffectTemplates[action_data.effect_template_name]
 	local global_effect_id = scratchpad.fx_system:start_template_effect(effect_template, unit)
 
 	scratchpad.global_effect_id = global_effect_id

@@ -12,6 +12,7 @@ MinigameBalance.init = function (self, unit, is_server, seed)
 
 	self._stage_amount = 1
 	self._current_stage = 1
+	self._manual_duration = nil
 	self._position = {
 		x = 0,
 		y = 0,
@@ -68,8 +69,8 @@ MinigameBalance.decode_interrupt = function (self)
 	end
 end
 
-MinigameBalance.start = function (self, player)
-	MinigameBalance.super.start(self, player)
+MinigameBalance.start = function (self, player, send_to_self_client)
+	MinigameBalance.super.start(self, player, send_to_self_client)
 
 	self._moved_time = Managers.time:time("gameplay")
 
@@ -218,7 +219,7 @@ end
 MinigameBalance.progressing = function (self)
 	local pos = self._position
 
-	return math.sqrt(pos.x * pos.x + pos.y * pos.y) < 1
+	return self._manual_duration ~= nil or math.sqrt(pos.x * pos.x + pos.y * pos.y) < 1
 end
 
 MinigameBalance.distance = function (self)

@@ -89,6 +89,14 @@ HudElementBase._stop_animation = function (self, animation_id)
 	ui_sequence_animator:stop_animation(animation_id)
 end
 
+HudElementBase._stop_animation_if_active = function (self, animation_id)
+	local ui_sequence_animator = self._ui_sequence_animator
+
+	if ui_sequence_animator:is_animation_active(animation_id) then
+		ui_sequence_animator:stop_animation(animation_id)
+	end
+end
+
 HudElementBase._is_animation_active = function (self, animation_sequence_name)
 	return self._ui_sequence_animator:is_animation_active(animation_sequence_name)
 end

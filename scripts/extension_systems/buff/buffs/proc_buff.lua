@@ -164,7 +164,7 @@ ProcBuff._can_activate = function (self, t)
 
 	if has_cooldown then
 		local is_active = self:_is_proc_active(t) and not self._template.allow_proc_while_active
-		local is_cooling_down = self:_is_cooling_down(t)
+		local is_cooling_down = self:_is_cooling_down(t) and not self._template.allow_proc_while_cooling_down
 
 		return not is_active and not is_cooling_down
 	end

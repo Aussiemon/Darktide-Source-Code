@@ -84,14 +84,16 @@ MutatorSpawnerNode.trigger_spawn = function (self, raycast_object, spawn_positio
 		end
 
 		if self._use_raycast then
-			local hit, hit_position, _, normal, _ = Raycast.cast(raycast_object, spawn_location, Vector3.down(), RAY_LENGTH)
+			local hit, hit_position, _, normal, _ = Raycast.cast(raycast_object, Vector3.add(spawn_location, Vector3.multiply(Vector3.up(), 0.15)), Vector3.down(), RAY_LENGTH + 0.15)
 
 			if hit then
-				spawn_location = hit_position
+				spawn_location = Vector3.subtract(hit_position, Vector3.multiply(normal, 0.05))
 
-				local normal_quat = Quaternion.axis_angle(normal, 0)
+				local matrix4x4 = Matrix4x4.identity()
 
-				spawn_rotation = Quaternion.multiply(spawn_rotation, normal_quat)
+				Matrix4x4.set_up(matrix4x4, normal)
+
+				spawn_rotation = Quaternion.from_matrix4x4(matrix4x4)
 				did_hit = true
 			end
 		end
@@ -106,7 +108,7 @@ MutatorSpawnerNode.trigger_spawn = function (self, raycast_object, spawn_positio
 	end
 end
 
-MutatorSpawnerNode._do_spawn = function (self, spawn_position, ahead_target_unit, spawn_rotation, spawn_scale)
+MutatorSpawnerNode._do_spawn = function (self, spawn_position, ahead_target_unit, spawn_rotation, spawn_scale, optional_level_size)
 	return
 end
 

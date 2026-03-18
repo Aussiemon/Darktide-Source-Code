@@ -76,6 +76,19 @@ local function _respawn_loadout_chest(scenario_system, step_data)
 	step_data.loadout_unit = unit_spawner:spawn_network_unit(unit_name, template_name, position, rotation)
 end
 
+ShootingRangeSteps.sr_unperceivable_loop = {
+	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		if not ALIVE[player.player_unit] then
+			return false
+		end
+
+		if not scenario_system:has_scenario_buff(player.player_unit, "tg_player_unperceivable") then
+			scenario_system:add_scenario_buff(player.player_unit, "tg_player_unperceivable")
+		end
+
+		return false
+	end,
+}
 ShootingRangeSteps.chest_loop = {
 	events = {
 		"shooting_range_chest_interact",
@@ -293,7 +306,6 @@ ShootingRangeSteps.enemies_loop = {
 
 					spawn_data.was_unlocked = true
 					spawn_data.unit = nil
-					spawned_unit = nil
 
 					break
 				end
@@ -336,8 +348,6 @@ ShootingRangeSteps.weak_enemies_loop = {
 			local t = FixedFrame.get_latest_fixed_time()
 
 			reset_enemies(scenario_system, "chaos_newly_infected", "weak_enemies", step_data.enemies, t)
-		elseif event_name == "aggro_weak_enemies" then
-			-- Nothing
 		end
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
@@ -357,8 +367,6 @@ ShootingRangeSteps.medium_enemies_loop = {
 			local t = FixedFrame.get_latest_fixed_time()
 
 			reset_enemies(scenario_system, "renegade_melee", "medium_enemies", step_data.enemies, t)
-		elseif event_name == "aggro_medium_enemies" then
-			-- Nothing
 		end
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
@@ -378,8 +386,6 @@ ShootingRangeSteps.heavy_enemies_loop = {
 			local t = FixedFrame.get_latest_fixed_time()
 
 			reset_enemies(scenario_system, "chaos_ogryn_executor", "heavy_enemies", step_data.enemies, t)
-		elseif event_name == "aggro_heavy_enemies" then
-			-- Nothing
 		end
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)

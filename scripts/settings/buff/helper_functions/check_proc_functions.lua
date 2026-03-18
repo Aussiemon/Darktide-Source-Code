@@ -387,18 +387,18 @@ CheckProcFunctions.on_first_target_melee_hit = function (params, template_data, 
 	return target_number == 1
 end
 
-CheckProcFunctions.on_multiple_melee_hit = function (params, template_data, template_context, t)
-	if not CheckProcFunctions.on_melee_hit(params, template_data, template_context, t) then
-		return false
-	end
-
+CheckProcFunctions.on_multiple_hit = function (params, template_data, template_context, t)
 	local template_override_data = template_context.template_override_data
 	local template = template_context.template
 	local buff_data = template_override_data and template_override_data.buff_data or template_data.buff_data or template.buff_data
 	local required_num_hits = buff_data.required_num_hits
 	local target_number = params.target_number
 
-	return target_number and required_num_hits <= target_number
+	return target_number and required_num_hits <= target_number or false
+end
+
+CheckProcFunctions.on_multiple_melee_hit = function (params, template_data, template_context, t)
+	return CheckProcFunctions.on_melee_hit(params, template_data, template_context, t) and CheckProcFunctions.on_multiple_hit(params, template_data, template_context, t)
 end
 
 CheckProcFunctions.on_ranged_crit_hit = function (params, template_data, template_context, t)
@@ -440,6 +440,10 @@ end
 
 CheckProcFunctions.on_damaging_hit = function (params, template_data, template_context, t)
 	return params.damage > 0
+end
+
+CheckProcFunctions.on_damaging_attack_result = function (params, template_data, template_context, t)
+	return params.damage > 0 and params.attack_result == attack_results.damaged
 end
 
 CheckProcFunctions.on_weakspot_hit = function (params, template_data, template_context, t)

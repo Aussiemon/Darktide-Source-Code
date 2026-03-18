@@ -36,6 +36,7 @@ local breed_data = {
 	game_object_type = "minion_sniper",
 	good_last_los_distance = 8,
 	has_direct_ragdoll_flow_event = true,
+	heat = 0.2,
 	ignore_detection_los_modifiers = true,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	navigation_propagation_box_extent = 200,
@@ -156,13 +157,14 @@ local breed_data = {
 	},
 	aim_config = {
 		distance = 5,
+		fallback_target_node = "enemy_aim_target_03",
 		lean_variable_modifier = -0.2,
 		lean_variable_name = "lean",
 		lerp_speed = 250,
 		node = "j_neck",
 		require_line_of_sight = true,
 		target = "head_aim_target",
-		target_node = "enemy_aim_target_03",
+		target_node = "j_neck",
 	},
 	smart_object_template = SmartObjectSettings.templates.renegade,
 	nav_tag_allowed_layers = {

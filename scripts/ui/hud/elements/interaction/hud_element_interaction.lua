@@ -23,6 +23,10 @@ HudElementInteraction._set_event_popup_visibility = function (self, visible)
 	self._widgets_by_name.event_background.content.visible = visible
 end
 
+HudElementInteraction._set_extra_info_popup_visibility = function (self, visible)
+	self._widgets_by_name.extra_info_background.content.visible = visible
+end
+
 HudElementInteraction.update = function (self, dt, t, ui_renderer, render_settings, input_service)
 	if self._scan_delay_duration > 0 then
 		self._scan_delay_duration = self._scan_delay_duration - dt
@@ -224,7 +228,6 @@ HudElementInteraction._update_can_interact_target = function (self)
 
 		self._widgets_by_name.background.content.use_minimal_presentation = self._use_minimal_presentation
 		self._widgets_by_name.frame.content.use_minimal_presentation = self._use_minimal_presentation
-		self._widgets_by_name.secondary_interact_text.content.text = ""
 
 		self:_update_tag_input_information(interactee_unit)
 
@@ -299,19 +302,10 @@ HudElementInteraction._update_interaction_input_text = function (self, interacte
 	local input_action_text = interactee_extension:action_text()
 	local interaction_input = interactee_extension:interaction_input() or "interact_pressed"
 	local interaction_input_alias_key = _get_alias_key(interaction_input)
+	local input_text_interact = _get_input_text(interaction_input_alias_key, input_action_text or "n/a", hold_required)
 	local widgets_by_name = self._widgets_by_name
 
-	widgets_by_name.interact_text.content.text = _get_input_text(interaction_input_alias_key, input_action_text or "n/a", hold_required)
-
-	local secondary_input_action_text = interactee_extension:secondary_action_text()
-	local secondary_interaction_input = interactee_extension:secondary_interaction_input() or "interact_pressed"
-	local secondary_interaction_input_alias_key = _get_alias_key(secondary_interaction_input)
-
-	if secondary_input_action_text and secondary_interaction_input then
-		widgets_by_name.secondary_interact_text.content.text = _get_input_text(secondary_interaction_input_alias_key, secondary_input_action_text or "n/a", hold_required)
-	else
-		widgets_by_name.secondary_interact_text.content.text = ""
-	end
+	widgets_by_name.interact_text.content.text = input_text_interact
 end
 
 HudElementInteraction._cb_world_markers_list_request = function (self, marker_list)
@@ -442,6 +436,14 @@ HudElementInteraction._update_target_interaction_size = function (self, dt, t, u
 	}
 	widgets_by_name.background.style.input_background.size[2] = interaction_height
 	widgets_by_name.background.style.input_background_slim.size[2] = interaction_height
+
+	local extra_info_text = widgets_by_name.extra_info_background.content.text
+	local extra_info_style = widgets_by_name.extra_info_background.style.text
+	local _, extra_info_description_height = self:_text_size(ui_renderer, extra_info_text, extra_info_style, description_max_size)
+
+	extra_info_description_height = extra_info_description_height + (extra_info_description_height > 0 and edge_spacing[2] * 2 or 0)
+
+	self:_set_scenegraph_size("extra_info_background", nil, extra_info_description_height)
 end
 
 HudElementInteraction._update_target_interaction_animation = function (self, dt, t)
@@ -525,7 +527,7 @@ HudElementInteraction._setup_interaction_information = function (self, interacte
 	local interaction_input = interactee_extension:interaction_input() or "interact_pressed"
 	local interaction_input_alias_key = _get_alias_key(interaction_input)
 	local input_text_interact = _get_input_text(interaction_input_alias_key, input_action_text or "n/a", hold_required)
-	local description_text, hud_description, hud_description_context
+	local description_text, hud_description, hud_description_context, extra_description, hud_extra_description, hud_extra_description_localized
 
 	if not use_minimal_presentation then
 		local interactee_player = Managers.player:player_by_unit(interactee_unit)
@@ -544,6 +546,14 @@ HudElementInteraction._setup_interaction_information = function (self, interacte
 			else
 				description_text = Localize(hud_description)
 			end
+
+			hud_extra_description, hud_extra_description_localized = interactor_extension:hud_extra_description()
+
+			if hud_extra_description_localized then
+				extra_description = hud_extra_description_localized
+			elseif hud_extra_description then
+				extra_description = Localize(hud_extra_description)
+			end
 		end
 	else
 		description_text = ""
@@ -561,6 +571,12 @@ HudElementInteraction._setup_interaction_information = function (self, interacte
 			widgets_by_name.interact_text.content.text = Localize(input_block_text)
 		end
 	end
+
+	if extra_description then
+		widgets_by_name.extra_info_background.content.text = extra_description
+	end
+
+	self:_set_extra_info_popup_visibility(extra_description ~= nil)
 
 	widgets_by_name.description_text.content.text = description_text
 	widgets_by_name.type_description_text.content.text = ""

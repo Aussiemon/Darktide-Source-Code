@@ -42,6 +42,7 @@ local categories = {
 	"Equipment",
 	"Error",
 	"Event",
+	"Expeditions",
 	"Explosion",
 	"Feature Info",
 	"FGRL",
@@ -509,8 +510,8 @@ params.throttle_fps = {
 	category = "Framerate",
 	user_setting = false,
 	value = 0,
-	on_value_set = function (new_value, old_value)
-		Application.set_time_step_policy("throttle", new_value)
+	on_value_set = function ()
+		Managers.frame_rate:refresh()
 	end,
 }
 params.debug_pickup_picker_selected_name = {
@@ -742,6 +743,7 @@ params.physics_debug_filter = {
 		"filter_player_mover",
 		"filter_player_ping_target_selection",
 		"filter_ray_aim_assist",
+		"filter_ray_aim_assist_line_of_sight",
 		"filter_simple_geometry",
 	},
 	on_value_set = function (new_value, old_value)
@@ -830,10 +832,7 @@ params.character_profile_selector = {
 		return value
 	end,
 	options_function = function ()
-		local options = {
-			false,
-			"Backend Profile",
-		}
+		local options = {}
 
 		if Managers.backend:authenticated() then
 			Managers.data_service.profiles:fetch_all_backend_profiles():next(function (profile_data)
@@ -846,9 +845,11 @@ params.character_profile_selector = {
 						if profile then
 							local character_id = profile.character_id
 
-							table.insert(options, 3, character_id)
+							table.insert(options, 1, character_id)
 						end
 					end
+				elseif not profiles or #profiles == 0 then
+					table.insert(options, 1, false)
 				end
 
 				if profile_data.selected_profile then
@@ -857,6 +858,8 @@ params.character_profile_selector = {
 			end):catch(function ()
 				return
 			end)
+		else
+			table.insert(options, 1, false)
 		end
 
 		local ProfileUtils = require("scripts/utilities/profile_utils")
@@ -872,10 +875,7 @@ params.character_profile_selector = {
 	options_texts_function = function ()
 		local MasterItems = require("scripts/backend/master_items")
 		local ProfileUtils = require("scripts/utilities/profile_utils")
-		local options_texts = {
-			"false",
-			"Backend Profile",
-		}
+		local options_texts = {}
 
 		if Managers.backend:authenticated() then
 			Managers.data_service.profiles:fetch_all_backend_profiles():next(function (profile_data)
@@ -892,11 +892,17 @@ params.character_profile_selector = {
 							local level = profile.current_level and tostring(profile.current_level) or "n/a"
 							local option_text = string.format("%s - %s (%s)", archetype_name_pretty, character_name, level)
 
-							table.insert(options_texts, 3, option_text)
+							table.insert(options_texts, 1, option_text)
 						end
 					end
+				elseif not profiles or #profiles == 0 then
+					table.insert(options_texts, 1, "Backend profile")
 				end
+			end):catch(function ()
+				return
 			end)
+		else
+			table.insert(options_texts, 1, "Backend profile")
 		end
 
 		local local_profiles = ProfileUtils.local_profiles(MasterItems.get_cached())
@@ -963,7 +969,7 @@ params.character_profile_selector = {
 					if is_server then
 						local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
 
-						profile_synchronizer_host:profile_changed_debug_local_character_profile(peer_id, local_player_id, new_value)
+						profile_synchronizer_host:notify_profile_changed_debug_local_character_profile(peer_id, local_player_id, new_value)
 					else
 						local channel = Managers.connection:host_channel()
 
@@ -972,6 +978,48 @@ params.character_profile_selector = {
 				end
 			end)
 		end
+	end,
+	options_filter_function = function (value, text)
+		local selected_filter = DevParameters.character_profile_selector_filter
+		local show_all = selected_filter == "All"
+
+		if show_all then
+			return true
+		end
+
+		local show_only_backend = selected_filter == "Backend"
+
+		if show_only_backend then
+			return math.is_uuid(value)
+		end
+
+		return string.find(string.lower(text), selected_filter) and not math.is_uuid(value)
+	end,
+}
+params.character_profile_selector_filter = {
+	category = "Player Character",
+	value = "All",
+	options_function = function ()
+		local ArchetypeSettings = require("scripts/settings/archetype/archetype_settings")
+		local selection_order = ArchetypeSettings.archetype_ui_selection_order
+		local options = {
+			"All",
+			"Backend",
+		}
+
+		for ii = 1, #selection_order do
+			local archetype_name = selection_order[ii]
+
+			options[#options + 1] = archetype_name
+		end
+
+		local selected_filter = DevParameters.character_profile_selector_filter
+
+		if not table.find(options, selected_filter) then
+			ParameterResolver.set_dev_parameter("character_profile_selector_filter", "All")
+		end
+
+		return options
 	end,
 }
 params.debug_character_interpolated_fixed_frame_movement = {
@@ -1800,7 +1848,7 @@ params.debug_rendering = {
 	on_value_set = function (new_value)
 		Application.console_command("renderer", "settings", "debug_rendering", new_value and "true" or "false")
 
-		local options = params.renderer_settings.options
+		local options = params.debug_rendering.options
 
 		for i = 2, #options do
 			local setting_name = options[i]
@@ -1898,6 +1946,18 @@ params.debug_nav_tag_volume_creation_times = {
 	value = false,
 }
 params.debug_adapt_speed = {
+	category = "Navigation",
+	value = false,
+}
+params.debug_flying_navigation = {
+	category = "Navigation",
+	value = false,
+}
+params.debug_flying_navmesh = {
+	category = "Navigation",
+	value = false,
+}
+params.debug_navigation_svo_generation = {
 	category = "Navigation",
 	value = false,
 }
@@ -2046,10 +2106,6 @@ params.debug_luggable_synchronizer = {
 	category = "Mission Objectives",
 	value = false,
 }
-params.debug_show_player_wallets = {
-	category = "Mission Objectives",
-	value = false,
-}
 params.use_free_flight_camera_for_bone_lod = {
 	category = "Animation",
 	value = false,
@@ -2059,6 +2115,10 @@ params.debug_bone_lod_radius = {
 	value = false,
 }
 params.debug_skeleton = {
+	category = "Animation",
+	value = false,
+}
+params.skip_triggering_non_existing_player_anim_events = {
 	category = "Animation",
 	value = false,
 }
@@ -2461,6 +2521,10 @@ params.cultist_captain_custom_attack_selection_void_shield_explosion = {
 	category = "Minion Renegade Captain Custom Attack Selection",
 	value = false,
 }
+params.debug_draw_vortex_minion = {
+	category = "Minions",
+	value = false,
+}
 params.debug_minion_ground_impact_fx = {
 	category = "Minions",
 	value = false,
@@ -2512,6 +2576,18 @@ params.debug_draw_minion_wounds_hits = {
 	value = false,
 }
 params.debug_minion_wounds_shape = {
+	category = "Minions",
+	value = false,
+}
+params.force_captain_injection_auto_events = {
+	category = "Minions",
+	value = false,
+}
+params.force_monster_injection_auto_events = {
+	category = "Minions",
+	value = false,
+}
+params.force_twin_injection_auto_events = {
 	category = "Minions",
 	value = false,
 }
@@ -2647,6 +2723,10 @@ params.ignore_horde_failed_spawn_warning = {
 params.ignore_special_failed_spawn_errors = {
 	category = "Minions",
 	value = false,
+}
+params.ignore_face_spawning_warnings = {
+	category = "Minions",
+	value = true,
 }
 params.script_minion_collision = {
 	category = "Minions",
@@ -2861,6 +2941,10 @@ params.disable_all_dlc_ownership = {
 	category = "DLC",
 	value = false,
 }
+params.auto_purchase_dlcs = {
+	category = "DLC",
+	value = false,
+}
 params.debug_chaos_hound = {
 	category = "Chaos Hound",
 	value = false,
@@ -3006,6 +3090,10 @@ params.chaos_hound_allowed = {
 	category = "Specials",
 	value = true,
 }
+params.chaos_armored_hound_allowed = {
+	category = "Specials",
+	value = true,
+}
 params.chaos_hound_mutator_allowed = {
 	category = "Specials",
 	value = true,
@@ -3089,6 +3177,25 @@ params.mutator_stimmed_enemies_always_stimm = {
 params.debug_pacing = {
 	category = "Pacing",
 	value = false,
+}
+params.debug_heat = {
+	category = "Pacing",
+	value = false,
+}
+params.client_debug_heat = {
+	category = "Pacing",
+	value = false,
+	on_value_set = function (new_value, old_value)
+		if not Managers.state or not Managers.state.game_session then
+			return
+		end
+
+		if not Managers.state.game_session:is_server() and DevParameters.allow_server_control_from_client then
+			local channel = Managers.connection:host_channel()
+
+			RPC.rpc_debug_client_request_heat_value(channel, new_value)
+		end
+	end,
 }
 params.disable_pacing = {
 	category = "Pacing",
@@ -3632,11 +3739,23 @@ params.ui_use_local_inventory = {
 	category = "UI",
 	value = false,
 }
-params.ui_always_enable_inventory_access = {
+params.ui_always_enable_achievements_menu = {
 	category = "UI",
 	value = false,
 }
-params.ui_always_enable_achievements_menu = {
+params.ui_always_enable_expedition_menu = {
+	category = "UI",
+	value = false,
+}
+params.ui_debug_expedition_view = {
+	category = "UI",
+	value = false,
+}
+params.ui_expedition_view_esc_menu = {
+	category = "UI",
+	value = false,
+}
+params.ui_always_enable_inventory_access = {
 	category = "UI",
 	value = false,
 }
@@ -3728,6 +3847,14 @@ params.ui_debug_mission_outro = {
 	value = false,
 }
 params.ui_debug_havoc_menu = {
+	category = "UI",
+	value = false,
+}
+params.ui_hide_unselected_expedition_exits = {
+	category = "UI",
+	value = false,
+}
+params.ui_hide_unselected_expedition_extractions = {
 	category = "UI",
 	value = false,
 }
@@ -4101,7 +4228,7 @@ params.dialogue_override_story_tick_start_time_value = {
 		local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 
 		if new_value ~= old_value then
-			DialogueSettings.story_start_delay = new_value
+			DialogueSettings.mission_dialogue_settings.story_start_delay = new_value
 		end
 	end,
 }
@@ -4116,7 +4243,7 @@ params.dialogue_override_short_story_tick_start_time_value = {
 		local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 
 		if new_value ~= old_value then
-			DialogueSettings.story_start_delay = new_value
+			DialogueSettings.mission_dialogue_settings.story_start_delay = new_value
 		end
 	end,
 }
@@ -4546,6 +4673,10 @@ params.network_hash = {
 	category = "Network",
 	value = "",
 }
+params.include_feature_flags_in_network_hash = {
+	category = "Network",
+	value = false,
+}
 params.lag_compensation_draw_enabled = {
 	category = "Network",
 	user_setting = false,
@@ -4789,6 +4920,14 @@ params.debug_smart_targeting_template = {
 	value = false,
 }
 params.visualize_smart_targeting_precision_target = {
+	category = "Smart Targeting",
+	value = false,
+}
+params.visualize_smart_targeting_precision_target_all_hits = {
+	category = "Smart Targeting",
+	value = false,
+}
+params.visualize_smart_targeting_visibility_cache = {
 	category = "Smart Targeting",
 	value = false,
 }
@@ -5044,7 +5183,7 @@ params.debug_grimoire_effects = {
 	category = "Weapon Effects",
 	value = false,
 }
-params.debug_melee_idling_effects = {
+params.debug_wielded_idling_effects = {
 	category = "Weapon Effects",
 	value = false,
 }
@@ -5222,6 +5361,11 @@ params.debug_terror_events = {
 params.debug_main_path = {
 	category = "Main Path",
 	value = false,
+	options = {
+		false,
+		"classic",
+		"rainbow_road",
+	},
 }
 params.debug_main_path_spawn_points = {
 	category = "Main Path",
@@ -5763,6 +5907,50 @@ params.show_broadphase_spheres_for_explosion_targets = {
 		end
 	end,
 }
+params.expedition_step = {
+	category = "Expeditions",
+	value = "",
+}
+params.expedition_layout_seed = {
+	category = "Expeditions",
+	value = "",
+}
+params.expedition_async_nav_gen = {
+	category = "Expeditions",
+	value = false,
+}
+params.expedition_instant_defense_sequence = {
+	category = "Expeditions",
+	value = false,
+}
+params.expedition_pickup_debug = {
+	category = "Expeditions",
+	value = false,
+}
+params.expedition_use_local_template = {
+	category = "Expeditions",
+	value = false,
+}
+params.expedition_draw_objective_ui_zones = {
+	category = "Expeditions",
+	value = false,
+}
+params.expedition_time_sliced_max_dt_in_sec = {
+	category = "Expeditions",
+	value = 0.004,
+}
+params.expedition_num_levels_registered_by_frame = {
+	category = "Expeditions",
+	value = 99999,
+}
+params.expedition_num_levels_despawned_by_frame = {
+	category = "Expeditions",
+	value = 1,
+}
+params.expedition_despawn_units_per_frame = {
+	category = "Expeditions",
+	value = 50,
+}
 params.keep_empty_server_alive = {
 	value = false,
 }
@@ -5839,9 +6027,6 @@ local function _set_build_override_parameter(parameter_name, value)
 	params[parameter_name].value = value
 end
 
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
 _set_build_override_parameter("debug_change_time_scale", false)
 _set_build_override_parameter("debug_change_time_scale", false)
 _set_build_override_parameter("debug_change_time_scale", false)

@@ -24,7 +24,7 @@ local mission_objective_templates = {
 				event_type = "mid_event",
 				header = "loc_objective_hm_cartel_scan_bodies_header",
 				mission_giver_voice_profile = "tech_priest_a",
-				mission_objective_type = "scanning",
+				mission_objective_type = "zone",
 				music_wwise_state = "scanning_event",
 				show_progression_popup_on_update = false,
 			},

@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/perception/target_selection_templates/renegade_netgunner_target_selection_template.lua
 
 local AttackIntensity = require("scripts/utilities/attack_intensity")
+local Breed = require("scripts/utilities/breed")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local MinionTargetSelection = require("scripts/utilities/minion_target_selection")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
@@ -113,15 +114,23 @@ target_selection_template.renegade_netgunner = function (unit, side, perception_
 				local target_unit = target_units[i]
 
 				if target_unit ~= current_target_unit and valid_enemy_player_units[target_unit] then
-					local can_be_disabled = AttackIntensity.player_can_be_attacked(target_unit, "disabling")
 					local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
-					local character_state_component = target_unit_data_extension:read_component("character_state")
-					local is_disabled = PlayerUnitStatus.is_disabled(character_state_component)
+					local target_breed = target_unit_data_extension:breed()
+					local can_be_disabled = false
+					local is_disabled = false
+
+					if Breed.is_player(target_breed) then
+						can_be_disabled = AttackIntensity.player_can_be_attacked(target_unit, "disabling")
+
+						local character_state_component = target_unit_data_extension:read_component("character_state")
+
+						is_disabled = PlayerUnitStatus.is_disabled(character_state_component)
+					end
 
 					if can_be_disabled and not is_disabled then
-						local is_new_target = true
 						local target_position = POSITION_LOOKUP[target_unit]
 						local distance_sq = Vector3_distance_squared(position, target_position)
+						local is_new_target = true
 						local score = _calculate_score(breed, unit, target_unit, distance_sq, is_new_target, debug_target_weighting_or_nil)
 
 						if best_score < score then

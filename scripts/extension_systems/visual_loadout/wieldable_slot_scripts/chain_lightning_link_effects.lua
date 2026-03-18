@@ -275,6 +275,9 @@ ChainLightningLinkEffects.init = function (self, context, slot, weapon_template,
 	local right_fx_source_name = fx_sources[weapon_chain_settings.right_fx_source_name]
 	local left_fx_source_name = fx_sources[weapon_chain_settings.left_fx_source_name]
 
+	self._weapon_chain_settings = weapon_chain_settings
+	self._triggering_action_kind = weapon_chain_settings.triggering_action_kind or "chain_lightning"
+
 	if weapon_chain_settings.right_fx_source_name_base_unit then
 		right_fx_source_name = weapon_chain_settings.right_fx_source_name_base_unit
 	end
@@ -296,6 +299,7 @@ ChainLightningLinkEffects.init = function (self, context, slot, weapon_template,
 		weapon_action_component = self._weapon_action_component,
 		weapon_template = self._weapon_template,
 		weapon_actions = self._weapon_actions,
+		weapon_chain_settings = weapon_chain_settings,
 		particle_group = self._particle_group_id,
 	}
 
@@ -318,7 +322,10 @@ ChainLightningLinkEffects._create_chain_root_node = function (self)
 	end
 
 	self:_clear_initial_targets()
-	self:_clear_no_target()
+
+	if not self._weapon_chain_settings.skip_no_target_effect then
+		self:_clear_no_target()
+	end
 end
 
 ChainLightningLinkEffects._clear_initial_targets = function (self)
@@ -356,8 +363,9 @@ end
 
 ChainLightningLinkEffects._find_root_targets = function (self, t)
 	local action_settings = Action.current_action_settings_from_component(self._weapon_action_component, self._weapon_actions)
+	local weapon_chain_settings = self._weapon_chain_settings
 	local action_kind = action_settings and action_settings.kind
-	local attacking = action_kind == "chain_lightning"
+	local attacking = action_kind == self._triggering_action_kind
 
 	if attacking then
 		local hit_units = self._hit_units
@@ -382,8 +390,9 @@ ChainLightningLinkEffects._find_root_targets = function (self, t)
 
 			local key = ACTION_MODULE_TARGET_FINDER_COMPONENT_KEYS[ii]
 			local target_unit = targeting_module_component[key]
+			local jump_validation_function = chain_settings and chain_settings.chain_visual_jump_validation_function_name and JUMP_VALIDATION[chain_settings.chain_visual_jump_validation_function_name] or JUMP_VALIDATION.target_alive_and_electrocuted
 
-			if target_unit and not hit_units[target_unit] and JUMP_VALIDATION.target_alive_and_electrocuted(target_unit) then
+			if target_unit and not hit_units[target_unit] and jump_validation_function(target_unit) then
 				local slot_target_node = chain_root_node:value(key)
 				local slot_target_unit_alive = HEALTH_ALIVE[chain_root_node:value("target_unit")]
 
@@ -405,13 +414,18 @@ ChainLightningLinkEffects._find_root_targets = function (self, t)
 			end
 		end
 
-		self:_find_no_target(t)
+		if not weapon_chain_settings.skip_no_target_effect then
+			self:_find_no_target(t)
+		end
 	elseif self._attacking and not attacking then
 		local chain_root_node = self._chain_root_node
 
 		ChainLightningTarget.remove_all_child_nodes(chain_root_node, _on_remove_func, self._func_context)
 		self:_clear_initial_targets()
-		self:_clear_no_target()
+
+		if not weapon_chain_settings.skip_no_target_effect then
+			self:_clear_no_target()
+		end
 	end
 
 	self._attacking = attacking
@@ -557,17 +571,18 @@ ChainLightningLinkEffects._find_new_targets = function (self, t)
 	for child_node, _ in pairs(chain_root_node:children()) do
 		local travel_direction = Vector3_normalize(Vector3_flat(owner_unit_position - POSITION_LOOKUP[child_node:value("unit")]))
 
-		self:_find_new_chain_targets(t, broadphase, enemy_side_names, max_angle, close_max_angle, vertical_max_angle, max_z_diff, max_jumps, radius, child_node, travel_direction)
+		self:_find_new_chain_targets(t, broadphase, enemy_side_names, max_angle, close_max_angle, vertical_max_angle, max_z_diff, max_jumps, radius, child_node, travel_direction, chain_settings)
 	end
 
 	self._next_jump_time = t + jump_time
 end
 
-ChainLightningLinkEffects._find_new_chain_targets = function (self, t, broadphase, enemy_side_names, max_angle, close_max_angle, vertical_max_angle, max_z_diff, max_jumps, radius, root_target, initial_travel_direction)
+ChainLightningLinkEffects._find_new_chain_targets = function (self, t, broadphase, enemy_side_names, max_angle, close_max_angle, vertical_max_angle, max_z_diff, max_jumps, radius, root_target, initial_travel_direction, chain_settings)
 	local func_context = self._func_context
 	local hit_units = self._hit_units
 	local temp_targets = self._temp_targets
 	local physics_world = self._physics_world
+	local jump_validation_function = chain_settings and chain_settings.chain_visual_jump_validation_function_name and JUMP_VALIDATION[chain_settings.chain_visual_jump_validation_function_name] or JUMP_VALIDATION.target_alive_and_electrocuted
 
 	table.clear(temp_targets)
 	ChainLightningTarget.traverse_breadth_first(t, root_target, temp_targets, BREADTH_FIRST_VALIDATION.node_available_within_depth, max_jumps)
@@ -575,7 +590,7 @@ ChainLightningLinkEffects._find_new_chain_targets = function (self, t, broadphas
 	for ii = 1, #temp_targets do
 		local source = temp_targets[ii]
 
-		ChainLightning.jump(t, physics_world, source, hit_units, broadphase, enemy_side_names, initial_travel_direction, radius, max_angle, close_max_angle, vertical_max_angle, max_z_diff, _on_add_func, func_context, JUMP_VALIDATION.target_alive_and_electrocuted)
+		ChainLightning.jump(t, physics_world, source, hit_units, broadphase, enemy_side_names, initial_travel_direction, radius, max_angle, close_max_angle, vertical_max_angle, max_z_diff, _on_add_func, func_context, jump_validation_function)
 	end
 end
 
@@ -636,7 +651,7 @@ end
 function _root_on_add_func(node, context)
 	local child_unit = node:value("unit")
 
-	if not node:value("fx_data") then
+	if not context.weapon_chain_settings.skip_link_to_player_effect and not node:value("fx_data") then
 		local fx_hand = context.fx_hand
 		local spawn_left = fx_hand == "both" or fx_hand == "left"
 		local spawn_right = fx_hand == "both" or fx_hand == "right"

@@ -11,7 +11,7 @@ local HitZone = require("scripts/utilities/attack/hit_zone")
 local HordesBuffsData = require("scripts/settings/buff/hordes_buffs/hordes_buffs_data")
 local HordesBuffsUtilities = require("scripts/settings/buff/hordes_buffs/hordes_buffs_utilities")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
-local ShoutAbilityImplementation = require("scripts/extension_systems/ability/utilities/shout_ability_implementation")
+local ShoutAbility = require("scripts/extension_systems/ability/utilities/shout_ability")
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local buff_categories = BuffSettings.buff_categories
@@ -159,7 +159,7 @@ templates.hordes_buff_adamant_auto_detonate = {
 		local rotation = Quaternion.identity()
 		local dog_forward = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
 
-		ShoutAbilityImplementation.execute(radius, shout_target_template_name, player_unit, t, nil, dog_forward, companion_position, rotation)
+		ShoutAbility.execute(radius, shout_target_template_name, player_unit, t, nil, dog_forward, companion_position, rotation)
 
 		local vfx = "content/fx/particles/abilities/adamant/adamant_shout"
 		local vfx_pos = companion_position + Vector3.up()

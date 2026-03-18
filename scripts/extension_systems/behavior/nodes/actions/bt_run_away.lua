@@ -3,6 +3,7 @@
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local Health = require("scripts/utilities/health")
 local MinionAttack = require("scripts/utilities/minion_attack")
 local MinionMovement = require("scripts/utilities/minion_movement")
@@ -340,7 +341,7 @@ BtRunAwayAction._start_move_anim = function (self, unit, t, behavior_component, 
 end
 
 BtRunAwayAction._start_effect_template = function (self, unit, scratchpad, action_data)
-	local effect_template = action_data.effect_template
+	local effect_template = action_data.effect_template_name and EffectTemplates[action_data.effect_template_name]
 
 	if not effect_template then
 		return

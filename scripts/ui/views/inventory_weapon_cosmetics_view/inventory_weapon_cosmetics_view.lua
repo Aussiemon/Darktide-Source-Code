@@ -63,7 +63,7 @@ function find_link_attachment_item_slot_path(start_table, slot_id, trinket_item,
 	return find_all_slot_paths(start_table, slot_id, trinket_item, link_item)
 end
 
-local function generate_preview_item(item, item_type)
+local function generate_preview_item(item)
 	return MasterItems.get_ui_item_instance(item)
 end
 
@@ -481,7 +481,7 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self)
 				end
 			end,
 			get_empty_item = function (selected_item, slot_name, item_type)
-				local visual_item = generate_preview_item(selected_item, item_type)
+				local visual_item = generate_preview_item(selected_item)
 
 				visual_item.slot_weapon_skin = nil
 
@@ -489,17 +489,17 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self)
 					visual_item.__gear.masterDataInstance.overrides.slot_weapon_skin = nil
 				end
 
-				local found_path = false
+				local path, trinket_item
 
 				for i = 1, #trinket_slot_order do
 					local equipped_trinket_name = self._equipped_weapon_trinket_name
 					local slot_id = trinket_slot_order[i]
 					local link_item_to_slot = true
-					local item_name = not found_path and equipped_trinket_name
-					local path = find_link_attachment_item_slot_path(visual_item, slot_id, item_name, link_item_to_slot)
 
-					if path then
-						found_path = true
+					path, trinket_item = find_link_attachment_item_slot_path(visual_item, slot_id, equipped_trinket_name, link_item_to_slot)
+
+					if trinket_item then
+						break
 					end
 				end
 
@@ -513,7 +513,7 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self)
 				return visual_item
 			end,
 			generate_visual_item_function = function (real_item, selected_item, item_type)
-				local visual_item = generate_preview_item(selected_item, item_type)
+				local visual_item = generate_preview_item(selected_item)
 
 				visual_item.rarity = real_item.rarity or -1
 				visual_item.gear_id = real_item.gear_id
@@ -527,21 +527,19 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self)
 					visual_item.__gear.masterDataInstance.overrides.slot_weapon_skin = real_item and real_item.name
 				end
 
-				local found_path = false
+				local path, trinket_item
 
 				for i = 1, #trinket_slot_order do
 					local equipped_trinket_name = self._equipped_weapon_trinket_name
 					local slot_id = trinket_slot_order[i]
 					local link_item_to_slot = true
-					local item_name = not found_path and self._equipped_weapon_trinket_name
-					local path = find_link_attachment_item_slot_path(visual_item, slot_id, item_name, link_item_to_slot)
 
-					if path then
-						found_path = true
+					path, trinket_item = find_link_attachment_item_slot_path(visual_item, slot_id, equipped_trinket_name, link_item_to_slot)
+
+					if trinket_item then
+						break
 					end
 				end
-
-				visual_item.item_type = "WEAPON_SKIN"
 
 				return visual_item
 			end,
@@ -580,13 +578,26 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self)
 				end
 			end,
 			get_empty_item = function (selected_item, slot_name, item_type)
-				local visual_item = generate_preview_item(selected_item, item_type)
+				local visual_item = generate_preview_item(selected_item)
+
+				visual_item.slot_weapon_skin = nil
+
+				if visual_item.__gear and visual_item.__gear.masterDataInstance and visual_item.__gear.masterDataInstance.overrides then
+					visual_item.__gear.masterDataInstance.overrides.slot_weapon_skin = nil
+				end
+
+				local path, trinket_item
 
 				for i = 1, #trinket_slot_order do
+					local equipped_trinket_name = self._equipped_weapon_trinket_name
 					local slot_id = trinket_slot_order[i]
 					local link_item_to_slot = true
 
-					find_link_attachment_item_slot_path(visual_item, slot_id, nil, link_item_to_slot)
+					path, trinket_item = find_link_attachment_item_slot_path(visual_item, slot_id, equipped_trinket_name, link_item_to_slot)
+
+					if trinket_item then
+						break
+					end
 				end
 
 				visual_item.rarity = -1
@@ -599,25 +610,22 @@ InventoryWeaponCosmeticsView._setup_menu_tabs = function (self)
 				return visual_item
 			end,
 			generate_visual_item_function = function (real_item, selected_item, item_type)
-				local visual_item = generate_preview_item(real_item, item_type)
-
-				visual_item = Items.weapon_trinket_preview_item(visual_item)
-				visual_item.rarity = real_item.rarity or -1
-				visual_item.item_type = "WEAPON_TRINKET"
+				local visual_item = generate_preview_item(real_item)
 
 				return visual_item
 			end,
 			apply_on_preview = function (real_item, presentation_item)
-				local found_path = false
+				local path, trinket_item
 
 				for i = 1, #trinket_slot_order do
 					local slot_id = trinket_slot_order[i]
 					local link_item_to_slot = true
-					local item_name = not found_path and real_item and real_item.name
-					local path = find_link_attachment_item_slot_path(presentation_item, slot_id, item_name, link_item_to_slot)
+					local item_name = real_item and real_item.name
 
-					if path then
-						found_path = true
+					path, trinket_item = find_link_attachment_item_slot_path(presentation_item, slot_id, item_name, link_item_to_slot)
+
+					if trinket_item then
+						break
 					end
 				end
 
@@ -728,6 +736,7 @@ InventoryWeaponCosmeticsView._load_layout = function (self)
 		end
 	end):catch(function ()
 		self:set_loading_state(false)
+		self:cb_switch_tab(1)
 	end)
 end
 
@@ -842,7 +851,7 @@ InventoryWeaponCosmeticsView._fetch_inventory_items = function (self)
 
 									if valid then
 										penance_track_items[#penance_track_items + 1] = {
-											item = reward_item,
+											item = generate_preview_item(reward_item),
 											label = Localize("loc_item_source_penance_track"),
 										}
 									end
@@ -934,7 +943,7 @@ InventoryWeaponCosmeticsView._parse_store_items = function (self, selected_slot_
 
 				if valid then
 					items[#items + 1] = {
-						item = item,
+						item = generate_preview_item(item),
 						offer = offer,
 					}
 				end
@@ -1020,20 +1029,14 @@ InventoryWeaponCosmeticsView._equip_weapon_cosmetics = function (self)
 
 	if previewed_element then
 		local selected_item = self._selected_item
-		local item_type
 
 		if self._selected_tab_index == 1 and self._equipped_weapon_skin_name ~= self._selected_weapon_skin_name then
-			item_type = "skin"
-		elseif self._selected_tab_index == 2 and self._equipped_weapon_trinket_name ~= self._selected_weapon_trinket_name then
-			item_type = "trinket"
-		end
-
-		if item_type == "skin" then
 			self._equipped_weapon_skin_name = self._selected_weapon_skin_name
 			self._equipped_weapon_skin = self._selected_weapon_skin
-		else
+		elseif self._selected_tab_index == 2 and self._equipped_weapon_trinket_name ~= self._selected_weapon_trinket_name then
 			self._equipped_weapon_trinket_name = self._selected_weapon_trinket_name
 			self._equipped_weapon_trinket = self._selected_weapon_trinket
+			self._update_icons = true
 		end
 	end
 end
@@ -1373,28 +1376,22 @@ end
 
 InventoryWeaponCosmeticsView.cb_switch_tab = function (self, index)
 	if index ~= self._selected_tab_index then
-		if self._selected_tab_index then
-			local presentation_item = self._presentation_item
-			local real_item
+		local prev_index = self._selected_tab_index or 1
+		local presentation_item = self._presentation_item
+		local real_item
 
-			if self._selected_tab_index == 1 then
-				real_item = self._equipped_weapon_skin
-			else
-				real_item = self._equipped_weapon_trinket
-			end
-
-			self._tabs_content[self._selected_tab_index].apply_on_preview(real_item, presentation_item)
-			self:_preview_item(presentation_item)
+		if prev_index == 1 then
+			real_item = self._equipped_weapon_skin
+		else
+			real_item = self._equipped_weapon_trinket
 		end
 
-		self._selected_tab_index = index
-
+		self._tabs_content[prev_index].apply_on_preview(real_item, presentation_item)
+		self:_preview_item(presentation_item)
 		self._tab_menu_element:set_selected_index(index)
 
 		local content = self._tabs_content[index]
 		local slot_name = content.slot_name
-		local item_type = content.item_type
-		local generate_visual_item_function = content.generate_visual_item_function
 
 		self._grid_display_name = content.display_name
 
@@ -1402,21 +1399,35 @@ InventoryWeaponCosmeticsView.cb_switch_tab = function (self, index)
 			self:_play_sound(UISoundEvents.tab_secondary_button_pressed)
 		end
 
+		self._selected_tab_index = index
+
 		self:_show_layout_by_slot(slot_name)
 	end
 end
 
 InventoryWeaponCosmeticsView._show_layout_by_slot = function (self, slot_name)
-	local filtered_layout = self._weapon_cosmetic_layouts_by_slot[slot_name] or {}
+	local filtered_layout = self._weapon_cosmetic_layouts_by_slot and self._weapon_cosmetic_layouts_by_slot[slot_name] or {}
 
 	if self._show_locked_cosmetics == false then
 		filtered_layout = table.filtered_array(filtered_layout, _filter_locked_elements)
 	end
 
+	local tab_content = self._selected_tab_index and self._tabs_content[self._selected_tab_index]
+	local generate_visual_item_function = tab_content.generate_visual_item_function
+	local get_empty_item_function = tab_content.get_empty_item
+	local item_type = tab_content.item_type
 	local has_rarity, has_locked = false, false
 
 	for i = 1, #filtered_layout do
 		local layout = filtered_layout[i]
+
+		if self._update_icons and slot_name == "slot_weapon_skin" then
+			if layout.real_item then
+				layout.item = generate_visual_item_function(layout.real_item, self._selected_item)
+			elseif layout.is_empty then
+				layout.item = generate_visual_item_function(get_empty_item_function(self._selected_item, slot_name, item_type), self._selected_item)
+			end
+		end
 
 		if layout.item and layout.item.rarity then
 			has_rarity = true
@@ -1425,11 +1436,9 @@ InventoryWeaponCosmeticsView._show_layout_by_slot = function (self, slot_name)
 		if layout.locked then
 			has_locked = true
 		end
-
-		if has_rarity and has_locked then
-			break
-		end
 	end
+
+	self._update_icons = nil
 
 	if has_locked then
 		self._show_locked_cosmetics = true
@@ -1479,7 +1488,7 @@ InventoryWeaponCosmeticsView._achievement_items = function (self, selected_slot_
 
 				if valid and is_visible_before_unlock then
 					achievement_items[#achievement_items + 1] = {
-						item = reward_item,
+						item = generate_preview_item(reward_item),
 						label = AchievementUIHelper.localized_title(achievement),
 						description = description_text,
 					}
@@ -1537,8 +1546,8 @@ InventoryWeaponCosmeticsView._prepare_layout_data = function (self)
 		local locked_premium_items_by_name = items_by_name(premium_items, false)
 
 		if inventory_items then
-			for i = 1, #inventory_items do
-				local inventory_item = inventory_items[i]
+			for ii = 1, #inventory_items do
+				local inventory_item = inventory_items[ii]
 				local is_empty = inventory_item.empty_item
 				local item
 
@@ -1565,7 +1574,7 @@ InventoryWeaponCosmeticsView._prepare_layout_data = function (self)
 
 					local gear_id = item.gear_id
 					local is_new = self._context and self._context.new_items_gear_ids and self._context.new_items_gear_ids[gear_id]
-					local visual_item = is_empty and item or generate_visual_item_function(item, self._selected_item, item_type)
+					local visual_item = is_empty and item or generate_visual_item_function(item, self._selected_item)
 					local real_item = not is_empty and item or nil
 
 					layout_count = layout_count + 1
@@ -1607,7 +1616,7 @@ InventoryWeaponCosmeticsView._prepare_layout_data = function (self)
 			local item = achievement_item.item
 
 			if item then
-				local visual_item = generate_visual_item_function(achievement_item.item, self._selected_item, item_type)
+				local visual_item = generate_visual_item_function(achievement_item.item, self._selected_item)
 
 				layout_count = layout_count + 1
 				layout[layout_count] = {
@@ -1630,7 +1639,7 @@ InventoryWeaponCosmeticsView._prepare_layout_data = function (self)
 			local item = penance_track_item.item
 
 			if item then
-				local visual_item = generate_visual_item_function(penance_track_item.item, self._selected_item, item_type)
+				local visual_item = generate_visual_item_function(penance_track_item.item, self._selected_item)
 
 				layout_count = layout_count + 1
 				layout[layout_count] = {
@@ -1653,7 +1662,7 @@ InventoryWeaponCosmeticsView._prepare_layout_data = function (self)
 			local item = store_item.item
 
 			if item then
-				local visual_item = generate_visual_item_function(store_item.item, self._selected_item, item_type)
+				local visual_item = generate_visual_item_function(store_item.item, self._selected_item)
 
 				layout_count = layout_count + 1
 				layout[layout_count] = {
@@ -1686,7 +1695,7 @@ InventoryWeaponCosmeticsView._prepare_layout_data = function (self)
 			local item = premium_item.item
 
 			if item then
-				local visual_item = generate_visual_item_function(premium_item.item, self._selected_item, item_type)
+				local visual_item = generate_visual_item_function(premium_item.item, self._selected_item)
 
 				layout_count = layout_count + 1
 				layout[layout_count] = {

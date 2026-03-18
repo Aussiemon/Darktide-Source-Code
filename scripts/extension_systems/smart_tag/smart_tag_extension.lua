@@ -115,6 +115,14 @@ local _pickup_name_to_tag_template_name = {
 	container_02_luggable = "luggable_container_over_here",
 	container_03_luggable = "luggable_container_over_here",
 	control_rod_01_luggable = "luggable_control_rod_over_here",
+	expedition_currency_small_tier_1 = "expeditions_salvage_pickup_over_here",
+	expedition_currency_small_tier_2 = "expeditions_salvage_pickup_over_here",
+	expedition_loot_heavy_tier_1 = "expeditions_loot_pickup_over_here",
+	expedition_loot_heavy_tier_2 = "expeditions_loot_pickup_over_here",
+	expedition_loot_heavy_tier_3 = "expeditions_loot_pickup_over_here",
+	expedition_loot_small_tier_1 = "expeditions_loot_pickup_over_here",
+	expedition_loot_small_tier_2 = "expeditions_loot_pickup_over_here",
+	expedition_loot_small_tier_3 = "expeditions_loot_pickup_over_here",
 	grimoire = "side_mission_grimoire_over_here",
 	large_clip = "large_clip_over_here",
 	large_metal = "large_metal_pickup_over_here",
@@ -196,6 +204,10 @@ SmartTagExtension._contextual_tag_template_name = function (self, tagger_unit, a
 			return "health_station_without_battery_over_here"
 		end
 	end
+end
+
+SmartTagExtension.is_particular_target_type = function (self, other_target_type)
+	return self._target_type == other_target_type
 end
 
 SmartTagExtension.register_owned_tag = function (self, tag_id)

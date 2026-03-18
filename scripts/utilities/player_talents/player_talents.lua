@@ -38,25 +38,25 @@ end
 PlayerTalents.add_archetype_base_talents = function (archetype, talents)
 	local talent_definitions = archetype.talents
 	local has_combat_ability, has_grenade_ability = false, false
-	local combat_ability_talent, grenade_ability_talent
 
 	for talent_name, _ in pairs(talents) do
 		local talent = talent_definitions[talent_name]
-		local player_ability = talent.player_ability
 
-		if player_ability then
-			local ability_type = player_ability.ability_type
+		if talent then
+			local player_ability = talent.player_ability
 
-			if ability_type == "combat_ability" then
-				has_combat_ability = true
-				combat_ability_talent = talent_name
-			elseif ability_type == "grenade_ability" then
-				has_grenade_ability = true
-				grenade_ability_talent = talent_name
-			elseif ability_type == "pocketable_ability" then
-				-- Nothing
-			else
-				ferror("Unknown ability_type(%q) found in talent(%q) for archetype(%q)", ability_type, talent_name, archetype.name)
+			if player_ability then
+				local ability_type = player_ability.ability_type
+
+				if ability_type == "combat_ability" then
+					has_combat_ability = true
+				elseif ability_type == "grenade_ability" then
+					has_grenade_ability = true
+				elseif ability_type == "pocketable_ability" then
+					-- Nothing
+				else
+					ferror("Unknown ability_type(%q) found in talent(%q) for archetype(%q)", ability_type, talent_name, archetype.name)
+				end
 			end
 		end
 	end

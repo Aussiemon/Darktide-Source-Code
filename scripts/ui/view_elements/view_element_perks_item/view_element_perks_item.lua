@@ -263,6 +263,8 @@ ViewElementPerksItem.present_perks = function (self, item, ingredients, external
 	self._external_left_click_callback = external_left_click_callback
 	self._backend_promise = Managers.data_service.crafting:get_item_crafting_metadata(item_masterid)
 
+	self:set_loading_state(true)
+
 	return self._backend_promise:next(function (data)
 		self._perks_by_rank = data.perks
 		self._backend_promise = Managers.data_service.mastery:get_mastery_by_pattern(item_pattern)
@@ -297,7 +299,27 @@ ViewElementPerksItem.present_perks = function (self, item, ingredients, external
 		self._disabled = false
 		self._backend_promise = nil
 
+		self:set_loading_state(false)
+
 		return max_unlocked
+	end):catch(function ()
+		self._backend_promise = nil
+
+		self:set_loading_state(false)
+
+		local max_unlocked = RankSettings.max_perk_rank
+
+		self._max_unlocked = max_unlocked
+
+		local widgets_by_name = self._widgets_by_name
+
+		for i = 1, RankSettings.max_perk_rank do
+			local name = "rank_" .. i
+
+			widgets_by_name[name].content.locked = max_unlocked < i
+		end
+
+		self:_switch_to_rank_tab(1, true)
 	end)
 end
 

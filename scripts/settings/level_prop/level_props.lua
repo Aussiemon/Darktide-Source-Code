@@ -18,5 +18,6 @@ _create_prop_entry("scripts/settings/level_prop/props/nurgle_totem")
 _create_prop_entry("scripts/settings/level_prop/props/servo_skull")
 _create_prop_entry("scripts/settings/level_prop/props/toxic_gas_volume")
 _create_prop_entry("scripts/settings/level_prop/props/voice_over_2d")
+_create_prop_entry("scripts/settings/level_prop/props/breach_charge")
 
 return settings("LevelProps", props)

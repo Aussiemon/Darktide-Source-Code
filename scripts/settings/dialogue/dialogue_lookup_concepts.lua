@@ -24,6 +24,7 @@ dialogue_lookup_concept_names.all_concepts = {
 	"heard_enemy",
 	"heard_horde",
 	"heard_speak",
+	"heat_vo",
 	"higher_elite_threat",
 	"hub_story_talk",
 	"interaction_vo",

@@ -142,6 +142,12 @@ GameStateMachine.on_reload = function (self, refreshed_resources)
 	end
 end
 
+GameStateMachine.on_recover = function (self)
+	if self._state and self._state.on_recover then
+		self._state:on_recover()
+	end
+end
+
 GameStateMachine.on_close = function (self)
 	if self._state and self._state.on_close then
 		return self._state:on_close()

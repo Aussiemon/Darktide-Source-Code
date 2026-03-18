@@ -29,7 +29,7 @@ scenarios.basic_training = {
 scenarios.attack_chains = {
 	steps = {
 		TrainingGroundsSteps.dynamic.teleport_player("player_reset"),
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_nerfed_damage"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_player_nerfed_damage"),
 		TrainingGroundsSteps.dynamic.equip_item("slot_secondary", TrainingGroundsItemNames.unarmed_training_grounds),
 		TrainingGroundsSteps.condition_if.archetype_is("ogryn"),
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.ogryn_combatblade_p1_m1),
@@ -40,7 +40,7 @@ scenarios.attack_chains = {
 		TrainingGroundsSteps.condition_else,
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.combatsword_p1_m3),
 		TrainingGroundsSteps.condition_end,
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_unperceivable"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_player_unperceivable"),
 		TrainingGroundsSteps.m1_chain_attack_prompt,
 		TrainingGroundsSteps.attack_chains_kill_infected_loop,
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
@@ -51,14 +51,12 @@ scenarios.attack_chains = {
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.hide_prompt,
-		TrainingGroundsSteps.dynamic.remove_unique_buff("tg_player_nerfed_damage"),
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_player_unperceivable"),
 	},
 }
 scenarios.attack_chains_heavy = {
 	steps = {
 		TrainingGroundsSteps.dynamic.teleport_player("player_reset"),
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_nerfed_damage"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_player_nerfed_damage"),
 		TrainingGroundsSteps.dynamic.equip_item("slot_secondary", TrainingGroundsItemNames.unarmed_training_grounds),
 		TrainingGroundsSteps.condition_if.archetype_is("ogryn"),
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.ogryn_combatblade_p1_m1),
@@ -69,7 +67,7 @@ scenarios.attack_chains_heavy = {
 		TrainingGroundsSteps.condition_else,
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.combatsword_p1_m3),
 		TrainingGroundsSteps.condition_end,
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_unperceivable"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_player_unperceivable"),
 		TrainingGroundsSteps.chain_attack_heavy_prompt,
 		TrainingGroundsSteps.attack_chains_kill_infected_loop_heavy,
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
@@ -80,8 +78,6 @@ scenarios.attack_chains_heavy = {
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.hide_prompt,
-		TrainingGroundsSteps.dynamic.remove_unique_buff("tg_player_nerfed_damage"),
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_player_unperceivable"),
 	},
 }
 scenarios.weapon_special = {
@@ -102,7 +98,7 @@ scenarios.weapon_special = {
 		TrainingGroundsSteps.weapon_special_prompt_chainsword,
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.chainsword_p1_m1),
 		TrainingGroundsSteps.condition_end,
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_unperceivable"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_player_unperceivable"),
 		TrainingGroundsSteps.condition_if.archetype_is("ogryn"),
 		TrainingGroundsSteps.use_weapon_special_attack,
 		TrainingGroundsSteps.condition_elseif.archetype_is("broker"),
@@ -118,7 +114,6 @@ scenarios.weapon_special = {
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.hide_prompt,
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_player_unperceivable"),
 	},
 }
 scenarios.push = {
@@ -134,7 +129,7 @@ scenarios.push = {
 		TrainingGroundsSteps.condition_else,
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.combatsword_p1_m1),
 		TrainingGroundsSteps.condition_end,
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_unperceivable"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_player_unperceivable"),
 		TrainingGroundsSteps.push_prompt,
 		TrainingGroundsSteps.push_enemies_loop,
 		TrainingGroundsSteps.dynamic.delay(1),
@@ -151,7 +146,6 @@ scenarios.push = {
 		TrainingGroundsSteps.push_clean_enemies,
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.hide_prompt,
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_player_unperceivable"),
 	},
 }
 scenarios.ranged_grenade = {
@@ -161,7 +155,7 @@ scenarios.ranged_grenade = {
 		TrainingGroundsSteps.dynamic.set_ability_enabled("grenade_ability", true, false),
 		TrainingGroundsSteps.dynamic.equip_item("slot_secondary", TrainingGroundsItemNames.unarmed_training_grounds),
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.unarmed_training_grounds),
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_unperceivable"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_player_unperceivable"),
 		TrainingGroundsSteps.condition_if.archetype_is("veteran"),
 		TrainingGroundsSteps.veteran_ranger_blitz_prompt,
 		TrainingGroundsSteps.kill_enemies_grenade_loop,
@@ -194,7 +188,6 @@ scenarios.ranged_grenade = {
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.set_grenade_count(0),
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_player_unperceivable"),
 	},
 }
 scenarios.biomancer_blitz = {
@@ -203,7 +196,7 @@ scenarios.biomancer_blitz = {
 		TrainingGroundsSteps.dynamic.set_ability_enabled("grenade_ability", true, false),
 		TrainingGroundsSteps.dynamic.equip_item("slot_secondary", TrainingGroundsItemNames.unarmed_training_grounds),
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.unarmed_training_grounds),
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_unperceivable"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_player_unperceivable"),
 		TrainingGroundsSteps.psyker_biomancer_blitz_prompt,
 		TrainingGroundsSteps.psyker_biomancer_blitz_loop,
 		TrainingGroundsSteps.dynamic.delay(2),
@@ -214,7 +207,6 @@ scenarios.biomancer_blitz = {
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.hide_prompt,
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_player_unperceivable"),
 	},
 }
 scenarios.combat_ability = {
@@ -222,8 +214,8 @@ scenarios.combat_ability = {
 		TrainingGroundsSteps.ensure_player_healthy,
 		TrainingGroundsSteps.dynamic.teleport_player("player_reset"),
 		TrainingGroundsSteps.dynamic.set_ability_enabled("combat_ability", true, true),
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_unperceivable"),
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_short_ability_cooldown"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_player_unperceivable"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_player_short_ability_cooldown"),
 		TrainingGroundsSteps.condition_if.archetype_is("ogryn"),
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.unarmed_training_grounds),
 		TrainingGroundsSteps.dynamic.equip_item("slot_secondary", TrainingGroundsItemNames.unarmed_training_grounds),
@@ -233,7 +225,7 @@ scenarios.combat_ability = {
 		TrainingGroundsSteps.combat_ability_ogryn_bonebreaker_remove,
 		TrainingGroundsSteps.condition_elseif.archetype_is("psyker"),
 		TrainingGroundsSteps.dynamic.set_ability_enabled("combat_ability", false, true),
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_on_combat_ability_hook"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_on_combat_ability_hook"),
 		TrainingGroundsSteps.dynamic.set_ability_enabled("grenade_ability", true, false),
 		TrainingGroundsSteps.combat_ability_prompt_psyker_biomancer,
 		TrainingGroundsSteps.dynamic.set_ability_enabled("combat_ability", true, true),
@@ -243,7 +235,7 @@ scenarios.combat_ability = {
 		TrainingGroundsSteps.combat_ability_biomancer_remove,
 		TrainingGroundsSteps.dynamic.remove_unique_buff("tg_on_combat_ability_hook"),
 		TrainingGroundsSteps.condition_elseif.archetype_is("zealot"),
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_on_combat_ability_hook"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_on_combat_ability_hook"),
 		TrainingGroundsSteps.dynamic.equip_item("slot_secondary", TrainingGroundsItemNames.unarmed_training_grounds),
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.chainsword_p1_m1),
 		TrainingGroundsSteps.combat_ability_prompt_zealot_maniac,
@@ -262,7 +254,7 @@ scenarios.combat_ability = {
 		TrainingGroundsSteps.condition_elseif.archetype_is("broker"),
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.dual_shivs_p1_m1),
 		TrainingGroundsSteps.dynamic.equip_item("slot_secondary", TrainingGroundsItemNames.dual_autopistols_p1_m1),
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_on_ranged_dodge_tutorial"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_player_on_ranged_dodge_tutorial"),
 		TrainingGroundsSteps.combat_ability_prompt_broker,
 		TrainingGroundsSteps.combat_ability_loop_broker,
 		TrainingGroundsSteps.condition_end,
@@ -279,16 +271,12 @@ scenarios.combat_ability = {
 		TrainingGroundsSteps.generic_dissolve_scenario_enemies,
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.hide_prompt,
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_player_unperceivable"),
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_player_short_ability_cooldown"),
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_on_combat_ability_hook"),
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_player_on_ranged_dodge_tutorial"),
 	},
 }
 scenarios.adamant_companion_targeting = {
 	steps = {
 		TrainingGroundsSteps.dynamic.teleport_player("player_reset"),
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_unperceivable"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_player_unperceivable"),
 		TrainingGroundsSteps.dynamic.equip_item("slot_secondary", TrainingGroundsItemNames.unarmed_training_grounds),
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.unarmed_training_grounds),
 		TrainingGroundsSteps.adamant_companion_targeting_prompt,
@@ -305,7 +293,6 @@ scenarios.adamant_companion_targeting = {
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.adamant_companion_despawn,
 		TrainingGroundsSteps.hide_prompt,
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_player_unperceivable"),
 	},
 }
 scenarios.dodging = {
@@ -322,11 +309,9 @@ scenarios.dodging = {
 		TrainingGroundsSteps.condition_else,
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.combatsword_p1_m1),
 		TrainingGroundsSteps.condition_end,
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_unperceivable"),
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_on_dodge_tutorial"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_player_on_dodge_tutorial"),
 		TrainingGroundsSteps.dodge_prompt,
 		TrainingGroundsSteps.dodge_loop,
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_unperceivable"),
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.delay(post_ui_removed_transition_start_delay),
@@ -335,8 +320,6 @@ scenarios.dodging = {
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.hide_prompt,
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_player_unperceivable"),
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_player_on_dodge_tutorial"),
 	},
 }
 scenarios.toughness_pre = {
@@ -376,12 +359,12 @@ scenarios.toughness = {
 		TrainingGroundsSteps.condition_else,
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.combatsword_p1_m1),
 		TrainingGroundsSteps.condition_end,
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_unperceivable"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_player_unperceivable"),
 		TrainingGroundsSteps.toughness_prompt,
 		TrainingGroundsSteps.toughness_wait_for_kill,
 		TrainingGroundsSteps.dynamic.delay(2),
 		TrainingGroundsSteps.dynamic.teleport_player("player_reset"),
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_no_coherency"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_no_coherency"),
 		TrainingGroundsSteps.toughness_spawn_bot,
 		TrainingGroundsSteps.dynamic.delay(3),
 		TrainingGroundsSteps.toughness_remove_bot,
@@ -396,9 +379,6 @@ scenarios.toughness = {
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.dynamic.set_ability_enabled("grenade_ability", true, false),
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_player_unperceivable"),
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_increased_coherency"),
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_no_coherency"),
 	},
 }
 scenarios.part_1_completed = {
@@ -436,7 +416,7 @@ scenarios.armor_types = {
 		TrainingGroundsSteps.condition_else,
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.combatsword_p1_m1),
 		TrainingGroundsSteps.condition_end,
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_unperceivable"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_player_unperceivable"),
 		TrainingGroundsSteps.armor_types_prompt,
 		TrainingGroundsSteps.armor_types_heavy_armored_loop,
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
@@ -447,7 +427,6 @@ scenarios.armor_types = {
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.hide_prompt,
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_player_unperceivable"),
 	},
 }
 scenarios.push_follow = {
@@ -463,7 +442,7 @@ scenarios.push_follow = {
 		TrainingGroundsSteps.condition_else,
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.chainsword_p1_m1),
 		TrainingGroundsSteps.condition_end,
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_unperceivable"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_player_unperceivable"),
 		TrainingGroundsSteps.push_follow_prompt,
 		TrainingGroundsSteps.push_follow_enemies_loop,
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
@@ -474,13 +453,12 @@ scenarios.push_follow = {
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.hide_prompt,
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_player_unperceivable"),
 	},
 }
 scenarios.healing_self_and_others = {
 	steps = {
 		TrainingGroundsSteps.dynamic.teleport_player("player_reset"),
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_no_aura_radius"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_no_aura_radius"),
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.unarmed_training_grounds),
 		TrainingGroundsSteps.condition_if.archetype_is("ogryn"),
 		TrainingGroundsSteps.dynamic.equip_item("slot_secondary", TrainingGroundsItemNames.ogryn_rippergun_p1_m1),
@@ -508,7 +486,6 @@ scenarios.healing_self_and_others = {
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.hide_prompt,
 		TrainingGroundsSteps.health_and_ammo_cleanup,
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_no_aura_radius"),
 	},
 }
 scenarios.reviving = {
@@ -545,7 +522,7 @@ scenarios.reviving = {
 scenarios.tagging = {
 	steps = {
 		TrainingGroundsSteps.dynamic.teleport_player("player_reset"),
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_unperceivable"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_player_unperceivable"),
 		TrainingGroundsSteps.tagging_prompt,
 		TrainingGroundsSteps.dynamic.delay(2),
 		TrainingGroundsSteps.sniper_tag_loop,
@@ -557,7 +534,6 @@ scenarios.tagging = {
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.hide_prompt,
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_player_unperceivable"),
 	},
 }
 scenarios.sprint_slide = {
@@ -598,7 +574,6 @@ scenarios.sprint_slide = {
 		TrainingGroundsSteps.sprint_dodge_cleanup,
 		TrainingGroundsSteps.cleanup_ragdolls,
 		TrainingGroundsSteps.hide_prompt,
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_player_unperceivable"),
 	},
 }
 scenarios.ranged_suppression = {
@@ -632,7 +607,7 @@ scenarios.incoming_suppression = {
 	steps = {
 		TrainingGroundsSteps.dynamic.teleport_player("suppression_player_spawn"),
 		TrainingGroundsSteps.dynamic.set_ability_enabled("grenade_ability", false, false),
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_on_ammo_consumed_hook"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_on_ammo_consumed_hook"),
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.unarmed_training_grounds),
 		TrainingGroundsSteps.condition_if.archetype_is("ogryn"),
 		TrainingGroundsSteps.dynamic.equip_item("slot_secondary", TrainingGroundsItemNames.ogryn_rippergun_p1_m1),
@@ -659,7 +634,6 @@ scenarios.incoming_suppression = {
 	},
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_on_ammo_consumed_hook"),
 		TrainingGroundsSteps.cleanup_incoming_suppression,
 		TrainingGroundsSteps.hide_prompt,
 	},
@@ -681,14 +655,13 @@ scenarios.end_of_training_grounds = {
 		TrainingGroundsSteps.dynamic.equip_item("slot_primary", TrainingGroundsItemNames.combatsword_p1_m1),
 		TrainingGroundsSteps.dynamic.equip_item("slot_secondary", TrainingGroundsItemNames.lasgun_p1_m1),
 		TrainingGroundsSteps.condition_end,
-		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_unperceivable"),
+		TrainingGroundsSteps.dynamic.add_scenario_buff("tg_player_unperceivable"),
 		TrainingGroundsSteps.end_of_tg_prompt,
 		TrainingGroundsSteps.end_of_tg_loop,
 		TrainingGroundsSteps.trigger_training_complete,
 	},
 	cleanup = {
 		TrainingGroundsSteps.cleanup_ragdolls,
-		TrainingGroundsSteps.dynamic.remove_unique_buff_safe("tg_player_unperceivable"),
 	},
 }
 

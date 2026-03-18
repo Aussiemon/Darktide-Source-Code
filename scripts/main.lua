@@ -3,8 +3,8 @@
 Main = Main or {}
 
 require("scripts/boot_init")
-require("scripts/foundation/utilities/log")
 require("scripts/foundation/utilities/class")
+require("scripts/foundation/utilities/log")
 require("scripts/foundation/utilities/patches")
 require("scripts/foundation/utilities/settings")
 require("scripts/foundation/utilities/table")

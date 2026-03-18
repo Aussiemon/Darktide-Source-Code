@@ -50,6 +50,7 @@ HudElementTacticalOverlay.init = function (self, parent, draw_layer, start_scale
 	self:_setup_right_panel_widgets()
 	self:on_resolution_modified()
 
+	self._widgets_by_name.expedition_currency.visible = false
 	self._using_input = false
 
 	self:_create_resource_renderer()
@@ -492,11 +493,12 @@ HudElementTacticalOverlay._generate_buffs_layout = function (self, display_buffs
 		items = Localize("loc_horde_tactical_overlay_category_loadout"),
 		talents = Localize("loc_horde_tactical_overlay_category_talents"),
 		default = Localize("loc_horde_tactical_overlay_category_misc"),
+		live_event = Localize("loc_mission_board_mission_category_event"),
 	}
-	local active_live_event_name = Managers.live_event:get_active_event_name()
+	local circumstance_template = Managers.state.circumstance:template()
 
-	if active_live_event_name then
-		buff_title_display_name.live_event = Localize(active_live_event_name)
+	if circumstance_template and circumstance_template.ui and circumstance_template.ui.display_name then
+		buff_title_display_name.live_event = Localize(circumstance_template.ui.display_name)
 	end
 
 	local buff_sub_title_display_name = {
@@ -868,7 +870,7 @@ HudElementTacticalOverlay.update = function (self, dt, t, ui_renderer, render_se
 	end
 
 	if self._active then
-		self:_update_materials_collected()
+		self:_update_materials_collected(ui_renderer)
 		self:_update_right_timer_text(dt, t, ui_renderer)
 
 		if self._game_mode_name ~= "hub" and self._game_mode_name ~= "prologue_hub" and not self._buffs_layout_size then
@@ -940,11 +942,11 @@ HudElementTacticalOverlay._update_left_panel_elements = function (self, ui_rende
 	end
 
 	local currencies_width = 110
-	local total_currencies_width = 0
 	local diamantine_offset = currencies_width + 20
 
 	self._widgets_by_name.diamantine_info.offset[1] = diamantine_offset
-	total_currencies_width = diamantine_offset + currencies_width
+
+	local total_currencies_width = diamantine_offset + currencies_width
 
 	self:_set_scenegraph_size("crafting_pickup_panel", total_currencies_width, nil)
 end
@@ -1319,7 +1321,7 @@ HudElementTacticalOverlay._setup_live_event = function (self, ui_renderer)
 	self._live_event_id = live_event_id
 
 	local page_key = "event"
-	local template = Managers.live_event:active_template()
+	local template = Managers.live_event:get_event_template(live_event_id)
 	local event_name = template.name
 	local event_description = template.description
 	local configs = {
@@ -1336,7 +1338,7 @@ HudElementTacticalOverlay._setup_live_event = function (self, ui_renderer)
 			text = Localize(event_description),
 		},
 	}
-	local tiers = Managers.live_event:active_tiers()
+	local tiers = Managers.live_event:get_event_tiers(live_event_id)
 	local tier_count = tiers and #tiers or 0
 	local max_tiers = ElementSettings.max_live_event_tiers
 	local shown_tiers = math.min(max_tiers, tier_count)
@@ -1348,7 +1350,7 @@ HudElementTacticalOverlay._setup_live_event = function (self, ui_renderer)
 		}
 	end
 
-	local progress = Managers.live_event:active_progress()
+	local progress = Managers.live_event:event_progress(nil, live_event_id)
 	local start_from = tier_count - shown_tiers + 1
 
 	while start_from > 1 and progress < tiers[start_from - 1].target do
@@ -1364,6 +1366,7 @@ HudElementTacticalOverlay._setup_live_event = function (self, ui_renderer)
 			blueprint = "event_tier",
 			target = tier.target,
 			rewards = tier.rewards,
+			event_id = live_event_id,
 		}
 	end
 
@@ -1798,7 +1801,7 @@ HudElementTacticalOverlay._total_materials_collected = function (self, material_
 	return Text.format_currency(small_count * small_value + large_count * large_value)
 end
 
-HudElementTacticalOverlay._update_materials_collected = function (self)
+HudElementTacticalOverlay._update_materials_collected = function (self, ui_renderer)
 	local show_details = self._context.show_left_side_details
 	local plasteel_info_widget = self._widgets_by_name.plasteel_info
 	local plasteel_info_content = plasteel_info_widget.content
@@ -1811,6 +1814,57 @@ HudElementTacticalOverlay._update_materials_collected = function (self)
 
 	diamantine_info_widget.visible = show_details
 	diamantine_info_content.amount_id = self:_total_materials_collected("diamantine")
+
+	if self._game_mode_name == "expedition" then
+		local game_mode_manager = Managers.state.game_mode
+		local game_mode = game_mode_manager:game_mode()
+		local players_name_text = ""
+		local players_loot_text = ""
+		local players_salvage_text = ""
+		local players = Managers.player:players()
+
+		for _, player in pairs(players) do
+			local valid_player = player:is_human_controlled()
+
+			if valid_player then
+				local peer_id = player.peer_id and player:peer_id()
+				local player_name = player:name()
+				local expedition_currency = game_mode:expedition_currency(peer_id) or 0
+				local expedition_loot = game_mode:expedition_loot(peer_id) or 0
+				local player_text = player_name
+
+				if players_name_text ~= "" then
+					players_name_text = players_name_text .. "\n"
+					players_loot_text = players_loot_text .. "\n"
+					players_salvage_text = players_salvage_text .. "\n"
+				end
+
+				players_name_text = players_name_text .. player_text
+				players_loot_text = players_loot_text .. Text.format_currency(expedition_loot)
+				players_salvage_text = players_salvage_text .. Text.format_currency(expedition_currency)
+			end
+		end
+
+		local expedition_team_loot = game_mode:expedition_team_loot()
+		local expedition_currency_widget = self._widgets_by_name.expedition_currency
+		local expedition_currency_content = expedition_currency_widget.content
+		local widget_size = expedition_currency_widget.content.size
+
+		expedition_currency_widget.visible = show_details
+		expedition_currency_content.text = players_name_text
+		expedition_currency_content.loot = players_loot_text
+		expedition_currency_content.salvage = players_salvage_text
+		expedition_currency_content.total_loot = Text.format_currency(expedition_team_loot)
+
+		local text_style = expedition_currency_widget.style.text
+		local _, text_height = self:_text_size(ui_renderer, players_name_text, text_style, {
+			widget_size[1],
+			1000,
+		})
+		local edge_margin = 60
+
+		widget_size[2] = text_height + edge_margin
+	end
 end
 
 HudElementTacticalOverlay.on_resolution_modified = function (self)

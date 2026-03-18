@@ -87,30 +87,26 @@ HudElementMissionSpeakerPopup._sync_active_speaker = function (self, dt, t, ui_r
 		return
 	end
 
-	local is_dialogue_playing = true
 	local mission_giver_speaker_name
+	local playing_dialogues_array = dialogue_system:playing_dialogues_array()
+	local mission_givers_settings = DialogueBreedSettings.mission_giver
+	local mission_giver_voices = mission_givers_settings.wwise_voices
 
-	if is_dialogue_playing then
-		local playing_dialogues_array = dialogue_system:playing_dialogues_array()
-		local mission_givers_settings = DialogueBreedSettings.mission_giver
-		local mission_giver_voices = mission_givers_settings.wwise_voices
+	for i = 1, #playing_dialogues_array do
+		local currently_playing = playing_dialogues_array[i]
+		local current_speaker_name = currently_playing.speaker_name
 
-		for i = 1, #playing_dialogues_array do
-			local currently_playing = playing_dialogues_array[i]
-			local current_speaker_name = currently_playing.speaker_name
+		if currently_playing.speaker_name == self._speaker_name then
+			mission_giver_speaker_name = self._speaker_name
 
-			if currently_playing.speaker_name == self._speaker_name then
-				mission_giver_speaker_name = self._speaker_name
+			break
+		end
 
-				break
-			end
+		if table.contains(mission_giver_voices, current_speaker_name) then
+			local ww_route = currently_playing.wwise_route
 
-			if table.contains(mission_giver_voices, current_speaker_name) then
-				local ww_route = currently_playing.wwise_route
-
-				if ww_route == 1 or ww_route == 21 then
-					mission_giver_speaker_name = currently_playing.speaker_name
-				end
+			if ww_route == 1 or ww_route == 21 then
+				mission_giver_speaker_name = currently_playing.speaker_name
 			end
 		end
 	end

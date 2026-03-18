@@ -71,6 +71,10 @@ local template_groups = {
 		"combataxe_p3_m3",
 	},
 	{
+		"crowbars",
+		"crowbar_p1_m1",
+	},
+	{
 		"combat_blades",
 		"ogryn_combatblade_p1_m1",
 		"ogryn_combatblade_p1_m2",
@@ -155,13 +159,16 @@ local template_groups = {
 		"powersword_p2_m2",
 	},
 	{
+		"saws",
+		"saw_p1_m1",
+	},
+	{
 		"thunder_hammers_2h",
 		"thunderhammer_2h_p1_m1",
 		"thunderhammer_2h_p1_m2",
 	},
 	{
-		"saws",
-		"saw_p1_m1",
+		"timed",
 	},
 	{
 		"autoguns",
@@ -205,14 +212,6 @@ local template_groups = {
 	{
 		"dual_stub_pistols",
 		"dual_stubpistols_p1_m1",
-	},
-	{
-		"saws",
-		"saw_p1_m1",
-	},
-	{
-		"crowbars",
-		"crowbar_p1_m1",
 	},
 	{
 		"flamers",
@@ -316,6 +315,7 @@ local template_groups = {
 	},
 	{
 		"devices",
+		"auspex_map",
 		"auspex_scanner",
 		"breach_charge",
 		"scanner_equip",
@@ -325,9 +325,10 @@ local template_groups = {
 	},
 	{
 		"grenades",
-		"adamant_whistle_grenade",
 		"adamant_grenade",
 		"shock_mine",
+		"quick_flash_grenade",
+		"tox_grenade",
 		"ogryn_grenade_box",
 		"ogryn_grenade_box_cluster",
 		"ogryn_grenade_frag",
@@ -341,8 +342,7 @@ local template_groups = {
 		"shock_grenade",
 		"fire_grenade",
 		"zealot_throwing_knives",
-		"quick_flash_grenade",
-		"tox_grenade",
+		"expeditions_big_grenade",
 	},
 	{
 		"luggables",
@@ -355,6 +355,16 @@ local template_groups = {
 		"ammo_cache_pocketable",
 		"breach_charge_pocketable",
 		"communications_hack_device_pocketable",
+		"expedition_loot_crate_tier_1_pocketable",
+		"expedition_loot_crate_tier_2_pocketable",
+		"expedition_loot_crate_tier_3_pocketable",
+		"expedition_grenade_airstrike_pocketable",
+		"expedition_grenade_artillery_strike_pocketable",
+		"expedition_grenade_valkyrie_hover_pocketable",
+		"motion_detection_mine_explosive_pocketable",
+		"motion_detection_mine_fire_pocketable",
+		"motion_detection_mine_shock_pocketable",
+		"deployable_force_field_pocketable",
 		"grimoire_pocketable",
 		"medical_crate_pocketable",
 		"syringe_ability_boost_pocketable",

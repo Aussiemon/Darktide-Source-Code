@@ -3,7 +3,6 @@
 local ChaosDaemonhostSettings = require("scripts/settings/monster/chaos_daemonhost_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local UtilityConsiderations = require("scripts/extension_systems/behavior/utility_considerations")
 local damage_types = DamageSettings.damage_types
 local STAGES = ChaosDaemonhostSettings.stages
@@ -52,6 +51,7 @@ local action_data = {
 	},
 	warp_grab = {
 		channel_anim_event = "grab_loop",
+		effect_template_name = "chaos_daemonhost_warp_grab",
 		execute_anim_event = "grab_execute",
 		execute_distance = 3,
 		execute_duration = 4.9,
@@ -70,7 +70,6 @@ local action_data = {
 			3,
 			2,
 		},
-		effect_template = EffectTemplates.chaos_daemonhost_warp_grab,
 		damage_profile = DamageProfileTemplates.daemonhost_grab,
 		damage_type = damage_types.daemonhost_execute,
 	},
@@ -395,6 +394,7 @@ local action_data = {
 	},
 	warp_sweep = {
 		attack_move_speed = 3,
+		effect_template_name = "chaos_daemonhost_warp_sweep",
 		hit_zone_name = "center_mass",
 		num_nearby_units_threshold = 2,
 		power_level = 2000,
@@ -415,7 +415,6 @@ local action_data = {
 		},
 		damage_profile = DamageProfileTemplates.daemonhost_warp_sweep,
 		damage_type = damage_types.daemonhost_melee,
-		effect_template = EffectTemplates.chaos_daemonhost_warp_sweep,
 		cooldown_duration = {
 			1.5,
 			2.5,
@@ -424,6 +423,7 @@ local action_data = {
 	melee_attack = {
 		attack_type = "sweep",
 		collision_filter = "filter_minion_melee_friendly_fire",
+		effect_template_name = "chaos_daemonhost_warp_sweep",
 		hit_zone_name = "center_mass",
 		ignore_animation_movement_speed = true,
 		ignore_backstab_sfx = true,
@@ -490,7 +490,6 @@ local action_data = {
 		damage_profile = DamageProfileTemplates.daemonhost_melee,
 		offtarget_damage_profile = DamageProfileTemplates.daemonhost_offtarget_melee,
 		damage_type = damage_types.daemonhost_melee,
-		effect_template = EffectTemplates.chaos_daemonhost_warp_sweep,
 		effect_template_start_timings = {
 			attack_down = 0.4,
 			attack_move_01 = 0.18666666666666668,
@@ -502,6 +501,7 @@ local action_data = {
 	combo_attack = {
 		attack_type = "oobb",
 		collision_filter = "filter_minion_melee_friendly_fire",
+		effect_template_name = "chaos_daemonhost_warp_sweep",
 		height = 3,
 		hit_zone_name = "center_mass",
 		ignore_animation_movement_speed = true,
@@ -547,7 +547,6 @@ local action_data = {
 			ranged = 1,
 			running_melee = 2,
 		},
-		effect_template = EffectTemplates.chaos_daemonhost_warp_sweep,
 		effect_template_start_timings = {
 			attack_combo = 0.9523809523809523,
 			attack_combo_2 = 0.47619047619047616,

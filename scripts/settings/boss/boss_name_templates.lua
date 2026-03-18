@@ -265,5 +265,22 @@ boss_name_templates.havoc_renegade_twin_captain_two = {
 	"loc_havoc_female_twin_name_05",
 	"loc_havoc_female_twin_name_06",
 }
+boss_name_templates.chaos_ogryn_houndmaster = {
+	"loc_chaos_ogryn_houndmaster_name_01",
+	"loc_chaos_ogryn_houndmaster_name_02",
+	"loc_chaos_ogryn_houndmaster_name_03",
+	"loc_chaos_ogryn_houndmaster_name_04",
+	"loc_chaos_ogryn_houndmaster_name_05",
+	"loc_chaos_ogryn_houndmaster_name_06",
+	"loc_chaos_ogryn_houndmaster_name_07",
+	"loc_chaos_ogryn_houndmaster_name_08",
+	"loc_chaos_ogryn_houndmaster_name_09",
+	"loc_chaos_ogryn_houndmaster_name_10",
+	"loc_chaos_ogryn_houndmaster_name_11",
+	"loc_chaos_ogryn_houndmaster_name_12",
+	"loc_chaos_ogryn_houndmaster_name_13",
+	"loc_chaos_ogryn_houndmaster_name_14",
+	"loc_chaos_ogryn_houndmaster_name_15",
+}
 
 return settings("BossNameTemplates", boss_name_templates)

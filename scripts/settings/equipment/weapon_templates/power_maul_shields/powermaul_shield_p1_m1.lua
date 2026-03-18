@@ -1479,11 +1479,11 @@ weapon_template.ammo_template = "no_ammo"
 weapon_template.fx_sources = {
 	_block = "fx_block",
 	_display = "fx_display",
-	_melee_idling = "fx_special_active",
-	_shield_melee_idling = "fx_shield_special_active",
 	_shield_special_active = "fx_shield_special_active",
+	_shield_wielded_idling = "fx_shield_special_active",
 	_special_active = "fx_special_active",
 	_sweep = "fx_sweep",
+	_wielded_idling = "fx_special_active",
 }
 weapon_template.crosshair = {
 	crosshair_type = "dot",

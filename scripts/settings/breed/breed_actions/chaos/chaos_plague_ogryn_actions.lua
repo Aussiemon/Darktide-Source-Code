@@ -2,7 +2,6 @@
 
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local GroundImpactFxTemplates = require("scripts/settings/fx/ground_impact_fx_templates")
 local UtilityConsiderations = require("scripts/extension_systems/behavior/utility_considerations")
 local damage_types = DamageSettings.damage_types
@@ -272,6 +271,7 @@ local action_data = {
 		collision_radius = 2,
 		default_lean_value = 1,
 		dodge_rotation_speed = 0.01,
+		effect_template_name = "chaos_plague_ogryn_charge_impact",
 		lean_speed = 1,
 		lean_variable_name = "lean",
 		left_lean_value = 0,
@@ -339,7 +339,6 @@ local action_data = {
 		},
 		push_minions_damage_profile = DamageProfileTemplates.chaos_plague_ogryn_minion_charge_push,
 		collision_angle = math.degrees_to_radians(100),
-		effect_template = EffectTemplates.chaos_plague_ogryn_charge_impact,
 		miss_animations = {
 			"attack_charge_miss",
 		},

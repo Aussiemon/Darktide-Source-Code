@@ -66,9 +66,9 @@ CoverUserExtension.update = function (self, unit, dt, t)
 
 	local behavior_component = self._behavior_component
 	local combat_range = behavior_component.combat_range
-	local combat_range_uses_cover = cover_config.cover_combat_ranges[combat_range]
+	local can_use_cover = cover_config.cover_combat_ranges[combat_range]
 
-	if not combat_range_uses_cover then
+	if not can_use_cover then
 		return
 	end
 

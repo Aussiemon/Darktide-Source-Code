@@ -27,6 +27,10 @@ CorruptorArmSystem.on_gameplay_post_init = function (self, level)
 	self:call_gameplay_post_init_on_extensions(level)
 end
 
+CorruptorArmSystem.on_location_setup = function (self)
+	self:call_gameplay_post_init_on_extensions()
+end
+
 CorruptorArmSystem.rpc_set_animation_target = function (self, channel_id, level_unit_id, target_pos, speed_multiplier_type_id, optional_hot_join_animation_pos)
 	local unit = Managers.state.unit_spawner:unit(level_unit_id, true)
 	local extension = self._unit_to_extension_map[unit]

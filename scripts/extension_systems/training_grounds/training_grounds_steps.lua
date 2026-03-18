@@ -16,7 +16,6 @@ local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadou
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local Stamina = require("scripts/utilities/attack/stamina")
 local TrainingGroundsInfoLookup = require("scripts/settings/training_grounds/training_grounds_info_lookup")
-local TrainingGroundsItemNames = require("scripts/settings/training_grounds/training_grounds_item_names")
 local TrainingGroundsObjectivesLookup = require("scripts/settings/training_grounds/training_grounds_objectives_lookup")
 local TrainingGroundsSoundEvents = require("scripts/settings/training_grounds/training_grounds_sound_events")
 local Vo = require("scripts/utilities/vo")
@@ -332,28 +331,6 @@ local function _spawn_unit_directional_unit(player, unit_name_optional, template
 	return ramping_spawn_data
 end
 
-local function _add_unique_buff(unit, buff_name, scenario_data, t)
-	scenario_data.unique_buffs = scenario_data.unique_buffs or {}
-
-	local buff_extension = ScriptUnit.extension(unit, "buff_system")
-	local _, buff_id, component_index = buff_extension:add_externally_controlled_buff(buff_name, t)
-	local buff_data = {
-		buff_id = buff_id,
-		component_index = component_index,
-	}
-
-	scenario_data.unique_buffs[buff_name] = buff_data
-end
-
-local function _remove_unique_buff(unit, buff_name, scenario_data)
-	local buff_data = scenario_data.unique_buffs[buff_name]
-	local buff_extension = ScriptUnit.extension(unit, "buff_system")
-
-	buff_extension:remove_externally_controlled_buff(buff_data.buff_id, buff_data.component_index)
-
-	scenario_data.unique_buffs[buff_name] = nil
-end
-
 local function _dissolve_unit(unit, t)
 	local scenario_system = Managers.state.extension:system("scripted_scenario_system")
 
@@ -432,32 +409,6 @@ local function _ensure_no_ammo(player)
 
 		secondary.num_special_charges = 0
 	end
-end
-
-local function _reset_if_knocked_down(scenario_system, unit, t, reset_delay)
-	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-	local knocked_down_state_input = unit_data_extension:read_component("knocked_down_state_input")
-
-	if knocked_down_state_input.knock_down then
-		scenario_system:reset_scenario(t, reset_delay)
-	end
-
-	return knocked_down_state_input.knock_down
-end
-
-local function _unit_has_buff(unit, name)
-	local buff_extension = ScriptUnit.extension(unit, "buff_system")
-	local buffs = buff_extension:buffs()
-
-	for i = 1, #buffs do
-		local template_name = buffs[i]:template_name()
-
-		if template_name == name then
-			return true
-		end
-	end
-
-	return false
 end
 
 local function _ensure_has_combat_ability(player, step_data, t, delay)
@@ -622,11 +573,11 @@ steps.dynamic.lerp_time_scale = function (from_scale, to_scale, transition_time)
 	}
 end
 
-steps.dynamic.add_unique_buff = function (buff_name)
+steps.dynamic.add_scenario_buff = function (buff_name)
 	return {
-		name = "add_unique_buff",
+		name = "add_scenario_buff",
 		start_func = function (scenario_system, player, scenario_data, step_data, t)
-			_add_unique_buff(player.player_unit, buff_name, scenario_data, t)
+			scenario_system:add_scenario_buff(player.player_unit, buff_name, t)
 		end,
 	}
 end
@@ -635,21 +586,7 @@ steps.dynamic.remove_unique_buff = function (buff_name)
 	return {
 		name = "remove_unique_buff",
 		start_func = function (scenario_system, player, scenario_data, step_data, t)
-			_remove_unique_buff(player.player_unit, buff_name, scenario_data)
-		end,
-	}
-end
-
-steps.dynamic.remove_unique_buff_safe = function (buff_name)
-	return {
-		name = "remove_unique_buff_safe",
-		start_func = function (scenario_system, player, scenario_data, step_data, t)
-			local exists = ALIVE[player.player_unit]
-			local has_buff = exists and scenario_data.unique_buffs and scenario_data.unique_buffs[buff_name]
-
-			if has_buff then
-				_remove_unique_buff(player.player_unit, buff_name, scenario_data)
-			end
+			scenario_system:remove_scenario_buff(player.player_unit, buff_name)
 		end,
 	}
 end
@@ -1111,7 +1048,6 @@ steps.armor_types_heavy_armored_loop = {
 	end,
 	on_event = function (scenario_system, player, scenario_data, step_data, event_name, event_data)
 		local damage_profile = event_data.damage_profile
-		local target_unit = step_data.enemy_unit
 		local is_heavy_attack = damage_profile and damage_profile.melee_attack_strength == melee_attack_strengths.heavy
 		local valid_attack_result = _target_damaged_or_died(event_data)
 		local progress_step = is_heavy_attack and valid_attack_result
@@ -2403,7 +2339,7 @@ steps.adamant_companion_spawn = {
 		local position, rotation = _get_relative_position_rotation(player_unit, Vector3(0, 10, 0), -Vector3.forward(), DEFAULT_GROUND_POSITION)
 		local companion_spawner_extension = ScriptUnit.extension(player_unit, "companion_spawner_system")
 
-		companion_spawner_extension:spawn_unit(position, rotation)
+		companion_spawner_extension:spawn_units(position, rotation)
 	end,
 }
 steps.adamant_companion_despawn = {
@@ -2411,7 +2347,7 @@ steps.adamant_companion_despawn = {
 		local player_unit = player.player_unit
 		local companion_spawner_extension = ScriptUnit.extension(player_unit, "companion_spawner_system")
 
-		companion_spawner_extension:despawn_unit()
+		companion_spawner_extension:despawn_units()
 	end,
 }
 steps.adamant_companion_targeting_loop = {
@@ -2540,12 +2476,16 @@ steps.dodge_loop = {
 		step_data.player_hit = 0
 		step_data.time_manager = Managers.time
 		step_data.slow_time_scale = 0.05
+
+		scenario_system:add_scenario_buff(player.player_unit, "tg_player_unperceivable")
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
 		if step_data.dodge_melee >= step_data.target_melee_dodges then
 			step_data.complete_grace_timer = step_data.complete_grace_timer or t + 1
 
 			if t > step_data.complete_grace_timer then
+				scenario_system:add_scenario_buff(player.player_unit, "tg_player_unperceivable")
+
 				return true
 			end
 
@@ -2656,7 +2596,7 @@ steps.dodge_loop = {
 			end
 
 			if step_data.grace_timer and t > step_data.grace_timer then
-				_remove_unique_buff(player.player_unit, "tg_player_unperceivable", scenario_data)
+				scenario_system:remove_scenario_buff(player.player_unit, "tg_player_unperceivable")
 				_add_objective_tracker("dodge_melee", true)
 
 				step_data.do_once = true
@@ -3270,7 +3210,7 @@ steps.toughness_spawn_bot = {
 
 			PlayerMovement.teleport_fixed_update(bot_player.player_unit, position, rotation)
 
-			local radius, limit = coherency_extension:current_radius()
+			local radius = coherency_extension:current_radius()
 
 			radius = radius + 1
 			step_data.decal_radius_sq = radius * radius
@@ -3308,20 +3248,20 @@ steps.toughness_spawn_bot = {
 		if not step_data.buffs_swapped and (step_data.coherency_area_entered or coherency_extension:num_units_in_coherency() == 0) then
 			step_data.buffs_swapped = true
 
-			_remove_unique_buff(player.player_unit, "tg_no_coherency", scenario_data)
+			scenario_system:remove_scenario_buff(player.player_unit, "tg_no_coherency")
 
 			local archetype_name = player:archetype_name()
 
 			if archetype_name == "ogryn" then
-				_add_unique_buff(player.player_unit, "tg_increased_coherency_ogryn", scenario_data, t)
+				scenario_system:add_scenario_buff(player.player_unit, "tg_increased_coherency_ogryn")
 			elseif archetype_name == "psyker" then
-				_add_unique_buff(player.player_unit, "tg_increased_coherency_psyker", scenario_data, t)
+				scenario_system:add_scenario_buff(player.player_unit, "tg_increased_coherency_psyker")
 			elseif archetype_name == "zealot" then
-				_add_unique_buff(player.player_unit, "tg_increased_coherency_zealot", scenario_data, t)
+				scenario_system:add_scenario_buff(player.player_unit, "tg_increased_coherency_zealot")
 			elseif archetype_name == "veteran" then
-				_add_unique_buff(player.player_unit, "tg_increased_coherency_veteran", scenario_data, t)
+				scenario_system:add_scenario_buff(player.player_unit, "tg_increased_coherency_veteran")
 			else
-				_add_unique_buff(player.player_unit, "tg_increased_coherency", scenario_data, t)
+				scenario_system:add_scenario_buff(player.player_unit, "tg_increased_coherency")
 			end
 		end
 
@@ -3456,15 +3396,14 @@ steps.combat_ability_loop_broker = {
 		local buff_extension = ScriptUnit.has_extension(player.player_unit, "buff_system")
 		local ability_active = buff_extension and buff_extension:has_keyword("broker_combat_ability_focus")
 		local buff_name = "tg_player_unperceivable"
-		local exists = ALIVE[player.player_unit]
-		local has_buff = exists and scenario_data.unique_buffs and scenario_data.unique_buffs[buff_name]
+		local has_buff = scenario_system:has_scenario_buff(player.player_unit, buff_name)
 
 		if ability_active then
 			if has_buff then
-				_remove_unique_buff(player.player_unit, buff_name, scenario_data)
+				scenario_system:remove_scenario_buff(player.player_unit, buff_name)
 			end
 		elseif not has_buff then
-			_add_unique_buff(player.player_unit, buff_name, scenario_data)
+			scenario_system:add_scenario_buff(player.player_unit, buff_name, t)
 		end
 
 		return false
@@ -4183,7 +4122,7 @@ steps.reviving_spawn_bot = {
 		scenario_data.bot_unit = bot_unit
 
 		PlayerDeath.knock_down(bot_unit)
-		_add_unique_buff(bot_unit, "tg_player_resist_death", scenario_data, t)
+		scenario_system:add_scenario_buff(bot_unit, "tg_player_resist_death")
 
 		return true
 	end,
@@ -4201,7 +4140,7 @@ steps.reviving_wait_for_bot_revival = {
 			end
 
 			_set_objective_tracker_value("reviving", 1, true)
-			_remove_unique_buff(bot_unit, "tg_player_resist_death", scenario_data)
+			scenario_system:remove_scenario_buff(bot_unit, "tg_player_resist_death")
 
 			return true
 		end
@@ -4751,13 +4690,15 @@ steps.transition_hide = {
 }
 steps.part_1_completed_decide_continue = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		local cb_continue = callback(function ()
+		local function cb_continue()
 			scenario_data.continue_training = true
 			step_data.chosen = true
-		end)
-		local cb_quit = callback(function ()
+		end
+
+		local function cb_quit()
 			step_data.chosen = true
-		end)
+		end
+
 		local context = {
 			description_text = "loc_training_grounds_choice_body",
 			title_text = "loc_training_grounds_choice_header_advanced",

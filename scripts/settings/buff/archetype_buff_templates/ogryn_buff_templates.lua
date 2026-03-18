@@ -19,7 +19,7 @@ local MinionState = require("scripts/utilities/minion_state")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
-local ShoutAbilityImplementation = require("scripts/extension_systems/ability/utilities/shout_ability_implementation")
+local ShoutAbility = require("scripts/extension_systems/ability/utilities/shout_ability")
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local Stamina = require("scripts/utilities/attack/stamina")
 local Suppression = require("scripts/utilities/attack/suppression")
@@ -55,13 +55,26 @@ local function _penance_start_func(buff_name)
 end
 
 templates.ogryn_base_passive_tank = {
-	class_name = "buff",
+	class_name = "proc_buff",
 	predicted = false,
 	stat_buffs = {
 		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings_shared.tank.toughness_damage_taken_multiplier,
 		[stat_buffs.damage_taken_multiplier] = talent_settings_shared.tank.damage_taken_multiplier,
 		[stat_buffs.static_movement_reduction_multiplier] = talent_settings_shared.tank.static_movement_reduction_multiplier,
 	},
+	proc_events = {
+		[proc_events.on_dodge_end] = 1,
+	},
+	proc_stat_buffs = {
+		[stat_buffs.damage_taken_multiplier] = talent_settings_shared.tank.damage_taken_while_dodging,
+	},
+	active_duration = talent_settings_shared.tank.dodge_linger_duration,
+	conditional_stat_buffs = {
+		[stat_buffs.damage_taken_multiplier] = talent_settings_shared.tank.damage_taken_while_dodging,
+	},
+	conditional_stat_buffs_func = function (template_data, template_context)
+		return Dodge.is_dodging(template_context.unit)
+	end,
 	related_talents = {
 		"ogryn_base_tank_passive",
 	},
@@ -381,7 +394,7 @@ local function _pulse(template_data, template_context)
 	local shout_target_template_name = "ogryn_shout_no_stagger"
 	local t = FixedFrame.get_latest_fixed_time()
 	local locomotion_component = unit_data_extension:read_component("locomotion")
-	local num_hits = ShoutAbilityImplementation.execute(radius, shout_target_template_name, unit, t, locomotion_component, shout_direction)
+	local num_hits = ShoutAbility.execute(radius, shout_target_template_name, unit, t, locomotion_component, shout_direction)
 	local buff_extension = template_context.buff_extension
 	local param_table = buff_extension:request_proc_event_param_table()
 
@@ -425,7 +438,7 @@ templates.ogryn_repeat_taunt = {
 }
 templates.ogryn_taunt_staggers_reduce_cooldown = {
 	class_name = "proc_buff",
-	cooldown_reduction_percentage = 0.025,
+	cooldown_reduction_percentage = 0.02,
 	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1,
@@ -565,11 +578,15 @@ templates.ogryn_bracing_reduces_damage_taken = {
 		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 
 		template_data.alternate_fire_component = unit_data_extension:read_component("alternate_fire")
+		template_data.shooting_status_component = unit_data_extension:read_component("shooting_status")
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
+		local fixed_t = FixedFrame.get_latest_fixed_time()
+		local shooting_status_component = template_data.shooting_status_component
 		local braced = template_data.alternate_fire_component.is_active
+		local is_shooting = shooting_status_component.shooting or not shooting_status_component.shooting and fixed_t <= shooting_status_component.shooting_end_time + 0.5
 
-		return braced
+		return braced or is_shooting
 	end,
 	realted_talents = {
 		"ogryn_bracing_reduces_damage_taken",
@@ -1648,6 +1665,8 @@ templates.ogryn_increased_toughness_at_low_health = {
 }
 
 local breed_name_size = {
+	attack_valkyrie = 1,
+	chaos_armored_hound = 5,
 	chaos_armored_infected = 1,
 	chaos_beast_of_nurgle = 10,
 	chaos_daemonhost = 8,
@@ -1661,6 +1680,7 @@ local breed_name_size = {
 	chaos_ogryn_bulwark = 5,
 	chaos_ogryn_executor = 5,
 	chaos_ogryn_gunner = 5,
+	chaos_ogryn_houndmaster = 5,
 	chaos_plague_ogryn = 10,
 	chaos_poxwalker = 1,
 	chaos_poxwalker_bomber = 2,
@@ -1929,10 +1949,10 @@ templates.ogryn_bull_rush_hits_replenish_toughness = {
 	end,
 }
 
-local stance_duration = 10
+local stance_duration = talent_settings_1.combat_ability.duration
 
 templates.ogryn_ranged_stance = {
-	class_name = "buff",
+	class_name = "proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_ability_speshul_ammo",
 	predicted = true,
 	unique_buff_id = "ogryn_ranged_stance",
@@ -1944,6 +1964,15 @@ templates.ogryn_ranged_stance = {
 		[stat_buffs.ranged_attack_speed] = 0.25,
 		[stat_buffs.reload_speed] = 0.65,
 	},
+	proc_events = {
+		[proc_events.on_ammo_consumed] = 1,
+	},
+	proc_func = function (params, template_data, template_context)
+		local saved_ammo = params.saved_ammo or 0
+		local ammo_usage = params.ammo_usage + saved_ammo
+
+		template_data.ammo_spent = template_data.ammo_spent + ammo_usage
+	end,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local talent_extension = ScriptUnit.extension(unit, "talent_system")
@@ -1954,6 +1983,7 @@ templates.ogryn_ranged_stance = {
 		template_data.evaluate_max_stacks_stat = false
 		template_data.amount_killed = 0
 		template_data.penance_threshold = 15
+		template_data.ammo_spent = 0
 
 		local no_movement_penalty = special_rules.ogryn_combat_no_movement_penalty
 
@@ -1993,14 +2023,19 @@ templates.ogryn_ranged_stance = {
 
 		template_data.evaluate_max_stacks_stat = true
 	end,
+	stop_func = function (template_data, template_context)
+		local ammo_gain = template_data.ammo_spent * talent_settings_1.combat_ability.ammo_return
+
+		Ammo.add_to_all_slots_flat(template_context.unit, ammo_gain)
+	end,
 	related_talents = {
 		"ogryn_special_ammo_movement",
 	},
 }
 templates.ogryn_kills_during_barrage = {
 	class_name = "proc_buff",
-	duration = 11,
 	predicted = false,
+	duration = stance_duration + 1,
 	proc_events = {
 		[proc_events.on_minion_death] = 1,
 	},
@@ -2337,20 +2372,32 @@ templates.ogryn_regen_toughness_on_braced = {
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	hud_priority = 4,
 	predicted = false,
+	target_slot_name = "slot_secondary",
+	start_func = function (template_data, template_context)
+		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+
+		template_data.inventory_component = unit_data_extension:read_component("inventory")
+		template_data.alternate_fire_component = unit_data_extension:read_component("alternate_fire")
+		template_data.shooting_status_component = unit_data_extension:read_component("shooting_status")
+		template_data.is_active = false
+	end,
 	update_func = function (template_data, template_context, dt, t)
 		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local alternate_fire_component = unit_data_extension:read_component("alternate_fire")
+		local wielded_slot = template_data.inventory_component.wielded_slot
+		local is_wielded = template_context.template.target_slot_name == wielded_slot
+		local alternate_fire_component = template_data.alternate_fire_component
 		local braced = alternate_fire_component.is_active
+		local shooting_status_component = template_data.shooting_status_component
+		local is_shooting = shooting_status_component.shooting or not shooting_status_component.shooting and t <= shooting_status_component.shooting_end_time + 0.5
 
-		template_data.braced = braced
+		template_data.is_active = is_wielded and (braced or is_shooting)
 
 		if template_context.is_server and braced then
 			Toughness.replenish_percentage(unit, talent_settings_1.defensive_3.braced_toughness_regen * dt)
 		end
 	end,
 	check_active_func = function (template_data, template_context)
-		return template_data.braced
+		return template_data.is_active
 	end,
 	related_talents = {
 		"ogryn_toughness_while_bracing",
@@ -2441,9 +2488,9 @@ local max_burn_stacks = talent_settings_1.combat_ability_1.max_stacks
 
 templates.ogryn_ranged_stance_fire_shots = {
 	class_name = "proc_buff",
-	duration = 10,
 	max_stacks = 1,
 	predicted = false,
+	duration = stance_duration,
 	proc_events = {
 		[proc_events.on_hit] = 1,
 		[proc_events.on_shoot] = 1,
@@ -3264,7 +3311,7 @@ templates.ogryn_staggering_damage_taken_increase = {
 	},
 }
 
-function _is_in_weapon_alternate_fire_with_stamina(template_data, template_context)
+local function _is_in_weapon_alternate_fire_with_stamina(template_data, template_context)
 	local wielded_slot = template_data.inventory_component.wielded_slot
 
 	if wielded_slot == "none" then

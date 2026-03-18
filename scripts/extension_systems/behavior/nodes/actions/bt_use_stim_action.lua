@@ -3,6 +3,7 @@
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local BtUseStimAction = class("BtUseStimAction", "BtNode")
 local _stim_use
@@ -126,7 +127,7 @@ function _stim_use(unit, breed, blackboard, scratchpad, action_data, dt, t)
 	end
 
 	local fx_system = Managers.state.extension:system("fx_system")
-	local effect_template = action_data.effect_template
+	local effect_template = EffectTemplates[action_data.effect_template_name]
 
 	scratchpad.effect_id = fx_system:start_template_effect(effect_template, unit)
 

@@ -5,6 +5,7 @@ require("scripts/extension_systems/fx/player_unit_fx_extension")
 require("scripts/extension_systems/fx/projectile_fx_extension")
 
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
+local EffectTemplatesHandler = require("scripts/extension_systems/fx/utilities/effect_templates_handler")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local ImpactEffectSettings = require("scripts/settings/damage/impact_effect_settings")
 local MaterialQuerySettings = require("scripts/settings/material_query_settings")
@@ -32,28 +33,7 @@ FxSystem.init = function (self, extension_system_creation_context, ...)
 	FxSystem.super.init(self, extension_system_creation_context, ...)
 
 	self._physics_world = extension_system_creation_context.physics_world
-
-	local max_num_template_effects = NetworkConstants.max_template_effect_buffer_index
-
-	self._max_num_template_effects = max_num_template_effects
-
-	local template_effects = Script.new_array(max_num_template_effects)
-
-	for i = 1, max_num_template_effects do
-		template_effects[i] = {
-			global_effect_id = nil,
-			is_running = false,
-			optional_node = nil,
-			optional_unit = nil,
-			template = nil,
-			buffer_index = i,
-			template_data = {},
-			optional_position = Vector3Box(Vector3.invalid_vector()),
-		}
-	end
-
-	self._template_effects = template_effects
-	self._running_template_effects = Script.new_array(max_num_template_effects)
+	self._effect_templates_handler = EffectTemplatesHandler:new(NetworkConstants.max_template_effect_buffer_index, false)
 
 	local is_server, game_session = self._is_server, extension_system_creation_context.game_session
 
@@ -61,6 +41,7 @@ FxSystem.init = function (self, extension_system_creation_context, ...)
 		is_server = is_server,
 		world = self._world,
 		wwise_world = self._wwise_world,
+		physics_world = self._physics_world,
 		game_session = game_session,
 	}
 	self.unit_to_particle_group_lookup = Script.new_map(256)
@@ -70,9 +51,7 @@ FxSystem.init = function (self, extension_system_creation_context, ...)
 
 	self._ambisonics_manual_source_id = ambisonics_manual_source_id
 
-	if is_server then
-		self._next_global_effect_id = 0
-	else
+	if not is_server then
 		self._network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
 	end
 end
@@ -101,17 +80,9 @@ FxSystem.on_add_extension = function (self, world, unit, extension_name, extensi
 end
 
 FxSystem.on_remove_extension = function (self, unit, extension_name)
-	local running_template_effects = self._running_template_effects
+	local template_context = self._template_context
 
-	for i = #running_template_effects, 1, -1 do
-		local template_effect = running_template_effects[i]
-
-		if template_effect.optional_unit == unit then
-			local template = template_effect.template
-
-			self:_stop_template_effect(template_effect, template)
-		end
-	end
+	self._effect_templates_handler:remove_effects_on_unit(template_context, unit)
 
 	local unit_to_particle_group_lookup = self.unit_to_particle_group_lookup
 	local particle_group_id = unit_to_particle_group_lookup[unit]
@@ -137,14 +108,9 @@ FxSystem.on_remove_extension = function (self, unit, extension_name)
 end
 
 FxSystem.destroy = function (self)
-	local running_template_effects = self._running_template_effects
+	local template_context = self._template_context
 
-	for i = #running_template_effects, 1, -1 do
-		local template_effect = running_template_effects[i]
-		local template = template_effect.template
-
-		self:_stop_template_effect(template_effect, template)
-	end
+	self._effect_templates_handler:clear(template_context)
 
 	if not self._is_server then
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
@@ -155,160 +121,34 @@ FxSystem.destroy = function (self)
 end
 
 FxSystem.hot_join_sync = function (self, sender, channel)
-	local running_template_effects = self._running_template_effects
-
-	for i = 1, #running_template_effects do
-		local template_effect = running_template_effects[i]
-		local buffer_index, template = template_effect.buffer_index, template_effect.template
-		local template_name = template.name
-		local template_id = NetworkLookup.effect_templates[template_name]
-		local optional_unit = template_effect.optional_unit
-		local optional_unit_id = Managers.state.unit_spawner:game_object_id(optional_unit)
-		local optional_node = template_effect.optional_node
-		local position = template_effect.optional_position:unbox()
-		local optional_position = Vector3.is_valid(position) and position or nil
-
-		RPC.rpc_start_template_effect(channel, buffer_index, template_id, optional_unit_id, optional_node, optional_position)
-	end
-
+	self._effect_templates_handler:hot_join_sync(sender, channel)
 	FxSystem.super.hot_join_sync(self, sender, channel)
 end
 
 FxSystem.update = function (self, context, dt, t, ...)
 	local template_context = self._template_context
-	local running_template_effects = self._running_template_effects
 
-	for i = 1, #running_template_effects do
-		local template_effect = running_template_effects[i]
-		local template = template_effect.template
-		local template_data = template_effect.template_data
-
-		template.update(template_data, template_context, dt, t)
-	end
-
+	self._effect_templates_handler:update(template_context, dt, t)
 	FxSystem.super.update(self, context, dt, t, ...)
 end
 
 FxSystem.has_running_template_of_name = function (self, unit, template_name)
-	local running_template_effects = self._running_template_effects
-
-	for i = 1, #running_template_effects do
-		local template_effect = running_template_effects[i]
-		local template = template_effect.template
-
-		if template_effect.optional_unit == unit and template.name == template_name then
-			return true
-		end
-	end
-
-	return false
+	return self._effect_templates_handler:has_running_template_of_name(unit, template_name)
 end
 
 FxSystem.start_template_effect = function (self, template, optional_unit, optional_node, optional_position)
 	local template_name = template.name
-	local buffer_index, template_effect
-	local max_num_template_effects = self._max_num_template_effects
-	local global_effect_id, template_effects = self._next_global_effect_id, self._template_effects
-
-	for i = 1, max_num_template_effects do
-		buffer_index = global_effect_id % max_num_template_effects + 1
-		template_effect = template_effects[buffer_index]
-
-		if not template_effect.is_running then
-			break
-		elseif i < max_num_template_effects then
-			global_effect_id = global_effect_id + 1
-		end
-	end
-
-	if template_effect.is_running then
-		local global_effect_id_to_stop = template_effect.global_effect_id
-
-		self:stop_template_effect(global_effect_id_to_stop)
-	end
-
-	self:_start_template_effect(template_effect, template, optional_unit, optional_node, optional_position)
-
-	template_effect.global_effect_id = global_effect_id
-	self._next_global_effect_id = global_effect_id + 1
-
-	local template_id = NetworkLookup.effect_templates[template_name]
-	local optional_unit_id = Managers.state.unit_spawner:game_object_id(optional_unit)
-
-	Managers.state.game_session:send_rpc_clients("rpc_start_template_effect", buffer_index, template_id, optional_unit_id, optional_node, optional_position)
+	local global_effect_id = self._effect_templates_handler:add_template_effect(self.unit_to_particle_group_lookup, self._template_context, template, optional_unit, optional_node, optional_position, nil)
 
 	return global_effect_id
 end
 
-FxSystem._start_template_effect = function (self, template_effect, template, optional_unit, optional_node, optional_position)
-	local template_data, template_context = template_effect.template_data, self._template_context
-
-	template_data.unit, template_data.node, template_data.position = optional_unit, optional_node, optional_position
-
-	if GameParameters.destroy_unmanaged_particles and optional_unit then
-		local particle_group_id_or_nil = self.unit_to_particle_group_lookup[optional_unit]
-
-		template_data.particle_group = particle_group_id_or_nil
-	end
-
-	template.start(template_data, template_context)
-
-	if optional_position then
-		template_effect.optional_position:store(optional_position)
-	end
-
-	template_effect.optional_unit = optional_unit
-	template_effect.optional_node = optional_node
-	template_effect.is_running, template_effect.template = true, template
-
-	local running_template_effects = self._running_template_effects
-
-	running_template_effects[#running_template_effects + 1] = template_effect
-end
-
 FxSystem.stop_template_effect = function (self, global_effect_id)
-	local template_effects = self._template_effects
-	local buffer_index = global_effect_id % self._max_num_template_effects + 1
-	local template_effect = template_effects[buffer_index]
-
-	if template_effect.global_effect_id ~= global_effect_id then
-		return
-	end
-
-	local template = template_effect.template
-
-	self:_stop_template_effect(template_effect, template)
-
-	template_effect.global_effect_id = nil
-
-	Managers.state.game_session:send_rpc_clients("rpc_stop_template_effect", buffer_index)
+	self._effect_templates_handler:remove_template_effect(self._template_context, global_effect_id)
 end
 
-FxSystem.has_running_global_effect_id = function (self, global_effect_id)
-	local template_effects = self._template_effects
-	local buffer_index = global_effect_id % self._max_num_template_effects + 1
-	local template_effect = template_effects[buffer_index]
-
-	return template_effect.template ~= nil
-end
-
-FxSystem._stop_template_effect = function (self, template_effect, template)
-	local template_data, template_context = template_effect.template_data, self._template_context
-
-	template.stop(template_data, template_context)
-	template_effect.optional_position:store(Vector3.invalid_vector())
-
-	template_effect.optional_unit = nil
-	template_effect.optional_node = nil
-
-	table.clear(template_data)
-
-	template_effect.is_running, template_effect.template = false
-
-	local running_template_effects = self._running_template_effects
-	local index_to_remove = table.index_of(running_template_effects, template_effect)
-
-	table.swap_delete(running_template_effects, index_to_remove)
+FxSystem.has_running_template_effect_with_global_effect_id = function (self, global_effect_id)
+	return self._effect_templates_handler:has_running_effect_with_global_id(global_effect_id)
 end
 
 FxSystem.play_impact_fx = function (self, impact_fx, position, direction, source_parameters, attacking_unit, optional_target_unit, optional_node_index, optional_hit_normal, optional_will_be_predicted, local_only_or_nil)
@@ -444,6 +284,15 @@ FxSystem.trigger_vfx = function (self, vfx_name, position, optional_rotation)
 	Managers.state.game_session:send_rpc_clients("rpc_trigger_vfx", vfx_id, position, optional_rotation)
 end
 
+FxSystem.trigger_local_unit_wwise_event = function (self, event_name, unit, optional_node)
+	local wwise_world = self._wwise_world
+	local source_id
+
+	source_id = WwiseWorld.make_auto_source(wwise_world, unit, optional_node)
+
+	WwiseWorld.trigger_resource_event(wwise_world, event_name, source_id)
+end
+
 FxSystem.trigger_wwise_event = function (self, event_name, optional_position, optional_unit, optional_node, optional_parameter_name, optional_parameter_value, optional_ambisonics)
 	local wwise_world = self._wwise_world
 	local source_id
@@ -561,22 +410,22 @@ FxSystem.trigger_flow_event = function (self, unit, event_name)
 	Managers.state.game_session:send_rpc_clients("rpc_trigger_flow_event", unit_id, event_id)
 end
 
-FxSystem.rpc_start_template_effect = function (self, channel_id, buffer_index, template_id, optional_unit_id, optional_node, optional_position)
+FxSystem.rpc_start_template_effect = function (self, channel_id, buffer_index, template_id, optional_unit_id, optional_node, optional_position, optional_player_owner_unit_id)
 	local template_name = NetworkLookup.effect_templates[template_id]
 	local template = EffectTemplates[template_name]
 	local optional_unit = Managers.state.unit_spawner:unit(optional_unit_id)
-	local template_effects = self._template_effects
-	local template_effect = template_effects[buffer_index]
+	local optional_player_owner_unit = Managers.state.unit_spawner:unit(optional_player_owner_unit_id)
+	local template_context = self._template_context
+	local effect_templates_handler = self._effect_templates_handler
 
-	self:_start_template_effect(template_effect, template, optional_unit, optional_node, optional_position)
+	effect_templates_handler:start_template_effect_from_rpc(self.unit_to_particle_group_lookup, template_context, buffer_index, template, optional_unit, optional_node, optional_position, optional_player_owner_unit)
 end
 
-FxSystem.rpc_stop_template_effect = function (self, channel_id, buffer_index)
-	local template_effects = self._template_effects
-	local template_effect = template_effects[buffer_index]
-	local template = template_effect.template
+FxSystem.rpc_stop_template_effect = function (self, channel_id, buffer_index, is_player_effect)
+	local template_context = self._template_context
+	local effect_templates_handler = self._effect_templates_handler
 
-	self:_stop_template_effect(template_effect, template)
+	effect_templates_handler:stop_template_effect_from_rpc(template_context, buffer_index)
 end
 
 local SOURCE_PARAMETERS = {}

@@ -421,9 +421,17 @@ do
 					offset = {
 						0,
 						0,
-						-1,
+						50,
 					},
 					default_size = Dimensions.small_mission_size,
+					size_addition = {
+						26,
+						26,
+					},
+					default_size_addition = {
+						26,
+						26,
+					},
 					material_values = {},
 				},
 				change_function = function (content, style, animations, dt)
@@ -431,8 +439,16 @@ do
 					local is_selected = hotspot.is_selected
 					local is_selected_mission_board = hotspot.is_selected_mission_board
 					local is_focused = hotspot.is_focused
+					local anim_select_progress = hotspot.anim_select_progress or 0
+					local anim_hover_progress = hotspot.anim_hover_progress or 0
+					local add_x, add_y = 0, 0
 
-					_update_size_by_selection_state(content, style, animations, dt)
+					add_x = style.default_size_addition[1] + 28 * anim_select_progress
+					add_y = style.default_size_addition[2] + 28 * anim_select_progress
+					add_x = add_x + style.default_size_addition[1] + 10 * anim_hover_progress
+					add_y = add_y + style.default_size_addition[2] + 10 * anim_hover_progress
+					style.size_addition[1] = add_x
+					style.size_addition[2] = add_y
 
 					local was_selected = style.is_selected
 					local currently_selected = is_selected or is_focused or is_selected_mission_board
@@ -476,13 +492,24 @@ do
 				tile_size[2] * slected_frame_size_addition,
 			}
 
+			if category ~= "common" and not creation_context.skip_background_frame then
+				style.selected_frame_detail.size_addition = {
+					40,
+					40,
+				}
+				style.selected_frame_detail.default_size_addition = {
+					40,
+					40,
+				}
+			end
+
 			style.selected_frame_detail.size = {
-				selected_frame_size[1] * size_modifier,
-				selected_frame_size[2] * size_modifier,
+				tile_size[1],
+				tile_size[2],
 			}
 			style.selected_frame_detail.default_size = {
-				selected_frame_size[1] * size_modifier,
-				selected_frame_size[2] * size_modifier,
+				tile_size[1],
+				tile_size[2],
 			}
 			style.frame_glow.size = {
 				tile_size[1] * size_modifier,
@@ -1230,7 +1257,7 @@ do
 				style = {
 					drop_shadow = true,
 					font_size = 18,
-					font_type = "kode_mono_bold",
+					font_type = "mono_tide_bold",
 					horizontal_alignment = "left",
 					text_horizontal_alignment = "left",
 					text_vertical_alignment = "center",
@@ -1495,7 +1522,7 @@ do
 					offset = {
 						-32,
 						0,
-						7,
+						8,
 					},
 				},
 				change_function = function (content, style, animations, dt)
@@ -1523,7 +1550,7 @@ do
 					offset = {
 						-34,
 						2,
-						7,
+						8,
 					},
 					material_values = {
 						gradient_map = "content/ui/textures/mission_board/gradient_digital_green",
@@ -1542,7 +1569,7 @@ do
 			local is_story = creation_context.is_story or mission_category == "story"
 			local category_colors = Styles.colors.color_by_mission_type[is_story and "story" or mission_category] or Styles.colors.color_by_mission_type.default
 
-			style.side_objective_background.color = Styles.colors[palette_name].background
+			style.side_objective_background.color = table.shallow_copy(Styles.colors[palette_name].background)
 			style.side_objective_frame.default_color = category_colors.corner_color
 			style.side_objective_frame.hover_color = category_colors.hover_color
 			style.side_objective_frame.selected_color = category_colors.selected_color
@@ -2022,7 +2049,7 @@ do
 				value_id = "banner_text",
 				style = {
 					font_size = 14,
-					font_type = "kode_mono_bold",
+					font_type = "mono_tide_bold",
 					horizontal_alignment = "center",
 					text_horizontal_alignment = "right",
 					text_vertical_alignment = "bottom",
@@ -2185,7 +2212,7 @@ do
 				value_id = "header_text",
 				style = {
 					font_size = 14,
-					font_type = "kode_mono_medium",
+					font_type = "mono_tide_medium",
 					horizontal_alignment = "center",
 					text_horizontal_alignment = "left",
 					text_vertical_alignment = "top",
@@ -2301,7 +2328,7 @@ do
 				value_id = "display_order_text",
 				style = {
 					font_size = 16,
-					font_type = "kode_mono_medium",
+					font_type = "mono_tide_medium",
 					horizontal_alignment = "left",
 					text_horizontal_alignment = "center",
 					text_vertical_alignment = "center",
@@ -2476,6 +2503,17 @@ do
 			style.display_order_text_frame.hover_color = table.shallow_copy(mission_type_colors.hover_color)
 			style.display_order_text.default_color = content.is_locked and table.shallow_copy(mission_type_colors.disabled_color) or table.shallow_copy(mission_type_colors.default_color)
 			style.display_order_text_frame.default_color = content.is_locked and table.shallow_copy(mission_type_colors.disabled_color) or table.shallow_copy(mission_type_colors.default_color)
+
+			if style.selected_frame_detail then
+				style.selected_frame_detail.size_addition = {
+					18,
+					30,
+				}
+				style.selected_frame_detail.default_size_addition = {
+					18,
+					30,
+				}
+			end
 		end,
 	}
 	local highest_difficulty_completed_icon = {
@@ -2559,6 +2597,14 @@ do
 						-1,
 					},
 					default_size = Dimensions.small_mission_size,
+					size_addition = {
+						10,
+						10,
+					},
+					default_size_addition = {
+						10,
+						10,
+					},
 					material_values = {},
 				},
 				change_function = function (content, style, animations, dt)
@@ -2566,8 +2612,16 @@ do
 					local is_selected = hotspot.is_selected
 					local is_selected_mission_board = hotspot.is_selected_mission_board
 					local is_focused = hotspot.is_focused
+					local anim_select_progress = hotspot.anim_select_progress or 0
+					local anim_hover_progress = hotspot.anim_hover_progress or 0
+					local add_x, add_y = 0, 0
 
-					_update_size_by_selection_state(content, style, animations, dt)
+					add_x = style.default_size_addition[1] + 28 * anim_select_progress
+					add_y = style.default_size_addition[2] + 28 * anim_select_progress
+					add_x = add_x + style.default_size_addition[1] + 10 * anim_hover_progress
+					add_y = add_y + style.default_size_addition[2] + 10 * anim_hover_progress
+					style.size_addition[1] = add_x
+					style.size_addition[2] = add_y
 
 					local was_selected = style.is_selected
 					local currently_selected = is_selected or is_focused or is_selected_mission_board
@@ -2629,11 +2683,11 @@ do
 			style.background_frame.disabled_color = table.shallow_copy(mission_type_colors.disabled_color)
 			style.selected_frame_detail.size = {
 				tile_size[1],
-				tile_size[2] + 32,
+				tile_size[2],
 			}
 			style.selected_frame_detail.default_size = {
 				tile_size[1],
-				tile_size[2] + 32,
+				tile_size[2],
 			}
 			style.selected_frame_detail.offset[2] = 0
 
@@ -2774,7 +2828,7 @@ do
 				value_id = "static_header_text",
 				style = {
 					font_size = 16,
-					font_type = "kode_mono_bold",
+					font_type = "mono_tide_bold",
 					horizontal_alignment = "left",
 					text_horizontal_alignment = "left",
 					text_vertical_alignment = "bottom",
@@ -2793,7 +2847,7 @@ do
 					local is_hovered = hotspot and hotspot.is_hover
 					local is_selected = hotspot and hotspot.is_selected
 
-					style.font_size = 16 + 1 * (hotspot.anim_hover_progress or 0) + 2 * (hotspot.anim_select_progress or 0)
+					style.font_size = 16 + (is_selected and 0.5 or 1) * (hotspot.anim_hover_progress or 0) + 1 * (hotspot.anim_select_progress or 0)
 				end,
 			},
 		},
@@ -2814,7 +2868,7 @@ do
 				content.size[1] - content.size[2] + 4,
 				content.size[2],
 			}
-			style.static_header_text.offset[1] = content.size[2] + 4
+			style.static_header_text.offset[1] = content.size[2] + 8
 			content.static_header_text = header_text
 
 			local text_color = Styles.colors.default.terminal_text_dark
@@ -2835,14 +2889,14 @@ do
 				value_id = "static_sub_header_text",
 				style = {
 					font_size = 12,
-					font_type = "kode_mono_regular",
+					font_type = "mono_tide_regular",
 					horizontal_alignment = "left",
 					text_horizontal_alignment = "left",
 					text_vertical_alignment = "top",
 					vertical_alignment = "center",
 					offset = {
 						70,
-						4,
+						8,
 						5,
 					},
 					text_color = table.shallow_copy(Styles.colors.color_by_mission_type.default.default_color),
@@ -2854,7 +2908,7 @@ do
 					local is_hovered = hotspot and hotspot.is_hover
 					local is_selected = hotspot and hotspot.is_selected
 
-					style.font_size = 12 + 1 * (hotspot.anim_hover_progress or 0) + 2 * (hotspot.anim_select_progress or 0)
+					style.font_size = 12 + (is_selected and 0.5 or 1) * (hotspot.anim_hover_progress or 0) + 1 * (hotspot.anim_select_progress or 0)
 				end,
 			},
 		},
@@ -2875,7 +2929,7 @@ do
 				content.size[1] - content.size[2] + 4,
 				content.size[2],
 			}
-			style.static_sub_header_text.offset[1] = content.size[2] + 4
+			style.static_sub_header_text.offset[1] = content.size[2] + 8
 			content.static_sub_header_text = sub_header_text
 
 			local text_color = table.shallow_copy(Styles.colors.color_by_mission_type.default.default_color)

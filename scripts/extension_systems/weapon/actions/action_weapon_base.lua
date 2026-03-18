@@ -40,6 +40,7 @@ ActionWeaponBase.init = function (self, action_context, action_params, action_se
 	self._weapon_unit = weapon.weapon_unit
 	self._weapon_template = weapon.weapon_template
 	self._inventory_slot_component = weapon.inventory_slot_component
+	self._wielded_slot = action_params.wielded_slot
 
 	local ability_type = self._action_settings.ability_type
 

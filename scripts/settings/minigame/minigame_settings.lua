@@ -2,7 +2,7 @@
 
 local minigame_settings = {}
 
-minigame_settings.types = table.enum("none", "balance", "decode_symbols", "drill", "frequency")
+minigame_settings.types = table.enum("none", "balance", "decode_search", "decode_symbols", "drill", "expedition_map", "frequency")
 minigame_settings.game_states = table.enum("none", "intro", "gameplay", "transition", "outro", "complete")
 minigame_settings.default_minigame_type = minigame_settings.types.decode_symbols
 minigame_settings.balance_move_ratio = 4.2
@@ -22,6 +22,61 @@ minigame_settings.disengage_view_angle_v = math.degrees_to_radians(62)
 minigame_settings.decode_symbols_stage_amount = num_stages
 minigame_settings.decode_symbols_items_per_stage = num_symbols_per_stage
 minigame_settings.decode_symbols_total_items = num_stages * num_symbols_per_stage
+minigame_settings.decode_transition_time = 0.25
+minigame_settings.decode_highlight_time = 0.75
+minigame_settings.decode_search_stage_amount = 3
+minigame_settings.decode_search_board_width = 6
+minigame_settings.decode_search_board_height = 4
+minigame_settings.decode_search_cursor_width = 2
+minigame_settings.decode_search_cursor_height = 2
+minigame_settings.decode_move_delay = 0.25
+minigame_settings.decode_move_deadzone = 0.5
+minigame_settings.decode_search_symbols = {
+	{
+		4,
+		5,
+		12,
+		16,
+	},
+	{
+		3,
+		8,
+		9,
+	},
+	{
+		10,
+		11,
+		13,
+		15,
+		18,
+	},
+	{
+		1,
+		2,
+		7,
+	},
+	{
+		14,
+		17,
+		19,
+		23,
+	},
+	{
+		20,
+		21,
+		22,
+	},
+	{
+		26,
+		27,
+		28,
+	},
+	{
+		6,
+		24,
+		25,
+	},
+}
 minigame_settings.frequency_search_stage_amount = 3
 minigame_settings.frequency_width_min_scale = 1.5
 minigame_settings.frequency_width_max_scale = 3
@@ -45,5 +100,8 @@ minigame_settings.drill_stage_amount = 3
 minigame_settings.drill_stage_targets = 5
 minigame_settings.drill_move_delay = 0.25
 minigame_settings.drill_move_distance_power = 0.75
+minigame_settings.exp_map_move_delay = 0.25
+minigame_settings.exp_map_move_deadzone = 0.5
+minigame_settings.exp_map_move_distance_power = 0.75
 
 return settings("MinigameSettings", minigame_settings)

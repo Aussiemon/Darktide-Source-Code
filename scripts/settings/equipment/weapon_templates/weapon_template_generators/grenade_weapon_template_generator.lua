@@ -1,10 +1,12 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/weapon_template_generators/grenade_weapon_template_generator.lua
 
+local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
+local ActionInputHierarchy = require("scripts/utilities/action/action_input_hierarchy")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 
-local function generate_base_template()
+local function generate_base_template(ability_type)
 	local base_template = {}
 
 	base_template.action_inputs = {
@@ -146,6 +148,9 @@ local function generate_base_template()
 			},
 		},
 	}
+
+	table.add_missing(base_template.action_inputs, BaseTemplateSettings.action_inputs)
+
 	base_template.action_input_hierarchy = {
 		{
 			input = "aim_hold",
@@ -257,6 +262,9 @@ local function generate_base_template()
 			},
 		},
 	}
+
+	ActionInputHierarchy.add_missing(base_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
+
 	base_template.actions = {
 		action_unwield = {
 			allowed_during_sprint = true,
@@ -285,6 +293,7 @@ local function generate_base_template()
 				combat_ability = {
 					action_name = "combat_ability",
 				},
+				grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 				wield = {
 					action_name = "action_unwield",
 				},
@@ -299,7 +308,6 @@ local function generate_base_template()
 			},
 		},
 		action_aim = {
-			ability_type = "grenade_ability",
 			allowed_during_sprint = false,
 			anim_end_event = "to_unaim_arc",
 			anim_event = "to_aim_arc",
@@ -311,7 +319,6 @@ local function generate_base_template()
 			stop_input = "block_cancel",
 			throw_type = "throw",
 			uninterruptible = true,
-			use_ability_charge = true,
 			total_time = math.huge,
 			arc_configuration = {
 				angle = 0.35,
@@ -324,6 +331,7 @@ local function generate_base_template()
 				combat_ability = {
 					action_name = "combat_ability",
 				},
+				grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 				aim_released = {
 					action_name = "action_throw_grenade",
 					chain_time = 0.1,
@@ -336,9 +344,9 @@ local function generate_base_template()
 				return end_reason == "hold_input_released"
 			end,
 			arc_start_offset = Vector3Box(0.5, 1, 0.1),
+			ability_type = ability_type,
 		},
 		action_throw_grenade = {
-			ability_type = "grenade_ability",
 			allowed_during_sprint = false,
 			anim_end_event = "equip",
 			anim_event = "throw",
@@ -348,7 +356,6 @@ local function generate_base_template()
 			throw_type = "throw",
 			total_time = 0.67,
 			uninterruptible = true,
-			use_ability_charge = true,
 			weapon_handling_template = "grenade_throw",
 			conditional_state_to_action_input = {
 				action_end = {
@@ -359,6 +366,7 @@ local function generate_base_template()
 				combat_ability = {
 					action_name = "combat_ability",
 				},
+				grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 				unwield_to_previous = {
 					action_name = "action_unwield_to_previous",
 				},
@@ -367,15 +375,20 @@ local function generate_base_template()
 				},
 			},
 			arc_start_offset = Vector3Box(0.5, 1, 0.1),
+			use_ability_charge = ability_type ~= nil,
+			remove_item_from_inventory = ability_type == nil,
+			ability_type = ability_type,
 			anim_end_event_condition_func = function (unit, data, end_reason)
-				local ability_extension = ScriptUnit.has_extension(unit, "ability_system")
-				local ability_type = "grenade_ability"
+				if ability_type then
+					local ability_extension = ScriptUnit.has_extension(unit, "ability_system")
 
-				return ability_extension and ability_extension:can_use_ability(ability_type)
+					return ability_extension and ability_extension:can_use_ability(ability_type)
+				end
+
+				return true
 			end,
 		},
 		action_aim_underhand = {
-			ability_type = "grenade_ability",
 			allowed_during_sprint = false,
 			anim_end_event = "to_unaim_arc",
 			anim_event = "prime_underhand",
@@ -387,7 +400,6 @@ local function generate_base_template()
 			stop_input = "short_hand_aim_released",
 			throw_type = "underhand_throw",
 			uninterruptible = true,
-			use_ability_charge = true,
 			total_time = math.huge,
 			arc_configuration = {
 				angle = 0.35,
@@ -400,6 +412,7 @@ local function generate_base_template()
 				combat_ability = {
 					action_name = "combat_ability",
 				},
+				grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 				short_hand_throw = {
 					action_name = "action_underhand_throw_grenade",
 					chain_time = 0.1,
@@ -412,9 +425,9 @@ local function generate_base_template()
 				return end_reason == "hold_input_released"
 			end,
 			arc_start_offset = Vector3Box(0.5, 0.1, -0.3),
+			ability_type = ability_type,
 		},
 		action_underhand_throw_grenade = {
-			ability_type = "grenade_ability",
 			allowed_during_sprint = false,
 			anim_end_event = "equip",
 			anim_event = "throw_underhand",
@@ -424,7 +437,6 @@ local function generate_base_template()
 			throw_type = "underhand_throw",
 			total_time = 0.67,
 			uninterruptible = true,
-			use_ability_charge = true,
 			weapon_handling_template = "grenade_throw",
 			conditional_state_to_action_input = {
 				action_end = {
@@ -435,6 +447,7 @@ local function generate_base_template()
 				combat_ability = {
 					action_name = "combat_ability",
 				},
+				grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 				unwield_to_previous = {
 					action_name = "action_unwield_to_previous",
 				},
@@ -443,11 +456,17 @@ local function generate_base_template()
 				},
 			},
 			arc_start_offset = Vector3Box(0.5, 0.1, -0.3),
+			use_ability_charge = ability_type ~= nil,
+			remove_item_from_inventory = ability_type == nil,
+			ability_type = ability_type,
 			anim_end_event_condition_func = function (unit, data, end_reason)
-				local ability_extension = ScriptUnit.has_extension(unit, "ability_system")
-				local ability_type = "grenade_ability"
+				if ability_type then
+					local ability_extension = ScriptUnit.has_extension(unit, "ability_system")
 
-				return ability_extension and ability_extension:can_use_ability(ability_type)
+					return ability_extension and ability_extension:can_use_ability(ability_type)
+				end
+
+				return true
 			end,
 		},
 		action_inspect = {
@@ -472,6 +491,9 @@ local function generate_base_template()
 			allowed_chain_actions = {},
 		},
 	}
+
+	table.add_missing(base_template.actions, BaseTemplateSettings.actions)
+
 	base_template.keywords = {
 		"grenade",
 	}

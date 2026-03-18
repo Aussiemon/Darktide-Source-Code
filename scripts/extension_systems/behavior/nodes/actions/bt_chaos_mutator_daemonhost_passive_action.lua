@@ -7,6 +7,7 @@ local Attack = require("scripts/utilities/attack/attack")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local ChaosDaemonhostSettings = require("scripts/settings/monster/chaos_daemonhost_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
@@ -115,7 +116,8 @@ BtChaosMutatorDaemonhostPassiveAction.enter = function (self, unit, breed, black
 	scratchpad.fx_system = fx_system
 
 	if not scratchpad.chanting_effect_id then
-		local chanting_effect_id = fx_system:start_template_effect(action_data.effect_template, unit)
+		local effect_template = EffectTemplates[action_data.effect_template_name]
+		local chanting_effect_id = fx_system:start_template_effect(effect_template, unit)
 
 		scratchpad.chanting_effect_id = chanting_effect_id
 	end

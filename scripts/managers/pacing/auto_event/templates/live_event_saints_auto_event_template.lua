@@ -1,8 +1,8 @@
 ﻿-- chunkname: @scripts/managers/pacing/auto_event/templates/live_event_saints_auto_event_template.lua
 
-template = {}
+local template = {}
+
 template.live_event_saints_auto_event_template = {
-	monster_limit_per_event = 0,
 	name = "live_event_saints_auto_event_template",
 	cooldown = {
 		{
@@ -65,24 +65,6 @@ template.live_event_saints_auto_event_template = {
 		5,
 		5,
 		5,
-	},
-	monster_chance = {
-		challenge = {
-			0,
-			0,
-			0,
-			0,
-			0,
-		},
-		heat = {
-			0,
-			0,
-			0,
-			0,
-			0,
-			0,
-			0,
-		},
 	},
 	resistance_multiplier = {
 		0.5,

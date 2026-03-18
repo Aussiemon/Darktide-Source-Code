@@ -64,6 +64,7 @@ local function _resolve_backend_game_settings()
 		Managers.package:apply_backend_game_settings()
 		Managers.multiplayer_session:apply_backend_game_settings()
 		user_settings_apply_backend_game_settings()
+		Crashify.apply_backend_game_settings()
 
 		return nil
 	end)

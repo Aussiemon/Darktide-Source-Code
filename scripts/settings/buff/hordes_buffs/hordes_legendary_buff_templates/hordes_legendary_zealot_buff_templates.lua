@@ -8,7 +8,7 @@ local FixedFrame = require("scripts/utilities/fixed_frame")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local HordesBuffsData = require("scripts/settings/buff/hordes_buffs/hordes_buffs_data")
 local HordesBuffsUtilities = require("scripts/settings/buff/hordes_buffs/hordes_buffs_utilities")
-local ShoutAbilityImplementation = require("scripts/extension_systems/ability/utilities/shout_ability_implementation")
+local ShoutAbility = require("scripts/extension_systems/ability/utilities/shout_ability")
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local buff_categories = BuffSettings.buff_categories
@@ -166,7 +166,7 @@ templates.hordes_buff_zealot_lunge_hit_triggers_shout = {
 			local rotation = template_data.first_person_component.rotation
 			local forward = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
 
-			ShoutAbilityImplementation.execute(template_data.shout_radius, template_data.shout_target_template, player_unit, t, template_data.locomotion_component, forward)
+			ShoutAbility.execute(template_data.shout_radius, template_data.shout_target_template, player_unit, t, template_data.locomotion_component, forward)
 
 			local player_fx_extension = ScriptUnit.extension(player_unit, "fx_system")
 

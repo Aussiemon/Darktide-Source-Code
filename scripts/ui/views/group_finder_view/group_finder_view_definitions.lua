@@ -2503,11 +2503,11 @@ local grid_blueprints = {
 				local frame_item = loadout and loadout.slot_portrait_frame
 
 				if frame_item then
-					local cb = callback(function (item)
+					local function cb()
 						local material_values = style.character_portrait.material_values
 
-						material_values.portrait_frame_texture = item.icon
-					end, frame_item)
+						material_values.portrait_frame_texture = frame_item.icon
+					end
 
 					content.frame_load_id = Managers.ui:load_item_icon(frame_item, cb)
 				end
@@ -2515,22 +2515,22 @@ local grid_blueprints = {
 				local insignia_item = loadout and loadout.slot_insignia
 
 				if insignia_item then
-					local cb = callback(function (item)
+					local function cb()
 						local icon_style = style.character_insignia
 						local material_values = icon_style.material_values
 
-						if item.icon_material and item.icon_material ~= "" then
+						if insignia_item.icon_material and insignia_item.icon_material ~= "" then
 							if material_values.texture_map then
 								material_values.texture_map = nil
 							end
 
-							content.character_insignia = item.icon_material
+							content.character_insignia = insignia_item.icon_material
 						else
-							material_values.texture_map = item.icon
+							material_values.texture_map = insignia_item.icon
 						end
 
 						icon_style.color[1] = 255
-					end, insignia_item)
+					end
 
 					content.insignia_load_id = Managers.ui:load_item_icon(insignia_item, cb)
 				end

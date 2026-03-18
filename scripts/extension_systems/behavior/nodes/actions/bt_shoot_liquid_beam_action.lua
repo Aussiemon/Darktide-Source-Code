@@ -5,6 +5,7 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local HitScan = require("scripts/utilities/attack/hit_scan")
 local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
 local MinionAttack = require("scripts/utilities/minion_attack")
@@ -23,11 +24,19 @@ BtShootLiquidBeamAction.enter = function (self, unit, breed, blackboard, scratch
 	behavior_component.move_state = "attacking"
 	scratchpad.behavior_component = behavior_component
 
-	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
-	local nav_world = navigation_extension:nav_world()
+	local navigation_extension = ScriptUnit.has_extension(unit, "navigation_system")
 
-	scratchpad.nav_world = nav_world
-	scratchpad.navigation_extension = navigation_extension
+	if navigation_extension then
+		local nav_world = navigation_extension:nav_world()
+
+		scratchpad.nav_world = nav_world
+		scratchpad.navigation_extension = navigation_extension
+	else
+		local nav_world = Managers.state.nav_mesh:nav_world()
+
+		scratchpad.nav_world = nav_world
+	end
+
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
@@ -57,7 +66,11 @@ BtShootLiquidBeamAction.enter = function (self, unit, breed, blackboard, scratch
 	scratchpad.spawn_component = spawn_component
 	scratchpad.breed = breed
 
-	self:_start_aiming(unit, t, scratchpad, action_data)
+	local ignore_aiming = action_data.ignore_aiming
+
+	if not ignore_aiming then
+		self:_start_aiming(unit, t, scratchpad, action_data)
+	end
 
 	local fx_system = Managers.state.extension:system("fx_system")
 
@@ -89,10 +102,14 @@ BtShootLiquidBeamAction.enter = function (self, unit, breed, blackboard, scratch
 end
 
 BtShootLiquidBeamAction.init_values = function (self, blackboard, action_data, node_data)
-	local statistics_component = Blackboard.write_component(blackboard, "statistics")
+	local has_component = Blackboard.has_component(blackboard, "statistics")
 
-	statistics_component.num_attacks_done = 0
-	statistics_component.num_in_liquid = 0
+	if has_component then
+		local statistics_component = Blackboard.write_component(blackboard, "statistics")
+
+		statistics_component.num_attacks_done = 0
+		statistics_component.num_in_liquid = 0
+	end
 end
 
 BtShootLiquidBeamAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
@@ -170,9 +187,9 @@ BtShootLiquidBeamAction.run = function (self, unit, breed, blackboard, scratchpa
 
 	local target_position = POSITION_LOOKUP[target_unit]
 	local self_position = POSITION_LOOKUP[unit]
-	local distance_to_target = Vector3.distance(self_position, target_position)
+	local distance_to_target = target_position and Vector3.distance(self_position, target_position)
 
-	if distance_to_target > action_data.range or distance_to_target < action_data.min_range then
+	if distance_to_target and (distance_to_target > action_data.range or distance_to_target < action_data.min_range) then
 		return "done"
 	end
 
@@ -535,7 +552,7 @@ BtShootLiquidBeamAction._update_liquid_beam_positions = function (self, dt, scra
 end
 
 BtShootLiquidBeamAction._start_effect_template = function (self, unit, scratchpad, action_data)
-	local effect_template = action_data.effect_template
+	local effect_template = EffectTemplates[action_data.effect_template_name]
 	local fx_system = scratchpad.fx_system
 	local liquid_beam_effect_id = fx_system:start_template_effect(effect_template, unit)
 

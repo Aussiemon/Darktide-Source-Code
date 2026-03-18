@@ -51,7 +51,7 @@ PlayerCharacterStateMinigame.on_enter = function (self, unit, dt, t, previous_st
 	local inair_state_component = self._inair_state_component
 	local is_crouching = self._movement_state_component.is_crouching
 
-	if is_crouching then
+	if is_crouching and Crouch.can_exit(unit) then
 		local first_person_extension = self._first_person_extension
 		local animation_extension = self._animation_extension
 		local weapon_extension = self._weapon_extension
@@ -79,7 +79,6 @@ PlayerCharacterStateMinigame.on_enter = function (self, unit, dt, t, previous_st
 	self._previous_action_one_hold = false
 	self._previous_jump_held = false
 	self._previous_interact_hold = false
-	self._force_cancel = false
 end
 
 PlayerCharacterStateMinigame.on_exit = function (self, unit, t, next_state)
@@ -136,6 +135,17 @@ PlayerCharacterStateMinigame.fixed_update = function (self, unit, dt, t, next_st
 	local input_extension = self._input_extension
 	local cancelled = self:_update_input(t, fixed_frame, input_extension) or self._force_cancel
 	local transition = self:_check_transition(unit, t, next_state_params, cancelled, input_extension)
+
+	if transition then
+		local anim_ext = ScriptUnit.extension(unit, "animation_system")
+		local action_time_offset = 0
+		local time_scale = 1
+		local first_person_unit = self._first_person_extension:first_person_unit()
+
+		if Unit.has_animation_event(first_person_unit, "auspex_stop_focus") then
+			anim_ext:anim_event_with_variable_floats_1p("auspex_stop_focus", "attack_speed", time_scale, "action_time_offset", action_time_offset)
+		end
+	end
 
 	return transition
 end
@@ -320,10 +330,6 @@ PlayerCharacterStateMinigame._queue_minigame_initialization = function (self)
 	self._setup_minigame = true
 end
 
-PlayerCharacterStateMinigame.force_cancel = function (self)
-	self._force_cancel = true
-end
-
 PlayerCharacterStateMinigame.minigame = function (self)
 	return self._minigame
 end
@@ -334,6 +340,22 @@ PlayerCharacterStateMinigame._check_initialize_minigame_from_gamemode = function
 	if not game_mode.map_minigame then
 		return false
 	end
+
+	local minigame = game_mode:map_minigame()
+
+	if not minigame then
+		return false
+	end
+
+	self._minigame = minigame
+
+	if self._is_server then
+		minigame:setup_game()
+	end
+
+	minigame:start(self._player)
+
+	return true
 end
 
 PlayerCharacterStateMinigame._check_initialize_minigame_from_unit = function (self)

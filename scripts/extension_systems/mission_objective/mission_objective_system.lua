@@ -23,8 +23,7 @@ local mission_objectives = {
 	timed = MissionObjectiveTimed,
 	demolition = MissionObjectiveDemolition,
 	luggable = MissionObjectiveLuggable,
-	scanning = MissionObjectiveZone,
-	capture = MissionObjectiveZone,
+	zone = MissionObjectiveZone,
 	side = MissionObjectiveSide,
 }
 local MissionObjectiveSystem = class("MissionObjectiveSystem", "ExtensionSystemBase")
@@ -35,6 +34,7 @@ local RPCS = {
 	"rpc_update_mission_objective_second_progression",
 	"rpc_update_mission_objective_increment",
 	"rpc_end_mission_objective",
+	"rpc_reset_mission_objective",
 	"rpc_add_objective_marker",
 	"rpc_remove_objective_marker",
 	"rpc_mission_objective_show_ui",
@@ -46,11 +46,21 @@ local RPCS = {
 	"rpc_mission_sound_event",
 }
 
+local function create_objective_group()
+	return {
+		active_objectives = {},
+		level_end_objectives = {},
+		objective_registered_synchronizer = {},
+		objective_registered_units = {},
+	}
+end
+
 MissionObjectiveSystem.init = function (self, context, system_init_data, ...)
 	MissionObjectiveSystem.super.init(self, context, system_init_data, ...)
 
 	self._is_server = context.is_server
 	self._support_objective_groups = false
+	self._support_objective_groups = Managers.mechanism:mechanism_name() == "expedition"
 	self._objective_groups = {
 		[GLOBAL_GROUP_ID] = create_objective_group(),
 	}
@@ -63,7 +73,6 @@ MissionObjectiveSystem.init = function (self, context, system_init_data, ...)
 	self._game_session = Managers.state.game_session
 	self._objective_definitions = {}
 	self._new_ui_strings = {}
-	self._objective_start_times = {}
 	self._music_event_listener = nil
 
 	local network_event_delegate = context.network_event_delegate
@@ -79,15 +88,6 @@ MissionObjectiveSystem.init = function (self, context, system_init_data, ...)
 	local mission = system_init_data.mission
 
 	self:_load_definitions(mission)
-end
-
-function create_objective_group()
-	return {
-		active_objectives = {},
-		level_end_objectives = {},
-		objective_registered_synchronizer = {},
-		objective_registered_units = {},
-	}
 end
 
 MissionObjectiveSystem.destroy = function (self, ...)
@@ -176,7 +176,9 @@ MissionObjectiveSystem.update = function (self, system_context, dt, t)
 					objective:update_progression()
 					self:_propagate_objective_progression(objective)
 
-					if objective:max_progression_achieved() and not objective:evaluate_at_level_end() then
+					local ready_to_end = objective:max_progression_achieved()
+
+					if ready_to_end and not objective:evaluate_at_level_end() then
 						self:end_mission_objective(objective_name, group_id)
 					end
 				end
@@ -222,8 +224,6 @@ MissionObjectiveSystem.start_mission_objective = function (self, objective_name,
 	Managers.event:trigger("event_mission_objective_start", objective)
 
 	if self._is_server then
-		self._objective_start_times[objective] = Managers.time:time("main")
-
 		local players = Managers.player:players()
 
 		for _, player in pairs(players) do
@@ -290,6 +290,36 @@ MissionObjectiveSystem.evaluate_level_end_objectives = function (self)
 	end
 end
 
+MissionObjectiveSystem.evaluate_location_objectives = function (self)
+	local objective_definitions = self._objective_definitions
+
+	for group_id, objective_group in pairs(self._objective_groups) do
+		local active_objectives = objective_group.active_objectives
+
+		for objective_name, objective in pairs(active_objectives) do
+			if not objective:persistent_between_locations() then
+				self:end_mission_objective(objective_name, group_id)
+			end
+		end
+
+		local objective_registered_synchronizer = objective_group.objective_registered_synchronizer
+
+		for objective_name, objective_synchronizer_unit in pairs(objective_registered_synchronizer) do
+			if not objective_definitions[objective_name].persistent_between_locations then
+				objective_registered_synchronizer[objective_name] = nil
+			end
+		end
+
+		local objective_registered_units = objective_group.objective_registered_units
+
+		for objective_name, objective_units in pairs(objective_registered_units) do
+			if not objective_definitions[objective_name].persistent_between_locations then
+				table.clear(objective_registered_units[objective_name])
+			end
+		end
+	end
+end
+
 MissionObjectiveSystem.end_mission_objective = function (self, objective_name, group_id)
 	group_id = group_id or GLOBAL_GROUP_ID
 
@@ -299,6 +329,14 @@ MissionObjectiveSystem.end_mission_objective = function (self, objective_name, g
 
 	if not objective then
 		return
+	end
+
+	local synchronizer_unit = objective_group.objective_registered_synchronizer[objective_name]
+
+	if synchronizer_unit then
+		local synchronizer_extension = ScriptUnit.extension(synchronizer_unit, "event_synchronizer_system")
+
+		synchronizer_extension:stop()
 	end
 
 	local is_side_mission = objective:is_side_mission()
@@ -323,8 +361,6 @@ MissionObjectiveSystem.end_mission_objective = function (self, objective_name, g
 	end
 
 	if self._is_server then
-		self._objective_start_times[objective] = nil
-
 		local players = Managers.player:players()
 
 		for _, player in pairs(players) do
@@ -333,6 +369,40 @@ MissionObjectiveSystem.end_mission_objective = function (self, objective_name, g
 			end
 
 			Managers.telemetry_events:player_completed_objective(player, objective_name)
+		end
+	end
+end
+
+MissionObjectiveSystem.reset_mission_objective = function (self, objective_name, group_id)
+	group_id = group_id or GLOBAL_GROUP_ID
+
+	local objective_group = self:_get_objective_group(group_id)
+	local active_objectives = objective_group.active_objectives
+	local objective = active_objectives[objective_name]
+	local synchronizer_unit = objective_group.objective_registered_synchronizer[objective_name]
+
+	if synchronizer_unit then
+		local synchronizer_extension = ScriptUnit.extension(synchronizer_unit, "event_synchronizer_system")
+
+		synchronizer_extension:reset()
+	end
+
+	if objective then
+		if self._is_server then
+			local objective_name_id = NetworkLookup.mission_objective_names[objective_name]
+
+			self:send_rpc_to_clients("rpc_reset_mission_objective", objective_name_id, group_id)
+		end
+
+		Managers.event:trigger("event_remove_mission_objective", objective)
+		objective:end_objective()
+		objective:delete()
+
+		active_objectives[objective_name] = nil
+		self._active_objectives[objective] = nil
+
+		if self._objective_end_cb[objective] then
+			self._objective_end_cb[objective] = nil
 		end
 	end
 end
@@ -746,7 +816,6 @@ MissionObjectiveSystem.register_objective_synchronizer = function (self, objecti
 
 	local group_id = group_id_override or self:get_objective_group_id_from_unit(objective_unit)
 	local objective_group = self:_get_objective_group(group_id, true)
-	local synchronizer = objective_group.objective_registered_synchronizer[objective_name]
 
 	objective_group.objective_registered_synchronizer[objective_name] = objective_unit
 
@@ -1046,6 +1115,12 @@ MissionObjectiveSystem.flow_callback_end_mission_objective = function (self, obj
 	self:end_mission_objective(objective_name, group_id)
 end
 
+MissionObjectiveSystem.flow_callback_reset_mission_objective = function (self, objective_name, group_id)
+	group_id = group_id or GLOBAL_GROUP_ID
+
+	self:reset_mission_objective(objective_name, group_id)
+end
+
 MissionObjectiveSystem.flow_callback_set_objective_show_ui = function (self, objective_name, group_id, show)
 	group_id = group_id or GLOBAL_GROUP_ID
 
@@ -1134,6 +1209,12 @@ MissionObjectiveSystem.rpc_end_mission_objective = function (self, channel_id, o
 	local objective_name = NetworkLookup.mission_objective_names[objective_name_id]
 
 	self:end_mission_objective(objective_name, group_id)
+end
+
+MissionObjectiveSystem.rpc_reset_mission_objective = function (self, channel_id, objective_name_id, group_id)
+	local objective_name = NetworkLookup.mission_objective_names[objective_name_id]
+
+	self:reset_mission_objective(objective_name, group_id)
 end
 
 MissionObjectiveSystem.rpc_add_objective_marker = function (self, channel_id, objective_name_id, group_id, is_level_unit, level_unit_id)

@@ -3,11 +3,8 @@
 local MasterItems = require("scripts/backend/master_items")
 local MissionObjectiveScanning = require("scripts/settings/mission_objective/mission_objective_scanning")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
-local Vo = require("scripts/utilities/vo")
 local MissionObjectiveZoneScanExtension = class("MissionObjectiveZoneScanExtension", "MissionObjectiveZoneBaseExtension")
 local SCANNING_VO_LINES = MissionObjectiveScanning.vo_trigger_ids
-local RETURN_TO_SERVO_SKULL_HEADER = "loc_objective_zone_scanning_return_to_servoskull_header"
-local RETURN_TO_SERVO_SKULL_DESC = "loc_objective_zone_scanning_return_to_servoskull_desc"
 
 MissionObjectiveZoneScanExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	MissionObjectiveZoneScanExtension.super.init(self, extension_init_context, unit, extension_init_data, ...)
@@ -15,25 +12,20 @@ MissionObjectiveZoneScanExtension.init = function (self, extension_init_context,
 	local is_server = extension_init_context.is_server
 
 	self._zone_type = "scan"
+	self._progress_ui_type = "counter"
 	self._is_server = is_server
-	self._num_scanned_objects_per_player = {}
-	self._registered_players = 0
 	self._num_scannables_in_zone = 0
-	self._finish_zone_timer = 1
-	self._start_finish_zone_timer = false
 	self._current_progression = 0
 	self._scannable_units = {}
 	self._selected_scannable_units = {}
-	self._start_vo_line_timer = false
-	self._vo_line_interval = MissionObjectiveScanning.zone_settings.vo_trigger_time
-	self._vo_line_timer = self._vo_line_interval
 
 	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
 	self._mission_objective_system = mission_objective_system
 end
 
-MissionObjectiveZoneScanExtension.setup_from_component = function (self, num_scannable_objects, item_to_equip)
+MissionObjectiveZoneScanExtension.setup_from_component = function (self, return_to_skull, num_scannable_objects, item_to_equip)
+	self._return_to_skull = return_to_skull
 	self._num_scannables_in_zone = num_scannable_objects
 	self._item_to_equip = item_to_equip
 end
@@ -49,42 +41,15 @@ MissionObjectiveZoneScanExtension.hot_join_sync = function (self, unit, sender, 
 		RPC.rpc_mission_objective_zone_register_scannable_unit(channel, level_unit_id, level_scannable_id)
 	end
 
-	if self._is_waiting_for_player_confirmation then
-		Managers.state.game_session:send_rpc_clients("rpc_mission_objective_zone_set_waiting_for_confirmation", level_unit_id)
-	end
+	MissionObjectiveZoneScanExtension.super.hot_join_sync(self, unit, sender, channel)
 end
 
 MissionObjectiveZoneScanExtension.update = function (self, unit, dt, t)
-	if self._activated and self._is_server then
-		if self._start_finish_zone_timer then
-			local finish_zone_timer = self._finish_zone_timer
+	MissionObjectiveZoneScanExtension.super.update(self, unit, dt, t)
 
-			if finish_zone_timer > 0 then
-				finish_zone_timer = math.max(finish_zone_timer - dt, 0)
-			else
-				self._start_finish_zone_timer = false
-
-				self:set_is_waiting_for_player_confirmation()
-				self:_set_skull_to_wait_for_players()
-				self:_unequip_auspex_from_players()
-				self:_play_vo(nil, SCANNING_VO_LINES.all_targets_scanned, true)
-			end
-
-			self._finish_zone_timer = finish_zone_timer
-		end
-
-		if self._start_vo_line_timer then
-			self:_vo_timer(dt)
-		end
-
-		if not self._is_waiting_for_player_confirmation then
-			self:_equip_auspex_to_players()
-		end
+	if self._activated and self._is_server and not self._is_waiting_for_player_confirmation then
+		self:_equip_auspex_to_players()
 	end
-end
-
-MissionObjectiveZoneScanExtension._set_skull_to_wait_for_players = function (self)
-	self._synchronizer_extension:set_servo_skull_target_enabled(true)
 end
 
 local function _set_objectie_name_on_unit(unit, objective_name, objective_group)
@@ -156,8 +121,13 @@ MissionObjectiveZoneScanExtension.set_scanned = function (self, scannable_extens
 
 	if self._is_server then
 		if progression == self._num_scannables_in_zone then
-			self._start_vo_line_timer = true
-			self._start_finish_zone_timer = true
+			if self._synchronizer_extension:uses_servo_skull() then
+				self._start_vo_line_timer = true
+
+				self:_inform_skull_of_completion()
+			else
+				self:zone_finished()
+			end
 		else
 			self._start_vo_line_timer = false
 			self._vo_line_timer = self._vo_line_interval
@@ -167,6 +137,10 @@ end
 
 MissionObjectiveZoneScanExtension.current_progression = function (self)
 	return self._current_progression
+end
+
+MissionObjectiveZoneScanExtension.max_progression = function (self)
+	return self:num_scannables_in_zone()
 end
 
 MissionObjectiveZoneScanExtension.num_scannables_in_zone = function (self)
@@ -182,9 +156,7 @@ MissionObjectiveZoneScanExtension.scannable_units = function (self)
 end
 
 MissionObjectiveZoneScanExtension.activate_zone = function (self)
-	self._activated = true
-
-	self:_enable_update()
+	MissionObjectiveZoneScanExtension.super.activate_zone(self)
 
 	if self._is_server then
 		local selected_scannable_units = self:_select_scannable_units_for_event()
@@ -197,10 +169,6 @@ MissionObjectiveZoneScanExtension.activate_zone = function (self)
 		end
 
 		self._selected_scannable_units = selected_scannable_units
-
-		local mission_objective_system = self._mission_objective_system
-
-		mission_objective_system:set_objective_show_counter(self._objective_name, self._objective_group, true)
 	end
 end
 
@@ -217,77 +185,11 @@ MissionObjectiveZoneScanExtension._deactivate_zone = function (self)
 end
 
 MissionObjectiveZoneScanExtension.set_is_waiting_for_player_confirmation = function (self)
-	self._is_waiting_for_player_confirmation = true
+	MissionObjectiveZoneScanExtension.super.set_is_waiting_for_player_confirmation(self)
 
 	if self._is_server then
-		local mission_objective_system = self._mission_objective_system
-
-		mission_objective_system:set_objective_show_counter(self._objective_name, self._objective_group, false)
-		mission_objective_system:override_ui_string(self._objective_name, self._objective_group, RETURN_TO_SERVO_SKULL_HEADER, RETURN_TO_SERVO_SKULL_DESC)
-
-		local level_object_id = Managers.state.unit_spawner:level_index(self._unit)
-
-		Managers.state.game_session:send_rpc_clients("rpc_mission_objective_zone_set_waiting_for_confirmation", level_object_id)
+		self:_unequip_auspex_from_players()
 	end
-end
-
-MissionObjectiveZoneScanExtension._vo_timer = function (self, dt)
-	local vo_line_timer = self._vo_line_timer
-
-	if vo_line_timer > 0 then
-		vo_line_timer = math.max(vo_line_timer - dt, 0)
-	else
-		vo_line_timer = self._vo_line_interval
-
-		local is_mission_giver_line = true
-		local player
-
-		self:_play_vo(player, SCANNING_VO_LINES.event_scan_skull_waiting, is_mission_giver_line)
-	end
-
-	self._vo_line_timer = vo_line_timer
-end
-
-MissionObjectiveZoneScanExtension._play_vo = function (self, player, scanning_vo_line, is_mission_giver_line)
-	if is_mission_giver_line then
-		local mission_objective = self._mission_objective_system:active_objective(self._objective_name, self._objective_group)
-		local voice_profile = mission_objective:mission_giver_voice_profile()
-
-		if voice_profile then
-			local concept = MissionObjectiveScanning.vo_settings.concept
-
-			Vo.mission_giver_vo_event(voice_profile, concept, scanning_vo_line)
-		else
-			Vo.mission_giver_mission_info_vo("rule_based", nil, scanning_vo_line)
-		end
-	else
-		local player_unit = player.player_unit
-
-		if not ALIVE[player_unit] then
-			return
-		end
-
-		Vo.generic_mission_vo_event(player_unit, scanning_vo_line)
-	end
-end
-
-MissionObjectiveZoneScanExtension.reset_vo_timer = function (self)
-	if self._is_server then
-		self._vo_line_timer = self._vo_line_interval
-	end
-end
-
-MissionObjectiveZoneScanExtension.abort_vo_timer = function (self)
-	if self._is_server then
-		self._start_vo_line_timer = false
-		self._vo_line_timer = self._vo_line_interval
-	end
-end
-
-MissionObjectiveZoneScanExtension.is_waiting_for_player_confirmation = function (self)
-	local is_waiting_for_player_confirmation = self._is_waiting_for_player_confirmation
-
-	return is_waiting_for_player_confirmation
 end
 
 local SLOT_NAME = "slot_device"

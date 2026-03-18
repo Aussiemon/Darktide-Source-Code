@@ -3,6 +3,7 @@
 local DLCSettings = {
 	dlc_id = "broker",
 	image = "content/ui/textures/dlc/broker/dt_broker_standard_store_large",
+	includes = nil,
 	loc_name = "loc_dlc_broker_name",
 	steam_dlc_target = 4013290,
 	texture_package = "packages/ui/dlc/broker",

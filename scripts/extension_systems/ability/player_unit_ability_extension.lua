@@ -500,8 +500,9 @@ PlayerUnitAbilityExtension._update_ability_cooldowns = function (self, t, dt)
 			local cooldown = component.cooldown
 			local cooldown_regen_buffer = component.cooldown_regen_buffer
 			local in_cooldown = cooldown ~= 0
+			local should_update_paused_state = component.cooldown_paused
 
-			if in_cooldown and component.cooldown_paused then
+			if in_cooldown and should_update_paused_state then
 				local pause_cooldown_settings = ability.pause_cooldown_settings
 				local pause_fulfilled_func = pause_cooldown_settings and pause_cooldown_settings.pause_fulfilled_func
 
@@ -536,7 +537,9 @@ PlayerUnitAbilityExtension._update_ability_cooldowns = function (self, t, dt)
 				end
 
 				if in_cooldown and (cooldown <= t or force_cooldown) then
-					component.num_charges = math.max(0, math.min(max_charges, component.num_charges + 1))
+					local new_charges = math.max(0, math.min(max_charges, component.num_charges + 1))
+
+					component.num_charges = new_charges
 					cooldown = 0
 					cooldown_regen_buffer = 0
 					self._charge_replenished[ability_type] = true
@@ -618,7 +621,9 @@ PlayerUnitAbilityExtension.can_use_ability = function (self, ability_type)
 		return true
 	end
 
-	if not (self:remaining_ability_charges(ability_type) > 0) then
+	local has_enough_charges = self:remaining_ability_charges(ability_type) > 0
+
+	if not has_enough_charges then
 		return false
 	end
 
@@ -686,8 +691,9 @@ PlayerUnitAbilityExtension.remaining_ability_cooldown = function (self, ability_
 
 	local ability_components = self._ability_components
 	local component = ability_components[ability_type]
+	local should_show_empty_cooldown = component.cooldown_paused
 
-	if component.cooldown_paused then
+	if should_show_empty_cooldown then
 		return 0
 	else
 		local cooldown = component.cooldown
@@ -826,16 +832,16 @@ PlayerUnitAbilityExtension.reduce_ability_cooldown_time = function (self, abilit
 
 	local ability_component = self._ability_components[ability_type]
 	local current_cooldown = ability_component.cooldown
+	local fixed_frame_t = FixedFrame.get_latest_fixed_time()
 	local in_cooldown = current_cooldown ~= 0
 
 	if not in_cooldown then
 		return
 	end
 
-	local new_cooldown = current_cooldown - reduce_time
-	local fixed_frame_t = FixedFrame.get_latest_fixed_time()
+	local reduced_cooldown_time = current_cooldown - reduce_time
+	local new_cooldown = math.max(reduced_cooldown_time, fixed_frame_t)
 
-	new_cooldown = math.max(new_cooldown, fixed_frame_t)
 	ability_component.cooldown = math.round_to_closest_multiple(new_cooldown, Managers.state.game_session.fixed_time_step)
 end
 
@@ -892,6 +898,12 @@ PlayerUnitAbilityExtension.get_current_grenade_ability_name = function (self)
 	local name = grenade_ability and grenade_ability.name
 
 	return name
+end
+
+PlayerUnitAbilityExtension.ability_name = function (self, ability_type)
+	local ability = self._equipped_abilities[ability_type]
+
+	return ability.name
 end
 
 PlayerUnitAbilityExtension.ability_pause_cooldown_settings = function (self, ability_type)

@@ -13,8 +13,10 @@ WwisePortalVolume.init = function (self, unit)
 		return false
 	end
 
-	if Unit.has_volume(unit, "portal_volume") == false then
-		Log.error("WwisePortalVolume", "[init][Unit: %s] missing 'portal_volume'", Unit.id_string(unit))
+	local volume_name = self:get_data(unit, "volume_name")
+
+	if Unit.has_volume(unit, volume_name) == false then
+		Log.error("WwisePortalVolume", "[init][Unit: %s] missing '%s'", Unit.id_string(unit), volume_name)
 
 		return false
 	end
@@ -40,8 +42,10 @@ WwisePortalVolume.editor_init = function (self, unit)
 	self._drawer = DebugDrawer(self._line_object, "retained")
 	self._should_debug_draw = false
 
-	if Unit.has_volume(unit, "portal_volume") == false then
-		Log.error("WwisePortalVolume", "[init][Unit: %s] missing 'portal_volume'", Unit.id_string(unit))
+	local volume_name = self:get_data(unit, "volume_name")
+
+	if Unit.has_volume(unit, volume_name) == false then
+		Log.error("WwisePortalVolume", "[init][Unit: %s] missing '%s'", Unit.id_string(unit), volume_name)
 
 		return false
 	end
@@ -56,10 +60,11 @@ end
 WwisePortalVolume.editor_validate = function (self, unit)
 	local success = true
 	local error_message = ""
+	local volume_name = self:get_data(unit, "volume_name")
 
-	if rawget(_G, "LevelEditor") and not Unit.has_volume(unit, "portal_volume") then
+	if rawget(_G, "LevelEditor") and not Unit.has_volume(unit, volume_name) then
 		success = false
-		error_message = error_message .. "\nMissing volume 'portal_volume'"
+		error_message = error_message .. "\nMissing volume '" .. volume_name .. "'"
 	end
 
 	return success, error_message
@@ -253,6 +258,11 @@ WwisePortalVolume.component_data = {
 		ui_name = "Higest Possible Obstruction & Occlusion Ratio",
 		ui_type = "number",
 		value = 1,
+	},
+	volume_name = {
+		ui_name = "Volume Name",
+		ui_type = "text_box",
+		value = "portal_volume",
 	},
 	adjust_open_anim_time = {
 		category = "Adjust Open Anim",

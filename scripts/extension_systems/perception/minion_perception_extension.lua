@@ -6,6 +6,7 @@ local Breed = require("scripts/utilities/breed")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local MinionPerception = require("scripts/utilities/minion_perception")
+local MutatorSettings = require("scripts/settings/mutator/mutator_settings")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local Vo = require("scripts/utilities/vo")
 local aggro_states = PerceptionSettings.aggro_states
@@ -119,7 +120,12 @@ end
 MinionPerceptionExtension.extensions_ready = function (self, world, unit)
 	self._animation_extension = ScriptUnit.extension(unit, "animation_system")
 	self._buff_extension = ScriptUnit.extension(unit, "buff_system")
-	self._visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+
+	local breed = self._breed
+
+	if breed.aggro_inventory_slot then
+		self._visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+	end
 end
 
 MinionPerceptionExtension.game_object_initialized = function (self, session, game_object_id)
@@ -196,6 +202,12 @@ MinionPerceptionExtension.immediate_line_of_sight_check = function (self, target
 	local hit = PhysicsWorld.raycast(self._physics_world, los_from_position, direction, distance, "all", "types", "both", "collision_filter", line_of_sight_collision_filter)
 
 	return not hit
+end
+
+MinionPerceptionExtension.validate_line_of_sight_from_position = function (self, target_unit, position, rotation)
+	local los_collision_filter = self._breed.line_of_sight_collision_filter
+
+	return self:_line_of_sight_check(self._unit, target_unit, los_collision_filter, false, position, rotation)
 end
 
 local FORCE_NEW_AIM_DISTANCE = 5
@@ -309,7 +321,9 @@ MinionPerceptionExtension.aggro = function (self)
 	if perception_component.aggro_state ~= aggro_states.aggroed then
 		perception_component.aggro_state = aggro_states.aggroed
 
-		self._animation_extension:anim_event("to_combat")
+		if self._animation_extension then
+			self._animation_extension:anim_event("to_combat")
+		end
 
 		local unit = self._unit
 		local breed = self._breed
@@ -318,7 +332,7 @@ MinionPerceptionExtension.aggro = function (self)
 		if aggro_inventory_slot then
 			local visual_loadout_extension = self._visual_loadout_extension
 
-			if visual_loadout_extension:can_wield_slot(aggro_inventory_slot) then
+			if visual_loadout_extension and visual_loadout_extension:can_wield_slot(aggro_inventory_slot) then
 				visual_loadout_extension:wield_slot(aggro_inventory_slot)
 			end
 		end
@@ -494,7 +508,7 @@ MinionPerceptionExtension._update_line_of_sight = function (self, unit, target_u
 			local within_detection_los_range, clear_last_los_pos = self:_within_detection_los_range(unit, unit_position, target_unit, target_position)
 
 			if within_detection_los_range then
-				self:_line_of_sight_check(unit, target_unit, los_collision_filter)
+				self:_line_of_sight_check(unit, target_unit, los_collision_filter, true)
 
 				running_line_of_sight_checks[target_unit] = true
 				line_of_sight_queue[#line_of_sight_queue + 1] = target_unit
@@ -513,8 +527,21 @@ MinionPerceptionExtension._update_line_of_sight = function (self, unit, target_u
 	end
 end
 
-MinionPerceptionExtension._line_of_sight_check = function (self, unit, target_unit, los_collision_filter)
+MinionPerceptionExtension._line_of_sight_check = function (self, unit, target_unit, los_collision_filter, deferred, optional_from_position, optional_from_rotation)
 	local perception_system, up = self._perception_system, Vector3.up()
+	local unit_rotation = Unit.local_rotation(unit, 1)
+	local additional_rotation = Quaternion.identity()
+
+	if optional_from_rotation then
+		additional_rotation = Quaternion.multiply(unit_rotation, Quaternion.inverse(optional_from_rotation))
+	end
+
+	local additional_position = Vector3.zero()
+
+	if optional_from_position then
+		additional_position = optional_from_position - Unit.local_position(unit, 1)
+	end
+
 	local line_of_sight_data = self._line_of_sight_data
 
 	for main_index = 1, #line_of_sight_data do
@@ -522,14 +549,14 @@ MinionPerceptionExtension._line_of_sight_check = function (self, unit, target_un
 		local from_node, to_node = data.from_node, data.to_node
 		local los_node = Unit.node(unit, from_node)
 		local los_to_node = Unit.node(target_unit, to_node)
-		local los_from_position = Unit.world_position(unit, los_node)
+		local los_from_position = Unit.world_position(unit, los_node) + additional_position
 		local from_offsets = data.from_offsets
 
 		if from_offsets then
-			local right = Quaternion.right(Unit.local_rotation(unit, 1))
+			local right = Quaternion.right(unit_rotation)
 			local from_offset = from_offsets:unbox()
 
-			los_from_position = los_from_position + Vector3(right.x * from_offset.x, right.y * from_offset.x, from_offset.z)
+			los_from_position = los_from_position + Quaternion.rotate(additional_rotation, Vector3(right.x * from_offset.x, right.y * from_offset.x, from_offset.z))
 		end
 
 		local los_to_position = Unit.world_position(target_unit, los_to_node)
@@ -543,10 +570,22 @@ MinionPerceptionExtension._line_of_sight_check = function (self, unit, target_un
 			local los_direction = Vector3.normalize(offset_vector)
 			local los_distance = Vector3.length(offset_vector)
 
-			perception_system:add_line_of_sight_raycast_query(unit, los_from_position, los_direction, los_distance, los_collision_filter)
+			if deferred then
+				perception_system:add_line_of_sight_raycast_query(unit, los_from_position, los_direction, los_distance, los_collision_filter)
 
-			self._num_running_raycasts = self._num_running_raycasts + 1
+				self._num_running_raycasts = self._num_running_raycasts + 1
+			else
+				local hit = PhysicsWorld.raycast(self._physics_world, los_from_position, los_direction, los_distance, "all", "types", "both", "collision_filter", los_collision_filter)
+
+				if hit then
+					return false
+				end
+			end
 		end
+	end
+
+	if not deferred then
+		return true
 	end
 end
 
@@ -689,7 +728,7 @@ MinionPerceptionExtension.update = function (self, unit, dt, t)
 	local delayed_alerts = self._delayed_alerts
 	local side_system = self._side_system
 	local side = side_system.side_by_unit[unit]
-	local target_units = side.ai_target_units
+	local target_units = self._breed.ranged and side.ai_target_units or side.ai_ground_target_units
 
 	for enemy_unit, time in pairs(delayed_alerts) do
 		if time < t then
@@ -717,6 +756,11 @@ local CIRCUMSTANCE_DETECTION_DISTANCE_LOS_REQUIREMENTS = {
 	mutator_darkness_los = 15,
 	mutator_ventilation_purge_los = 30,
 }
+
+for i = 1, #MutatorSettings.dark_mutators do
+	local mutator_name = MutatorSettings.dark_mutators[i]
+end
+
 local BUFF_KEYWORD_DISTANCE_LOS_REQUIREMENT = {
 	concealed = 5,
 }

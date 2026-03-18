@@ -82,7 +82,7 @@ weapon_template.action_inputs = {
 		},
 	},
 	reload = {
-		buffer_time = 0,
+		buffer_time = 0.3,
 		clear_input_queue = true,
 		input_sequence = {
 			{

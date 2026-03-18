@@ -131,6 +131,18 @@ LocalizationManager.reset_cache = function (self)
 end
 
 LocalizationManager.destroy = function (self)
+	local localizers = self._localizers
+
+	if localizers then
+		for ii = 1, #localizers do
+			local localizer = localizers[ii]
+
+			Localizer.release(localizer)
+		end
+	end
+
+	self._localizers = nil
+
 	rawset(_G, "Localize", false)
 end
 
@@ -162,6 +174,16 @@ end
 
 LocalizationManager._teardown_localizers = function (self)
 	print("[LocalizationManager] Tearing down localizers")
+
+	local localizers = self._localizers
+
+	if localizers then
+		for ii = 1, #localizers do
+			local localizer = localizers[ii]
+
+			Localizer.release(localizer)
+		end
+	end
 
 	self._localizers = nil
 

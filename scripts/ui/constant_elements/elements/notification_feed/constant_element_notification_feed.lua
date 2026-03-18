@@ -120,7 +120,7 @@ local function _remove_player_frame_cb_func(widget, ui_renderer)
 end
 
 local ConstantElementNotificationFeed = class("ConstantElementNotificationFeed", "ConstantElementBase")
-local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "voting", "matchmaking", "penance_item_can_be_claimed", "player_assist", "collectible", "helped_collect_collectible", "destructible", "havoc_status", "mutator")
+local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "voting", "matchmaking", "penance_item_can_be_claimed", "player_assist", "collectible", "helped_collect_collectible", "destructible", "minion_loot_steal", "minion_loot_drop", "player_loot_drop", "havoc_status", "mutator")
 
 ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start_scale)
 	ConstantElementNotificationFeed.super.init(self, parent, draw_layer, start_scale, Definitions)
@@ -220,6 +220,27 @@ ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start
 			widget_definition = Definitions.notification_message,
 		},
 		destructible = {
+			animation_enter = "popup_enter",
+			animation_exit = "popup_leave",
+			priority_order = 2,
+			total_time = 4,
+			widget_definition = Definitions.notification_message,
+		},
+		minion_loot_steal = {
+			animation_enter = "popup_enter",
+			animation_exit = "popup_leave",
+			priority_order = 2,
+			total_time = 4,
+			widget_definition = Definitions.notification_message,
+		},
+		minion_loot_drop = {
+			animation_enter = "popup_enter",
+			animation_exit = "popup_leave",
+			priority_order = 2,
+			total_time = 4,
+			widget_definition = Definitions.notification_message,
+		},
+		player_loot_drop = {
 			animation_enter = "popup_enter",
 			animation_exit = "popup_leave",
 			priority_order = 2,
@@ -596,21 +617,11 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		local reason = data.reason
 		local optional_localization_key = data.optional_localization_key
 		local wallet_settings = WalletSettings[currency_type]
-
-		if currency_type == "event_material" then
-			wallet_settings = Managers.live_event:get_active_event_wallet_settings()
-		end
-
-		local icon_texture_for_size
 		local ignore_wallet_display_name = false
 
 		if amount_size and type(amount_size) == "string" and wallet_settings then
 			local pickup_localization_by_size = wallet_settings.pickup_localization_by_size
 			local localization_key = pickup_localization_by_size[amount_size]
-
-			if wallet_settings.pickup_icon_by_size then
-				icon_texture_for_size = wallet_settings.pickup_icon_by_size[amount_size]
-			end
 
 			amount_size = Localize(localization_key)
 			ignore_wallet_display_name = true
@@ -618,11 +629,6 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 
 		if wallet_settings then
 			local icon_texture_large = wallet_settings and wallet_settings.icon_texture_big
-
-			if icon_texture_for_size then
-				icon_texture_large = icon_texture_for_size
-			end
-
 			local selected_color = Color.terminal_corner_selected(255, true)
 
 			amount = string.format("{#color(%d,%d,%d)}%s %s{#reset()}", selected_color[2], selected_color[3], selected_color[4], amount_size or Text.format_currency(amount), not ignore_wallet_display_name and Localize(wallet_settings.display_name) or "")
@@ -738,6 +744,126 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 				215,
 				0,
 			},
+			enter_sound_event = UISoundEvents.notification_collectible_pickup_helped,
+		}
+	elseif message_type == MESSAGE_TYPES.minion_loot_drop then
+		local currency_type = "expedition_loot"
+		local wallet_settings = WalletSettings[currency_type]
+
+		if wallet_settings then
+			local icon_texture_large = wallet_settings and wallet_settings.icon_texture_big
+			local amount = data.amount
+			local amount_color = Color.terminal_corner_selected(255, true)
+			local amount_text = Text.apply_color_to_text(amount, amount_color)
+			local breed_color = Color.ui_hud_red_light(255, true)
+			local breed_name = data.breed_display_name
+			local breed_name_localized = Text.apply_color_to_text(Localize(breed_name), breed_color)
+			local header_text = Localize("loc_notification_minion_loot_drop", true, {
+				breed_name = breed_name_localized,
+				amount = amount_text,
+			})
+
+			notification_data = {
+				icon_size = "currency",
+				texts = {
+					{
+						display_name = header_text,
+						color = {
+							255,
+							224,
+							224,
+							224,
+						},
+					},
+				},
+				icon = icon_texture_large,
+				line_color = Color.terminal_text_body(255, true),
+				color = Color.terminal_grid_background(100, true),
+				enter_sound_event = UISoundEvents.notification_collectible_pickup_helped,
+			}
+		end
+	elseif message_type == MESSAGE_TYPES.minion_loot_steal then
+		local player = data.player
+		local player_name = player and player:name()
+		local player_slot = player and player.slot and player:slot()
+		local player_slot_colors = UISettings.player_slot_colors
+		local player_slot_color = player_slot and player_slot_colors[player_slot]
+
+		if player_name and player_slot_color then
+			player_name = Text.apply_color_to_text(player_name, player_slot_color)
+		end
+
+		local amount = data.amount
+		local amount_color = Color.terminal_corner_selected(255, true)
+		local amount_text = Text.apply_color_to_text(amount, amount_color)
+		local breed_color = Color.ui_hud_red_light(255, true)
+		local breed_name = data.breed_display_name
+		local breed_name_localized = Text.apply_color_to_text(Localize(breed_name), breed_color)
+		local header_text = Localize("loc_notification_player_loot_stolen", true, {
+			player_name = player_name,
+			breed_name = breed_name_localized,
+			amount = amount_text,
+		})
+		local line_color = Color.ui_hud_red_light(255, true)
+		local background_color = Color.ui_hud_red_medium(255 * ConstantElementNotificationFeedSettings.default_alpha_value, true)
+
+		notification_data = {
+			icon = "content/ui/materials/icons/notifications/tech_dropped",
+			icon_size = "currency",
+			texts = {
+				{
+					display_name = header_text,
+					color = {
+						255,
+						224,
+						224,
+						224,
+					},
+				},
+			},
+			player = player,
+			line_color = line_color,
+			color = background_color,
+			enter_sound_event = UISoundEvents.notification_collectible_pickup_helped,
+		}
+	elseif message_type == MESSAGE_TYPES.player_loot_drop then
+		local player = data.player
+		local player_name = player and player:name()
+		local player_slot = player and player.slot and player:slot()
+		local player_slot_colors = UISettings.player_slot_colors
+		local player_slot_color = player_slot and player_slot_colors[player_slot]
+
+		if player_name and player_slot_color then
+			player_name = Text.apply_color_to_text(player_name, player_slot_color)
+		end
+
+		local amount = data.amount
+		local amount_color = Color.terminal_corner_selected(255, true)
+		local amount_text = Text.apply_color_to_text(amount, amount_color)
+		local header_text = Localize("loc_expedition_drop_loot", true, {
+			player_name = player_name,
+			amount = amount_text,
+		})
+		local line_color = Color.ui_hud_red_light(255, true)
+		local background_color = Color.ui_hud_red_medium(255 * ConstantElementNotificationFeedSettings.default_alpha_value, true)
+
+		notification_data = {
+			icon = "content/ui/materials/icons/notifications/tech_dropped",
+			icon_size = "currency",
+			texts = {
+				{
+					display_name = header_text,
+					color = {
+						255,
+						224,
+						224,
+						224,
+					},
+				},
+			},
+			player = player,
+			line_color = line_color,
+			color = background_color,
 			enter_sound_event = UISoundEvents.notification_collectible_pickup_helped,
 		}
 	elseif message_type == MESSAGE_TYPES.destructible and challenge then

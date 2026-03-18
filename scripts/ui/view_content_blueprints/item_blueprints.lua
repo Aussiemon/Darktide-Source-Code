@@ -790,7 +790,6 @@ local function generate_blueprints_function(grid_size)
 				local style = widget.style
 				local content = widget.content
 				local element = content.element
-				local real_item = element.real_item
 				local item = element.real_item or element.item
 
 				if item then
@@ -815,7 +814,7 @@ local function generate_blueprints_function(grid_size)
 			end,
 			load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
 				local content = widget.content
-				local item = element.real_item or element.item
+				local item = element.item or element.real_item
 
 				if not content.icon_load_id and item then
 					local cb = callback(_apply_live_item_icon_cb_func, widget)

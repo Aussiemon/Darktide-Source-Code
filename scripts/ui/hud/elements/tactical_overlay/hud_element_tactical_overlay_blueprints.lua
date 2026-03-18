@@ -28,7 +28,7 @@ local function _format_progress(current, goal, use_complete_text)
 	return string.format("%s/%s", current, Text.apply_color_to_text(goal, _dark_text_color))
 end
 
-local _achievement_completed_color = Color.termianl_icon_dark(255, true)
+local _achievement_completed_color = Color.terminal_icon_dark(255, true)
 local content_width = ElementSettings.right_grid_width - 2 * buffer
 local text_width = content_width - icon_size - buffer
 local base_text_style = {
@@ -551,9 +551,11 @@ Blueprints.event_tier = {
 		style.reward_icon.visible = false
 	end,
 	init = function (parent, widget, config, ui_renderer)
+		local event_id = config.event_id
+		local template = Managers.live_event:get_event_template(event_id)
+		local progress = Managers.live_event:event_progress(nil, event_id)
 		local target = config.target
-		local at = math.min(Managers.live_event:active_progress(), target)
-		local template = Managers.live_event:active_template()
+		local at = math.min(progress, target)
 		local content, style = widget.content, widget.style
 		local size = widget.content.size[2]
 		local title = Localize(template.condition, true, {
@@ -601,6 +603,7 @@ Blueprints.event_tier = {
 		size = size + Text.text_height(ui_renderer, content.progress, style.progress, style.progress.size, true) + internal_buffer
 		widget.target = target
 		content.size[2] = size
+		widget.event_id = event_id
 
 		local is_complete = at == target
 
@@ -611,7 +614,7 @@ Blueprints.event_tier = {
 	update = function (parent, widget, ui_renderer)
 		local content, style = widget.content, widget.style
 		local target = widget.target
-		local at = math.min(Managers.live_event:active_progress(), target)
+		local at = math.min(Managers.live_event:event_progress(nil, widget.event_id), target)
 		local percent_done = math.min(at / target, 1)
 
 		content.progress = _format_progress(at, target, true)

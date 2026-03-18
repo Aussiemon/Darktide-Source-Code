@@ -7,7 +7,9 @@ local chaos_daemonhost = {
 		combat_range_sticky_time = "number",
 		enter_combat_range_flag = "boolean",
 		lock_combat_range_switch = "boolean",
+		move_medium = "string",
 		move_state = "string",
+		restricted_combat_range = "string",
 		warp_sweep_cooldown = "number",
 	},
 	slot = {

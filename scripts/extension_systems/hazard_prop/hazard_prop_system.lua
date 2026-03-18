@@ -25,8 +25,8 @@ end
 
 HazardPropSystem._fetch_settings = function (self, mission, circumstance_name)
 	local original_settings = mission.hazard_prop_settings
-	local circumstance_template = CircumstanceTemplates[circumstance_name]
-	local mission_overrides = circumstance_template.mission_overrides
+	local circumstance_template = circumstance_name and CircumstanceTemplates[circumstance_name]
+	local mission_overrides = circumstance_template and circumstance_template.mission_overrides
 	local circumstance_settings = mission_overrides and mission_overrides.hazard_prop_settings or nil
 
 	return circumstance_settings or original_settings
@@ -78,6 +78,10 @@ HazardPropSystem.rpc_hazard_prop_hot_join = function (self, channel_id, level_un
 end
 
 HazardPropSystem.on_gameplay_post_init = function (self, level)
+	self:_populate_hazard_props()
+end
+
+HazardPropSystem.on_location_setup = function (self)
 	self:_populate_hazard_props()
 end
 

@@ -344,11 +344,9 @@ PlayerHuskVisualLoadoutExtension._equip_item_to_slot = function (self, slot_name
 	local profile = player:profile()
 	local parent_unit_3p = self._unit
 	local parent_unit_1p = self._first_person_unit
-	local deform_overrides = item.deform_overrides and table.clone(item.deform_overrides) or {}
 	local deform_override_items = item.deform_override_items and table.clone(item.deform_override_items) or {}
 
 	if profile.gender == "female" then
-		deform_overrides[#deform_overrides + 1] = "wrap_deform_human_body_female"
 		deform_override_items[#deform_override_items + 1] = "content/items/material_overrides/player_wrap_deform/wrap_deform_human_body_female"
 	end
 
@@ -358,7 +356,7 @@ PlayerHuskVisualLoadoutExtension._equip_item_to_slot = function (self, slot_name
 	local equipment_component = self._equipment_component
 	local mission = self._mission
 
-	equipment_component:equip_item(parent_unit_3p, parent_unit_1p, slot, item, optional_existing_unit_3p, deform_overrides, deform_override_items, breed_name, mission)
+	equipment_component:equip_item(parent_unit_3p, parent_unit_1p, slot, item, optional_existing_unit_3p, deform_override_items, breed_name, mission)
 
 	local is_in_first_person_mode = self._is_in_first_person_mode
 

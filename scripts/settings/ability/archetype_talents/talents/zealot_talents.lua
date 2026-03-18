@@ -831,7 +831,7 @@ local archetype_talents = {
 			},
 		},
 		zealot_stamina_cost_multiplier_aura = {
-			description = "loc_talent_zealot_stamina_cost_multiplier_aura_description",
+			description = "loc_talent_zealot_stamina_cost_multiplier_delay_aura_description",
 			display_name = "loc_talent_zealot_stamina_cost_multiplier_aura",
 			name = "Aura: Always count as in at least 2 coherency",
 			format_values = {
@@ -842,6 +842,10 @@ local archetype_talents = {
 					value_manipulation = function (value)
 						return math_round((1 - value) * 100)
 					end,
+				},
+				stamina_delay = {
+					format_type = "number",
+					value = math.abs(talent_settings.zealot_stamina_cost_multiplier_aura.stamina_delay),
 				},
 			},
 			coherency = {

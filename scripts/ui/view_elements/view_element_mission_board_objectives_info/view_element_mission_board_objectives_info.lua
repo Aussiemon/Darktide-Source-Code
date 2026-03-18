@@ -71,14 +71,9 @@ end
 
 ViewElementMissionBoardObjectivesInfo.on_mission_selected = function (self, mission)
 	self._current_selected_mission = mission
-
-	local parent = self:parent()
-	local ui_theme = parent:_get_ui_theme()
-	local palette_name = ui_theme.view_data.palette_name
-
 	self._current_tab_name = nil
 
-	self:_update_mission_objective_info_panel(mission, palette_name)
+	self:_update_mission_objective_info_panel(mission)
 
 	local has_circumstance = mission ~= "qp_mission_widget" and mission.circumstance ~= "default" and mission.circumstance ~= "none"
 	local is_story = mission ~= "qp_mission_widget" and mission.category == "story"
@@ -92,7 +87,7 @@ ViewElementMissionBoardObjectivesInfo.on_mission_selected = function (self, miss
 	end
 end
 
-ViewElementMissionBoardObjectivesInfo._update_mission_objective_info_panel = function (self, mission, palette_name)
+ViewElementMissionBoardObjectivesInfo._update_mission_objective_info_panel = function (self, mission)
 	if not mission then
 		table.clear(self._objectives_tabs)
 		table.clear(self._sidebar_key_is_active)
@@ -102,14 +97,11 @@ ViewElementMissionBoardObjectivesInfo._update_mission_objective_info_panel = fun
 
 	local title, sub_title, icon
 
-	self._objectives_tabs.palette_name = palette_name
-
 	if mission == "qp_mission_widget" then
 		if self._objectives_tabs.mission_id ~= mission then
 			table.clear(self._objectives_tabs)
 			table.clear(self._sidebar_key_is_active)
 
-			self._objectives_tabs.palette_name = palette_name
 			self._objectives_tabs.mission_id = mission
 			icon = "content/ui/materials/icons/mission_types_pj/mission_type_quick"
 			title = Localize("loc_mission_board_quickplay_header")
@@ -134,7 +126,6 @@ ViewElementMissionBoardObjectivesInfo._update_mission_objective_info_panel = fun
 		table.clear(self._sidebar_key_is_active)
 
 		self._objectives_tabs.mission_id = mission.id
-		self._objectives_tabs.palette_name = palette_name
 
 		local parent = self:parent()
 		local has_side_mission = not not mission.sideMission
@@ -164,8 +155,8 @@ ViewElementMissionBoardObjectivesInfo._update_mission_objective_info_panel = fun
 
 		if has_circumstance then
 			local category = mission.category
-			local is_story = category == "story"
-			local unlock_data = parent._mission_board_logic:get_mission_unlock_data(mission.map, category)
+			local is_story = parent.is_campaign_mission and parent:is_campaign_mission(mission)
+			local unlock_data = parent.get_mission_unlock_data and parent:get_mission_unlock_data(mission.map, category)
 			local circumstance = mission.circumstance
 			local circumstance_template = CircumstanceTemplates[circumstance]
 			local circumstance_ui_data = circumstance_template and circumstance_template.ui
@@ -191,15 +182,11 @@ ViewElementMissionBoardObjectivesInfo._update_mission_objective_info_panel = fun
 			local widget = self:_create_panel_widget(title, sub_title, icon, is_story and "story" or "circumstance", tab_idx, active_tab_size, tab_width)
 			local style = widget.style
 			local content = widget.content
+			local icon_style = style.icon
+			local gradient_by_category = Styles.gradient_by_category[is_story and "story" or "circumstance"] or Styles.gradient_by_category.default
 
-			if is_story then
-				local icon_style = style.icon
-				local gradient_by_category = Styles.gradient_by_category.story or Styles.gradient_by_category.default
-
-				icon_style.material_values = {}
-				icon_style.material_values.gradient_map = gradient_by_category.selected_gradient
-			end
-
+			icon_style.material_values = {}
+			icon_style.material_values.gradient_map = gradient_by_category.selected_gradient
 			style.frame.color = table.shallow_copy(Styles.colors.theme_colors[is_story and "story" or "circumstance"] or Styles.colors.theme_colors.default)
 			style.background_gradient.color = table.shallow_copy(Styles.colors.theme_colors[is_story and "story" or "circumstance"] or Styles.colors.theme_colors.default)
 
@@ -259,6 +246,7 @@ ViewElementMissionBoardObjectivesInfo._create_panel_widget = function (self, tit
 	widget.offset[1] = (tab_idx - 1) * tab_width
 
 	local content = widget.content
+	local style = widget.style
 
 	content.tab_id = tab_id
 	content.tab_index = tab_idx
@@ -304,7 +292,7 @@ ViewElementMissionBoardObjectivesInfo._update_mission_objective_info = function 
 		content.has_mission_giver = false
 
 		local parent = self:parent()
-		local bonus_data = parent._mission_board_logic:get_bonus_data("quickplay")
+		local bonus_data = parent.get_bonus_data and parent:get_bonus_data("quickplay")
 
 		if bonus_data then
 			local offset_mod = 0
@@ -337,12 +325,12 @@ ViewElementMissionBoardObjectivesInfo._update_mission_objective_info = function 
 		if tab_id then
 			if tab_id == "circumstance" or tab_id == "story" then
 				local category = mission.category
-				local is_story = category == "story"
+				local parent = self:parent()
+				local is_story = parent.is_campaign_mission and parent:is_campaign_mission(mission)
 				local circumstance = mission.circumstance
 				local circumstance_template = CircumstanceTemplates[circumstance]
 				local circumstance_ui_data = circumstance_template and circumstance_template.ui
-				local parent = self:parent()
-				local unlock_data = parent._mission_board_logic:get_mission_unlock_data(mission.map, category)
+				local unlock_data = parent.get_mission_unlock_data and parent:get_mission_unlock_data(mission.map, category)
 				local circumstance_description = "???"
 
 				if is_story then

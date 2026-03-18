@@ -5,17 +5,16 @@ local MissionSoundEvents = require("scripts/settings/sound/mission_sound_events"
 local Vo = require("scripts/utilities/vo")
 local ServoSkullExtension = class("ServoSkullExtension")
 local SCANNING_VO_LINES = MissionObjectiveScanning.vo_trigger_ids
-local STATES = table.enum("inactive", "traveling", "scanning", "idle")
+local STATES = table.enum("inactive", "traveling", "active", "idle")
 
 ServoSkullExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._is_server = extension_init_context.is_server
 	self._unit = unit
 	self._scannable_units = {}
-	self._scannable_units_distance = {}
 	self._pulse_interval = 0
 	self._pulse_timer = 0
-	self._scannable_check_interval = MissionObjectiveScanning.servo_skull.scannable_check_interval
-	self._scannable_check_timer = 0
+	self._active_check_interval = MissionObjectiveScanning.servo_skull.active_check_interval
+	self._active_check_timer = 0
 	self._activate_scannable_indicator_particle = false
 	self._pulse_fx_timer = 0
 	self._pulse_fx_interval = MissionObjectiveScanning.servo_skull.pulse_fx_interval
@@ -31,6 +30,7 @@ ServoSkullExtension.init = function (self, extension_init_context, unit, extensi
 	self._vo_line_interval = MissionObjectiveScanning.servo_skull.vo_trigger_time
 	self._vo_line_timer = 0
 	self._scanning_active = false
+	self._capturing_zone = nil
 end
 
 ServoSkullExtension.setup_from_component = function (self, pulse_interval)
@@ -55,47 +55,59 @@ ServoSkullExtension.update = function (self, unit, dt, t)
 				self._vo_line_timer = 0
 			end
 		end
-	elseif self._servo_skull_state == STATES.scanning then
-		local pulse_timer = self._pulse_timer
+	elseif self._servo_skull_state == STATES.active then
+		if self._scanning_active then
+			local pulse_timer = self._pulse_timer
 
-		if pulse_timer > 0 then
-			pulse_timer = math.max(pulse_timer - dt, 0)
-		else
-			pulse_timer = self._pulse_interval
-
-			if self:_zone_has_active_scannables() then
-				self:do_pulse_fx()
-
-				self._activate_scannable_indicator_particle = true
-
-				table.clear(self._units_to_ignore)
-
-				self._pulse_fx_timer = self._pulse_fx_travel_time_per_meter
+			if pulse_timer > 0 then
+				pulse_timer = pulse_timer - dt
 			else
-				self:set_servo_skull_state(STATES.idle)
+				pulse_timer = pulse_timer + self._pulse_interval
 
-				self._pulse_timer = 0
+				if self:_zone_has_active_scannables() then
+					self:do_pulse_fx()
+
+					self._activate_scannable_indicator_particle = true
+
+					table.clear(self._units_to_ignore)
+
+					self._pulse_fx_timer = self._pulse_fx_travel_time_per_meter
+				else
+					self:set_scanning_active(false)
+				end
 			end
+
+			self._pulse_timer = pulse_timer
 		end
 
-		self._pulse_timer = pulse_timer
+		if not self:_active_functions() then
+			self:set_servo_skull_state(STATES.idle)
+		end
 	elseif self._servo_skull_state == STATES.idle then
-		local scannable_check_timer = self._scannable_check_timer
+		local active_check_timer = self._active_check_timer
 
-		if scannable_check_timer > 0 then
-			scannable_check_timer = math.max(scannable_check_timer - dt, 0)
+		if active_check_timer > 0 then
+			active_check_timer = active_check_timer - dt
 		else
-			scannable_check_timer = self._scannable_check_interval
+			active_check_timer = active_check_timer + self._active_check_interval
 
-			if self:_zone_has_active_scannables() then
-				self:set_servo_skull_state(STATES.scanning)
-				self._mission_objective_system:music_event(MissionSoundEvents.scanning_scan_start)
+			if self:_active_functions() then
+				self:set_servo_skull_state(STATES.active)
+				self._mission_objective_system:music_event(MissionSoundEvents.zone_start)
 
-				self._scannable_check_timer = 0
+				self._active_check_timer = 0
 			end
 		end
 
-		self._scannable_check_timer = scannable_check_timer
+		self._active_check_timer = active_check_timer
+	end
+
+	if self:_zone_has_active_capture_zone() then
+		if not self._capturing_zone:activated() or self._capturing_zone:is_waiting_for_player_confirmation() then
+			self:set_capture_zone(nil)
+		end
+	else
+		self:_check_active_capture_zone()
 	end
 
 	if not DEDICATED_SERVER and self._scanning_active then
@@ -123,6 +135,14 @@ ServoSkullExtension.update = function (self, unit, dt, t)
 	end
 end
 
+ServoSkullExtension._active_functions = function (self)
+	return self:_zone_has_active_capture_zone() or self:_zone_has_active_scannables()
+end
+
+ServoSkullExtension._zone_has_active_capture_zone = function (self)
+	return self._capturing_zone ~= nil
+end
+
 ServoSkullExtension._zone_has_active_scannables = function (self)
 	local scannable_units = self._scannable_units
 
@@ -138,14 +158,15 @@ ServoSkullExtension._zone_has_active_scannables = function (self)
 	return false
 end
 
-ServoSkullExtension._recieve_scannables_from_active_zone = function (self, objective_name, objective_group)
+ServoSkullExtension._check_active_capture_zone = function (self)
+	local target_extension = ScriptUnit.extension(self._unit, "mission_objective_target_system")
+	local objective_name = target_extension:objective_name()
+	local objective_group = target_extension:objective_group_id()
 	local mission_objective_zone_system = self._mission_objective_zone_system
 	local current_active_zone = mission_objective_zone_system:current_active_zone(objective_name, objective_group)
 
-	if current_active_zone.selected_scannable_units then
-		local scannable_units = current_active_zone:selected_scannable_units()
-
-		return scannable_units
+	if current_active_zone and current_active_zone:is_capture_zone() and not current_active_zone:is_waiting_for_player_confirmation() then
+		self:set_capture_zone(current_active_zone)
 	end
 end
 
@@ -153,7 +174,7 @@ ServoSkullExtension.at_start_of_spline = function (self)
 	self._pulse_timer = 0
 
 	self:set_servo_skull_state(STATES.traveling)
-	self._mission_objective_system:sound_event(MissionSoundEvents.scanning_travel_start)
+	self._mission_objective_system:sound_event(MissionSoundEvents.zone_travel_start)
 end
 
 ServoSkullExtension.at_end_of_spline = function (self, last_spline)
@@ -166,25 +187,24 @@ ServoSkullExtension.at_end_of_spline = function (self, last_spline)
 
 		synchronizer_unit_extension:at_end_of_spline(last_spline)
 
-		local scannable_units = self:_recieve_scannables_from_active_zone(objective_name, objective_group)
+		local mission_objective_zone_system = self._mission_objective_zone_system
+		local current_active_zone = mission_objective_zone_system:current_active_zone(objective_name, objective_group)
+
+		self:set_servo_skull_state(STATES.active)
+
+		local scannable_units = current_active_zone.selected_scannable_units and current_active_zone:selected_scannable_units()
 
 		if scannable_units then
 			self._scannable_units = scannable_units
 
-			local scannable_units_distance = self._scannable_units_distance
-			local servo_skull_position = POSITION_LOOKUP[self._unit]
-
-			for ii = 1, #scannable_units do
-				local scannable_unit = scannable_units[ii]
-
-				scannable_units_distance[scannable_unit] = Vector3.distance(POSITION_LOOKUP[scannable_unit], servo_skull_position)
-			end
-
-			self._scannable_units_distance = scannable_units_distance
-
-			self:set_servo_skull_state(STATES.scanning)
-			self._mission_objective_system:sound_event(MissionSoundEvents.scanning_scan_start)
+			self:set_scanning_active(true)
 		end
+
+		if current_active_zone:is_capture_zone() then
+			self:set_capture_zone(current_active_zone)
+		end
+
+		self._mission_objective_system:sound_event(MissionSoundEvents.zone_start)
 	end
 end
 
@@ -216,21 +236,19 @@ ServoSkullExtension.do_pulse_fx = function (self)
 	end
 end
 
-ServoSkullExtension._do_pulse_feedback_fx_on_scannable = function (self, scannable_unit)
-	if self._is_server then
-		local script = ScriptUnit.has_extension(scannable_unit, "mission_objective_zone_scannable_system")
-
-		if script and script:is_active() then
-			script:activate_indicator_particle()
-		end
-	end
-end
-
 ServoSkullExtension.set_servo_skull_state = function (self, servo_skull_state)
 	if self._is_server then
-		self._servo_skull_state = servo_skull_state
+		if servo_skull_state ~= STATES.active then
+			if self._scanning_active then
+				self:set_scanning_active(false)
+			end
 
-		self:set_scanning_active(servo_skull_state == STATES.scanning)
+			if self._capturing_zone then
+				self:set_capture_zone(nil)
+			end
+		end
+
+		self._servo_skull_state = servo_skull_state
 	end
 end
 
@@ -284,7 +302,21 @@ ServoSkullExtension.set_scanning_active = function (self, active)
 	end
 end
 
+ServoSkullExtension.set_capture_zone = function (self, zone)
+	if self._capturing_zone == zone then
+		return
+	end
+
+	self._capturing_zone = zone
+
+	Unit.flow_event(self._unit, zone and "lua_capture_zone_started" or "lua_capture_zone_finished")
+end
+
 ServoSkullExtension._objective = function (self)
+	if self._mission_objective then
+		return self._mission_objective
+	end
+
 	local target_extension = ScriptUnit.extension(self._unit, "mission_objective_target_system")
 	local objective_name = target_extension:objective_name()
 	local objective_group = target_extension:objective_group_id()

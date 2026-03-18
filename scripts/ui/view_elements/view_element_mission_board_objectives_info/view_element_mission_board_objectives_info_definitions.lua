@@ -158,11 +158,11 @@ local scenegraph_definition = {
 	},
 }
 
-function panel_element_visibility_function(content, style)
+local function panel_element_visibility_function(content, style)
 	return content.hotspot.is_selected
 end
 
-function change_size_by_selection_state(content, style, animations, dt)
+local function change_size_by_selection_state(content, style, animations, dt)
 	local hotspot = content.hotspot or content.parent.hotspot
 	local is_selected = hotspot.is_selected
 	local selection_progress = hotspot.anim_select_progress or 0
@@ -241,6 +241,11 @@ end
 Definitions.create_reward_widget = function (scenegraph_id, amount, icon, size)
 	return UIWidget.create_definition({
 		{
+			pass_type = "rect",
+			style_id = "background",
+			style = Styles.mission_objective_info.reward.background,
+		},
+		{
 			pass_type = "texture",
 			style_id = "frame",
 			value = "content/ui/materials/frames/frame_tile_2px",
@@ -283,6 +288,14 @@ widget_definitions.mission_objective_info = UIWidget.create_definition({
 		value = "Objective Description",
 		value_id = "objective_description",
 		style = Styles.mission_objective_info.objective_description,
+	},
+	{
+		pass_type = "rect",
+		style_id = "mission_giver_background",
+		style = Styles.mission_objective_info.mission_giver_background,
+		visibility_function = function (content, style)
+			return not content.is_quickplay_mission and content.has_mission_giver
+		end,
 	},
 	{
 		pass_type = "texture",
@@ -359,7 +372,7 @@ animations.info_description_enter = {
 
 			style.frame.color = ColorUtilities.color_lerp(frame_from_color, to_color, progress, frame_color, ignore_alpha)
 
-			local should_show = content.active_tab and (content.active_tab == "circumstance" or content.active_tab == "story")
+			local should_show = true
 
 			style.background_fade.color[1] = 80 * progress * (should_show and 1 or 0)
 

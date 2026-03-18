@@ -7,6 +7,7 @@ local Promise = require("scripts/foundation/utilities/promise")
 local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local QPCode = require("scripts/utilities/qp_code")
 local Settings = require("scripts/ui/views/mission_board_view/mission_board_view_settings")
+local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local MAX_DISPLAYED_STORY_MISSIONS = 3
 
 local function _filter_backend_missions(missions)
@@ -787,6 +788,10 @@ end
 MissionBoardViewLogic._should_show_mission = function (self, mission)
 	local mission_data = self:get_mission_unlock_data(mission.map, mission.category)
 
+	if mission.circumstance and not CircumstanceTemplates[mission.circumstance] then
+		return false
+	end
+
 	if mission.category == "story" then
 		if self:_is_story_mission_complete(mission) then
 			return false
@@ -926,6 +931,14 @@ MissionBoardViewLogic.get_campaign_mission_progression = function (self)
 	end
 
 	return completed_missions, total_missions
+end
+
+MissionBoardViewLogic.is_campaign_mission = function (self, mission)
+	if not mission then
+		return false
+	end
+
+	return self:is_story_mission(mission)
 end
 
 MissionBoardViewLogic._mission_passes_filters = function (self, mission, filters, target, exact)

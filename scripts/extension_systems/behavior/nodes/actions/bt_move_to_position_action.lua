@@ -15,7 +15,11 @@ BtMoveToPositionAction.CONSECUTIVE_EVALUATE_INTERVAL = {
 	2,
 }
 
-local minion_spawner_radius_checks = 40
+local minion_spawner_radius_checks = {
+	20,
+	40,
+	60,
+}
 
 BtMoveToPositionAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
@@ -37,28 +41,47 @@ BtMoveToPositionAction.enter = function (self, unit, breed, blackboard, scratchp
 	if move_to_closest_minion_spawner then
 		local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")
 		local unit_postion = POSITION_LOOKUP[unit]
-		local spawners = minion_spawn_system:spawners_in_range(unit_postion, minion_spawner_radius_checks)
-		local num_spawners = #spawners
-		local random_spawner = spawners[math.random(1, num_spawners)]
+		local spawners
 
-		move_to_position = random_spawner._exit_position:unbox()
+		for i = 1, #minion_spawner_radius_checks do
+			spawners = minion_spawn_system:spawners_in_range(unit_postion, minion_spawner_radius_checks[i])
+
+			if spawners then
+				break
+			end
+		end
+
+		if spawners then
+			local num_spawners = #spawners
+			local random_spawner = spawners[math.random(1, num_spawners)]
+
+			if random_spawner then
+				move_to_position = random_spawner._exit_position:unbox()
+			end
+
+			scratchpad.failed_to_find_spawner = true
+		else
+			scratchpad.failed_to_find_spawner = true
+		end
 	end
 
-	navigation_extension:move_to(move_to_position)
+	if move_to_position then
+		navigation_extension:move_to(move_to_position)
 
-	scratchpad.move_to_position = Vector3Box(move_to_position)
-	scratchpad.behavior_component = behavior_component
+		scratchpad.move_to_position = Vector3Box(move_to_position)
+		scratchpad.behavior_component = behavior_component
 
-	if action_data.adapt_speed then
-		scratchpad.current_speed_timer = 0
-	end
+		if action_data.adapt_speed then
+			scratchpad.current_speed_timer = 0
+		end
 
-	local slot_system = Managers.state.extension:system("slot_system")
+		local slot_system = Managers.state.extension:system("slot_system")
 
-	if slot_system:is_slot_searching(unit) then
-		slot_system:do_slot_search(unit, false)
+		if slot_system:is_slot_searching(unit) then
+			slot_system:do_slot_search(unit, false)
 
-		scratchpad.reset_slot_system = true
+			scratchpad.reset_slot_system = true
+		end
 	end
 end
 
@@ -77,7 +100,18 @@ BtMoveToPositionAction.leave = function (self, unit, breed, blackboard, scratchp
 		slot_system:do_slot_search(unit, true)
 	end
 
-	local behavior_component = scratchpad.behavior_component
+	local remove_loot = action_data.remove_loot
+
+	if remove_loot then
+		local game_mode_manager = Managers.state.game_mode
+		local game_mode = game_mode_manager:game_mode()
+		local game_mode_name = game_mode:name()
+
+		if game_mode_name == "expedition" then
+			game_mode:remove_minion_loot(unit)
+		end
+	end
+
 	local despawn_once_reached = action_data.despawn_once_reached
 
 	if despawn_once_reached then
@@ -90,6 +124,10 @@ end
 local ARRIVED_AT_POSITION_THRESHOLD_SQ = 1
 
 BtMoveToPositionAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
+	if scratchpad.failed_to_find_spawner then
+		return "failed"
+	end
+
 	local self_position, move_to_position = POSITION_LOOKUP[unit], scratchpad.move_to_position:unbox()
 	local distance_sq = Vector3.distance_squared(self_position, move_to_position)
 

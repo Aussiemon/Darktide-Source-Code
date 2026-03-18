@@ -1,5 +1,78 @@
 ﻿-- chunkname: @scripts/settings/havoc/havoc_mutator_local_settings.lua
 
+local MutatorSpawnerNode = require("scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node")
+local EnemyEventSpawnerSettings = require("scripts/settings/components/enemy_event_spawner_settings")
+local MutatorSpawnerLocationSources = require("scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_location_sources")
+local CHAOS_DAEMONHOST_COMPOISTION = {
+	{
+		{
+			breeds = {
+				{
+					name = "chaos_mutator_daemonhost",
+					amount = {
+						1,
+						1,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_mutator_daemonhost",
+					amount = {
+						1,
+						1,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_mutator_daemonhost",
+					amount = {
+						1,
+						1,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_mutator_daemonhost",
+					amount = {
+						1,
+						1,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_mutator_daemonhost",
+					amount = {
+						1,
+						1,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_mutator_daemonhost",
+					amount = {
+						1,
+						1,
+					},
+				},
+			},
+		},
+	},
+}
 local havoc_mutator_local_settings = {
 	mutator_havoc_enemies_corrupted = {
 		breed_chances = {
@@ -420,11 +493,10 @@ local havoc_mutator_local_settings = {
 		},
 	},
 	mutator_havoc_chaos_rituals = {
+		class = "scripts/managers/mutator/mutators/mutator_spawner",
 		force_horde_on_spawn = true,
 		trigger_distance = 55,
-		monster_breed_name = {
-			"chaos_mutator_daemonhost",
-		},
+		spawn_locations = MutatorSpawnerLocationSources.prebaked_mission_locations(),
 		num_to_spawn_per_mission = {
 			cm_archives = 5,
 			cm_habs = 3,
@@ -447,14 +519,42 @@ local havoc_mutator_local_settings = {
 			lm_rails = 5,
 			lm_scavenge = 5,
 		},
+		spawners = {
+			{
+				class = "scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_enemy_template",
+				template = {
+					force_horde_on_spawn = true,
+					placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
+					composition = {
+						renegade = CHAOS_DAEMONHOST_COMPOISTION,
+						cultist = CHAOS_DAEMONHOST_COMPOISTION,
+					},
+					enemy_placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
+				},
+			},
+		},
 	},
 	mutator_havoc_twins_settings = {
-		force_horde_on_spawn = true,
-		injection_template = "havoc_twins",
+		class = "scripts/managers/mutator/mutators/mutator_spawner",
 		num_to_spawn = 1,
 		trigger_distance = 55,
-		monster_breed_name = {
-			"havoc_twins",
+		spawn_locations = MutatorSpawnerLocationSources.prebaked_mission_locations(),
+		spawners = {
+			{
+				class = "scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_enemy_template",
+				template = {
+					injection_template_settings = {
+						force_horde_on_spawn = true,
+						name = "havoc_twins",
+					},
+					enemy_placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
+					placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
+					composition = {
+						cultist = nil,
+						renegade = nil,
+					},
+				},
+			},
 		},
 	},
 }

@@ -15,9 +15,8 @@ GameplayInitStepExtensionUnits.on_enter = function (self, parent, params)
 	self._shared_state = shared_state
 
 	local world = shared_state.world
-	local level = shared_state.level
 
-	self:_init_extension_unit_registration(world, level, time_query_handle)
+	self:_init_extension_unit_registration(world, shared_state, time_query_handle)
 end
 
 GameplayInitStepExtensionUnits.update = function (self, main_dt, main_t)
@@ -48,7 +47,8 @@ GameplayInitStepExtensionUnits._optimize_world_units = function (self, world)
 	ScriptWorld.optimize_world_units(world)
 end
 
-GameplayInitStepExtensionUnits._init_extension_unit_registration = function (self, world, level, time_query_handle)
+GameplayInitStepExtensionUnits._init_extension_unit_registration = function (self, world, shared_state, time_query_handle)
+	local level = shared_state.level
 	local units = Level.units(level, true)
 
 	Managers.state.unit_spawner:register_static_level_spawned_units(level, units)

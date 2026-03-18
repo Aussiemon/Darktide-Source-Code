@@ -90,31 +90,31 @@ end
 local general_goods_offer_display_information = {
 	{
 		background_icon = "content/ui/materials/icons/items/general_melee_weapon",
-		icon = "content/ui/materials/icons/contracts/contracts_store/uknown_melee_weapon",
+		icon = "content/ui/materials/icons/contracts/contracts_store/unknown_melee_weapon",
 		display_name = Localize("loc_contracts_view_general_goods_random_melee_weapon"),
 		sub_header = Localize("loc_contracts_view_general_goods_random_item_desc"),
 	},
 	{
 		background_icon = "content/ui/materials/icons/items/general_range_weapon",
-		icon = "content/ui/materials/icons/contracts/contracts_store/uknown_ranged_weapon",
+		icon = "content/ui/materials/icons/contracts/contracts_store/unknown_ranged_weapon",
 		display_name = Localize("loc_contracts_view_general_goods_random_ranged_weapon"),
 		sub_header = Localize("loc_contracts_view_general_goods_random_item_desc"),
 	},
 	{
 		background_icon = "content/ui/materials/icons/items/general_curio_01",
-		icon = "content/ui/materials/icons/contracts/contracts_store/uknown_melee_weapon",
+		icon = "content/ui/materials/icons/contracts/contracts_store/unknown_melee_weapon",
 		display_name = Localize("loc_contracts_view_general_goods_random_gadget_defensive"),
 		sub_header = Localize("loc_contracts_view_general_goods_random_item_desc"),
 	},
 	{
 		background_icon = "content/ui/materials/icons/items/general_curio_02",
-		icon = "content/ui/materials/icons/contracts/contracts_store/uknown_melee_weapon",
+		icon = "content/ui/materials/icons/contracts/contracts_store/unknown_melee_weapon",
 		display_name = Localize("loc_contracts_view_general_goods_random_gadget_teamplay"),
 		sub_header = Localize("loc_contracts_view_general_goods_random_item_desc"),
 	},
 	{
 		background_icon = "content/ui/materials/icons/items/general_curio_03",
-		icon = "content/ui/materials/icons/contracts/contracts_store/uknown_melee_weapon",
+		icon = "content/ui/materials/icons/contracts/contracts_store/unknown_melee_weapon",
 		display_name = Localize("loc_contracts_view_general_goods_random_gadget_utility"),
 		sub_header = Localize("loc_contracts_view_general_goods_random_item_desc"),
 	},

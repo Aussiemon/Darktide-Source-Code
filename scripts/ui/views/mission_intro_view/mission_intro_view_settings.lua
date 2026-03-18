@@ -17,6 +17,15 @@ local mission_intro_view_settings = {
 			level_name = "content/levels/ui/horde_mission_intro/horde_mission_intro",
 			shading_environment = "content/shading_environments/ui/horde_mission_intro",
 		},
+		expeditions = {
+			level_name = "content/levels/ui/expeditions_mission_intro/expeditions_mission_intro",
+			shading_environment = "content/shading_environments/expeditions/wastes/cinematics/expeditions_wastes_mission_intro_default",
+			shading_environments = {
+				darkness = "content/shading_environments/expeditions/wastes/cinematics/expeditions_wastes_mission_intro_darkness",
+				dawn = "content/shading_environments/expeditions/wastes/cinematics/expeditions_wastes_mission_intro_dawn",
+				default = "content/shading_environments/expeditions/wastes/cinematics/expeditions_wastes_mission_intro_default",
+			},
+		},
 	},
 	world_custom_flags = {
 		Application.ENABLE_VOLUMETRICS,

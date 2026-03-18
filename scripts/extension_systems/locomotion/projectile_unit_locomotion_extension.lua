@@ -294,19 +294,36 @@ end
 
 ProjectileUnitLocomotionExtension.external_move = function (self, position, rotation)
 	local projectile_unit = self._projectile_unit
+
+	self._position:store(position)
+	self._rotation:store(rotation)
+
 	local dynamic_actor
 
 	if self._dynamic_actor_id then
 		dynamic_actor = Unit.actor(projectile_unit, self._dynamic_actor_id)
 	end
 
-	if dynamic_actor then
+	local state = self._current_state
+
+	if state == locomotion_states.engine_physics and dynamic_actor then
+		local velocity = Actor.velocity(dynamic_actor)
+		local momentum_or_angular_velocity = Actor.angular_velocity(dynamic_actor)
+
+		self:switch_to_engine_physics(position, rotation, velocity, momentum_or_angular_velocity)
+	elseif state == locomotion_states.manual_physics then
+		local integration_data = self._integration_data
+		local direction = Vector3.normalize(integration_data.velocity_box:unbox())
+		local speed = Vector3.length(integration_data.velocity_box:unbox())
+		local angular_velocity = integration_data.angular_velocity_box:unbox()
+
+		self:switch_to_manual_physics(position, rotation, direction, speed, angular_velocity)
+	elseif dynamic_actor then
 		Actor.teleport_position(dynamic_actor, position)
 		Actor.teleport_rotation(dynamic_actor, rotation)
+	else
+		Log.error("ProjectileUnitLocomotionExtension", "[external_move] no dynamic actor")
 	end
-
-	self._position:store(position)
-	self._rotation:store(rotation)
 end
 
 ProjectileUnitLocomotionExtension.switch_to_manual_physics = function (self, position, rotation, direction, speed, angular_velocity)
@@ -367,7 +384,6 @@ ProjectileUnitLocomotionExtension._update_manual_physics = function (self, unit,
 
 		if deploy_on_stop then
 			self:switch_to_deployed(new_position, new_rotation)
-			deployable_settings.deploy_func(self._world, self._physics_world, unit)
 		else
 			local angular_momentum = integration_data.angular_velocity / integration_data.inertia
 
@@ -422,7 +438,6 @@ ProjectileUnitLocomotionExtension._update_true_flight = function (self, unit, dt
 
 		if deploy_on_stop then
 			self:switch_to_deployed(new_position, new_rotation)
-			deployable_settings.deploy_func(self._world, self._physics_world, unit)
 		else
 			self:switch_to_sleep(new_position, new_rotation)
 		end
@@ -600,6 +615,17 @@ end
 ProjectileUnitLocomotionExtension.switch_to_deployed = function (self, position, rotation)
 	self:_set_state(locomotion_states.deployed)
 	self:_apply_changes(locomotion_states.deployed, position, rotation, Vector3.zero(), Vector3.zero(), nil, nil, nil)
+
+	local projectile_template = self._projectile_template
+	local deployable_settings = projectile_template.deployable
+
+	deployable_settings.deploy_func(self._world, self._physics_world, self._projectile_unit, true, self._owner_unit, self)
+
+	local fx_extension = self._fx_extension
+
+	if fx_extension then
+		self._fx_extension:try_start_fx("deploy")
+	end
 end
 
 ProjectileUnitLocomotionExtension._set_state = function (self, new_state)
@@ -624,7 +650,7 @@ ProjectileUnitLocomotionExtension._set_state = function (self, new_state)
 			ProjectileLocomotion.deactivate_physics(projectile_unit, self._dynamic_actor_id)
 		elseif new_state == locomotion_states.deployed then
 			ProjectileLocomotion.deactivate_physics(projectile_unit, self._dynamic_actor_id)
-		elseif old_state == locomotion_states.carried then
+		elseif self._dynamic_actor_id and (old_state == locomotion_states.carried or new_state == locomotion_states.sleep) then
 			ProjectileLocomotion.activate_physics(projectile_unit)
 		end
 

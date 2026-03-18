@@ -5,6 +5,7 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local MinionAttack = require("scripts/utilities/minion_attack")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
@@ -93,6 +94,14 @@ BtShootNetAction.leave = function (self, unit, breed, blackboard, scratchpad, ac
 
 		if is_player_unit then
 			record_state_component.has_disabled_player = true
+
+			local game_mode_manager = Managers.state.game_mode
+			local game_mode = game_mode_manager:game_mode()
+			local game_mode_name = game_mode:name()
+
+			if game_mode_name == "expedition" then
+				game_mode:minion_steal(hit_unit, unit)
+			end
 		end
 	end
 
@@ -386,7 +395,7 @@ BtShootNetAction._play_wwise_event = function (self, event, scratchpad, action_d
 end
 
 BtShootNetAction._start_effect_template = function (self, unit, scratchpad, action_data)
-	local effect_template = action_data.effect_template
+	local effect_template = EffectTemplates[action_data.effect_template_name]
 	local global_effect_id = scratchpad.fx_system:start_template_effect(effect_template, unit)
 
 	scratchpad.global_effect_id = global_effect_id

@@ -53,6 +53,7 @@ _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/h
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/hli_barbershop")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/hli_gun_shop")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/hli_penances")
+_extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/hli_expeditions")
 
 video_view_settings.templates = cinematic_video_templates
 

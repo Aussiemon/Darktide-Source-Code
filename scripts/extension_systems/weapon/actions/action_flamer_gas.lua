@@ -174,7 +174,7 @@ ActionFlamerGas._do_raycast = function (self, i, position, rotation, max_range, 
 	local ray_rotation = rotation
 
 	if i > 1 then
-		ray_rotation = Spread.uniform_circle(rotation, spread_angle, math.random_seed())
+		ray_rotation = Spread.uniform_circle(rotation, spread_angle, spread_angle, math.random_seed())
 	end
 
 	local direction = Quaternion.forward(ray_rotation)

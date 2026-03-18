@@ -10,6 +10,7 @@ local function _create_roamer_pacing_template_entry(path)
 end
 
 _create_roamer_pacing_template_entry("scripts/managers/pacing/roamer_pacing/templates/default_roamer_pacing_template")
+_create_roamer_pacing_template_entry("scripts/managers/pacing/roamer_pacing/templates/expedition_roamer_pacing_template")
 _create_roamer_pacing_template_entry("scripts/managers/pacing/roamer_pacing/templates/havoc_roamer_pacing_template")
 
 return settings("RoamerPacingTemplates", roamer_pacing_templates)

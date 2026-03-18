@@ -15,6 +15,7 @@ local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings"
 local HordesModeSettings = require("scripts/settings/hordes_mode_settings")
 local MaterialFx = require("scripts/utilities/material_fx")
 local MaterialQuery = require("scripts/utilities/material_query")
+local MutatorSettings = require("scripts/settings/mutator/mutator_settings")
 local NavQueries = require("scripts/utilities/nav_queries")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerMovement = require("scripts/utilities/player_movement")
@@ -1879,9 +1880,10 @@ FlowCallbacks.trigger_on_demand_vo = function (params)
 	end
 
 	local unit = params.source
+	local concept = params.concept
 	local trigger_id = params.trigger_id
 
-	Vo.on_demand_vo_event(unit, trigger_id)
+	Vo.on_demand_vo_event(unit, concept, trigger_id)
 end
 
 FlowCallbacks.trigger_start_banter_vo = function (params)
@@ -2054,6 +2056,256 @@ FlowCallbacks.change_spawner_groups_terror_event = function (params)
 	end
 end
 
+FlowCallbacks.start_vote = function (params)
+	local is_server = Managers.state.game_session:is_server()
+
+	if not is_server then
+		return
+	end
+
+	local initiator_peer
+	local source_player_unit = params.source_player
+
+	if params.source_player then
+		local player = Managers.player:player_by_unit(source_player_unit)
+
+		if player then
+			initiator_peer = player:peer_id()
+		end
+	end
+
+	Managers.voting:start_voting("flow", {
+		level = Application.flow_callback_context_level(),
+		unit = Application.flow_callback_context_unit(),
+		node_id = params.node_id,
+		initiator_peer = initiator_peer,
+		flow_settings_name = params.flow_template_name,
+	})
+end
+
+FlowCallbacks.expedition_mark_level_complete = function (params)
+	local level = params.level or Application.flow_callback_context_level()
+
+	Managers.event:trigger("expedition_mark_level_complete", Managers.state.unit_spawner:index_by_level(level))
+end
+
+FlowCallbacks.expedition_register_interactable_requirement = function (params)
+	local unit = params.unit
+	local collectible_id = params.collectible_id
+	local amount = params.amount
+
+	Managers.event:trigger("event_expedition_register_interactable_requirement", unit, collectible_id, amount)
+end
+
+FlowCallbacks.expedition_get_extraction_wait_time = function (params)
+	local is_server = Managers.state.game_session:is_server()
+
+	if is_server then
+		local extraction_type = params.event
+		local wait_time = Managers.state.pacing:request_extraction_wait_time(extraction_type)
+
+		flow_return_table.time = wait_time
+
+		return flow_return_table
+	end
+end
+
+FlowCallbacks.pacing_heat_event = function (params)
+	local is_server = Managers.state.game_session:is_server()
+
+	if is_server then
+		local oppertunity_type = params.event
+		local level = Application.flow_callback_context_level()
+
+		Managers.state.pacing:add_heat_on_oppertunity(oppertunity_type, level)
+	end
+end
+
+FlowCallbacks.pacing_lower_heat = function (params)
+	local is_server = Managers.state.game_session:is_server()
+
+	if is_server then
+		local oppertunity_type = params.event
+
+		Managers.state.pacing:lower_heat_on_oppertunity(oppertunity_type)
+	end
+end
+
+FlowCallbacks.request_auto_event = function (params)
+	return
+end
+
+FlowCallbacks.request_auto_event_end = function (params)
+	return
+end
+
+FlowCallbacks.expedition_event_counter_add_unit = function (params)
+	local component_system = Managers.state.extension:system("component_system")
+	local expedition_opportunity_counters = component_system:get_units_from_component_name("ExpeditionOpportunityCounter")
+
+	if #expedition_opportunity_counters == 0 then
+		Log.exception("ExpeditionOpportunityCounter", "No ExpExpeditionOpportunityCountereditionEventCounter components found in the level.")
+	else
+		for i = 1, #expedition_opportunity_counters do
+			local counter_unit = expedition_opportunity_counters[i]
+
+			if counter_unit == params.component_unit then
+				local components = Component.get_components_by_name(counter_unit, "ExpeditionOpportunityCounter")
+
+				for ii = 1, #components do
+					local component = components[ii]
+
+					component:add_new_unit(params.add_unit)
+				end
+			end
+		end
+	end
+end
+
+FlowCallbacks.expedition_spawn_random_enemy = function (params)
+	local is_server = Managers.state.game_session:is_server()
+
+	if not is_server then
+		return
+	end
+
+	params.flow_level = Application.flow_callback_context_level()
+
+	local game_mode_manager = Managers.state.game_mode
+	local game_mode = game_mode_manager:game_mode()
+	local game_mode_name = game_mode:name()
+
+	if not game_mode_name == "expedition" then
+		return
+	end
+
+	local minion_spawn_manager = Managers.state.minion_spawn
+	local param_table = minion_spawn_manager:request_param_table()
+	local breed_type = params.event
+	local choosen_breed_name
+	local monster_spawner_unit = params.monster_spawner_unit
+	local position, rotation = Unit.world_position(monster_spawner_unit, 1), Unit.world_rotation(monster_spawner_unit, 1)
+
+	if breed_type == "random" then
+		local possible_breeds = BreedQueries.match_minions_by_tags({
+			{
+				"monster",
+			},
+		}, {
+			{
+				"witch",
+			},
+		}, "chaos")
+		local random_breed = math.random(1, #possible_breeds)
+
+		choosen_breed_name = possible_breeds[random_breed].name
+	else
+		choosen_breed_name = breed_type
+	end
+
+	local spawned_unit = minion_spawn_manager:spawn_minion(choosen_breed_name, position, rotation, 2, param_table)
+
+	flow_return_table.spawned_unit = spawned_unit
+
+	return flow_return_table
+end
+
+FlowCallbacks.register_level_hazard = function (params)
+	local is_server = Managers.state.game_session:is_server()
+
+	if not is_server then
+		return
+	end
+
+	params.flow_level = Application.flow_callback_context_level()
+
+	local game_mode_manager = Managers.state.game_mode
+	local game_mode = game_mode_manager:game_mode()
+
+	game_mode:register_level_hazard(params)
+end
+
+FlowCallbacks.unregister_level_hazard = function (params)
+	local is_server = Managers.state.game_session:is_server()
+
+	if not is_server then
+		return
+	end
+
+	params.flow_level = Application.flow_callback_context_level()
+
+	local game_mode_manager = Managers.state.game_mode
+	local game_mode = game_mode_manager:game_mode()
+
+	game_mode:unregister_level_hazard(params)
+
+	local chosen_hazard_type = params.hazard_type
+	local level_hazard_objective_lookup = game_mode:level_hazard_objective_lookup()
+	local active_level_hazards = game_mode:get_active_level_hazards()
+	local activated = false
+
+	for level, hazard_type in pairs(active_level_hazards) do
+		if hazard_type == chosen_hazard_type then
+			activated = true
+
+			break
+		end
+	end
+
+	if not activated then
+		local end_objective_name = level_hazard_objective_lookup[chosen_hazard_type].objective
+		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+
+		mission_objective_system:flow_callback_end_mission_objective(end_objective_name, 0)
+	end
+end
+
+FlowCallbacks.check_for_active_level_hazards = function (params)
+	local is_server = Managers.state.game_session:is_server()
+
+	if not is_server then
+		return
+	end
+
+	params.flow_level = Application.flow_callback_context_level()
+
+	local game_mode_manager = Managers.state.game_mode
+	local game_mode = game_mode_manager:game_mode()
+	local active_level_hazards = game_mode:get_active_level_hazards()
+	local level_hazard_objective_lookup = game_mode:level_hazard_objective_lookup()
+	local activated = false
+	local chosen_hazard_type = params.hazard_type
+
+	if active_level_hazards then
+		for level, hazard_type in pairs(active_level_hazards) do
+			if hazard_type == chosen_hazard_type then
+				local activated_event = level_hazard_objective_lookup[chosen_hazard_type].activated_event
+
+				if activated_event then
+					Level.trigger_event(level, activated_event)
+				end
+
+				local start_objective_name = level_hazard_objective_lookup[chosen_hazard_type].objective
+				local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+
+				mission_objective_system:flow_callback_start_mission_objective(start_objective_name, 0)
+
+				activated = true
+			end
+		end
+	end
+
+	if activated then
+		flow_return_table.active_level_hazards_of_given_type = true
+
+		return flow_return_table
+	else
+		flow_return_table.active_level_hazards_of_given_type = false
+
+		return flow_return_table
+	end
+end
+
 FlowCallbacks.get_crossroad_road_id = function (params)
 	local crossroads_id = params.crossroads_id
 	local main_path_manager = Managers.state.main_path
@@ -2196,14 +2448,18 @@ FlowCallbacks.script_data_set_unit = function (params)
 	Unit.set_data(my_unit, script_data_name, i, script_data_unit)
 end
 
+FlowCallbacks.script_data_set_numeric = function (params)
+	local my_unit = params.unit
+	local script_data_name = params.script_data_name
+	local value = params.value
+
+	Unit.set_data(my_unit, script_data_name, value)
+end
+
 FlowCallbacks.register_objective_unit = function (params)
-	local is_server = Managers.state.game_session and Managers.state.game_session:is_server()
+	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-	if is_server then
-		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
-
-		mission_objective_system:flow_callback_register_objective_unit(params.objective_name, params.objective_unit)
-	end
+	mission_objective_system:flow_callback_register_objective_unit(params.objective_name, params.objective_unit)
 end
 
 FlowCallbacks.teleport_payload = function (params)
@@ -2239,7 +2495,7 @@ FlowCallbacks.clear_payload_aim_target_position = function (params)
 	end
 end
 
-function get_objective_group_id()
+local function get_objective_group_id()
 	local level = Application.flow_callback_context_level()
 	local unit_spawner_manager = Managers.state.unit_spawner
 
@@ -2289,6 +2545,16 @@ FlowCallbacks.end_mission_objective = function (params)
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
 		mission_objective_system:flow_callback_end_mission_objective(params.objective_name, get_objective_group_id())
+	end
+end
+
+FlowCallbacks.reset_mission_objective = function (params)
+	local is_server = Managers.state.game_session and Managers.state.game_session:is_server()
+
+	if is_server then
+		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+
+		mission_objective_system:flow_callback_reset_mission_objective(params.objective_name, get_objective_group_id())
 	end
 end
 
@@ -2408,17 +2674,24 @@ end
 local function _teleport_player_companion(player, destination_position)
 	local player_unit = player.player_unit
 	local companion_spawner_extension = ScriptUnit.extension(player_unit, "companion_spawner_system")
-	local companion_unit = companion_spawner_extension:companion_unit()
+	local companion_units = companion_spawner_extension and companion_spawner_extension:companion_units()
 
-	if companion_unit and ALIVE[companion_unit] then
-		local companion_blackboard = BLACKBOARDS[companion_unit]
+	if companion_units then
+		for i = 1, #companion_units do
+			local companion_unit = companion_units[i]
 
-		if companion_blackboard then
-			local teleport_component = Blackboard.write_component(companion_blackboard, "teleport")
+			if companion_unit and ALIVE[companion_unit] then
+				local companion_blackboard = BLACKBOARDS[companion_unit]
+				local has_teleport_component = companion_blackboard and Blackboard.has_component(companion_blackboard, "teleport")
 
-			teleport_component.teleport_position:store(destination_position)
+				if has_teleport_component then
+					local teleport_component = Blackboard.write_component(companion_blackboard, "teleport")
 
-			teleport_component.has_teleport_position = true
+					teleport_component.teleport_position:store(destination_position)
+
+					teleport_component.has_teleport_position = true
+				end
+			end
 		end
 	end
 end
@@ -2626,6 +2899,28 @@ FlowCallbacks.random_player_alive = function (params)
 		local random_player = alive_players[random_index]
 
 		flow_return_table.player_unit = random_player.player_unit
+	end
+
+	return flow_return_table
+end
+
+FlowCallbacks.all_player_units = function (params)
+	local is_server = Managers.state.game_session:is_server()
+
+	if not is_server then
+		return
+	end
+
+	local side_system = Managers.state.extension:system("side_system")
+	local side_name = side_system:get_default_player_side_name()
+	local side = side_system:get_side_from_name(side_name)
+	local players = side:added_player_units()
+	local num_players = #players
+
+	for i = 1, num_players do
+		local unit = players[i]
+
+		flow_return_table["player_unit_" .. i] = unit
 	end
 
 	return flow_return_table
@@ -3020,6 +3315,18 @@ FlowCallbacks.complete_narrative_chapter = function (params)
 	return flow_return_table
 end
 
+FlowCallbacks.highest_player_difficulty = function (params)
+	local local_player_id = 1
+	local local_player = Managers.player:local_player(local_player_id)
+	local profile = local_player:profile()
+	local character_id = profile.character_id
+	local difficulty = Managers.data_service.mission_board:get_highest_difficulty_unlocked(character_id) or "none"
+
+	flow_return_table[difficulty] = true
+
+	return flow_return_table
+end
+
 FlowCallbacks.delete_impact_fx_unit = function (params)
 	local unit = params.unit
 	local extension_manager = Managers.state and Managers.state.extension
@@ -3178,11 +3485,53 @@ FlowCallbacks.set_unit_material_scalar = function (params)
 	Unit.set_scalar_for_material(unit, material_name, material_variable_name, material_scalar)
 end
 
+FlowCallbacks.set_particle_material_scalar = function (params)
+	local world = Application.flow_callback_context_world()
+	local effect_id = params.effect_id
+	local cloud_name = params.cloud_name
+	local variable_name = params.variable_name
+	local scalar = params.scalar or 1
+
+	World.set_particles_material_scalar(world, effect_id, cloud_name, variable_name, scalar)
+end
+
 FlowCallbacks.pj_feature_check = function ()
 	local feature = "off"
 
 	feature = "on"
 	flow_return_table[feature] = true
+
+	return flow_return_table
+end
+
+FlowCallbacks.is_level_dark = function (params)
+	flow_return_table.is_dark = false
+
+	local mutator_manager = Managers.state.mutator
+
+	if mutator_manager then
+		for i = 1, #MutatorSettings.dark_mutators do
+			if mutator_manager:mutator(MutatorSettings.dark_mutators[i]) then
+				flow_return_table.is_dark = true
+
+				break
+			end
+		end
+	end
+
+	if not flow_return_table.is_dark then
+		local circumstance_manager = Managers.state.circumstance
+
+		if circumstance_manager then
+			for i = 1, #MutatorSettings.dark_themes do
+				if circumstance_manager:active_theme_tag() == MutatorSettings.dark_themes[i] then
+					flow_return_table.is_dark = true
+
+					break
+				end
+			end
+		end
+	end
 
 	return flow_return_table
 end

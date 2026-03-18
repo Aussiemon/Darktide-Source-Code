@@ -9,10 +9,15 @@ local ui_view_level_requirement = {
 	havoc_background_view = PlayerProgressionUnlocks.havoc_missions,
 }
 local ui_view_progression_requirement = {
-	credits_vendor_background_view = PlayerProgressionUnlocks.credits_vendor,
-	crafting_view = PlayerProgressionUnlocks.crafting,
-	contracts_background_view = PlayerProgressionUnlocks.contracts,
-	cosmetics_vendor_background_view = PlayerProgressionUnlocks.cosmetics_vendor,
+	hub_facility = {
+		credits_vendor_background_view = PlayerProgressionUnlocks.credits_vendor,
+		crafting_view = PlayerProgressionUnlocks.crafting,
+		contracts_background_view = PlayerProgressionUnlocks.contracts,
+		cosmetics_vendor_background_view = PlayerProgressionUnlocks.cosmetics_vendor,
+	},
+	game_mode = {
+		expedition_view = PlayerProgressionUnlocks.expeditions,
+	},
 }
 
 ViewInteraction.init = function (self, ...)
@@ -72,13 +77,23 @@ ViewInteraction._is_blocked = function (self, interactor_unit, interactee_unit)
 		})
 	end
 
-	local progression_requirement = ui_view_progression_requirement[ui_interaction]
+	local hub_facility_progression_requirement = ui_view_progression_requirement.hub_facility[ui_interaction]
 
-	if progression_requirement then
-		local block_reason, block_context = Managers.data_service.mission_board:get_block_reason("hub_facility", progression_requirement)
+	if hub_facility_progression_requirement then
+		local block_reason, block_context = Managers.data_service.mission_board:get_block_reason("hub_facility", hub_facility_progression_requirement)
 
 		if block_reason then
 			return self:_set_cache(interactor_unit, interactee_unit, true, block_reason, block_context)
+		end
+	else
+		local game_mode_progression_requirement = ui_view_progression_requirement.game_mode[ui_interaction]
+
+		if game_mode_progression_requirement then
+			local block_reason, block_context = Managers.data_service.mission_board:get_block_reason("game_mode", game_mode_progression_requirement)
+
+			if block_reason then
+				return self:_set_cache(interactor_unit, interactee_unit, true, block_reason, block_context)
+			end
 		end
 	end
 

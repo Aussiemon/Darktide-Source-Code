@@ -7,6 +7,7 @@ local InventoryWeaponsViewSettings = require("scripts/ui/views/inventory_weapons
 local Items = require("scripts/utilities/items")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ProfileUtils = require("scripts/utilities/profile_utils")
+local Text = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
@@ -14,7 +15,6 @@ local ViewElementDiscardItems = require("scripts/ui/view_elements/view_element_d
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementWeaponActions = require("scripts/ui/view_elements/view_element_weapon_actions/view_element_weapon_actions")
-local Text = require("scripts/utilities/ui/text")
 local InventoryWeaponsView = class("InventoryWeaponsView", "ItemGridViewBase")
 
 InventoryWeaponsView.init = function (self, settings, context)
@@ -828,7 +828,7 @@ InventoryWeaponsView._setup_background_world = function (self)
 	local player = self._preview_player
 	local player_profile = player:profile()
 	local archetype = player_profile.archetype
-	local breed_name = archetype.breed
+	local breed_name = archetype.ui_breed or archetype.breed or "human"
 	local default_camera_event_id = "event_register_cosmetics_preview_default_camera_" .. breed_name
 
 	self[default_camera_event_id] = function (instance, camera_unit)

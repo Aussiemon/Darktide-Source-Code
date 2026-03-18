@@ -269,9 +269,9 @@ HudElementSmartTagging._on_tag_stop_callback = function (self, t, ui_renderer, r
 
 	if target_unit then
 		local companion_spawner_extension = ScriptUnit.has_extension(player_unit, "companion_spawner_system")
-		local has_companion = companion_spawner_extension and companion_spawner_extension:should_have_companion()
+		local can_tag_order = companion_spawner_extension and companion_spawner_extension:companion_can_tag_order()
 
-		if has_companion then
+		if can_tag_order then
 			local account_data = Managers.save:account_data()
 			local single_tap = account_data.input_settings.companion_command_tap == "single"
 			local smart_tag_system = Managers.state.extension:system("smart_tag_system")

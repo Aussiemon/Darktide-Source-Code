@@ -6,7 +6,6 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local UtilityConsiderations = require("scripts/extension_systems/behavior/utility_considerations")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local damage_types = DamageSettings.damage_types
 local hit_zone_names = HitZone.hit_zone_names
@@ -1371,6 +1370,7 @@ local action_data = {
 		},
 	},
 	throw_frag_grenade = {
+		effect_template_name = "renegade_captain_grenade",
 		utility_weight = 10,
 		considerations = UtilityConsiderations.frag_grenade,
 		aim_anim_events = {
@@ -1385,7 +1385,6 @@ local action_data = {
 		attack_intensities = {
 			grenade = 20,
 		},
-		effect_template = EffectTemplates.renegade_captain_grenade,
 		effect_template_timings = {
 			throw_grenade = 0.4375,
 		},
@@ -1663,13 +1662,28 @@ local action_data = {
 	use_stim = {
 		anim_event = "use_syringe",
 		duration = 1.6666666666666667,
+		effect_template_name = "minion_stim_effect",
 		exit_state = "to_riflemen",
-		effect_template = EffectTemplates.minion_stim_effect,
 		stim_buffs = {
 			"mutator_stimmed_minion_red",
 			"mutator_stimmed_minion_yellow",
 			"mutator_stimmed_minion_green",
 			"mutator_stimmed_minion_blue",
+		},
+	},
+	vortex_grabbed = {
+		ignore_rotate_towards_target = false,
+		anim_events = {
+			loop = {
+				"vortex_loop",
+			},
+			landing = {
+				"vortex_landing",
+			},
+		},
+		anim_durations = {
+			vortex_landing = 5.666666666666667,
+			vortex_loop = 0.3333333333333333,
 		},
 	},
 }

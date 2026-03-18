@@ -8,6 +8,7 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breed = require("scripts/utilities/breed")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local MinionAttack = require("scripts/utilities/minion_attack")
 local MinionMovement = require("scripts/utilities/minion_movement")
@@ -37,6 +38,7 @@ BtChargeAction.enter = function (self, unit, breed, blackboard, scratchpad, acti
 	scratchpad.broadphase_system = Managers.state.extension:system("broadphase_system")
 	scratchpad.side_system = Managers.state.extension:system("side_system")
 	scratchpad.pushed_minions = {}
+	scratchpad.pushed_enemies = {}
 
 	MinionPerception.set_target_lock(unit, perception_component, true)
 
@@ -113,9 +115,23 @@ BtChargeAction.run = function (self, unit, breed, blackboard, scratchpad, action
 		self:_update_charge_buildup(unit, scratchpad, action_data, dt, t)
 	elseif state == "charging" then
 		self:_update_charging(unit, scratchpad, action_data, dt, t)
+
+		if action_data.push_enemies_damage_profile then
+			local target_unit = scratchpad.perception_component.target_unit
+
+			MinionAttack.push_nearby_enemies(unit, scratchpad, action_data, target_unit)
+		end
+
 		MinionAttack.push_friendly_minions(unit, scratchpad, action_data, t)
 	elseif state == "navigating" then
 		self:_update_navigating(unit, scratchpad, action_data, t)
+
+		if action_data.push_enemies_damage_profile then
+			local target_unit = scratchpad.perception_component.target_unit
+
+			MinionAttack.push_nearby_enemies(unit, scratchpad, action_data, target_unit)
+		end
+
 		MinionAttack.push_friendly_minions(unit, scratchpad, action_data, t)
 
 		if scratchpad.max_duration_t and t > scratchpad.max_duration_t then
@@ -414,9 +430,21 @@ BtChargeAction._update_attacking = function (self, unit, scratchpad, action_data
 		local hit_world_position = Unit.world_position(hit_target, head_node)
 		local damage, result, damage_efficiency = Attack.execute(hit_target, damage_profile, "power_level", power_level, "attacking_unit", unit, "attack_type", attack_types.melee, "attack_direction", direction, "hit_world_position", hit_world_position, "damage_type", damage_type, "hit_zone_name", action_data.hit_zone_name)
 
+		if action_data.minion_can_steal and not scratchpad.loot_stolen_from_target_unit then
+			scratchpad.loot_stolen_from_target_unit = true
+
+			local game_mode_manager = Managers.state.game_mode
+			local game_mode = game_mode_manager:game_mode()
+			local game_mode_name = game_mode:name()
+
+			if game_mode_name == "expedition" then
+				game_mode:minion_steal(hit_target, unit)
+			end
+		end
+
 		ImpactEffect.play(hit_target, nil, damage, damage_type, nil, result, hit_world_position, nil, direction, unit, nil, nil, nil, damage_efficiency, damage_profile)
 
-		local effect_template = action_data.effect_template
+		local effect_template = EffectTemplates[action_data.effect_template_name]
 
 		if effect_template and not scratchpad.global_effect_id then
 			local fx_system = scratchpad.fx_system
@@ -546,7 +574,7 @@ BtChargeAction._close_attack_target = function (self, unit, hit_unit, scratchpad
 		attack_anim_duration = attack_anim_duration[wielded_slot_name] or attack_anim_duration.default
 	end
 
-	local effect_template = action_data.effect_template
+	local effect_template = EffectTemplates[action_data.effect_template_name]
 
 	if effect_template then
 		local fx_system = scratchpad.fx_system

@@ -13,5 +13,6 @@ end
 _require_deployable("broker_stimm_field_crate")
 _require_deployable("medical_crate")
 _require_deployable("shock_mine")
+_require_deployable("deployable_force_field")
 
 return settings("Deployables", deployables)

@@ -1,8 +1,8 @@
 ﻿-- chunkname: @scripts/ui/view_elements/view_element_campaign_mission_list/view_element_campaign_mission_list_settings.lua
 
-local Settings = {}
+local view_element_campaign_mission_list_settings = {}
 
-Settings.mission_tile_settings = {
+view_element_campaign_mission_list_settings.mission_tile_settings = {
 	mission_tile = {
 		blueprint_name = "replay_mission_tile_pass_templates",
 		scenegraph_id = "list_anchor",
@@ -12,7 +12,7 @@ Settings.mission_tile_settings = {
 		},
 	},
 }
-Settings.debrief_settings = {
+view_element_campaign_mission_list_settings.debrief_settings = {
 	size = {
 		60,
 		60,
@@ -22,8 +22,8 @@ Settings.debrief_settings = {
 		60,
 	},
 }
-Settings.panel_height = 48
-Settings.debrief_videos = {
+view_element_campaign_mission_list_settings.panel_height = 48
+view_element_campaign_mission_list_settings.debrief_videos = {
 	player_journey_01 = "debriefing_01",
 	player_journey_010 = "debriefing_12",
 	player_journey_011_A = "debriefing_13",
@@ -46,4 +46,4 @@ Settings.debrief_videos = {
 	story_nomansland_03 = "debriefing_nml_03",
 }
 
-return settings("ViewElementCampaignMissionListSettings", Settings)
+return settings("ViewElementCampaignMissionListSettings", view_element_campaign_mission_list_settings)

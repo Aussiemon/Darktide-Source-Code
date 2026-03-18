@@ -23,6 +23,16 @@ MainPathManager.init = function (self, world, nav_world, level_seed, main_path_r
 	self._world = world
 	self._nav_world = nav_world
 	self._level_seed = level_seed
+	self._num_sides = num_sides
+	self._group_locations = {}
+
+	self:setup_for_level(main_path_resource_name, use_nav_point_time_slice, false, debug_level_name)
+end
+
+MainPathManager.setup_for_level = function (self, main_path_resource_name, use_nav_point_time_slice, debug_level_name)
+	local level_seed = self._level_seed
+
+	use_nav_point_time_slice = use_nav_point_time_slice ~= false
 
 	if Application.can_get_resource("lua", main_path_resource_name) then
 		local path_markers, crossroads, main_path_segments, main_path_version = self:_load_main_path_data(main_path_resource_name)
@@ -53,7 +63,11 @@ MainPathManager.init = function (self, world, nav_world, level_seed, main_path_r
 
 			self._spawn_points_time_slice_data = spawn_points_time_slice_data
 		end
+
+		return true
 	end
+
+	return false
 end
 
 MainPathManager.path_type = function (self)
@@ -66,6 +80,14 @@ end
 
 MainPathManager.nav_spawn_points = function (self)
 	return self._nav_spawn_points
+end
+
+MainPathManager.group_locations = function (self)
+	return self._group_locations
+end
+
+MainPathManager.add_group_location = function (self, position)
+	self._group_locations[#self._group_locations + 1] = Vector3Box(position)
 end
 
 MainPathManager._calculate_travel_distances = function (self, main_path_segments)
@@ -129,6 +151,10 @@ MainPathManager._load_main_path_data = function (self, main_path_resource_name)
 	return path_markers, main_path_data.crossroads, main_path_segments, main_path_data.version
 end
 
+MainPathManager.reset = function (self)
+	self:destroy()
+end
+
 MainPathManager.destroy = function (self)
 	if self._main_path_version then
 		self._main_path_version = nil
@@ -172,7 +198,7 @@ MainPathManager.is_main_path_available = function (self)
 end
 
 MainPathManager.is_main_path_ready = function (self)
-	return self._main_path_version ~= nil and self._nav_spawn_points ~= nil
+	return self._main_path_version ~= nil and (not self._spawn_points_time_slice_data or self._spawn_points_time_slice_data.ready)
 end
 
 MainPathManager.main_path_segments = function (self)
@@ -328,17 +354,80 @@ MainPathManager.update_time_slice_spawn_points = function (self)
 	local time_slice_data = self._spawn_points_time_slice_data
 	local done = SpawnPointQueries.update_time_slice_nav_spawn_points(time_slice_data, self._nav_spawn_points, self._spawn_point_positions)
 
+	if self._path_type == "open" and #self._group_locations > 0 then
+		local previous_spawn_point_positions = self._spawn_point_positions
+		local spawn_point_positions = Script.new_array(#previous_spawn_point_positions)
+		local spawn_point_origin = {}
+		local group_locations = self._group_locations
+
+		table.shuffle(group_locations, self._level_seed)
+
+		for i = 1, #group_locations do
+			local new_step = {}
+
+			spawn_point_positions[i] = new_step
+
+			for j = 1, 5 do
+				new_step[j] = {}
+			end
+
+			spawn_point_origin[i] = group_locations[i]:unbox()
+		end
+
+		for i = 1, #previous_spawn_point_positions do
+			local old_step = previous_spawn_point_positions[i]
+
+			for j = 1, #old_step do
+				local old_group = old_step[j]
+
+				for k = 1, #old_group do
+					local point = old_group[k]:unbox()
+					local closest_l
+					local closest_dist = math.huge
+
+					for l = 1, #spawn_point_origin do
+						local origin = spawn_point_origin[l]
+						local distance = math.abs(origin.x - point.x) + math.abs(origin.y - point.y)
+
+						if distance < closest_dist then
+							closest_l = l
+							closest_dist = distance
+						end
+					end
+
+					if closest_l then
+						local new_step = spawn_point_positions[closest_l]
+						local group_length = 100
+						local group_index = math.min(math.floor(1 + closest_dist / group_length), 5)
+						local group = new_step[group_index]
+
+						group[#group + 1] = Vector3Box(point)
+					end
+				end
+			end
+		end
+
+		self._spawn_point_positions = spawn_point_positions
+		self._group_origins = table.create_copy({}, self._group_locations)
+
+		table.clear(self._group_locations)
+	end
+
 	return done
 end
 
-MainPathManager.update_time_slice_generate_occluded_points = function (self)
+MainPathManager.get_group_origins = function (self)
+	return self._group_origins
+end
+
+MainPathManager.update_time_slice_generate_occluded_points = function (self, optional_max_dt_in_sec_override)
 	if self._main_path_version == nil or not self._is_server then
 		return true
 	end
 
 	local nav_spawn_points = self._nav_spawn_points
 	local occluded_points_collision_filter = MainPathSettings.occluded_points_collision_filter
-	local done = GwNavSpawnPoints.generate_occluded_points(nav_spawn_points, self._nav_world, self._world, occluded_points_collision_filter, GameplayInitTimeSlice.MAX_DT_IN_SEC)
+	local done = GwNavSpawnPoints.generate_occluded_points(nav_spawn_points, self._nav_world, self._world, occluded_points_collision_filter, optional_max_dt_in_sec_override or GameplayInitTimeSlice.MAX_DT_IN_SEC)
 
 	if done then
 		self._spawn_points_time_slice_data.ready = true

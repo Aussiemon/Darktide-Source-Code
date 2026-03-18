@@ -13,6 +13,8 @@ local ProjectileLocomotionTemplates = require("scripts/settings/projectile_locom
 local ProjectileSettings = require("scripts/settings/projectile/projectile_settings")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
+local ValkyrieAid = require("scripts/utilities/valkyrie_aid")
+local Vo = require("scripts/utilities/vo")
 local damage_types = DamageSettings.damage_types
 local armor_types = ArmorSettings.types
 local projectile_types = ProjectileSettings.projectile_types
@@ -195,6 +197,58 @@ projectile_templates.broker_missile = {
 			sfx = {
 				looping_event_name = "wwise/events/weapon/play_outlaw_missile_launcher_projectile_loop",
 				looping_stop_event_name = "wwise/events/weapon/stop_outlaw_missile_launcher_projectile_loop",
+			},
+		},
+	},
+}
+projectile_templates.expedition_airstrike_nuke = {
+	item_name = "content/items/weapons/player/ranged/bullets/attack_valkyrie_bomb",
+	locomotion_template = ProjectileLocomotionTemplates.attack_valkyrie_bomb,
+	projectile_type = projectile_types.weapon_grenade,
+	damage = {
+		impact = {
+			delete_on_hit_mass = true,
+			damage_profile = DamageProfileTemplates.frag_grenade_impact,
+			damage_type = damage_types.grenade_frag_ogryn,
+			explosion_template = ExplosionTemplates.expedition_airstrike_nuke,
+		},
+	},
+	effects = {
+		spawn = {
+			sfx = {
+				looping_event_name = "wwise/events/weapon/play_airdrop_bomb_drop",
+				looping_stop_event_name = "wwise/events/weapon/stop_airdrop_bomb_drop",
+			},
+		},
+	},
+}
+projectile_templates.attack_valkyrie_missile = {
+	item_name = "content/items/weapons/player/ranged/bullets/attack_valkyrie_missile",
+	locomotion_template = ProjectileLocomotionTemplates.attack_valkyrie_missile,
+	projectile_type = projectile_types.weapon_grenade,
+	damage = {
+		fuse = {
+			fuse_time = 10,
+			impact_fuse_time = 0,
+			explosion_template = ExplosionTemplates.attack_valkyrie_missile,
+		},
+		impact = {
+			delete_on_hit_mass = true,
+			damage_profile = DamageProfileTemplates.broker_missile_launcher_impact,
+			damage_type = damage_types.grenade_frag_ogryn,
+			explosion_template = ExplosionTemplates.attack_valkyrie_missile,
+		},
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				link = true,
+				orphaned_policy = "stop",
+				particle_name = "content/fx/particles/weapons/grenades/expeditions/valkyrie_hover_shooting",
+			},
+			sfx = {
+				looping_event_name = "wwise/events/world/play_expeditions_attack_valkyrie_projectile",
+				looping_stop_event_name = "wwise/events/world/stop_expeditions_attack_valkyrie_projectile",
 			},
 		},
 	},
@@ -718,6 +772,202 @@ projectile_templates.smoke_grenade = {
 		},
 	},
 }
+projectile_templates.airstrike_smoke_grenade = {
+	item_name = "content/items/weapons/player/expedition_airstrike_grenade_smoke",
+	locomotion_template = ProjectileLocomotionTemplates.grenade,
+	projectile_type = projectile_types.player_grenade,
+	event_settings = {
+		{
+			event_name = "event_expedition_smoke_grenade_airstrike_call_in",
+			event_time = 3,
+		},
+		{
+			event_name = "event_airstrike_started",
+			event_time = 1,
+		},
+		{
+			event_name = "event_airstrike_finished",
+			event_time = 15,
+		},
+	},
+	damage = {
+		fuse = {
+			fuse_time = 15,
+		},
+	},
+	deployable = {
+		deploy_func = function (world, physics_world, projectile_unit, is_server, owner_unit, locomotion_extension)
+			if not is_server then
+				return
+			end
+
+			locomotion_extension:switch_to_sleep()
+		end,
+	},
+	split_settings = {
+		split_angle = math.pi * 0.1,
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				link = true,
+				orphaned_policy = "stop",
+				particle_name = "content/fx/particles/pocketables/valkyrie_payload_grenade_blue_trail",
+			},
+			sfx = {
+				looping_event_name = "wwise/events/world/play_event_flare_start",
+			},
+		},
+		deploy = {
+			vfx = {
+				link = true,
+				orphaned_policy = "stop",
+				particle_name = "content/fx/particles/weapons/grenades/expeditions/valkyrie_payload_grenade_blue",
+				rotate_inverse_of_parent = true,
+			},
+		},
+	},
+}
+projectile_templates.artillery_strike_grenade = {
+	item_name = "content/items/weapons/player/expedition_artillery_strike_grenade_smoke",
+	locomotion_template = ProjectileLocomotionTemplates.grenade,
+	projectile_type = projectile_types.player_grenade,
+	damage = {
+		fuse = {
+			deploy_fuse_time = 1,
+			deploy_triggered = true,
+			fuse_time = math.huge,
+		},
+		impact = {
+			damage_profile = DamageProfileTemplates.expedition_artillery_strike_grenade_impact,
+			damage_type = damage_types.grenade_frag,
+		},
+	},
+	deployable = {
+		deploy_func = function (world, physics_world, projectile_unit, is_server, owner_unit, locomotion_extension)
+			if not is_server then
+				return
+			end
+
+			local _, position = locomotion_extension:previous_and_current_positions()
+			local rotation, _ = Quaternion.identity()
+			local unit_name = "content/empty_unit"
+			local unit_template = "area_of_effect_unit_spawner"
+			local husk_unit_name = "content/empty_unit"
+			local material, placed_on_unit
+			local unit_template_parameters = {
+				aoe_template_name = "expeditions_artillery_strike",
+			}
+
+			Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, position, rotation, material, husk_unit_name, placed_on_unit, projectile_unit, unit_template_parameters)
+			Vo.mission_giver_mission_info_vo("selected_voice", "pilot_a", "expeditions_artillery_support_a")
+		end,
+	},
+	split_settings = {
+		split_angle = math.pi * 0.1,
+	},
+	effects = {
+		spawn = {},
+	},
+}
+projectile_templates.valkyrie_hover_smoke_grenade = {
+	item_name = "content/items/weapons/player/expedition_valkyrie_hover_grenade_smoke",
+	locomotion_template = ProjectileLocomotionTemplates.grenade,
+	projectile_type = projectile_types.player_grenade,
+	damage = {
+		fuse = {
+			fuse_time = 15,
+		},
+	},
+	deployable = {
+		deploy_func = function (world, physics_world, projectile_unit, is_server, owner_unit, locomotion_extension)
+			if not is_server then
+				return
+			end
+
+			local side_system = Managers.state.extension:system("side_system")
+			local side = side_system.side_by_unit[owner_unit] or side_system:get_side_from_name("heroes")
+			local position = Unit.local_position(projectile_unit, 1)
+
+			ValkyrieAid.call_attack_aid(position, side.side_id)
+			locomotion_extension:switch_to_sleep()
+			Vo.mission_giver_mission_info_vo("selected_voice", "pilot_a", "expeditions_valkyrie_support_hover_a")
+		end,
+	},
+	split_settings = {
+		split_angle = math.pi * 0.1,
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				link = true,
+				orphaned_policy = "stop",
+				particle_name = "content/fx/particles/weapons/grenades/expeditions/valkyrie_hover_grenade_trail_orange",
+			},
+		},
+		deploy = {
+			vfx = {
+				link = true,
+				orphaned_policy = "stop",
+				particle_name = "content/fx/particles/weapons/grenades/expeditions/valkyrie_hover_grenade_orange",
+				rotate_inverse_of_parent = true,
+			},
+			sfx = {
+				looping_event_name = "wwise/events/world/play_event_flare_start",
+			},
+		},
+	},
+}
+projectile_templates.expeditions_big_grenade = {
+	item_name = "content/items/weapons/player/grenade_expeditions_big",
+	locomotion_template = ProjectileLocomotionTemplates.ogryn_frag_grenade,
+	projectile_type = projectile_types.player_grenade,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.ogryn_grenade_impact,
+			damage_type = damage_types.grenade_frag,
+			explosion_template = ExplosionTemplates.expeditions_big_grenade,
+		},
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				link = true,
+				orphaned_policy = "destroy",
+				particle_name = "content/fx/particles/weapons/grenades/grenade_trail",
+			},
+			sfx = {
+				looping_event_name = "wwise/events/weapon/play_player_combat_weapon_grenader_loop",
+				looping_stop_event_name = "wwise/events/weapon/stop_player_combat_weapon_grenader_loop",
+			},
+		},
+	},
+}
+projectile_templates.expedition_trap_explosive_cluster = {
+	item_name = "content/items/weapons/player/grenade_frag",
+	locomotion_template = ProjectileLocomotionTemplates.trap_explosive_cluster,
+	projectile_type = projectile_types.player_grenade,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.frag_grenade_impact,
+			damage_type = damage_types.grenade_frag,
+			explosion_template = ExplosionTemplates.expedition_trap_explosive_cluster,
+		},
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				link = true,
+				orphaned_policy = "destroy",
+				particle_name = "content/fx/particles/weapons/grenades/grenade_trail",
+			},
+			sfx = {
+				looping_event_name = "wwise/events/weapon/play_player_combat_weapon_grenader_loop",
+				looping_stop_event_name = "wwise/events/weapon/stop_player_combat_weapon_grenader_loop",
+			},
+		},
+	},
+}
 projectile_templates.ogryn_grenade_box_cluster = {
 	item_name = "content/items/weapons/player/grenade_box_ogryn_cluster",
 	locomotion_template = ProjectileLocomotionTemplates.ogryn_grenade_box,
@@ -830,7 +1080,7 @@ projectile_templates.adamant_grenade = {
 }
 projectile_templates.shock_mine = {
 	item_name = "content/items/weapons/player/mine_shock",
-	unit_template_name = "item_deployable_projectile",
+	unit_template_name = "item_deployable_side_relation_projectile",
 	uses_script_components = true,
 	locomotion_template = ProjectileLocomotionTemplates.shock_mine,
 	projectile_type = projectile_types.player_grenade,
@@ -877,22 +1127,24 @@ projectile_templates.shock_mine = {
 				},
 			},
 		},
-		deploy_func = function (world, physics_world, unit)
-			local job_class = ScriptUnit.extension(unit, "proximity_system")
+		deploy_func = function (world, physics_world, unit, is_server)
+			if is_server then
+				local job_class = ScriptUnit.extension(unit, "proximity_system")
 
-			Managers.state.unit_job:register_job(unit, job_class, true)
+				Managers.state.unit_job:register_job(unit, job_class, true)
 
-			local can_place, _, _, placed_on_unit = AimPlacement.from_unit(physics_world, unit)
+				local can_place, _, _, placed_on_unit = AimPlacement.from_unit(physics_world, unit)
 
-			if can_place and placed_on_unit then
-				DeployableLocomotion.set_placed_on_unit(world, unit, placed_on_unit)
+				if can_place and placed_on_unit then
+					DeployableLocomotion.set_placed_on_unit(world, unit, placed_on_unit)
+				end
 			end
 		end,
 	},
 }
 projectile_templates.area_buff_drone = {
 	item_name = "content/items/weapons/player/drone_area_buff",
-	unit_template_name = "item_deployable_projectile",
+	unit_template_name = "item_deployable_side_relation_projectile",
 	uses_script_components = true,
 	locomotion_template = ProjectileLocomotionTemplates.area_buff_drone,
 	projectile_type = projectile_types.player_grenade,
@@ -956,15 +1208,17 @@ projectile_templates.area_buff_drone = {
 				},
 			},
 		},
-		deploy_func = function (world, physics_world, unit)
-			local job_class = ScriptUnit.extension(unit, "proximity_system")
+		deploy_func = function (world, physics_world, unit, is_server)
+			if is_server then
+				local job_class = ScriptUnit.extension(unit, "proximity_system")
 
-			Managers.state.unit_job:register_job(unit, job_class, true)
+				Managers.state.unit_job:register_job(unit, job_class, true)
 
-			local can_place, _, _, placed_on_unit = AimPlacement.from_unit(physics_world, unit)
+				local can_place, _, _, placed_on_unit = AimPlacement.from_unit(physics_world, unit)
 
-			if can_place and placed_on_unit then
-				DeployableLocomotion.set_placed_on_unit(world, unit, placed_on_unit)
+				if can_place and placed_on_unit then
+					DeployableLocomotion.set_placed_on_unit(world, unit, placed_on_unit)
+				end
 			end
 		end,
 	},

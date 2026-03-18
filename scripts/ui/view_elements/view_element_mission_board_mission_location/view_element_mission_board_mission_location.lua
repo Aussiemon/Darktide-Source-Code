@@ -51,14 +51,10 @@ end
 ViewElementMissionBoardMissionLocation.on_mission_selected = function (self, mission)
 	self._current_selected_mission = mission
 
-	local parent = self:parent()
-	local ui_theme = parent:_get_ui_theme()
-	local palette_name = ui_theme.view_data.palette_name
-
-	self:_update_mission_location(mission, palette_name)
+	self:_update_mission_location(mission)
 end
 
-ViewElementMissionBoardMissionLocation._update_mission_location = function (self, mission, palette_name)
+ViewElementMissionBoardMissionLocation._update_mission_location = function (self, mission)
 	local mission_area_info = self._widgets_by_name.mission_area_info
 	local mission_timer_bar = self._widgets_by_name.large_timer_bar
 	local content = mission_area_info.content
@@ -79,7 +75,7 @@ ViewElementMissionBoardMissionLocation._update_mission_location = function (self
 		content.mission_id = mission
 		title = Localize("loc_mission_board_quickplay_header")
 		sub_title = Localize("loc_mission_board_view_header_tertium_hive")
-		texture = "content/ui/textures/pj_missions/quickplay_medium"
+		texture = "content/ui/textures/missions/quickplay_medium"
 		is_locked = false
 	else
 		content.mission_id = mission.id
@@ -92,7 +88,7 @@ ViewElementMissionBoardMissionLocation._update_mission_location = function (self
 
 		local parent = self:parent()
 
-		is_locked = parent._mission_board_logic:is_mission_locked(mission)
+		is_locked = parent.is_mission_locked and parent:is_mission_locked(mission) or false
 
 		local flags = mission.flags
 		local is_flash = not not flags.flash

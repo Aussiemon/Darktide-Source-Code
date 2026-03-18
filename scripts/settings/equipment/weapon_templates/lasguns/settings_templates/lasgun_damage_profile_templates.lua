@@ -323,14 +323,14 @@ overrides.lasgun_p1_m1_killshot = {
 			"near",
 			"attack",
 			"resistant",
-			damage_lerp_values.lerp_0_6,
+			damage_lerp_values.lerp_0_75,
 		},
 		{
 			"armor_damage_modifier_ranged",
 			"far",
 			"attack",
 			"resistant",
-			damage_lerp_values.lerp_0_75,
+			damage_lerp_values.lerp_0_8,
 		},
 	},
 }
@@ -365,14 +365,14 @@ overrides.lasgun_p1_m2_killshot = {
 			"near",
 			"attack",
 			"resistant",
-			damage_lerp_values.lerp_0_6,
+			damage_lerp_values.lerp_0_75,
 		},
 		{
 			"armor_damage_modifier_ranged",
 			"far",
 			"attack",
 			"resistant",
-			damage_lerp_values.lerp_0_65,
+			damage_lerp_values.lerp_0_8,
 		},
 	},
 }

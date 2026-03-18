@@ -5,6 +5,7 @@ require("scripts/extension_systems/weapon/actions/action_weapon_base")
 local AimPlacement = require("scripts/extension_systems/weapon/actions/utilities/aim_placement")
 local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
+local Ammo = require("scripts/utilities/ammo")
 local ActionPlaceBase = class("ActionPlaceBase", "ActionWeaponBase")
 
 ActionPlaceBase.init = function (self, action_context, ...)
@@ -63,13 +64,26 @@ ActionPlaceBase.fixed_update = function (self, dt, t, time_in_action)
 	local is_in_placement_time = ActionUtility.is_within_trigger_time(time_able_to_place, dt, place_time / time_scale)
 
 	if is_in_placement_time then
-		if action_settings.remove_item_from_inventory then
-			PlayerUnitVisualLoadout.wield_previous_weapon_slot(inventory_component, player_unit, t)
-			PlayerUnitVisualLoadout.unequip_item_from_slot(player_unit, wielded_slot, t)
-		end
+		local ammunition_usage = action_settings.ammunition_usage
 
-		if self._is_server then
-			self:_place_unit(action_settings, position, rotation, placed_on_unit)
+		if not ammunition_usage or ammunition_usage <= self:_current_ammo() then
+			if ammunition_usage then
+				local inventory_slot_component = self._inventory_slot_component
+				local new_ammunition = math.max(Ammo.current_ammo_in_clips(inventory_slot_component) - ammunition_usage, 0)
+
+				Ammo.set_current_ammo_in_clips(inventory_slot_component, new_ammunition)
+
+				inventory_slot_component.last_ammunition_usage = t
+			end
+
+			if action_settings.remove_item_from_inventory and (not ammunition_usage or ammunition_usage > self:_current_ammo()) then
+				PlayerUnitVisualLoadout.wield_previous_weapon_slot(inventory_component, player_unit, t)
+				PlayerUnitVisualLoadout.unequip_item_from_slot(player_unit, wielded_slot, t)
+			end
+
+			if self._is_server then
+				self:_place_unit(action_settings, position, rotation, placed_on_unit)
+			end
 		end
 	end
 
@@ -138,6 +152,12 @@ ActionPlaceBase._update_place_data = function (self, t)
 	action_component.position = position
 	action_component.rotation = rotation
 	action_component.placed_on_unit = placed_on_unit
+end
+
+ActionPlaceBase._current_ammo = function (self, optional_fire_config)
+	local current_ammo = Ammo.current_ammo_in_clips(self._inventory_slot_component, optional_fire_config and optional_fire_config.ammo_pool_index)
+
+	return current_ammo
 end
 
 return ActionPlaceBase

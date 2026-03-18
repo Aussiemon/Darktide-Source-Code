@@ -939,9 +939,9 @@ return {
 		{
 			cost = 1,
 			group_name = "",
-			icon = "content/ui/textures/icons/talents/psyker/psyker_3_tier_2_name_3",
+			icon = "content/ui/textures/icons/talents/psyker/psyker_shield_extra_charge",
 			max_points = 1,
-			talent = "psyker_shield_stun_passive",
+			talent = "psyker_shield_extra_charge",
 			type = "ability_modifier",
 			widget_name = "node_a10c7d87-9c54-4268-b6be-ca862dcc59ae",
 			x = 875,
@@ -1003,9 +1003,9 @@ return {
 		},
 		{
 			cost = 1,
-			icon = "content/ui/textures/icons/talents/psyker/psyker_shield_extra_charge",
+			icon = "content/ui/textures/icons/talents/psyker/psyker_3_tier_2_name_3",
 			max_points = 1,
-			talent = "psyker_shield_extra_charge",
+			talent = "psyker_shield_stun_passive",
 			type = "ability_modifier",
 			widget_name = "node_959bd205-bf6c-48fc-ab14-f59364fedd6c",
 			x = 785,

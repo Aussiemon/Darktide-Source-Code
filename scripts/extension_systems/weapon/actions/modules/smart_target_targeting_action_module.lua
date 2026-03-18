@@ -16,7 +16,10 @@ SmartTargetingActionModule.init = function (self, is_server, physics_world, play
 	self._unit_data_extension = unit_data_extension
 	self._first_person_component = unit_data_extension:read_component("first_person")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
+	self._combat_ability_action_component = unit_data_extension:read_component("combat_ability_action")
+	self._grenade_ability_action_component = unit_data_extension:read_component("grenade_ability_action")
 	self._smart_targeting_extension = ScriptUnit.extension(player_unit, "smart_targeting_system")
+	self.talent_extension = ScriptUnit.extension(player_unit, "talent_system")
 end
 
 SmartTargetingActionModule.start = function (self, action_settings, t)
@@ -25,6 +28,13 @@ SmartTargetingActionModule.start = function (self, action_settings, t)
 	component.target_unit_1 = nil
 	component.target_unit_2 = nil
 	component.target_unit_3 = nil
+
+	if self._action_settings.reset_smart_targeting_on_start then
+		local smart_targeting_extension = self._smart_targeting_extension
+		local targeting_data = smart_targeting_extension:targeting_data()
+
+		table.clear(targeting_data)
+	end
 end
 
 SmartTargetingActionModule.fixed_update = function (self, dt, t)
@@ -41,12 +51,14 @@ SmartTargetingActionModule.fixed_update = function (self, dt, t)
 		local smart_targeting_extension = self._smart_targeting_extension
 		local targeting_data = smart_targeting_extension:targeting_data()
 		local new_target_unit = targeting_data.unit
+		local can_target_unit_validate_func = action_settings.can_target_unit_validate_func
+		local can_target_unit = not new_target_unit or not can_target_unit_validate_func or can_target_unit_validate_func(self.talent_extension, new_target_unit)
 
-		if new_target_unit ~= current_target_unit then
+		if can_target_unit and new_target_unit ~= current_target_unit then
 			local is_in_range
 
-			if HEALTH_ALIVE[new_target_unit] then
-				local smart_targeting_template = SmartTargeting.smart_targeting_template(t, self._weapon_action_component)
+			if ALIVE[new_target_unit] then
+				local smart_targeting_template = SmartTargeting.smart_targeting_template(t, self._weapon_action_component, self._combat_ability_action_component, self._grenade_ability_action_component)
 				local precision_target_settings = smart_targeting_template and smart_targeting_template.precision_target or EMPTY_TABLE
 				local max_range = precision_target_settings.max_range
 				local target_pos = POSITION_LOOKUP[new_target_unit]

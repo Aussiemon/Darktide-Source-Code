@@ -131,6 +131,14 @@ local function draw_utility_condition(gui, action_name, consideration, pos, win_
 	Gui.rect(gui, pos, win_size, bk_color)
 end
 
+local COLORS = {
+	Color(255, 0, 255, 204),
+	Color(255, 192, 255, 0),
+	Color(255, 255, 234, 0),
+	Color(255, 255, 84, 0),
+	(Color(255, 255, 0, 0)),
+}
+
 local function draw_utility_spline(gui, t, consideration_data, temp_max_value, name, pos, size, bk_color, fade_factor, thickness)
 	local spline = consideration_data.spline
 	local w = size.x
@@ -145,7 +153,7 @@ local function draw_utility_spline(gui, t, consideration_data, temp_max_value, n
 		local x2 = pos.x + w * spline[i + 2]
 		local y2 = pos.y + h * (1 - spline[i + 3])
 
-		ScriptGui.hud_line(gui, Vector2(x1, y1), Vector2(x2, y2), nil, thickness, line_color)
+		ScriptGui.hud_line(gui, Vector2(x1, y1), Vector2(x2, y2), nil, thickness, COLORS[i])
 	end
 
 	Gui.rect(gui, pos, size, bk_color)

@@ -3,6 +3,7 @@
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local BtFlamerApproachAction = class("BtFlamerApproachAction", "BtNode")
 local DEFAULT_MIN_MOVE_DURATION = 0.5
@@ -25,11 +26,12 @@ BtFlamerApproachAction.enter = function (self, unit, breed, blackboard, scratchp
 	navigation_extension:set_enabled(true, run_speed)
 	MinionMovement.init_find_ranged_position(scratchpad, action_data)
 
-	if action_data.effect_template then
+	if action_data.effect_template_name then
+		local effect_template = EffectTemplates[action_data.effect_template_name]
 		local fx_system = Managers.state.extension:system("fx_system")
 
 		scratchpad.fx_system = fx_system
-		scratchpad.global_effect_id = fx_system:start_template_effect(action_data.effect_template, unit)
+		scratchpad.global_effect_id = fx_system:start_template_effect(effect_template, unit)
 	end
 
 	scratchpad.min_move_duration = t + (DEFAULT_MIN_MOVE_DURATION or action_data.min_move_duration)

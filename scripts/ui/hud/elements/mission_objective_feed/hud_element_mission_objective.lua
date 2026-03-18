@@ -29,6 +29,8 @@ HudElementMissionObjective.init = function (self, objective, id)
 	self._additional_height = 0
 	self._sort_order = nil
 	self._id = id
+	self._alert_text = ""
+	self._title_text = ""
 
 	local game_mode_name = Managers.state.game_mode:game_mode_name()
 	local is_in_hub = game_mode_name == "hub" or game_mode_name == "prologue_hub"
@@ -84,6 +86,14 @@ HudElementMissionObjective.is_synchronized_with_objective = function (self)
 		return false
 	end
 
+	if self._required_players ~= objective:required_players() then
+		return false
+	end
+
+	if self._available_players ~= objective:available_players() then
+		return false
+	end
+
 	if current_progress_timer and objective.timer_paused and objective:timer_paused() ~= self._progress_timer_paused then
 		return false
 	end
@@ -136,9 +146,13 @@ HudElementMissionObjective.synchronize_objective = function (self)
 		self._progress_timer_paused = objective.timer_paused and objective:timer_paused()
 	end
 
+	self._required_players = objective:required_players()
+	self._available_players = objective:available_players()
 	self._marked_units = objective:marked_units()
 	self._marker_type = objective:marker_type()
 	self._sort_order = objective:hud_sort_order()
+	self._alert_text = objective:alert_text()
+	self._title_text = objective:title_text()
 end
 
 HudElementMissionObjective.update_markers = function (self)
@@ -289,6 +303,14 @@ HudElementMissionObjective.second_progression = function (self)
 	return self._second_progression
 end
 
+HudElementMissionObjective.required_players = function (self)
+	return self._required_players
+end
+
+HudElementMissionObjective.available_players = function (self)
+	return self._available_players
+end
+
 HudElementMissionObjective.icon = function (self)
 	return self._icon
 end
@@ -303,6 +325,14 @@ end
 
 HudElementMissionObjective.locally_added = function (self)
 	return self._locally_added
+end
+
+HudElementMissionObjective.alert_text = function (self)
+	return self._alert_text
+end
+
+HudElementMissionObjective.title_text = function (self)
+	return self._title_text
 end
 
 return HudElementMissionObjective

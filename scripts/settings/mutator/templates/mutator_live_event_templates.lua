@@ -22,7 +22,7 @@ local mutator_templates = {
 		class = "scripts/managers/mutator/mutators/mutator_base",
 		random_spawn_buff_templates = {
 			buffs = {
-				"drop_pickup_on_death",
+				"drop_skull_pickup_on_death",
 			},
 			breed_chances = {
 				chaos_beast_of_nurgle = 1,

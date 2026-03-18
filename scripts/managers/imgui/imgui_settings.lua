@@ -15,8 +15,8 @@ view_groups.ImguiManager = {
 	},
 }
 
-local ImguiSettings = {
+local imgui_settings = {
 	view_groups = view_groups,
 }
 
-return settings("ImguiSettings", ImguiSettings)
+return settings("ImguiSettings", imgui_settings)

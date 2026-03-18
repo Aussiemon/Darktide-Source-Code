@@ -8,7 +8,9 @@ circumstance_templates.skulls_event_01 = {
 	wwise_state = "None",
 	mutators = {
 		"mutator_nurgle_totem",
-		"mutator_drop_pickup_on_death",
+		"mutator_live_event_skulls_drop_single_skull_pickup_on_death",
+		"mutator_live_event_skulls_drop_many_skull_pickups_on_death",
+		"mutator_live_event_skulls_notification_feed",
 	},
 	ui = {
 		description = "loc_circumstance_skulls_event_01_01_description",
@@ -27,7 +29,9 @@ circumstance_templates.skulls_event_01_02 = {
 		"mutator_chaos_hounds",
 		"mutator_add_resistance",
 		"mutator_nurgle_totem",
-		"mutator_drop_pickup_on_death",
+		"mutator_live_event_skulls_drop_single_skull_pickup_on_death",
+		"mutator_live_event_skulls_drop_many_skull_pickups_on_death",
+		"mutator_live_event_skulls_notification_feed",
 	},
 	ui = {
 		description = "loc_circumstance_skulls_event_01_02_description",
@@ -43,7 +47,9 @@ circumstance_templates.skulls_event_01_03 = {
 	mutators = {
 		"mutator_add_resistance",
 		"mutator_nurgle_totem",
-		"mutator_drop_pickup_on_death",
+		"mutator_live_event_skulls_drop_single_skull_pickup_on_death",
+		"mutator_live_event_skulls_drop_many_skull_pickups_on_death",
+		"mutator_live_event_skulls_notification_feed",
 	},
 	ui = {
 		description = "loc_circumstance_skulls_event_01_03_description",
@@ -62,7 +68,9 @@ circumstance_templates.skulls_event_01_04 = {
 		"mutator_add_resistance",
 		"mutator_darkness_los",
 		"mutator_nurgle_totem",
-		"mutator_drop_pickup_on_death",
+		"mutator_live_event_skulls_drop_single_skull_pickup_on_death",
+		"mutator_live_event_skulls_drop_many_skull_pickups_on_death",
+		"mutator_live_event_skulls_notification_feed",
 	},
 	ui = {
 		description = "loc_circumstance_skulls_event_01_04_description",
@@ -80,7 +88,9 @@ circumstance_templates.skulls_event_01_05 = {
 		"mutator_toxic_gas_volumes",
 		"mutator_add_resistance",
 		"mutator_nurgle_totem",
-		"mutator_drop_pickup_on_death",
+		"mutator_live_event_skulls_drop_single_skull_pickup_on_death",
+		"mutator_live_event_skulls_drop_many_skull_pickups_on_death",
+		"mutator_live_event_skulls_notification_feed",
 	},
 	ui = {
 		description = "loc_circumstance_skulls_event_01_05_description",
@@ -99,7 +109,9 @@ circumstance_templates.skulls_event_01_06 = {
 		"mutator_add_resistance",
 		"mutator_ventilation_purge_los",
 		"mutator_nurgle_totem",
-		"mutator_drop_pickup_on_death",
+		"mutator_live_event_skulls_drop_single_skull_pickup_on_death",
+		"mutator_live_event_skulls_drop_many_skull_pickups_on_death",
+		"mutator_live_event_skulls_notification_feed",
 	},
 	ui = {
 		description = "loc_circumstance_skulls_event_01_06_description",
@@ -119,7 +131,9 @@ circumstance_templates.skulls_event_01_07 = {
 		"mutator_reduced_ramp_duration_low",
 		"mutator_auric_tension_modifier",
 		"mutator_nurgle_totem",
-		"mutator_drop_pickup_on_death",
+		"mutator_live_event_skulls_drop_single_skull_pickup_on_death",
+		"mutator_live_event_skulls_drop_many_skull_pickups_on_death",
+		"mutator_live_event_skulls_notification_feed",
 	},
 	ui = {
 		description = "loc_circumstance_skulls_event_01_07_description",

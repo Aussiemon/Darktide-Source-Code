@@ -846,7 +846,7 @@ PlayerUnitBuffExtension._stop_fx = function (self, index, template)
 		local effect_template_id = active_effect_templates[index]
 		local effect_template = player_effects.effect_template
 
-		if effect_template and effect_template_id and fx_system:has_running_global_effect_id(effect_template_id) then
+		if effect_template and effect_template_id and fx_system:has_running_template_effect_with_global_effect_id(effect_template_id) then
 			fx_system:stop_template_effect(effect_template_id)
 
 			active_effect_templates[index] = nil

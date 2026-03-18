@@ -34,6 +34,12 @@ BaseInteraction.hud_description = function (self, interactor_unit, interactee_un
 	return interactee_extension:description()
 end
 
+BaseInteraction.hud_extra_description = function (self, interactor_unit, interactee_unit)
+	local interactee_extension = ScriptUnit.extension(interactee_unit, "interactee_system")
+
+	return interactee_extension:extra_description()
+end
+
 BaseInteraction.hud_block_text = function (self, interactor_unit, interactee_unit)
 	local interactee_extension = ScriptUnit.extension(interactee_unit, "interactee_system")
 
@@ -52,10 +58,6 @@ BaseInteraction.interaction_input = function (self)
 	return self._template.interaction_input or "interact_pressed"
 end
 
-BaseInteraction.secondary_interaction_input = function (self)
-	return self._template.secondary_interaction_input
-end
-
 BaseInteraction.interaction_priority = function (self)
 	return self._template.interaction_priority or 1
 end
@@ -72,12 +74,12 @@ BaseInteraction.description = function (self)
 	return self._template.description
 end
 
-BaseInteraction.action_text = function (self)
-	return self._template.action_text
+BaseInteraction.extra_description = function (self)
+	return self._template.extra_description
 end
 
-BaseInteraction.secondary_action_text = function (self)
-	return self._template.secondary_action_text
+BaseInteraction.action_text = function (self)
+	return self._template.action_text
 end
 
 BaseInteraction.ui_view_name = function (self)

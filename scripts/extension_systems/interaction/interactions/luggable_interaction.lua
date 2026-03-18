@@ -74,6 +74,31 @@ LuggableInteraction.stop = function (self, world, interactor_unit, unit_data_com
 end
 
 LuggableInteraction.hud_block_text = function (self, interactor_unit, interactee_unit, target_node)
+	local player = Managers.state.player_unit_spawn:owner(interactor_unit)
+
+	if player then
+		local mechanism_manager = Managers.mechanism
+		local mechanism_name = mechanism_manager:mechanism_name()
+
+		if mechanism_name == "expedition" then
+			local game_mode_manager = Managers.state.game_mode
+			local game_mode = game_mode_manager:game_mode()
+
+			if game_mode:in_safe_zone() and game_mode:is_store_product(interactee_unit) then
+				local peer_id = player:peer_id()
+				local expedition_currency_amount = game_mode:expedition_currency(peer_id)
+				local purchase_price = game_mode:get_unit_store_product_price(interactee_unit)
+				local can_afford = purchase_price <= expedition_currency_amount
+
+				if not can_afford then
+					local blocked_text = "loc_mindwipe_insufficient_funds_popup_title"
+
+					return blocked_text
+				end
+			end
+		end
+	end
+
 	return LuggableInteraction.super.hud_block_text(self, interactor_unit, interactee_unit, target_node)
 end
 

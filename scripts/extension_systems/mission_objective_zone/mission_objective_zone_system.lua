@@ -2,11 +2,12 @@
 
 require("scripts/extension_systems/mission_objective_zone/mission_objective_zone_base_extension")
 require("scripts/extension_systems/mission_objective_zone/mission_objective_zone_capture_extension")
+require("scripts/extension_systems/mission_objective_zone/mission_objective_zone_flow_extension")
 require("scripts/extension_systems/mission_objective_zone/mission_objective_zone_scan_extension")
 
 local MissionObjectiveZoneSystem = class("MissionObjectiveZoneSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
-	"rpc_mission_objective_zone_hot_join_sync",
+	"rpc_mission_objective_zone_set_active",
 	"rpc_mission_objective_zone_register_scannable_unit",
 	"rpc_mission_objective_zone_set_waiting_for_confirmation",
 	"rpc_event_mission_objective_zone_activate_zone",
@@ -36,6 +37,12 @@ MissionObjectiveZoneSystem.on_gameplay_post_init = function (self, level)
 	self:call_gameplay_post_init_on_extensions(level)
 end
 
+MissionObjectiveZoneSystem.on_location_setup = function (self)
+	self:_group_units_by_objective_name()
+	self:_select_units_for_event()
+	self:call_gameplay_post_init_on_extensions()
+end
+
 MissionObjectiveZoneSystem.destroy = function (self)
 	if self._is_server then
 		-- Nothing
@@ -56,28 +63,33 @@ MissionObjectiveZoneSystem._group_units_by_objective_name = function (self)
 		local mission_objective_target_extension = ScriptUnit.extension(unit, "mission_objective_target_system")
 		local group_id = mission_objective_target_extension:objective_group_id()
 		local objective_name = mission_objective_target_extension:objective_name()
-		local zone_group = zone_groups[group_id]
 
-		if not zone_group then
-			zone_group = {}
-			zone_groups[group_id] = zone_group
+		if objective_name ~= "default" then
+			local zone_group = zone_groups[group_id]
+
+			if not zone_group then
+				zone_group = {}
+				zone_groups[group_id] = zone_group
+			end
+
+			local unit_list = zone_group[objective_name]
+
+			if not unit_list then
+				unit_list = {}
+				zone_group[objective_name] = unit_list
+			end
+
+			unit_list[#unit_list + 1] = unit
 		end
-
-		local unit_list = zone_group[objective_name]
-
-		if not unit_list then
-			unit_list = {}
-			zone_group[objective_name] = unit_list
-		end
-
-		unit_list[#unit_list + 1] = unit
 	end
 
 	self._zone_units = zone_groups
 end
 
 MissionObjectiveZoneSystem._select_units_for_event = function (self)
-	table.clear(self._selected_zone_units)
+	local selected_zone_units = self._selected_zone_units
+
+	table.clear(selected_zone_units)
 
 	local zone_units = self._zone_units
 	local seed = self._seed
@@ -92,9 +104,6 @@ MissionObjectiveZoneSystem._select_units_for_event = function (self)
 			local selected_units = {}
 			local sorted_units = self:_sort_units_by_id(units)
 			local num_units = #units
-			local zone_unit_extension = self._unit_to_extension_map[sorted_units[num_units]]
-
-			synchronizer_unit_extension:register_zone_type(zone_unit_extension:zone_type())
 
 			if self:has_spline_path(objective_name, group_id) then
 				local spline_follower_system = self._spline_follower_system
@@ -138,11 +147,32 @@ MissionObjectiveZoneSystem._select_units_for_event = function (self)
 				end
 			end
 
-			self._selected_zone_units[group_id] = self._selected_zone_units[group_id] or {}
+			selected_zone_units[group_id] = selected_zone_units[group_id] or {}
 
-			local objective_group = self._selected_zone_units[group_id]
+			local objective_group = selected_zone_units[group_id]
 
 			objective_group[objective_name] = selected_units
+		end
+	end
+
+	local game_mode = Managers.state.game_mode:game_mode()
+	local override_times = game_mode.zone_override_times and game_mode:zone_override_times()
+
+	if override_times then
+		for objective_name, duration in pairs(override_times) do
+			for _, list in pairs(selected_zone_units) do
+				local units = list[objective_name]
+
+				if units then
+					for i = 1, #units do
+						local timer_extension = ScriptUnit.has_extension(units[i], "networked_timer_system")
+
+						if timer_extension then
+							timer_extension:set_duration(duration)
+						end
+					end
+				end
+			end
 		end
 	end
 end
@@ -208,6 +238,36 @@ MissionObjectiveZoneSystem.current_active_zone = function (self, objective_name,
 	return nil
 end
 
+MissionObjectiveZoneSystem.current_active_zone_count = function (self, objective_name, objective_group)
+	local unit_to_extension_map = self._unit_to_extension_map
+	local count = 0
+
+	for unit, extension in pairs(unit_to_extension_map) do
+		local same_objective = extension:objective_name() == objective_name and extension:objective_group_id() == objective_group
+
+		if same_objective and extension:activated() then
+			count = count + 1
+		end
+	end
+
+	return count
+end
+
+MissionObjectiveZoneSystem.current_active_zone_objective_max_progression = function (self, objective_name, objective_group)
+	local unit_to_extension_map = self._unit_to_extension_map
+	local total = 0
+
+	for unit, extension in pairs(unit_to_extension_map) do
+		local same_objective = extension:objective_name() == objective_name and extension:objective_group_id() == objective_group
+
+		if same_objective and extension:activated() then
+			total = total + extension:max_progression()
+		end
+	end
+
+	return total
+end
+
 MissionObjectiveZoneSystem.any_active_scanning_zone = function (self)
 	local unit_to_extension_map = self._unit_to_extension_map
 
@@ -238,6 +298,20 @@ MissionObjectiveZoneSystem.scannable_units = function (self)
 	end
 
 	return SCANNABLE_UNITS
+end
+
+MissionObjectiveZoneSystem.players_inside_status = function (self, objective_name, objective_group)
+	local unit_to_extension_map = self._unit_to_extension_map
+
+	for unit, extension in pairs(unit_to_extension_map) do
+		local same_objective = extension:objective_name() == objective_name and extension:objective_group_id() == objective_group
+
+		if same_objective and extension:activated() and extension.players_inside_status then
+			return extension:players_inside_status()
+		end
+	end
+
+	return nil
 end
 
 MissionObjectiveZoneSystem.zone_progression = function (self, objective_name, objective_group)
@@ -286,12 +360,16 @@ MissionObjectiveZoneSystem.has_spline_path = function (self, objective_name, gro
 	return spline_follower_system:has_objective_spline_path(objective_name, group_id)
 end
 
-MissionObjectiveZoneSystem.rpc_mission_objective_zone_hot_join_sync = function (self, channel_id, level_unit_id)
+MissionObjectiveZoneSystem.selected_zone_units = function (self)
+	return self._selected_zone_units
+end
+
+MissionObjectiveZoneSystem.rpc_mission_objective_zone_set_active = function (self, channel_id, level_unit_id, active)
 	local is_level_unit = true
 	local unit = Managers.state.unit_spawner:unit(level_unit_id, is_level_unit)
 	local extension = self._unit_to_extension_map[unit]
 
-	extension:activate_zone()
+	extension:set_active(active)
 end
 
 MissionObjectiveZoneSystem.rpc_mission_objective_zone_register_scannable_unit = function (self, channel_id, level_unit_id, level_scannable_id)

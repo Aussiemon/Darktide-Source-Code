@@ -3,6 +3,7 @@
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Navigation = require("scripts/extension_systems/navigation/utilities/navigation")
 local Breed = require("scripts/utilities/breed")
+local FlyingNavBot = require("scripts/extension_systems/navigation/flying_nav_bot")
 local MinionNavigationExtension = class("MinionNavigationExtension")
 local MAX_NUM_MOVEMENT_MODIFERS = 8
 local FAR_PATHING_ALLOWED = true
@@ -29,15 +30,16 @@ MinionNavigationExtension.init = function (self, extension_init_context, unit, e
 	end
 
 	local position = POSITION_LOOKUP[unit]
-	local nav_bot, max_speed, avoidance_enabled = self:_create_nav_bot(position, breed, traverse_logic, nav_world)
+	local nav_bot, max_speed, acceleration, avoidance_enabled = self:_create_nav_bot(position, breed, traverse_logic, nav_world)
 
-	self._nav_bot, self._max_speed, self._max_speed_with_modifiers, self._avoidance_enabled = nav_bot, max_speed, max_speed, avoidance_enabled
+	self._nav_bot, self._max_speed, self._max_speed_with_modifiers, self._acceleration, self._avoidance_enabled = nav_bot, max_speed, max_speed, acceleration, avoidance_enabled
 	self._wanted_destination = Vector3Box(position)
 	self._destination = Vector3Box(position)
 	self._debug_position_when_starting_search = Vector3Box()
 	self._enabled = false
 	self._waiting_on_getting_to_nav_mesh = false
-	self._has_path = false
+	self._has_ground_path = false
+	self._has_air_path = false
 	self._is_following_path = false
 	self._is_computing_path = false
 	self._is_computing_path_due_to_crowd_dispersion = false
@@ -59,6 +61,11 @@ MinionNavigationExtension.init = function (self, extension_init_context, unit, e
 	self:_init_blackboard_components(blackboard)
 
 	self._blackboard = blackboard
+end
+
+MinionNavigationExtension.game_object_initialized = function (self, session, object_id)
+	self._game_session = session
+	self._game_object_id = object_id
 end
 
 local DEFAULT_RANDOMIZED_NAV_TAG_COSTS = {
@@ -145,7 +152,14 @@ local DEFAULT_AVOIDANCE_CONFIG = {
 
 MinionNavigationExtension._create_nav_bot = function (self, position, breed, traverse_logic, nav_world)
 	local max_speed = breed.run_speed
+	local acceleration = breed.run_acceleration or math.huge
 	local nav_bot = GwNavBot.create(nav_world, NAV_BOT_HEIGHT, NAVIGATION_NAVMESH_RADIUS, max_speed, position, traverse_logic)
+
+	if breed.flying then
+		local radius = breed.flying_navmesh_radius or 0.5
+
+		FlyingNavBot.create(nav_bot, position, radius, max_speed)
+	end
 
 	GwNavBot.set_outside_navmesh_distance(nav_bot, FROM_OUTSIDE_NAV_MESH_DISTANCE, TO_OUTSIDE_NAV_MESH_DISTANCE)
 
@@ -158,6 +172,10 @@ MinionNavigationExtension._create_nav_bot = function (self, position, breed, tra
 		GwNavBot.set_avoidance_behavior(nav_bot, config.enable_slowing, config.enable_forcing, config.enable_stop, config.stop_wait_time_s, config.forcing_time_s, config.forcing_wait_time_s)
 		GwNavBot.set_avoidance_collider_collector_configuration(nav_bot, config.half_height, config.radius, config.forcing_wait_time_s)
 		GwNavBot.set_avoidance_computer_configuration(nav_bot, config.angle_span, config.time_to_collision, config.sample_count)
+
+		if breed.flying then
+			FlyingNavBot.set_use_avoidance(nav_bot, true)
+		end
 	end
 
 	local propagation_box_extent = breed.navigation_propagation_box_extent or DEFAULT_PROPAGATION_BOX_EXTENT
@@ -193,7 +211,7 @@ MinionNavigationExtension._create_nav_bot = function (self, position, breed, tra
 		end
 	end
 
-	return nav_bot, max_speed, use_avoidance
+	return nav_bot, max_speed, acceleration, use_avoidance
 end
 
 MinionNavigationExtension._init_blackboard_components = function (self, blackboard)
@@ -223,6 +241,10 @@ MinionNavigationExtension.extensions_ready = function (self, world, unit)
 	locomotion_extension:set_traverse_logic(traverse_logic)
 
 	self._locomotion_extension = locomotion_extension
+
+	if self._breed.airbound then
+		locomotion_extension:set_movement_type("script_driven")
+	end
 end
 
 local TEMP_SMART_OBJECT_FAILING_MINIONS = {}
@@ -231,6 +253,11 @@ MinionNavigationExtension.destroy = function (self, unit)
 	TEMP_SMART_OBJECT_FAILING_MINIONS[unit] = nil
 
 	self:set_enabled(false)
+
+	if self._breed.flying then
+		FlyingNavBot.destroy(self._nav_bot)
+	end
+
 	GwNavBot.destroy(self._nav_bot)
 	GwNavTraverseLogic.destroy(self._traverse_logic)
 	GwNavTagLayerCostTable.destroy(self._nav_tag_cost_table)
@@ -238,25 +265,26 @@ MinionNavigationExtension.destroy = function (self, unit)
 	GwNavSmartObjectInterval.destroy(self._next_smart_object_interval)
 end
 
-MinionNavigationExtension.update = function (self, unit, t)
+MinionNavigationExtension.update = function (self, unit, dt, t)
 	if self._waiting_on_getting_to_nav_mesh then
 		if self._locomotion_extension:is_getting_back_to_nav_mesh() then
 			return
-		else
-			local wanted_destination, destination = self._wanted_destination:unbox(), self._destination:unbox()
-
-			if not self._has_path and Vector3.equal(wanted_destination, destination) then
-				self:stop()
-			end
-
-			self._waiting_on_getting_to_nav_mesh = false
 		end
+
+		local wanted_destination, destination = self._wanted_destination:unbox(), self._destination:unbox()
+
+		if not self:has_path() and Vector3.equal(wanted_destination, destination) then
+			self:stop()
+		end
+
+		self._waiting_on_getting_to_nav_mesh = false
 	end
 
 	local nav_bot = self._nav_bot
 
 	self:_update_destination(unit, nav_bot, t)
-	self:_update_desired_velocity(nav_bot)
+	self:_update_is_following_path(nav_bot)
+	self:_update_desired_velocity(nav_bot, dt)
 	self:_update_next_smart_object(nav_bot)
 	self:_update_dispersion(nav_bot)
 end
@@ -271,12 +299,22 @@ local DEBUG_NUM_FAILED_PATHINGS_FOR_DRAW = 5
 local DEBUG_NUM_FAILED_PATHINGS_FOR_DESPAWN = 10
 
 MinionNavigationExtension._update_destination = function (self, unit, nav_bot, t)
-	local is_computing_path = GwNavBot.is_computing_new_path(nav_bot)
-	local has_path = GwNavBot.has_path(nav_bot)
+	local has_path, is_computing_path
+	local move_medium = self._behavior_component.move_medium
 
-	self._is_computing_path = is_computing_path
-	self._is_computing_path_due_to_crowd_dispersion = self._is_computing_path_due_to_crowd_dispersion and is_computing_path
-	self._has_path = has_path
+	if move_medium == "ground" then
+		is_computing_path = GwNavBot.is_computing_new_path(nav_bot)
+		has_path = GwNavBot.has_path(nav_bot)
+		self._is_computing_path = is_computing_path
+		self._is_computing_path_due_to_crowd_dispersion = self._is_computing_path_due_to_crowd_dispersion and is_computing_path
+		self._has_ground_path = has_path
+	else
+		is_computing_path = FlyingNavBot.is_computing_new_path(nav_bot)
+		has_path = FlyingNavBot.has_path(nav_bot)
+		self._is_computing_path = is_computing_path
+		self._is_computing_path_due_to_crowd_dispersion = self._is_computing_path_due_to_crowd_dispersion and is_computing_path
+		self._has_air_path = has_path
+	end
 
 	if not is_computing_path and t > self._wait_timer then
 		local Vector3_distance_squared = Vector3.distance_squared
@@ -346,13 +384,25 @@ MinionNavigationExtension._update_destination = function (self, unit, nav_bot, t
 			end
 
 			local already_at_wanted_destination = distance_to_wanted_destination_sq <= AT_DESTINATION_DISTANCE_SQ
-			local is_path_recomputation_needed = GwNavBot.is_path_recomputation_needed(nav_bot)
+			local is_path_recomputation_needed
+
+			if move_medium == "ground" then
+				is_path_recomputation_needed = GwNavBot.is_path_recomputation_needed(nav_bot)
+			else
+				is_path_recomputation_needed = FlyingNavBot.is_path_recomputation_needed(nav_bot)
+			end
+
 			local should_start_new_pathfind = is_path_recomputation_needed or not already_at_wanted_destination and (not has_path or change_large_enough)
 
 			if should_start_new_pathfind then
 				local far_pathing_allowed = self._far_pathing_allowed
 
-				GwNavBot.compute_new_path(nav_bot, wanted_destination, far_pathing_allowed)
+				if move_medium == "ground" then
+					GwNavBot.compute_new_path(nav_bot, wanted_destination, far_pathing_allowed)
+				else
+					FlyingNavBot.compute_new_path(nav_bot, wanted_destination, far_pathing_allowed)
+				end
+
 				self._destination:store(wanted_destination)
 				self._debug_position_when_starting_search:store(position_unit)
 
@@ -369,36 +419,72 @@ MinionNavigationExtension._update_destination = function (self, unit, nav_bot, t
 	end
 end
 
-MinionNavigationExtension._update_desired_velocity = function (self, nav_bot)
-	self._is_following_path = GwNavBot.is_following_path(nav_bot)
+MinionNavigationExtension._update_is_following_path = function (self, nav_bot)
+	local move_medium = self._behavior_component.move_medium
 
+	if move_medium == "ground" then
+		self._is_following_path = GwNavBot.is_following_path(nav_bot)
+	else
+		self._is_following_path = FlyingNavBot.is_following_path(nav_bot)
+	end
+end
+
+MinionNavigationExtension._update_desired_velocity = function (self, nav_bot, dt)
 	local desired_velocity, desired_speed
 	local behavior_component = self._behavior_component
 
 	if behavior_component.move_state ~= "idle" then
-		local nav_bot_velocity = GwNavBot.output_velocity(nav_bot)
-		local flat_nav_bot_velocity = Vector3.flat(nav_bot_velocity)
-		local flat_nav_bot_speed = Vector3.length(flat_nav_bot_velocity)
+		local nav_bot_velocity
+		local move_medium = self._behavior_component.move_medium
 
-		desired_velocity, desired_speed = flat_nav_bot_velocity, flat_nav_bot_speed
+		if move_medium == "ground" then
+			nav_bot_velocity = GwNavBot.output_velocity(nav_bot)
+			nav_bot_velocity = Vector3.flat(nav_bot_velocity)
+		else
+			nav_bot_velocity = FlyingNavBot.output_velocity(nav_bot)
+		end
+
+		local nav_bot_speed = Vector3.length(nav_bot_velocity)
+
+		desired_velocity, desired_speed = nav_bot_velocity, nav_bot_speed
 	else
 		desired_velocity, desired_speed = Vector3.zero(), 0
 	end
 
 	local max_speed_with_modifiers = self._max_speed_with_modifiers
 
-	self._current_speed = math.min(desired_speed, max_speed_with_modifiers)
-	desired_velocity = Vector3.normalize(desired_velocity) * self._current_speed
+	desired_speed = math.min(desired_speed, max_speed_with_modifiers)
 
-	self._locomotion_extension:set_wanted_velocity_flat(desired_velocity)
+	local current_speed, acceleration = self._current_speed, self._acceleration
+
+	if current_speed < desired_speed then
+		local speed_delta = acceleration * dt * 0.5
+
+		current_speed = math.clamp(current_speed + speed_delta, 0, desired_speed)
+		desired_velocity = Vector3.normalize(desired_velocity) * current_speed
+		self._current_speed = math.clamp(current_speed + speed_delta, 0, desired_speed)
+	else
+		desired_velocity = Vector3.normalize(desired_velocity) * desired_speed
+		self._current_speed = desired_speed
+	end
+
+	self._locomotion_extension:set_wanted_velocity(desired_velocity)
 end
 
 local NEXT_SMART_OBJECT_MAX_DISTANCE = 2
 
 MinionNavigationExtension._update_next_smart_object = function (self, nav_bot)
 	local next_smart_object_interval, smart_object_component = self._next_smart_object_interval, self._nav_smart_object_component
+	local current_or_next_smartobject_interval
+	local move_medium = self._behavior_component.move_medium
 
-	if GwNavBot.current_or_next_smartobject_interval(nav_bot, next_smart_object_interval, NEXT_SMART_OBJECT_MAX_DISTANCE) then
+	if move_medium == "ground" then
+		current_or_next_smartobject_interval = GwNavBot.current_or_next_smartobject_interval(nav_bot, next_smart_object_interval, NEXT_SMART_OBJECT_MAX_DISTANCE)
+	else
+		current_or_next_smartobject_interval = FlyingNavBot.current_or_next_smartobject_interval(nav_bot, next_smart_object_interval, NEXT_SMART_OBJECT_MAX_DISTANCE)
+	end
+
+	if current_or_next_smartobject_interval then
 		local entrance_position, entrance_is_at_bot_progress_on_path = GwNavSmartObjectInterval.entrance_position(next_smart_object_interval)
 
 		smart_object_component.entrance_position:store(entrance_position)
@@ -442,6 +528,12 @@ local APPROACHING_OCCUPIED_SMART_OBJECT = 1
 local TOO_CLOSE_TO_SMART_OBJECT_TO_DIVERT = 2
 
 MinionNavigationExtension._update_dispersion = function (self, nav_bot)
+	local move_medium = self._behavior_component.move_medium
+
+	if move_medium ~= "ground" then
+		return
+	end
+
 	local action = GwNavBot.update_logic_for_crowd_dispersion(nav_bot)
 	local is_computing_path = self._is_computing_path
 
@@ -469,6 +561,10 @@ MinionNavigationExtension.update_position = function (self, unit)
 	local position = Unit.local_position(unit, 1)
 
 	GwNavBot.update_position(nav_bot, position)
+
+	if self._breed.flying then
+		FlyingNavBot.update_position(self._nav_bot, position)
+	end
 end
 
 MinionNavigationExtension.traverse_logic = function (self)
@@ -489,12 +585,22 @@ MinionNavigationExtension.set_enabled = function (self, enabled, max_speed)
 
 		if not old_status then
 			local nav_bot = self._nav_bot
-			local has_path = GwNavBot.has_path(nav_bot)
-			local is_following_path = GwNavBot.is_following_path(nav_bot)
-
-			self._has_path, self._is_following_path = has_path, is_following_path
-
 			local behavior_component = self._behavior_component
+			local has_path, is_following_path
+			local move_medium = behavior_component.move_medium
+
+			if move_medium == "ground" then
+				has_path = GwNavBot.has_path(nav_bot)
+				is_following_path = GwNavBot.is_following_path(nav_bot)
+				self._has_ground_path = has_path
+			else
+				has_path = FlyingNavBot.has_path(nav_bot)
+				is_following_path = FlyingNavBot.is_following_path(nav_bot)
+				self._has_air_path = has_path
+			end
+
+			self._is_following_path = is_following_path
+
 			local move_state = behavior_component.move_state
 
 			if has_path and move_state ~= "moving" then
@@ -506,7 +612,8 @@ MinionNavigationExtension.set_enabled = function (self, enabled, max_speed)
 			self:update_position(unit)
 		end
 	else
-		self._has_path, self._is_following_path, self._waiting_on_getting_to_nav_mesh = false, false, false
+		self._has_ground_path, self._is_following_path, self._waiting_on_getting_to_nav_mesh = false, false, false
+		self._has_air_path = false
 	end
 
 	self._navigation_system:set_enabled_unit(unit, enabled)
@@ -571,7 +678,15 @@ MinionNavigationExtension._recalculate_max_speed = function (self)
 
 	GwNavBot.set_max_desired_linear_speed(self._nav_bot, max_speed_with_modifiers)
 
+	if self._breed.flying then
+		FlyingNavBot.set_max_desired_linear_speed(self._nav_bot, max_speed_with_modifiers)
+	end
+
 	self._max_speed_with_modifiers = max_speed_with_modifiers
+
+	local net_info = NetworkConstants.move_speed
+
+	GameSession.set_game_object_field(self._game_session, self._game_object_id, "max_speed_with_modifiers", math.clamp(max_speed_with_modifiers, net_info.min, net_info.max))
 end
 
 MinionNavigationExtension.set_max_speed = function (self, speed)
@@ -581,6 +696,9 @@ MinionNavigationExtension.set_max_speed = function (self, speed)
 
 	self._max_speed = speed
 
+	local net_info = NetworkConstants.move_speed
+
+	GameSession.set_game_object_field(self._game_session, self._game_object_id, "max_speed", math.clamp(speed, net_info.min, net_info.max))
 	self:_recalculate_max_speed()
 end
 
@@ -588,12 +706,35 @@ MinionNavigationExtension.max_speed = function (self)
 	return self._max_speed, self._max_speed_with_modifiers
 end
 
+MinionNavigationExtension.set_acceleration = function (self, acceleration)
+	self._acceleration = acceleration
+end
+
 MinionNavigationExtension.set_nav_bot_position = function (self, position)
 	GwNavBot.update_position(self._nav_bot, position)
+
+	if self._breed.flying then
+		FlyingNavBot.update_position(self._nav_bot, position)
+	end
 end
 
 MinionNavigationExtension.move_to = function (self, position)
 	self._wanted_destination:store(position)
+end
+
+MinionNavigationExtension.cancel_computation = function (self)
+	local nav_bot = self._nav_bot
+
+	if self._is_computing_path then
+		GwNavBot.cancel_async_path_computation(nav_bot)
+
+		if self._breed.flying then
+			FlyingNavBot.cancel_async_path_computation(nav_bot)
+		end
+
+		self._is_computing_path = false
+		self._is_computing_path_due_to_crowd_dispersion = false
+	end
 end
 
 MinionNavigationExtension.stop = function (self)
@@ -614,18 +755,18 @@ MinionNavigationExtension.stop = function (self)
 	self._failed_move_attempts = 0
 	self._has_started_pathfind = false
 
+	self:cancel_computation()
+
 	local nav_bot = self._nav_bot
-
-	if self._is_computing_path then
-		GwNavBot.cancel_async_path_computation(nav_bot)
-
-		self._is_computing_path = false
-		self._is_computing_path_due_to_crowd_dispersion = false
-	end
 
 	GwNavBot.clear_followed_path(nav_bot)
 
-	self._has_path, self._is_following_path = false, false
+	if self._breed.flying then
+		FlyingNavBot.clear_followed_path(nav_bot)
+	end
+
+	self._has_ground_path, self._is_following_path = false, false
+	self._has_air_path = false
 end
 
 MinionNavigationExtension.enabled = function (self)
@@ -643,7 +784,13 @@ MinionNavigationExtension.is_on_wait_time = function (self)
 end
 
 MinionNavigationExtension.has_path = function (self)
-	return self._has_path
+	local move_medium = self._behavior_component.move_medium
+
+	if move_medium == "ground" then
+		return self._has_ground_path
+	else
+		return self._has_air_path
+	end
 end
 
 MinionNavigationExtension.is_computing_path = function (self)
@@ -674,8 +821,13 @@ end
 
 MinionNavigationExtension.has_reached_destination = function (self)
 	local nav_bot = self._nav_bot
+	local move_medium = self._behavior_component.move_medium
 
-	return GwNavBot.has_reached_destination(nav_bot)
+	if move_medium == "ground" then
+		return GwNavBot.has_reached_destination(nav_bot)
+	else
+		return FlyingNavBot.has_reached_destination(nav_bot)
+	end
 end
 
 MinionNavigationExtension.current_smart_object_data = function (self)
@@ -688,12 +840,17 @@ local TOTAL_NUM_SMART_OBJECT_DESPAWNS = 0
 MinionNavigationExtension.use_smart_object = function (self, do_use)
 	local nav_bot, unit = self._nav_bot, self._unit
 	local nav_smart_object_component = self._nav_smart_object_component
+	local move_medium = self._behavior_component.move_medium
 	local success
 
 	if do_use then
 		local smart_object_id = nav_smart_object_component.id
 
-		success = GwNavBot.enter_manual_control(nav_bot, self._next_smart_object_interval)
+		if move_medium == "ground" then
+			success = GwNavBot.enter_manual_control(nav_bot, self._next_smart_object_interval)
+		else
+			success = FlyingNavBot.enter_manual_control(nav_bot, self._next_smart_object_interval)
+		end
 
 		if success then
 			TEMP_SMART_OBJECT_FAILING_MINIONS[unit] = 0
@@ -703,9 +860,14 @@ MinionNavigationExtension.use_smart_object = function (self, do_use)
 			local smart_object_type = nav_smart_object_component.type
 			local breed_name = self._breed.name
 
-			GwNavBot.clear_followed_path(nav_bot)
+			if move_medium == "ground" then
+				GwNavBot.clear_followed_path(nav_bot)
+			else
+				FlyingNavBot.clear_followed_path(nav_bot)
+			end
 
-			self._has_path, self._is_following_path = false, false
+			self._has_ground_path, self._is_following_path = false, false
+			self._has_air_path = false
 			nav_smart_object_component.id = -1
 
 			local num_fails = (TEMP_SMART_OBJECT_FAILING_MINIONS[unit] or 0) + 1
@@ -725,7 +887,11 @@ MinionNavigationExtension.use_smart_object = function (self, do_use)
 			end
 		end
 	else
-		success = GwNavBot.exit_manual_control(nav_bot)
+		if move_medium == "ground" then
+			success = GwNavBot.exit_manual_control(nav_bot)
+		else
+			success = FlyingNavBot.exit_manual_control(nav_bot)
+		end
 
 		if success then
 			TEMP_SMART_OBJECT_FAILING_MINIONS[unit] = 0
@@ -735,9 +901,17 @@ MinionNavigationExtension.use_smart_object = function (self, do_use)
 			local smart_object_type = nav_smart_object_component.type
 			local breed_name = self._breed.name
 
-			GwNavBot.clear_followed_path(nav_bot)
+			if move_medium == "ground" then
+				GwNavBot.clear_followed_path(nav_bot)
 
-			self._has_path, self._is_following_path = false, false
+				self._has_ground_path = false
+			else
+				FlyingNavBot.clear_followed_path(nav_bot)
+
+				self._has_air_path = false
+			end
+
+			self._is_following_path = false
 
 			local num_fails = (TEMP_SMART_OBJECT_FAILING_MINIONS[unit] or 0) + 1
 
@@ -771,7 +945,14 @@ MinionNavigationExtension.is_using_smart_object = function (self)
 end
 
 MinionNavigationExtension.path_distance_to_next_smart_object = function (self, optional_max_distance)
-	local has_upcoming_smart_object, path_distance = GwNavBot.distance_to_next_smartobject(self._nav_bot, optional_max_distance)
+	local has_upcoming_smart_object, path_distance
+	local move_medium = self._behavior_component.move_medium
+
+	if move_medium == "ground" then
+		has_upcoming_smart_object, path_distance = GwNavBot.distance_to_next_smartobject(self._nav_bot, optional_max_distance)
+	else
+		has_upcoming_smart_object, path_distance = FlyingNavBot.distance_to_next_smartobject(self._nav_bot, optional_max_distance)
+	end
 
 	return has_upcoming_smart_object, path_distance
 end
@@ -810,47 +991,179 @@ end
 
 MinionNavigationExtension.current_and_next_node_positions_in_path = function (self)
 	local nav_bot = self._nav_bot
-	local node_count = GwNavBot.get_path_nodes_count(nav_bot)
-	local current_node_index = GwNavBot.get_path_current_node_index(nav_bot)
-	local current_node_position = GwNavBot.get_path_node_pos(nav_bot, current_node_index)
+	local move_medium = self._behavior_component.move_medium
+	local node_count, current_node_index, current_node_position
+
+	if move_medium == "ground" then
+		node_count = GwNavBot.get_path_nodes_count(nav_bot)
+		current_node_index = GwNavBot.get_path_current_node_index(nav_bot)
+		current_node_position = GwNavBot.get_path_node_pos(nav_bot, current_node_index)
+	else
+		node_count = FlyingNavBot.get_path_nodes_count(nav_bot)
+		current_node_index = FlyingNavBot.get_path_current_node_index(nav_bot)
+		current_node_position = FlyingNavBot.get_path_node_pos(nav_bot, current_node_index)
+	end
+
 	local next_node_1_index = current_node_index + 1
 
 	if node_count < next_node_1_index then
 		return current_node_position, nil, nil
 	end
 
-	local next_node_1_position = GwNavBot.get_path_node_pos(nav_bot, next_node_1_index)
+	local next_node_1_position
+
+	if move_medium == "ground" then
+		next_node_1_position = GwNavBot.get_path_node_pos(nav_bot, next_node_1_index)
+	else
+		next_node_1_position = FlyingNavBot.get_path_node_pos(nav_bot, next_node_1_index)
+	end
+
 	local next_node_2_index = current_node_index + 2
 
 	if node_count < next_node_2_index then
 		return current_node_position, next_node_1_position, nil
 	end
 
-	local next_node_2_position = GwNavBot.get_path_node_pos(nav_bot, next_node_2_index)
+	local next_node_2_position
+
+	if move_medium == "ground" then
+		next_node_2_position = GwNavBot.get_path_node_pos(nav_bot, next_node_2_index)
+	else
+		next_node_2_position = FlyingNavBot.get_path_node_pos(nav_bot, next_node_2_index)
+	end
 
 	return current_node_position, next_node_1_position, next_node_2_position
 end
 
 MinionNavigationExtension.current_and_wanted_node_position_in_path = function (self, wanted_node_offset_index)
 	local nav_bot = self._nav_bot
-	local node_count = GwNavBot.get_path_nodes_count(nav_bot)
-	local current_node_index = GwNavBot.get_path_current_node_index(nav_bot)
-	local current_node_position = GwNavBot.get_path_node_pos(nav_bot, current_node_index)
+	local move_medium = self._behavior_component.move_medium
+	local node_count, current_node_index, current_node_position
+
+	if move_medium == "ground" then
+		node_count = GwNavBot.get_path_nodes_count(nav_bot)
+		current_node_index = GwNavBot.get_path_current_node_index(nav_bot)
+		current_node_position = GwNavBot.get_path_node_pos(nav_bot, current_node_index)
+	else
+		node_count = FlyingNavBot.get_path_nodes_count(nav_bot)
+		current_node_index = FlyingNavBot.get_path_current_node_index(nav_bot)
+		current_node_position = FlyingNavBot.get_path_node_pos(nav_bot, current_node_index)
+	end
+
 	local wanted_node_index = current_node_index + wanted_node_offset_index
 
 	if node_count < wanted_node_index then
 		return current_node_position, nil
 	end
 
-	local wanted_node_position = GwNavBot.get_path_node_pos(nav_bot, wanted_node_index)
+	local wanted_node_position
+
+	if move_medium == "ground" then
+		wanted_node_position = GwNavBot.get_path_node_pos(nav_bot, wanted_node_index)
+	else
+		wanted_node_position = FlyingNavBot.get_path_node_pos(nav_bot, wanted_node_index)
+	end
 
 	return current_node_position, wanted_node_position
 end
 
+MinionNavigationExtension.path_node_position = function (self, index)
+	local nav_bot = self._nav_bot
+	local move_medium = self._behavior_component.move_medium
+
+	if move_medium == "ground" then
+		return GwNavBot.get_path_node_pos(nav_bot, index)
+	else
+		return FlyingNavBot.get_path_node_pos(nav_bot, index)
+	end
+end
+
 MinionNavigationExtension.remaining_distance_from_progress_to_end_of_path = function (self)
-	local distance = GwNavBot.get_remaining_distance_from_progress_to_end_of_path(self._nav_bot)
+	local distance
+	local move_medium = self._behavior_component.move_medium
+
+	if move_medium == "ground" then
+		distance = GwNavBot.get_remaining_distance_from_progress_to_end_of_path(self._nav_bot)
+	else
+		distance = FlyingNavBot.get_remaining_distance_from_progress_to_end_of_path(self._nav_bot)
+	end
 
 	return distance
+end
+
+MinionNavigationExtension.remaining_distance_to_position = function (self, position)
+	local distance
+	local move_medium = self._behavior_component.move_medium
+
+	if move_medium == "ground" then
+		error("[MinionNavigationExtension] function 'remaining_distance_to_position' not implemented")
+	else
+		distance = FlyingNavBot.remaining_distance_to_position(self._nav_bot, position)
+	end
+
+	return distance
+end
+
+MinionNavigationExtension.distance_to_progress_on_path = function (self)
+	local distance
+	local move_medium = self._behavior_component.move_medium
+
+	if move_medium == "ground" then
+		error("[MinionNavigationExtension] 'distance_to_progress_on_path' not implemented.")
+	else
+		distance = FlyingNavBot.distance_to_progress_on_path(self._nav_bot)
+	end
+
+	return distance
+end
+
+MinionNavigationExtension.position_ahead_on_path = function (self, distance)
+	local move_medium = self._behavior_component.move_medium
+
+	if move_medium == "ground" then
+		error("[MinionNavigationExtension] 'position_ahead_on_path' not implemented.")
+	else
+		return FlyingNavBot.position_ahead_on_path(self._nav_bot, distance)
+	end
+end
+
+MinionNavigationExtension.position_ahead_on_path_from_position = function (self, position, distance)
+	local move_medium = self._behavior_component.move_medium
+
+	if move_medium == "ground" then
+		error("[MinionNavigationExtension] 'position_ahead_on_path_from_position' not implemented.")
+	else
+		return FlyingNavBot.position_ahead_on_path_from_position(self._nav_bot, position, distance)
+	end
+end
+
+MinionNavigationExtension.cut_path_at_distance_from_current = function (self, distance)
+	local move_medium = self._behavior_component.move_medium
+
+	if move_medium == "ground" then
+		error("[MinionNavigationExtension] 'cut_path_at_distance_from_current' not implemented.")
+	else
+		return FlyingNavBot.cut_path_at_distance_from_current(self._nav_bot, distance)
+	end
+end
+
+MinionNavigationExtension.goal_position = function (self)
+	local nav_bot = self._nav_bot
+	local move_medium = self._behavior_component.move_medium
+
+	if move_medium == "ground" then
+		local node_count = GwNavBot.get_path_nodes_count(nav_bot)
+
+		return GwNavBot.get_path_node_pos(nav_bot, node_count)
+	else
+		local node_count = FlyingNavBot.get_path_nodes_count(nav_bot)
+
+		return FlyingNavBot.get_path_node_pos(nav_bot, node_count)
+	end
+end
+
+MinionNavigationExtension.move_medium = function (self)
+	return self._behavior_component.move_medium
 end
 
 return MinionNavigationExtension

@@ -188,4 +188,8 @@ PlayerHuskFirstPersonExtension.extrapolated_character_height = function (self)
 	return self._extrapolated_character_height
 end
 
+PlayerHuskFirstPersonExtension.extrapolated_rotation = function (self)
+	return Unit.local_rotation(self._first_person_unit, 1)
+end
+
 return PlayerHuskFirstPersonExtension

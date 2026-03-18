@@ -25,10 +25,6 @@ local currency_info_size = {
 	110,
 	33,
 }
-local havoc_info_size = {
-	details_panel_size[1] - 50,
-	180,
-}
 local screen_size = UIWorkspaceSettings.screen.size
 local right_content_size = {
 	ElementSettings.right_grid_width,
@@ -37,6 +33,10 @@ local right_content_size = {
 local right_header_size = {
 	ElementSettings.right_grid_width,
 	ElementSettings.right_header_height,
+}
+local expedition_currency_info_size = {
+	450,
+	33,
 }
 local left_panel_x_position = 25
 local scenegraph_definition = {
@@ -239,6 +239,31 @@ local scenegraph_definition = {
 			0,
 			0,
 			3,
+		},
+	},
+	expedition_currency_pivot = {
+		horizontal_alignment = "right",
+		parent = "buff_panel_background",
+		vertical_alignment = "top",
+		size = {
+			0,
+			0,
+		},
+		position = {
+			40,
+			0,
+			1,
+		},
+	},
+	expedition_currency_panel = {
+		horizontal_alignment = "left",
+		parent = "expedition_currency_pivot",
+		vertical_alignment = "top",
+		size = expedition_currency_info_size,
+		position = {
+			0,
+			0,
+			1,
 		},
 	},
 }
@@ -661,6 +686,198 @@ local left_panel_widgets_definitions = {
 	}, "circumstance_info_panel"),
 	plasteel_info = UIWidget.create_definition(generate_currency_passes("content/ui/materials/icons/currencies/plasteel_small"), "crafting_pickup_panel", nil, currency_info_size),
 	diamantine_info = UIWidget.create_definition(generate_currency_passes("content/ui/materials/icons/currencies/diamantine_small"), "crafting_pickup_panel", nil, currency_info_size),
+	expedition_currency = UIWidget.create_definition({
+		{
+			pass_type = "rect",
+			style_id = "reward_background",
+			style = {
+				color = {
+					200,
+					0,
+					0,
+					0,
+				},
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "reward_gradient",
+			value = "content/ui/materials/gradients/gradient_vertical",
+			style = {
+				color = {
+					32,
+					169,
+					211,
+					158,
+				},
+				offset = {
+					0,
+					0,
+					1,
+				},
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "reward_frame",
+			value = "content/ui/materials/frames/frame_tile_2px",
+			style = {
+				scale_to_material = true,
+				color = Color.terminal_frame(255, true),
+				offset = {
+					0,
+					0,
+					2,
+				},
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "title_frame",
+			value = "content/ui/materials/frames/frame_tile_2px",
+			style = {
+				scale_to_material = true,
+				color = Color.terminal_frame(255, true),
+				offset = {
+					0,
+					0,
+					2,
+				},
+				size = {
+					nil,
+					36,
+				},
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "loot_title",
+			value_id = "loot_title",
+			value = Localize("loc_expeditions_loot_name_hud") .. " ",
+			style = {
+				font_size = 22,
+				font_type = "proxima_nova_bold",
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "top",
+				text_color = Color.terminal_text_body(255, true),
+				offset = {
+					10,
+					5,
+					3,
+				},
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "total_loot",
+			value = "0",
+			value_id = "total_loot",
+			style = {
+				font_size = 22,
+				font_type = "proxima_nova_bold",
+				text_horizontal_alignment = "right",
+				text_vertical_alignment = "top",
+				text_color = Color.terminal_text_body(255, true),
+				offset = {
+					-150,
+					5,
+					3,
+				},
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "salvage_title",
+			value_id = "salvage_title",
+			value = Localize("loc_expeditions_currency_name_hud") .. " ",
+			style = {
+				font_size = 22,
+				font_type = "proxima_nova_bold",
+				text_horizontal_alignment = "right",
+				text_vertical_alignment = "top",
+				text_color = Color.terminal_text_body(255, true),
+				offset = {
+					-10,
+					5,
+					3,
+				},
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "text",
+			value = "0",
+			value_id = "text",
+			style = {
+				font_size = 18,
+				font_type = "proxima_nova_bold",
+				line_spacing = 1.5,
+				text_horizontal_alignment = "left",
+				text_vertical_alignment = "center",
+				text_color = Color.terminal_text_body(255, true),
+				offset = {
+					10,
+					18,
+					3,
+				},
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "loot",
+			value = "0",
+			value_id = "loot",
+			style = {
+				font_size = 18,
+				font_type = "proxima_nova_bold",
+				line_spacing = 1.5,
+				text_horizontal_alignment = "right",
+				text_vertical_alignment = "center",
+				text_color = Color.terminal_text_body(255, true),
+				offset = {
+					-150,
+					18,
+					3,
+				},
+			},
+		},
+		{
+			pass_type = "text",
+			style_id = "salvage",
+			value = "0",
+			value_id = "salvage",
+			style = {
+				font_size = 18,
+				font_type = "proxima_nova_bold",
+				line_spacing = 1.5,
+				text_horizontal_alignment = "right",
+				text_vertical_alignment = "center",
+				text_color = Color.terminal_text_body(255, true),
+				offset = {
+					-10,
+					18,
+					3,
+				},
+			},
+		},
+		{
+			pass_type = "rect",
+			style_id = "vertical_line",
+			style = {
+				horizontal_alignment = "right",
+				vertical_alignment = "top",
+				color = Color.terminal_frame(255, true),
+				size = {
+					1,
+				},
+				offset = {
+					-140,
+					0,
+					0,
+				},
+			},
+		},
+	}, "expedition_currency_panel", nil, expedition_currency_info_size),
 	havoc_rank_info = UIWidget.create_definition({
 		{
 			pass_type = "texture",

@@ -5,6 +5,7 @@ local AttackIntensity = require("scripts/utilities/attack_intensity")
 local AttackingUnitResolver = require("scripts/utilities/attack/attacking_unit_resolver")
 local AttackPositioning = require("scripts/utilities/attack/attack_positioning")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Block = require("scripts/utilities/attack/block")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -239,6 +240,17 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 		if damage_profile.breed_instakill_overrides then
 			instakill = instakill or damage_profile.breed_instakill_overrides[target_breed_or_nil.name]
 		end
+
+		if damage_profile.instakill_specials then
+			instakill = target_breed_or_nil.tags and target_breed_or_nil.tags.special
+		end
+
+		if damage_profile.instakill_non_monster_or_captain_or_ogryn and target_breed_or_nil and target_breed_or_nil.tags then
+			local tags = target_breed_or_nil.tags
+			local invalid = tags.captain or tags.cultist_captain or tags.ogryn or tags.monster
+
+			instakill = tags.minion and not invalid
+		end
 	end
 
 	local is_server = Managers.state.game_session:is_server()
@@ -271,20 +283,23 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 		local target_stagger_count = 0
 		local num_triggered_staggers = 0
 		local current_stagger_impact = 0
+		local has_stagger_component = target_blackboard and Blackboard.has_component(target_blackboard, "stagger")
 
-		if not is_player_character and target_blackboard then
+		if not is_player_character and target_blackboard and has_stagger_component then
 			local stagger_component = target_blackboard.stagger
 
-			target_stagger_count = stagger_component.count
-			num_triggered_staggers = stagger_component.num_triggered_staggers
-			was_staggered_before_attack = num_triggered_staggers > 0
+			if stagger_component then
+				num_triggered_staggers = stagger_component.num_triggered_staggers
+				was_staggered_before_attack = num_triggered_staggers > 0
 
-			local stagger_impact_comparison = StaggerSettings.stagger_impact_comparison
-			local current_stagger_type = stagger_component.type
+				local stagger_impact_comparison = StaggerSettings.stagger_impact_comparison
+				local current_stagger_type = stagger_component.type
 
-			current_stagger_impact = stagger_impact_comparison[current_stagger_type] or 0
+				current_stagger_impact = stagger_impact_comparison[current_stagger_type] or 0
+			end
 		end
 
+		local untargetable = target_breed_or_nil and target_breed_or_nil.is_untargetable
 		local damage_immune = target_buff_extension and target_buff_extension:has_keyword("damage_immune")
 		local has_random_damage_immunity = is_server and target_buff_extension and target_buff_extension:has_keyword("random_damage_immune")
 
@@ -296,7 +311,7 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 			damage_immune = damage_immune or random_damage_immune
 		end
 
-		if damage_immune then
+		if damage_immune or untargetable then
 			calculated_damage = 0
 			damage_efficiency = "negated"
 		else
@@ -495,7 +510,7 @@ function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogt
 					end
 				end
 
-				actual_damage_dealt = Damage.deal_damage(attacked_unit, target_breed_or_nil, attacking_unit, attacking_unit_owner_unit, result, attack_type, damage_profile, damage, permanent_damage, tougness_damage, hit_actor, attack_direction, hit_zone_name, herding_template_or_nil, is_critical_strike, damage_type, hit_world_position_or_nil, wounds_shape, instakill)
+				actual_damage_dealt = Damage.deal_damage(attacked_unit, target_breed_or_nil, attacking_unit, attacking_unit_owner_unit, result, attack_type, damage_profile, damage, permanent_damage, tougness_damage, hit_actor, attack_direction, hit_zone_name, herding_template_or_nil, is_critical_strike, damage_type, hit_world_position_or_nil, wounds_shape, instakill, damage_absorbed)
 			end
 		end
 	end

@@ -167,9 +167,6 @@ end
 
 WorldLevelDespawnManager._delete_unit = function (self, unit)
 	Unit.flow_event(unit, "cleanup_before_destroy")
-
-	local unit_is_alive = Unit_alive(unit)
-
 	Unit.flow_event(unit, "unit_despawned")
 
 	local unit_world = Unit.world(unit)
@@ -186,7 +183,10 @@ WorldLevelDespawnManager._check_orphaned_units = function (self)
 		local unit = remaining_units[i]
 
 		Log.error("WorldLevelDespawnManager", "Unregistering orphaned unit %s.", unit)
-		self:_delete_unit(unit)
+
+		if Unit.alive(unit) then
+			self:_delete_unit(unit)
+		end
 	end
 end
 

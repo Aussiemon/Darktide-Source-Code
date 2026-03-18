@@ -15,11 +15,16 @@ LiquidAreaSystem.init = function (self, ...)
 	self._liquid_paint_id = 0
 	self._liquid_paint_id_to_unit_map = {}
 
+	local world = self._world
+	local liquid_particle_group = World.create_particle_group(world)
+
+	self._liquid_particle_group = liquid_particle_group
+
 	local drawers = {}
 
 	for name, template in pairs(LiquidAreaTemplates) do
 		if template.use_liquid_drawer then
-			drawers[name] = LiquidAreaDrawer:new(self._world, template)
+			drawers[name] = LiquidAreaDrawer:new(world, template, liquid_particle_group)
 		end
 	end
 
@@ -55,6 +60,8 @@ LiquidAreaSystem.on_gameplay_post_init = function (self, level)
 end
 
 LiquidAreaSystem.on_add_extension = function (self, world, unit, extension_name, extension_init_data, ...)
+	extension_init_data.liquid_particle_group = self._liquid_particle_group
+
 	local extension = LiquidAreaSystem.super.on_add_extension(self, world, unit, extension_name, extension_init_data, ...)
 
 	extension:set_drawer(self._drawers)
@@ -99,6 +106,7 @@ LiquidAreaSystem.destroy = function (self)
 		GwNavTagLayerCostTable.destroy(self._nav_tag_cost_table)
 	end
 
+	World.destroy_particle_group(self._world, self._liquid_particle_group)
 	LiquidAreaSystem.super.destroy(self)
 end
 

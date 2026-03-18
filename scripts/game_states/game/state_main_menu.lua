@@ -3,10 +3,10 @@
 local CharacterCreate = require("scripts/utilities/character_create")
 local MasterItems = require("scripts/backend/master_items")
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
+local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local Promise = require("scripts/foundation/utilities/promise")
 local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local StateMainMenuTestify = GameParameters.testify and require("scripts/game_states/game/state_main_menu_testify")
-local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local SINGLEPLAY_TYPES = MatchmakingConstants.SINGLEPLAY_TYPES
 local StateMainMenu = class("StateMainMenu")
 

@@ -10,6 +10,7 @@ local function _create_pacing_template_entry(path)
 end
 
 _create_pacing_template_entry("scripts/managers/pacing/templates/default_pacing_template")
+_create_pacing_template_entry("scripts/managers/pacing/templates/expedition_pacing_template")
 _create_pacing_template_entry("scripts/managers/pacing/templates/havoc_pacing_template")
 _create_pacing_template_entry("scripts/managers/pacing/templates/terror_events_only_template")
 

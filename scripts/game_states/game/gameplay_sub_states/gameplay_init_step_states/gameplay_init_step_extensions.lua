@@ -26,6 +26,11 @@ GameplayInitStepExtensions.on_enter = function (self, parent, params)
 	local havoc_data = shared_state.havoc_data
 	local nav_world = shared_state.nav_world
 	local has_navmesh = not table.is_empty(shared_state.nav_data)
+
+	if Managers.state.game_mode:game_mode_name() == "expedition" then
+		has_navmesh = true
+	end
+
 	local soft_cap_out_of_bounds_units = shared_state.soft_cap_out_of_bounds_units
 	local vo_sources_cache = shared_state.vo_sources_cache
 	local fixed_time_step = shared_state.fixed_time_step
@@ -131,6 +136,10 @@ GameplayInitStepExtensions._init_extensions = function (self, world, physics_wor
 			level_seed = level_seed,
 		},
 		component_system = {
+			level_seed = level_seed,
+		},
+		expedition_loot_converter_system = {
+			mission = mission,
 			level_seed = level_seed,
 		},
 	}

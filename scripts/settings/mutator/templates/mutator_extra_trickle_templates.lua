@@ -116,6 +116,171 @@ local mutator_templates = {
 			},
 		},
 	},
+	exp_mutator_chaos_hounds = {
+		class = "scripts/managers/mutator/mutators/mutator_expedition_extra_trickle_hordes",
+		ui = {
+			category_name = "loc_expedition_map_heretic_intel",
+			description = "loc_expeditions_modifier_enemy_hunting_grounds_description",
+			display_name = "loc_expeditions_modifier_enemy_hunting_grounds",
+			icon = "content/ui/materials/mission_board/circumstances/hunting_grounds_01",
+		},
+		trickle_horde_templates = {
+			{
+				cant_be_ramped = true,
+				ignore_disallowance = true,
+				min_players_alive = 1,
+				not_during_terror_events = true,
+				num_trickle_hordes_active_for_cooldown = 2,
+				optional_num_tries = 6,
+				stinger = "wwise/events/minions/play_chaos_hound_spawn_stinger_circumstance",
+				stinger_duration = 5,
+				horde_compositions = {
+					trickle_horde = {
+						renegade = {
+							none = {
+								HordeCompositions.mutator_chaos_hounds,
+							},
+							undetected = {
+								HordeCompositions.mutator_chaos_hounds,
+							},
+							alert = {
+								HordeCompositions.mutator_chaos_hounds,
+							},
+							detected = {
+								HordeCompositions.mutator_chaos_hounds,
+							},
+							max = {
+								HordeCompositions.mutator_chaos_hounds,
+							},
+						},
+						cultist = {
+							none = {
+								HordeCompositions.mutator_chaos_hounds,
+							},
+							undetected = {
+								HordeCompositions.mutator_chaos_hounds,
+							},
+							alert = {
+								HordeCompositions.mutator_chaos_hounds,
+							},
+							detected = {
+								HordeCompositions.mutator_chaos_hounds,
+							},
+							max = {
+								HordeCompositions.mutator_chaos_hounds,
+							},
+						},
+					},
+				},
+				trickle_horde_travel_distance_range = {
+					45,
+					85,
+				},
+				trickle_horde_cooldown = {
+					45,
+					65,
+				},
+				optional_main_path_offset = {
+					40,
+					60,
+				},
+				optional_mutator_params = {
+					always_patrol = true,
+					externally_controlled_patrol = true,
+					mutator_name = "exp_mutator_chaos_hounds",
+					optional_horde_type = "mutator_trickle_horde",
+					skip_heat_override = true,
+					spawn_aggro_state = "passive",
+				},
+				group_sound_event_names = {
+					start = "wwise/events/minions/play_chaos_hound_group_sound",
+					stop = "wwise/events/minions/stop_chaos_hound_group_sound",
+				},
+			},
+		},
+	},
+	exp_mutator_rotten_armor = {
+		class = "scripts/managers/mutator/mutators/mutator_expedition_extra_trickle_hordes",
+		ui = {
+			category_name = "loc_expedition_map_heretic_intel",
+			description = "loc_expeditions_modifier_enemy_rotten_armour_description",
+			display_name = "loc_expeditions_modifier_enemy_rotten_armour",
+			icon = "content/ui/materials/icons/circumstances/havoc_pj/havoc_mutator_rotten_armor",
+		},
+		trickle_horde_templates = {
+			{
+				cant_be_ramped = true,
+				ignore_disallowance = true,
+				min_players_alive = 1,
+				not_during_terror_events = true,
+				num_trickle_hordes_active_for_cooldown = 2,
+				optional_num_tries = 6,
+				stinger = "wwise/events/minions/play_chaos_hound_spawn_stinger_circumstance",
+				stinger_duration = 5,
+				horde_compositions = {
+					trickle_horde = {
+						renegade = {
+							none = {
+								HordeCompositions.mutator_live_rotten_armor,
+							},
+							undetected = {
+								HordeCompositions.mutator_live_rotten_armor,
+							},
+							alert = {
+								HordeCompositions.mutator_live_rotten_armor,
+							},
+							detected = {
+								HordeCompositions.mutator_live_rotten_armor,
+							},
+							max = {
+								HordeCompositions.mutator_live_rotten_armor,
+							},
+						},
+						cultist = {
+							none = {
+								HordeCompositions.mutator_live_rotten_armor,
+							},
+							undetected = {
+								HordeCompositions.mutator_live_rotten_armor,
+							},
+							alert = {
+								HordeCompositions.mutator_live_rotten_armor,
+							},
+							detected = {
+								HordeCompositions.mutator_live_rotten_armor,
+							},
+							max = {
+								HordeCompositions.mutator_live_rotten_armor,
+							},
+						},
+					},
+				},
+				trickle_horde_travel_distance_range = {
+					45,
+					60,
+				},
+				trickle_horde_cooldown = {
+					25,
+					35,
+				},
+				optional_main_path_offset = {
+					40,
+					60,
+				},
+				optional_mutator_params = {
+					always_patrol = true,
+					externally_controlled_patrol = true,
+					mutator_name = "exp_mutator_rotten_armor",
+					skip_heat_override = true,
+					spawn_aggro_state = "passive",
+				},
+				group_sound_event_names = {
+					start = "wwise/events/minions/play_chaos_hound_group_sound",
+					stop = "wwise/events/minions/stop_chaos_hound_group_sound",
+				},
+			},
+		},
+	},
 	mutator_snipers = {
 		class = "scripts/managers/mutator/mutators/mutator_extra_trickle_hordes",
 		trickle_horde_templates = {
@@ -386,6 +551,123 @@ local mutator_templates = {
 				trickle_horde_travel_distance_range = {
 					110,
 					230,
+				},
+				trickle_horde_cooldown = {
+					40,
+					45,
+				},
+				optional_main_path_offset = {
+					30,
+					70,
+				},
+				pause_pacing_on_spawn = {
+					{
+						hordes = 40,
+						roamers = 20,
+						specials = 50,
+						trickle_hordes = 40,
+					},
+					{
+						hordes = 40,
+						roamers = 20,
+						specials = 50,
+						trickle_hordes = 40,
+					},
+					{
+						hordes = 40,
+						specials = 50,
+						trickle_hordes = 40,
+					},
+					{
+						trickle_hordes = 20,
+					},
+					{
+						trickle_hordes = 10,
+					},
+				},
+				num_trickle_waves = {
+					{
+						1,
+						1,
+					},
+					{
+						1,
+						1,
+					},
+					{
+						1,
+						2,
+					},
+					{
+						2,
+						3,
+					},
+					{
+						3,
+						4,
+					},
+				},
+				time_between_waves = {
+					15,
+					25,
+				},
+			},
+		},
+	},
+	mutator_exp_rotten_armor_trickle_horde = {
+		class = "scripts/managers/mutator/mutators/mutator_extra_trickle_hordes",
+		trickle_horde_templates = {
+			{
+				cant_be_ramped = true,
+				disallow_spawning_too_close_to_other_spawn = true,
+				ignore_disallowance = true,
+				min_players_alive = 1,
+				not_during_terror_events = true,
+				num_trickle_hordes_active_for_cooldown = 20,
+				optional_num_tries = 6,
+				stinger = "wwise/events/minions/play_mutator_abhuman_spawn_stinger",
+				stinger_duration = 8,
+				horde_compositions = {
+					trickle_horde = {
+						renegade = {
+							none = {
+								HordeCompositions.mutator_live_rotten_armor,
+							},
+							undetected = {
+								HordeCompositions.mutator_live_rotten_armor,
+							},
+							alert = {
+								HordeCompositions.mutator_live_rotten_armor,
+							},
+							detected = {
+								HordeCompositions.mutator_live_rotten_armor,
+							},
+							max = {
+								HordeCompositions.mutator_live_rotten_armor,
+							},
+						},
+						cultist = {
+							none = {
+								HordeCompositions.mutator_live_rotten_armor,
+							},
+							undetected = {
+								HordeCompositions.mutator_live_rotten_armor,
+							},
+							alert = {
+								HordeCompositions.mutator_live_rotten_armor,
+							},
+							detected = {
+								HordeCompositions.mutator_live_rotten_armor,
+							},
+							max = {
+								HordeCompositions.mutator_live_rotten_armor,
+							},
+						},
+					},
+				},
+				trickle_horde_travel_distance_range = {
+					60,
+					80,
 				},
 				trickle_horde_cooldown = {
 					40,

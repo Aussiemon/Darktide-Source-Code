@@ -136,10 +136,10 @@ AuthoritativePlayerUnitAnimationExtension.anim_event_with_variable_int = functio
 end
 
 AuthoritativePlayerUnitAnimationExtension.anim_event_1p = function (self, event_name)
-	local unit = self._first_person_unit
-	local event_index = Unit.animation_event(unit, event_name)
+	local fp_unit = self._first_person_unit
+	local event_index = Unit.animation_event(fp_unit, event_name)
 
-	PlayerUnitAnimationState.record_animation_state(self._animation_state_component, self._unit, self._first_person_unit)
+	PlayerUnitAnimationState.record_animation_state(self._animation_state_component, self._unit, fp_unit)
 
 	local is_first_person = true
 
@@ -151,14 +151,14 @@ AuthoritativePlayerUnitAnimationExtension.anim_event_with_variable_float_1p = fu
 		variable_value = math.clamp(variable_value, min_anim_variable_float_value, max_anim_variable_float_value)
 	end
 
-	local first_person_unit = self._first_person_unit
-	local variable_index = Unit.animation_find_variable(first_person_unit, variable_name)
+	local fp_unit = self._first_person_unit
+	local variable_index = Unit.animation_find_variable(fp_unit, variable_name)
 
-	Unit.animation_set_variable(first_person_unit, variable_index, variable_value)
+	Unit.animation_set_variable(fp_unit, variable_index, variable_value)
 
-	local event_index = Unit.animation_event(first_person_unit, event_name)
+	local event_index = Unit.animation_event(fp_unit, event_name)
 
-	PlayerUnitAnimationState.record_animation_state(self._animation_state_component, self._unit, first_person_unit)
+	PlayerUnitAnimationState.record_animation_state(self._animation_state_component, self._unit, fp_unit)
 
 	local is_first_person = true
 
@@ -166,13 +166,13 @@ AuthoritativePlayerUnitAnimationExtension.anim_event_with_variable_float_1p = fu
 end
 
 AuthoritativePlayerUnitAnimationExtension.anim_event_with_variable_floats_1p = function (self, event_name, ...)
-	local first_person_unit = self._first_person_unit
+	local fp_unit = self._first_person_unit
 	local num_params = select("#", ...)
 	local num_params_to_send = 0
 
 	for ii = 1, num_params, 2 do
 		local variable_name, variable_value = select(ii, ...)
-		local variable_index = Unit.animation_find_variable(first_person_unit, variable_name)
+		local variable_index = Unit.animation_find_variable(fp_unit, variable_name)
 
 		if variable_value and variable_index then
 			if variable_value < min_anim_variable_float_value or variable_value > max_anim_variable_float_value then
@@ -183,13 +183,13 @@ AuthoritativePlayerUnitAnimationExtension.anim_event_with_variable_floats_1p = f
 			VARIABLES_INDEXES_RPC_CACHE[num_params_to_send] = variable_index
 			VARIABLES_VALUES_RPC_CACHE[num_params_to_send] = variable_value
 
-			Unit.animation_set_variable(first_person_unit, variable_index, variable_value)
+			Unit.animation_set_variable(fp_unit, variable_index, variable_value)
 		end
 	end
 
-	local event_index = Unit.animation_event(first_person_unit, event_name)
+	local event_index = Unit.animation_event(fp_unit, event_name)
 
-	PlayerUnitAnimationState.record_animation_state(self._animation_state_component, self._unit, first_person_unit)
+	PlayerUnitAnimationState.record_animation_state(self._animation_state_component, self._unit, fp_unit)
 
 	local is_first_person = true
 

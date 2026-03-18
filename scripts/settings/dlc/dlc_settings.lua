@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/dlc/dlc_settings.lua
 
-dlc_settings = {
+local dlc_settings = {
 	dlcs = {},
 	durable_dlcs = {},
 	also_grants = {},

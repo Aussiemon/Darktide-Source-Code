@@ -51,14 +51,18 @@ MinigameBase.decode_interrupt = function (self)
 	self:set_state(MinigameSettings.game_states.intro)
 end
 
-MinigameBase.start = function (self, player)
+MinigameBase.start = function (self, player, send_to_self_client)
 	self._player_session_id = player and player:session_id()
 
 	if self._minigame_extension then
 		self._minigame_extension:set_active(true)
 
 		if self._is_server then
-			Managers.state.game_session:send_rpc_clients_except("rpc_minigame_sync_start", player:channel_id(), self._minigame_unit_id, self._is_level_unit)
+			if send_to_self_client then
+				Managers.state.game_session:send_rpc_clients("rpc_minigame_sync_start", self._minigame_unit_id, self._is_level_unit)
+			else
+				Managers.state.game_session:send_rpc_clients_except("rpc_minigame_sync_start", player:channel_id(), self._minigame_unit_id, self._is_level_unit)
+			end
 		end
 	end
 end
@@ -226,11 +230,11 @@ MinigameBase.action = function (self, held, t)
 
 		if held then
 			self:on_action_pressed(t)
+
+			return true
 		else
 			self:on_action_released(t)
 		end
-
-		return true
 	end
 
 	return false
@@ -286,15 +290,21 @@ MinigameBase.play_sound = function (self, alias, sync_with_clients, include_clie
 		sync_with_clients = sync_with_clients == nil and true
 		include_client = include_client == nil and true
 
-		if self._fx_extension:sound_source(self._fx_source_name) then
-			self._fx_extension:trigger_gear_wwise_event_with_source(alias, nil, self._fx_source_name, sync_with_clients, include_client)
+		local fx_source_name = self._fx_source_name
+
+		if fx_source_name and self._fx_extension:sound_source(fx_source_name) then
+			self._fx_extension:trigger_gear_wwise_event_with_source(alias, nil, fx_source_name, sync_with_clients, include_client)
 		end
 	end
 end
 
 MinigameBase.set_parameter_sound = function (self, parameter_name, parameter_value)
-	if self._fx_extension and self._fx_extension:sound_source(self._fx_source_name) then
-		self._fx_extension:set_source_parameter(parameter_name, parameter_value, self._fx_source_name)
+	if self._fx_extension then
+		local fx_source_name = self._fx_source_name
+
+		if fx_source_name and self._fx_extension:sound_source(fx_source_name) then
+			self._fx_extension:set_source_parameter(parameter_name, parameter_value, fx_source_name)
+		end
 	end
 end
 

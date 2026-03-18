@@ -237,6 +237,7 @@ Trigger.component_data = {
 		options_keys = {
 			"content/volume_types/minion_trigger",
 			"content/volume_types/minion_instakill_no_cost",
+			"content/volume_types/minion_instakill_gibbing_no_cost",
 			"content/volume_types/nav_tag_volumes/minion_instakill_high_cost",
 			"content/volume_types/nav_tag_volumes/bot_impassable",
 			"content/volume_types/player_trigger",
@@ -248,6 +249,7 @@ Trigger.component_data = {
 		options_values = {
 			"content/volume_types/minion_trigger",
 			"content/volume_types/minion_instakill_no_cost",
+			"content/volume_types/minion_instakill_gibbing_no_cost",
 			"content/volume_types/nav_tag_volumes/minion_instakill_high_cost",
 			"content/volume_types/nav_tag_volumes/bot_impassable",
 			"content/volume_types/player_trigger",

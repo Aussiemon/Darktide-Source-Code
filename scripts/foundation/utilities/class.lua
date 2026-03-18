@@ -18,6 +18,9 @@ local special_functions = {
 	new = true,
 	super = true,
 }
+
+CLASSES = CLASSES or {}
+
 local CLASSES = CLASSES
 
 function assert_interface(object, interface)

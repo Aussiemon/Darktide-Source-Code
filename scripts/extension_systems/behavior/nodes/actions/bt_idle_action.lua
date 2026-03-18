@@ -14,24 +14,28 @@ BtIdleAction.enter = function (self, unit, breed, blackboard, scratchpad, action
 	if behavior_component.move_state ~= "idle" then
 		local events = action_data.anim_events
 		local event = Animation.random_event(events)
-		local animation_extension = ScriptUnit.extension(unit, "animation_system")
+		local animation_extension = ScriptUnit.has_extension(unit, "animation_system") and ScriptUnit.extension(unit, "animation_system")
 
-		animation_extension:anim_event(event)
+		if animation_extension then
+			animation_extension:anim_event(event)
+		end
 
 		behavior_component.move_state = "idle"
 	end
 
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 
-	local perception_component = blackboard.perception
+	if ScriptUnit.has_extension(unit, "perception_system") then
+		local perception_component = blackboard.perception
 
-	scratchpad.perception_component = perception_component
-	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
+		scratchpad.perception_component = perception_component
+		scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
 
-	local vo_event = action_data.vo_event
+		local vo_event = action_data.vo_event
 
-	if vo_event and perception_component.aggro_state == "passive" then
-		Vo.enemy_vo_event(unit, vo_event)
+		if vo_event and perception_component.aggro_state == "passive" then
+			Vo.enemy_vo_event(unit, vo_event)
+		end
 	end
 end
 

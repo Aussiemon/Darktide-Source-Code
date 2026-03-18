@@ -64,8 +64,8 @@ local talent_settings = {
 		},
 		zealot_stacking_melee_damage_after_dodge = {
 			duration = 8,
-			max_stacks = 5,
-			melee_damage = 0.03,
+			max_stacks = 3,
+			melee_damage = 0.05,
 		},
 		zealot_bled_enemies_take_more_damage = {
 			damage_taken_multiplier = 1.15,
@@ -98,6 +98,7 @@ local talent_settings = {
 		},
 		zealot_stamina_cost_multiplier_aura = {
 			stamina_cost_multiplier = 0.85,
+			stamina_delay = -0.15,
 		},
 		zealot_backstabs_increase_backstab_damage = {
 			backstab_damage = 0.1,
@@ -184,7 +185,7 @@ local talent_settings = {
 		},
 		zealot_block_dodging_synergy = {
 			number_of_restored_dodges = 3,
-			on_dodge_block_cost_multiplier = 0.75,
+			on_dodge_block_cost_multiplier = 0.5,
 			on_dodge_block_cost_multiplier_duration = 2,
 			on_perfect_blocking_cooldown = 8,
 		},
@@ -316,7 +317,7 @@ local talent_settings = {
 			duration = 8,
 			impact_modifier = 0.08,
 			max_stacks = 5,
-			min_hits = 3,
+			min_hits = 2,
 		},
 		offensive_3 = {
 			attack_speed = 0.1,

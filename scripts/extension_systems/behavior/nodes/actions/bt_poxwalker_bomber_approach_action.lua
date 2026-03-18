@@ -6,6 +6,7 @@ local Animation = require("scripts/utilities/animation")
 local Attack = require("scripts/utilities/attack/attack")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local NavQueries = require("scripts/utilities/nav_queries")
 local BtPoxwalkerBomberApproachAction = class("BtPoxwalkerBomberApproachAction", "BtNode")
@@ -25,7 +26,7 @@ BtPoxwalkerBomberApproachAction.enter = function (self, unit, breed, blackboard,
 
 	navigation_extension:set_enabled(true, action_data.move_speed or breed.run_speed)
 
-	if action_data.effect_template then
+	if action_data.effect_template_name then
 		scratchpad.fx_system = Managers.state.extension:system("fx_system")
 	end
 
@@ -183,9 +184,7 @@ BtPoxwalkerBomberApproachAction.run = function (self, unit, breed, blackboard, s
 		end
 	end
 
-	local effect_template = action_data.effect_template
-
-	if effect_template then
+	if action_data.effect_template_name then
 		self:_update_effect_template(unit, scratchpad, action_data, navigation_extension)
 	end
 
@@ -366,7 +365,9 @@ BtPoxwalkerBomberApproachAction._update_effect_template = function (self, unit, 
 		local remaining_path_distance = not has_upcoming_smart_object and navigation_extension:remaining_distance_from_progress_to_end_of_path()
 
 		if not has_upcoming_smart_object and remaining_path_distance <= start_distance then
-			scratchpad.global_effect_id = scratchpad.fx_system:start_template_effect(action_data.effect_template, unit)
+			local effect_template = EffectTemplates[action_data.effect_template_name]
+
+			scratchpad.global_effect_id = scratchpad.fx_system:start_template_effect(effect_template, unit)
 		end
 	end
 end

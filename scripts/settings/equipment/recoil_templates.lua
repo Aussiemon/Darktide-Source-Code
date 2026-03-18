@@ -1876,7 +1876,9 @@ recoil_templates.lasgun_hip_assault = {
 		},
 	},
 }
-pitch_default = 0.02
+
+local pitch_default = 0.02
+
 recoil_templates.lasgun_zoomed = {
 	[weapon_movement_states.still] = {
 		camera_recoil_percentage = 1,

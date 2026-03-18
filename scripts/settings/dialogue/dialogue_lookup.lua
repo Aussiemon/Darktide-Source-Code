@@ -32,6 +32,7 @@ _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_event_vo_hacking"
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_event_vo_kill")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_event_vo_scan")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_event_vo_survive")
+_add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_expedition")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_gameplay_vo")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_guidance_vo")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_meat_grinder_vo")

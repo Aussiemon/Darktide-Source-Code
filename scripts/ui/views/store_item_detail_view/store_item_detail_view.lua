@@ -1,5 +1,7 @@
 ﻿-- chunkname: @scripts/ui/views/store_item_detail_view/store_item_detail_view.lua
 
+require("scripts/ui/views/base_view")
+
 local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
 local Definitions = require("scripts/ui/views/store_item_detail_view/store_item_detail_view_definitions")
 local Archetypes = require("scripts/settings/archetype/archetypes")
@@ -38,6 +40,14 @@ local URLTextureLoadStatus = {
 	FAILED = 2,
 	OK = 1,
 	PENDING = 0,
+}
+local BUNDLE_BUTTON_SIZE = {
+	542,
+	160,
+}
+local BUNDLE_BACKGROUND_SIZE = {
+	1200,
+	1080,
 }
 
 StoreItemDetailView.init = function (self, settings, context)
@@ -225,41 +235,30 @@ StoreItemDetailView._filter_large_media = function (media)
 	return media.mediaSize and media.mediaSize == "large"
 end
 
+StoreItemDetailView._filter_large_or_small_media = function (media)
+	return media.mediaSize and (media.mediaSize == "large" or media.mediaSize == "small")
+end
+
 StoreItemDetailView._fetch_image_data_async = function (self, url)
 	if url == nil then
 		return Promise.rejected()
 	end
 
 	local url_textures = self._url_textures
-	local texture_load_state = url_textures[url]
 
-	if texture_load_state and texture_load_state.status == URLTextureLoadStatus.OK then
-		return Promise.resolved(url_textures[url].data)
+	if not url_textures[url] then
+		local promise = self._promise_container:cancel_on_destroy(Managers.url_loader:load_texture(url, nil, "store_item_detail_view"):next()):next(function (texture_data)
+			url_textures[url].data = texture_data
+
+			return texture_data
+		end)
+
+		url_textures[url] = {
+			promise = promise,
+		}
 	end
 
-	if texture_load_state and texture_load_state.status == URLTextureLoadStatus.PENDING then
-		texture_load_state.promise:cancel()
-	end
-
-	local promise = Managers.url_loader:load_texture(url, nil, "store_item_detail_view"):catch(function (error)
-		url_textures[url] = {
-			status = URLTextureLoadStatus.FAILED,
-		}
-	end):next(function (data)
-		url_textures[url] = {
-			status = URLTextureLoadStatus.OK,
-			data = data,
-		}
-
-		return data
-	end)
-
-	url_textures[url] = {
-		status = URLTextureLoadStatus.PENDING,
-		promise = promise,
-	}
-
-	return promise
+	return url_textures[url].promise
 end
 
 StoreItemDetailView._refresh = function (self, context_data)
@@ -281,13 +280,7 @@ StoreItemDetailView._refresh = function (self, context_data)
 	self._bundle_image = nil
 	self._selected_element = nil
 
-	self:_fetch_image_data_async(Offer.find_media_url(offer, self._filter_large_media)):next(function (data)
-		self._bundle_image = data
-
-		self:_setup_item_presentation()
-	end, function ()
-		self:_setup_item_presentation()
-	end)
+	self:_setup_item_presentation()
 end
 
 StoreItemDetailView._create_loading_widget = function (self)
@@ -578,10 +571,7 @@ StoreItemDetailView._setup_bundle_button = function (self)
 	self:_destroy_details()
 
 	local bundle_pass = Definitions.bundle_button_definition
-	local size = {
-		542,
-		160,
-	}
+	local size = BUNDLE_BUTTON_SIZE
 	local bundle_definition = UIWidget.create_definition(bundle_pass, "details_pivot", nil, size)
 	local bundle_widget = self:_create_widget("detail_widget", bundle_definition)
 	local content = bundle_widget.content
@@ -589,25 +579,6 @@ StoreItemDetailView._setup_bundle_button = function (self)
 
 	content.hotspot.pressed_callback = function ()
 		self:cb_on_bundle_pressed()
-	end
-
-	if self._bundle_image then
-		local icon_style = style.icon
-
-		icon_style.material_values.texture_map = self._bundle_image and self._bundle_image.texture
-
-		local image_size = {
-			self._bundle_image.width,
-			self._bundle_image.height,
-		}
-		local image_ratio = image_size[2] / image_size[1]
-		local bundle_image_height = image_ratio * size[1]
-		local top_padding_to_trim = self._bundle_image.trim_top_px or 240
-		local image_uv_height = size[2] / bundle_image_height
-		local uv_trim_top = top_padding_to_trim / image_size[2]
-
-		icon_style.uvs[1][2] = uv_trim_top
-		icon_style.uvs[2][2] = image_uv_height + uv_trim_top
 	end
 
 	local offer = self._store_item.offer
@@ -681,6 +652,10 @@ StoreItemDetailView._setup_bundle_button = function (self)
 	content.size = size
 	self._details_widget = bundle_widget
 	self._widgets_by_name.grid_divider.content.visible = true
+
+	if self._bundle_image then
+		self:_set_bundle_button_image(self._bundle_image)
+	end
 end
 
 StoreItemDetailView._check_details_can_afford = function (self)
@@ -877,27 +852,6 @@ StoreItemDetailView._create_grid_entry_for_bundle = function (self, entry, index
 	content.hotspot.pressed_callback = callback(self, "cb_on_item_pressed", bundle_widget, entry)
 	content.hotspot.double_click_callback = callback(self, "cb_on_inspect_pressed")
 
-	local icon_style = style.icon
-
-	self:_fetch_image_data_async(Offer.find_media_url(entry.offer, self._filter_large_media)):next(function (data)
-		icon_style.material_values.texture_map = data.texture
-
-		local image_size = {
-			data.width,
-			data.height,
-		}
-		local image_ratio = image_size[2] / image_size[1]
-		local bundle_image_height = image_ratio * size[1]
-		local top_padding_to_trim = data.trim_top_px or 240
-		local image_uv_height = size[2] / bundle_image_height
-		local uv_trim_top = top_padding_to_trim / image_size[2]
-
-		icon_style.uvs[1][2] = uv_trim_top
-		icon_style.uvs[2][2] = image_uv_height + uv_trim_top
-	end, function ()
-		return
-	end)
-
 	local offer = entry.offer
 	local price_data = offer.price.amount
 	local currency_type = price_data.type
@@ -1090,59 +1044,101 @@ end
 
 StoreItemDetailView._present_bundle = function (self, offer)
 	self:_destroy_profile()
+	self:_destroy_weapon()
 
 	local widgets_by_name = self._widgets_by_name
 	local bundle_background_widget = widgets_by_name.bundle_background
 
-	self:_fetch_image_data_async(Offer.find_media_url(offer, self._filter_large_media)):next(function (data)
-		bundle_background_widget.style.bundle.material_values.texture_map = data.texture
+	self._bundle_image_promise = self:_fetch_image_data_async(Offer.find_media_url(offer, self._filter_large_or_small_media))
+
+	self._bundle_image_promise:next(function (texture_data)
+		self._bundle_image = texture_data
+
+		self:_set_bundle_button_image(texture_data)
+
+		return texture_data
+	end)
+
+	self._present_bundle_promise = self._bundle_image_promise:next()
+
+	self._present_bundle_promise:next(function (texture_data)
+		self._details_widget.style.icon.material_values.texture_map = texture_data.texture
+
+		self:_present_bundle_with_image(offer, bundle_background_widget, texture_data)
 	end, function ()
 		bundle_background_widget.style.bundle.material_values.texture_map = nil
+
+		self:_present_item(self._items[1].item, self._items[1].real_item)
 	end)
+end
+
+StoreItemDetailView._set_bundle_button_image = function (self, texture_data)
+	local icon_style = self._details_widget.style.icon
+
+	icon_style.material_values.texture_map = texture_data.texture
+
+	if not icon_style.material_values.texture_map then
+		return
+	end
+
+	local image_size = {
+		texture_data.width,
+		texture_data.height,
+	}
+	local image_ratio = image_size[2] / image_size[1]
+	local bundle_image_height = image_ratio * BUNDLE_BUTTON_SIZE[1]
+	local top_padding_to_trim = texture_data.trim_top_px or 240
+
+	if image_ratio < 0.6 then
+		top_padding_to_trim = 120
+	end
+
+	local image_uv_height = BUNDLE_BUTTON_SIZE[2] / bundle_image_height
+	local uv_trim_top = top_padding_to_trim / image_size[2]
+
+	icon_style.uvs[1][2] = uv_trim_top
+	icon_style.uvs[2][2] = image_uv_height + uv_trim_top
+end
+
+StoreItemDetailView._adjust_background_image_size = function (self, bundle_background_widget, texture_data)
+	bundle_background_widget.style.bundle.material_values.texture_map = texture_data.texture
+
+	if not bundle_background_widget.style.bundle.material_values.texture_map then
+		return
+	end
+
+	local image_size = {
+		texture_data.width,
+		texture_data.height,
+	}
+	local image_ratio = image_size[2] / image_size[1]
+
+	if image_ratio < 0.6 then
+		bundle_background_widget.style.bundle.size = {
+			BUNDLE_BACKGROUND_SIZE[1],
+			image_ratio * BUNDLE_BACKGROUND_SIZE[1],
+		}
+
+		return
+	end
+
+	bundle_background_widget.style.bundle.size = BUNDLE_BACKGROUND_SIZE
+end
+
+StoreItemDetailView._present_bundle_with_image = function (self, offer, bundle_background_widget, texture_data)
+	self:_adjust_background_image_size(bundle_background_widget, texture_data)
 
 	local item_type_lookup = offer.description.type
 	local item_type_display_name_localized = Items.type_display_name({
 		item_type = item_type_lookup,
 	})
-	local item_size = {
-		700,
-		60,
-	}
 	local ui_renderer = self._ui_forward_renderer
-	local scenegraph_id = "item_name_pivot"
-	local widget_type = "item_name"
-	local template = self._content_blueprints[widget_type]
 	local title_item = {
 		display_name = offer.sku.name or "",
 		item_type = item_type_display_name_localized,
 	}
-	local config = {
-		horizontal_alignment = "right",
-		ignore_localization = true,
-		use_store_appearance = true,
-		vertical_alignment = "bottom",
-		size = item_size,
-		item = title_item,
-	}
-	local size = template.size_function and template.size_function(self, config, ui_renderer) or template.size
-	local pass_template = template.pass_template_function and template.pass_template_function(self, config, ui_renderer) or template.pass_template
-	local optional_style = template.style_function and template.style_function(self, config, size) or template.style
-	local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size, optional_style)
 
-	if widget_definition then
-		local name = "item_name"
-		local widget = self:_create_widget(name, widget_definition)
-
-		widget.type = widget_type
-
-		local init = template.init
-
-		if init then
-			init(self, widget, config, nil, nil, ui_renderer)
-		end
-
-		self._item_name_widget = widget
-	end
+	self:_create_item_name_widget(title_item, "item_name_pivot", ui_renderer)
 
 	local breed_name = self._presentation_profile and self._presentation_profile.archetype.breed or "human"
 	local default_camera_settings = self._breeds_default_camera_settings[breed_name]
@@ -1155,6 +1151,10 @@ StoreItemDetailView._present_item = function (self, item, visual_item)
 
 	bundle_background_widget.style.bundle.material_values.texture_map = nil
 
+	if self._present_bundle_promise then
+		self._present_bundle_promise:cancel()
+	end
+
 	local slot_name = item.slots[1]
 
 	self._selected_slot = ItemSlotSettings[slot_name]
@@ -1165,6 +1165,10 @@ StoreItemDetailView._present_item = function (self, item, visual_item)
 
 	if not preview_on_player or not valid_on_profile then
 		self:_destroy_profile()
+	end
+
+	if preview_on_player then
+		self:_destroy_weapon()
 	end
 
 	local set_initial_viewport = false
@@ -1216,26 +1220,36 @@ StoreItemDetailView._present_item = function (self, item, visual_item)
 		self:_trigger_zoom_logic(self._spawn_player)
 	end
 
-	local item_size = {
-		700,
-		60,
-	}
 	local ui_renderer = self._ui_forward_renderer
-	local scenegraph_id = "item_name_pivot"
-	local widget_type = "item_name"
-	local template = self._content_blueprints[widget_type]
 	local title = item.display_name and Localize(item.display_name) or ""
 	local sub_type = Items.type_display_name(item)
 	local title_item = {
 		display_name = title,
 		item_type = sub_type,
 	}
+
+	self:_create_item_name_widget(title_item, "item_name_pivot", ui_renderer)
+end
+
+local _item_name_item_size = {
+	700,
+	60,
+}
+
+StoreItemDetailView._create_item_name_widget = function (self, title_item, scenegraph_id, ui_renderer)
+	local widget = self._item_name_widget
+
+	if widget then
+		return
+	end
+
+	local template = self._content_blueprints.item_name
 	local config = {
 		horizontal_alignment = "right",
 		ignore_localization = true,
 		use_store_appearance = true,
 		vertical_alignment = "bottom",
-		size = item_size,
+		size = _item_name_item_size,
 		item = title_item,
 	}
 	local size = template.size_function and template.size_function(self, config, ui_renderer) or template.size
@@ -1243,20 +1257,22 @@ StoreItemDetailView._present_item = function (self, item, visual_item)
 	local optional_style = template.style_function and template.style_function(self, config, size) or template.style
 	local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size, optional_style)
 
-	if widget_definition then
-		local name = "item_name"
-		local widget = self:_create_widget(name, widget_definition)
-
-		widget.type = widget_type
-
-		local init = template.init
-
-		if init then
-			init(self, widget, config, nil, nil, ui_renderer)
-		end
-
-		self._item_name_widget = widget
+	if not widget_definition then
+		return
 	end
+
+	local name = "item_name"
+
+	widget = self:_create_widget(name, widget_definition)
+	widget.type = "item_name"
+
+	local init = template.init
+
+	if init then
+		init(self, widget, config, nil, nil, ui_renderer)
+	end
+
+	self._item_name_widget = widget
 end
 
 StoreItemDetailView._destroy_side_panel = function (self)
@@ -1391,7 +1407,6 @@ StoreItemDetailView._should_show_inspect = function (self, element)
 end
 
 StoreItemDetailView._present_current_element = function (self)
-	self:_destroy_weapon()
 	self:_stop_previewing()
 
 	local element = self._selected_element
@@ -1421,8 +1436,6 @@ StoreItemDetailView.cb_on_weapon_skin_preview_pressed = function (self)
 		item = self._selected_element.visual_item
 	end
 
-	self:_destroy_weapon_preview()
-	self:_setup_weapon_preview()
 	self:_present_weapon(item)
 end
 
@@ -1648,7 +1661,7 @@ StoreItemDetailView._setup_background_world = function (self)
 		if is_player then
 			local default_camera_event_id = "event_register_cosmetics_preview_default_camera_" .. breed_name
 
-			self[default_camera_event_id] = function (self, camera_unit)
+			self[default_camera_event_id] = function (instance, camera_unit)
 				local camera_position = Unit.world_position(camera_unit, 1)
 				local camera_rotation = Unit.world_rotation(camera_unit, 1)
 
@@ -1658,7 +1671,7 @@ StoreItemDetailView._setup_background_world = function (self)
 					original_rotation_boxed = QuaternionBox(camera_rotation),
 				}
 
-				self:_unregister_event(default_camera_event_id)
+				instance:_unregister_event(default_camera_event_id)
 
 				if not starting_camera_unit then
 					starting_camera_unit = camera_unit
@@ -1673,14 +1686,14 @@ StoreItemDetailView._setup_background_world = function (self)
 				if is_gear then
 					local item_camera_event_id = "event_register_cosmetics_preview_item_camera_" .. breed_name .. "_" .. slot_name
 
-					self[item_camera_event_id] = function (self, camera_unit)
+					self[item_camera_event_id] = function (instance, camera_unit)
 						if not breeds_item_camera_by_slot_id[breed_name] then
 							breeds_item_camera_by_slot_id[breed_name] = {}
 						end
 
 						breeds_item_camera_by_slot_id[breed_name][slot_name] = camera_unit
 
-						self:_unregister_event(item_camera_event_id)
+						instance:_unregister_event(item_camera_event_id)
 					end
 
 					self:_register_event(item_camera_event_id)
@@ -2625,6 +2638,12 @@ StoreItemDetailView._setup_weapon_preview = function (self)
 		ignore_blur = true,
 	})
 
+	self._weapon_preview:center_align(0, {
+		-0.5,
+		-2,
+		-0.2,
+	})
+	self._weapon_preview:set_force_allow_rotation(true)
 	self:_update_weapon_preview_viewport()
 end
 
@@ -2679,12 +2698,6 @@ StoreItemDetailView._present_weapon = function (self, item)
 	local weapon_preview = self._weapon_preview
 
 	weapon_preview:present_item(item, disable_auto_spin)
-	weapon_preview:center_align(0, {
-		-0.5,
-		-2,
-		-0.2,
-	})
-	weapon_preview:set_force_allow_rotation(true)
 end
 
 StoreItemDetailView._destroy_weapon = function (self)
@@ -3289,12 +3302,12 @@ StoreItemDetailView.cb_on_purchase_pressed = function (self)
 				hotkey = "back",
 				template_type = "terminal_button_small",
 				text = "loc_popup_button_cancel",
-				callback = callback(function ()
+				callback = function ()
 					purchase_button_widget.content.hotspot.disabled = false
 					self._popup_id = nil
 
 					self:_update_purchase_buttons()
-				end),
+				end,
 			},
 		},
 	}
@@ -3329,6 +3342,7 @@ StoreItemDetailView.cb_on_inspect_pressed = function (self)
 		context = {
 			use_store_appearance = true,
 			bundle = {
+				image_promise = self._bundle_image_promise,
 				image = self._bundle_image,
 				title = offer.sku.name,
 				description = offer.sku.description,
@@ -3400,11 +3414,7 @@ StoreItemDetailView._unload_url_textures = function (self)
 
 	self._bundle_image = nil
 
-	for url, state in pairs(url_textures) do
-		if state.promise then
-			state.promise:cancel()
-		end
-
+	for url, _ in pairs(url_textures) do
 		Managers.url_loader:unload_texture(url)
 	end
 

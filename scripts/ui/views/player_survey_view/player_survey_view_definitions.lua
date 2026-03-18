@@ -256,7 +256,7 @@ local legend_inputs = {
 }
 local animations = {}
 
-function _progress_widget_definition_factory(widget_size)
+local function _progress_widget_definition_factory(widget_size)
 	return UIWidget.create_definition({
 		{
 			pass_type = "rect",

@@ -244,7 +244,7 @@ ConnectionClient.next_event = function (self)
 	end
 end
 
-ConnectionClient.rpc_player_connected = function (self, channel_id, peer_id, local_player_id_array, is_human_controlled_array, account_id_array, player_session_id_array, slot_array)
+ConnectionClient.rpc_player_connected = function (self, channel_id, peer_id, local_player_id_array, is_human_controlled_array, account_id_array, player_session_id_array, slot_array, player_instance_id_array)
 	local observers = self._observers
 	local profile_chunks_array = self._profile_synchronizer_client:peer_profile_chunks_array(peer_id, local_player_id_array)
 
@@ -264,6 +264,7 @@ ConnectionClient.rpc_player_connected = function (self, channel_id, peer_id, loc
 					profile_chunks_array = profile_chunks_array,
 					player_session_id_array = player_session_id_array,
 					slot_array = slot_array,
+					player_instance_id_array = player_instance_id_array,
 				},
 			},
 		}
@@ -291,13 +292,13 @@ ConnectionClient.rpc_player_disconnected = function (self, channel_id, peer_id)
 	end
 end
 
-ConnectionClient.rpc_sync_host_local_players = function (self, channel_id, local_player_id_array, is_human_controlled_array, account_id_array, player_session_id_array, slot_array)
+ConnectionClient.rpc_sync_host_local_players = function (self, channel_id, local_player_id_array, is_human_controlled_array, account_id_array, player_session_id_array, slot_array, player_instance_id_array)
 	local peer_id = Network.peer_id(channel_id)
 	local is_server = false
 	local RemotePlayer = require("scripts/managers/player/remote_player")
 	local profile_chunks_array = self._profile_synchronizer_client:peer_profile_chunks_array(peer_id, local_player_id_array)
 
-	Managers.player:create_players_from_sync_data(RemotePlayer, channel_id, peer_id, is_server, local_player_id_array, is_human_controlled_array, account_id_array, profile_chunks_array, player_session_id_array, slot_array)
+	Managers.player:create_players_from_sync_data(RemotePlayer, channel_id, peer_id, is_server, local_player_id_array, is_human_controlled_array, account_id_array, profile_chunks_array, player_session_id_array, slot_array, player_instance_id_array)
 
 	local package_synchronizer_client = Managers.package_synchronization:synchronizer_client()
 

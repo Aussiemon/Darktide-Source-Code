@@ -125,8 +125,8 @@ end
 
 CinematicSceneSystem._mission_settings = function (self, mission, circumstance_name)
 	local original_settings = mission.cinematics or {}
-	local circumstance_template = CircumstanceTemplates[circumstance_name]
-	local mission_overrides = circumstance_template.mission_overrides
+	local circumstance_template = circumstance_name and CircumstanceTemplates[circumstance_name]
+	local mission_overrides = circumstance_template and circumstance_template.mission_overrides
 	local circumstance_settings = mission_overrides and mission_overrides.cinematics or nil
 
 	return circumstance_settings or original_settings

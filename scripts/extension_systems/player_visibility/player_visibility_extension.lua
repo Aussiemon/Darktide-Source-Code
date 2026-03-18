@@ -22,10 +22,16 @@ end
 
 local function _set_player_companion_visibility(player_unit, visibility)
 	local companion_spawner_extension = ScriptUnit.has_extension(player_unit, "companion_spawner_system")
-	local companion_unit = companion_spawner_extension and companion_spawner_extension:companion_unit()
+	local companion_units = companion_spawner_extension and companion_spawner_extension:companion_units()
 
-	if companion_unit and ALIVE[companion_unit] then
-		Unit.set_unit_visibility(companion_unit, visibility, true)
+	if companion_units then
+		for i = 1, #companion_units do
+			local companion_unit = companion_units[i]
+
+			if companion_unit and ALIVE[companion_unit] then
+				Unit.set_unit_visibility(companion_unit, visibility, true)
+			end
+		end
 	end
 end
 

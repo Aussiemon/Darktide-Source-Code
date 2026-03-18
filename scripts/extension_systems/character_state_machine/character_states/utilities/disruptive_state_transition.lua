@@ -65,6 +65,10 @@ DisruptiveStateTransition.poll = function (unit, unit_data_extension, next_state
 			return "warp_grabbed"
 		end
 
+		if disabling_type == "vortex_grabbed" then
+			return "vortex_grabbed"
+		end
+
 		if disabling_type == "mutant_charged" then
 			return "mutant_charged"
 		end

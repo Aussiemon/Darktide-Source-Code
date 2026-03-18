@@ -37,7 +37,7 @@ local talent_settings = {
 			warp_generation = 0.8,
 		},
 		psyker_cooldown = {
-			cooldown = 0.6,
+			cooldown = 0.5,
 			duration = 5,
 		},
 		coherency_aura_size_increase = {
@@ -254,8 +254,9 @@ local talent_settings = {
 	},
 	psyker_3 = {
 		combat_ability = {
-			cooldown = 45,
-			cooldown_reduced = 35,
+			cooldown = 40,
+			cooldown_reduced = 40,
+			cooldown_sphere = 60,
 			damage_cooldown = 0.33,
 			damage_per_hit = 1,
 			duration = 17.5,

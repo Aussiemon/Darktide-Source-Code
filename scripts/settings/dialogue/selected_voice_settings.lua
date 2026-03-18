@@ -46,6 +46,9 @@ local selected_voice_settings = {
 	ogryn_c = {
 		preview_sound_event = "wwise/events/vo/play_preview_mask_ogryn_c",
 	},
+	ogryn_d = {
+		preview_sound_event = "wwise/events/vo/play_preview_mask_ogryn_d",
+	},
 	psyker_female_a = {
 		preview_sound_event = "wwise/events/vo/play_preview_mask_psyker_female_a",
 	},

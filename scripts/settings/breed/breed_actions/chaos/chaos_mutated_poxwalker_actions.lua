@@ -987,6 +987,21 @@ local action_data = {
 			spawn_jump_up_03 = 4,
 		},
 	},
+	vortex_grabbed = {
+		ignore_rotate_towards_target = false,
+		anim_events = {
+			loop = {
+				"vortex_loop",
+			},
+			landing = {
+				"vortex_landing",
+			},
+		},
+		anim_durations = {
+			vortex_landing = 5.666666666666667,
+			vortex_loop = 0.3333333333333333,
+		},
+	},
 }
 
 return action_data

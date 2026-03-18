@@ -4,6 +4,7 @@ local Component = require("scripts/utilities/component")
 local FlashlightTemplates = require("scripts/settings/equipment/flashlight_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionPerception = require("scripts/utilities/minion_perception")
+local MutatorSettings = require("scripts/settings/mutator/mutator_settings")
 local PerlinNoise = require("scripts/utilities/perlin_noise")
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local Flashlight = class("Flashlight")
@@ -284,10 +285,7 @@ function _falloff_position_rotation(template_1p, flashlights_1p)
 	end
 end
 
-local FLASHLIGHT_AGGRO_MUTATORS = {
-	"mutator_darkness_los",
-	"mutator_ventilation_purge_los",
-}
+local FLASHLIGHT_AGGRO_MUTATORS = MutatorSettings.dark_mutators
 
 function _trigger_aggro(template_1p, flashlights_1p, physics_world, owner_unit)
 	local mutator_manager = Managers.state.mutator

@@ -6,7 +6,7 @@ local RoamerSlotPlacementFunctions = require("scripts/settings/roamer/roamer_slo
 local mutator_monster_spawner_injection_templates = {}
 
 mutator_monster_spawner_injection_templates.havoc_twins = {
-	spawn = function (template, monster, ahead_target_unit, side_id)
+	spawn = function (template, spawn_position, ahead_target_unit, side_id)
 		local threshold_value = 0.2
 
 		if threshold_value < math.random() then
@@ -14,7 +14,6 @@ mutator_monster_spawner_injection_templates.havoc_twins = {
 				"renegade_twin_captain",
 				"renegade_twin_captain_two",
 			}
-			local spawn_position = monster.position:unbox()
 			local spawned_unit
 			local minion_spawn_manager = Managers.state.minion_spawn
 			local param_table = minion_spawn_manager:request_param_table()
@@ -43,8 +42,7 @@ mutator_monster_spawner_injection_templates.havoc_twins = {
 	end,
 }
 mutator_monster_spawner_injection_templates.nurgle_totems = {
-	spawn = function (template, monster, ahead_target_unit, side_id)
-		local spawn_position = monster.position:unbox()
+	spawn = function (template, spawn_position, ahead_target_unit, side_id)
 		local prop_settings = LevelProps.nurgle_totem
 
 		Managers.state.unit_spawner:spawn_network_unit(prop_settings.unit_name, "level_prop", spawn_position, Quaternion.identity(), nil, prop_settings)
@@ -70,7 +68,7 @@ mutator_monster_spawner_injection_templates.nurgle_totems = {
 			position_offset = 4,
 			num_slots = #breed_data,
 		}
-		local spawn_locations = RoamerSlotPlacementFunctions.circle_placement(nav_world, monster.position, placement_settings, nil)
+		local spawn_locations = RoamerSlotPlacementFunctions.circle_placement(nav_world, spawn_position:unbox(), placement_settings, nil)
 
 		table.shuffle(breed_data)
 
@@ -84,7 +82,7 @@ mutator_monster_spawner_injection_templates.nurgle_totems = {
 	end,
 }
 mutator_monster_spawner_injection_templates.plasma_smugglers = {
-	spawn = function (template, monster, ahead_target_unit, side_id)
+	spawn = function (template, spawn_position, ahead_target_unit, side_id)
 		local nav_mesh_manager = Managers.state.nav_mesh
 		local nav_world = nav_mesh_manager:nav_world()
 		local breed_data = {}
@@ -106,7 +104,7 @@ mutator_monster_spawner_injection_templates.plasma_smugglers = {
 			position_offset = 4,
 			num_slots = #breed_data,
 		}
-		local spawn_locations = RoamerSlotPlacementFunctions.circle_placement_guaranteed(nav_world, monster.position, placement_settings, nil)
+		local spawn_locations = RoamerSlotPlacementFunctions.circle_placement_guaranteed(nav_world, spawn_position, placement_settings, nil)
 		local want_to_spawn = #breed_data
 
 		if want_to_spawn <= #spawn_locations then

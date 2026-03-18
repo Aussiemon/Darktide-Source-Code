@@ -1,8 +1,8 @@
 ﻿-- chunkname: @scripts/settings/breed/breed_combat_ranges/chaos/chaos_hound_combat_ranges.lua
 
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local combat_ranges = {
 	name = "chaos_hound",
+	start_effect_template_name = "chaos_hound_approach",
 	starting_combat_range = "far",
 	config = {
 		far = {
@@ -22,7 +22,6 @@ local combat_ranges = {
 			},
 		},
 	},
-	start_effect_template = EffectTemplates.chaos_hound_approach,
 }
 
 return combat_ranges

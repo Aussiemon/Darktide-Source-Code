@@ -1,79 +1,9 @@
 ﻿-- chunkname: @scripts/managers/pacing/horde_pacing/compositions/mutator_horde_compositions.lua
 
-local max_resistance = 6
-
-local function _empty()
-	local t = {}
-
-	for i = 1, max_resistance do
-		t[i] = {
-			0,
-			0,
-		}
-	end
-
-	return t
-end
-
-local function _constant(lo, hi, from_resistance)
-	local t = _empty()
-
-	from_resistance = from_resistance or 1
-
-	for i = from_resistance, max_resistance do
-		t[i] = {
-			lo,
-			hi,
-		}
-	end
-
-	return t
-end
-
-local function _interpolate(from, target, from_resistance, interpolate_function)
-	local t = _empty()
-
-	from_resistance = from_resistance or 1
-
-	for i = from_resistance, max_resistance do
-		local percent_to_max = interpolate_function((i - from_resistance) / (max_resistance - from_resistance))
-		local lo = math.round(from[1] + percent_to_max * (target[1] - from[1]))
-		local hi = math.round(from[2] + percent_to_max * (target[2] - from[2]))
-
-		t[i] = {
-			lo,
-			hi,
-		}
-	end
-
-	return t
-end
-
-local function _linear(from, target, from_resistance)
-	return _interpolate(from, target, from_resistance, function (x)
-		return x
-	end)
-end
-
-local function _add(a, b)
-	local t = _empty()
-
-	for i = 1, max_resistance do
-		local _a = a[i] or a[#a]
-		local _b = b[i] or b[#b]
-
-		t[i] = {
-			_a[1] + _b[1],
-			_a[2] + _b[2],
-		}
-	end
-
-	return t
-end
-
+local ResistanceUtils = require("scripts/managers/pacing/utilities/resistance_utils")
 local horde_compositions = {
 	mutator_chaos_hounds = {
-		chaos_hound = _constant(1, 1, 4),
+		chaos_hound = ResistanceUtils.constant(1, 1, 4),
 		chaos_hound_mutator = {
 			{
 				2,
@@ -102,22 +32,22 @@ local horde_compositions = {
 		},
 	},
 	mutator_snipers = {
-		renegade_sniper = _constant(1, 1),
+		renegade_sniper = ResistanceUtils.constant(1, 1),
 	},
 	mutator_poxwalker_bombers = {
-		chaos_poxwalker_bomber = _constant(1, 1),
+		chaos_poxwalker_bomber = ResistanceUtils.constant(1, 1),
 	},
 	mutator_armored_bombers = {
-		chaos_armored_bomber = _constant(1, 1),
+		chaos_armored_bomber = ResistanceUtils.constant(1, 1),
 	},
 	mutator_mutants = {
-		cultist_mutant_mutator = _constant(1, 1),
+		cultist_mutant_mutator = ResistanceUtils.constant(1, 1),
 	},
 	mutator_cultist_grenadier = {
-		cultist_grenadier = _constant(1, 1),
+		cultist_grenadier = ResistanceUtils.constant(1, 1),
 	},
 	mutator_renegade_grenadier = {
-		renegade_grenadier = _constant(1, 1),
+		renegade_grenadier = ResistanceUtils.constant(1, 1),
 	},
 	mutator_riflemen = {
 		renegade_rifleman = {
@@ -148,14 +78,14 @@ local horde_compositions = {
 		},
 	},
 	mutator_renegade_shocktrooper = {
-		renegade_shocktrooper = _add(_constant(1, 1), _linear({
+		renegade_shocktrooper = ResistanceUtils.add(ResistanceUtils.constant(1, 1), ResistanceUtils.linear({
 			0,
 			0,
 		}, {
 			0,
 			3,
 		}, 3)),
-		renegade_assault = _linear({
+		renegade_assault = ResistanceUtils.linear({
 			1,
 			2,
 		}, {
@@ -164,14 +94,14 @@ local horde_compositions = {
 		}, 4),
 	},
 	mutator_cultist_shocktrooper = {
-		cultist_shocktrooper = _add(_constant(1, 1), _linear({
+		cultist_shocktrooper = ResistanceUtils.add(ResistanceUtils.constant(1, 1), ResistanceUtils.linear({
 			0,
 			0,
 		}, {
 			0,
 			3,
 		}, 3)),
-		cultist_assault = _linear({
+		cultist_assault = ResistanceUtils.linear({
 			1,
 			2,
 		}, {
@@ -180,21 +110,21 @@ local horde_compositions = {
 		}, 4),
 	},
 	mutator_live_abhuman = {
-		chaos_ogryn_executor = _linear({
+		chaos_ogryn_executor = ResistanceUtils.linear({
 			1,
 			1,
 		}, {
 			1,
 			4,
 		}, 1),
-		chaos_ogryn_gunner = _linear({
+		chaos_ogryn_gunner = ResistanceUtils.linear({
 			1,
 			1,
 		}, {
 			1,
 			4,
 		}, 1),
-		chaos_ogryn_bulwark = _linear({
+		chaos_ogryn_bulwark = ResistanceUtils.linear({
 			1,
 			1,
 		}, {
@@ -203,21 +133,21 @@ local horde_compositions = {
 		}, 1),
 	},
 	mutator_live_rotten_armor = {
-		chaos_ogryn_executor = _linear({
+		chaos_ogryn_executor = ResistanceUtils.linear({
 			1,
 			1,
 		}, {
 			1,
 			4,
 		}, 1),
-		renegade_executor = _linear({
+		renegade_executor = ResistanceUtils.linear({
 			1,
 			1,
 		}, {
 			1,
 			4,
 		}, 1),
-		renegade_berzerker = _linear({
+		renegade_berzerker = ResistanceUtils.linear({
 			1,
 			1,
 		}, {
@@ -230,7 +160,7 @@ local horde_compositions = {
 for name, comp in pairs(horde_compositions) do
 	local expanded = {}
 
-	for i = 1, max_resistance do
+	for i = 1, ResistanceUtils.MAX_RESISTANCE do
 		expanded[i] = {
 			breeds = {},
 		}

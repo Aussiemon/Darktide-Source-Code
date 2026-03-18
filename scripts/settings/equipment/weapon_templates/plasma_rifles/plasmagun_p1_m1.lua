@@ -274,6 +274,7 @@ weapon_template.actions = {
 		kind = "wield",
 		total_time = 0.5,
 		uninterruptible = true,
+		weapon_handling_template = "time_scale_0_85",
 		conditional_state_to_action_input = {
 			started_reload = {
 				input_name = "reload",
@@ -414,7 +415,7 @@ weapon_template.actions = {
 		fire_configuration = {
 			anim_event = "attack_charge_shoot",
 			use_charge = true,
-			hit_scan_template = HitScanTemplates.default_plasma_rifle_bfg,
+			hit_scan_template = HitScanTemplates.default_plasma_rifle_bfg_light,
 			damage_type = damage_types.plasma,
 		},
 		allowed_chain_actions = {
@@ -449,8 +450,8 @@ weapon_template.actions = {
 	},
 	action_shoot_charged = {
 		allowed_during_sprint = true,
-		ammunition_usage_max = 9,
-		ammunition_usage_min = 5,
+		ammunition_usage_max = 8,
+		ammunition_usage_min = 1,
 		charge_template = "plasmagun_p1_m1_shoot_charged",
 		kind = "shoot_hit_scan",
 		recoil_template = "default_plasma_rifle_demolitions",

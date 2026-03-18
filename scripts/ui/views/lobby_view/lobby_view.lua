@@ -235,6 +235,10 @@ LobbyView.select_target_level = function (self)
 		level_name = "horde"
 	end
 
+	if self._mission_data and string.find(self._mission_data.mission_name, "exp_") then
+		level_name = "expeditions"
+	end
+
 	local level = LobbyViewSettings.levels_by_id[level_name] or LobbyViewSettings.levels_by_id.default
 	local level_packages = {
 		is_level_package = true,
@@ -757,6 +761,10 @@ LobbyView.can_exit = function (self)
 end
 
 LobbyView.on_exit = function (self)
+	if GameParameters.testify then
+		Managers.event:unregister(self, "event_lobby_vote_started")
+	end
+
 	self:_destroy_spawn_slots()
 
 	if self._world_spawner then

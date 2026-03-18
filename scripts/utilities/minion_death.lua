@@ -128,9 +128,9 @@ function _gib(ragdoll_unit, hit_zone_name_or_nil, attack_direction, damage_profi
 			hit_zone_name_or_nil = _find_random_hitzone(ragdoll_unit, is_critical_strike_or_nil)
 		end
 
-		local visual_loadout_extension = ScriptUnit.extension(ragdoll_unit, "visual_loadout_system")
+		local visual_loadout_extension = ScriptUnit.has_extension(ragdoll_unit, "visual_loadout_system")
 
-		if visual_loadout_extension:can_gib(hit_zone_name_or_nil) then
+		if visual_loadout_extension and visual_loadout_extension:can_gib(hit_zone_name_or_nil) then
 			visual_loadout_extension:gib(hit_zone_name_or_nil, attack_direction, damage_profile, is_critical_strike_or_nil)
 		end
 	end

@@ -49,6 +49,7 @@ RoomsAndPortalsManager.update = function (self, dt, t)
 		for portal, id in pairs(self._portals) do
 			if id == -1 then
 				local portal_unit = portal:get_unit()
+				local portal_volume = portal:get_data(portal_unit, "volume_name")
 				local portal_id = WwiseWorld.add_portal_unit(self._wwise_world, portal_unit)
 
 				if self:_check_portal_id(portal_id) then

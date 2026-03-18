@@ -76,6 +76,20 @@ else
 	end
 end
 
+local function _source_location(depth)
+	local info = getinfo(1 + depth, "Sl")
+
+	if not info then
+		return "[unknown]"
+	end
+
+	if info.source == "=[C]" then
+		return "=[C]"
+	end
+
+	return string.format("%s:%d", info.source or "[unknown]", info.currentline or -1)
+end
+
 Promise.next = function (self, on_fulfilled, on_rejected)
 	local promise = Promise.new()
 
@@ -83,8 +97,8 @@ Promise.next = function (self, on_fulfilled, on_rejected)
 		fulfill = is_callable(on_fulfilled) and on_fulfilled or nil,
 		reject = is_callable(on_rejected) and on_rejected or nil,
 		promise = promise,
-		debug_traceback_info_1 = getinfo(2, "Sl"),
-		debug_traceback_info_2 = getinfo(3, "Sl"),
+		debug_traceback_info_1 = _source_location(2),
+		debug_traceback_info_2 = _source_location(3),
 	})
 	run(self)
 
@@ -120,7 +134,7 @@ local function extract_locals(level_base)
 end
 
 local function extract_stored_traceback(obj)
-	local short_traceback = string.format("%s:%d\n%s:%d", obj.debug_traceback_info_1 and obj.debug_traceback_info_1.source or "", obj.debug_traceback_info_1 and obj.debug_traceback_info_1.currentline or -1, obj.debug_traceback_info_2 and obj.debug_traceback_info_2.source or "", obj.debug_traceback_info_2 and obj.debug_traceback_info_2.currentline or -1)
+	local short_traceback = string.format("%s\n%s", obj.debug_traceback_info_1, obj.debug_traceback_info_2)
 
 	return short_traceback
 end
@@ -185,8 +199,8 @@ function resolve(promise, x)
 			}
 		end
 
-		err.__traceback = "<<Promise Stack>>" .. debug.traceback("Error in promise resolve", 2) .. "<</Promise Stack>><<Promise Context>>" .. extract_stored_traceback(promise) .. "<</Promise Context>>"
-		err.__locals = extract_locals(4)
+		err.__traceback = "<<Promise Stack>> " .. debug.traceback("Error in promise resolve", 2) .. "\n<</Promise Stack>>\n<<Promise Context>>\n" .. extract_stored_traceback(promise) .. "\n<</Promise Context>>\n"
+		err.__locals = "<<Promise Locals>>" .. extract_locals(4) .. "\n<</Promise Locals>>\n"
 
 		return err
 	end)
@@ -235,11 +249,11 @@ function run(promise)
 					}
 				end
 
-				err.__traceback = "<<Promise Stack>>" .. debug.traceback("Error in promise resolve", 2) .. "<</Promise Stack>><<Promise Context>>" .. extract_stored_traceback(obj) .. "<</Promise Context>>"
-				err.__locals = extract_locals(4)
+				err.__traceback = "<<Promise Stack>> " .. debug.traceback("Error in promise resolve", 2) .. "\n<</Promise Stack>>\n<<Promise Context>>\n" .. extract_stored_traceback(obj) .. "\n<</Promise Context>>\n"
+				err.__locals = "<<Promise Locals>>" .. extract_locals(4) .. "\n<</Promise Locals>>\n"
 
 				if err.fatal then
-					err.__fatal_message = "<<Promise Error>>" .. tostring(err.message) .. "<</Promise Error>>\n" .. err.__traceback .. "<<Promise Locals>>" .. err.__locals .. "<</Promise Locals>>" .. "[Log end]"
+					err.__fatal_message = "\n<<Promise Error>> " .. tostring(err.message) .. " <</Promise Error>>\n" .. err.__traceback .. err.__locals .. "[Log end]\n"
 
 					if BUILD ~= "release" then
 						Log.error("Promise", "%s", err.__fatal_message)

@@ -11,11 +11,6 @@ DialogueContextExtension.init = function (self, system, unit, extension_init_dat
 	self._target_context = target_context
 	self._health_extension = nil
 	self._legacy_v2_proximity_extension = nil
-
-	if self._dialogue_context_system:get_start_dialogue_modifier() then
-		self._target_context.dialogue_modifier = self._dialogue_context_system:get_start_dialogue_modifier()
-	end
-
 	self._timed_counters = {}
 end
 

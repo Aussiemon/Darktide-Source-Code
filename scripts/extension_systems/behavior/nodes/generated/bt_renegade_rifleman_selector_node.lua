@@ -47,14 +47,13 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_disable = children[2]
-		local disable_component = blackboard.disable
-		local condition_result = disable_component.is_disabled
+		local node_disable_actions = children[2]
+		local leaf_node = node_disable_actions:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
 
-		if condition_result then
-			new_running_child_nodes[node_identifier] = node_disable
+		if leaf_node then
+			new_running_child_nodes[node_identifier] = node_disable_actions
 
-			return node_disable
+			return leaf_node
 		end
 	end
 
@@ -191,7 +190,23 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_switch_weapon = children[8]
+		local node_weapon_malfunction = children[8]
+		local buff_extension = ScriptUnit.extension(unit, "buff_system")
+		local condition_result = buff_extension and buff_extension:has_keyword("weapon_malfunction")
+
+		if condition_result then
+			local leaf_node = node_weapon_malfunction:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+
+			if leaf_node then
+				new_running_child_nodes[node_identifier] = node_weapon_malfunction
+
+				return leaf_node
+			end
+		end
+	end
+
+	do
+		local node_switch_weapon = children[9]
 		local condition_result
 
 		repeat
@@ -222,7 +237,7 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_cover_combat = children[9]
+		local node_cover_combat = children[10]
 		local tree_node = node_cover_combat.tree_node
 		local condition_args = tree_node.condition_args
 		local is_running = last_leaf_node_running and last_running_node == node_cover_combat
@@ -310,7 +325,7 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_suppressed = children[10]
+		local node_suppressed = children[11]
 		local suppression_component = blackboard.suppression
 		local is_suppressed = suppression_component.is_suppressed
 		local condition_result = is_suppressed
@@ -323,7 +338,7 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_melee_combat = children[11]
+		local node_melee_combat = children[12]
 		local tree_node = node_melee_combat.tree_node
 		local condition_args = tree_node.condition_args
 		local is_running = last_leaf_node_running and last_running_node == node_melee_combat
@@ -402,7 +417,7 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_far_combat = children[12]
+		local node_far_combat = children[13]
 		local tree_node = node_far_combat.tree_node
 		local condition_args = tree_node.condition_args
 		local is_running = last_leaf_node_running and last_running_node == node_far_combat
@@ -481,7 +496,7 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_close_combat = children[13]
+		local node_close_combat = children[14]
 		local tree_node = node_close_combat.tree_node
 		local condition_args = tree_node.condition_args
 		local is_running = last_leaf_node_running and last_running_node == node_close_combat
@@ -560,7 +575,7 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_alerted = children[14]
+		local node_alerted = children[15]
 		local is_running = last_leaf_node_running and last_running_node == node_alerted
 		local condition_result
 
@@ -609,7 +624,7 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_patrol = children[15]
+		local node_patrol = children[16]
 		local is_running = last_leaf_node_running and last_running_node == node_patrol
 		local condition_result
 
@@ -660,7 +675,7 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 		end
 	end
 
-	local node_idle = children[16]
+	local node_idle = children[17]
 
 	new_running_child_nodes[node_identifier] = node_idle
 

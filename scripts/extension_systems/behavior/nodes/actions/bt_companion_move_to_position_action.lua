@@ -5,6 +5,7 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local CompanionDogLocomotionSettings = require("scripts/settings/companion/companion_dog_locomotion_settings")
 local CompanionFollow = require("scripts/utilities/companion_follow")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local MinionAttack = require("scripts/utilities/minion_attack")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local BtCompanionMoveToPositionAction = class("BtCompanionMoveToPositionAction", "BtNode")
@@ -60,9 +61,10 @@ BtCompanionMoveToPositionAction.enter = function (self, unit, breed, blackboard,
 		MinionMovement.smooth_speed_based_on_distance(unit, scratchpad, 0, action_data, breed, false, speed_threshold, false, true)
 	end
 
-	if action_data.effect_template then
+	if action_data.effect_template_name then
+		local effect_template = EffectTemplates[action_data.effect_template_name]
 		local fx_system = Managers.state.extension:system("fx_system")
-		local global_effect_id = fx_system:start_template_effect(action_data.effect_template, unit)
+		local global_effect_id = fx_system:start_template_effect(effect_template, unit)
 
 		scratchpad.global_effect_id = global_effect_id
 	end
@@ -107,7 +109,7 @@ BtCompanionMoveToPositionAction.leave = function (self, unit, breed, blackboard,
 		scratchpad.navigation_extension:set_enabled(false)
 	end
 
-	if action_data.effect_template then
+	if action_data.effect_template_name then
 		local fx_system = Managers.state.extension:system("fx_system")
 
 		fx_system:stop_template_effect(scratchpad.global_effect_id)

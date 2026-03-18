@@ -27,6 +27,18 @@ LuggableSynchronizerExtension.init = function (self, extension_init_context, uni
 	self._is_side_mission_synchronizer = false
 end
 
+LuggableSynchronizerExtension.destroy = function (self)
+	local spawner_to_luggable = self._spawner_to_luggable
+
+	for _, luggable_unit in pairs(spawner_to_luggable) do
+		if ALIVE[luggable_unit] then
+			local luggable_extension = ScriptUnit.extension(luggable_unit, "luggable_system")
+
+			luggable_extension:clear_synchronizer()
+		end
+	end
+end
+
 LuggableSynchronizerExtension.setup_from_component = function (self, objective_name, objective_stages, auto_start, shuffle_stages, use_safe_zone, manual_luggable_spawn, max_socket_target, keep_unused_sockets, luggable_should_respawn, luggable_respawn_timer, luggable_reset_timer, luggable_consume_timer, is_side_mission_synchronizer, automatic_start_on_level_spawned)
 	local unit = self._unit
 	local mission_manager = Managers.state.mission

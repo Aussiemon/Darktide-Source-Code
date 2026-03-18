@@ -503,23 +503,6 @@ local action_data = {
 			},
 		},
 		smash_sweep_start_timings = {
-			ogryn = {
-				{
-					0.7,
-					0.9666666666666667,
-					"j_leftfinger3_jnt",
-				},
-				{
-					1.7666666666666666,
-					1.9666666666666666,
-					"j_leftfinger3_jnt",
-				},
-				{
-					2.466666666666667,
-					2.9,
-					"j_leftfinger3_jnt",
-				},
-			},
 			human = {
 				{
 					0.6333333333333333,
@@ -534,6 +517,23 @@ local action_data = {
 				{
 					2.466666666666667,
 					2.533333333333333,
+					"j_leftfinger3_jnt",
+				},
+			},
+			ogryn = {
+				{
+					0.7,
+					0.9666666666666667,
+					"j_leftfinger3_jnt",
+				},
+				{
+					1.7666666666666666,
+					1.9666666666666666,
+					"j_leftfinger3_jnt",
+				},
+				{
+					2.466666666666667,
+					2.9,
 					"j_leftfinger3_jnt",
 				},
 			},

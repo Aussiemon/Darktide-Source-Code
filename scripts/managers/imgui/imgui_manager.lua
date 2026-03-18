@@ -372,7 +372,7 @@ ImguiManager._handle_input = function (self)
 	end
 end
 
-function _get_hotkey(input, hotkey_action)
+local function _get_hotkey(input, hotkey_action)
 	if not hotkey_action then
 		return ""
 	end

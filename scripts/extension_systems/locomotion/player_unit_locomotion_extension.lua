@@ -7,6 +7,7 @@ local ForceTranslation = require("scripts/extension_systems/locomotion/utilities
 local HubMovementLocomotion = require("scripts/extension_systems/locomotion/utilities/hub_movement_locomotion")
 local Ladder = require("scripts/extension_systems/character_state_machine/character_states/utilities/ladder")
 local MoverController = require("scripts/extension_systems/locomotion/utilities/mover_controller")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerDeath = require("scripts/utilities/player_death")
 local PlayerMovement = require("scripts/utilities/player_movement")
 local PlayerUnitLinker = require("scripts/extension_systems/locomotion/utilities/player_unit_linker")
@@ -23,7 +24,6 @@ local Vector3_dot = Vector3.dot
 local Quaternion_look = Quaternion.look
 local dodge_types = DodgeSettings.dodge_types
 local PLAYER_RENDER_FRAME_POSITIONS = table.enum("interpolate", "extrapolate", "raw")
-local EMPTY_TABLE = {}
 
 PlayerUnitLocomotionExtension.init = function (self, extension_init_context, unit, extension_init_component, game_object_component_or_game_session, game_object_id_or_nil)
 	self._unit = unit
@@ -32,6 +32,9 @@ PlayerUnitLocomotionExtension.init = function (self, extension_init_context, uni
 	self._is_server = extension_init_context.is_server
 
 	local data_ext = ScriptUnit.extension(unit, "unit_data_system")
+
+	self._input_extension = ScriptUnit.extension(unit, "input_system")
+
 	local loc_component = data_ext:write_component("locomotion")
 
 	self._locomotion_component = loc_component
@@ -76,6 +79,7 @@ PlayerUnitLocomotionExtension.init = function (self, extension_init_context, uni
 	local rot = Unit.local_rotation(unit, 1)
 
 	loc_component.velocity_current = Vector3.zero()
+	loc_component.velocity_current_before_z_stepup_cut = Vector3.zero()
 	loc_steering_component.disable_push_velocity = false
 	loc_steering_component.target_rotation = rot
 	loc_steering_component.target_translation = Vector3.zero()
@@ -576,6 +580,8 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 
 	self:_decay_push_velocity(on_ground, dt, final_velocity)
 
+	locomotion_component.velocity_current_before_z_stepup_cut = final_velocity
+
 	local mover_z_velocity = final_velocity.z
 	local dragged_z_velocity = dragged_velocity.z
 	local wanted_z_velocity = velocity_wanted.z
@@ -910,7 +916,7 @@ PlayerUnitLocomotionExtension.update = function (self, unit, dt, t)
 	local current_velocity = self._locomotion_steering_component.velocity_wanted
 	local target_rotation = self._locomotion_steering_component.target_rotation
 	local current_rotation = locomotion_component.rotation
-	local extrapolated_rot = self:_calculate_rotation(unit, remainder_t, t, locomotion_component, self._locomotion_steering_component, self._locomotion_force_rotation_component, look_rotation, current_velocity, locomotion_component.velocity_current, current_rotation, target_rotation)
+	local extrapolated_rot, _ = self:_calculate_rotation(unit, remainder_t, t, locomotion_component, self._locomotion_steering_component, self._locomotion_force_rotation_component, look_rotation, current_velocity, locomotion_component.velocity_current, current_rotation, target_rotation)
 
 	Unit.set_local_rotation(unit, 1, extrapolated_rot)
 
@@ -998,13 +1004,14 @@ PlayerUnitLocomotionExtension.post_update = function (self, unit, dt, t)
 	end
 end
 
+local MOVING_BACKWARDS_THRESHOLD = -0.01
 local HUB_MOVEMENT_ROTATION_EPS = 0.3
 local HUB_MOVEMENT_ROTATION_EPS_SQ = HUB_MOVEMENT_ROTATION_EPS * HUB_MOVEMENT_ROTATION_EPS
 
 PlayerUnitLocomotionExtension._calculate_rotation = function (self, unit, dt, t, data, steering_component, force_rotation_component, look_rotation, velocity_wanted, velocity_current, current_rotation, current_target_rotation)
 	local final_rotation
-	local current_unnormalized_direction_flat = Vector3_flat(Quaternion_forward(look_rotation))
-	local flat_look_rotation = Quaternion_look(current_unnormalized_direction_flat)
+	local unnormalized_flat_look_direction = Vector3_flat(Quaternion_forward(look_rotation))
+	local flat_look_rotation = Quaternion_look(unnormalized_flat_look_direction)
 	local target_rotation = steering_component.target_rotation
 
 	if force_rotation_component.use_force_rotation then
@@ -1012,56 +1019,60 @@ PlayerUnitLocomotionExtension._calculate_rotation = function (self, unit, dt, t,
 	elseif steering_component.disable_velocity_rotation then
 		final_rotation = flat_look_rotation
 		target_rotation = final_rotation
-	elseif steering_component.rotation_based_on_wanted_velocity then
-		local flat_current_velocity = Vector3_flat(velocity_wanted)
-
-		if Vector3.length_squared(flat_current_velocity) == 0 then
-			local current_flat_direction = Vector3_normalize(current_unnormalized_direction_flat)
-			local target_direction_flat = Vector3_normalize(Vector3_flat(Quaternion_forward(target_rotation)))
-			local dot = Vector3_dot(current_flat_direction, target_direction_flat)
-
-			if dot < 0 then
-				target_rotation = flat_look_rotation
-			end
-
-			final_rotation = PlayerMovement.calculate_final_unit_rotation(current_rotation, target_rotation, target_rotation, dt * 5)
-		else
-			target_rotation = flat_look_rotation
-
-			local velocity_dot = Vector3_dot(flat_current_velocity, current_unnormalized_direction_flat)
-
-			if velocity_dot < -0.01 then
-				flat_current_velocity = -flat_current_velocity
-			end
-
-			final_rotation = PlayerMovement.calculate_final_unit_rotation(current_rotation, Quaternion_look(flat_current_velocity), target_rotation, dt * 5)
-		end
 	else
-		local movement_settings = HubMovementLocomotion.fetch_movement_settings(unit, self._constants, self._hub_jog_character_state_component)
-		local movement_settings_move_state = movement_settings.current_move_state
-		local flat_current_velocity = Vector3_flat(velocity_current)
-		local speed_sq = Vector3.length_squared(flat_current_velocity)
+		local lerp_speed = PlayerCharacterConstants.rotation_lerp_speed_3p
+		local lerp_t = math.min(dt * lerp_speed, 1)
 
-		if speed_sq < HUB_MOVEMENT_ROTATION_EPS_SQ then
-			local turn_in_place_rot_speed_multiplier = movement_settings.shared.turn_in_place_rot_speed_multiplier
+		if steering_component.rotation_based_on_wanted_velocity then
+			local flat_velocity_wanted = Vector3_flat(velocity_wanted)
 
-			final_rotation = math.quat_rotate_towards(current_rotation, current_target_rotation, movement_settings_move_state.rotation_speed_rad * dt * turn_in_place_rot_speed_multiplier)
-		else
-			target_rotation = Quaternion.normalize(Quaternion_look(flat_current_velocity))
+			if Vector3.length_squared(flat_velocity_wanted) == 0 then
+				local current_flat_direction = Vector3_normalize(unnormalized_flat_look_direction)
+				local target_direction_flat = Vector3_normalize(Vector3_flat(Quaternion_forward(target_rotation)))
+				local dot = Vector3_dot(current_flat_direction, target_direction_flat)
 
-			local shared_movement_settings = movement_settings.shared
-			local animation_rotation_correction_weight = shared_movement_settings.animation_rotation_correction_weight
-			local rotation_correction = 0
-
-			if animation_rotation_correction_weight > 0 then
-				local angle_to_target = math.abs(math.quat_angle(current_target_rotation, target_rotation))
-
-				if angle_to_target < shared_movement_settings.animation_rotation_correction_threshold then
-					rotation_correction = angle_to_target * animation_rotation_correction_weight
+				if dot < 0 then
+					target_rotation = flat_look_rotation
 				end
-			end
 
-			final_rotation = math.quat_rotate_towards(current_rotation, target_rotation, movement_settings_move_state.rotation_speed_rad * dt + rotation_correction)
+				final_rotation = PlayerMovement.calculate_final_unit_rotation(unit, current_rotation, target_rotation, target_rotation, lerp_t, false)
+			else
+				local move_vector = self._input_extension:get("move")
+
+				if move_vector.y < MOVING_BACKWARDS_THRESHOLD then
+					flat_velocity_wanted = -flat_velocity_wanted
+				end
+
+				target_rotation = flat_look_rotation
+				final_rotation = PlayerMovement.calculate_final_unit_rotation(unit, current_rotation, Quaternion_look(flat_velocity_wanted), target_rotation, lerp_t, false)
+			end
+		else
+			local movement_settings = HubMovementLocomotion.fetch_movement_settings(unit, self._constants, self._hub_jog_character_state_component)
+			local movement_settings_move_state = movement_settings.current_move_state
+			local flat_velocity_wanted = Vector3_flat(velocity_current)
+			local speed_sq = Vector3.length_squared(flat_velocity_wanted)
+
+			if speed_sq < HUB_MOVEMENT_ROTATION_EPS_SQ then
+				local turn_in_place_rot_speed_multiplier = movement_settings.shared.turn_in_place_rot_speed_multiplier
+
+				final_rotation = math.quat_rotate_towards(current_rotation, current_target_rotation, movement_settings_move_state.rotation_speed_rad * dt * turn_in_place_rot_speed_multiplier)
+			else
+				target_rotation = Quaternion.normalize(Quaternion_look(flat_velocity_wanted))
+
+				local shared_movement_settings = movement_settings.shared
+				local animation_rotation_correction_weight = shared_movement_settings.animation_rotation_correction_weight
+				local rotation_correction = 0
+
+				if animation_rotation_correction_weight > 0 then
+					local angle_to_target = math.abs(math.quat_angle(current_target_rotation, target_rotation))
+
+					if angle_to_target < shared_movement_settings.animation_rotation_correction_threshold then
+						rotation_correction = angle_to_target * animation_rotation_correction_weight
+					end
+				end
+
+				final_rotation = math.quat_rotate_towards(current_rotation, target_rotation, movement_settings_move_state.rotation_speed_rad * dt + rotation_correction)
+			end
 		end
 	end
 
@@ -1178,6 +1189,13 @@ PlayerUnitLocomotionExtension.current_velocity = function (self)
 	local loc_component = data_extension:read_component("locomotion")
 
 	return loc_component.velocity_current
+end
+
+PlayerUnitLocomotionExtension.velocity_current_before_z_stepup_cut = function (self)
+	local data_extension = ScriptUnit.extension(self._unit, "unit_data_system")
+	local loc_component = data_extension:read_component("locomotion")
+
+	return loc_component.velocity_current_before_z_stepup_cut
 end
 
 PlayerUnitLocomotionExtension._on_soft_oob = function (self)

@@ -390,6 +390,8 @@ ConstantElementChat._setup_input = function (self)
 
 	scrollbar_widget.style.mouse_scroll.scenegraph_id = "chat_window"
 	scrollbar_widget.content.min_thumb_length = 0.05
+	scrollbar_widget.content.scroll_speed = 200
+	scrollbar_widget.content.enable_gamepad_scrolling = true
 	self._input_field_widget = self._widgets_by_name.input_field
 
 	self:_setup_input_labels()

@@ -138,13 +138,12 @@ ActionInputParser._format_and_initialize_action_inputs = function (self, action_
 			action_input_queue[j] = {
 				[ACTION_INPUT] = NO_ACTION_INPUT,
 				[RAW_INPUT] = NO_RAW_INPUT,
-				[HIERARCHY_POSITION] = {
-					NO_ACTION_INPUT,
-					NO_ACTION_INPUT,
-					NO_ACTION_INPUT,
-					NO_ACTION_INPUT,
-				},
+				[HIERARCHY_POSITION] = {},
 			}
+
+			for k = 1, MAX_HIERARCHY_DEPTH do
+				action_input_queue[j][HIERARCHY_POSITION][k] = NO_ACTION_INPUT
+			end
 		end
 
 		action_input_queue_ring_buffer[i] = action_input_queue

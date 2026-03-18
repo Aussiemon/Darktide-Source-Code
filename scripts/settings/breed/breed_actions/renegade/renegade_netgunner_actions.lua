@@ -1,7 +1,6 @@
 ﻿-- chunkname: @scripts/settings/breed/breed_actions/renegade/renegade_netgunner_actions.lua
 
 local BreedShootTemplates = require("scripts/settings/breed/breed_shoot_templates")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -11,6 +10,15 @@ local action_data = {
 	name = "renegade_netgunner",
 	idle = {
 		anim_events = "idle",
+	},
+	weapon_malfunction_loop = {
+		rotate_towards_target = false,
+		anim_events = {
+			"reload",
+		},
+		end_anim_events = {
+			"idle",
+		},
 	},
 	death = {
 		instant_ragdoll_chance = 0.5,
@@ -106,6 +114,22 @@ local action_data = {
 		run_speed = 5.7,
 		vo_event = "seen_netgunner_flee",
 	},
+	run_away_weapon_malfunction = {
+		is_assaulting = true,
+		leave_when_reached_destination = true,
+		move_anim_event = "assault_fwd",
+		move_type = "combat_vector",
+		run_speed = 5.7,
+		vo_event = "seen_netgunner_flee",
+	},
+	extract_with_stolen_loot = {
+		despawn_once_reached = true,
+		enable_disable_locomotion_speed = true,
+		idle_anim_events = "idle",
+		move_anim_event = "assault_fwd",
+		move_to_closest_minion_spawner = true,
+		remove_loot = true,
+	},
 	reload = {
 		rotate_towards_target = true,
 		anim_events = {
@@ -198,10 +222,10 @@ local action_data = {
 	},
 	approach_target = {
 		clear_shot_line_of_sight_id = "gun",
+		effect_template_name = "renegade_netgunner_approach",
 		leave_distance = 10,
 		speed = 5.7,
 		vo_event = "assault",
-		effect_template = EffectTemplates.renegade_netgunner_approach,
 	},
 	shoot_net = {
 		aim_anim_event = "aim_loop",
@@ -214,6 +238,7 @@ local action_data = {
 		drag_anim_event = "drag_player",
 		drag_anim_exit_delay = 3,
 		drag_wwise_event = "wwise/events/weapon/play_enemy_netgunner_net_pull",
+		effect_template_name = "renegade_netgunner_net",
 		flee_vo_event = "seen_netgunner_flee",
 		fx_source_name = "muzzle",
 		inventory_slot = "slot_netgun",
@@ -225,7 +250,6 @@ local action_data = {
 		vo_event = "throwing_net",
 		drag_anim_delay = PlayerCharacterConstants.netted_fp_anim_duration,
 		shoot_template = BreedShootTemplates.renegade_netgunner_default,
-		effect_template = EffectTemplates.renegade_netgunner_net,
 		num_shots = shooting_difficulty_settings.num_shots,
 		aoe_bot_threat_size = Vector3Box(1.5, 2, 2),
 	},
@@ -487,6 +511,21 @@ local action_data = {
 	},
 	exit_spawner = {
 		run_anim_event = "move_fwd",
+	},
+	vortex_grabbed = {
+		ignore_rotate_towards_target = false,
+		anim_events = {
+			loop = {
+				"vortex_loop",
+			},
+			landing = {
+				"vortex_landing",
+			},
+		},
+		anim_durations = {
+			vortex_landing = 5.666666666666667,
+			vortex_loop = 0.3333333333333333,
+		},
 	},
 }
 

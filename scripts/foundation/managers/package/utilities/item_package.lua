@@ -174,20 +174,10 @@ ItemPackage.compile_resource_dependencies = function (item_entry_data, resource_
 		end
 	end
 
-	local material_overrides = item_entry_data.material_overrides
+	local texture = item_entry_data.texture
 
-	if material_overrides then
-		local ItemMaterialOverrides = require("scripts/settings/equipment/item_material_overrides/item_material_overrides")
-
-		for _, material_override in pairs(material_overrides) do
-			if material_override ~= "" then
-				local material_override_data = ItemMaterialOverrides[material_override]
-
-				for resource_name, _ in pairs(material_override_data.resource_dependencies) do
-					resource_dependencies[resource_name] = true
-				end
-			end
-		end
+	if texture and texture ~= "" then
+		resource_dependencies[texture] = true
 	end
 
 	local texture_resource = item_entry_data.texture_resource
@@ -220,17 +210,19 @@ ItemPackage.compile_resource_dependencies = function (item_entry_data, resource_
 		resource_dependencies[hud_icon] = true
 	end
 
-	local resource = item_entry_data.resource or item_entry_data.base_unit
+	local base_unit = item_entry_data.resource or item_entry_data.base_unit
 
-	if resource then
-		resource_dependencies[resource] = true
+	if base_unit then
+		resource_dependencies[base_unit] = true
 	end
 
-	local resource_by_item = item_entry_data.resource_by_item
+	local breed_base_unit = item_entry_data.breed_base_unit
 
-	if resource_by_item then
-		for _, resource in pairs(resource_by_item) do
-			resource_dependencies[resource] = true
+	if breed_base_unit then
+		for breed, base_unit_by_breed in pairs(breed_base_unit) do
+			if base_unit_by_breed ~= "" then
+				resource_dependencies[base_unit_by_breed] = true
+			end
 		end
 	end
 
@@ -299,21 +291,81 @@ ItemPackage.compile_item_instance_dependencies = function (item, items_dictionar
 	if projectile_items then
 		for _, item_name in pairs(projectile_items) do
 			if item_name and item_name ~= "" then
-				local item_entry = rawget(items_dictionary, item_name)
-
-				if not item_entry then
-					Log.error("ItemPackage", "Unable to find item %s", item_name)
-
-					return
-				end
-
-				local resource_dependencies = item_entry.resource_dependencies
-
-				for resource_name, _ in pairs(resource_dependencies) do
-					result[resource_name] = true
-				end
+				ItemPackage._add_item_dependencies(item_name, items_dictionary, result)
 			end
 		end
+	end
+
+	local material_override_items = item.material_override_items
+
+	if material_override_items then
+		for _, item_name in pairs(material_override_items) do
+			if item_name and item_name ~= "" then
+				ItemPackage._add_item_dependencies(item_name, items_dictionary, result)
+			end
+		end
+	end
+
+	local deform_override_items = item.deform_override_items
+
+	if deform_override_items then
+		for _, item_name in pairs(deform_override_items) do
+			if item_name and item_name ~= "" then
+				ItemPackage._add_item_dependencies(item_name, items_dictionary, result)
+			end
+		end
+	end
+
+	local mask_hair_overrides = item.mask_hair_override
+
+	if mask_hair_overrides then
+		for _, override_name in pairs(mask_hair_overrides) do
+			if override_name.HairMaskOverrideItem and override_name.HairMaskOverrideItem ~= "" then
+				ItemPackage._add_item_dependencies(override_name.HairMaskOverrideItem, items_dictionary, result)
+			end
+		end
+	end
+
+	local mask_facial_hair_item = item.mask_facial_hair_item
+
+	if mask_facial_hair_item and mask_facial_hair_item ~= "" then
+		ItemPackage._add_item_dependencies(mask_facial_hair_item, items_dictionary, result)
+	end
+
+	local mask_hair_item = item.mask_hair_item
+
+	if mask_hair_item and mask_hair_item ~= "" then
+		ItemPackage._add_item_dependencies(mask_hair_item, items_dictionary, result)
+	end
+
+	local mask_torso_item = item.mask_torso_item
+
+	if mask_torso_item and mask_torso_item ~= "" then
+		ItemPackage._add_item_dependencies(mask_torso_item, items_dictionary, result)
+	end
+
+	local mask_arms_item = item.mask_arms_item
+
+	if mask_arms_item and mask_arms_item ~= "" then
+		ItemPackage._add_item_dependencies(mask_arms_item, items_dictionary, result)
+	end
+
+	local mask_legs_item = item.mask_legs_item
+
+	if mask_legs_item and mask_legs_item ~= "" then
+		ItemPackage._add_item_dependencies(mask_legs_item, items_dictionary, result)
+	end
+
+	local mask_face_item = item.mask_face_item
+
+	if mask_face_item and mask_face_item ~= "" then
+		ItemPackage._add_item_dependencies(mask_face_item, items_dictionary, result)
+	end
+
+	local mask_face_accessory_item = item.mask_face_accessory_item
+
+	if mask_face_accessory_item and mask_face_accessory_item ~= "" then
+		ItemPackage._add_item_dependencies(mask_face_accessory_item, items_dictionary, result)
 	end
 
 	local icon = item.icon
@@ -364,6 +416,22 @@ ItemPackage.compile_item_instance_dependencies = function (item, items_dictionar
 	return result
 end
 
+ItemPackage._add_item_dependencies = function (item_name, items_dictionary, result)
+	local item_entry = rawget(items_dictionary, item_name)
+
+	if not item_entry then
+		Log.error("ItemPackage", "Unable to find item %s", item_name)
+
+		return
+	end
+
+	local resource_dependencies = item_entry.resource_dependencies
+
+	for resource_name, _ in pairs(resource_dependencies) do
+		result[resource_name] = true
+	end
+end
+
 ItemPackage._resolve_item_packages_recursive = function (attachments, items_dictionary, result)
 	for key, value in pairs(attachments) do
 		if key == "item" then
@@ -382,6 +450,78 @@ ItemPackage._resolve_item_packages_recursive = function (attachments, items_dict
 
 				if child_attachments then
 					ItemPackage._resolve_item_packages_recursive(child_attachments, items_dictionary, result)
+				end
+
+				local material_override_items = item_entry.material_override_items
+
+				if material_override_items then
+					for _, item_name in pairs(material_override_items) do
+						if item_name and item_name ~= "" then
+							ItemPackage._add_item_dependencies(item_name, items_dictionary, result)
+						end
+					end
+				end
+
+				local deform_override_items = item_entry.deform_override_items
+
+				if deform_override_items then
+					for _, item_name in pairs(deform_override_items) do
+						if item_name and item_name ~= "" then
+							ItemPackage._add_item_dependencies(item_name, items_dictionary, result)
+						end
+					end
+				end
+
+				local mask_hair_overrides = item_entry.mask_hair_override
+
+				if mask_hair_overrides then
+					for _, override_name in pairs(mask_hair_overrides) do
+						if override_name.HairMaskOverrideItem and override_name.HairMaskOverrideItem ~= "" then
+							ItemPackage._add_item_dependencies(override_name.HairMaskOverrideItem, items_dictionary, result)
+						end
+					end
+				end
+
+				local mask_facial_hair_item = item_entry.mask_facial_hair_item
+
+				if mask_facial_hair_item and mask_facial_hair_item ~= "" then
+					ItemPackage._add_item_dependencies(mask_facial_hair_item, items_dictionary, result)
+				end
+
+				local mask_hair_item = item_entry.mask_hair_item
+
+				if mask_hair_item and mask_hair_item ~= "" then
+					ItemPackage._add_item_dependencies(mask_hair_item, items_dictionary, result)
+				end
+
+				local mask_torso_item = item_entry.mask_torso_item
+
+				if mask_torso_item and mask_torso_item ~= "" then
+					ItemPackage._add_item_dependencies(mask_torso_item, items_dictionary, result)
+				end
+
+				local mask_arms_item = item_entry.mask_arms_item
+
+				if mask_arms_item and mask_arms_item ~= "" then
+					ItemPackage._add_item_dependencies(mask_arms_item, items_dictionary, result)
+				end
+
+				local mask_legs_item = item_entry.mask_legs_item
+
+				if mask_legs_item and mask_legs_item ~= "" then
+					ItemPackage._add_item_dependencies(mask_legs_item, items_dictionary, result)
+				end
+
+				local mask_face_item = item_entry.mask_face_item
+
+				if mask_face_item and mask_face_item ~= "" then
+					ItemPackage._add_item_dependencies(mask_face_item, items_dictionary, result)
+				end
+
+				local mask_face_accessory_item = item_entry.mask_face_accessory_item
+
+				if mask_face_accessory_item and mask_face_accessory_item ~= "" then
+					ItemPackage._add_item_dependencies(mask_face_accessory_item, items_dictionary, result)
 				end
 
 				local resource_dependencies = item_entry.resource_dependencies

@@ -11,8 +11,9 @@ end
 _system_require("ability", "player_unit_ability_extension", "player_husk_ability_extension")
 _system_require("action_input", "player_unit_action_input_extension")
 _system_require("aim", "player_unit_aim_extension", "player_unit_hub_aim_extension", "player_husk_hub_aim_extension", "player_husk_aim_extension", "minion_ranged_aim_extension", "minion_ranged_husk_aim_extension")
+_system_require("area_of_effect", "area_of_effect_unit_spawner_extension")
 _system_require("hologram", "player_unit_hologram_extension")
-_system_require("animation", "animation_system")
+_system_require("animation", "animation_system", "scripted_flying_animation_extension")
 _system_require("attack_intensity", "attack_intensity_system")
 _system_require("behavior", "behavior_system")
 _system_require("blackboard", "blackboard_system")
@@ -25,7 +26,7 @@ _system_require("chest", "chest_system")
 _system_require("cinematic_scene", "cinematic_scene_system")
 _system_require("coherency", "coherency_system")
 _system_require("combat_vector", "combat_vector_system")
-_system_require("companion_spawner", "companion_spawner_extension")
+_system_require("companion_spawner", "companion_spawner_system")
 _system_require("component", "component_system")
 _system_require("corruptor_arm", "corruptor_arm_system")
 _system_require("corruptor", "corruptor_system")
@@ -40,6 +41,7 @@ _system_require("dissolve", "minion_dissolve_extension")
 _system_require("door", "door_system")
 _system_require("door_control_panel", "door_control_panel_system")
 _system_require("event_synchronizer", "event_synchronizer_system")
+_system_require("expedition_loot_converter", "expedition_loot_converter_system")
 _system_require("fade", "fade_system")
 _system_require("first_person", "player_unit_first_person_extension", "player_husk_first_person_extension")
 _system_require("force_field", "force_field_system")
@@ -60,6 +62,8 @@ _system_require("luggable", "luggable_extension")
 _system_require("luggable_socket", "luggable_socket_system")
 _system_require("minigame", "minigame_system")
 _system_require("minion_spawner", "minion_spawner_system")
+_system_require("minion_nurgle_flies", "minion_nurgle_flies_extension")
+_system_require("minion_vortex", "minion_vortex_extension")
 _system_require("mission_objective", "mission_objective_system")
 _system_require("mission_objective_target", "mission_objective_target_system")
 _system_require("mission_objective_zone", "mission_objective_zone_system")
@@ -71,6 +75,7 @@ _system_require("nav_block", "nav_block_extension")
 _system_require("nav_box_obstacle", "nav_box_obstacle_extension")
 _system_require("nav_graph", "nav_graph_system")
 _system_require("navigation", "navigation_system")
+_system_require("flying_navigation", "flying_navigation_system")
 _system_require("networked_timer", "networked_timer_system")
 _system_require("outline", "outline_system")
 _system_require("spline_follower", "spline_follower_system")
@@ -104,6 +109,7 @@ _system_require("spread", "player_unit_weapon_spread_extension")
 _system_require("suppression", "minion_suppression_extension", "minion_suppression_husk_extension", "player_suppression_extension")
 _system_require("summoned_minions", "summoned_minions_extension")
 _system_require("scripted_scenario", "scripted_scenario_system")
+_system_require("flee", "flee_extension")
 _system_require("talent", "talent_system")
 _system_require("trigger", "trigger_system")
 _system_require("token", "token_system")
@@ -131,7 +137,7 @@ local systems = {
 	},
 	{
 		"companion_spawner_system",
-		"ExtensionSystemBase",
+		"CompanionSpawnerSystem",
 		false,
 		false,
 		false,
@@ -310,6 +316,18 @@ local systems = {
 		},
 	},
 	{
+		"area_of_effect",
+		"ExtensionSystemBase",
+		false,
+		false,
+		false,
+		true,
+		false,
+		{
+			"AreaOfEffectUnitSpawnerExtension",
+		},
+	},
+	{
 		"action_input_system",
 		"ExtensionSystemBase",
 		false,
@@ -423,8 +441,8 @@ local systems = {
 			"PlayerUnitHealthExtension",
 			"PlayerHuskHealthExtension",
 			"PlayerHubHealthExtension",
-			"ForceFieldHealthExtension",
-			"ForceFieldHuskHealthExtension",
+			"PsykerForceFieldUnitHealthExtension",
+			"PsykerForceFieldHuskHealthExtension",
 		},
 	},
 	{
@@ -585,6 +603,16 @@ local systems = {
 		},
 	},
 	{
+		"flying_navigation_system",
+		"FlyingNavigationSystem",
+		false,
+		false,
+		false,
+		true,
+		false,
+		{},
+	},
+	{
 		"navigation_system",
 		"NavigationSystem",
 		false,
@@ -595,6 +623,7 @@ local systems = {
 		{
 			"BotNavigationExtension",
 			"MinionNavigationExtension",
+			"MinionHuskNavigationExtension",
 		},
 	},
 	{
@@ -812,7 +841,7 @@ local systems = {
 		true,
 		false,
 		{
-			"ForceFieldExtension",
+			"PsykerForceFieldUnitExtension",
 		},
 	},
 	{
@@ -863,6 +892,18 @@ local systems = {
 			"PlayerUnitAnimationExtension",
 			"PlayerHuskAnimationExtension",
 			"PropAnimationExtension",
+		},
+	},
+	{
+		"scripted_animation_system",
+		"ExtensionSystemBase",
+		false,
+		false,
+		false,
+		true,
+		false,
+		{
+			"ScriptedFlyingAnimationExtension",
 		},
 	},
 	{
@@ -1032,6 +1073,30 @@ local systems = {
 		},
 	},
 	{
+		"minion_nurgle_flies_system",
+		"ExtensionSystemBase",
+		false,
+		false,
+		false,
+		true,
+		false,
+		{
+			"MinionNurgleFliesExtension",
+		},
+	},
+	{
+		"minion_vortex_system",
+		"ExtensionSystemBase",
+		false,
+		false,
+		false,
+		true,
+		false,
+		{
+			"MinionVortexExtension",
+		},
+	},
+	{
 		"point_of_interest_system",
 		"PointOfInterestSystem",
 		false,
@@ -1164,6 +1229,7 @@ local systems = {
 		{
 			"MissionObjectiveZoneBaseExtension",
 			"MissionObjectiveZoneCaptureExtension",
+			"MissionObjectiveZoneFlowExtension",
 			"MissionObjectiveZoneScanExtension",
 		},
 	},
@@ -1426,6 +1492,18 @@ local systems = {
 		},
 	},
 	{
+		"flee_system",
+		"ExtensionSystemBase",
+		false,
+		false,
+		false,
+		false,
+		false,
+		{
+			"FleeExtension",
+		},
+	},
+	{
 		"unit_data_system",
 		"ExtensionSystemBase",
 		true,
@@ -1475,6 +1553,18 @@ local systems = {
 		false,
 		{
 			"BlackboardExtension",
+		},
+	},
+	{
+		"expedition_loot_converter_system",
+		"ExpeditionLootConverterSystem",
+		false,
+		true,
+		false,
+		true,
+		false,
+		{
+			"ExpeditionLootConverterExtension",
 		},
 	},
 }

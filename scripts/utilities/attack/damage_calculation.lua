@@ -37,11 +37,13 @@ local HEALTHY_MIN_PERCENTAGE = 0.75
 local DamageCalculation = {}
 local _apply_armor_type_buffs_to_damage, _apply_damage_type_buffs_to_damage, _apply_diminishing_returns_to_damage, _backstab_damage, _base_boost_damage, _base_damage, _boost_curve_multiplier, _calculate_damage_buff, _damage_taken_by_breed_multiplier, _finesse_boost_damage, _flanking_damage, _hit_zone_damage_multiplier, _power_level_scaled_damage, _rending_multiplier
 local EMPTY_STAT_BUFFS = {}
+local EMPTY_KEYWORDS = {}
 
 DamageCalculation.calculate = function (damage_profile, damage_type, target_settings, lerp_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_owner_breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, attacker_buff_extension, target_buff_extension, armor_penetrating, target_health_extension, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, auto_completed_action, stagger_impact, stagger_impact_bonus, attacking_unit_or_nil, attacking_unit_owner_unit_or_nil, attacker_owner_buff_extension, target_index)
 	attacker_stat_buffs = attacker_stat_buffs or EMPTY_STAT_BUFFS
 	target_stat_buffs = target_stat_buffs or EMPTY_STAT_BUFFS
 
+	local target_keywords = target_buff_extension and target_buff_extension:keywords() or EMPTY_KEYWORDS
 	local blackboard = BLACKBOARDS[target_unit]
 	local attacking_unit_blackboard_or_nil = BLACKBOARDS[attacking_unit_or_nil]
 	local target_unit_health_extension = ScriptUnit.has_extension(target_unit, "health_system")
@@ -57,7 +59,7 @@ DamageCalculation.calculate = function (damage_profile, damage_type, target_sett
 	local is_target_staggered = num_triggered_staggers > 0 or target_buff_extension and target_buff_extension:has_keyword(keywords.count_as_staggered)
 	local warp_damage_types = DamageSettings.warp_damage_types
 	local is_warp_attack = warp_damage_types[damage_type]
-	local rending_multiplier, is_rending = _rending_multiplier(attacker_stat_buffs, target_stat_buffs, is_backstab, is_flanking, is_critical_strike, is_target_staggered, is_warp_attack, attack_type, damage_profile, distance)
+	local rending_multiplier, is_rending = _rending_multiplier(attacker_stat_buffs, target_stat_buffs, target_keywords, is_backstab, is_flanking, is_critical_strike, is_target_staggered, is_warp_attack, attack_type, damage_profile, distance)
 	local damage = base_damage + base_buff_damage
 	local finesse_boost_damage, finesse_buff_damage = 0, 0
 	local base_boost_damage = _base_boost_damage(damage_profile, target_settings, power_level, charge_level, armor_type, is_critical_strike, hit_weakspot, dropoff_scalar, attack_type, attacker_stat_buffs, lerp_values, attacker_stat_buffs, attacking_unit_or_nil, target_unit, target_index)
@@ -324,6 +326,11 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 	local vs_elites_damage_stat_buff = (is_target_elite and attacker_stat_buffs.damage_vs_elites or 1) - 1
 
 	damage_stat_buffs = damage_stat_buffs + vs_elites_damage_stat_buff
+
+	local is_heavy_melee_vs_elite = is_target_elite and is_heavy_melee_attack
+	local melee_vs_elites_damage_stat_buff = (is_heavy_melee_vs_elite and attacker_stat_buffs.melee_heavy_damage_vs_elites or 1) - 1
+
+	damage_stat_buffs = damage_stat_buffs + melee_vs_elites_damage_stat_buff
 
 	local companion_vs_elites_damage_stat_buff = (is_companion and is_target_elite and owner_stat_buffs and owner_stat_buffs.companion_damage_vs_elites or 1) - 1
 
@@ -602,11 +609,11 @@ function _damage_taken_by_breed_multiplier(target_stat_buffs, attacker_owner_bre
 	return multiplier
 end
 
-function _rending_multiplier(attacker_stat_buffs, target_stat_buffs, is_backstab, is_flanking, is_critical_strike, is_target_staggered, is_warp_attack, attack_type, damage_profile, distance)
+function _rending_multiplier(attacker_stat_buffs, target_stat_buffs, target_keywords, is_backstab, is_flanking, is_critical_strike, is_target_staggered, is_warp_attack, attack_type, damage_profile, distance)
+	local brittleness_multiplier = target_stat_buffs.rending_multiplier or 1
 	local is_melee = attack_type and attack_type == attack_types.melee
 	local is_ranged = attack_type == attack_types.ranged or damage_profile and damage_profile.count_as_ranged_attack
 	local attacker_multiplier = attacker_stat_buffs.rending_multiplier or 1
-	local target_multiplier = target_stat_buffs.rending_multiplier or 1
 	local attacker_backstab_multiplier = is_backstab and attacker_stat_buffs.backstab_rending_multiplier or 1
 	local target_backstab_multiplier = is_backstab and target_stat_buffs.backstab_rending_multiplier or 1
 	local attacker_flanking_multiplier = is_flanking and attacker_stat_buffs.flanking_rending_multiplier or 1
@@ -616,6 +623,8 @@ function _rending_multiplier(attacker_stat_buffs, target_stat_buffs, is_backstab
 	local target_crit_multiplier = is_critical_strike and target_stat_buffs.critical_strike_rending_multiplier or 1
 	local warp_attack_rending = is_warp_attack and attacker_stat_buffs.warp_attacks_rending_multiplier or 1
 	local attacker_vs_staggered_multiplier = is_target_staggered and attacker_stat_buffs.rending_vs_staggered_multiplier or 1
+	local is_target_electrocuted = target_keywords and target_keywords.electrocuted or false
+	local rending_vs_electrocuted_multiplier = is_target_electrocuted and attacker_stat_buffs.rending_vs_electrocuted_multiplier or 1
 	local melee_rending_multiplier = is_melee and attacker_stat_buffs.melee_rending_multiplier or 1
 	local melee_heavy_rending_multiplier = is_melee and damage_profile.melee_attack_strength == melee_attack_strengths.heavy and attacker_stat_buffs.melee_heavy_rending_multiplier or 1
 	local attacker_melee_vs_staggered_multiplier = is_target_staggered and is_melee and attacker_stat_buffs.melee_rending_vs_staggered_multiplier or 1
@@ -626,8 +635,8 @@ function _rending_multiplier(attacker_stat_buffs, target_stat_buffs, is_backstab
 		close_range_rending_multiplier = attacker_stat_buffs.close_range_rending_multiplier or 1
 	end
 
-	local num_multipliers = 16
-	local rending_multiplier = attacker_multiplier + target_multiplier + attacker_backstab_multiplier + target_backstab_multiplier + attacker_crit_multiplier + target_crit_multiplier + attacker_ranged_crit_multiplier + attacker_flanking_multiplier + target_flanking_multiplier + attacker_vs_staggered_multiplier + attacker_melee_vs_staggered_multiplier + melee_rending_multiplier + warp_attack_rending + ranged_rending_multiplier + close_range_rending_multiplier + melee_heavy_rending_multiplier - num_multipliers
+	local num_multipliers = 17
+	local rending_multiplier = attacker_multiplier + brittleness_multiplier + attacker_backstab_multiplier + target_backstab_multiplier + attacker_crit_multiplier + target_crit_multiplier + attacker_ranged_crit_multiplier + attacker_flanking_multiplier + target_flanking_multiplier + attacker_vs_staggered_multiplier + attacker_melee_vs_staggered_multiplier + rending_vs_electrocuted_multiplier + melee_rending_multiplier + warp_attack_rending + ranged_rending_multiplier + close_range_rending_multiplier + melee_heavy_rending_multiplier - num_multipliers
 
 	rending_multiplier = math.min(rending_multiplier, 1)
 

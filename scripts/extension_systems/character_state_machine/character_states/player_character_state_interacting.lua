@@ -50,7 +50,7 @@ PlayerCharacterStateInteracting.on_enter = function (self, unit, dt, t, previous
 	local start_anim_event_func = template.start_anim_event_func
 
 	if start_anim_event_func then
-		start_anim_event, start_anim_event_3p = start_anim_event_func(interactee_unit, unit)
+		start_anim_event, start_anim_event_3p = start_anim_event_func(template, interactee_unit, unit)
 	else
 		start_anim_event = template.start_anim_event
 		start_anim_event_3p = template.start_anim_event_3p or start_anim_event

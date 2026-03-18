@@ -27,7 +27,7 @@ DestructibleSystem.on_remove_extension = function (self, unit, extension_name)
 		local is_level_unit, level_unit_id = Managers.state.unit_spawner:game_object_id_or_level_index(unit)
 
 		if is_level_unit then
-			self._removed_level_unit_ids[#self._removed_level_unit_ids + 1] = level_unit_id
+			self._removed_level_unit_ids[level_unit_id] = true
 		end
 	end
 
@@ -44,24 +44,18 @@ DestructibleSystem.destroy = function (self, ...)
 	DestructibleSystem.super.destroy(self, ...)
 end
 
-DestructibleSystem.clear_unit_from_removed_level_list = function (self, unit_id)
+DestructibleSystem.clear_unit_ids_from_removed_level_list = function (self, unit_id_list)
 	local removed_level_unit_ids = self._removed_level_unit_ids
 
-	for i = #removed_level_unit_ids, 1, -1 do
-		if removed_level_unit_ids[i] == unit_id then
-			table.remove(removed_level_unit_ids, i)
+	for i = 1, #unit_id_list do
+		local unit_id = unit_id_list[i]
 
-			break
-		end
+		removed_level_unit_ids[unit_id] = nil
 	end
 end
 
 DestructibleSystem.hot_join_sync = function (self, sender, channel)
-	local removed_level_unit_ids = self._removed_level_unit_ids
-
-	for ii = 1, #removed_level_unit_ids do
-		local level_unit_id = removed_level_unit_ids[ii]
-
+	for level_unit_id in pairs(self._removed_level_unit_ids) do
 		RPC.rpc_destructible_mark_for_deletion(channel, level_unit_id)
 	end
 

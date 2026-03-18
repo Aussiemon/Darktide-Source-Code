@@ -4,6 +4,12 @@ local TestifySnippets = require("scripts/tests/testify_snippets")
 
 PerformanceTestCases = {}
 
+PerformanceTestCases.telemetry_collect_all_allocators = function (case_settings)
+	Testify:run_case(function (dt, t)
+		Testify:make_request("telemetry_collect_all_allocators")
+	end)
+end
+
 PerformanceTestCases.measure_memory_usage_evolution = function (case_settings)
 	Testify:run_case(function (dt, t)
 		local settings = cjson.decode(case_settings or "{}")
@@ -17,8 +23,7 @@ PerformanceTestCases.measure_memory_usage_evolution = function (case_settings)
 
 		local is_application_bundled = Application.bundled()
 
-		Log.info("Testify", "is_application_bundled: ")
-		Log.info("Testify", is_application_bundled)
+		Log.info("Testify", "is_application_bundled: %s", is_application_bundled)
 
 		local cached_last_mission_loaded = Testify:retrieve_cache("last_mission_loaded") or "boot"
 		local cached_memory_usage_data = Testify:retrieve_cache("memory_usage_data") or {}
@@ -103,11 +108,6 @@ PerformanceTestCases.performance_memory_usage = function (mission_key)
 		TestifySnippets.load_mission(mission_key)
 		Testify:make_request("wait_for_state_gameplay_reached")
 		TestifySnippets.wait_for_mission_intro()
-
-		local memory_usage_data = Testify:make_request("memory_usage")
-		local telemetry_event_name = "perf_memory"
-
-		Testify:make_request("create_telemetry_event", telemetry_event_name, mission_key, 0, memory_usage_data)
 		TestifySnippets.send_telemetry_batch()
 	end)
 end

@@ -367,13 +367,9 @@ NewsView.load_texture = function (self, image_url, image_element)
 
 		url_textures[#url_textures + 1] = image_url
 
-		self._promise_container:cancel_on_destroy(Managers.url_loader:load_texture(image_url, nil, "news_view")):next(function (data)
+		self._promise_container:cancel_on_destroy(Managers.url_loader:load_texture(image_url, nil, "news_view"):next()):next(function (data)
 			style.texture.material_values.texture = data.texture
 			url_textures[image_url] = data
-		end):catch(function (error)
-			local error_string = tostring(error)
-
-			Log.error("NewsService", "Error fetching news images", error_string)
 		end)
 	end
 end
@@ -442,9 +438,9 @@ NewsView._on_back_pressed = function (self)
 	local current_slide = self._slide_position.current
 
 	if self._view_triggered_by_user and (current_slide == nil or current_slide == 1) then
-		self._window_exit_anim_id = self:_start_animation("on_exit", self._widgets_by_name, nil, callback(function ()
+		self._window_exit_anim_id = self:_start_animation("on_exit", self._widgets_by_name, nil, function ()
 			Managers.ui:close_view(self.view_name)
-		end))
+		end)
 
 		self:_play_sound(UISoundEvents.news_popup_exit)
 
@@ -466,9 +462,9 @@ NewsView._on_forward_pressed = function (self)
 	local current_slide = self._slide_position.current
 
 	if current_slide == #self._slides then
-		self._window_exit_anim_id = self:_start_animation("on_exit", self._widgets_by_name, nil, callback(function ()
+		self._window_exit_anim_id = self:_start_animation("on_exit", self._widgets_by_name, nil, function ()
 			Managers.ui:close_view(self.view_name)
-		end))
+		end)
 
 		self:_play_sound(UISoundEvents.news_popup_exit)
 

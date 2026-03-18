@@ -1,5 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_focus_auspex.lua
 
+local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local ActionFocusAuspex = class("ActionFocusAuspex", "ActionWeaponBase")
@@ -9,6 +11,7 @@ ActionFocusAuspex.init = function (self, action_context, action_params, action_s
 
 	local unit_data_extension = action_context.unit_data_extension
 
+	self._inventory_component = unit_data_extension:read_component("inventory")
 	self._minigame_character_state_component = unit_data_extension:write_component("minigame_character_state")
 end
 
@@ -23,9 +26,8 @@ ActionFocusAuspex.start = function (self, action_settings, t, time_scale, action
 
 		self:trigger_anim_event("auspex_start_focus")
 	else
-		local current_state = character_state_machine_extension:current_state()
+		self._minigame_character_state_component.pocketable_device_active = false
 
-		current_state:force_cancel()
 		self:trigger_anim_event("auspex_stop_focus")
 	end
 end

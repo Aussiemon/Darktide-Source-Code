@@ -653,29 +653,32 @@ function _calculate_to_position(from_position, nav_world, traverse_logic)
 
 	for i = 1, num_alive_minions do
 		local unit = alive_minions[i]
-		local blackboard = BLACKBOARDS[unit]
-		local perception_component = blackboard.perception
 
-		if perception_component.aggro_state == "aggroed" then
-			local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-			local breed = unit_data_extension:breed()
-			local tags = breed.tags
+		if ScriptUnit.has_extension(unit, "perception_system") then
+			local blackboard = BLACKBOARDS[unit]
+			local perception_component = blackboard.perception
 
-			if breed.combat_range_data and not tags.melee then
-				local behavior_component = blackboard.behavior
-				local combat_range = behavior_component.combat_range
-				local is_in_melee = combat_range == "melee" and perception_component.target_distance <= CombatVectorSettings.melee_minion_range
+			if perception_component.aggro_state == "aggroed" then
+				local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+				local breed = unit_data_extension:breed()
+				local tags = breed.tags
 
-				if not is_in_melee then
-					local unit_position = POSITION_LOOKUP[unit]
-					local distance_sq = Vector3_distance_squared(from_position, unit_position)
+				if breed.combat_range_data and not tags.melee then
+					local behavior_component = blackboard.behavior
+					local combat_range = behavior_component.combat_range
+					local is_in_melee = combat_range == "melee" and perception_component.target_distance <= CombatVectorSettings.melee_minion_range
 
-					if min_distance_sq < distance_sq and distance_sq < max_distance_sq then
-						average_position = average_position + unit_position
-						num_aggroed = num_aggroed + 1
+					if not is_in_melee then
+						local unit_position = POSITION_LOOKUP[unit]
+						local distance_sq = Vector3_distance_squared(from_position, unit_position)
+
+						if min_distance_sq < distance_sq and distance_sq < max_distance_sq then
+							average_position = average_position + unit_position
+							num_aggroed = num_aggroed + 1
+						end
+
+						total_minions = total_minions + 1
 					end
-
-					total_minions = total_minions + 1
 				end
 			end
 		end

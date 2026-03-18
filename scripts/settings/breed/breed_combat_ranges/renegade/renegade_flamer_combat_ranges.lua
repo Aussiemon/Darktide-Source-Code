@@ -1,8 +1,8 @@
 ﻿-- chunkname: @scripts/settings/breed/breed_combat_ranges/renegade/renegade_flamer_combat_ranges.lua
 
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local combat_ranges = {
 	name = "renegade_flamer",
+	start_effect_template_name = "renegade_flamer_approach",
 	starting_combat_range = "far",
 	config = {
 		far = {
@@ -66,7 +66,6 @@ local combat_ranges = {
 			},
 		},
 	},
-	start_effect_template = EffectTemplates.renegade_flamer_approach,
 }
 
 return combat_ranges

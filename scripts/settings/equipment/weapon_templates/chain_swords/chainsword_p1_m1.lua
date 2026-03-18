@@ -2092,10 +2092,10 @@ weapon_template.weapon_special_tweak_data = {
 }
 weapon_template.fx_sources = {
 	_block = "fx_block",
-	_melee_idling = "fx_engine",
 	_special_active = "fx_weapon_special",
 	_sticky = "fx_sawing",
 	_sweep = "fx_sweep",
+	_wielded_idling = "fx_engine",
 }
 weapon_template.crosshair = {
 	crosshair_type = "dot",

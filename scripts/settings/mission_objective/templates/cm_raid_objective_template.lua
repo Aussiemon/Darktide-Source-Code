@@ -55,9 +55,8 @@ local mission_objective_templates = {
 				description = "loc_objective_cm_raid_drug_lab_desc",
 				event_type = "end_event",
 				header = "loc_objective_cm_raid_drug_lab_header",
-				mission_objective_type = "scanning",
+				mission_objective_type = "zone",
 				music_wwise_state = "progression_stage_1",
-				progress_bar = true,
 				turn_off_backfill = true,
 			},
 			objective_cm_raid_destroy_filtration_tanks = {

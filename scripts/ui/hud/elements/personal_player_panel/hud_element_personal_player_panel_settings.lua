@@ -51,6 +51,7 @@ local hud_element_personal_player_panel_settings = {
 		ammo = false,
 		coherency = false,
 		corruption_text = true,
+		expedition_currency = true,
 		health = true,
 		health_text = true,
 		name = true,

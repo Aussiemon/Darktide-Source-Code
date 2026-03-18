@@ -20,6 +20,7 @@ UIViewHandler.init = function (self, view_list, timer_name)
 	self._active_views_data = {}
 	self._num_active_views = 0
 	self._timer_name = timer_name
+	self._is_throttling_frame_rate = false
 	self._any_view_using_input = false
 	self._game_world_disabled = false
 	self._game_world_fullscreen_blur_enabled = false
@@ -534,6 +535,37 @@ UIViewHandler._update_views = function (self, dt, t, allow_input)
 	end
 end
 
+UIViewHandler._should_throttle_frame_rate = function (self)
+	local top_view_name = self:active_top_view()
+
+	if not top_view_name then
+		return false
+	end
+
+	return self:settings_by_view_name(top_view_name).throttle_frame_rate
+end
+
+UIViewHandler._update_frame_rate_throttle = function (self)
+	if not GameParameters.cap_ui_frame_rate then
+		return
+	end
+
+	local should_throttle_frame_rate = self:_should_throttle_frame_rate()
+	local is_throttling_frame_rate = self._is_throttling_frame_rate
+
+	if should_throttle_frame_rate == is_throttling_frame_rate then
+		return
+	end
+
+	self._is_throttling_frame_rate = should_throttle_frame_rate
+
+	if should_throttle_frame_rate then
+		Managers.frame_rate:request_throttled_frame_rate("view_handler", 2)
+	else
+		Managers.frame_rate:relinquish_request("view_handler")
+	end
+end
+
 UIViewHandler._post_update_views = function (self, dt, t)
 	local active_views_array = self._active_views_array
 	local active_views_data = self._active_views_data
@@ -559,6 +591,8 @@ UIViewHandler._post_update_views = function (self, dt, t)
 			end
 		end
 	end
+
+	self:_update_frame_rate_throttle()
 end
 
 UIViewHandler._can_draw_view = function (self, view_name)

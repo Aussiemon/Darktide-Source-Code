@@ -16,6 +16,7 @@ _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/cha
 _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/chaos/chaos_ogryn_bulwark_combat_ranges")
 _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/chaos/chaos_ogryn_executor_combat_ranges")
 _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/chaos/chaos_ogryn_gunner_combat_ranges")
+_create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/chaos/chaos_ogryn_houndmaster_combat_ranges")
 _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/chaos/chaos_poxwalker_bomber_combat_ranges")
 _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/chaos/chaos_poxwalker_combat_ranges")
 _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/renegade/renegade_assault_combat_ranges")

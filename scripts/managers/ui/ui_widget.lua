@@ -398,6 +398,8 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 	local pass_transforms = temp_pass_transforms
 
 	table.clear(pass_transforms)
+	ResourceReferenceContext.push("UIWidget.draw")
+	ResourceReferenceContext.push(ui_renderer.name)
 
 	for i = 1, #passes do
 		repeat
@@ -651,6 +653,8 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 		until true
 	end
 
+	ResourceReferenceContext.pop(ui_renderer.name)
+	ResourceReferenceContext.pop("UIWidget.draw")
 	_return_transforms(pass_transforms)
 
 	render_settings.alpha_multiplier = previous_render_settings_alpha_multiplier

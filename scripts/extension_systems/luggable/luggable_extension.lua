@@ -62,9 +62,19 @@ LuggableExtension._on_carried = function (self)
 end
 
 LuggableExtension._on_dropped = function (self)
-	if self._is_server and not self._destroyed then
+	if self._destroyed then
+		return
+	end
+
+	Unit.set_scalar_for_materials(self._unit, "inv_jitter_alpha", 0, true)
+
+	if self._is_server then
 		self._interactee_extension:set_active(true)
 	end
+end
+
+LuggableExtension.is_currently_carried = function (self)
+	return Unit.alive(self._carrier_player_unit)
 end
 
 return LuggableExtension

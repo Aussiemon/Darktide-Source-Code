@@ -1591,6 +1591,509 @@ local function _create_dim_havoc_animation(animation_table)
 	}
 end
 
+local function _create_progress_expedition_animation(animation_table, start_time)
+	animation_table[#animation_table + 1] = {
+		name = "expedition_init",
+		start_time = start_time,
+		end_time = start_time,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			params.currency_styles = {
+				widget.style.currency_icon_background,
+				widget.style.currency_icon,
+				widget.style.currency_label,
+				widget.style.currency_text,
+			}
+			params.progress_styles = {}
+			params.progress_background_styles = {}
+			params.progress_square_styles = {}
+
+			for i = 1, #widget.content.affected_nodes do
+				local affected_node = widget.content.affected_nodes[i]
+
+				params.progress_styles[#params.progress_styles + 1] = widget.style["node_name_" .. affected_node]
+			end
+
+			for i = 1, #widget.content.used_indexes do
+				params.progress_styles[#params.progress_styles + 1] = widget.style["progress_text_" .. i]
+				params.progress_styles[#params.progress_styles + 1] = widget.style["progress_value_" .. i]
+				params.progress_background_styles[#params.progress_background_styles + 1] = widget.style["progress_background_" .. i]
+				params.progress_square_styles[#params.progress_square_styles + 1] = widget.style["progress_square_background_" .. i]
+				params.progress_square_styles[#params.progress_square_styles + 1] = widget.style["progress_square_corner_" .. i]
+				params.progress_square_styles[#params.progress_square_styles + 1] = widget.style["progress_square_tile_" .. i]
+			end
+
+			local pass_styles = table.append(table.append({}, params.currency_styles), params.progress_styles)
+			local start_x_offset = 50
+
+			widget.style.currency_background.start_color = table.clone(widget.style.currency_background.color)
+			widget.style.currency_background.end_color = table.clone(widget.style.currency_background.color)
+			widget.style.currency_background.end_color[1] = 63.75
+
+			for i = 1, #pass_styles do
+				local pass_style = pass_styles[i]
+
+				pass_style.start_offset = table.clone(pass_style.offset)
+				pass_style.end_offset = table.clone(pass_style.offset)
+				pass_style.offset[1] = pass_style.offset[1] - start_x_offset
+				pass_style.start_offset[1] = pass_style.offset[1]
+
+				if pass_style.color then
+					pass_style.end_color = table.clone(pass_style.color)
+					pass_style.start_color = table.clone(pass_style.color)
+					pass_style.end_color[1] = 255
+				end
+
+				if pass_style.text_color then
+					pass_style.end_text_color = table.clone(pass_style.text_color)
+					pass_style.start_text_color = table.clone(pass_style.text_color)
+					pass_style.end_text_color[1] = 255
+				end
+			end
+
+			for i = 1, #params.progress_background_styles do
+				local pass_style = params.progress_background_styles[i]
+
+				pass_style.end_color = table.clone(pass_style.color)
+				pass_style.start_color = table.clone(pass_style.color)
+				pass_style.end_color[1] = 63.75
+			end
+
+			for i = 1, #params.progress_square_styles do
+				local pass_style = params.progress_square_styles[i]
+
+				pass_style.end_color = table.clone(pass_style.color)
+				pass_style.start_color = table.clone(pass_style.color)
+				pass_style.end_color[1] = 255
+			end
+
+			local pass_style = widget.style.expedition_resume_text
+
+			if pass_style then
+				pass_style.start_offset = table.clone(pass_style.offset)
+				pass_style.end_offset = table.clone(pass_style.offset)
+				pass_style.offset[2] = pass_style.offset[2] + 20
+				pass_style.start_offset[2] = pass_style.offset[2]
+				pass_style.end_text_color = table.clone(pass_style.text_color)
+				pass_style.start_text_color = table.clone(pass_style.text_color)
+				pass_style.end_text_color[1] = 255
+			end
+		end,
+	}
+	animation_table[#animation_table + 1] = {
+		name = "expedition_loot_fade",
+		start_time = start_time,
+		end_time = start_time + 0.2,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			return
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			for i = 1, #params.currency_styles do
+				local pass_style = params.currency_styles[i]
+
+				pass_style.offset[1] = math.lerp(pass_style.start_offset[1], pass_style.end_offset[1], progress)
+
+				if i > 1 then
+					if pass_style.color then
+						pass_style.color[1] = math.lerp(pass_style.start_color[1], pass_style.end_color[1], progress)
+					end
+
+					if pass_style.text_color then
+						pass_style.text_color[1] = math.lerp(pass_style.start_text_color[1], pass_style.end_text_color[1], progress)
+					end
+				end
+			end
+
+			local pass_style = widget.style.currency_background
+
+			pass_style.color[1] = math.lerp(pass_style.start_color[1], pass_style.end_color[1], progress)
+		end,
+	}
+	animation_table[#animation_table + 1] = {
+		name = "expedition_loot_icon_fade",
+		start_time = start_time + 0.2,
+		end_time = start_time + 0.4,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			return
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local pass_style = params.currency_styles[1]
+
+			pass_style.color[1] = math.lerp(pass_style.start_color[1], pass_style.end_color[1], progress)
+		end,
+	}
+	animation_table[#animation_table + 1] = {
+		name = "expedition_loot_update",
+		start_time = start_time + 0.2,
+		end_time = start_time + 1.2,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			parent:play_sound(UISoundEvents.end_screen_summary_expeditions_credits_start)
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local loot_collected_progress = progress * widget.content.loot_collected
+
+			parent:update_expedition_progress(loot_collected_progress, nil, widget)
+		end,
+		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			parent:play_sound(UISoundEvents.end_screen_summary_expeditions_credits_stop)
+		end,
+	}
+	animation_table[#animation_table + 1] = {
+		name = "expedition_progress_fade",
+		start_time = start_time + 1,
+		end_time = start_time + 1.2,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			return
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			for i = 1, #params.progress_styles do
+				local pass_style = params.progress_styles[i]
+
+				pass_style.offset[1] = math.lerp(pass_style.start_offset[1], pass_style.end_offset[1], progress)
+
+				if pass_style.color then
+					pass_style.color[1] = math.lerp(pass_style.start_color[1], pass_style.end_color[1], progress)
+				end
+
+				if pass_style.text_color then
+					pass_style.text_color[1] = math.lerp(pass_style.start_text_color[1], pass_style.end_text_color[1], progress)
+				end
+			end
+
+			for i = 1, #params.progress_background_styles do
+				local pass_style = params.progress_background_styles[i]
+
+				pass_style.color[1] = math.lerp(pass_style.start_color[1], pass_style.end_color[1], progress)
+			end
+
+			for i = 1, #params.progress_square_styles do
+				local pass_style = params.progress_square_styles[i]
+
+				pass_style.color[1] = math.lerp(pass_style.start_color[1], pass_style.end_color[1], progress)
+			end
+		end,
+	}
+	animation_table[#animation_table + 1] = {
+		name = "expedition_resume_fade",
+		start_time = start_time + 1.6,
+		end_time = start_time + 1.8,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			return
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			if widget.style.expedition_resume_text then
+				local resume_text_style = widget.style.expedition_resume_text
+
+				resume_text_style.offset[2] = math.lerp(resume_text_style.start_offset[2], resume_text_style.end_offset[2], progress)
+				resume_text_style.text_color[1] = math.lerp(resume_text_style.start_text_color[1], resume_text_style.end_text_color[1], progress)
+			end
+		end,
+	}
+	animation_table[#animation_table + 1] = {
+		name = "expedition_progress_update",
+		start_time = start_time + 1.2,
+		end_time = start_time + 2.2,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			parent:play_sound(UISoundEvents.end_screen_summary_expeditions_progress_start)
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			local all_progresses = {}
+
+			for i = 1, #widget.content.used_indexes do
+				local unlock_index = widget.content.used_indexes[i]
+				local unlock_progress = widget.content.all_unlock_progress[unlock_index]
+				local previous_start = unlock_progress.previous_progress
+				local progress_end = unlock_progress.progress
+
+				all_progresses[i] = math.lerp(previous_start, progress_end, progress)
+			end
+
+			parent:update_expedition_progress(widget.content.loot_collected, all_progresses, widget)
+		end,
+		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			parent:play_sound(UISoundEvents.end_screen_summary_expeditions_progress_stop)
+		end,
+	}
+	animation_table[#animation_table + 1] = {
+		name = "expedition_progress_complete_start",
+		start_time = start_time + 2.2,
+		end_time = start_time + 2.4,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			return
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			for i = 1, #widget.content.used_indexes do
+				local unlock_index = widget.content.used_indexes[i]
+				local unlock_progress = widget.content.all_unlock_progress[unlock_index]
+				local progress_end = unlock_progress.progress
+				local limit = unlock_progress.limit
+
+				if limit <= progress_end then
+					local pass_style = widget.style["progress_complete_square_" .. i]
+					local text_pass_style = widget.style["progress_value_" .. i]
+					local text_width = text_pass_style.size[1]
+
+					pass_style.size[1] = math.lerp(0, text_width, progress)
+				end
+			end
+		end,
+		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			local is_completed = false
+
+			for i = 1, #widget.content.used_indexes do
+				local unlock_index = widget.content.used_indexes[i]
+				local unlock_progress = widget.content.all_unlock_progress[unlock_index]
+				local progress_end = unlock_progress.progress
+				local limit = unlock_progress.limit
+
+				if limit <= progress_end then
+					is_completed = true
+				end
+			end
+
+			if is_completed then
+				parent:play_sound(UISoundEvents.end_screen_summary_expeditions_node_complete)
+			end
+		end,
+	}
+	animation_table[#animation_table + 1] = {
+		name = "expedition_progress_complete_end",
+		start_time = start_time + 2.6,
+		end_time = start_time + 2.8,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			for i = 1, #widget.content.used_indexes do
+				local unlock_index = widget.content.used_indexes[i]
+				local unlock_progress = widget.content.all_unlock_progress[unlock_index]
+				local progress_end = unlock_progress.progress
+				local limit = unlock_progress.limit
+
+				if limit <= progress_end then
+					widget.content["progress_value_" .. i] = Localize("loc_wintracks_tab_completed")
+
+					local pass_style = widget.style["progress_complete_square_" .. i]
+
+					pass_style.horizontal_alignment = "right"
+					pass_style.offset[1] = -pass_style.offset[1]
+				end
+			end
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			for i = 1, #widget.content.used_indexes do
+				local unlock_index = widget.content.used_indexes[i]
+				local unlock_progress = widget.content.all_unlock_progress[unlock_index]
+				local progress_end = unlock_progress.progress
+				local limit = unlock_progress.limit
+
+				if limit <= progress_end then
+					local pass_style = widget.style["progress_complete_square_" .. i]
+					local text_pass_style = widget.style["progress_value_" .. i]
+					local text_width = text_pass_style.size[1]
+
+					pass_style.size[1] = math.lerp(text_width, 0, progress)
+
+					_color_utils_color_lerp(Color.black(255, true), {
+						255,
+						225,
+						222,
+						207,
+					}, progress, widget.style["progress_square_background_" .. i].color)
+				end
+			end
+		end,
+		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			for i = 1, #widget.content.used_indexes do
+				local unlock_index = widget.content.used_indexes[i]
+				local unlock_progress = widget.content.all_unlock_progress[unlock_index]
+				local progress_end = unlock_progress.progress
+				local limit = unlock_progress.limit
+
+				if limit <= progress_end then
+					local pass_style = widget.style["progress_complete_square_" .. i]
+
+					pass_style.horizontal_alignment = "left"
+					pass_style.offset[1] = -pass_style.offset[1]
+				end
+			end
+
+			params.currency_styles = nil
+			params.progress_styles = nil
+			params.progress_background_styles = nil
+			params.progress_square_styles = nil
+		end,
+	}
+end
+
+local function _create_dim_expedition_animation(animation_table)
+	animation_table[#animation_table + 1] = {
+		end_time = 0.2,
+		name = "expedition_progress_fade_out",
+		start_time = 0,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			params.progress_styles = {}
+
+			for i = 1, #widget.content.affected_nodes do
+				local affected_node = widget.content.affected_nodes[i]
+
+				params.progress_styles[#params.progress_styles + 1] = widget.style["node_name_" .. affected_node]
+			end
+
+			for i = 1, #widget.content.used_indexes do
+				params.progress_styles[#params.progress_styles + 1] = widget.style["progress_text_" .. i]
+				params.progress_styles[#params.progress_styles + 1] = widget.style["progress_value_" .. i]
+				params.progress_styles[#params.progress_styles + 1] = widget.style["progress_background_" .. i]
+				params.progress_styles[#params.progress_styles + 1] = widget.style["progress_square_background_" .. i]
+				params.progress_styles[#params.progress_styles + 1] = widget.style["progress_square_corner_" .. i]
+				params.progress_styles[#params.progress_styles + 1] = widget.style["progress_square_tile_" .. i]
+			end
+
+			for i = 1, #params.progress_styles do
+				local pass_style = params.progress_styles[i]
+
+				if pass_style.color then
+					pass_style.end_color = table.clone(pass_style.color)
+					pass_style.start_color = table.clone(pass_style.color)
+					pass_style.end_color[1] = 0
+				end
+
+				if pass_style.text_color then
+					pass_style.end_text_color = table.clone(pass_style.text_color)
+					pass_style.start_text_color = table.clone(pass_style.text_color)
+					pass_style.end_text_color[1] = 0
+				end
+			end
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			for i = 1, #params.progress_styles do
+				local pass_style = params.progress_styles[i]
+
+				if pass_style.color then
+					pass_style.color[1] = math.lerp(pass_style.start_color[1], pass_style.end_color[1], progress)
+				end
+
+				if pass_style.text_color then
+					pass_style.text_color[1] = math.lerp(pass_style.start_text_color[1], pass_style.end_text_color[1], progress)
+				end
+			end
+		end,
+		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			if not table.is_empty(params.progress_styles) then
+				local count = #widget.content.all_unlock_progress
+				local resume_text = widget.content.expedition_resume_text
+
+				if resume_text then
+					widget.content.expedition_resume_text = Localize("loc_expedition_eor_additional", true, {
+						requirements = count,
+					})
+				end
+
+				for i = 1, #params.progress_styles do
+					local pass_style = params.progress_styles[i]
+
+					pass_style.end_color = nil
+					pass_style.start_color = nil
+					pass_style.end_text_color = nil
+					pass_style.start_text_color = nil
+				end
+			end
+		end,
+	}
+	animation_table[#animation_table + 1] = {
+		end_time = 0.2,
+		name = "expedition_fade_out",
+		start_time = 0,
+		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			params.currency_styles = {
+				widget.style.currency_icon_background,
+				widget.style.currency_icon,
+				widget.style.currency_label,
+				widget.style.currency_text,
+			}
+
+			local total_moved_y_offset = not table.is_empty(params.progress_styles) and 0 or -60
+
+			for i = 1, #params.currency_styles do
+				local pass_style = params.currency_styles[i]
+
+				pass_style.start_offset = table.clone(pass_style.offset)
+				pass_style.end_offset = table.clone(pass_style.offset)
+				pass_style.end_offset[2] = pass_style.end_offset[2] + total_moved_y_offset
+
+				if pass_style.color then
+					pass_style.start_color = table.clone(pass_style.color)
+					pass_style.end_color = table.clone(pass_style.color)
+					pass_style.end_color[1] = 127
+				end
+
+				if pass_style.text_color then
+					pass_style.start_text_color = table.clone(pass_style.text_color)
+					pass_style.end_text_color = table.clone(pass_style.text_color)
+					pass_style.end_text_color[1] = 127
+				end
+			end
+
+			local pass_style = widget.style.currency_icon_background
+
+			pass_style.end_color[1] = 0
+			pass_style = widget.style.expedition_resume_text
+
+			if pass_style then
+				pass_style.start_offset = table.clone(pass_style.offset)
+				pass_style.end_offset = table.clone(pass_style.offset)
+
+				if not table.is_empty(params.progress_styles) then
+					pass_style.end_offset[2] = pass_style.end_offset[2] - total_moved_y_offset
+				end
+
+				pass_style.start_text_color = table.clone(pass_style.text_color)
+				pass_style.end_text_color = table.clone(pass_style.text_color)
+				pass_style.end_text_color[1] = 127
+				params.currency_styles[#params.currency_styles + 1] = pass_style
+			end
+
+			pass_style = widget.style.currency_background
+			pass_style.start_color = table.clone(pass_style.color)
+			pass_style.end_color = table.clone(pass_style.color)
+			pass_style.end_color[1] = pass_style.start_color[1] * 0.5
+			pass_style.start_offset = table.clone(pass_style.offset)
+			pass_style.end_offset = table.clone(pass_style.offset)
+			pass_style.end_offset[2] = pass_style.end_offset[2] + total_moved_y_offset
+		end,
+		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
+			for i = 1, #params.currency_styles do
+				local pass_style = params.currency_styles[i]
+
+				pass_style.offset[2] = math.lerp(pass_style.start_offset[2], pass_style.end_offset[2], progress)
+
+				if pass_style.color then
+					pass_style.color[1] = math.lerp(pass_style.start_color[1], pass_style.end_color[1], progress)
+				end
+
+				if pass_style.text_color then
+					pass_style.text_color[1] = math.lerp(pass_style.start_text_color[1], pass_style.end_text_color[1], progress)
+				end
+			end
+
+			local pass_style = widget.style.currency_background
+
+			pass_style.color[1] = math.lerp(pass_style.start_color[1], pass_style.end_color[1], progress)
+			pass_style.offset[2] = math.lerp(pass_style.start_offset[2], pass_style.end_offset[2], progress)
+		end,
+		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
+			if params.currency_styles then
+				for i = 1, #params.currency_styles do
+					local pass_style = params.currency_styles[i]
+
+					pass_style.start_offset = nil
+					pass_style.end_offset = nil
+					pass_style.start_color = nil
+					pass_style.end_color = nil
+					pass_style.start_text_color = nil
+					pass_style.end_text_color = nil
+				end
+			end
+		end,
+	}
+end
+
 local function _create_fade_in_level_up_label_animation(animation_table, start_time)
 	_create_fade_in_pass_animation(animation_table, "level_up_label", start_time)
 	_create_fade_in_pass_animation(animation_table, "level_up_label_divider", start_time + 0.05)
@@ -1911,6 +2414,12 @@ animations.havoc_card_dim_out_content = {}
 
 _create_progress_havoc_animation(animations.havoc_card_show_content, 0.25)
 _create_dim_havoc_animation(animations.havoc_card_dim_out_content)
+
+animations.expedition_card_show_content = {}
+animations.expedition_card_dim_out_content = {}
+
+_create_progress_expedition_animation(animations.expedition_card_show_content, 0.25)
+_create_dim_expedition_animation(animations.expedition_card_dim_out_content)
 
 animations.wallet_change_function = function (content, style, animation, dt)
 	local anim_progress = content._anim_progress

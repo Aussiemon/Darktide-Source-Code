@@ -35,6 +35,7 @@ local function _create_breed_entry(path)
 	breeds[breed_name] = breed_data
 end
 
+_create_breed_entry("scripts/settings/breed/breeds/chaos/chaos_armored_hound_breed")
 _create_breed_entry("scripts/settings/breed/breeds/chaos/chaos_armored_infected_breed")
 _create_breed_entry("scripts/settings/breed/breeds/chaos/chaos_beast_of_nurgle_breed")
 _create_breed_entry("scripts/settings/breed/breeds/chaos/chaos_daemonhost_breed")
@@ -48,6 +49,7 @@ _create_breed_entry("scripts/settings/breed/breeds/chaos/chaos_newly_infected_br
 _create_breed_entry("scripts/settings/breed/breeds/chaos/chaos_ogryn_bulwark_breed")
 _create_breed_entry("scripts/settings/breed/breeds/chaos/chaos_ogryn_executor_breed")
 _create_breed_entry("scripts/settings/breed/breeds/chaos/chaos_ogryn_gunner_breed")
+_create_breed_entry("scripts/settings/breed/breeds/chaos/chaos_ogryn_houndmaster_breed")
 _create_breed_entry("scripts/settings/breed/breeds/chaos/chaos_plague_ogryn_breed")
 _create_breed_entry("scripts/settings/breed/breeds/chaos/chaos_poxwalker_bomber_breed")
 _create_breed_entry("scripts/settings/breed/breeds/chaos/chaos_poxwalker_breed")
@@ -83,6 +85,9 @@ _create_breed_entry("scripts/settings/breed/breeds/renegade/renegade_twin_captai
 _create_breed_entry("scripts/settings/breed/breeds/companion/companion_dog_breed")
 _create_breed_entry("scripts/settings/breed/breeds/human_breed")
 _create_breed_entry("scripts/settings/breed/breeds/ogryn_breed")
+_create_breed_entry("scripts/settings/breed/breeds/sand_vortex_breed")
+_create_breed_entry("scripts/settings/breed/breeds/nurgle_flies_breed")
+_create_breed_entry("scripts/settings/breed/breeds/valkyrie/attack_valkyrie_breed")
 
 local init_breed_nav_settings_func = require("scripts/settings/breed/breed_nav_init")
 

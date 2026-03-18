@@ -1,30 +1,52 @@
 ﻿-- chunkname: @scripts/settings/equipment/tests/weapon_item_tests.lua
 
 local MasterItems = require("scripts/backend/master_items")
+local UiSettings = require("scripts/settings/ui/ui_settings")
+local ui_weapon_patterns_settings = UiSettings.weapon_patterns
+local _check_weapon_template, _check_mastery_settings
+local workflow_states_to_check = {
+	FUNCTIONAL = true,
+	PROTOTYPE = true,
+	RELEASABLE = true,
+	SHIPPABLE = true,
+}
 
-local function weapon_template_tests(weapon_templates)
+local function _weapon_item_tests(weapon_templates)
 	local item_definitions = MasterItems.get_cached()
 
-	for item_name, item in pairs(item_definitions) do
-		local weapon_template_name = item.weapon_template
+	for _, item in pairs(item_definitions) do
+		_check_weapon_template(weapon_templates, item)
+		_check_mastery_settings(item)
+	end
+end
 
-		weapon_template_name = type(weapon_template_name) == "string" and weapon_template_name ~= "" and weapon_template_name
+function _check_weapon_template(weapon_templates, item)
+	local weapon_template_name = item.weapon_template
 
-		local workflow_state = item.workflow_state
-		local testable = workflow_state == "FUNCTIONAL" or workflow_state == "SHIPPABLE" or workflow_state == "RELEASABLE"
-		local unstable = workflow_state == "PROTOTYPE"
-		local wip = workflow_state == "BLOCKOUT"
+	weapon_template_name = type(weapon_template_name) == "string" and weapon_template_name ~= "" and weapon_template_name
 
-		if weapon_template_name then
-			local weapon_template = weapon_templates[weapon_template_name]
+	local item_name = item.name
+	local workflow_state = item.workflow_state
 
-			if weapon_template or testable or unstable then
-				-- Nothing
-			elseif wip then
-				Log.error("WeaponTemplateTests", "Weapon template %q defined for item %q with workflow state %q does not exist.", weapon_template_name, item_name, workflow_state)
-			end
+	if weapon_template_name then
+		local weapon_template = weapon_templates[weapon_template_name]
+
+		if weapon_template or workflow_states_to_check[workflow_state] then
+			-- Nothing
+		elseif workflow_state then
+			Log.error("WeaponItemTests", "Weapon template %q defined for item %q with workflow state %q does not exist.", weapon_template_name, item_name, workflow_state)
 		end
 	end
 end
 
-return weapon_template_tests
+function _check_mastery_settings(item)
+	local parent_pattern = item.parent_pattern
+	local item_name = item.name
+	local workflow_state = item.workflow_state
+
+	if workflow_states_to_check[workflow_state] and parent_pattern and parent_pattern ~= "" then
+		-- Nothing
+	end
+end
+
+return _weapon_item_tests

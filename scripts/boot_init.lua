@@ -102,8 +102,49 @@ end
 HAS_STEAM = rawget(_G, "Steam") and true or false
 DEDICATED_SERVER = Application.is_dedicated_server()
 VIRTUAL_MACHINE = Application.is_virtual_machine()
-CLASSES = CLASSES or {}
 SETTINGS = SETTINGS or {}
+
+local function get_platform_detailed()
+	if PLATFORM == "xbs" then
+		if Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_ANACONDA then
+			return "xbs_anaconda"
+		elseif Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_LOCKHEART then
+			return "xbs_lockheart"
+		end
+	elseif PLATFORM == "ps5" then
+		if Playstation.device_type() == "ps5_pro" then
+			return "ps5_pro"
+		elseif Playstation.device_type() == "ps5" then
+			return "ps5_standard"
+		end
+	elseif PLATFORM == "win32" then
+		if HAS_STEAM and Steam.is_running_on_steamdeck() then
+			return "windows_steamdeck"
+		elseif Application.wine_version() then
+			return "windows_wine"
+		elseif Backend.get_auth_method() == Backend.AUTH_METHOD_XBOXLIVE then
+			return "windows_msstore"
+		elseif Backend.get_auth_method() == Backend.AUTH_METHOD_STEAM then
+			return "windows_steam"
+		elseif Backend.get_auth_method() == Backend.AUTH_METHOD_DEV_USER then
+			return "windows_devuser"
+		elseif Application.is_dedicated_server() then
+			return "windows_server"
+		end
+	elseif PLATFORM == "linux" and Application.is_dedicated_server() then
+		return "linux_server"
+	end
+end
+
+PLATFORM_DETAILED = get_platform_detailed()
+
+if not PLATFORM_DETAILED then
+	if PLATFORM then
+		PLATFORM_DETAILED = PLATFORM .. "_unknown"
+	else
+		PLATFORM_DETAILED = "unknown"
+	end
+end
 
 local valid
 

@@ -262,6 +262,7 @@ local views = {
 		package = "packages/ui/views/class_selection_view/class_selection_view",
 		path = "scripts/ui/views/class_selection_view/class_selection_view",
 		state_bound = true,
+		throttle_frame_rate = false,
 		use_transition_ui = true,
 		levels = {
 			"content/levels/ui/class_selection/class_selection_adamant/class_selection_adamant",
@@ -427,6 +428,7 @@ local views = {
 		package = "packages/ui/views/lobby_view/lobby_view",
 		path = "scripts/ui/views/lobby_view/lobby_view",
 		preload_in_hub = "always",
+		throttle_frame_rate = false,
 		use_transition_ui = true,
 		testify_flags = {
 			ui_views = false,
@@ -442,6 +444,7 @@ local views = {
 		package = "packages/ui/views/main_menu_view/main_menu_view",
 		parent_transition_view = "main_menu_background_view",
 		path = "scripts/ui/views/main_menu_view/main_menu_view",
+		throttle_frame_rate = false,
 		enter_sound_events = {
 			UISoundEvents.main_menu_enter,
 		},
@@ -625,6 +628,7 @@ local views = {
 		display_name = "loc_main_menu_background_view_display_name",
 		package = "packages/ui/views/main_menu_background_view/main_menu_background_view",
 		path = "scripts/ui/views/main_menu_background_view/main_menu_background_view",
+		throttle_frame_rate = false,
 		use_transition_ui = true,
 		levels = {
 			"content/levels/ui/main_menu/main_menu",
@@ -640,6 +644,7 @@ local views = {
 		preload_in_hub = "not_ps5",
 		preload_in_mission = "not_ps5",
 		state_bound = true,
+		throttle_frame_rate = false,
 		enter_sound_events = {
 			UISoundEvents.mission_vote_popup_enter,
 		},
@@ -749,10 +754,12 @@ local views = {
 		class = "TalentBuilderView",
 		disable_game_world = true,
 		display_name = "loc_talent_builder_view_display_name",
-		package = "packages/ui/views/talent_builder_view/talent_builder_view",
 		path = "scripts/ui/views/talent_builder_view/talent_builder_view",
 		preload_in_hub = "not_ps5_nor_lockhart",
 		state_bound = true,
+		package = {
+			"packages/ui/views/talent_builder_view/talent_builder_view",
+		},
 		testify_flags = {
 			ui_views = false,
 		},
@@ -826,6 +833,9 @@ _declare_view("havoc_reward_presentation_view", require("scripts/ui/views/havoc_
 _declare_view("group_finder_view", require("scripts/ui/views/group_finder_view/group_finder_view_declaration_settings"))
 _declare_view("penance_overview_view", require("scripts/ui/views/penance_overview_view/penance_overview_view_declaration_settings"))
 _declare_view("report_player_view", require("scripts/ui/views/report_player_view/report_player_view_declaration_settings"))
+_declare_view("expedition_play_view", require("scripts/ui/views/expedition_play_view/expedition_play_view_declaration_settings"))
+_declare_view("expedition_background_view", require("scripts/ui/views/expedition_background_view/expedition_background_view_declaration_settings"))
+_declare_view("expedition_view", require("scripts/ui/views/expedition_view/expedition_view_declaration_settings"))
 _declare_view("horde_play_view", require("scripts/ui/views/horde_play_view/horde_play_view_declaration_settings"))
 _declare_view("dlc_purchase_view", require("scripts/ui/views/dlc_purchase_view/dlc_purchase_view_declaration_settings"))
 _declare_view("premium_currency_purchase_view", require("scripts/ui/views/premium_currency_purchase_view/premium_currency_purchase_view_declaration_settings"))
@@ -835,6 +845,7 @@ for view_name, settings in pairs(views) do
 	settings.name = view_name
 	settings.close_on_hotkey_pressed = settings.close_on_hotkey_pressed ~= false
 	settings.close_on_hotkey_gamepad = settings.close_on_hotkey_gamepad == true
+	settings.throttle_frame_rate = settings.throttle_frame_rate or not settings.allow_hud and settings.throttle_frame_rate ~= false
 end
 
 return settings("Views", views)

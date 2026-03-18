@@ -14,10 +14,8 @@ local BASE_TALENT_STEP_COUNT = -1
 local _fill_combat_ability_or_grenade_ability_or_coherency, _add_modifier
 local talent_layouts = {
 	"talent_layout_file_path",
+	"specialization_talent_layout_file_path",
 }
-
-table.insert(talent_layouts, "specialization_talent_layout_file_path")
-
 local ALLOWED_MULTIPLE_OF = table.set({
 	"stat",
 	"default",
@@ -151,8 +149,7 @@ local NODES_BY_TALENT = {}
 local NON_BASE_TALENTS = {}
 
 CharacterSheet.class_loadout = function (profile, destination, force_base_talents, optional_selected_talents, mute_log)
-	local ability, blitz, aura = destination.ability or TRASH_TABLE, destination.blitz or TRASH_TABLE, destination.aura or TRASH_TABLE
-	local pocketable = destination.pocketable or TRASH_TABLE
+	local ability, blitz, aura, pocketable = destination.ability or TRASH_TABLE, destination.blitz or TRASH_TABLE, destination.aura or TRASH_TABLE, destination.pocketable or TRASH_TABLE
 	local passives, coherency_buffs, special_rules, buff_template_tiers, iconics, modifiers = destination.passives, destination.coherency, destination.special_rules, destination.buff_template_tiers, destination.iconics, destination.modifiers
 
 	table.clear(ability)
@@ -198,8 +195,7 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 	end
 
 	local combat_ability, grenade_ability, pocketable_ability
-	local found_base_combat_ability, found_base_grenade_ability, found_base_coherency_talent = false, false, false
-	local found_base_pocketable_ability = false
+	local found_base_combat_ability, found_base_grenade_ability, found_base_coherency_talent, found_base_pocketable_ability = false, false, false, false
 	local archetype = profile.archetype
 	local archetype_talents = archetype.talents
 	local base_talents = PlayerTalents.base_talents(archetype, not force_base_talents and optional_selected_talents)
@@ -339,8 +335,6 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 	if optional_selected_talents and not force_base_talents then
 		_nodes_by_talents(NODES_BY_TALENT, archetype)
 
-		local found_combat_ability, found_grenade_ability, found_coherency_talent = false, false, false
-		local found_pocketable_ability = false
 		local num_talents = _filter_non_base_talents(optional_selected_talents, base_talents, NON_BASE_TALENTS)
 
 		for i = 1, num_talents do
@@ -484,9 +478,8 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 		ability = ability,
 		blitz = blitz,
 		aura = aura,
+		pocketable = pocketable,
 	}
-
-	write_out_abilities.pocketable = pocketable
 
 	for ability_type, write_out_data in pairs(write_out_abilities) do
 		local ability_data = ABILITIES_FOUND[ability_type]

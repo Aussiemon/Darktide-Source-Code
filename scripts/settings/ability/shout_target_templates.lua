@@ -80,7 +80,7 @@ shout_target_templates.ogryn_shout = {
 			chaos_mutator_daemonhost = true,
 			chaos_mutator_ritualist = true,
 		},
-		can_not_hit = {
+		ignored_breeds = {
 			chaos_mutator_daemonhost = true,
 			chaos_mutator_ritualist = true,
 		},

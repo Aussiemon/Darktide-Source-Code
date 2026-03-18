@@ -740,37 +740,5 @@ AchievementMissionGroups.zone_meta = {
 		achievements = {},
 	},
 }
-AchievementMissionGroups.sorted_missions_per_zone = {
-	transit = {
-		count = 0,
-		loc_variables = "loc_zone_name_transit_short",
-		stats = {},
-	},
-	watertown = {
-		count = 0,
-		loc_variables = "loc_zone_name_watertown_short",
-		stats = {},
-	},
-	dust = {
-		count = 0,
-		loc_variables = "loc_zone_name_hourglass_short",
-		stats = {},
-	},
-	entertainment = {
-		count = 0,
-		loc_variables = "loc_zone_name_entertainment_short",
-		stats = {},
-	},
-	throneside = {
-		count = 0,
-		loc_variables = "loc_zone_name_throneside_short",
-		stats = {},
-	},
-	tank_foundry = {
-		count = 0,
-		loc_variables = "loc_zone_name_tank_foundry_short",
-		stats = {},
-	},
-}
 
 return AchievementMissionGroups

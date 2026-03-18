@@ -4,7 +4,6 @@ local BreedShootTemplates = require("scripts/settings/breed/breed_shoot_template
 local ChaosBeastOfNurgleSettings = require("scripts/settings/monster/chaos_beast_of_nurgle_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local GroundImpactFxTemplates = require("scripts/settings/fx/ground_impact_fx_templates")
 local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
@@ -291,6 +290,7 @@ local action_data = {
 		attack_intensity_type = "ranged",
 		collision_filter = "filter_minion_shooting_no_friendly_fire",
 		dont_follow_target = true,
+		effect_template_name = "chaos_beast_of_nurgle_vomit",
 		exit_after_cooldown = true,
 		ground_normal_rotation = true,
 		liquid_paint_brush_size = 2,
@@ -328,7 +328,6 @@ local action_data = {
 			elite_ranged = 50,
 			ranged = 50,
 		},
-		effect_template = EffectTemplates.chaos_beast_of_nurgle_vomit,
 		from_node = ChaosBeastOfNurgleSettings.from_node,
 		range = ChaosBeastOfNurgleSettings.range,
 		min_range = ChaosBeastOfNurgleSettings.min_range,
@@ -463,6 +462,7 @@ local action_data = {
 	},
 	consume_minion = {
 		consumed_minion_anim = "death_bon_eaten",
+		effect_template_name = "chaos_beast_of_nurgle_consume_minion",
 		health_percent_threshold = 0.85,
 		max_tongue_length = 10,
 		min_tongue_length = 4.5,
@@ -496,7 +496,6 @@ local action_data = {
 			6,
 			4,
 		},
-		effect_template = EffectTemplates.chaos_beast_of_nurgle_consume_minion,
 	},
 	spit_out = {
 		after_throw_taunt_anim = "change_target_fwd",
@@ -579,6 +578,7 @@ local action_data = {
 		allow_fallback_movement = true,
 		dont_push_consumed_unit = true,
 		dont_rotate_towards_target = true,
+		effect_template_name = "chaos_beast_of_nurgle_weakspot",
 		ground_normal_rotation = true,
 		is_assaulting = true,
 		leave_when_reached_destination = false,
@@ -609,7 +609,6 @@ local action_data = {
 			"ledges",
 			"ledges_with_fence",
 		},
-		effect_template = EffectTemplates.chaos_beast_of_nurgle_weakspot,
 		start_move_anim_events = {
 			bwd = "move_start_bwd",
 			fwd = "move_start_fwd",

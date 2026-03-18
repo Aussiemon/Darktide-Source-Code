@@ -16,7 +16,7 @@ Styles.mission_area_info.image = {
 	vertical_alignment = "bottom",
 	size = {
 		480,
-		270,
+		269,
 	},
 	offset = {
 		0,
@@ -93,9 +93,9 @@ Styles.mission_area_info.title_background = {
 	vertical_alignment = "top",
 	size = {
 		Dimensions.details_width,
-		66,
+		92,
 	},
-	color = Color.black(165, true),
+	color = Color.black(255, true),
 	offset = {
 		0,
 		0,
@@ -104,7 +104,7 @@ Styles.mission_area_info.title_background = {
 }
 Styles.mission_area_info.mission_title = {
 	font_size = 20,
-	font_type = "kode_mono_bold",
+	font_type = "mono_tide_bold",
 	horizontal_alignment = "center",
 	text_horizontal_alignment = "left",
 	text_vertical_alignment = "top",
@@ -116,13 +116,13 @@ Styles.mission_area_info.mission_title = {
 	text_color = table.shallow_copy(default_colors.terminal_header_text),
 	offset = {
 		20,
-		8,
+		12,
 		2,
 	},
 }
 Styles.mission_area_info.mission_sub_title = {
 	font_size = 14,
-	font_type = "kode_mono_medium",
+	font_type = "mono_tide_medium",
 	horizontal_alignment = "center",
 	text_horizontal_alignment = "left",
 	text_vertical_alignment = "top",
@@ -134,7 +134,7 @@ Styles.mission_area_info.mission_sub_title = {
 	text_color = table.shallow_copy(default_colors.text_sub_header),
 	offset = {
 		20,
-		34,
+		38,
 		2,
 	},
 }
@@ -218,7 +218,7 @@ Styles.mission_area_info.timer.timer_icon = {
 Styles.mission_area_info.timer.timer_text = {
 	drop_shadow = true,
 	font_size = 18,
-	font_type = "kode_mono_bold",
+	font_type = "mono_tide_bold",
 	horizontal_alignment = "left",
 	text_vertical_alignment = "bottom",
 	vertical_alignment = "top",

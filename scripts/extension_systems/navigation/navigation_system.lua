@@ -2,6 +2,7 @@
 
 require("scripts/extension_systems/navigation/bot_navigation_extension")
 require("scripts/extension_systems/navigation/minion_navigation_extension")
+require("scripts/extension_systems/navigation/minion_husk_navigation_extension")
 
 local NavigationSystem = class("NavigationSystem", "ExtensionSystemBase")
 
@@ -37,7 +38,7 @@ NavigationSystem.update = function (self, context, dt, t)
 	local enabled_units = self._enabled_units
 
 	for unit, extension in pairs(enabled_units) do
-		extension:update(unit, t)
+		extension:update(unit, dt, t)
 	end
 end
 

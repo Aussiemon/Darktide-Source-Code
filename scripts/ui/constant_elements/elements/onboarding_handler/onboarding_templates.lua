@@ -37,6 +37,13 @@ local function _is_in_hub()
 	return is_in_hub
 end
 
+local function _is_in_prologue_hub()
+	local game_mode_name = Managers.state.game_mode:game_mode_name()
+	local is_in_hub = game_mode_name == "prologue_hub"
+
+	return is_in_hub
+end
+
 local function _has_hud()
 	local has_hud = Managers.ui:has_hud()
 
@@ -47,13 +54,6 @@ local function is_view_or_popup_active()
 	local ui_manager = Managers.ui
 
 	return ui_manager:has_active_view() or ui_manager:handling_popups()
-end
-
-local function _is_in_prologue_hub()
-	local game_mode_name = Managers.state.game_mode:game_mode_name()
-	local is_in_hub = game_mode_name == "prologue_hub"
-
-	return is_in_hub
 end
 
 local function _get_player_character_level()
@@ -188,12 +188,31 @@ local function _has_new_difficulty()
 	return new_difficulty_unlocked
 end
 
+local difficulty_mappings = {
+	auric = 5,
+	damnation = 4,
+	heresy = 3,
+	malice = 2,
+	uprising = 1,
+}
+
+local function _highest_difficulty_num()
+	local player = _get_player()
+	local profile = player:profile()
+	local character_id = profile.character_id
+	local highest_difficulty_name = Managers.data_service.mission_board:get_highest_difficulty_unlocked(character_id)
+	local highest_difficulty_num = 0
+
+	if highest_difficulty_name then
+		highest_difficulty_num = difficulty_mappings[highest_difficulty_name]
+	end
+
+	return highest_difficulty_num
+end
+
 local templates = {
 	{
 		name = "Training Ground Objective - Morrow",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
 			return _is_in_prologue_hub() and _is_on_story_chapter("onboarding", "speak_to_morrow")
 		end,
@@ -229,7 +248,7 @@ local templates = {
 
 			self.objective = nil
 
-			objective:destroy()
+			objective:delete()
 		end,
 		sync_on_events = {
 			"event_onboarding_step_speak_to_morrow",
@@ -237,9 +256,6 @@ local templates = {
 	},
 	{
 		name = "Training Ground Objective - visit training ground",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
 			return _is_in_prologue_hub() and _is_on_story_chapter("onboarding", "go_to_training")
 		end,
@@ -275,7 +291,7 @@ local templates = {
 
 			self.objective = nil
 
-			objective:destroy()
+			objective:delete()
 		end,
 		sync_on_events = {
 			"event_onboarding_step_go_to_training",
@@ -283,9 +299,6 @@ local templates = {
 	},
 	{
 		name = "Training Ground Popup - Reward Popup",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
 			return _is_in_prologue_hub() and _is_on_story_chapter("onboarding", "training_reward")
 		end,
@@ -311,9 +324,6 @@ local templates = {
 	},
 	{
 		name = "Training Ground Popup - Inventory",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
 			return _is_in_prologue_hub() and _is_on_story_chapter("onboarding", "inventory_popup")
 		end,
@@ -355,9 +365,6 @@ local templates = {
 	},
 	{
 		name = "Training Ground Objective - Visit Chapel",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
 			return _is_in_prologue_hub() and _is_on_story_chapter("onboarding", "visit_chapel")
 		end,
@@ -393,7 +400,7 @@ local templates = {
 
 			self.objective = nil
 
-			objective:destroy()
+			objective:delete()
 		end,
 		sync_on_events = {
 			"event_onboarding_step_visit_chapel",
@@ -401,9 +408,6 @@ local templates = {
 	},
 	{
 		name = "Training Ground Objective - Chapel Video",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
 			return _is_in_hub() and Managers.state.mission and Managers.narrative:can_complete_event("onboarding_step_chapel_video_viewed")
 		end,
@@ -462,9 +466,6 @@ local templates = {
 	},
 	{
 		name = "Mission Terminal Objective - Access MT",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
 			return _has_hud() and _is_in_hub() and Managers.narrative:can_complete_event("onboarding_step_mission_board_introduction")
 		end,
@@ -496,17 +497,14 @@ local templates = {
 
 			self.objective = nil
 
-			objective:destroy()
+			objective:delete()
 		end,
 		sync_on_events = {},
 	},
 	{
 		name = "Mission Terminal Popup - Access MT",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _is_in_hub() and Managers.narrative:can_complete_event("onboarding_step_mission_board_introduction")
+			return _has_hud() and _is_in_hub() and Managers.narrative:can_complete_event("onboarding_step_mission_board_introduction")
 		end,
 		on_activation = function (self)
 			local player = _get_player()
@@ -530,9 +528,6 @@ local templates = {
 	},
 	{
 		name = "Level 2 Unlocks Objective - Contracts Shop",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
 			return _has_hud() and _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_contract_store_visited")
 		end,
@@ -564,7 +559,7 @@ local templates = {
 
 			self.objective = nil
 
-			objective:destroy()
+			objective:delete()
 		end,
 		close_condition = function (self)
 			return Managers.ui:view_active("contracts_background_view")
@@ -573,9 +568,6 @@ local templates = {
 	},
 	{
 		name = "Level 2 Unlocks Popup - Contracts Shop",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
 			return _is_in_hub() and _is_on_story_chapter("level_unlock_popups", "level_unlock_contract_store_popup")
 		end,
@@ -596,11 +588,8 @@ local templates = {
 	},
 	{
 		name = "Level 3 Unlocks Objective - Weapons Shop",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _has_hud() and _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_credits_store_visited")
+			return _is_in_hub() and _has_hud() and Managers.narrative:can_complete_event("level_unlock_credits_store_visited")
 		end,
 		on_activation = function (self)
 			if self.objective then
@@ -630,7 +619,7 @@ local templates = {
 
 			self.objective = nil
 
-			objective:destroy()
+			objective:delete()
 		end,
 		close_condition = function (self)
 			return Managers.ui:view_active("credits_view")
@@ -639,9 +628,6 @@ local templates = {
 	},
 	{
 		name = "Level 3 Unlocks Popup - Weapons Shop",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
 			return _is_in_hub() and _is_on_story_chapter("level_unlock_popups", "level_unlock_credits_store_popup")
 		end,
@@ -668,11 +654,8 @@ local templates = {
 	},
 	{
 		name = "Level 3 Unlocks Objective - Cosmetics Shop",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _has_hud() and _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_cosmetic_store_visited") and not _is_dlc_archetype()
+			return _is_in_hub() and _has_hud() and Managers.narrative:can_complete_event("level_unlock_cosmetic_store_visited") and not _is_dlc_archetype()
 		end,
 		on_activation = function (self)
 			if self.objective then
@@ -702,7 +685,7 @@ local templates = {
 
 			self.objective = nil
 
-			objective:destroy()
+			objective:delete()
 		end,
 		close_condition = function (self)
 			return Managers.ui:view_active("cosmetics_vendor_background_view")
@@ -711,9 +694,6 @@ local templates = {
 	},
 	{
 		name = "Level 3 Unlocks Popup - Cosmetics Shop",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
 			return _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_cosmetic_store_popup") and not _journey_mission_completed("km_heresy")
 		end,
@@ -734,11 +714,8 @@ local templates = {
 	},
 	{
 		name = "Level 4 Unlocks Objective - Forge / Crafting",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _has_hud() and _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_crafting_station_visited")
+			return _is_in_hub() and _has_hud() and Managers.narrative:can_complete_event("level_unlock_crafting_station_visited")
 		end,
 		on_activation = function (self)
 			if self.objective then
@@ -768,7 +745,7 @@ local templates = {
 
 			self.objective = nil
 
-			objective:destroy()
+			objective:delete()
 		end,
 		close_condition = function (self)
 			return Managers.ui:view_active("crafting_view")
@@ -777,9 +754,6 @@ local templates = {
 	},
 	{
 		name = "Level 4 Unlocks Popup - Forge / Crafting",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
 			return _is_in_hub() and _is_on_story_chapter("level_unlock_popups", "level_unlock_crafting_station_popup")
 		end,
@@ -806,9 +780,6 @@ local templates = {
 	},
 	{
 		name = "Level 5 Unlocks Popup - Mission Board Tier Up",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
 			return _is_in_hub() and (_is_on_story_chapter("level_unlock_popups", "level_unlock_mission_board_popup_difficulty_increased_1") or _is_on_story_chapter("level_unlock_popups", "level_unlock_mission_board_popup_difficulty_increased_2") or _is_on_story_chapter("level_unlock_popups", "level_unlock_mission_board_popup_difficulty_increased_3"))
 		end,
@@ -833,9 +804,6 @@ local templates = {
 	},
 	{
 		name = "Level 5/10/15/20/25/30 Unlocks Popup - Talent Tier Up",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
 			return _is_in_hub() and (_is_on_story_chapter("level_unlock_popups", "level_unlock_talent_tier_1") or _is_on_story_chapter("level_unlock_popups", "level_unlock_talent_tier_2") or _is_on_story_chapter("level_unlock_popups", "level_unlock_talent_tier_3") or _is_on_story_chapter("level_unlock_popups", "level_unlock_talent_tier_4") or _is_on_story_chapter("level_unlock_popups", "level_unlock_talent_tier_5") or _is_on_story_chapter("level_unlock_popups", "level_unlock_talent_tier_6"))
 		end,
@@ -845,9 +813,6 @@ local templates = {
 	},
 	{
 		name = "Level 7 Introduce Objective - Penances / Track",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
 			if not _is_in_hub() then
 				return false
@@ -887,17 +852,14 @@ local templates = {
 
 			self.objective = nil
 
-			objective:destroy()
+			objective:delete()
 		end,
 		sync_on_events = {},
 	},
 	{
 		name = "Level 8 / 15 / 23 Unlocks Popup - New Device Slot",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _is_in_hub() and (_is_on_story_chapter("level_unlock_popups", "level_unlock_gadget_slot_1") or _is_on_story_chapter("level_unlock_popups", "level_unlock_gadget_slot_2") or _is_on_story_chapter("level_unlock_popups", "level_unlock_gadget_slot_3"))
+			return _is_in_hub() and _has_hud() and (_is_on_story_chapter("level_unlock_popups", "level_unlock_gadget_slot_1") or _is_on_story_chapter("level_unlock_popups", "level_unlock_gadget_slot_2") or _is_on_story_chapter("level_unlock_popups", "level_unlock_gadget_slot_3"))
 		end,
 		on_activation = function (self)
 			local player = _get_player()
@@ -926,9 +888,6 @@ local templates = {
 	},
 	{
 		name = "Level 30 Introduce Objective - Havoc Start Quest",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
 			return _is_in_hub() and _has_hud() and _is_on_story_chapter("unlock_havoc", "unlock_havoc_1") and _is_havoc_cadence_active()
 		end,
@@ -966,7 +925,7 @@ local templates = {
 
 			self.objective = nil
 
-			objective:destroy()
+			objective:delete()
 
 			if close_condition_met then
 				Managers.narrative:complete_current_chapter("unlock_havoc", "unlock_havoc_1")
@@ -979,9 +938,6 @@ local templates = {
 	},
 	{
 		name = "Level 30 Introduce Objective - Havoc Complete Maelstrom",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
 			return _is_in_hub() and _has_hud() and _is_on_story_chapter("unlock_havoc", "unlock_havoc_2") and _is_havoc_cadence_active()
 		end,
@@ -1022,7 +978,7 @@ local templates = {
 
 			self.objective = nil
 
-			objective:destroy()
+			objective:delete()
 
 			if close_condition_met then
 				Managers.narrative:complete_current_chapter("unlock_havoc", "unlock_havoc_2")
@@ -1035,9 +991,6 @@ local templates = {
 	},
 	{
 		name = "Level 30 Introduce Objective - Havoc Complete Quest",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
 			return _is_in_hub() and _has_hud() and _is_on_story_chapter("unlock_havoc", "unlock_havoc_3") and _is_havoc_cadence_active()
 		end,
@@ -1077,7 +1030,7 @@ local templates = {
 
 			self.objective = nil
 
-			objective:destroy()
+			objective:delete()
 
 			if close_condition_met then
 				Managers.narrative:complete_current_chapter("unlock_havoc", "unlock_havoc_3")
@@ -1090,13 +1043,52 @@ local templates = {
 		sync_on_events = {},
 	},
 	{
+		name = "Expeditions Objective",
+		validation_func = function (self)
+			return _is_in_hub() and _has_hud() and Managers.narrative:can_complete_event("hli_expeditions_viewed")
+		end,
+		on_activation = function (self)
+			if self.objective then
+				Log.warning("onboarding_templates", "[on_event_triggered] trying to start objective '%s' when it's already active", self.name)
+
+				return
+			end
+
+			local objective_name = self.name
+			local localization_key = "loc_hub_expedition_deadside_mission"
+			local interaction_type = "gamemode_expeditions"
+			local marker_units = _get_interaction_units_by_type(interaction_type)
+			local objective = _create_objective(objective_name, localization_key, marker_units, true)
+
+			self.objective = objective
+
+			Managers.event:trigger("event_add_mission_objective", objective)
+		end,
+		on_deactivation = function (self)
+			if not self.objective then
+				return
+			end
+
+			local objective = self.objective
+
+			Managers.event:trigger("event_remove_mission_objective", objective)
+
+			self.objective = nil
+
+			objective:delete()
+		end,
+		sync_on_events = {},
+	},
+	{
 		name = "Unspent Talent points available",
 		once_per_state = true,
 		valid_states = {
 			"GameplayStateRun",
 		},
 		validation_func = function (self)
-			if _is_in_hub() then
+			local has_hud = _has_hud()
+
+			if has_hud then
 				local player = _get_player()
 				local profile = player and player:profile()
 
@@ -1122,8 +1114,6 @@ local templates = {
 						return true
 					end
 				end
-
-				return false
 			end
 
 			return false
@@ -1138,13 +1128,7 @@ local templates = {
 			local localized_text = Localize(localization_key, no_cache, param)
 			local duration = UI_POPUP_INFO_DURATION
 
-			local function close_callback_function()
-				return
-			end
-
-			local close_callback = callback(close_callback_function)
-
-			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration, close_callback)
+			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration)
 		end,
 		close_condition = function (self)
 			local input_service = Managers.input:get_input_service("View")
@@ -1160,29 +1144,32 @@ local templates = {
 	},
 	{
 		name = "Player Journey - Mission Board Tier Up",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _is_in_hub() and not is_view_or_popup_active() and _has_hud() and _has_new_difficulty()
+			return _is_in_hub() and _has_hud() and not is_view_or_popup_active() and _has_new_difficulty()
 		end,
 		on_activation = function (self)
-			local player = _get_player()
-			local current_difficulty_name = Managers.data_service.mission_board:get_difficulty_progression_data().current.name
-			local localization_key = "loc_onboarding_popup_difficulty_unlocked_" .. current_difficulty_name
-			local localized_text = Localize(localization_key)
-			local duration = UI_POPUP_INFO_DURATION
+			if _journey_mission_completed("fm_armoury") and _highest_difficulty_num() == 2 then
+				local player = _get_player()
+				local localization_key = "loc_onboarding_popup_expeditions_unlocked"
+				local localized_text = Localize(localization_key)
+				local duration = UI_POPUP_INFO_DURATION
 
-			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration)
+				Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration)
+			else
+				local player = _get_player()
+				local current_difficulty_name = Managers.data_service.mission_board:get_difficulty_progression_data().current.name
+				local localization_key = "loc_onboarding_popup_difficulty_unlocked_" .. current_difficulty_name
+				local localized_text = Localize(localization_key)
+				local duration = UI_POPUP_INFO_DURATION
+
+				Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration)
+			end
 		end,
 	},
 	{
 		name = "main_story_km_station",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("km_station") and not Managers.narrative:last_completed_chapter("main_story") or _journey_mission_completed("km_heresy") and _last_completed_chapter_is("main_story", "km_station")
+			return not is_view_or_popup_active() and _journey_mission_completed("km_station") and not Managers.narrative:last_completed_chapter("main_story") or _journey_mission_completed("km_heresy") and _last_completed_chapter_is("main_story", "km_station")
 		end,
 		on_activation = function (self)
 			if _journey_mission_completed("km_heresy") then
@@ -1224,11 +1211,8 @@ local templates = {
 	},
 	{
 		name = "main_story_dm_stockpile",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("dm_stockpile") and _is_on_story_chapter("main_story", "dm_stockpile")
+			return _has_hud() and not is_view_or_popup_active() and _journey_mission_completed("dm_stockpile") and _is_on_story_chapter("main_story", "dm_stockpile")
 		end,
 		on_activation = function (self)
 			if not _is_dlc_archetype() then
@@ -1245,11 +1229,8 @@ local templates = {
 	},
 	{
 		name = "main_story_hm_cartel",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("hm_cartel") and _is_on_story_chapter("main_story", "hm_cartel")
+			return not is_view_or_popup_active() and _journey_mission_completed("hm_cartel") and _is_on_story_chapter("main_story", "hm_cartel")
 		end,
 		on_activation = function (self)
 			Managers.narrative:complete_current_chapter("main_story")
@@ -1257,11 +1238,8 @@ local templates = {
 	},
 	{
 		name = "main_story_km_enforcer",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("km_enforcer") and _is_on_story_chapter("main_story", "km_enforcer")
+			return _has_hud() and not is_view_or_popup_active() and _journey_mission_completed("km_enforcer") and _is_on_story_chapter("main_story", "km_enforcer")
 		end,
 		on_activation = function (self)
 			Managers.narrative:complete_current_chapter("main_story")
@@ -1276,11 +1254,8 @@ local templates = {
 	},
 	{
 		name = "main_story_cm_habs",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("cm_habs") and _is_on_story_chapter("main_story", "cm_habs")
+			return not is_view_or_popup_active() and _journey_mission_completed("cm_habs") and _is_on_story_chapter("main_story", "cm_habs")
 		end,
 		on_activation = function (self)
 			Managers.narrative:complete_current_chapter("main_story")
@@ -1303,11 +1278,8 @@ local templates = {
 	},
 	{
 		name = "main_story_dm_propaganda",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("dm_propaganda") and (_last_completed_chapter_is("main_story", "cm_habs") or _last_completed_chapter_is("main_story", "fm_cargo_0_1") or _last_completed_chapter_is("main_story", "core_research_0_2"))
+			return _has_hud() and not is_view_or_popup_active() and _journey_mission_completed("dm_propaganda") and (_last_completed_chapter_is("main_story", "cm_habs") or _last_completed_chapter_is("main_story", "fm_cargo_0_1") or _last_completed_chapter_is("main_story", "core_research_0_2"))
 		end,
 		on_activation = function (self)
 			local jump_to_chapter
@@ -1335,11 +1307,8 @@ local templates = {
 	},
 	{
 		name = "main_story_fm_cargo",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _is_in_hub() and _journey_mission_completed("fm_cargo") and (_last_completed_chapter_is("main_story", "cm_habs") or _last_completed_chapter_is("main_story", "dm_propaganda_1_0") or _last_completed_chapter_is("main_story", "hm_strain_2_0"))
+			return _journey_mission_completed("fm_cargo") and (_last_completed_chapter_is("main_story", "cm_habs") or _last_completed_chapter_is("main_story", "dm_propaganda_1_0") or _last_completed_chapter_is("main_story", "hm_strain_2_0"))
 		end,
 		on_activation = function (self)
 			local ui_manager = Managers.ui
@@ -1384,11 +1353,8 @@ local templates = {
 	},
 	{
 		name = "main_story_hm_strain",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _is_in_hub() and _journey_mission_completed("hm_strain") and (_last_completed_chapter_is("main_story", "dm_propaganda_1_0") or _last_completed_chapter_is("main_story", "fm_cargo_1_1") or _last_completed_chapter_is("main_story", "dm_propaganda_1_1") or _last_completed_chapter_is("main_story", "core_research_1_2") or _last_completed_chapter_is("main_story", "dm_propaganda_1_2"))
+			return _journey_mission_completed("hm_strain") and (_last_completed_chapter_is("main_story", "dm_propaganda_1_0") or _last_completed_chapter_is("main_story", "fm_cargo_1_1") or _last_completed_chapter_is("main_story", "dm_propaganda_1_1") or _last_completed_chapter_is("main_story", "core_research_1_2") or _last_completed_chapter_is("main_story", "dm_propaganda_1_2"))
 		end,
 		on_activation = function (self)
 			if not _is_dlc_archetype() then
@@ -1428,11 +1394,8 @@ local templates = {
 	},
 	{
 		name = "main_story_core_research",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("core_research") and (_last_completed_chapter_is("main_story", "fm_cargo_0_1") or _last_completed_chapter_is("main_story", "fm_cargo_1_1") or _last_completed_chapter_is("main_story", "dm_propaganda_1_1") or _last_completed_chapter_is("main_story", "hm_strain_2_1") or _last_completed_chapter_is("main_story", "fm_cargo_2_1"))
+			return not is_view_or_popup_active() and _journey_mission_completed("core_research") and (_last_completed_chapter_is("main_story", "fm_cargo_0_1") or _last_completed_chapter_is("main_story", "fm_cargo_1_1") or _last_completed_chapter_is("main_story", "dm_propaganda_1_1") or _last_completed_chapter_is("main_story", "hm_strain_2_1") or _last_completed_chapter_is("main_story", "fm_cargo_2_1"))
 		end,
 		on_activation = function (self)
 			local jump_to_chapter
@@ -1460,23 +1423,26 @@ local templates = {
 	},
 	{
 		name = "main_story_fm_armoury",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("fm_armoury") and (_last_completed_chapter_is("main_story", "core_research_2_2") or _last_completed_chapter_is("main_story", "hm_strain_2_2"))
+			return _has_hud() and not is_view_or_popup_active() and _journey_mission_completed("fm_armoury") and (_last_completed_chapter_is("main_story", "core_research_2_2") or _last_completed_chapter_is("main_story", "hm_strain_2_2"))
 		end,
 		on_activation = function (self)
 			Managers.narrative:set_story_to_chapter("main_story", "fm_armoury")
+
+			if _highest_difficulty_num() >= 2 then
+				local player = _get_player()
+				local localization_key = "loc_onboarding_popup_expeditions_unlocked"
+				local localized_text = Localize(localization_key)
+				local duration = UI_POPUP_INFO_DURATION
+
+				Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration)
+			end
 		end,
 	},
 	{
 		name = "main_story_cm_raid",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("cm_raid") and _is_on_story_chapter("main_story", "cm_raid")
+			return not is_view_or_popup_active() and _journey_mission_completed("cm_raid") and _is_on_story_chapter("main_story", "cm_raid")
 		end,
 		on_activation = function (self)
 			Managers.narrative:complete_current_chapter("main_story")
@@ -1484,11 +1450,8 @@ local templates = {
 	},
 	{
 		name = "main_story_km_enforcer_twins",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("km_enforcer_twins") and _is_on_story_chapter("main_story", "km_enforcer_twins")
+			return not is_view_or_popup_active() and _journey_mission_completed("km_enforcer_twins") and _is_on_story_chapter("main_story", "km_enforcer_twins")
 		end,
 		on_activation = function (self)
 			Managers.narrative:complete_current_chapter("main_story")
@@ -1506,11 +1469,8 @@ local templates = {
 	},
 	{
 		name = "main_story_fm_resurgence",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("fm_resurgence") and (_last_completed_chapter_is("main_story", "km_enforcer_twins") or _last_completed_chapter_is("main_story", "dm_rise_0_1"))
+			return not is_view_or_popup_active() and _journey_mission_completed("fm_resurgence") and (_last_completed_chapter_is("main_story", "km_enforcer_twins") or _last_completed_chapter_is("main_story", "dm_rise_0_1"))
 		end,
 		on_activation = function (self)
 			local jump_to_chapter
@@ -1526,11 +1486,8 @@ local templates = {
 	},
 	{
 		name = "main_story_dm_rise",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("dm_rise") and (_last_completed_chapter_is("main_story", "km_enforcer_twins") or _last_completed_chapter_is("main_story", "fm_resurgence_1_0") or _last_completed_chapter_is("main_story", "cm_archives_2_0") or _last_completed_chapter_is("main_story", "hm_complex_3_0"))
+			return not is_view_or_popup_active() and _journey_mission_completed("dm_rise") and (_last_completed_chapter_is("main_story", "km_enforcer_twins") or _last_completed_chapter_is("main_story", "fm_resurgence_1_0") or _last_completed_chapter_is("main_story", "cm_archives_2_0") or _last_completed_chapter_is("main_story", "hm_complex_3_0"))
 		end,
 		on_activation = function (self)
 			local jump_to_chapter
@@ -1550,11 +1507,8 @@ local templates = {
 	},
 	{
 		name = "main_story_cm_archives",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("cm_archives") and (_last_completed_chapter_is("main_story", "fm_resurgence_1_0") or _last_completed_chapter_is("main_story", "dm_rise_1_1") or _last_completed_chapter_is("main_story", "fm_resurgence_1_1"))
+			return not is_view_or_popup_active() and _journey_mission_completed("cm_archives") and (_last_completed_chapter_is("main_story", "fm_resurgence_1_0") or _last_completed_chapter_is("main_story", "dm_rise_1_1") or _last_completed_chapter_is("main_story", "fm_resurgence_1_1"))
 		end,
 		on_activation = function (self)
 			local jump_to_chapter
@@ -1570,11 +1524,8 @@ local templates = {
 	},
 	{
 		name = "main_story_hm_complex",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("hm_complex") and (_last_completed_chapter_is("main_story", "cm_archives_2_0") or _last_completed_chapter_is("main_story", "dm_rise_2_1") or _last_completed_chapter_is("main_story", "cm_archives_2_1"))
+			return not is_view_or_popup_active() and _journey_mission_completed("hm_complex") and (_last_completed_chapter_is("main_story", "cm_archives_2_0") or _last_completed_chapter_is("main_story", "dm_rise_2_1") or _last_completed_chapter_is("main_story", "cm_archives_2_1"))
 		end,
 		on_activation = function (self)
 			local jump_to_chapter
@@ -1590,11 +1541,8 @@ local templates = {
 	},
 	{
 		name = "main_story_km_heresy",
-		valid_states = {
-			"GameplayStateRun",
-		},
 		validation_func = function (self)
-			return _is_in_hub() and not is_view_or_popup_active() and _journey_mission_completed("km_heresy") and (_last_completed_chapter_is("main_story", "hm_complex_3_1") or _last_completed_chapter_is("main_story", "dm_rise_3_1"))
+			return not is_view_or_popup_active() and _journey_mission_completed("km_heresy") and (_last_completed_chapter_is("main_story", "hm_complex_3_1") or _last_completed_chapter_is("main_story", "dm_rise_3_1"))
 		end,
 		on_activation = function (self)
 			Managers.narrative:set_story_to_chapter("main_story", "km_heresy")

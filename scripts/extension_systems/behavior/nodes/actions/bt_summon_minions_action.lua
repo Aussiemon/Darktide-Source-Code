@@ -55,11 +55,25 @@ BtSummonMinionsAction.enter = function (self, unit, breed, blackboard, scratchpa
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 end
 
-BtSummonMinionsAction.init_values = function (self, blackboard)
+BtSummonMinionsAction.init_values = function (self, blackboard, action_data)
 	local summon_component = Blackboard.write_component(blackboard, "summon")
 
 	summon_component.next_summon_t = 0
 	summon_component.amount = 0
+
+	local has_additional_blackboard_values = action_data.additional_blackboard_values
+
+	if has_additional_blackboard_values then
+		for k, v in pairs(has_additional_blackboard_values) do
+			if v == "number" then
+				summon_component[k] = 0
+			elseif v == "boolean" then
+				summon_component[k] = false
+			else
+				Log.info("BtSummonMinionsAction", "Trying to init value %s but it is not a type known to the action", k)
+			end
+		end
+	end
 end
 
 BtSummonMinionsAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
@@ -117,10 +131,32 @@ BtSummonMinionsAction.run = function (self, unit, breed, blackboard, scratchpad,
 
 		summon_component.next_summon_t = t + math.random(interval_til_next_summon[1], interval_til_next_summon[2])
 
+		if action_data.should_patrol then
+			self:_patrol_setup(unit, breed, blackboard, scratchpad, action_data, dt, t)
+		end
+
 		return "done"
 	end
 
 	return "running"
+end
+
+BtSummonMinionsAction._patrol_setup = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
+	local summoned_minions = scratchpad.summoned_minions_extension:summoned_minions()
+
+	if #summoned_minions < 0 then
+		return
+	end
+
+	for i = 1, #summoned_minions do
+		local target_unit = summoned_minions[i]
+		local unit_blackboard = BLACKBOARDS[target_unit]
+		local patrol_component = Blackboard.write_component(unit_blackboard, "patrol")
+
+		patrol_component.patrol_leader_unit = unit
+		patrol_component.patrol_index = i * 2
+		patrol_component.should_patrol = true
+	end
 end
 
 local TEMP_FLOOD_FILL_POSITONS = {}

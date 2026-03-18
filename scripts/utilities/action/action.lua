@@ -64,16 +64,16 @@ end
 
 local _fire_configs_temp = {}
 
-Action.damage_template = function (action, optional_index)
+Action.damage_template = function (action_settings, optional_index)
 	local damage_profile, special_damage_profile, damage_profile_on_abort, special_damage_profile_on_abort
 
-	damage_profile = action.damage_profile or action.inner_damage_profile
-	special_damage_profile = action.damage_profile_special_active or damage_profile
-	damage_profile_on_abort = action.damage_profile_on_abort
-	special_damage_profile_on_abort = action.damage_profile_special_active_on_abort
+	damage_profile = action_settings.damage_profile or action_settings.inner_damage_profile
+	special_damage_profile = action_settings.damage_profile_special_active or damage_profile
+	damage_profile_on_abort = action_settings.damage_profile_on_abort
+	special_damage_profile_on_abort = action_settings.damage_profile_special_active_on_abort
 
-	if action.sweeps then
-		local sweep = action.sweeps[optional_index or 1]
+	if action_settings.sweeps then
+		local sweep = action_settings.sweeps[optional_index or 1]
 
 		damage_profile = sweep and sweep.damage_profile or damage_profile
 		special_damage_profile = sweep.damage_profile_special_active or special_damage_profile
@@ -85,10 +85,10 @@ Action.damage_template = function (action, optional_index)
 		return damage_profile, special_damage_profile, damage_profile_on_abort, special_damage_profile_on_abort
 	end
 
-	local fire_configurations = action.fire_configurations
+	local fire_configurations = action_settings.fire_configurations
 
 	if not fire_configurations then
-		_fire_configs_temp[1] = action.fire_configuration
+		_fire_configs_temp[1] = action_settings.fire_configuration
 		fire_configurations = _fire_configs_temp
 	end
 
@@ -121,13 +121,13 @@ Action.damage_template = function (action, optional_index)
 		end
 	end
 
-	local projectile_template = action.projectile_template
+	local projectile_template = action_settings.projectile_template
 
 	if projectile_template then
 		return projectile_template.damage.impact.damage_profile
 	end
 
-	local explosion_template = action.explosion_template
+	local explosion_template = action_settings.explosion_template
 
 	if explosion_template then
 		return explosion_template.close_damage_profile or explosion_template.damage_profile

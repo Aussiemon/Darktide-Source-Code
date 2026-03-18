@@ -3,6 +3,7 @@
 require("scripts/managers/mutator/mutators/mutator_base")
 
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
+local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local MutatorPestilentBauble = class("MutatorPestilentBauble", "MutatorBase")
 local throw_config = {
@@ -92,7 +93,7 @@ MutatorPestilentBauble._spawn = function (self)
 	local projectile_template = throw_config.projectile_template
 	local locomotion_template = projectile_template.locomotion_template
 	local trajectory_parameters = locomotion_template.trajectory_parameters.drop
-	local grenade_unit_name, locomotion_state = item.base_unit, trajectory_parameters.locomotion_state
+	local grenade_unit_name, locomotion_state = Items.base_unit(item), trajectory_parameters.locomotion_state
 	local speed = trajectory_parameters.speed_initial or trajectory_parameters.speed
 	local is_critical_strike, origin_item_slot, charge_level, target_unit, weapon_item_or_nil, fuse_override_time_or_nil
 	local owner_side = "villains"
@@ -101,7 +102,8 @@ MutatorPestilentBauble._spawn = function (self)
 	player_position[3] = player_position[3] + 6
 
 	local unit_template_name = projectile_template.unit_template_name or "item_projectile"
-	local unit, game_object_id = Managers.state.unit_spawner:spawn_network_unit(grenade_unit_name, unit_template_name, target_position, nil, nil, item, projectile_template, locomotion_state, target_position, speed, angular_velocity, nil, is_critical_strike, origin_item_slot, charge_level, target_unit, target_position, weapon_item_or_nil, fuse_override_time_or_nil, owner_side)
+
+	Managers.state.unit_spawner:spawn_network_unit(grenade_unit_name, unit_template_name, target_position, nil, nil, item, projectile_template, locomotion_state, target_position, speed, angular_velocity, nil, is_critical_strike, origin_item_slot, charge_level, target_unit, target_position, weapon_item_or_nil, fuse_override_time_or_nil, owner_side)
 end
 
 return MutatorPestilentBauble

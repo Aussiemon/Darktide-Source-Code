@@ -3,7 +3,7 @@
 local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterLoopingParticleAliases = require("scripts/settings/particles/player_character_looping_particle_aliases")
 local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
-local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
+local VisualLoadoutExtractData = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_extract_data")
 local PlayerUnitFxExtension = class("PlayerUnitFxExtension")
 local PARTICLE_INDEX_MIN = NetworkConstants.particle_index_min
 local PARTICLE_INDEX_MAX = NetworkConstants.particle_index_max
@@ -460,7 +460,7 @@ end
 
 PlayerUnitFxExtension._update_first_person_mode = function (self, source_name, first_person_mode, optional_attachment_name)
 	local sound_source = self._sources[source_name]
-	local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+	local reference_attachment_name = optional_attachment_name or VisualLoadoutExtractData.ROOT_ATTACH_NAME
 
 	sound_source = sound_source[reference_attachment_name]
 
@@ -846,7 +846,7 @@ local function _register_sound_sources(wwise_source_node_cache, parent_unit, att
 	end
 
 	if Unit.has_node(parent_unit, node_name) then
-		local parent_id_name = attachment_name_lookup and attachment_name_lookup[parent_unit] or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+		local parent_id_name = attachment_name_lookup and attachment_name_lookup[parent_unit] or VisualLoadoutExtractData.ROOT_ATTACH_NAME
 
 		sources[parent_id_name] = _register_sound_source(wwise_source_node_cache, parent_unit, node_name, wwise_world, source_name)
 	end
@@ -868,7 +868,7 @@ local function _register_sound_sources(wwise_source_node_cache, parent_unit, att
 		Log.exception("PlayerUnitFxExtension", "Could not register sound source %q. Node %q could not be found in any of the given attachment (%q) units nor parent unit (%q)", source_name, node_name, attachment_string, tostring(parent_unit))
 	end
 
-	sources[VisualLoadoutCustomization.ROOT_ATTACH_NAME] = _register_sound_source(wwise_source_node_cache, parent_unit, 1, wwise_world, source_name)
+	sources[VisualLoadoutExtractData.ROOT_ATTACH_NAME] = _register_sound_source(wwise_source_node_cache, parent_unit, 1, wwise_world, source_name)
 
 	return sources
 end
@@ -923,7 +923,7 @@ end
 
 PlayerUnitFxExtension.sound_source = function (self, source_name, optional_attachment_name)
 	local sound_source = self._sources[source_name]
-	local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+	local reference_attachment_name = optional_attachment_name or VisualLoadoutExtractData.ROOT_ATTACH_NAME
 
 	sound_source = sound_source[reference_attachment_name]
 
@@ -932,7 +932,7 @@ end
 
 PlayerUnitFxExtension.vfx_spawner = function (self, spawner_name, optional_attachment_name)
 	local vfx_spawner = self._vfx_spawners[spawner_name]
-	local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+	local reference_attachment_name = optional_attachment_name or VisualLoadoutExtractData.ROOT_ATTACH_NAME
 
 	vfx_spawner = vfx_spawner[reference_attachment_name]
 
@@ -941,7 +941,7 @@ end
 
 PlayerUnitFxExtension.vfx_spawner_unit_and_node = function (self, spawner_name, optional_attachment_name)
 	local vfx_spawner = self._vfx_spawners[spawner_name]
-	local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+	local reference_attachment_name = optional_attachment_name or VisualLoadoutExtractData.ROOT_ATTACH_NAME
 
 	vfx_spawner = vfx_spawner[reference_attachment_name]
 
@@ -953,7 +953,7 @@ end
 
 PlayerUnitFxExtension.vfx_spawner_pose = function (self, spawner_name, optional_attachment_name)
 	local vfx_spawner = self._vfx_spawners[spawner_name]
-	local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+	local reference_attachment_name = optional_attachment_name or VisualLoadoutExtractData.ROOT_ATTACH_NAME
 
 	vfx_spawner = vfx_spawner[reference_attachment_name]
 
@@ -1202,7 +1202,7 @@ PlayerUnitFxExtension._spawn_moving_player_fx = function (self, husk_only, shoul
 end
 
 PlayerUnitFxExtension.spawn_unit_fx_line = function (self, line_effect, is_critical_strike, source_name, end_position, link, orphaned_policy, scale, append_husk_to_event_name, optional_attachment_name)
-	local attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+	local attachment_name = optional_attachment_name or VisualLoadoutExtractData.ROOT_ATTACH_NAME
 
 	self:_spawn_unit_fx_line(line_effect, is_critical_strike, source_name, end_position, link, orphaned_policy, scale, append_husk_to_event_name, attachment_name)
 
@@ -1221,7 +1221,7 @@ PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_crit
 	end
 
 	local spawner = self._vfx_spawners[spawner_name]
-	local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+	local reference_attachment_name = optional_attachment_name or VisualLoadoutExtractData.ROOT_ATTACH_NAME
 
 	spawner = spawner[reference_attachment_name]
 
@@ -1572,7 +1572,7 @@ PlayerUnitFxExtension.trigger_gear_wwise_event_with_source = function (self, sou
 
 	if resolved then
 		local source = self._sources[source_name]
-		local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+		local reference_attachment_name = optional_attachment_name or VisualLoadoutExtractData.ROOT_ATTACH_NAME
 
 		source = source[reference_attachment_name]
 
@@ -1632,7 +1632,7 @@ PlayerUnitFxExtension.trigger_wwise_event_with_source = function (self, event_na
 	end
 
 	local source = self._sources[source_name]
-	local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+	local reference_attachment_name = optional_attachment_name or VisualLoadoutExtractData.ROOT_ATTACH_NAME
 
 	source = source[reference_attachment_name]
 
@@ -1662,7 +1662,7 @@ PlayerUnitFxExtension.trigger_wwise_event_non_synced = function (self, dialogue_
 	end
 
 	local source = self._sources[source_name]
-	local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+	local reference_attachment_name = optional_attachment_name or VisualLoadoutExtractData.ROOT_ATTACH_NAME
 
 	source = source[reference_attachment_name]
 
@@ -1686,7 +1686,7 @@ end
 
 PlayerUnitFxExtension.set_source_parameter_local = function (self, parameter_name, parameter_value, source_name, optional_attachment_name)
 	local source = self._sources[source_name]
-	local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+	local reference_attachment_name = optional_attachment_name or VisualLoadoutExtractData.ROOT_ATTACH_NAME
 
 	source = source[reference_attachment_name]
 
@@ -1695,7 +1695,7 @@ end
 
 PlayerUnitFxExtension.set_source_parameter = function (self, parameter_name, parameter_value, source_name, optional_attachment_name)
 	local source = self._sources[source_name]
-	local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+	local reference_attachment_name = optional_attachment_name or VisualLoadoutExtractData.ROOT_ATTACH_NAME
 
 	source = source[reference_attachment_name]
 
@@ -1801,7 +1801,7 @@ PlayerUnitFxExtension.run_looping_sound = function (self, sound_alias, optional_
 
 	local looping_sound = self._looping_sounds[sound_alias]
 
-	optional_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+	optional_attachment_name = optional_attachment_name or VisualLoadoutExtractData.ROOT_ATTACH_NAME
 
 	if not looping_sound.is_playing or not ignore_source_check and (looping_sound.source_name ~= optional_source_name or looping_sound.source_attach_name ~= optional_attachment_name) then
 		local trigger_data = self._looping_sound_trigger_data[sound_alias]
@@ -1886,7 +1886,7 @@ PlayerUnitFxExtension._trigger_looping_wwise_event = function (self, sound_alias
 				else
 					local source = self._sources[optional_source_name]
 
-					optional_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+					optional_attachment_name = optional_attachment_name or VisualLoadoutExtractData.ROOT_ATTACH_NAME
 					source = source[optional_attachment_name]
 					event_id = WwiseWorld.trigger_resource_event(self._wwise_world, wwise_event_name, source)
 				end
@@ -2006,7 +2006,7 @@ local function _register_vfx_spawner_from_attachments(parent_unit, attachments_b
 
 	Log.exception("PlayerUnitFxExtension", "Could not register vfx spawner %q. Node %q could not be found in any of the given attachment (%q) units nor parent unit (%q)", spawner_name, node_name, attachment_string, tostring(parent_unit))
 
-	spawners[VisualLoadoutCustomization.ROOT_ATTACH_NAME] = {
+	spawners[VisualLoadoutExtractData.ROOT_ATTACH_NAME] = {
 		node = 1,
 		unit = parent_unit,
 	}
@@ -2035,7 +2035,7 @@ PlayerUnitFxExtension._register_vfx_spawner = function (self, spawners, spawner_
 			node_3p = Unit.has_node(self._unit, node_name) and Unit.node(self._unit, node_name) or 1
 		end
 
-		spawners[spawner_name][VisualLoadoutCustomization.ROOT_ATTACH_NAME] = {
+		spawners[spawner_name][VisualLoadoutExtractData.ROOT_ATTACH_NAME] = {
 			unit = parent_unit,
 			node = node,
 			node_3p = node_3p,
@@ -2252,7 +2252,7 @@ PlayerUnitFxExtension.spawn_unit_particles = function (self, particle_name, spaw
 	local is_resim = self._unit_data_extension.is_resimulating
 
 	if not is_resim then
-		local attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+		local attachment_name = optional_attachment_name or VisualLoadoutExtractData.ROOT_ATTACH_NAME
 		local particle_id = self:_spawn_unit_particles(particle_name, spawner_name, link, orphaned_policy, position_offset, rotation_offset, scale, create_network_index, attachment_name)
 
 		if self._is_server then
@@ -2286,7 +2286,7 @@ PlayerUnitFxExtension._spawn_unit_particles = function (self, particle_name, spa
 	end
 
 	local spawner = self._vfx_spawners[spawner_name]
-	local reference_attachment_name = optional_attachment_name or VisualLoadoutCustomization.ROOT_ATTACH_NAME
+	local reference_attachment_name = optional_attachment_name or VisualLoadoutExtractData.ROOT_ATTACH_NAME
 
 	spawner = spawner[reference_attachment_name]
 
