@@ -1,8 +1,13 @@
 ﻿-- chunkname: @scripts/extension_systems/locomotion/deployable_husk_locomotion_extension.lua
 
+local DeployableLocomotion = require("scripts/extension_systems/locomotion/utilities/deployable_locomotion")
 local DeployableHuskLocomotionExtension = class("DeployableHuskLocomotionExtension")
 
 DeployableHuskLocomotionExtension.UPDATE_DISABLED_BY_DEFAULT = true
+
+local RPCS = {
+	"rpc_move_deployable",
+}
 
 DeployableHuskLocomotionExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, game_object_id)
 	self._unit = unit
@@ -13,13 +18,21 @@ DeployableHuskLocomotionExtension.init = function (self, extension_init_context,
 
 	if unit_id and unit_id ~= 0 then
 		if Managers.state.unit_spawner:unit_exists(unit_id, true) then
-			self:_attach_to_unit(unit_id)
+			self._placed_on_unit = self:_attach_to_unit(unit_id)
 		else
 			self._attach_later_on_id = unit_id
 
 			self._owner_system:enable_update_function(self.__class_name, "update", self._unit, self)
 		end
 	end
+
+	self._game_object_id = game_object_id
+
+	local network_event_delegate = extension_init_context.network_event_delegate
+
+	network_event_delegate:register_session_unit_events(self, game_object_id, unpack(RPCS))
+
+	self._network_event_delegate = network_event_delegate
 end
 
 DeployableHuskLocomotionExtension._attach_to_unit = function (self, unit_id)
@@ -43,7 +56,21 @@ DeployableHuskLocomotionExtension._attach_to_unit = function (self, unit_id)
 		World.link_unit(self._world, unit, 1, placed_on_unit, 1)
 		Unit.set_local_position(unit, 1, new_local_pos)
 		Unit.set_local_rotation(unit, 1, unit_rot)
+
+		return placed_on_unit
 	end
+
+	return nil
+end
+
+DeployableHuskLocomotionExtension.rpc_move_deployable = function (self, channel_id, game_object_id, position, rotation)
+	if self._placed_on_unit then
+		self._placed_on_unit = nil
+
+		World.unlink(self._world, self._unit)
+	end
+
+	DeployableLocomotion.teleport_deployable(self._unit, position, rotation)
 end
 
 DeployableHuskLocomotionExtension.fixed_update = function (self, unit, dt, t)
@@ -61,6 +88,10 @@ end
 
 DeployableHuskLocomotionExtension.current_state = function (self)
 	return
+end
+
+DeployableHuskLocomotionExtension.destroy = function (self)
+	self._network_event_delegate:unregister_unit_events(self._game_object_id, unpack(RPCS))
 end
 
 return DeployableHuskLocomotionExtension

@@ -31,7 +31,7 @@ RespawnBeaconSystem.on_gameplay_post_init = function (self, level)
 	self._generate_respawn_beacons = true
 end
 
-RespawnBeaconSystem.set_use_safe_zone = function (self, active)
+RespawnBeaconSystem.set_use_safe_zone = function (self, active, optional_beacon)
 	if active == self._safe_zone then
 		return
 	end
@@ -45,9 +45,9 @@ RespawnBeaconSystem.set_use_safe_zone = function (self, active)
 	local should_move_players, hogtied_players = self:_update_hogtied_players(side_id)
 
 	if should_move_players then
-		local optimal_beacon = self:_find_optimal_beacon(side_id)
+		local new_beacon = optional_beacon or self:_find_optimal_beacon(side_id)
 
-		self:_move_hogtied_players(hogtied_players, optimal_beacon)
+		self:_move_hogtied_players(hogtied_players, new_beacon)
 	end
 end
 

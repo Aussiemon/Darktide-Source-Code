@@ -227,7 +227,7 @@ ViewElementExpeditionViewMissionInfo._update_mission_info_pages = function (self
 				if self._node.unlock_status == UNLOCK_STATUS.unlocked then
 					unlock_status_style.text_color = Settings.colors.unlocked_text
 					page.content.unlock_status = "[ " .. Localize("loc_unlocked") .. " ]"
-				elseif self._node_unlock_status == UNLOCK_STATUS.unlockable then
+				elseif self._node.unlock_status == UNLOCK_STATUS.unlockable then
 					unlock_status_style.text_color = Settings.colors.unlockable_text
 					page.content.unlock_status = "[ " .. Localize("loc_unlockable") .. " ]"
 				else

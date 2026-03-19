@@ -192,9 +192,13 @@ PickupSystem.external_populate_pickups = function (self)
 	self:_populate_pickups()
 end
 
+local transition_tags = table.set({
+	"pickup",
+})
+
 PickupSystem.get_pickups_for_location_transition = function (self, register_func)
 	for unit, _ in pairs(self._dropped_pickups) do
-		register_func(unit, "hard", "PickupSystem", self.despawn_pickup, self, unit)
+		register_func(unit, "hard", "PickupSystem", transition_tags, self.despawn_pickup, self, unit)
 	end
 end
 
@@ -1149,7 +1153,7 @@ PickupSystem.move_pickup = function (self, unit, position, rotation)
 	for i = 1, num_actors do
 		local actor = Unit.actor(unit, i)
 
-		if Actor.is_static(actor) then
+		if actor and Actor.is_static(actor) then
 			local actor_position = Actor.position(actor)
 			local actor_rotation = Actor.rotation(actor)
 			local absolute_actor_rotation, absolute_actor_position = _new_rotation_and_position(actor_rotation, actor_position)

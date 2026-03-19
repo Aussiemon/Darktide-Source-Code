@@ -95,10 +95,20 @@ GameSessionManager.num_clients = function (self)
 	return session_host and session_host:num_clients() or 0
 end
 
-GameSessionManager.num_approved_channel_clients = function (self)
+GameSessionManager.num_clients_in_session = function (self)
 	local session_host = self._session_host
 
-	return session_host and session_host:num_approved_channel_clients() or 0
+	if not session_host then
+		return 0
+	end
+
+	local num_joined_peers = table.size(self._joined_peers_cache)
+
+	if num_joined_peers == 0 then
+		return num_joined_peers
+	end
+
+	return num_joined_peers - 1
 end
 
 GameSessionManager.disconnect = function (self)

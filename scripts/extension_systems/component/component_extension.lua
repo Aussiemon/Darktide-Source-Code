@@ -101,7 +101,7 @@ ComponentExtension._unregister_extension_update = function (self)
 	local unit = self._unit
 	local component_system = self._component_system
 
-	if component_system then
+	if component_system and component_system.disable_update_function then
 		component_system:disable_update_function("ComponentExtension", "update", unit)
 
 		self._extension_updates_enabled = false

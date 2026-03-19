@@ -26,28 +26,14 @@ local function _get_array_length(array)
 	return length
 end
 
-local function _get_largest_array_value(array)
-	local highest_layer_id = 0
-
-	for layer_id, layer_name in pairs(array) do
-		if type(layer_id) == "number" and highest_layer_id < layer_id then
-			highest_layer_id = layer_id
-		end
-	end
-
-	return highest_layer_id
-end
-
-local function _get_next_available_array_value(array)
-	local array_length = _get_array_length(array)
-
-	for i = 1, array_length do
+local function _get_next_free_array_index(array)
+	for i = 1, #array + 1 do
 		if not array[i] then
 			return i
 		end
 	end
 
-	return array_length + 1
+	ferror("unreachable")
 end
 
 NavMeshManager.init = function (self, world, nav_world, is_server, network_event_delegate, level_name, dynamic_mesh_spawning)
@@ -69,6 +55,12 @@ NavMeshManager.init = function (self, world, nav_world, is_server, network_event
 	self._nav_cost_map_lookup = self:_setup_nav_cost_map_lookup()
 	self._nav_tag_layer_lookup = self:_setup_nav_tag_layer_lookup(nav_tag_volume_layers)
 	self._nav_tag_allowed_layers = table.set(self._nav_tag_layer_lookup)
+	self._network_layer_id_lookup = {}
+
+	for layer_name in pairs(self._nav_tag_allowed_layers) do
+		self:_register_nav_tag_layer(layer_name)
+	end
+
 	self._nav_cost_map_volume_id_data = {
 		current_id = 1,
 		size = 0,
@@ -89,6 +81,33 @@ NavMeshManager.init = function (self, world, nav_world, is_server, network_event
 		network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
 		self:_initialize_client_traverse_logic(nav_world)
 	end
+end
+
+NavMeshManager._register_nav_tag_layer = function (self, layer_name)
+	local network_layer_id = Script.id_string_32(layer_name)
+	local network_layer_id_lookup = self._network_layer_id_lookup
+
+	self._network_layer_id_lookup[layer_name] = network_layer_id
+	self._network_layer_id_lookup[network_layer_id] = layer_name
+
+	local layer_id = _get_next_free_array_index(self._nav_tag_layer_lookup)
+
+	self._nav_tag_layer_lookup[layer_name] = layer_id
+	self._nav_tag_layer_lookup[layer_id] = layer_name
+
+	return layer_id
+end
+
+NavMeshManager._unregister_nav_tag_layer = function (self, layer_name)
+	local network_layer_id = self._network_layer_id_lookup[layer_name]
+
+	self._network_layer_id_lookup[layer_name] = nil
+	self._network_layer_id_lookup[network_layer_id] = nil
+
+	local layer_id = self._nav_tag_layer_lookup[layer_name]
+
+	self._nav_tag_layer_lookup[layer_name] = nil
+	self._nav_tag_layer_lookup[layer_id] = nil
 end
 
 NavMeshManager._require_nav_tag_volume_data = function (self, level_name, nav_tag_volume_data)
@@ -221,12 +240,7 @@ NavMeshManager.add_nav_tag_volume = function (self, bottom_points, altitude_min,
 	local nav_tag_layer_lookup = self._nav_tag_layer_lookup
 	local layer_id = nav_tag_layer_lookup[layer_name]
 
-	if not layer_id then
-		layer_id = _get_next_available_array_value(nav_tag_layer_lookup)
-		nav_tag_layer_lookup[layer_name] = layer_id
-		nav_tag_layer_lookup[layer_id] = layer_name
-	end
-
+	layer_id = layer_id or self:_register_nav_tag_layer(layer_name)
 	self._nav_tag_allowed_layers[layer_name] = allowed
 
 	local nav_tag_volume_data = self._nav_tag_volume_data
@@ -262,23 +276,13 @@ NavMeshManager.remove_nav_tag_volume = function (self, nav_tag_volume)
 	if data then
 		nav_tag_volume_data[nav_tag_volume] = nil
 
-		local name = data.name
-		local nav_tag_layer_lookup = self._nav_tag_layer_lookup
-		local layer_id = nav_tag_layer_lookup[name]
-		local can_remove_layer = true
-
-		for _, volume_data in pairs(nav_tag_volume_data) do
-			if volume_data.name == name then
-				can_remove_layer = false
-
-				break
-			end
-		end
+		local layer_name = data.name
+		local can_remove_layer = not table.find_by_key(nav_tag_volume_data, "name", layer_name)
 
 		if can_remove_layer then
-			nav_tag_layer_lookup[name] = nil
-			self._nav_tag_allowed_layers[name] = nil
-			nav_tag_layer_lookup[layer_id] = nil
+			self:_unregister_nav_tag_layer(layer_name)
+
+			self._nav_tag_allowed_layers[layer_name] = nil
 		end
 	end
 
@@ -621,9 +625,6 @@ NavMeshManager._connect_sparse_graph = function (self)
 		return
 	end
 
-	local nav_tag_layer_lookup = self._nav_tag_layer_lookup
-	local highest_layer_id = _get_largest_array_value(nav_tag_layer_lookup)
-
 	self._sparse_nav_graph_nav_data = GwNavWorld.connect_sparse_graph(self._nav_world)
 	self._sparse_nav_graph_connected = true
 	self._sparse_graph_dirty = false
@@ -725,7 +726,9 @@ NavMeshManager.hot_join_sync = function (self, sender, channel)
 			local allowed = allowed_layers[layer_name]
 
 			if not allowed then
-				RPC.rpc_set_allowed_nav_tag_layer(channel, layer_id, allowed)
+				local network_layer_id = self._network_layer_id_lookup[layer_name]
+
+				RPC.rpc_set_allowed_nav_tag_layer(channel, network_layer_id, allowed)
 			end
 		end
 	end
@@ -798,17 +801,28 @@ NavMeshManager.set_allowed_nav_tag_layer = function (self, layer_name, allowed)
 	Managers.state.pacing:allow_nav_tag_layer(layer_name, allowed)
 	Managers.state.main_path:allow_nav_tag_layer(layer_name, allowed)
 	Managers.state.bot_nav_transition:allow_nav_tag_layer(layer_name, allowed)
-	Managers.state.game_session:send_rpc_clients("rpc_set_allowed_nav_tag_layer", layer_id, allowed)
+
+	local network_layer_id = self._network_layer_id_lookup[layer_name]
+
+	Managers.state.game_session:send_rpc_clients("rpc_set_allowed_nav_tag_layer", network_layer_id, allowed)
 end
 
 NavMeshManager.is_nav_tag_volume_layer_allowed = function (self, layer_name)
 	return self._nav_tag_allowed_layers[layer_name]
 end
 
-NavMeshManager.rpc_set_allowed_nav_tag_layer = function (self, channel_id, layer_id, allowed)
-	local layer_name = self._nav_tag_layer_lookup[layer_id]
+NavMeshManager.rpc_set_allowed_nav_tag_layer = function (self, channel_id, network_layer_id, allowed)
+	local layer_name = self._network_layer_id_lookup[network_layer_id]
+
+	if not layer_name then
+		Log.exeption("NavMeshManager", "Ignoring rpc_set_allowed_nav_tag_layer for unknown layer id")
+
+		return
+	end
 
 	self._nav_tag_allowed_layers[layer_name] = allowed
+
+	local layer_id = self._nav_tag_layer_lookup[layer_name]
 
 	if allowed then
 		GwNavTagLayerCostTable.allow_layer(self._navtag_layer_cost_table, layer_id)

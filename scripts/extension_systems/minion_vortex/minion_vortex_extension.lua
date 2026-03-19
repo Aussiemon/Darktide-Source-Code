@@ -9,11 +9,13 @@ local PlayerCharacterConstants = require("scripts/settings/player_character/play
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local VortexLocomotion = require("scripts/extension_systems/locomotion/utilities/vortex_locomotion")
 local FixedFrame = require("scripts/utilities/fixed_frame")
+local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local MinionVortexExtension = class("MinionVortexExtension")
 local STARTUP_VFX_NAME = "content/fx/particles/environment/expeditions/wastes/sand_tornado_01_startup"
 local VFX_NAME = "content/fx/particles/environment/expeditions/wastes/sand_tornado_01"
 local SFX_LOOP_NAME = "wwise/events/world/play_vortex_loop"
 local SFX_LOOP_STOP_NAME = "wwise/events/world/stop_vortex_loop"
+local VORTEX_GRABBED_BUFF_NAME = "vortex_grabbed"
 
 local function _is_valid_vortex_target(character_state_component)
 	local requires_help = PlayerUnitStatus.requires_help(character_state_component)
@@ -70,6 +72,9 @@ MinionVortexExtension.init = function (self, extension_init_context, unit, exten
 
 	self:_spawn_effects(t, unit)
 
+	local vortex_grabbed_buff_template = BuffTemplates[VORTEX_GRABBED_BUFF_NAME]
+
+	self._vortex_grabbed_max_stacks = vortex_grabbed_buff_template.max_stacks
 	self._startup_t = t + vortex_template.startup_time
 end
 
@@ -403,6 +408,10 @@ end
 MinionVortexExtension._process_near_player = function (self, t, dt, vortex_unit, vortex_template, player_data, disabled_character_state_component, player_distance, inner_radius, outer_radius, falloff_radius, suck_dir)
 	local is_vortex_grabbed = PlayerUnitStatus.is_vortex_grabbed(disabled_character_state_component)
 
+	if self:_is_vortex_immune(player_data) then
+		return
+	end
+
 	if inner_radius < player_distance then
 		local player_attract_speed = vortex_template.player_attract_speed
 		local distance_to_inner_radius = player_distance - inner_radius
@@ -575,6 +584,13 @@ end
 MinionVortexExtension._vortex_grab = function (self, t, vortex_unit, vortex_template, player_data)
 	local unit_data_extension = player_data.unit_data_extension
 	local disabled_state_input = unit_data_extension:write_component("disabled_state_input")
+	local buff_ext = player_data.buff_extension
+
+	if self:_is_vortex_immune(player_data) then
+		return
+	elseif buff_ext then
+		buff_ext:add_internally_controlled_buff(VORTEX_GRABBED_BUFF_NAME, t)
+	end
 
 	disabled_state_input.wants_disable = true
 	disabled_state_input.disabling_unit = vortex_unit
@@ -702,6 +718,13 @@ MinionVortexExtension._update_attract_inside_ai = function (self, blackboard, vo
 			ai_units_inside[ai_unit] = nil
 		end
 	end
+end
+
+MinionVortexExtension._is_vortex_immune = function (self, player_data)
+	local buff_ext = player_data and player_data.buff_extension
+	local current_stacks = buff_ext and buff_ext:current_stacks(VORTEX_GRABBED_BUFF_NAME) or 0
+
+	return current_stacks >= self._vortex_grabbed_max_stacks
 end
 
 MinionVortexExtension._spawn_effects = function (self, t, unit)

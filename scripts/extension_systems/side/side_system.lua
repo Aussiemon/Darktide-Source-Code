@@ -196,6 +196,10 @@ SideSystem._remove_unit_from_side = function (self, unit)
 	end
 
 	self.side_by_unit[unit] = nil
+
+	if self._is_server then
+		Managers.state.pacing:remove_unit_from_auto_event_frame_tables()
+	end
 end
 
 SideSystem._remove_unit_from_tag_units = function (self, unit, side_extension)
@@ -261,6 +265,10 @@ SideSystem.pre_update = function (self, context, dt, t)
 
 		self:_update_frame_tables(side)
 		self:_update_enemy_frame_tables(side)
+	end
+
+	if self._is_server then
+		Managers.state.pacing:update_auto_event_frame_tables()
 	end
 end
 
@@ -415,10 +423,6 @@ SideSystem._update_frame_tables = function (self, side)
 				end
 			end
 		end
-	end
-
-	if self._is_server then
-		Managers.state.pacing:update_auto_event_frame_tables()
 	end
 end
 

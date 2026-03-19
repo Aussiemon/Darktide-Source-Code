@@ -69,9 +69,9 @@ Settings.colors = {
 	},
 	unlockable_text = {
 		255,
-		91,
-		121,
-		82,
+		255,
+		183,
+		44,
 	},
 	locked_text = {
 		255,

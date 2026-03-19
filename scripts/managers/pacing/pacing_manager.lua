@@ -162,6 +162,10 @@ PacingManager.update_auto_event_frame_tables = function (self)
 	self._auto_event:update_auto_event_frame_tables()
 end
 
+PacingManager.remove_unit_from_auto_event_frame_tables = function (self, unit)
+	self._auto_event:remove_unit_from_auto_event_frame_tables(unit)
+end
+
 PacingManager.update = function (self, dt, t)
 	local side_id, target_side_id = self._side_id, self._target_side_id
 

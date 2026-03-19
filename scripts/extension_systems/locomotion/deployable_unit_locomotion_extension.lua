@@ -5,9 +5,13 @@ local DeployableUnitLocomotionExtension = class("DeployableUnitLocomotionExtensi
 
 DeployableUnitLocomotionExtension.init = function (self, extension_init_context, unit, extension_init_data)
 	local world = extension_init_context.world
+
+	self._world = world
+	self._unit = unit
+
 	local placed_on_unit = extension_init_data.placed_on_unit
 
-	DeployableLocomotion.set_placed_on_unit(world, unit, placed_on_unit)
+	self._placed_on_unit = DeployableLocomotion.set_placed_on_unit(world, unit, placed_on_unit)
 
 	if extension_init_context.is_server then
 		Managers.state.extension:system("locomotion_system"):register_deployable(unit)
@@ -17,6 +21,17 @@ end
 DeployableUnitLocomotionExtension.game_object_initialized = function (self, game_session, game_object_id)
 	self._game_object_id = game_object_id
 	self._game_session = game_session
+end
+
+DeployableUnitLocomotionExtension.external_move = function (self, position, rotation)
+	if self._placed_on_unit then
+		World.unlink_unit(self._world, self._unit)
+
+		self._placed_on_unit = nil
+	end
+
+	DeployableLocomotion.teleport_deployable(self._unit, position, rotation)
+	Managers.state.game_session:send_rpc_clients("rpc_move_deployable", self._game_object_id, position, rotation)
 end
 
 DeployableUnitLocomotionExtension.current_state = function (self)

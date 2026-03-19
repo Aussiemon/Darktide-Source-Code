@@ -176,14 +176,12 @@ BtRendezvousAction._update_path = function (self, unit, blackboard, scratchpad, 
 		end
 	end
 
-	scratchpad.force_new_rendezvous_position = false
-
 	local rendezvous_component = scratchpad.rendezvous_component
 	local current_reference = rendezvous_component.rendezvous_reference:unbox()
 	local rendezvous_position, rendezvous_reference = Utility.find_rendezvous_position(unit, action_data, blackboard)
 	local radius = action_data.rendezvous_radius
 
-	if not rendezvous_component.has_randezvous_position or Vector3.distance_squared(current_reference, rendezvous_reference) > radius * radius then
+	if rendezvous_position and (not rendezvous_component.has_randezvous_position or Vector3.distance_squared(current_reference, rendezvous_reference) > radius * radius) then
 		rendezvous_component.rendezvous_position:store(rendezvous_position)
 		rendezvous_component.rendezvous_reference:store(rendezvous_reference)
 
@@ -191,7 +189,7 @@ BtRendezvousAction._update_path = function (self, unit, blackboard, scratchpad, 
 		force_move = true
 	end
 
-	if force_move then
+	if force_move and rendezvous_component.has_randezvous_position then
 		local navigation_extension = scratchpad.navigation_extension
 
 		if navigation_extension:is_following_path() then
@@ -201,6 +199,7 @@ BtRendezvousAction._update_path = function (self, unit, blackboard, scratchpad, 
 			return
 		end
 
+		scratchpad.force_new_rendezvous_position = false
 		scratchpad.had_path = false
 
 		navigation_extension:cancel_computation()

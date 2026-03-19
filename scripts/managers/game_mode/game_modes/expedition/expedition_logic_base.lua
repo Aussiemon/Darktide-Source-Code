@@ -624,27 +624,29 @@ ExpeditionLogicBase._refresh_safe_zone_unit_store_data_presentation = function (
 				description = Localize(original_description),
 				price = price_text,
 			})
-		end
 
-		local num_charges = info.charges
+			local num_charges = info.charges
 
-		if num_charges and num_charges > 0 then
-			local charges_text = Localize("loc_game_mode_expedition_pickup_charges_desc", true, {
-				charges = num_charges,
-			})
+			if num_charges and num_charges > 0 then
+				local charges_text = Localize("loc_game_mode_expedition_pickup_charges_desc", true, {
+					charges = num_charges,
+				})
 
-			charges_text = Text.apply_color_to_text(charges_text, Color.terminal_icon(255, true))
+				charges_text = Text.apply_color_to_text(charges_text, Color.terminal_icon(255, true))
 
-			if original_extra_description then
-				charges_text = charges_text .. "\n\n" .. Localize(original_extra_description)
+				if original_extra_description then
+					charges_text = charges_text .. "\n\n" .. Localize(original_extra_description)
+				end
+
+				unit_interactee_extension:set_extra_description(nil, charges_text)
+			elseif num_charges and num_charges == 0 then
+				unit_interactee_extension:set_extra_description(nil)
 			end
-
-			unit_interactee_extension:set_extra_description(nil, charges_text)
 		end
 	end
 end
 
-ExpeditionLogicBase.rpc_client_expedition_on_purchase_performed = function (self, channel_id, peer_id, is_level_unit, pickup_unit_id, original_description, original_extra_description)
+ExpeditionLogicBase.rpc_client_expedition_on_purchase_performed = function (self, channel_id, peer_id, is_level_unit, pickup_unit_id, charges_left, original_description, original_extra_description)
 	local pickup_unit = Managers.state.unit_spawner:unit(pickup_unit_id, is_level_unit)
 	local product_data = self:_get_safe_zone_product_data_by_purchase_unit(pickup_unit)
 	local local_player_id = 1
@@ -673,6 +675,12 @@ ExpeditionLogicBase.rpc_client_expedition_on_purchase_performed = function (self
 		if fx_extension then
 			fx_extension:trigger_wwise_event("wwise/events/player/play_expeditions_loot_buy", true)
 		end
+	end
+
+	if charges_left > -1 then
+		local pickup_info = product_data.info
+
+		pickup_info.charges = charges_left
 	end
 
 	product_data.unit = nil

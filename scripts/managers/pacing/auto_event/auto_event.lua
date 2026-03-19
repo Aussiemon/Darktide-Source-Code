@@ -21,12 +21,11 @@ local TWIN_BREEDS = {
 	"renegade_twin_captain_two",
 }
 local _get_valid_player_target
-local TEMP_EVENT_DATA = {}
 
 AutoEvent._request_event_table = function (self)
-	table.clear(TEMP_EVENT_DATA)
+	local event_data = {}
 
-	return TEMP_EVENT_DATA
+	return event_data
 end
 
 AutoEvent.init = function (self, nav_world, world, side_id, target_side_id, template_name)
@@ -121,6 +120,8 @@ AutoEvent.request_auto_event = function (self, params, debug_position)
 		param_table.tried_spawning_twin = false
 		param_table.injection_spawn_table = {}
 		param_table.last_special_injected_t = 0
+		param_table.target_units = {}
+		param_table.num_valid_targets = 0
 
 		if self._template.optional_disallowed_positions then
 			param_table.optional_disallowed_positions = {}
@@ -167,8 +168,6 @@ AutoEvent.request_auto_event = function (self, params, debug_position)
 		if should_force_inject_twin then
 			param_table.should_force_inject_twin = should_force_inject_twin
 		end
-
-		param_table.num_valid_players_in_radius = 0
 
 		local uuid = tostring(params.node_id)
 
@@ -237,6 +236,23 @@ AutoEvent.update_auto_event_frame_tables = function (self)
 	for uuid, data in pairs(self._active_events) do
 		if self._template.check_radius_to_players then
 			self:_check_players_in_radius(uuid, data)
+		end
+	end
+end
+
+AutoEvent.remove_unit_from_auto_event_frame_tables = function (self, unit)
+	for uuid, data in pairs(self._active_events) do
+		local target_units = data.target_units
+		local idx = target_units[unit]
+
+		if idx then
+			local last_idx = #target_units
+			local last_unit = target_units[last_idx]
+
+			target_units[idx] = last_unit
+			target_units[last_unit] = idx
+			target_units[last_idx] = nil
+			target_units[unit] = nil
 		end
 	end
 end
@@ -342,19 +358,8 @@ AutoEvent._get_first_available_radius_by_tags = function (self, tags)
 	end
 end
 
-local PLAYERS_IN_RADIUS_PER_EVENT = {}
-
 AutoEvent._check_players_in_radius = function (self, uuid, data)
-	if not PLAYERS_IN_RADIUS_PER_EVENT[uuid] then
-		PLAYERS_IN_RADIUS_PER_EVENT[uuid] = {
-			num_valid_units = 0,
-			player_units = {},
-		}
-	end
-
-	local event_data = PLAYERS_IN_RADIUS_PER_EVENT[uuid]
-
-	table.clear(event_data.player_units)
+	table.clear(data.target_units)
 
 	local level_reference = data.level_reference
 	local tags, position
@@ -378,13 +383,13 @@ AutoEvent._check_players_in_radius = function (self, uuid, data)
 		radius, margin = RADIUS_BY_LEVEL_TAG.level_size_32, MARGIN_BY_LEVEL_TAG.level_size_32
 	end
 
-	local side = self._side_system:get_side(1)
-	local valid_player_units = side.valid_player_units
-	local num_valid_player_units = #valid_player_units
+	local side = self._side_system:get_side(self._side_id)
+	local ai_target_units = side.ai_target_units
+	local num_ai_target_units = #ai_target_units
 	local num_valid = 0
 
-	for i = 1, num_valid_player_units do
-		local target_unit = valid_player_units[i]
+	for i = 1, num_ai_target_units do
+		local target_unit = ai_target_units[i]
 		local player_position = POSITION_LOOKUP[target_unit]
 		local flattened_player_position = Vector3(player_position.x, player_position.y, 0)
 		local flattened_level_position = Vector3(position.x, position.y, 0)
@@ -392,20 +397,19 @@ AutoEvent._check_players_in_radius = function (self, uuid, data)
 
 		if distance < radius + margin and HEALTH_ALIVE[target_unit] then
 			num_valid = num_valid + 1
-			event_data.player_units[target_unit] = num_valid
-			event_data.player_units[num_valid] = target_unit
+			data.target_units[target_unit] = num_valid
+			data.target_units[num_valid] = target_unit
 		end
 	end
 
-	event_data.num_valid_units = num_valid
-	data.num_valid_players_in_radius = num_valid
+	data.num_valid_targets = num_valid
 end
 
 AutoEvent.get_all_valid_units_in_event = function (self, uuid)
-	if PLAYERS_IN_RADIUS_PER_EVENT[uuid] then
-		local event_data = PLAYERS_IN_RADIUS_PER_EVENT[uuid]
+	local active_event = self._active_events[uuid]
 
-		return event_data.player_units, event_data.num_valid_units
+	if active_event then
+		return active_event.target_units, active_event.num_valid_targets
 	else
 		return nil
 	end
@@ -443,7 +447,7 @@ AutoEvent.update = function (self, dt, t)
 		end
 
 		if self._template.check_radius_to_players and data.is_paused and t > data.paused_check_t then
-			if data.num_valid_players_in_radius > 0 then
+			if data.num_valid_targets > 0 then
 				data.is_paused = false
 			else
 				data.paused_check_t = data.paused_check_t + 1
@@ -563,7 +567,7 @@ AutoEvent.update = function (self, dt, t)
 					end
 
 					self._active_events[data.uuid] = nil
-				elseif not self._template.check_radius_to_players or self._template.check_radius_to_players and data.num_valid_players_in_radius > 0 then
+				elseif not self._template.check_radius_to_players or self._template.check_radius_to_players and data.num_valid_targets > 0 then
 					local cooldown_by_resistance = Managers.state.difficulty:get_table_entry_by_resistance(self._template.cooldown)
 					local first_wave_cooldown = math.random(cooldown_by_resistance[1], cooldown_by_resistance[2])
 					local pre_stinger_delay = first_wave_cooldown / 2 + t
@@ -575,7 +579,7 @@ AutoEvent.update = function (self, dt, t)
 					data.stinger_played = false
 					data.primary_wave_event_sent = false
 					data.frame_skipped = nil
-				elseif self._template.check_radius_to_players and data.num_valid_players_in_radius < 1 then
+				elseif self._template.check_radius_to_players and data.num_valid_targets < 1 then
 					data.is_paused = true
 					data.paused_check_t = t + 1
 				end

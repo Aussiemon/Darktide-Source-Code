@@ -267,6 +267,14 @@ templates.expedition_sand_vortex_move_speed = {
 		return false
 	end,
 }
+templates.vortex_grabbed = {
+	class_name = "buff",
+	duration = 25,
+	max_stacks = 3,
+	max_stacks_cap = 3,
+	predicted = false,
+	keywords = {},
+}
 templates.expeditions_death_imminent = {
 	class_name = "buff",
 	max_stacks = 1,

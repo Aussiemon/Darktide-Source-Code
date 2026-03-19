@@ -186,7 +186,9 @@ MinigameExpeditionMapView._update_target_widgets = function (self, widgets_by_na
 			local player_slot = player and player.slot and player:slot()
 			local player_slot_color = player_slot and PLAYER_SLOT_COLORS[player_slot]
 
-			cursor_widget.style.frame.color = player_slot_color or Color.white()
+			if player_slot_color then
+				cursor_widget.style.frame.color = player_slot_color
+			end
 
 			local target_offset = widget.offset
 			local offset = cursor_widget.offset

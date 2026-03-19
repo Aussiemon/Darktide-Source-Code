@@ -71,18 +71,6 @@ SessionHost.num_clients = function (self)
 	return table.size(self._remote_clients)
 end
 
-SessionHost.num_approved_channel_clients = function (self)
-	local num_approved_clients = 0
-
-	for _, remote_client in pairs(self._remote_clients) do
-		if remote_client:channel_id() then
-			num_approved_clients = num_approved_clients + 1
-		end
-	end
-
-	return num_approved_clients
-end
-
 SessionHost.next_event = function (self)
 	for _, remote_client in pairs(self._remote_clients) do
 		local event, parameters = remote_client:next_event()
