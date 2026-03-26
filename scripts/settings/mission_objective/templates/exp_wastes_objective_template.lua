@@ -33,6 +33,7 @@ local mission_objective_templates = {
 				persistent_between_locations = true,
 				popups_enabled = false,
 				progress_timer = true,
+				progression_sync_high_fidelity = true,
 			},
 			objective_expedition_escape = {
 				additional_height = 20,

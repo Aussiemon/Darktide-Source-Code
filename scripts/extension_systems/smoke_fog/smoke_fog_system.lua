@@ -168,9 +168,10 @@ SmokeFogSystem._check_unit_collisions = function (self, t)
 				local unit_pos = POSITION_LOOKUP[unit]
 				local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 				local breed = unit_data_extension:breed()
-				local unit_radius = (breed.player_locomotion_constrain_radius or 0.5) * 2
+				local player_locomotion_constrain_radius = breed.player_locomotion_constrain_radius
+				local unit_radius = player_locomotion_constrain_radius and player_locomotion_constrain_radius * 2
 
-				if not extension:is_unit_inside(unit_pos, unit_radius) then
+				if unit_radius and not extension:is_unit_inside(unit_pos, unit_radius) then
 					extension:on_unit_exit(unit, t)
 
 					units_inside[unit] = nil
@@ -184,10 +185,11 @@ SmokeFogSystem._check_unit_collisions = function (self, t)
 			if not temp_check_units[unit] and HEALTH_ALIVE[unit] then
 				local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 				local breed = unit_data_extension:breed()
-				local unit_radius = breed.player_locomotion_constrain_radius * 2
+				local player_locomotion_constrain_radius = breed.player_locomotion_constrain_radius
+				local unit_radius = player_locomotion_constrain_radius and player_locomotion_constrain_radius * 2
 				local unit_pos = POSITION_LOOKUP[unit]
 
-				if not units_inside[unit] and extension:is_unit_inside(unit_pos, unit_radius) then
+				if unit_radius and not units_inside[unit] and extension:is_unit_inside(unit_pos, unit_radius) then
 					extension:on_unit_enter(unit, t)
 
 					units_inside[unit] = true

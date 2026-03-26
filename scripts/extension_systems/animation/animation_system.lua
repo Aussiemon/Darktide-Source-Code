@@ -217,17 +217,25 @@ end
 AnimationSystem.play_companion_interaction_anim_event = function (player_unit, companion_unit, anim_event_player, anim_event_companion, optional_variable_name, optional_variable_value)
 	if optional_variable_name and optional_variable_value then
 		local variable_index = Unit.animation_find_variable(player_unit, optional_variable_name)
-		local variable_index_companion = Unit.animation_find_variable(companion_unit, optional_variable_name)
 
 		Unit.animation_set_variable(player_unit, variable_index, optional_variable_value)
-		Unit.animation_set_variable(companion_unit, variable_index_companion, optional_variable_value)
+
+		if ALIVE[companion_unit] then
+			local variable_index_companion = Unit.animation_find_variable(companion_unit, optional_variable_name)
+
+			Unit.animation_set_variable(companion_unit, variable_index_companion, optional_variable_value)
+		end
 	end
 
 	local player_event_index = Unit.animation_event(player_unit, anim_event_player)
-	local companion_event_index = Unit.animation_event(companion_unit, anim_event_companion)
 
 	Unit.animation_event_by_index(player_unit, player_event_index)
-	Unit.animation_event_by_index(companion_unit, companion_event_index)
+
+	if ALIVE[companion_unit] then
+		local companion_event_index = Unit.animation_event(companion_unit, anim_event_companion)
+
+		Unit.animation_event_by_index(companion_unit, companion_event_index)
+	end
 end
 
 return AnimationSystem

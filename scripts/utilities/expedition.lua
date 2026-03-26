@@ -478,55 +478,15 @@ local function get_levels_by_slot_distribution_config(settings, slot_distributio
 	return return_data
 end
 
-local function _in_expedition_safe_zone()
-	local game_mode_manager = Managers.state.game_mode
-
-	if game_mode_manager then
-		local game_mode = game_mode_manager:game_mode()
-
-		if game_mode.in_safe_zone then
-			return game_mode:in_safe_zone()
-		end
-	end
-
-	return false
-end
-
 local level_spawn_template = {
 	level = {
-		on_gameplay_resume_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.set_lod_level_type(level, LodLevelType.SHOW_LEVEL)
-		end,
-		on_gameplay_pause_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.set_lod_level_type(level, LodLevelType.HIDE)
-		end,
-		on_teleport_players_to_safe_zone_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.set_lod_level_type(level, LodLevelType.HIDE)
-		end,
-		on_spawned_function = function (level_data, world, settings)
-			if _in_expedition_safe_zone() then
-				local level = level_data.level
-
-				Level.set_lod_level_type(level, LodLevelType.HIDE)
-			end
+		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
+			return not in_safe_zone
 		end,
 	},
 	arrival_level = {
-		on_gameplay_resume_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.set_lod_level_type(level, LodLevelType.SHOW_LEVEL)
-		end,
-		on_gameplay_pause_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.set_lod_level_type(level, LodLevelType.HIDE)
+		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
+			return not in_safe_zone
 		end,
 		position_and_rotation_function = function (level_data, world)
 			local section = level_data.section
@@ -551,31 +511,17 @@ local level_spawn_template = {
 			local level_slot_unit = Level.unit_by_id(parent_level, level_slot_id)
 
 			section.arrival_unit = level_slot_unit
-
-			if _in_expedition_safe_zone() then
-				local level = level_data.level
-
-				Level.set_lod_level_type(level, LodLevelType.HIDE)
-			end
 		end,
 	},
 	safe_zone_connector_entrance_level = {
-		on_gameplay_resume_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.set_lod_level_type(level, LodLevelType.HIDE)
+		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
+			return in_safe_zone and belongs_to_current_safe_zone_section
 		end,
-		on_gameplay_pause_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.trigger_event(level, "event_players_entered_safe_zone")
-			Level.set_lod_level_type(level, LodLevelType.SHOW_LEVEL)
-		end,
-		on_spawned_function = function (level_data, world, settings)
-			if not _in_expedition_safe_zone() then
+		on_gameplay_pause_function = function (level_data, belongs_to_current_safe_zone_section)
+			if belongs_to_current_safe_zone_section then
 				local level = level_data.level
 
-				Level.set_lod_level_type(level, LodLevelType.HIDE)
+				Level.trigger_event(level, "event_players_entered_safe_zone")
 			end
 		end,
 		on_registered_function = function (level_data, world)
@@ -597,15 +543,8 @@ local level_spawn_template = {
 		end,
 	},
 	safe_zone_connector_exit_level = {
-		on_gameplay_resume_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.set_lod_level_type(level, LodLevelType.HIDE)
-		end,
-		on_gameplay_pause_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.set_lod_level_type(level, LodLevelType.SHOW_LEVEL)
+		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
+			return in_safe_zone and belongs_to_current_safe_zone_section
 		end,
 		on_registered_function = function (level_data, world)
 			local level = level_data.level
@@ -626,11 +565,9 @@ local level_spawn_template = {
 
 			section.safe_zone_connector_exit_level = level_data.level
 
-			if not _in_expedition_safe_zone() then
-				local level = level_data.level
+			local level = level_data.level
 
-				Level.set_lod_level_type(level, LodLevelType.HIDE)
-			end
+			Level.set_lod_level_type(level, LodLevelType.HIDE)
 		end,
 		position_and_rotation_function = function (level_data, world)
 			local section = level_data.section
@@ -646,7 +583,10 @@ local level_spawn_template = {
 		end,
 	},
 	connector_entrance_level = {
-		on_gameplay_resume_function = function (level_data, world, expedition)
+		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
+			return not in_safe_zone
+		end,
+		on_gameplay_resume_function = function (level_data, belongs_to_current_safe_zone_section)
 			local level = level_data.level
 
 			Level.trigger_event(level, "event_players_entered_location")
@@ -688,6 +628,9 @@ local level_spawn_template = {
 		end,
 	},
 	connector_exit_level = {
+		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
+			return not in_safe_zone
+		end,
 		on_registered_function = function (level_data, world)
 			local level = level_data.level
 
@@ -733,15 +676,8 @@ local level_spawn_template = {
 		end,
 	},
 	extraction_level = {
-		on_gameplay_resume_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.set_lod_level_type(level, LodLevelType.SHOW_LEVEL)
-		end,
-		on_gameplay_pause_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.set_lod_level_type(level, LodLevelType.HIDE)
+		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
+			return not in_safe_zone
 		end,
 		position_and_rotation_function = function (level_data, world)
 			local section = level_data.section
@@ -766,12 +702,6 @@ local level_spawn_template = {
 			local level_slot_unit = Level.unit_by_id(parent_level, level_slot_id)
 
 			section.extraction_unit = level_slot_unit
-
-			if _in_expedition_safe_zone() then
-				local level = level_data.level
-
-				Level.set_lod_level_type(level, LodLevelType.HIDE)
-			end
 		end,
 		on_registered_function = function (level_data, world)
 			local section = level_data.section
@@ -788,15 +718,8 @@ local level_spawn_template = {
 		end,
 	},
 	main_objective_level = {
-		on_gameplay_resume_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.set_lod_level_type(level, LodLevelType.SHOW_LEVEL)
-		end,
-		on_gameplay_pause_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.set_lod_level_type(level, LodLevelType.HIDE)
+		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
+			return not in_safe_zone
 		end,
 		position_and_rotation_function = function (level_data, world)
 			local section = level_data.section
@@ -830,15 +753,8 @@ local level_spawn_template = {
 		end,
 	},
 	opportunity_level = {
-		on_gameplay_resume_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.set_lod_level_type(level, LodLevelType.SHOW_LEVEL)
-		end,
-		on_gameplay_pause_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.set_lod_level_type(level, LodLevelType.HIDE)
+		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
+			return not in_safe_zone
 		end,
 		position_and_rotation_function = function (level_data, world)
 			local section = level_data.section
@@ -875,13 +791,6 @@ local level_spawn_template = {
 						excluded_object_sets[#excluded_object_sets + 1] = object_set_name
 					end
 				end
-			end
-		end,
-		on_spawned_function = function (level_data, world, settings)
-			if _in_expedition_safe_zone() then
-				local level = level_data.level
-
-				Level.set_lod_level_type(level, LodLevelType.HIDE)
 			end
 		end,
 		on_registered_function = function (level_data, world)
@@ -899,15 +808,8 @@ local level_spawn_template = {
 		end,
 	},
 	traversal_level = {
-		on_gameplay_resume_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.set_lod_level_type(level, LodLevelType.SHOW_LEVEL)
-		end,
-		on_gameplay_pause_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.set_lod_level_type(level, LodLevelType.HIDE)
+		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
+			return not in_safe_zone
 		end,
 		position_and_rotation_function = function (level_data, world)
 			local section = level_data.section
@@ -946,17 +848,10 @@ local level_spawn_template = {
 				end
 			end
 		end,
-		on_spawned_function = function (level_data, world, settings)
-			if _in_expedition_safe_zone() then
-				local level = level_data.level
-
-				Level.set_lod_level_type(level, LodLevelType.HIDE)
-			end
-		end,
 	},
 	toxic_gas = {
-		on_spawned_function = function (level_data, world)
-			return
+		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
+			return not in_safe_zone
 		end,
 		position_and_rotation_function = function (level_data, world)
 			local section = level_data.section
@@ -995,15 +890,8 @@ local level_spawn_template = {
 		end,
 	},
 	safe_zone_level = {
-		on_gameplay_resume_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.set_lod_level_type(level, LodLevelType.HIDE)
-		end,
-		on_gameplay_pause_function = function (level_data, world)
-			local level = level_data.level
-
-			Level.set_lod_level_type(level, LodLevelType.SHOW_LEVEL)
+		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
+			return in_safe_zone and belongs_to_current_safe_zone_section
 		end,
 		on_spawned_function = function (level_data, world, settings)
 			local section = level_data.section
@@ -1014,8 +902,6 @@ local level_spawn_template = {
 
 			section.safe_zone_entrance_slot_unit = Level.unit_by_id(level, entrance_level_slot_id)
 			section.safe_zone_exit_slot_unit = Level.unit_by_id(level, exit_level_slot_id)
-
-			Level.set_lod_level_type(level, LodLevelType.HIDE)
 		end,
 		position_and_rotation_function = function (level_data, world)
 			local section = level_data.section

@@ -99,14 +99,12 @@ PlayerCharacterStateMinigame.on_exit = function (self, unit, t, next_state)
 	local keep_equipped = minigame and not minigame:unequip_on_exit()
 
 	if not keep_equipped then
-		PlayerUnitVisualLoadout.wield_previous_weapon_slot(inventory_component, unit, t)
+		if wielded_slot == "slot_device" then
+			PlayerUnitVisualLoadout.wield_previous_weapon_slot(inventory_component, unit, t)
+		end
 
-		local is_completed = minigame and minigame:is_completed()
-
-		if wielded_slot == "slot_device" and PlayerUnitVisualLoadout.slot_equipped(inventory_component, self._visual_loadout_extension, "slot_device") then
+		if inventory_component.slot_device ~= "not_equipped" and PlayerUnitVisualLoadout.slot_equipped(inventory_component, self._visual_loadout_extension, "slot_device") then
 			PlayerUnitVisualLoadout.unequip_item_from_slot(unit, "slot_device", t)
-		elseif wielded_slot == "slot_pocketable_small" and PlayerUnitVisualLoadout.slot_equipped(inventory_component, self._visual_loadout_extension, "slot_pocketable_small") and is_completed then
-			PlayerUnitVisualLoadout.unequip_item_from_slot(unit, "slot_pocketable_small", t)
 		end
 	end
 

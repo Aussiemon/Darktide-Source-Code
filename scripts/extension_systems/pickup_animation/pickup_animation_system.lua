@@ -36,18 +36,19 @@ PickupAnimationSystem.start_animation_to_unit = function (self, pickup_unit, des
 	return false
 end
 
-PickupAnimationSystem.start_animation_from_unit = function (self, pickup_unit, from_unit)
-	local pickup_animation_extension = self._unit_to_extension_map[pickup_unit]
+PickupAnimationSystem.start_animation_from_unit = function (self, dropped_pickup_unit, swapped_pickup_unit, from_unit)
+	local pickup_animation_extension = self._unit_to_extension_map[dropped_pickup_unit]
 
 	if pickup_animation_extension then
-		pickup_animation_extension:start_place_animation(from_unit)
+		pickup_animation_extension:start_place_animation(from_unit, swapped_pickup_unit)
 
 		if self._is_server then
 			local unit_spawner_manager = Managers.state.unit_spawner
-			local pickup_is_level_unit, pickup_id = unit_spawner_manager:game_object_id_or_level_index(pickup_unit)
+			local pickup_is_level_unit, pickup_id = unit_spawner_manager:game_object_id_or_level_index(dropped_pickup_unit)
+			local swapped_pickup_is_level_unit, swapped_pickup_id = unit_spawner_manager:game_object_id_or_level_index(swapped_pickup_unit)
 			local end_is_level_unit, end_id = unit_spawner_manager:game_object_id_or_level_index(from_unit)
 
-			Managers.state.game_session:send_rpc_clients("rpc_start_place_animation", pickup_id, pickup_is_level_unit, end_id, end_is_level_unit)
+			Managers.state.game_session:send_rpc_clients("rpc_start_place_animation", pickup_id, pickup_is_level_unit, end_id, end_is_level_unit, swapped_pickup_id, swapped_pickup_is_level_unit)
 		end
 
 		return true
@@ -67,14 +68,15 @@ PickupAnimationSystem.rpc_start_pickup_animation = function (self, channel_id, p
 	end
 end
 
-PickupAnimationSystem.rpc_start_place_animation = function (self, channel_id, pickup_id, pickup_is_level_unit, end_id, end_is_level_unit)
+PickupAnimationSystem.rpc_start_place_animation = function (self, channel_id, pickup_id, pickup_is_level_unit, end_id, end_is_level_unit, swapped_pickup_id, swapped_pickup_is_level_unit)
 	local unit_spawner_manager = Managers.state.unit_spawner
 	local pickup_unit = unit_spawner_manager:unit(pickup_id, pickup_is_level_unit)
+	local swapped_pickup_unit = unit_spawner_manager:unit(swapped_pickup_id, swapped_pickup_is_level_unit)
 	local end_unit = unit_spawner_manager:unit(end_id, end_is_level_unit)
 	local pickup_animation_extension = self._unit_to_extension_map[pickup_unit]
 
 	if pickup_animation_extension then
-		pickup_animation_extension:start_place_animation(end_unit)
+		pickup_animation_extension:start_place_animation(end_unit, swapped_pickup_unit)
 	end
 end
 

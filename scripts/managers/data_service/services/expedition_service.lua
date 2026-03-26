@@ -818,6 +818,14 @@ ExpeditionService._get_expeditions_tracks = function (self)
 	end)
 end
 
+ExpeditionService.get_node_name_by_id = function (self, node_id)
+	return self:fetch_nodes():next(function ()
+		local node_name = self._cached_data.result[node_id] and self._cached_data.result[node_id].ui.display_name or ""
+
+		return node_name
+	end)
+end
+
 ExpeditionService.fetch_nodes = function (self)
 	if not table.is_empty(self._cached_data) then
 		local t = Managers.time:time("main")

@@ -371,20 +371,6 @@ ExpeditionLogicServer._clear_location_systems = function (self)
 	ExpeditionLogicServer.super._clear_location_systems(self)
 end
 
-ExpeditionLogicServer._get_active_safe_zone_section = function (self)
-	local expedition = self._expedition
-
-	for _, section in ipairs(expedition) do
-		local levels_data = section.levels_data
-
-		for _, level_data in ipairs(levels_data) do
-			if level_data.template_type == "safe_zone_level" and level_data.spawned then
-				return section
-			end
-		end
-	end
-end
-
 ExpeditionLogicServer._server_update_safe_zone = function (self, force_update)
 	local safe_zone_section = self:_get_active_safe_zone_section()
 
@@ -423,45 +409,42 @@ ExpeditionLogicServer._server_update_safe_zone = function (self, force_update)
 
 			for i = 1, #store_units do
 				local store_unit = store_units[i]
+				local pickup_type = Unit.get_data(store_unit, "pickup_type")
+				local interactee_extension = ScriptUnit.has_extension(store_unit, "interactee_system")
+				local interaction_type = interactee_extension and interactee_extension:interaction_type()
+				local interaction_only = (store_product_info[interaction_type] or store_product_info[pickup_type]) ~= nil
+				local store_unit_pickup_extension = ScriptUnit.has_extension(store_unit, "pickup_system")
+				local has_next_item = not interaction_only and store_unit_pickup_extension:has_next_item()
+				local has_pickups_to_spawn = has_next_item and store_unit_pickup_extension:spawnable_pickups_amount() > 0
 
-				if Unit.alive(store_unit) then
-					local pickup_type = Unit.get_data(store_unit, "pickup_type")
-					local interactee_extension = ScriptUnit.has_extension(store_unit, "interactee_system")
-					local interaction_type = interactee_extension and interactee_extension:interaction_type()
-					local interaction_only = (store_product_info[interaction_type] or store_product_info[pickup_type]) ~= nil
-					local store_unit_pickup_extension = ScriptUnit.has_extension(store_unit, "pickup_system")
-					local has_next_item = not interaction_only and store_unit_pickup_extension:has_next_item()
-					local has_pickups_to_spawn = has_next_item and store_unit_pickup_extension:spawnable_pickups_amount() > 0
+				if has_pickups_to_spawn or interaction_only then
+					local existing_pickup_data = purchase_data_by_store_unit[store_unit]
+					local pickup_info = existing_pickup_data and existing_pickup_data.info
+					local has_charges_left = pickup_info and (not pickup_info.charges or pickup_info.charges ~= 0)
 
-					if has_pickups_to_spawn or interaction_only then
-						local existing_pickup_data = purchase_data_by_store_unit[store_unit]
-						local pickup_info = existing_pickup_data and existing_pickup_data.info
-						local has_charges_left = pickup_info and (not pickup_info.charges or pickup_info.charges ~= 0)
+					if not existing_pickup_data or not interaction_only and not Unit.alive(existing_pickup_data.pickup_unit) and has_charges_left then
+						if interaction_only then
+							local success = self:_register_safe_zone_pickup_unit_by_pickup_spawner_unit(safe_zone_section_index, nil, store_unit)
 
-						if not existing_pickup_data or not interaction_only and not Unit.alive(existing_pickup_data.pickup_unit) and has_charges_left then
-							if interaction_only then
-								local success = self:_register_safe_zone_pickup_unit_by_pickup_spawner_unit(safe_zone_section_index, nil, store_unit)
+							if success then
+								local store_unit_level_id = unit_spawner_manager:level_index(store_unit)
 
-								if success then
-									local store_unit_level_id = unit_spawner_manager:level_index(store_unit)
+								game_session_manager:send_rpc_clients("rpc_register_safe_zone_store_unit", safe_zone_section_index, store_unit_level_id)
+							end
+						else
+							local pickup_unit = not interaction_only and store_unit_pickup_extension:spawn_item()
+							local success = self:_register_safe_zone_pickup_unit_by_pickup_spawner_unit(safe_zone_section_index, pickup_unit, store_unit)
 
-									game_session_manager:send_rpc_clients("rpc_register_safe_zone_store_unit", safe_zone_section_index, store_unit_level_id)
-								end
-							else
-								local pickup_unit = not interaction_only and store_unit_pickup_extension:spawn_item()
-								local success = self:_register_safe_zone_pickup_unit_by_pickup_spawner_unit(safe_zone_section_index, pickup_unit, store_unit)
+							if success then
+								local pickup_spawner_level_id = unit_spawner_manager:level_index(store_unit)
+								local pickup_game_object_id = unit_spawner_manager:game_object_id(pickup_unit)
 
-								if success then
-									local pickup_spawner_level_id = unit_spawner_manager:level_index(store_unit)
-									local pickup_game_object_id = unit_spawner_manager:game_object_id(pickup_unit)
-
-									game_session_manager:send_rpc_clients("rpc_register_safe_zone_pickup_unit_by_pickup_spawner_unit", safe_zone_section_index, pickup_game_object_id, pickup_spawner_level_id)
-								end
+								game_session_manager:send_rpc_clients("rpc_register_safe_zone_pickup_unit_by_pickup_spawner_unit", safe_zone_section_index, pickup_game_object_id, pickup_spawner_level_id)
 							end
 						end
-					else
-						random_pickup_spawners[#random_pickup_spawners + 1] = store_unit
 					end
+				else
+					random_pickup_spawners[#random_pickup_spawners + 1] = store_unit
 				end
 			end
 
@@ -539,11 +522,13 @@ ExpeditionLogicServer._server_hot_join_sync_active_safe_zone = function (self, c
 		return
 	end
 
+	local safe_zone_section_index = safe_zone_section.index
+
 	if self._in_safe_zone then
-		RPC.rpc_expedition_on_gameplay_pause(channel_id)
+		RPC.rpc_expedition_on_gameplay_pause(channel_id, safe_zone_section_index)
 
 		if self._server_level_state == SERVER_LEVEL_STATES.idle then
-			RPC.rpc_can_proceed_to_safe_zone_exit(channel_id, safe_zone_section.index)
+			RPC.rpc_can_proceed_to_safe_zone_exit(channel_id, safe_zone_section_index)
 		end
 	end
 
@@ -551,7 +536,6 @@ ExpeditionLogicServer._server_hot_join_sync_active_safe_zone = function (self, c
 
 	if purchase_data_by_store_unit then
 		local unit_spawner_manager = Managers.state.unit_spawner
-		local safe_zone_section_index = safe_zone_section.index
 
 		for store_unit, pickup_data in pairs(purchase_data_by_store_unit) do
 			local pickup_unit = pickup_data.pickup_unit
@@ -821,17 +805,18 @@ ExpeditionLogicServer.update = function (self, dt, t)
 			self:_set_server_level_state(SERVER_LEVEL_STATES.idle)
 		end
 	elseif state == SERVER_LEVEL_STATES.teleport_players_to_safe_zone then
-		local current_section = self._expedition[self._current_section_index]
+		local current_section_index = self._current_section_index
+		local current_section = self._expedition[current_section_index]
 
 		if self._teleporter_unit then
 			self._teleporter_unit = nil
 		end
 
-		self:_server_inform_all_players_teleporting_to_safe_zone()
-
 		local safe_zone_level = current_section.safe_zone_level
 
 		if safe_zone_level then
+			self._current_safe_zone_section_index = current_section_index
+
 			local connector_exit_unit = current_section.connector_exit_unit
 			local safe_zone_entrance_slot_unit = current_section.safe_zone_entrance_slot_unit
 			local transition_level = current_section.connector_exit_level
@@ -850,7 +835,7 @@ ExpeditionLogicServer.update = function (self, dt, t)
 		self._loot_handler:server_update_dropped_loot_pickups()
 		self:_set_server_level_state(SERVER_LEVEL_STATES.wait_on_server_level_despawn)
 		self._levels_spawner:start_despawning()
-		self:_server_inform_all_players_on_safe_zone_enter()
+		self:_server_inform_all_players_on_gameplay_pause(current_section_index)
 	elseif state == SERVER_LEVEL_STATES.wait_on_server_level_despawn then
 		local despawn_in_progress = self._levels_spawner:despawning()
 
@@ -876,7 +861,7 @@ ExpeditionLogicServer.update = function (self, dt, t)
 		end
 
 		self:_set_server_level_state(SERVER_LEVEL_STATES.idle)
-		self:_server_inform_all_players_on_safe_zone_left()
+		self:_server_inform_all_players_on_gameplay_resume()
 		self:_server_update_location_objective()
 	elseif state == SERVER_LEVEL_STATES.wait_on_clients_level_despawn then
 		local player_manager = Managers.player
@@ -1026,7 +1011,7 @@ ExpeditionLogicServer.event_expedition_airlock_sealed = function (self, hostile_
 		end
 	end
 
-	if not self:_is_any_player_in_exit_airlock() then
+	if not self:_is_any_human_controlled_player_in_exit_airlock() then
 		for unit, _ in pairs(self._transition_activator_units) do
 			Unit.flow_event(unit, "lua_reactivate_extract_event")
 		end
@@ -1185,7 +1170,7 @@ ExpeditionLogicServer.event_expedition_teleport_players_from_store = function (s
 	end
 end
 
-ExpeditionLogicServer._is_any_player_in_exit_airlock = function (self)
+ExpeditionLogicServer._is_any_human_controlled_player_in_exit_airlock = function (self)
 	local current_section = self._expedition[self._current_section_index]
 	local transition_level = current_section.connector_exit_level
 
@@ -1199,7 +1184,7 @@ ExpeditionLogicServer._is_any_player_in_exit_airlock = function (self)
 	for _, player in pairs(players) do
 		local player_unit = player.player_unit
 
-		if player_unit then
+		if player_unit and player:is_human_controlled() then
 			local player_position = Unit.world_position(player_unit, 1)
 
 			if Level.is_point_inside_volume(transition_level, "transition_area", player_position) then
@@ -1211,20 +1196,31 @@ end
 
 ExpeditionLogicServer.event_expedition_teleport_players_to_store = function (self, level, teleporter_unit)
 	self:_server_assign_teleporter_unit(teleporter_unit)
+
+	local loot_handler = self._loot_handler
+	local currency_handler = self._currency_handler
+	local location_index = self._current_section_index
+	local gameplay_time = Managers.time:time("gameplay")
+	local time_remaining = self._timer_handler:get_remaining_duration()
+	local total_loot = loot_handler:collected_team_loot()
+	local player_manager = Managers.player
+	local players = player_manager:players()
+
+	for _, player in pairs(players) do
+		local player_health = _player_health_percentage(player)
+		local peer_id = player:peer_id()
+
+		Managers.telemetry_events:expedition_exited_location_index(player, location_index, gameplay_time, time_remaining, total_loot, loot_handler:collected_player_loot(peer_id), currency_handler:collected_player_currency(peer_id), player_health)
+	end
 end
 
-ExpeditionLogicServer._server_inform_all_players_on_safe_zone_left = function (self)
+ExpeditionLogicServer._server_inform_all_players_on_gameplay_resume = function (self)
 	Managers.state.game_session:send_rpc_clients("rpc_expedition_on_gameplay_resume")
-	self:rpc_expedition_on_gameplay_resume()
+	self:_on_gameplay_resume()
 end
 
-ExpeditionLogicServer._server_inform_all_players_teleporting_to_safe_zone = function (self)
-	Managers.state.game_session:send_rpc_clients("rpc_expedition_teleporting_to_safe_zone")
-	self:_on_teleporting_to_safe_zone()
-end
-
-ExpeditionLogicServer._server_inform_all_players_on_safe_zone_enter = function (self)
-	Managers.state.game_session:send_rpc_clients("rpc_expedition_on_gameplay_pause")
+ExpeditionLogicServer._server_inform_all_players_on_gameplay_pause = function (self, section_index)
+	Managers.state.game_session:send_rpc_clients("rpc_expedition_on_gameplay_pause", section_index)
 	self:_on_gameplay_paused()
 end
 
@@ -1804,7 +1800,7 @@ ExpeditionLogicServer.event_expedition_validate_game_mode_completion = function 
 			extracted_loot_amount = extracted_loot_amount + player_loot
 
 			if loot_handler:collected_player_loot_by_type(player:peer_id(), "heavy") > 0 then
-				Managers.stats:record_private("hook_loot_luggable_extracted", player)
+				Managers.stats:record_team("hook_loot_team_luggable_delivered")
 				Managers.achievements:unlock_achievement(player, "expeditions_extract_with_luggable_loot")
 			end
 

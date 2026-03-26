@@ -141,6 +141,12 @@ PlayerCustomization._customize = function (self, unit, item_definitions)
 		Unit.set_unit_culling(unit, false, true)
 	end
 
+	local disable_all_shadows = self:get_data(unit, "disable_all_shadows")
+
+	if disable_all_shadows then
+		Unit.set_unit_objects_visibility(unit, false, true, VisibilityContexts.SHADOW_CASTER_CONTEXT)
+	end
+
 	local force_highest_lod = self:get_data(unit, "force_highest_lod")
 
 	if force_highest_lod then
@@ -413,6 +419,12 @@ PlayerCustomization.component_data = {
 	is_first_person = {
 		category = "Settings",
 		ui_name = "Is First Person",
+		ui_type = "check_box",
+		value = false,
+	},
+	disable_all_shadows = {
+		category = "Settings",
+		ui_name = "Disable All Shadows",
 		ui_type = "check_box",
 		value = false,
 	},

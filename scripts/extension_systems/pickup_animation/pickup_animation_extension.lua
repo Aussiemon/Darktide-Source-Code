@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/pickup_animation/pickup_animation_extension.lua
 
 local PickupSettings = require("scripts/settings/pickup/pickup_settings")
+local Pickups = require("scripts/settings/pickup/pickups")
 local PickupAnimationExtension = class("PickupAnimationExtension")
 
 PickupAnimationExtension.UPDATE_DISABLED_BY_DEFAULT = true
@@ -34,12 +35,19 @@ PickupAnimationExtension.start_pickup_animation = function (self, destination_un
 	if interactee_extension then
 		interactee_extension:set_used()
 	end
+
+	local dynamic_id = Unit.find_actor(unit, "dynamic")
+
+	if dynamic_id then
+		Unit.destroy_actor(unit, dynamic_id)
+	end
 end
 
-PickupAnimationExtension.start_place_animation = function (self, destination_unit)
+PickupAnimationExtension.start_place_animation = function (self, destination_unit, swapped_pickup_unit)
 	local unit = self._unit
 
 	self._start_position = Vector3Box(Unit.world_position(unit, 1))
+	self._swap_unit_offset = self:_get_swap_pickup_spawn_offset(swapped_pickup_unit)
 	self._end_unit = destination_unit
 	self._timer = PickupSettings.animation_time
 	self._animation_speed = -1
@@ -52,6 +60,12 @@ PickupAnimationExtension.start_place_animation = function (self, destination_uni
 	if interactee_extension then
 		interactee_extension:set_active(false)
 	end
+
+	local dynamic_id = Unit.find_actor(unit, "dynamic")
+
+	if dynamic_id then
+		Unit.destroy_actor(unit, dynamic_id)
+	end
 end
 
 PickupAnimationExtension.pickup_animation_started = function (self)
@@ -62,12 +76,13 @@ PickupAnimationExtension.update = function (self, unit, dt, t)
 	self._timer = self._timer + dt * self._animation_speed
 
 	local percentage = self._timer / PickupSettings.animation_time
+	local offset = self._swap_unit_offset and self._swap_unit_offset:unbox() or Vector3.zero()
 
 	if ALIVE[self._end_unit] then
 		local animation_position = math.clamp(percentage, 0, 1)
 		local unit_data_extension = ScriptUnit.extension(self._end_unit, "unit_data_system")
 		local first_person_component = unit_data_extension:read_component("first_person")
-		local start_position = Vector3Box.unbox(self._start_position)
+		local start_position = Vector3Box.unbox(self._start_position) - offset
 		local end_position = Unit.world_position(self._end_unit, 1) + Vector3(0, 0, first_person_component.height + PickupSettings.target_height_offset)
 		local position = Vector3.lerp(start_position, end_position, animation_position)
 
@@ -97,10 +112,25 @@ PickupAnimationExtension.update = function (self, unit, dt, t)
 			interactee_extension:set_active(true)
 		end
 
-		Unit.set_local_position(unit, 1, Vector3Box.unbox(self._start_position))
+		self._swap_unit_offset = nil
+
+		Unit.set_local_position(unit, 1, Vector3Box.unbox(self._start_position) - offset)
 		Unit.set_local_scale(unit, 1, Vector3.one())
 		self._owner_system:disable_update_function(self.__class_name, "update", self._unit, self)
 	end
+end
+
+PickupAnimationExtension._get_swap_pickup_spawn_offset = function (self, swapped_pickup_unit)
+	local swapped_unit_pickup_name = swapped_pickup_unit and Unit.get_data(swapped_pickup_unit, "pickup_type")
+	local swapped_pickup_offset
+
+	if swapped_pickup_unit then
+		local pickup_data = Pickups.by_name[swapped_unit_pickup_name]
+
+		swapped_pickup_offset = pickup_data and pickup_data.spawn_offset
+	end
+
+	return swapped_pickup_offset
 end
 
 return PickupAnimationExtension

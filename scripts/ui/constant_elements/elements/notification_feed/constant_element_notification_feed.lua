@@ -828,13 +828,16 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		}
 	elseif message_type == MESSAGE_TYPES.player_loot_drop then
 		local player = data.player
-		local player_name = player and player:name()
-		local player_slot = player and player.slot and player:slot()
-		local player_slot_colors = UISettings.player_slot_colors
-		local player_slot_color = player_slot and player_slot_colors[player_slot]
+		local player_name = data.player_name
 
-		if player_name and player_slot_color then
-			player_name = Text.apply_color_to_text(player_name, player_slot_color)
+		if not player.__deleted then
+			local player_slot = player and player.slot and player:slot()
+			local player_slot_colors = UISettings.player_slot_colors
+			local player_slot_color = player_slot and player_slot_colors[player_slot]
+
+			if player_name and player_slot_color then
+				player_name = Text.apply_color_to_text(player_name, player_slot_color)
+			end
 		end
 
 		local amount = data.amount

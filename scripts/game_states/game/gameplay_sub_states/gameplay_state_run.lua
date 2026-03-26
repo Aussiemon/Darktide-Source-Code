@@ -108,7 +108,11 @@ GameplayStateRun.update = function (self, main_dt, main_t)
 	end
 
 	player_manager:state_update(main_dt, main_t)
-	Managers.state.chunk_lod:update(main_dt, main_t)
+
+	if Managers.state.chunk_lod then
+		Managers.state.chunk_lod:update(main_dt, main_t)
+	end
+
 	self:_handle_load_failures()
 	self:_handle_session_disconnects()
 

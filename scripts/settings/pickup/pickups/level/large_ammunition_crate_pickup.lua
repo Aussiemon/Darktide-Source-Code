@@ -1,13 +1,13 @@
 ﻿-- chunkname: @scripts/settings/pickup/pickups/level/large_ammunition_crate_pickup.lua
 
 local pickup_data = {
-	ammo_crate = true,
 	description = "loc_pickup_deployable_ammo_crate_01",
 	group = "ammo",
 	interaction_icon = "content/ui/materials/hud/interactions/icons/pocketable_ammo",
 	interaction_type = "ammunition",
 	name = "large_ammunition_crate",
 	pickup_sound = "wwise/events/player/play_pick_up_full_ammo",
+	prevent_hog_ammo_vo = true,
 	refill_blitz = false,
 	smart_tag_target_type = "pickup",
 	spawn_flow_event = "lua_deploy",

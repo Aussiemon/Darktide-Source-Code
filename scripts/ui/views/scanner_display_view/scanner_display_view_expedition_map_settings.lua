@@ -37,6 +37,7 @@ local background_ring_definitions = {
 	},
 	{
 		pass_type = "texture",
+		platform_disable = "xbs",
 		style_id = "noise",
 		value = "content/ui/materials/backgrounds/scanner/scanner_noise",
 		style = {

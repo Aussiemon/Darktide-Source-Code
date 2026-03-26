@@ -57,6 +57,13 @@ end
 ViewElementMissionBoardMissionLocation._update_mission_location = function (self, mission)
 	local mission_area_info = self._widgets_by_name.mission_area_info
 	local mission_timer_bar = self._widgets_by_name.large_timer_bar
+
+	if self._mission_area_enter_anim_id then
+		self:_stop_animation(self._mission_area_enter_anim_id)
+
+		self._mission_area_enter_anim_id = nil
+	end
+
 	local content = mission_area_info.content
 
 	if not mission then

@@ -7,16 +7,14 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local Vo = require("scripts/utilities/vo")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local TIMER_OBJECTIVE_NAME = "objective_expedition_timer"
-local half_time_sound = "wwise/events/player/play_device_auspex_exps_timer_signal_half"
 local last_minute_sound = "wwise/events/player/play_device_auspex_exps_timer_signal_last_minute"
 local time_out_sound = "wwise/events/player/play_device_auspex_exps_timer_signal_timer_out"
 local timer_paused_sound = "wwise/events/player/play_device_auspex_exps_timer_signal_timer_pause"
 local timer_started_sound = "wwise/events/player/play_device_auspex_exps_timer_signal_timer_start"
-local _time_left_notifications = {
+local _time_left_events = {
 	[150] = {
 		description = "loc_game_mode_expedition_timer_popup_warning_desc_first",
 		header = "loc_game_mode_expedition_timer_popup_warning_title_first",
-		type = "alert",
 		sound_event = UISoundEvents.mission_objective_popup_new_expeditions,
 	},
 	[60] = {
@@ -25,6 +23,7 @@ local _time_left_notifications = {
 		header = "loc_game_mode_expedition_timer_popup_warning_title_final",
 		type = "alert",
 		sound_event = UISoundEvents.mission_objective_popup_new_expeditions,
+		auspex_sound = last_minute_sound,
 	},
 }
 local ExpeditionTimerHandler = class("ExpeditionTimerHandler")
@@ -173,12 +172,10 @@ ExpeditionTimerHandler.get_remaining_duration = function (self)
 	return timer_objective:get_time_left()
 end
 
-ExpeditionTimerHandler._reset_timed_notifications = function (self, from, to)
-	for time = from, to do
-		local notification = _time_left_notifications[time]
-
-		if notification then
-			notification.done = false
+ExpeditionTimerHandler._reset_timed_events = function (self, from, to)
+	for time, event in pairs(_time_left_events) do
+		if event.done and from <= time and time <= to then
+			event.done = false
 		end
 	end
 end
@@ -195,20 +192,13 @@ ExpeditionTimerHandler.extend_max_time = function (self, time_bonus)
 	timer_objective:set_increment(current_increment + time_bonus)
 	timer_objective:set_max_increment(current_max_increment + time_bonus)
 	mission_objective_system:propagate_objective_increment(timer_objective)
-
-	local current_time_left_ceiled = math.ceil(current_time_left)
-
-	self:_reset_timed_notifications(current_time_left_ceiled, current_time_left_ceiled + math.ceil(time_bonus))
+	self:_reset_timed_events(current_time_left, current_time_left + time_bonus)
 
 	local new_timer_progression = timer_objective:progression()
 	local new_time_remaining = timer_objective:max_incremented_progression() * (1 - new_timer_progression)
 
-	if new_timer_progression < 0.5 then
-		self._play_half_time = true
-
-		if new_time_remaining > 60 then
-			self._play_last_minute = true
-		end
+	if new_time_remaining > 60 then
+		self._play_last_minute = true
 	end
 
 	self:_remove_all_corruption_screenspace_effects()
@@ -223,12 +213,6 @@ ExpeditionTimerHandler.update = function (self, dt, t)
 	local timer_objective = objective_system:active_objective(TIMER_OBJECTIVE_NAME)
 
 	if timer_objective then
-		if self._play_half_time and timer_objective:progression() >= 0.5 then
-			self:_play_sound(half_time_sound)
-
-			self._play_half_time = false
-		end
-
 		if self._play_last_minute and timer_objective:max_incremented_progression() * (1 - timer_objective:progression()) <= 60 then
 			self:_play_sound(last_minute_sound)
 			Vo.mission_giver_mission_info_vo("selected_voice", "tech_priest_a", "expeditions_mission_forced_extraction_a")
@@ -237,16 +221,22 @@ ExpeditionTimerHandler.update = function (self, dt, t)
 		end
 
 		local time_left = self:get_remaining_duration()
-		local time_left_ceiled = math.ceil(time_left)
-		local notification = _time_left_notifications[time_left_ceiled]
 
-		if notification and not notification.done then
-			Managers.event:trigger("event_show_objective_popup", notification.description, notification.header, notification.sound_event, notification.type)
+		for time, event in pairs(_time_left_events) do
+			if not event.done and time_left <= time then
+				if event.header then
+					Managers.event:trigger("event_show_objective_popup", event.description, event.header, event.sound_event, event.type)
+				end
 
-			notification.done = true
+				if event.auspex_sound then
+					self:_play_sound(event.auspex_sound)
+				end
 
-			if self._is_server and notification.alert_objective then
-				objective_system:set_objective_ui_state(TIMER_OBJECTIVE_NAME, nil, "alert")
+				if self._is_server and event.alert_objective then
+					objective_system:set_objective_ui_state(TIMER_OBJECTIVE_NAME, nil, "alert")
+				end
+
+				event.done = true
 			end
 		end
 

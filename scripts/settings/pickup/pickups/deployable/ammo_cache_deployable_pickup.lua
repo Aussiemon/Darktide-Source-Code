@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/settings/pickup/pickups/deployable/ammo_cache_deployable_pickup.lua
 
 local pickup_data = {
-	ammo_crate = true,
+	allow_grenade_sharing = true,
 	auto_tag_on_spawn = true,
 	deployable = true,
 	description = "loc_pickup_deployable_ammo_crate_01",
@@ -11,6 +11,7 @@ local pickup_data = {
 	name = "ammo_cache_deployable",
 	num_charges = 4,
 	pickup_sound = "wwise/events/player/play_pick_up_ammo_01",
+	prevent_hog_ammo_vo = true,
 	smart_tag_target_type = "pickup",
 	spawn_flow_event = "lua_deploy",
 	unit_name = "content/pickups/pocketables/ammo_crate/deployable_ammo_crate",

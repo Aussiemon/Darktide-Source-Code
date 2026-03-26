@@ -34,6 +34,7 @@ ExpeditionLogicBase.init = function (self, network_event_delegate)
 
 	self._delayed_notifications = {}
 	self._current_section_index = mechanism_data.current_location_index
+	self._current_safe_zone_section_index = 1
 
 	local levels_spawner = mechanism:levels_spawner()
 
@@ -117,11 +118,9 @@ ExpeditionLogicBase.in_safe_zone = function (self)
 	return self._in_safe_zone
 end
 
-ExpeditionLogicBase.rpc_expedition_teleporting_to_safe_zone = function (self)
-	self:_on_teleporting_to_safe_zone()
-end
+ExpeditionLogicBase.rpc_expedition_on_gameplay_pause = function (self, channel, safe_zone_section_index)
+	self._current_safe_zone_section_index = safe_zone_section_index
 
-ExpeditionLogicBase.rpc_expedition_on_gameplay_pause = function (self)
 	self:_on_gameplay_paused()
 end
 
@@ -138,6 +137,7 @@ ExpeditionLogicBase.update = function (self, dt, t)
 	self._collectibles_handler:update(dt, t)
 	self._objectives_handler:update(dt, t)
 	self._navigation_handler:update(dt, t)
+	self:_update_levels_visibility()
 	self:_update_events(dt, t)
 
 	local airstrike_levels_to_despawn = self._airstrike_levels_to_despawn
@@ -223,6 +223,8 @@ end
 ExpeditionLogicBase._on_gameplay_paused = function (self)
 	_log("Gameplay Pause")
 
+	local current_safe_zone_section_index = self._current_safe_zone_section_index
+
 	self._in_safe_zone = true
 
 	Managers.event:trigger("in_safe_zone")
@@ -230,41 +232,18 @@ ExpeditionLogicBase._on_gameplay_paused = function (self)
 
 	local expedition = self._expedition
 
-	for _, section in ipairs(expedition) do
+	for section_index, section in ipairs(expedition) do
+		local belongs_to_current_safe_zone_section = current_safe_zone_section_index == section_index
 		local levels_data = section.levels_data
 
 		for _, level_data in ipairs(levels_data) do
-			if level_data.level and level_data.spawned and not level_data.gameplay_pause_triggered then
-				level_data.gameplay_pause_triggered = true
-
+			if level_data.level and level_data.spawned then
 				local template_type = level_data.template_type
 				local template = Expedition.get_level_template_by_type(template_type)
 				local on_gameplay_pause_function = template and template.on_gameplay_pause_function
 
 				if on_gameplay_pause_function then
-					on_gameplay_pause_function(level_data)
-				end
-			end
-		end
-	end
-end
-
-ExpeditionLogicBase._on_teleporting_to_safe_zone = function (self)
-	local expedition = self._expedition
-
-	for _, section in ipairs(expedition) do
-		local levels_data = section.levels_data
-
-		for _, level_data in ipairs(levels_data) do
-			if level_data.level and level_data.spawned and not level_data.gameplay_teleport_to_safe_zone_triggered then
-				level_data.gameplay_teleport_to_safe_zone_triggered = true
-
-				local template_type = level_data.template_type
-				local template = Expedition.get_level_template_by_type(template_type)
-				local on_teleport_players_to_safe_zone_function = template and template.on_teleport_players_to_safe_zone_function
-
-				if on_teleport_players_to_safe_zone_function then
-					on_teleport_players_to_safe_zone_function(level_data)
+					on_gameplay_pause_function(level_data, belongs_to_current_safe_zone_section)
 				end
 			end
 		end
@@ -335,16 +314,41 @@ end
 
 ExpeditionLogicBase.rpc_expedition_on_gameplay_resume = function (self)
 	self:_on_gameplay_resume()
-	Managers.state.rooms_and_portals:reset()
-	self._levels_spawner:apply_location_themes()
-
-	local world = self:_game_world()
-
-	World.set_data(world, "shadow_baked", false)
 end
 
 ExpeditionLogicBase.rpc_expedition_on_location_setup = function (self)
 	Managers.state.extension:on_location_setup()
+end
+
+ExpeditionLogicBase._update_levels_visibility = function (self)
+	local in_safe_zone = self._in_safe_zone
+	local current_safe_zone_section_index = self._current_safe_zone_section_index
+	local expedition = self._expedition
+
+	for section_index, section in ipairs(expedition) do
+		local belongs_to_current_safe_zone_section = current_safe_zone_section_index == section_index
+		local levels_data = section.levels_data
+
+		for _, level_data in ipairs(levels_data) do
+			local level = level_data.level
+
+			if level and level_data.spawned then
+				local template_type = level_data.template_type
+				local template = Expedition.get_level_template_by_type(template_type)
+				local visibility_function = template.visibility_function
+
+				if visibility_function then
+					local visible = visibility_function(level_data, belongs_to_current_safe_zone_section, in_safe_zone)
+
+					if visible ~= level_data.visible then
+						level_data.visible = visible
+
+						Level.set_lod_level_type(level, visible and LodLevelType.SHOW_LEVEL or LodLevelType.HIDE)
+					end
+				end
+			end
+		end
+	end
 end
 
 ExpeditionLogicBase._on_gameplay_resume = function (self)
@@ -354,25 +358,32 @@ ExpeditionLogicBase._on_gameplay_resume = function (self)
 
 	Managers.event:trigger("left_safe_zone")
 
+	local current_safe_zone_section_index = self._current_safe_zone_section_index
 	local expedition = self._expedition
 
-	for _, section in ipairs(expedition) do
+	for section_index, section in ipairs(expedition) do
+		local belongs_to_current_safe_zone_section = current_safe_zone_section_index == section_index
 		local levels_data = section.levels_data
 
 		for _, level_data in ipairs(levels_data) do
-			if level_data.level and level_data.spawned and not level_data.gameplay_resume_triggered then
-				level_data.gameplay_resume_triggered = true
-
+			if level_data.level and level_data.spawned then
 				local template_type = level_data.template_type
 				local template = Expedition.get_level_template_by_type(template_type)
 				local on_gameplay_resume_function = template and template.on_gameplay_resume_function
 
 				if on_gameplay_resume_function then
-					on_gameplay_resume_function(level_data, nil, expedition)
+					on_gameplay_resume_function(level_data, belongs_to_current_safe_zone_section)
 				end
 			end
 		end
 	end
+
+	Managers.state.rooms_and_portals:reset()
+	self._levels_spawner:apply_location_themes()
+
+	local world = self:_game_world()
+
+	World.set_data(world, "shadow_baked", false)
 end
 
 ExpeditionLogicBase.rpc_expedition_start_despawning_levels = function (self, channel_id)
@@ -504,17 +515,11 @@ ExpeditionLogicBase._clear_location_systems = function (self)
 end
 
 ExpeditionLogicBase._get_active_safe_zone_section = function (self)
+	local current_safe_zone_section_index = self._current_safe_zone_section_index
 	local expedition = self._expedition
+	local section = expedition[current_safe_zone_section_index]
 
-	for _, section in ipairs(expedition) do
-		local levels_data = section.levels_data
-
-		for _, level_data in ipairs(levels_data) do
-			if level_data.template_type == "safe_zone_level" and level_data.spawned then
-				return section
-			end
-		end
-	end
+	return section
 end
 
 ExpeditionLogicBase.loot_handler = function (self)
@@ -655,8 +660,8 @@ ExpeditionLogicBase.rpc_client_expedition_on_purchase_performed = function (self
 
 	if player and player:is_human_controlled() then
 		local expedition = self._expedition
-		local current_section_index = self._current_section_index
-		local current_section = expedition[current_section_index]
+		local current_safe_zone_section_index = self._current_safe_zone_section_index
+		local current_section = expedition[current_safe_zone_section_index]
 		local players_purchases = current_section.players_purchases
 		local name = product_data.name
 		local character_id = player:character_id()

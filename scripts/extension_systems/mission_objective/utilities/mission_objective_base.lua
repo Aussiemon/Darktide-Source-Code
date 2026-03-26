@@ -29,6 +29,7 @@ MissionObjectiveBase.init = function (self)
 	self._incremented_progression = 0
 	self._max_incremented_progression = 0
 	self._progression_sync_granularity = 0.01
+	self._progression_sync_high_fidelity = false
 	self._hide_max_increment = false
 	self._ui_state = "default"
 	self._header = ""
@@ -118,6 +119,7 @@ MissionObjectiveBase.start_objective = function (self, mission_objective_data, g
 	end
 
 	self._progression_sync_granularity = mission_objective_data.progression_sync_granularity or 0.01
+	self._progression_sync_high_fidelity = mission_objective_data.progression_sync_high_fidelity or false
 	self._registered_units = registered_units
 	self._objective_units = {}
 	self._marked_units = {}
@@ -470,6 +472,10 @@ end
 
 MissionObjectiveBase.progression_sync_granularity = function (self)
 	return self._progression_sync_granularity
+end
+
+MissionObjectiveBase.progression_sync_high_fidelity = function (self)
+	return self._progression_sync_high_fidelity
 end
 
 MissionObjectiveBase.total_progression = function (self)

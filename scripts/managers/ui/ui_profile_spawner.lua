@@ -314,12 +314,14 @@ UIProfileSpawner.assign_face_animation_event = function (self, face_animation_ev
 			local slots = self._character_spawn_data.slots
 			local face_unit = slots.slot_body_face.unit_3p
 
-			if Unit.has_animation_event(face_unit, "no_anim") then
-				Unit.animation_event(face_unit, "no_anim")
-			end
+			if Unit.has_animation_state_machine(face_unit) then
+				if Unit.has_animation_event(face_unit, "no_anim") then
+					Unit.animation_event(face_unit, "no_anim")
+				end
 
-			if Unit.has_animation_event(face_unit, face_animation_event) then
-				Unit.animation_event(face_unit, face_animation_event)
+				if Unit.has_animation_event(face_unit, face_animation_event) then
+					Unit.animation_event(face_unit, face_animation_event)
+				end
 			end
 
 			self._pending_face_animation_event = nil

@@ -27,6 +27,7 @@ weapon_template.actions.action_underhand_throw_grenade.ammunition_usage = AMMUNI
 weapon_template.actions.action_throw_grenade.remove_item_from_inventory = REMOVE_ITEM_FROM_INVENTORY
 weapon_template.actions.action_underhand_throw_grenade.remove_item_from_inventory = REMOVE_ITEM_FROM_INVENTORY
 weapon_template.ammo_template = "expeditions_big_grenade"
+weapon_template.ammo_template_static = "expeditions_big_grenade"
 weapon_template.swap_pickup_name = "expedition_grenade_big_pocketable"
 weapon_template.projectile_template = ProjectileTemplates.expeditions_big_grenade
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_combat_blade

@@ -4,6 +4,7 @@ local MasterItems = require("scripts/backend/master_items")
 local Pickups = require("scripts/settings/pickup/pickups")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local Ammo = require("scripts/utilities/ammo")
 
 local function _is_expedition_store_product(unit)
 	local mechanism_manager = Managers.mechanism
@@ -63,7 +64,12 @@ Pocketable.drop_pocketable = function (t, physics_world, is_server, player_unit,
 			position = hit_position
 		end
 
-		_drop_pickup(item_name, position, rotation, player_unit)
+		local pickup_system = Managers.state.extension:system("pickup_system")
+		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+		local inventory_slot_component = unit_data_extension:write_component(slot_name)
+		local optional_num_retained_charges = pickup_system:get_dropped_item_retained_pickup_charges(inventory_slot_component, item_name)
+
+		_drop_pickup(item_name, position, rotation, player_unit, optional_num_retained_charges)
 	end
 
 	PlayerUnitVisualLoadout.unequip_item_from_slot(player_unit, slot_name, t)
@@ -76,6 +82,7 @@ Pocketable.equip_pocketable = function (t, is_server, player_unit, pickup_unit, 
 	local item_name = inventory_component[slot_name]
 	local swap_item = item_name ~= "not_equipped"
 	local inventory_slot_component = unit_data_extension:write_component(slot_name)
+	local pickup_system = Managers.state.extension:system("pickup_system")
 	local want_to_swap_item = true
 
 	if pocketable_wielded then
@@ -86,11 +93,16 @@ Pocketable.equip_pocketable = function (t, is_server, player_unit, pickup_unit, 
 		want_to_swap_item = not inventory_slot_component.unequip_slot
 	end
 
+	local optional_num_retained_charges
+
 	if swap_item then
+		optional_num_retained_charges = pickup_system:get_dropped_item_retained_pickup_charges(inventory_slot_component, item_name)
+
 		PlayerUnitVisualLoadout.unequip_item_from_slot(player_unit, slot_name, t)
 	end
 
 	PlayerUnitVisualLoadout.equip_item_to_slot(player_unit, inventory_item, slot_name, nil, t)
+	pickup_system:set_equipped_pickup_retained_charges(inventory_component, inventory_slot_component, slot_name, pickup_unit)
 
 	if swap_item and is_server and want_to_swap_item then
 		local position = Unit.world_position(pickup_unit, 1)
@@ -101,11 +113,11 @@ Pocketable.equip_pocketable = function (t, is_server, player_unit, pickup_unit, 
 			rotation = Unit.world_rotation(player_unit, 1)
 		end
 
-		local spawned_unit = _drop_pickup(item_name, position, rotation, player_unit)
+		local spawned_unit = _drop_pickup(item_name, position, rotation, player_unit, optional_num_retained_charges)
 		local pickup_animation_system = Managers.state.extension:system("pickup_animation_system")
 
 		if spawned_unit and pickup_animation_system then
-			pickup_animation_system:start_animation_from_unit(spawned_unit, player_unit)
+			pickup_animation_system:start_animation_from_unit(spawned_unit, pickup_unit, player_unit)
 		end
 	end
 
@@ -130,7 +142,7 @@ end
 local TRAINING_GROUNDS_GAME_MODE_NAME = "training_grounds"
 local SHOOTING_RANGE_GAME_MODE_NAME = "shooting_range"
 
-function _drop_pickup(item_name, spawn_pos, spawn_rot, interactor_unit)
+function _drop_pickup(item_name, spawn_pos, spawn_rot, interactor_unit, optional_num_retained_charges)
 	local item_definitions = MasterItems.get_cached()
 	local item = item_definitions[item_name]
 	local weapon_template = WeaponTemplate.weapon_template_from_item(item)
@@ -145,7 +157,15 @@ function _drop_pickup(item_name, spawn_pos, spawn_rot, interactor_unit)
 	if game_mode_name ~= TRAINING_GROUNDS_GAME_MODE_NAME and game_mode_name ~= SHOOTING_RANGE_GAME_MODE_NAME then
 		local pickup_system = Managers.state.extension:system("pickup_system")
 		local disable_time = 0.5
-		local spawned_unit, _ = pickup_system:spawn_pickup(swap_pickup_name, spawn_pos, spawn_rot, nil, nil, disable_time)
+		local spawned_unit, _ = pickup_system:spawn_pickup(swap_pickup_name, spawn_pos, spawn_rot, nil, nil, disable_time, nil, nil)
+
+		if optional_num_retained_charges then
+			local game_session = Managers.state.game_session:game_session()
+			local game_object_id = Managers.state.unit_spawner:game_object_id(spawned_unit)
+
+			GameSession.set_game_object_field(game_session, game_object_id, "charges", optional_num_retained_charges)
+		end
+
 		local equipped_pickup_data = Pickups.by_name[swap_pickup_name]
 
 		if equipped_pickup_data and equipped_pickup_data.on_drop_func then

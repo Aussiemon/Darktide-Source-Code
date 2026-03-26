@@ -605,7 +605,7 @@ FlyingSearchEngine._string_pull = function (self, step_data, timer, budget)
 	repeat
 		local index_to_test = start_pivot + (direction == 1 and math.ceil or math.floor)((end_pivot - start_pivot) / 2)
 		local pull_index = num_pulled_indices
-		local blocked = self._nav_svo:overlap_capsule(Vector3.from_array(points[index_to_test]), Vector3.from_array(points[pull_index]), self._radius)
+		local blocked = index_to_test ~= pull_index and self._nav_svo:overlap_capsule(Vector3.from_array(points[index_to_test]), Vector3.from_array(points[pull_index]), self._radius)
 
 		if blocked then
 			end_pivot = index_to_test

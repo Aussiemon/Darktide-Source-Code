@@ -1002,10 +1002,18 @@ ExpeditionView._update_can_start_mission = function (self)
 		return
 	end
 
-	if self.current_match_visibility == MATCH_VISIBILITY.private and party_manager:num_other_members() < 1 then
-		self:_set_can_start_mission(false, "warning", Localize("loc_mission_board_cannot_private_match"))
+	if self.current_match_visibility == MATCH_VISIBILITY.private then
+		if node.id == "quickplay_button" then
+			self:_set_can_start_mission(false, "warning", Localize("loc_mission_board_locked_issue"))
 
-		return
+			return
+		end
+
+		if party_manager:num_other_members() < 1 then
+			self:_set_can_start_mission(false, "warning", Localize("loc_mission_board_cannot_private_match"))
+
+			return
+		end
 	end
 
 	if self.selected_node and self.selected_node.unlock_status ~= UNLOCK_STATUS.unlocked and node.id ~= "quickplay_button" then
@@ -1083,6 +1091,14 @@ ExpeditionView.cb_toggle_private_match = function (self)
 
 	self:set_saved_match_visibility(match_visibility)
 	self._sidebar:update_match_visibility_text(match_visibility)
+
+	local quickplay_widget = self.quickplay_button_widget
+
+	if quickplay_widget then
+		local content = quickplay_widget.content
+
+		content.is_locked = not self.quickplay_unlocked or match_visibility ~= MATCH_VISIBILITY.public
+	end
 end
 
 ExpeditionView.cb_show_tutorial = function (self)
@@ -1302,7 +1318,7 @@ ExpeditionView._setup_quickplay_button = function (self)
 		})
 	end
 
-	local is_unlocked = self.quickplay_unlocked
+	local is_unlocked = self.quickplay_unlocked and self.current_match_visibility == MATCH_VISIBILITY.public
 	local widget_id = "quickplay_button"
 	local optional_blueprint_settings = "quickplay_tile"
 	local optional_creation_context = {

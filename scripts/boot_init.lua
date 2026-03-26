@@ -28,7 +28,7 @@ if s3d and not LIBRARIES_IMPORTED then
 	LIBRARIES_IMPORTED = true
 end
 
-if cjson.stingray_init then
+if cjson and cjson.stingray_init then
 	cjson = cjson.stingray_init()
 end
 

@@ -338,6 +338,7 @@ local views = {
 		class = "LoadingView",
 		disable_game_world = true,
 		display_name = "loc_loading_view_display_name",
+		draw_while_loading = true,
 		dynamic_package_folder = "packages/ui/views/loading_view/",
 		package = "packages/ui/views/loading_view/loading_view",
 		path = "scripts/ui/views/loading_view/loading_view",

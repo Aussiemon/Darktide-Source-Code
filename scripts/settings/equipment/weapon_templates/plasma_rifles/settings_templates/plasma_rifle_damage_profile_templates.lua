@@ -224,8 +224,8 @@ damage_templates.default_plasma_bfg_light = {
 	weakspot_stagger_resistance_modifier = 0.0001,
 	herding_template = HerdingTemplates.shot,
 	cleave_distribution = {
-		attack = 18,
-		impact = 18,
+		attack = 34.3,
+		impact = 34.3,
 	},
 	ranges = {
 		max = 20,

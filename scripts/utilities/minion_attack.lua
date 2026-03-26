@@ -237,6 +237,15 @@ local function _spread_direction(target_unit, minion_unit, shoot_direction, spre
 	return spread_direction
 end
 
+local function _check_for_hitscan_template_override(target_unit)
+	local mutator_manager = Managers.state.mutator
+	local vortex_override_mutator = mutator_manager:mutator("mutator_exp_dummy_sand_vortex")
+
+	if vortex_override_mutator then
+		return vortex_override_mutator:get_hitscan_template_override(target_unit)
+	end
+end
+
 local DEFAULT_DAMAGE_FALLOFF = {
 	falloff_range = 15,
 	max_power_reduction = 0.6,
@@ -279,6 +288,8 @@ MinionAttack.shoot_hit_scan = function (world, physics_world, unit, target_unit,
 	local charge_level = 1
 	local hit_scan_template = shoot_template.hit_scan_template
 	local range, collision_filter = hit_scan_template.range, shoot_template.collision_filter
+
+	collision_filter = _check_for_hitscan_template_override(target_unit) or collision_filter
 
 	if shoot_template.bot_power_level_modifier then
 		local player_unit_spawn_manager = Managers.state.player_unit_spawn

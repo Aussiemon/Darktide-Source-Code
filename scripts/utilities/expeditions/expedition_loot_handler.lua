@@ -214,15 +214,16 @@ ExpeditionLootHandler._show_collected_materials_notification = function (self, p
 	local player_manager = Managers.player
 	local local_player_id = 1
 	local player = player_manager:player(peer_id, local_player_id)
+	local player_name = player and player:name()
 
 	if amount < 0 then
 		Managers.event:trigger("event_add_notification_message", "player_loot_drop", {
 			currency = "expedition_loot",
 			amount = math.abs(amount),
+			player_name = player_name,
 			player = player,
 		})
 	else
-		local player_name = player and player:name()
 		local player_slot = player and player.slot and player:slot()
 		local player_slot_colors = UISettings.player_slot_colors
 		local player_slot_color = player_slot and player_slot_colors[player_slot]

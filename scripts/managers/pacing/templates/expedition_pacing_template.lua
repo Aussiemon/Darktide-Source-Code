@@ -621,8 +621,8 @@ local ROAMER_MINIMUM_SETTINGS = {
 		20,
 		25,
 		30,
-		35,
-		40,
+		33,
+		38,
 	},
 }
 
@@ -683,8 +683,8 @@ local pacing_template = {
 	max_tension = _multiplier_step(100),
 	challenge_rating_thresholds = {
 		specials = _challenge_rating_multiplier_steps(40),
-		hordes = _challenge_rating_multiplier_steps(60),
-		trickle_hordes = _challenge_rating_multiplier_steps(45),
+		hordes = _challenge_rating_multiplier_steps(45),
+		trickle_hordes = _challenge_rating_multiplier_steps(35),
 		roamers = _challenge_rating_multiplier_steps(90),
 		terror_events = _challenge_rating_multiplier_steps(100),
 		auto_events = _challenge_rating_multiplier_steps(100),

@@ -286,12 +286,13 @@ MoveablePlatformExtension.set_wall_collision = function (self, activate)
 	end
 
 	if activate then
-		local camera_player = self._chunk_lod_manager:player()
+		local player_manager = Managers.player
+		local local_player = player_manager:local_player(1)
 
-		if camera_player then
-			local camera_player_unit = camera_player.player_unit
+		if local_player then
+			local local_player_unit = local_player.player_unit
 
-			if self._passenger_units[camera_player_unit] then
+			if self._passenger_units[local_player_unit] and self._chunk_lod_manager then
 				self._locked_chunk_lod = self._chunk_lod_manager:set_level_unit(self._unit)
 			end
 		end

@@ -2875,7 +2875,7 @@ templates.psyker_cycle_stacking_warp_damage = {
 }
 templates.psyker_cycle_stacking_non_warp_damage = {
 	class_name = "buff",
-	duration = 8,
+	duration = 10,
 	hud_icon = "content/ui/textures/icons/buffs/hud/psyker/psyker_1_tier_2_name_2",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	hud_priority = 5,

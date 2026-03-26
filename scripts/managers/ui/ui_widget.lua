@@ -137,6 +137,10 @@ local PASS_INTERFACE = table.set({
 })
 
 UIWidget.add_definition_pass = function (destination, pass_info)
+	if pass_info.platform_disable and pass_info.platform_disable == PLATFORM then
+		return
+	end
+
 	local passes = destination.passes
 
 	if not passes then

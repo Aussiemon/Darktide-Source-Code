@@ -2104,68 +2104,74 @@ end_player_view_blueprints.expedition = {
 
 					offset_y = offset_y + 10
 
-					local progress_square_background_id = "progress_square_background_" .. pass_index
+					local checkbox_size = {
+						20,
+						20,
+					}
+					local checkbox_color = table.clone(new_main_color)
+
+					checkbox_color[1] = 0
+
+					local progress_checkbox_shadow_id = "progress_checkbox_shadow_" .. pass_index
 
 					pass_template[next_index] = {
-						pass_type = "rect",
-						style_id = progress_square_background_id,
+						pass_type = "texture",
+						value = "content/ui/materials/buttons/slider_handle_line",
+						value_id = progress_checkbox_shadow_id,
+						style_id = progress_checkbox_shadow_id,
 						style = {
 							scale_to_material = true,
-							size = {
-								20,
-								20,
-							},
 							color = Color.black(0, true),
 							offset = {
-								offset_x,
-								offset_y,
-								2,
-							},
-						},
-					}
-					next_index = next_index + 1
-
-					local progress_square_tile_id = "progress_square_tile_" .. pass_index
-
-					pass_template[next_index] = {
-						pass_type = "texture",
-						value = "content/ui/materials/frames/frame_tile_2px",
-						style_id = progress_square_tile_id,
-						value_id = progress_square_tile_id,
-						style = {
-							scale_to_material = true,
-							color = Color.terminal_frame(0, true),
-							size = {
-								20,
-								20,
-							},
-							offset = {
-								offset_x,
-								offset_y,
-								3,
-							},
-						},
-					}
-					next_index = next_index + 1
-
-					local progress_square_corner_id = "progress_square_corner_" .. pass_index
-
-					pass_template[next_index] = {
-						pass_type = "texture",
-						value = "content/ui/materials/frames/frame_corner_2px",
-						style_id = progress_square_corner_id,
-						value_id = progress_square_corner_id,
-						style = {
-							scale_to_material = true,
-							color = Color.terminal_corner_hover(0, true),
-							size = {
-								20,
-								20,
-							},
-							offset = {
-								offset_x,
-								offset_y,
+								offset_x + 0.5,
+								offset_y + 2.5,
 								4,
+							},
+							size = checkbox_size,
+						},
+					}
+					next_index = next_index + 1
+
+					local progress_checkbox_line_id = "progress_checkbox_line_" .. pass_index
+
+					pass_template[next_index] = {
+						pass_type = "texture",
+						value = "content/ui/materials/buttons/slider_handle_line",
+						value_id = progress_checkbox_line_id,
+						style_id = progress_checkbox_line_id,
+						style = {
+							scale_to_material = true,
+							color = checkbox_color,
+							offset = {
+								offset_x,
+								offset_y + 2,
+								5,
+							},
+							size = checkbox_size,
+						},
+					}
+					next_index = next_index + 1
+
+					local progress_checkbox_fill_id = "progress_checkbox_fill_" .. pass_index
+
+					pass_template[next_index] = {
+						pass_type = "texture",
+						value = "content/ui/materials/buttons/slider_handle_fill",
+						value_id = progress_checkbox_fill_id,
+						style_id = progress_checkbox_fill_id,
+						style = {
+							scale_to_material = true,
+							original_color = checkbox_color,
+							highlight_color = table.clone(new_main_color),
+							color = checkbox_color,
+							offset = {
+								offset_x + 5,
+								offset_y + 7,
+								5,
+							},
+							size = {
+								checkbox_size[1] - 10,
+								checkbox_size[2] - 10,
 							},
 						},
 					}
@@ -2319,7 +2325,7 @@ end_player_view_blueprints.expedition = {
 		local style = widget.style
 		local node_name_played = config.node_name_played and Localize(config.node_name_played)
 
-		content.label = string.format("%s\n%s", Localize("loc_expedition_eor_title"), node_name_played)
+		content.label = string.format("%s\n%s %s", Localize("loc_expedition_eor_title"), Localize("loc_grid_point"), node_name_played)
 
 		local all_unlock_progress = config.all_unlock_progress
 		local loot_collected = config.loot_collected

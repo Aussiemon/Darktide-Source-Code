@@ -8,7 +8,6 @@ local CLIENT_RPCS = {
 	"rpc_register_safe_zone_store_unit",
 	"rpc_register_safe_zone_pickup_unit_by_pickup_spawner_unit",
 	"rpc_expedition_on_gameplay_pause",
-	"rpc_expedition_teleporting_to_safe_zone",
 	"rpc_expedition_clear_location_systems",
 	"rpc_expedition_on_gameplay_resume",
 	"rpc_expedition_on_location_setup",

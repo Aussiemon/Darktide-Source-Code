@@ -20,6 +20,7 @@ local overrides = {
 		"content/levels/expeditions/safe_zones/wastes/sz_cave_tunnels_001/missions/mission_sz_cave_tunnels_001",
 		"content/levels/expeditions/safe_zones/wastes/sz_cave_tunnels_002/missions/mission_sz_cave_tunnels_002",
 		"content/levels/expeditions/safe_zones/wastes/sz_stronghold_ruin_002/missions/mission_sz_stronghold_ruin_002",
+		"content/levels/expeditions/safe_zones/wastes/sz_stronghold_ruin_003/missions/mission_sz_stronghold_ruin_003",
 	},
 	allowed_dsl_levels = {
 		"content/levels/expeditions/opportunities/wastes/op_16m_hack_chest_002/world",

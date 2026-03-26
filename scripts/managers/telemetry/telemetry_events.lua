@@ -660,6 +660,21 @@ TelemetryEvents.chest_opened = function (self, player, chest_size, chest_coordin
 	self._manager:register_event(event)
 end
 
+TelemetryEvents.expedition_exited_location_index = function (self, player, index, gameplay_time, time_remaining, total_loot, player_loot, player_currency, player_health)
+	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "expedition_exited_location_index", self:_session_from_player(player))
+
+	event:set_data({
+		index = index,
+		gameplay_time = gameplay_time,
+		time_remaining = time_remaining,
+		total_loot = total_loot,
+		player_loot = player_loot,
+		player_currency = player_currency,
+		player_health = player_health,
+	})
+	self._manager:register_event(event)
+end
+
 TelemetryEvents.expedition_reached_location_index = function (self, player, index, gameplay_time, time_remaining, total_loot, player_loot, player_currency, player_health)
 	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "expedition_reached_location_index", self:_session_from_player(player))
 

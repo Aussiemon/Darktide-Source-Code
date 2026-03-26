@@ -740,9 +740,11 @@ local function _pages_from_difficulty()
 			filter = {
 				challenge = difficulty_data.challenge,
 				resistance = difficulty_data.resistance,
-				category_blacklist = {
-					"horde",
-					"story_nomansland",
+				category_whitelist = {
+					"common",
+					"event",
+					"maelstrom",
+					"story",
 				},
 			},
 			qp = {
@@ -770,9 +772,11 @@ local function _populate_pages(missions, difficulty_progress_data)
 			filter = {
 				challenge = difficulty_data.challenge,
 				resistance = difficulty_data.resistance,
-				category_blacklist = {
-					"horde",
-					"story_nomansland",
+				category_whitelist = {
+					"common",
+					"event",
+					"maelstrom",
+					"story",
 				},
 			},
 			qp = {
@@ -860,7 +864,7 @@ MissionBoardViewLogic.get_missions_by_filters = function (self, filters)
 end
 
 MissionBoardViewLogic._mission_passes_filter = function (self, mission, filter)
-	if filter.category_blacklist and table.array_contains(filter.category_blacklist, mission.category) then
+	if filter.category_whitelist and not table.array_contains(filter.category_whitelist, mission.category) then
 		return false
 	end
 

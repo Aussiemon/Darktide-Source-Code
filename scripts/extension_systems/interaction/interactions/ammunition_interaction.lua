@@ -124,7 +124,7 @@ function _can_refill_grenades(interactor_unit, pickup_data)
 		return true, has_missing_charges
 	end
 
-	if pickup_data and pickup_data.ammo_crate then
+	if pickup_data.allow_grenade_sharing then
 		local side_system = Managers.state.extension:system("side_system")
 		local side = side_system.side_by_unit[interactor_unit]
 		local player_units = side.player_units

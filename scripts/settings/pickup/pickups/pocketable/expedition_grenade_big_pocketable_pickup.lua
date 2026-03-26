@@ -11,6 +11,7 @@ local pickup_data = {
 	look_at_tag = "pocketable",
 	name = "expedition_grenade_big_pocketable",
 	pickup_sound = "wwise/events/player/play_pick_up_grenade",
+	retain_charges = true,
 	smart_tag_target_type = "pickup",
 	unit_name = "content/environment/gameplay/expeditions/grenades/big_fing_grenade_01",
 	spawn_offset = Vector3Box(0, 0, 0.11),

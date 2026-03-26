@@ -226,6 +226,7 @@ BakeNavmesh.generate_navmesh = function (world, nav_world, nav_gen, navgen_setti
 	for i = 1, #levels do
 		local level_data = levels[i]
 		local level_name = level_data.level_name
+		local level_tm = Matrix4x4.from_quaternion_position(Quaternion.identity(), level_data.position:unbox())
 		local file_path = level_name .. "_volume_data"
 
 		if Application.can_get_resource("lua", file_path) then
@@ -274,7 +275,7 @@ BakeNavmesh.generate_navmesh = function (world, nav_world, nav_gen, navgen_setti
 					for j = 1, #volume.bottom_points do
 						local bottom_point = volume.bottom_points[j]
 
-						bottom_points[#bottom_points + 1] = Vector3(bottom_point[1], bottom_point[2], bottom_point[3])
+						bottom_points[#bottom_points + 1] = Matrix4x4.transform(level_tm, Vector3(bottom_point[1], bottom_point[2], bottom_point[3]))
 					end
 
 					local alt_min_vector = Vector3(volume.alt_min_vector[1], volume.alt_min_vector[2], volume.alt_min_vector[3])

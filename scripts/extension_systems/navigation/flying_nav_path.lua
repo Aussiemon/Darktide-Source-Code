@@ -31,7 +31,7 @@ FlyingNavPath.velocity_at = function (self, position, max_speed, nav_step_dt)
 	local num_points = self._num_points
 	local to_point, progress_index = self:_next_point(position)
 
-	self._progress_index = math.max(self._progress_index, progress_index)
+	progress_index = math.max(self._progress_index, progress_index)
 
 	local trace_offset = max_speed * nav_step_dt
 	local from_point = points[progress_index]
@@ -84,9 +84,12 @@ FlyingNavPath.velocity_at = function (self, position, max_speed, nav_step_dt)
 		end
 
 		from_point = to_point
+		progress_index = forward_index
 		forward_index = forward_index + 1
 		to_point = points[forward_index]
 	end
+
+	self._progress_index = progress_index
 
 	local move_to = Vector3(trace_x, trace_y, trace_z)
 	local diff = move_to - position

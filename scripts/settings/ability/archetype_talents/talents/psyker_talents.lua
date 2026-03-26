@@ -1411,7 +1411,7 @@ local archetype_talents = {
 			},
 		},
 		psyker_2_tier_3_name_2 = {
-			description = "loc_talent_psyker_cooldown_on_allied_elite_kills_fixed_desc",
+			description = "loc_talent_psyker_cooldown_on_allied_elite_kills_desc",
 			display_name = "loc_talent_psyker_elite_kills_give_combat_ability_cd_coherency",
 			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_5_3",
 			name = "Killing an elite enemy restores combat ability cooldown to allies in coherency",

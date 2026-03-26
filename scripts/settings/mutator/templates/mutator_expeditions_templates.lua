@@ -11,7 +11,8 @@ local mutator_templates = {
 		},
 	},
 	mutator_exp_dummy_sand_vortex = {
-		class = "scripts/managers/mutator/mutators/mutator_base",
+		class = "scripts/managers/mutator/mutators/mutator_minion_extra_spread",
+		optional_spread_multiplier = 500,
 		ui = {
 			category_name = "loc_expedition_map_enviromental_intel",
 			description = "loc_expeditions_modifier_environment_sand_vortex_description",

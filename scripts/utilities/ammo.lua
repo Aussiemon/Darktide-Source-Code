@@ -586,7 +586,7 @@ Ammo.add_ammo_using_pickup_data = function (unit, pickup_data, skip_proc)
 			if not skip_proc then
 				local missing_player_ammo = max_ammo_reserve - ammo_reserve
 
-				if missing_player_ammo < pickup_amount * DialogueSettings.ammo_hog_pickup_share and not pickup_data.ammo_crate then
+				if missing_player_ammo < pickup_amount * DialogueSettings.ammo_hog_pickup_share and not pickup_data.prevent_hog_ammo_vo then
 					local Vo = require("scripts/utilities/vo")
 
 					Vo.ammo_hog_event(unit, inventory_slot_component, pickup_data)

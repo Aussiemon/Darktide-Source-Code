@@ -161,7 +161,7 @@ ExpeditionLootConverterExtension.stop_converting = function (self, success, inte
 		local player = Managers.state.player_unit_spawn:owner(interactor_unit)
 
 		if player then
-			Managers.stats:record_private("hook_loot_luggable_deposited", player)
+			Managers.stats:record_team("hook_loot_team_luggable_delivered")
 			Managers.achievements:unlock_achievement(player, "expeditions_use_loot_converter")
 		end
 

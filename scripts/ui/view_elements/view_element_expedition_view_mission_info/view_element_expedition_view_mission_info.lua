@@ -44,6 +44,7 @@ ViewElementExpeditionViewMissionInfo._create_unlock_requirements_tab = function 
 	tab_widget.content.hotspot.pressed_callback = callback(self, "_cb_on_tab_pressed", #self._mission_info_tabs + 1)
 	self._mission_info_tabs[#self._mission_info_tabs + 1] = tab_widget
 	tab_widget.offset[1] = (#self._mission_info_tabs - 1) * Settings.dimensions.tab_size[1]
+	self._unlock_requirement_tab_widget = tab_widget
 
 	local page_definition, page_height = Definitions.create_unlock_requirements_page(self._node, self._all_nodes, self._ui_renderer)
 	local page_widget = UIWidget.init("mission_info_pages_" .. #self._mission_info_pages + 1, page_definition)
@@ -72,7 +73,7 @@ ViewElementExpeditionViewMissionInfo._create_minor_modifiers_tab = function (sel
 	end
 
 	if has_minor_modifiers_data(modifiers) then
-		local icon = Settings.default_tab_icon
+		local icon = Settings.minor_modifiers_tab_icon
 		local tab_definition = Definitions.create_page_tab(icon)
 		local tab_widget = UIWidget.init("mission_info_tabs_" .. #self._mission_info_tabs + 1, tab_definition)
 
@@ -164,12 +165,12 @@ end
 
 ViewElementExpeditionViewMissionInfo.update = function (self, dt, t, input_service)
 	ViewElementExpeditionViewMissionInfo.super.update(self, dt, t, input_service)
-	self:_update_mission_info_tabs(dt)
+	self:_update_mission_info_tabs(dt, t, input_service)
 	self:_update_mission_info_pages(dt, t, input_service)
 	self:_update_mission_info_stats(dt, t, input_service)
 end
 
-ViewElementExpeditionViewMissionInfo._update_mission_info_tabs = function (self, dt)
+ViewElementExpeditionViewMissionInfo._update_mission_info_tabs = function (self, dt, t, input_service)
 	if not self._mission_info_tabs then
 		return
 	end
@@ -202,6 +203,19 @@ ViewElementExpeditionViewMissionInfo._update_mission_info_tabs = function (self,
 			tab_widget.offset[2] = -animated_extra_height
 			tab_style.gradient.color[1] = 255 * (1 - anim_select_progress)
 			tab_style.background_bottom_edge.color[1] = 255 * anim_select_progress
+		end
+	end
+
+	local tab_icon = self._unlock_requirement_tab_widget
+	local unlock_status = self._node.unlock_status
+
+	if tab_icon then
+		if unlock_status == UNLOCK_STATUS.locked then
+			tab_icon.style.icon.material_values.gradient_map = "content/ui/textures/mission_board/gradient_digital_blood_red"
+		elseif unlock_status == UNLOCK_STATUS.unlockable then
+			tab_icon.style.icon.material_values.gradient_map = "content/ui/textures/mission_board/gradient_digital_circumnstance_default"
+		else
+			tab_icon.style.icon.material_values.gradient_map = "content/ui/textures/mission_board/gradient_digital_green"
 		end
 	end
 end

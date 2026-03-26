@@ -86,8 +86,13 @@ GameplayInitStepManagers._init_state_managers = function (self, world, physics_w
 	local mission = mission_manager:mission()
 	local player_manager = Managers.player
 	local local_player = player_manager:local_player(1)
+	local mechanism_manager = Managers.mechanism
+	local mechanism_name = mechanism_manager:mechanism_name()
 
-	Managers.state.chunk_lod = ChunkLodManager:new(world, mission, local_player)
+	if mechanism_name ~= "expedition" then
+		Managers.state.chunk_lod = ChunkLodManager:new(world, mission, local_player)
+	end
+
 	Managers.state.network_story = NetworkStoryManager:new(world, is_server, network_event_delegate)
 	Managers.state.networked_flow_state = NetworkedFlowStateManager:new(world, is_server, network_event_delegate)
 	Managers.state.difficulty = DifficultyManager:new(is_server, resistance, challenge, havoc_data)

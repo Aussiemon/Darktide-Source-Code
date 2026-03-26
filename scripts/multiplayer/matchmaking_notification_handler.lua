@@ -5,15 +5,23 @@ local Havoc = require("scripts/utilities/havoc")
 local InputUtils = require("scripts/managers/input/input_utils")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local PartyConstants = require("scripts/settings/network/party_constants")
+local QPCode = require("scripts/utilities/qp_code")
 local MatchmakingNotificationHandler = class("MatchmakingNotificationHandler")
 local INPUT_SERVICE_TYPE = "View"
 local CANCEL_INPUT_ALIAS = "cancel_matchmaking"
 
 local function _get_quick_play_values(qp_code)
+	local quickplay_text = Localize("loc_mission_board_quickplay_header")
+	local qp_keys = QPCode.decode(qp_code)
+
+	if qp_keys.category and qp_keys.category == "expedition" then
+		quickplay_text = string.format("%s - %s", quickplay_text, Localize("loc_mission_name_exp_wastes"))
+	end
+
 	local danger_settings = Danger.danger_by_qp_code(qp_code)
 	local danger_string = danger_settings and danger_settings.display_name
 
-	return Localize("loc_mission_board_quickplay_header"), danger_string and Localize(danger_string)
+	return quickplay_text, danger_string and Localize(danger_string)
 end
 
 local function _mission_name(mission_data)
@@ -22,6 +30,16 @@ local function _mission_name(mission_data)
 	local mission_name = mission_template and mission_template.mission_name
 
 	return mission_name and Localize(mission_name)
+end
+
+local function _cancel_matchmaking_text()
+	local color_tint_text = true
+	local input_text = InputUtils.input_text_for_current_input_device(INPUT_SERVICE_TYPE, CANCEL_INPUT_ALIAS, color_tint_text)
+	local loc_context = {
+		input = input_text,
+	}
+
+	return Localize("loc_matchmaking_cancel_search", true, loc_context)
 end
 
 local function _get_havoc_values(mission_data)
@@ -44,7 +62,49 @@ local function _get_mission_values(mission_data)
 	return mission_name, danger_string and Localize(danger_string)
 end
 
-local function _try_get_mission_text()
+local function _get_expedition_values(self, mission_data)
+	local mission_name = _mission_name(mission_data)
+	local danger_settings = Danger.danger_by_mission(mission_data.mission)
+	local danger_string = danger_settings and danger_settings.display_name
+
+	if not self._fetched_mission_name then
+		local node_id
+
+		for flag_name in pairs(mission_data.mission.flags) do
+			if string.find(flag_name, "exped-node-", nil, true) then
+				node_id = string.sub(flag_name, 12)
+			end
+		end
+
+		if node_id then
+			Managers.data_service.expedition:get_node_name_by_id(node_id):next(function (node_name)
+				if self._destroyed then
+					return
+				end
+
+				self._fetched_mission_name = true
+
+				local display_name = node_name and node_name ~= "" and string.format("%s %s - %s", Localize("loc_grid_point"), Localize(node_name), mission_name)
+
+				if display_name then
+					local mission_text = string.format("%s - %s", display_name, Localize(danger_string))
+
+					self._mission_text = mission_text
+
+					self:_create_or_update_notification({
+						Localize("loc_matchmaking_looking_for_team"),
+						mission_text or "???",
+						(_cancel_matchmaking_text()),
+					})
+				end
+			end)
+		end
+	end
+
+	return mission_name, danger_string and Localize(danger_string)
+end
+
+local function _try_get_mission_text(self)
 	local game_state = Managers.party_immaterium:party_game_state()
 	local quickplay = game_state.params.qp == "true"
 	local first_value, second_value
@@ -61,9 +121,12 @@ local function _try_get_mission_text()
 		local mission_data_json = game_state.params.mission_data
 		local mission_data = cjson.decode(mission_data_json)
 		local is_havoc = mission_data.mission.category == "havoc"
+		local is_expedition = mission_data.mission.category == "expedition"
 
 		if is_havoc then
 			first_value, second_value = _get_havoc_values(mission_data)
+		elseif is_expedition then
+			first_value, second_value = _get_expedition_values(self, mission_data)
 		else
 			first_value, second_value = _get_mission_values(mission_data)
 		end
@@ -79,16 +142,6 @@ local function _try_get_mission_text()
 	end
 
 	return first_value or ""
-end
-
-local function _cancel_matchmaking_text()
-	local color_tint_text = true
-	local input_text = InputUtils.input_text_for_current_input_device(INPUT_SERVICE_TYPE, CANCEL_INPUT_ALIAS, color_tint_text)
-	local loc_context = {
-		input = input_text,
-	}
-
-	return Localize("loc_matchmaking_cancel_search", true, loc_context)
 end
 
 MatchmakingNotificationHandler.init = function (self)
@@ -114,7 +167,7 @@ MatchmakingNotificationHandler.state_changed = function (self, last_state, new_s
 	if new_state == PartyConstants.State.none then
 		self:_remove_notification_if_active()
 	elseif new_state == PartyConstants.State.matchmaking then
-		local mission_text = _try_get_mission_text()
+		local mission_text = _try_get_mission_text(self)
 
 		self._mission_text = mission_text
 		self._matchmaking_time = 0
@@ -130,7 +183,7 @@ MatchmakingNotificationHandler.state_changed = function (self, last_state, new_s
 		self:_remove_notification_if_active()
 	elseif new_state == PartyConstants.State.in_mission then
 		if last_state == PartyConstants.State.matchmaking or last_state == PartyConstants.State.matchmaking_acceptance_vote then
-			local mission_text = _try_get_mission_text()
+			local mission_text = _try_get_mission_text(self)
 
 			self._mission_text = mission_text
 
@@ -211,6 +264,7 @@ MatchmakingNotificationHandler._remove_notification_if_active = function (self)
 		Managers.event:trigger("event_remove_notification", self._notification_id)
 
 		self._notification_id = nil
+		self._fetched_mission_name = nil
 	end
 end
 

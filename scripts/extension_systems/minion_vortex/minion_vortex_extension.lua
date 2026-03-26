@@ -52,10 +52,6 @@ MinionVortexExtension.init = function (self, extension_init_context, unit, exten
 	self._vortex_height = vortex_template.vortex_height
 	self._inner_radius = vortex_template.inner_radius
 	self._outer_radius = vortex_template.outer_radius
-
-	local t = FixedFrame.get_latest_fixed_time()
-
-	self._dissipate_t = t + vortex_template.lifetime
 	self._adjacent_ai_units = {}
 	self._ai_units_inside = {}
 	self._player_units_inside = {}
@@ -70,12 +66,11 @@ MinionVortexExtension.init = function (self, extension_init_context, unit, exten
 		self:_init_blackboard_components(blackboard, extension_init_data)
 	end
 
-	self:_spawn_effects(t, unit)
+	self:_spawn_effects(unit)
 
 	local vortex_grabbed_buff_template = BuffTemplates[VORTEX_GRABBED_BUFF_NAME]
 
 	self._vortex_grabbed_max_stacks = vortex_grabbed_buff_template.max_stacks
-	self._startup_t = t + vortex_template.startup_time
 end
 
 MinionVortexExtension._init_blackboard_components = function (self, blackboard, extension_init_data)
@@ -167,6 +162,12 @@ end
 MinionVortexExtension.update = function (self, context, dt, t)
 	local vortex_template = self._vortex_template
 	local unit = self._unit
+
+	if not self._dissipate_t then
+		self._dissipate_t = t + vortex_template.lifetime
+		self._startup_t = t + vortex_template.startup_time
+	end
+
 	local minion_position = self._vfx_pos:unbox()
 	local inner_radius = vortex_template.inner_radius
 	local outer_radius = vortex_template.outer_radius
@@ -727,7 +728,7 @@ MinionVortexExtension._is_vortex_immune = function (self, player_data)
 	return current_stacks >= self._vortex_grabbed_max_stacks
 end
 
-MinionVortexExtension._spawn_effects = function (self, t, unit)
+MinionVortexExtension._spawn_effects = function (self, unit)
 	local world, wwise_world = self:_game_world()
 	local vfx_pos = POSITION_LOOKUP[self._unit]
 

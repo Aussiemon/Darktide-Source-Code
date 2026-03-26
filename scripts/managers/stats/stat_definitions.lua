@@ -7469,26 +7469,10 @@ stat_definitions.hook_loot_luggable_deposited = {
 		StatFlags.hook,
 	},
 }
-stat_definitions.hook_loot_luggable_extracted = {
+stat_definitions.hook_loot_team_luggable_delivered = {
 	flags = {
 		StatFlags.hook,
-	},
-}
-stat_definitions.hook_team_loot_luggable_deposited = {
-	flags = {
 		StatFlags.team,
-		StatFlags.never_log,
-		StatFlags.no_sync,
-	},
-	triggers = {
-		{
-			id = "hook_loot_luggable_deposited",
-			trigger = StatMacros.forward,
-		},
-		{
-			id = "hook_loot_luggable_extracted",
-			trigger = StatMacros.forward,
-		},
 	},
 }
 stat_definitions.session_team_expedition_loot_retrieved = {
@@ -7531,7 +7515,7 @@ stat_definitions.expedition_total_luggables_retrieved = {
 	},
 	triggers = {
 		{
-			id = "hook_loot_luggable_deposited",
+			id = "hook_loot_team_luggable_delivered",
 			trigger = StatMacros.increment,
 		},
 	},

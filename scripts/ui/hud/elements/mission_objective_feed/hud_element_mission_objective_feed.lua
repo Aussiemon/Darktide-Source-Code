@@ -617,6 +617,10 @@ HudElementMissionObjectiveFeed._synchronize_widget_with_hud_objective = function
 			realign = true
 		end
 
+		if content.show_timer then
+			content.icon = "content/ui/materials/hud/interactions/icons/time"
+		end
+
 		self:_update_timer_progress(hud_objective, widget, nil, realign)
 	else
 		content.max_counter_amount = nil

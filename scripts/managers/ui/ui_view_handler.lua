@@ -607,6 +607,10 @@ UIViewHandler._can_draw_view = function (self, view_name)
 		return false
 	end
 
+	if view_data.draw_while_loading then
+		return true
+	end
+
 	local parent_transition_view = view_data.parent_transition_view
 
 	if parent_transition_view then
@@ -636,15 +640,19 @@ UIViewHandler._draw_views = function (self, dt, t, allow_input, transitioning_in
 			local draw_layer = 1
 
 			if draw_view then
-				draw_view = view_instance:is_view_requirements_complete()
+				draw_view = view_instance:is_view_requirements_complete() or view_instance.draw_while_loading
 				draw_layer = math.max(1, layers_per_view * i - layers_per_view)
 
 				local input = allow_input and input_service or null_service
 
 				if draw_view then
-					view_instance:draw(dt, t, input, draw_layer)
+					if view_instance:is_view_requirements_complete() then
+						view_instance:draw(dt, t, input, draw_layer)
 
-					TEMP_DRAWN_VIEWS[view_name] = true
+						TEMP_DRAWN_VIEWS[view_name] = true
+					else
+						view_instance:draw_while_loading(dt, t)
+					end
 				end
 			end
 
@@ -766,7 +774,13 @@ UIViewHandler._open = function (self, view_name, opening_duration, context, sett
 		fade_in = view_settings.use_transition_ui,
 		use_transition_ui = view_settings.use_transition_ui,
 		parent_transition_view = view_settings.parent_transition_view,
+		draw_while_loading = view_settings.draw_while_loading,
 	}
+
+	if view_settings.draw_while_loading then
+		view_data.fade_in = false
+		view_data.use_transition_ui = false
+	end
 
 	self._num_active_views = self._num_active_views + 1
 

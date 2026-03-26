@@ -73,11 +73,29 @@ Settings.colors = {
 		183,
 		44,
 	},
+	unlockable_tab_icon = {
+		255,
+		255,
+		183,
+		44,
+	},
 	locked_text = {
 		255,
 		227,
 		56,
 		56,
+	},
+	locked_tab_icon = {
+		255,
+		227,
+		56,
+		56,
+	},
+	unlocked_tab_icon = {
+		255,
+		167,
+		255,
+		151,
 	},
 	terminal = {
 		255,

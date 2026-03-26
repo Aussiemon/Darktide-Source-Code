@@ -342,6 +342,26 @@ LobbyView._setup_mission_descriptions = function (self)
 		local mission_type = MissionTypes[mission_settings.mission_type]
 		local mission_type_name = mission_type and mission_type.name
 		local circumstance_name
+		local widgets_by_name = self._widgets_by_name
+
+		if Managers.mechanism._mechanism._mechanism_data.expedition_template_name then
+			local node_id
+			local node_id = Managers.mechanism._mechanism._mechanism_data.node_id
+
+			if node_id then
+				Managers.data_service.expedition:get_node_name_by_id(node_id):next(function (node_name)
+					if self._destroyed then
+						return
+					end
+
+					local display_name = node_name and node_name ~= "" and string.format("%s %s", Localize("loc_grid_point"), Localize(node_name))
+
+					if display_name then
+						widgets_by_name.mission_title.content.title = display_name
+					end
+				end)
+			end
+		end
 
 		if mission_data.circumstance_name ~= "default" then
 			local ui_settings = Circumstances[mission_data.circumstance_name].ui
@@ -355,9 +375,6 @@ LobbyView._setup_mission_descriptions = function (self)
 
 		sub_title = zone_display_name and sub_title .. " · " .. self:_localize(zone_display_name) or sub_title
 		sub_title = circumstance_name and sub_title .. " · " .. circumstance_name or sub_title
-
-		local widgets_by_name = self._widgets_by_name
-
 		widgets_by_name.mission_title.content.title = mission_display_name and self:_localize(mission_display_name) or "N/A"
 		widgets_by_name.mission_title.content.sub_title = sub_title or "N/A"
 

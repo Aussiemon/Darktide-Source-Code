@@ -3160,6 +3160,9 @@ templates.broker_passive_crit_grants_damage = {
 		[stat_buffs.melee_damage] = 1,
 	},
 	stat_buff_multiplier = function (template_data, template_context)
+		return template_data.damage_multiplier
+	end,
+	update_func = function (template_data, template_context)
 		local visual_loadout_extension = template_data.visual_loadout_extension
 		local wielded_slot = visual_loadout_extension:currently_wielded_slot()
 		local weapon_template = visual_loadout_extension:weapon_template_from_slot(wielded_slot)
@@ -3176,8 +3179,7 @@ templates.broker_passive_crit_grants_damage = {
 		local stacks = math.round(math.min(crit_stacks, template_context.template.crit_cap))
 
 		template_data.visual_chance = stacks
-
-		return template_context.template.melee_damage_per_stack * stacks
+		template_data.damage_multiplier = template_context.template.melee_damage_per_stack * stacks
 	end,
 	visual_stack_count = function (template_data, template_context)
 		return template_data.visual_chance
@@ -3187,6 +3189,7 @@ templates.broker_passive_crit_grants_damage = {
 		template_data.weapon_extension = ScriptUnit.extension(template_context.unit, "weapon_system")
 		template_data.visual_loadout_extension = ScriptUnit.extension(template_context.unit, "visual_loadout_system")
 		template_data.visual_chance = 0
+		template_data.damage_multiplier = 0
 	end,
 }
 templates.broker_passive_toxin_infected_enemies_take_increased_damage = {

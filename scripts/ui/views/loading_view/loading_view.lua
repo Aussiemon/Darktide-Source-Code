@@ -54,6 +54,10 @@ LoadingView.on_enter = function (self)
 	self:_register_event("event_on_active_input_changed", "event_on_input_changed")
 end
 
+LoadingView.draw_while_loading = function (self, dt, t)
+	Managers.ui:render_black_background()
+end
+
 LoadingView.draw = function (self, dt, t, input_service, layer)
 	LoadingView.super.draw(self, dt, t, input_service, layer)
 	Managers.ui:render_loading_info()

@@ -636,9 +636,7 @@ LiveEventManager.active_time_left = function (self, optional_t)
 		return 0
 	end
 
-	local t = Managers.backend:get_server_time(optional_t or Managers.time:time("main"))
-
-	return (event_data.ends_at - t) / 1000
+	return self:event_time_left(optional_t, event_data.id)
 end
 
 LiveEventManager._show_combat_feed_message = function (self, amount, stat_id, optional_caused_by_peer_id)
@@ -772,7 +770,7 @@ LiveEventManager.event_completion_rate = function (self, optional_player_id, eve
 	return active_completion_rate
 end
 
-LiveEventManager.active_time_left = function (self, optional_t, event_id)
+LiveEventManager.event_time_left = function (self, optional_t, event_id)
 	local live_events = self:get_active_events()
 
 	if not live_events or not live_events[event_id] then

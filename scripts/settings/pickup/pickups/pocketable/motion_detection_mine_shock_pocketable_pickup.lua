@@ -11,6 +11,7 @@ local pickup_data = {
 	look_at_tag = "pocketable",
 	name = "motion_detection_mine_shock_pocketable",
 	pickup_sound = "wwise/events/player/play_pickup_metal_object",
+	retain_charges = true,
 	smart_tag_target_type = "pickup",
 	unit_name = "content/weapons/player/pickups/pup_landmine_shock/pickup_landmine_shock",
 }

@@ -31,6 +31,7 @@ local RPCS = {
 	"rpc_start_mission_objective",
 	"rpc_start_mission_objective_stage",
 	"rpc_update_mission_objective_progression",
+	"rpc_update_mission_objective_progression_high_fidelity",
 	"rpc_update_mission_objective_second_progression",
 	"rpc_update_mission_objective_increment",
 	"rpc_end_mission_objective",
@@ -461,7 +462,9 @@ MissionObjectiveSystem._propagate_objective_progression = function (self, object
 	if should_sync_progression then
 		self._synced_progressions[objective] = progression
 
-		self:send_rpc_to_clients("rpc_update_mission_objective_progression", objective_name_id, group_id, progression)
+		local rpc_name = objective:progression_sync_high_fidelity() and "rpc_update_mission_objective_progression_high_fidelity" or "rpc_update_mission_objective_progression"
+
+		self:send_rpc_to_clients(rpc_name, objective_name_id, group_id, progression)
 		objective:progression_to_flow()
 	end
 
@@ -1177,6 +1180,10 @@ MissionObjectiveSystem.rpc_start_mission_objective_stage = function (self, chann
 	local objective_name = NetworkLookup.mission_objective_names[objective_name_id]
 
 	self:start_mission_objective_stage(objective_name, group_id, stage)
+end
+
+MissionObjectiveSystem.rpc_update_mission_objective_progression_high_fidelity = function (self, ...)
+	self:rpc_update_mission_objective_progression(...)
 end
 
 MissionObjectiveSystem.rpc_update_mission_objective_progression = function (self, channel_id, objective_name_id, group_id, progression)

@@ -1617,9 +1617,8 @@ local function _create_progress_expedition_animation(animation_table, start_time
 				params.progress_styles[#params.progress_styles + 1] = widget.style["progress_text_" .. i]
 				params.progress_styles[#params.progress_styles + 1] = widget.style["progress_value_" .. i]
 				params.progress_background_styles[#params.progress_background_styles + 1] = widget.style["progress_background_" .. i]
-				params.progress_square_styles[#params.progress_square_styles + 1] = widget.style["progress_square_background_" .. i]
-				params.progress_square_styles[#params.progress_square_styles + 1] = widget.style["progress_square_corner_" .. i]
-				params.progress_square_styles[#params.progress_square_styles + 1] = widget.style["progress_square_tile_" .. i]
+				params.progress_square_styles[#params.progress_square_styles + 1] = widget.style["progress_checkbox_shadow_" .. i]
+				params.progress_square_styles[#params.progress_square_styles + 1] = widget.style["progress_checkbox_line_" .. i]
 			end
 
 			local pass_styles = table.append(table.append({}, params.currency_styles), params.progress_styles)
@@ -1890,12 +1889,10 @@ local function _create_progress_expedition_animation(animation_table, start_time
 
 					pass_style.size[1] = math.lerp(text_width, 0, progress)
 
-					_color_utils_color_lerp(Color.black(255, true), {
-						255,
-						225,
-						222,
-						207,
-					}, progress, widget.style["progress_square_background_" .. i].color)
+					local original_color = widget.style["progress_checkbox_fill_" .. i].original_color
+					local highlight_color = widget.style["progress_checkbox_fill_" .. i].highlight_color
+
+					_color_utils_color_lerp(original_color, highlight_color, progress, widget.style["progress_checkbox_fill_" .. i].color)
 				end
 			end
 		end,
@@ -1940,9 +1937,9 @@ local function _create_dim_expedition_animation(animation_table)
 				params.progress_styles[#params.progress_styles + 1] = widget.style["progress_text_" .. i]
 				params.progress_styles[#params.progress_styles + 1] = widget.style["progress_value_" .. i]
 				params.progress_styles[#params.progress_styles + 1] = widget.style["progress_background_" .. i]
-				params.progress_styles[#params.progress_styles + 1] = widget.style["progress_square_background_" .. i]
-				params.progress_styles[#params.progress_styles + 1] = widget.style["progress_square_corner_" .. i]
-				params.progress_styles[#params.progress_styles + 1] = widget.style["progress_square_tile_" .. i]
+				params.progress_styles[#params.progress_styles + 1] = widget.style["progress_checkbox_shadow_" .. i]
+				params.progress_styles[#params.progress_styles + 1] = widget.style["progress_checkbox_line_" .. i]
+				params.progress_styles[#params.progress_styles + 1] = widget.style["progress_checkbox_fill_" .. i]
 			end
 
 			for i = 1, #params.progress_styles do

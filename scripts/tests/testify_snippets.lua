@@ -28,7 +28,11 @@ TestifySnippets.exit_to_main_menu_and_wait = function (duration)
 	local duration = duration or 2
 
 	Testify:make_request("exit_to_main_menu")
-	Testify:make_request("wait_for_main_menu_displayed")
+
+	if not DEDICATED_SERVER then
+		Testify:make_request("wait_for_main_menu_displayed")
+	end
+
 	TestifySnippets.wait(duration)
 end
 

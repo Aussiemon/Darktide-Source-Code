@@ -361,11 +361,13 @@ MissionObjectiveZoneCaptureExtension.players_inside_status = function (self)
 				end
 			end
 
-			if not dead and self:point_in_zone(player_position) then
-				players_in_zone = players_in_zone + 1
-			end
+			if not dead then
+				if self:point_in_zone(player_position) then
+					players_in_zone = players_in_zone + 1
+				end
 
-			total_players = total_players + 1
+				total_players = total_players + 1
+			end
 		end
 	end
 

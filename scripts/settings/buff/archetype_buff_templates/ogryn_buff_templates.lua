@@ -2392,7 +2392,7 @@ templates.ogryn_regen_toughness_on_braced = {
 
 		template_data.is_active = is_wielded and (braced or is_shooting)
 
-		if template_context.is_server and braced then
+		if template_context.is_server and (braced or is_shooting) then
 			Toughness.replenish_percentage(unit, talent_settings_1.defensive_3.braced_toughness_regen * dt)
 		end
 	end,

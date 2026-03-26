@@ -259,10 +259,15 @@ local function _check_shadow_baking(world, shading_environment)
 	local shadow_baked = World.get_data(world, "shadow_baked")
 	local chunk_lod_manager = Managers.state and Managers.state.chunk_lod
 
-	if chunk_lod_manager and not shadow_baked then
-		chunk_lod_manager:disable()
-		Renderer.bake_static_shadows()
-		chunk_lod_manager:enable()
+	if not shadow_baked then
+		if chunk_lod_manager then
+			chunk_lod_manager:disable()
+			Renderer.bake_static_shadows()
+			chunk_lod_manager:enable()
+		else
+			Renderer.bake_static_shadows()
+		end
+
 		World.set_data(world, "shadow_baked", true)
 	end
 end

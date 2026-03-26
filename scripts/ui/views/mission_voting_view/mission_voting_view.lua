@@ -647,6 +647,35 @@ MissionVotingView._set_mission_data = function (self, mission_data)
 	local mission_info_widget_content = mission_info_widget.content
 	local mission_title = mission_template.mission_name and Utf8.upper(Localize(mission_template.mission_name)) or "n/a"
 
+	if mission_data.category == "expedition" then
+		local node_id
+
+		for flag_name in pairs(mission_data.flags) do
+			if string.find(flag_name, "exped-node-", nil, true) then
+				node_id = string.sub(flag_name, 12)
+			end
+		end
+
+		if node_id then
+			Managers.data_service.expedition:get_node_name_by_id(node_id):next(function (node_name)
+				if self._destroyed then
+					return
+				end
+
+				local display_name = node_name and node_name ~= "" and string.format("%s %s", Localize("loc_grid_point"), Localize(node_name))
+
+				if display_name then
+					mission_info_widget_content.mission_title = display_name
+
+					local mission_name = Localize(mission_template.mission_name) or "n/a"
+					local zone_name = zone_settings.name and Localize(zone_settings.name) or "n/a"
+
+					self._widgets_by_name.mission_type.content.mission_type = string.format("%s · %s", mission_name, zone_name)
+				end
+			end)
+		end
+	end
+
 	mission_info_widget_content.mission_title = mission_title
 
 	local zone_name = Localize(zone_settings.name)

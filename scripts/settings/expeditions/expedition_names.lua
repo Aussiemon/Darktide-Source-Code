@@ -26,75 +26,75 @@ local expedition_names = {
 		material_atlas_index = 6,
 	},
 	{
-		display_name = "loc_expeditions_map_kappa",
+		display_name = "loc_expeditions_map_eta",
 		material_atlas_index = 7,
 	},
 	{
-		display_name = "loc_expeditions_map_lambda",
+		display_name = "loc_expeditions_map_theta",
 		material_atlas_index = 8,
 	},
 	{
-		display_name = "loc_expeditions_map_omicron",
+		display_name = "loc_expeditions_map_iota",
 		material_atlas_index = 9,
 	},
 	{
-		display_name = "loc_expeditions_map_pi",
+		display_name = "loc_expeditions_map_kappa",
 		material_atlas_index = 10,
 	},
 	{
-		display_name = "loc_expeditions_map_sigma",
+		display_name = "loc_expeditions_map_lambda",
 		material_atlas_index = 11,
 	},
 	{
-		display_name = "loc_expeditions_map_omega",
+		display_name = "loc_expeditions_map_mu",
 		material_atlas_index = 12,
 	},
 	{
-		display_name = "loc_expeditions_map_eta",
+		display_name = "loc_expeditions_map_nu",
 		material_atlas_index = 13,
 	},
 	{
-		display_name = "loc_expeditions_map_theta",
+		display_name = "loc_expeditions_map_xi",
 		material_atlas_index = 14,
 	},
 	{
-		display_name = "loc_expeditions_map_iota",
+		display_name = "loc_expeditions_map_omicron",
 		material_atlas_index = 15,
 	},
 	{
-		display_name = "loc_expeditions_map_mu",
+		display_name = "loc_expeditions_map_pi",
 		material_atlas_index = 16,
 	},
 	{
-		display_name = "loc_expeditions_map_nu",
+		display_name = "loc_expeditions_map_rho",
 		material_atlas_index = 17,
 	},
 	{
-		display_name = "loc_expeditions_map_xi",
+		display_name = "loc_expeditions_map_sigma",
 		material_atlas_index = 18,
 	},
 	{
-		display_name = "loc_expeditions_map_rho",
+		display_name = "loc_expeditions_map_tau",
 		material_atlas_index = 19,
 	},
 	{
-		display_name = "loc_expeditions_map_tau",
+		display_name = "loc_expeditions_map_upsilon",
 		material_atlas_index = 20,
 	},
 	{
-		display_name = "loc_expeditions_map_upsilon",
+		display_name = "loc_expeditions_map_phi",
 		material_atlas_index = 21,
 	},
 	{
-		display_name = "loc_expeditions_map_phi",
+		display_name = "loc_expeditions_map_chi",
 		material_atlas_index = 22,
 	},
 	{
-		display_name = "loc_expeditions_map_chi",
+		display_name = "loc_expeditions_map_psi",
 		material_atlas_index = 23,
 	},
 	{
-		display_name = "loc_expeditions_map_psi",
+		display_name = "loc_expeditions_map_omega",
 		material_atlas_index = 24,
 	},
 }

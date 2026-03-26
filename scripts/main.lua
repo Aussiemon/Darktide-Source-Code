@@ -20,6 +20,7 @@ local StateLoadAudioSettings = require("scripts/game_states/boot/state_load_audi
 local StateLoadBootAssets = require("scripts/game_states/boot/state_load_boot_assets")
 local StateLoadRenderSettings = require("scripts/game_states/boot/state_load_render_settings")
 local StateRequireScripts = require("scripts/game_states/boot/state_require_scripts")
+local StateStartupTests = require("scripts/game_states/boot/state_startup_tests")
 local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
 local GAME_RESUME_COUNT = 0
 
@@ -50,6 +51,10 @@ Main.init = function (self)
 					package_manager = package_manager,
 					localization_manager = localization_manager,
 				},
+			},
+			{
+				StateStartupTests,
+				{},
 			},
 			{
 				StateRequireScripts,

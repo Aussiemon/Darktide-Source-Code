@@ -19,6 +19,7 @@ local Text = require("scripts/utilities/ui/text")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
+local Zones = require("scripts/settings/zones/zones")
 local HudElementTacticalOverlay = class("HudElementTacticalOverlay", "HudElementBase")
 local default_mission_type_icon = "content/ui/materials/icons/mission_types/mission_type_side"
 local default_material = "content/ui/materials/base/ui_default_base"
@@ -1630,6 +1631,32 @@ HudElementTacticalOverlay._sync_mission_info = function (self)
 	else
 		mission_info_content.mission_type = ""
 		mission_info_style.mission_name.offset[2] = 30
+	end
+
+	if Managers.mechanism._mechanism._mechanism_data.expedition_template_name then
+		local node_id
+		local node_id = Managers.mechanism._mechanism._mechanism_data.node_id
+
+		if node_id then
+			Managers.data_service.expedition:get_node_name_by_id(node_id):next(function (node_name)
+				if self._destroyed then
+					return
+				end
+
+				local display_name = node_name and node_name ~= "" and string.format("%s %s", Localize("loc_grid_point"), Localize(node_name))
+
+				if display_name then
+					mission_info_content.mission_name = Utf8.upper(display_name)
+
+					if show_mission_type then
+						local zone_id = mission.zone_id
+						local zone_settings = zone_id and Zones[zone_id]
+
+						mission_info_content.mission_type = string.format("%s · %s", Localize(mission_type.name), Localize(zone_settings.name))
+					end
+				end
+			end)
+		end
 	end
 end
 

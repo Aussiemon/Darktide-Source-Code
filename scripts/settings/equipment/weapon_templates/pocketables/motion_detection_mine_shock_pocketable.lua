@@ -10,6 +10,7 @@ weapon_template.hud_icon_small = "content/ui/materials/icons/pocketables/hud/lan
 weapon_template.swap_pickup_name = "motion_detection_mine_shock_pocketable"
 weapon_template.pickup_name = "motion_detection_mine_shock_pocketable"
 weapon_template.ammo_template = "motion_detection_mine"
+weapon_template.ammo_template_static = "motion_detection_mine"
 weapon_template.breed_footstep_intervals = {
 	human = FootstepIntervalsTemplates.pocketable_human,
 	ogryn = FootstepIntervalsTemplates.pocketable_ogryn,

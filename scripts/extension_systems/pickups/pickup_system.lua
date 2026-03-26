@@ -9,6 +9,9 @@ local Pickups = require("scripts/settings/pickup/pickups")
 local PickupSettings = require("scripts/settings/pickup/pickup_settings")
 local Text = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
+local MasterItems = require("scripts/backend/master_items")
+local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local WeaponAmmoTemplates = require("scripts/settings/equipment/weapon_handling_templates/weapon_ammo_templates")
 local DISTRIBUTION_TYPES = PickupSettings.distribution_types
 local PICKUPS_BY_NAME = Pickups.by_name
 local PICKUP_SELECTOR = PickupSettings.pickup_selector
@@ -975,6 +978,9 @@ PickupSystem.spawn_pickup = function (self, pickup_name, position, rotation, opt
 	end
 
 	local pickup_unit, pickup_unit_go_id = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template_name, position, rotation, nil, pickup_settings, optional_placed_on_unit, optional_spawn_interaction_cooldown, optional_origin_player)
+
+	self:_reset_retained_pickup_charges(pickup_settings, pickup_unit_go_id)
+
 	local spawned_pickups = self._spawned_pickups
 
 	spawned_pickups[#spawned_pickups + 1] = pickup_unit
@@ -1222,6 +1228,49 @@ PickupSystem._update_soft_oob = function (self, unit)
 	if not_despawned_this_frame then
 		Log.info("PickupSystem", "%s is out-of-bounds, despawning (%s).", unit, tostring(POSITION_LOOKUP[unit]))
 		self:despawn_pickup(unit)
+	end
+end
+
+PickupSystem._reset_retained_pickup_charges = function (self, pickup_settings, pickup_unit_go_id)
+	if pickup_settings.retain_charges then
+		local inventory_item = pickup_settings.inventory_item
+		local item_definitions = MasterItems.get_cached()
+		local item = item_definitions[inventory_item]
+		local weapon_template = WeaponTemplate.weapon_template_from_item(item)
+		local static_ammo_template_name = weapon_template.ammo_template_static
+		local ammo_template = static_ammo_template_name and WeaponAmmoTemplates[static_ammo_template_name]
+		local game_session = Managers.state.game_session:game_session()
+
+		GameSession.set_game_object_field(game_session, pickup_unit_go_id, "charges", ammo_template.ammunition_reserve)
+	end
+end
+
+PickupSystem.get_dropped_item_retained_pickup_charges = function (self, inventory_slot_component, item_name)
+	local item_definitions = MasterItems.get_cached()
+	local dropped_item = item_definitions[item_name]
+	local dropped_weapon_template = dropped_item and WeaponTemplate.weapon_template_from_item(dropped_item)
+	local dropped_swap_pickup_name = dropped_weapon_template and dropped_weapon_template.swap_pickup_name
+	local dropped_pickup_data = dropped_swap_pickup_name and Pickups.by_name[dropped_swap_pickup_name]
+
+	if dropped_pickup_data and dropped_pickup_data.retain_charges then
+		return Ammo.current_ammo_in_clips(inventory_slot_component)
+	end
+end
+
+PickupSystem.set_equipped_pickup_retained_charges = function (self, inventory_component, inventory_slot_component, slot_name, pickup_unit)
+	local item_definitions = MasterItems.get_cached()
+	local new_item_name = inventory_component[slot_name]
+	local item = item_definitions[new_item_name]
+	local new_item_weapon_template = item and WeaponTemplate.weapon_template_from_item(item)
+	local new_item_swap_pickup_name = new_item_weapon_template and new_item_weapon_template.swap_pickup_name
+	local pickup_data = new_item_swap_pickup_name and Pickups.by_name[new_item_swap_pickup_name]
+
+	if pickup_data and pickup_data.retain_charges then
+		local game_session = Managers.state.game_session:game_session()
+		local game_object_id = Managers.state.unit_spawner:game_object_id(pickup_unit)
+		local charges = GameSession.game_object_field(game_session, game_object_id, "charges")
+
+		Ammo.set_current_ammo_in_clips(inventory_slot_component, charges)
 	end
 end
 

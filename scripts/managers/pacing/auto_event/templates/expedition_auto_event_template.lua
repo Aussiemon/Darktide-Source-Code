@@ -17,20 +17,20 @@ template.expedition_auto_event_template = {
 	points_base = {
 		25,
 		30,
+		30,
 		35,
 		40,
-		55,
 	},
 	num_waves_by_resistance = {
 		3,
 		3,
 		4,
 		4,
-		5,
+		4,
 	},
 	size_multipliers = {
 		default = 1,
-		large = 1.5,
+		large = 1.2,
 		small = 0.5,
 	},
 	cooldown = {

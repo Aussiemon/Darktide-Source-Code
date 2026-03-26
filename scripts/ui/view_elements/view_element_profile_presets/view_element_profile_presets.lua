@@ -312,9 +312,10 @@ ViewElementProfilePresets._setup_preset_buttons = function (self)
 
 			local default_icon_index = math.index_wrapper(i, #optional_preset_icon_reference_keys)
 			local default_icon_key = optional_preset_icon_reference_keys[default_icon_index]
-			local default_icon = optional_preset_icons_lookup[custom_icon_key or default_icon_key]
+			local icon = custom_icon_key and optional_preset_icons_lookup[custom_icon_key]
 
-			content.icon = default_icon
+			icon = icon or optional_preset_icons_lookup[default_icon_key]
+			content.icon = icon
 			content.profile_preset_id = profile_preset_id
 			total_width = total_width + button_width
 

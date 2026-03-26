@@ -241,7 +241,7 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 			instakill = instakill or damage_profile.breed_instakill_overrides[target_breed_or_nil.name]
 		end
 
-		if damage_profile.instakill_specials then
+		if not instakill and damage_profile.instakill_specials then
 			instakill = target_breed_or_nil.tags and target_breed_or_nil.tags.special
 		end
 

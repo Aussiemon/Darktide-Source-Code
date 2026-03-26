@@ -436,7 +436,7 @@ BtValkyrieShootAction._update_speed = function (self, scratchpad, dt)
 		end
 	end
 
-	if not navigation_extension:has_path() then
+	if not navigation_extension:is_following_path() then
 		self:_update_movement_modifier(scratchpad, nil)
 
 		return
