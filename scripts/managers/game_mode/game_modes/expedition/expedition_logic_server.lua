@@ -1724,6 +1724,14 @@ ExpeditionLogicServer.expedition_unregister_transition_activator = function (sel
 end
 
 ExpeditionLogicServer._loot_in_extraction_zone = function (self, volume_unit)
+	local current_section = self._expedition[self._current_section_index]
+	local extraction_level = current_section.extraction_level
+	local level_volume_name = "extraction_zone"
+
+	if not Level.has_volume(extraction_level, level_volume_name) then
+		level_volume_name = nil
+	end
+
 	local extension_manager = Managers.state.extension
 	local pickup_system = extension_manager:system("pickup_system")
 	local dropped_pickups = pickup_system:dropped_pickups()
@@ -1732,10 +1740,15 @@ ExpeditionLogicServer._loot_in_extraction_zone = function (self, volume_unit)
 
 	for unit, _ in pairs(dropped_pickups) do
 		if Unit.alive(unit) then
-			local unit_position = POSITION_LOOKUP[unit]
+			local unit_position = Unit.world_position(unit, 1)
 			local in_zone = Unit.is_point_inside_volume(volume_unit, "c_extraction_zone", unit_position)
+			local in_level_zone
 
-			if in_zone then
+			if level_volume_name then
+				in_level_zone = Level.is_point_inside_volume(extraction_level, level_volume_name, unit_position)
+			end
+
+			if in_zone or in_level_zone then
 				local pickup_name = Unit.get_data(unit, "pickup_type")
 				local pickup_settings = Pickups.by_name[pickup_name]
 				local loot_data = pickup_settings and pickup_settings.loot_data
@@ -1760,27 +1773,69 @@ ExpeditionLogicServer._loot_in_extraction_zone = function (self, volume_unit)
 end
 
 ExpeditionLogicServer._players_in_extraction_zone = function (self, volume_unit)
+	local current_section = self._expedition[self._current_section_index]
+	local extraction_level = current_section.extraction_level
+	local level_volume_name = "extraction_zone"
+
+	if not Level.has_volume(extraction_level, level_volume_name) then
+		level_volume_name = nil
+	end
+
+	local valkyrie_position = Unit.world_position(volume_unit, 1)
 	local players_in_zone = 0
 	local players_in_extraction_zone = {}
+	local missing_player_units = 0
+	local players_outside_extraction_zone = {}
 	local player_manager = Managers.player
 	local players = player_manager:players()
 
 	for _, player in pairs(players) do
-		local valid_player = player:is_human_controlled()
-
-		if valid_player and player:unit_is_alive() then
+		if player:is_human_controlled() then
 			local player_unit = player.player_unit
-			local player_position = POSITION_LOOKUP[player_unit]
-			local in_zone = Unit.is_point_inside_volume(volume_unit, "c_extraction_zone", player_position)
 
-			if in_zone then
-				players_in_zone = players_in_zone + 1
-				players_in_extraction_zone[player] = true
+			if player_unit and Unit.alive(player_unit) then
+				local player_position = Unit.world_position(player_unit, 1)
+				local in_zone = Unit.is_point_inside_volume(volume_unit, "c_extraction_zone", player_position)
+				local in_level_zone
+
+				if level_volume_name then
+					in_level_zone = Level.is_point_inside_volume(extraction_level, level_volume_name, player_position)
+				end
+
+				local close_to_valk = math.abs(player_position.x - valkyrie_position.x) < 2 and math.abs(player_position.y - valkyrie_position.y) < 2
+
+				if in_zone or in_level_zone or close_to_valk then
+					if not in_zone then
+						local exception_message = string.format("[ExpeditionLogicServer] Player in the extraction Valkyrie without being in the zone. Within position: %s, In level zone: %s, player pos: %s, valkyrie pos: %s, level: %s", close_to_valk, in_level_zone, Vector3.compact_string(player_position), Vector3.compact_string(valkyrie_position), Level.name(extraction_level))
+
+						Log.exception("ExpeditionLogicServer", exception_message)
+					end
+
+					players_in_zone = players_in_zone + 1
+					players_in_extraction_zone[player] = true
+				else
+					players_outside_extraction_zone[player] = true
+				end
+			else
+				missing_player_units = missing_player_units + 1
 			end
 		end
 	end
 
 	local any_player_in_extraction_zone = players_in_zone > 0
+
+	if not any_player_in_extraction_zone then
+		local has_volume = Unit.has_volume(volume_unit, "c_extraction_zone")
+
+		Log.info("ExpeditionLogicServer", "No players in extraction zone, valkyrie position: %s, has volume: %s, %s players without unit", valkyrie_position, has_volume, missing_player_units)
+
+		for player, _ in pairs(players_outside_extraction_zone) do
+			local player_position = Unit.world_position(player.player_unit, 1)
+			local distance_to_volume = Unit.distance_to_volume(volume_unit, "c_extraction_zone", player_position, true)
+
+			Log.info("ExpeditionLogicServer", "Player position: %s, distance to volume: %s", player_position, distance_to_volume)
+		end
+	end
 
 	return any_player_in_extraction_zone, players_in_extraction_zone
 end

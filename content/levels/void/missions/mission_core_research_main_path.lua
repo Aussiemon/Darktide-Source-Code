@@ -6,84 +6,6 @@ local path_markers = {
 		kind = "good",
 		main_path_segment_index = 1,
 		marker_type = "normal",
-		name = "path_marker_001",
-		order = 1,
-		position = {
-			87.85795593261719,
-			-353.7760009765625,
-			66.12754821777344,
-		},
-	},
-	{
-		crossroads = "",
-		kind = "good",
-		main_path_segment_index = 1,
-		marker_type = "break",
-		name = "path_marker_002",
-		order = 2,
-		position = {
-			45.99998474121094,
-			-320,
-			68.09197998046875,
-		},
-	},
-	{
-		crossroads = "",
-		kind = "good",
-		main_path_segment_index = 2,
-		marker_type = "normal",
-		name = "path_marker_003",
-		order = 3,
-		position = {
-			40.109066009521484,
-			-324.9300537109375,
-			62.232547760009766,
-		},
-	},
-	{
-		crossroads = "",
-		kind = "good",
-		main_path_segment_index = 2,
-		marker_type = "break",
-		name = "path_marker_004",
-		order = 4,
-		position = {
-			34.46931457519531,
-			-331.68951416015625,
-			59.2115478515625,
-		},
-	},
-	{
-		crossroads = "",
-		kind = "good",
-		main_path_segment_index = 3,
-		marker_type = "normal",
-		name = "path_marker_005",
-		order = 5,
-		position = {
-			32.51397705078125,
-			-333.1114196777344,
-			56.94854736328125,
-		},
-	},
-	{
-		crossroads = "",
-		kind = "good",
-		main_path_segment_index = 3,
-		marker_type = "break",
-		name = "path_marker_010",
-		order = 10,
-		position = {
-			-44.027950286865234,
-			-328.8862609863281,
-			54.1275749206543,
-		},
-	},
-	{
-		crossroads = "",
-		kind = "good",
-		main_path_segment_index = 4,
-		marker_type = "normal",
 		name = "path_marker_011",
 		order = 11,
 		position = {
@@ -95,7 +17,7 @@ local path_markers = {
 	{
 		crossroads = "",
 		kind = "good",
-		main_path_segment_index = 4,
+		main_path_segment_index = 1,
 		marker_type = "normal",
 		name = "path_marker_013",
 		order = 13,
@@ -108,7 +30,7 @@ local path_markers = {
 	{
 		crossroads = "",
 		kind = "good",
-		main_path_segment_index = 4,
+		main_path_segment_index = 1,
 		marker_type = "normal",
 		name = "path_marker_015",
 		order = 15,
@@ -121,7 +43,7 @@ local path_markers = {
 	{
 		crossroads = "",
 		kind = "good",
-		main_path_segment_index = 4,
+		main_path_segment_index = 1,
 		marker_type = "break",
 		name = "path_marker_017",
 		order = 17,
@@ -134,7 +56,7 @@ local path_markers = {
 	{
 		crossroads = "",
 		kind = "good",
-		main_path_segment_index = 5,
+		main_path_segment_index = 2,
 		marker_type = "normal",
 		name = "path_marker_018",
 		order = 18,
@@ -147,7 +69,7 @@ local path_markers = {
 	{
 		crossroads = "",
 		kind = "good",
-		main_path_segment_index = 5,
+		main_path_segment_index = 2,
 		marker_type = "normal",
 		name = "path_marker_022",
 		order = 22,
@@ -160,7 +82,7 @@ local path_markers = {
 	{
 		crossroads = "",
 		kind = "good",
-		main_path_segment_index = 5,
+		main_path_segment_index = 2,
 		marker_type = "normal",
 		name = "path_marker_023",
 		order = 23,
@@ -173,7 +95,7 @@ local path_markers = {
 	{
 		crossroads = "",
 		kind = "good",
-		main_path_segment_index = 5,
+		main_path_segment_index = 2,
 		marker_type = "break",
 		name = "path_marker_025",
 		order = 25,
@@ -186,7 +108,7 @@ local path_markers = {
 	{
 		crossroads = "",
 		kind = "good",
-		main_path_segment_index = 6,
+		main_path_segment_index = 3,
 		marker_type = "normal",
 		name = "path_marker_030",
 		order = 30,
@@ -199,7 +121,7 @@ local path_markers = {
 	{
 		crossroads = "",
 		kind = "good",
-		main_path_segment_index = 6,
+		main_path_segment_index = 3,
 		marker_type = "break",
 		name = "path_marker_035",
 		order = 35,
@@ -212,7 +134,7 @@ local path_markers = {
 	{
 		crossroads = "",
 		kind = "good",
-		main_path_segment_index = 7,
+		main_path_segment_index = 4,
 		marker_type = "normal",
 		name = "path_marker_036",
 		order = 36,
@@ -225,7 +147,7 @@ local path_markers = {
 	{
 		crossroads = "",
 		kind = "good",
-		main_path_segment_index = 7,
+		main_path_segment_index = 4,
 		marker_type = "normal",
 		name = "path_marker_037",
 		order = 37,
@@ -238,7 +160,7 @@ local path_markers = {
 	{
 		crossroads = "",
 		kind = "good",
-		main_path_segment_index = 7,
+		main_path_segment_index = 4,
 		marker_type = "break",
 		name = "path_marker_040",
 		order = 40,
@@ -251,7 +173,7 @@ local path_markers = {
 	{
 		crossroads = "",
 		kind = "good",
-		main_path_segment_index = 8,
+		main_path_segment_index = 5,
 		marker_type = "normal",
 		name = "path_marker_041",
 		order = 41,
@@ -264,7 +186,7 @@ local path_markers = {
 	{
 		crossroads = "",
 		kind = "good",
-		main_path_segment_index = 8,
+		main_path_segment_index = 5,
 		marker_type = "normal",
 		name = "path_marker_042",
 		order = 42,
@@ -277,7 +199,7 @@ local path_markers = {
 	{
 		crossroads = "",
 		kind = "good",
-		main_path_segment_index = 8,
+		main_path_segment_index = 5,
 		marker_type = "normal",
 		name = "path_marker_045",
 		order = 45,
@@ -289,211 +211,6 @@ local path_markers = {
 	},
 }
 local main_path_segments = {
-	{
-		path_length = 57.687286376953125,
-		nodes = {
-			{
-				87.85795593261719,
-				-353.7760009765625,
-				66.15339660644531,
-			},
-			{
-				85.1199951171875,
-				-351.8800048828125,
-				66.15339660644531,
-			},
-			{
-				78.8148193359375,
-				-346.29498291015625,
-				66.24098205566406,
-			},
-			{
-				74.55705261230469,
-				-340.8756408691406,
-				66.15339660644531,
-			},
-			{
-				48.66584777832031,
-				-317.5818786621094,
-				66.15400695800781,
-			},
-			{
-				47.938262939453125,
-				-317.6784362792969,
-				66.71321868896484,
-			},
-			{
-				45.99998474121094,
-				-320,
-				68.01043701171875,
-			},
-		},
-	},
-	{
-		path_length = 9.6093111038208,
-		nodes = {
-			{
-				40.109066009521484,
-				-324.9300537109375,
-				62.14006042480469,
-			},
-			{
-				38.12944030761719,
-				-326.3127746582031,
-				61.956443786621094,
-			},
-			{
-				36.6161994934082,
-				-327.7119445800781,
-				60.76970291137695,
-			},
-			{
-				35.96677780151367,
-				-329.36553955078125,
-				60.14841079711914,
-			},
-			{
-				34.46931457519531,
-				-331.68951416015625,
-				59.1860466003418,
-			},
-		},
-	},
-	{
-		path_length = 90.06696319580078,
-		nodes = {
-			{
-				32.51397705078125,
-				-333.1114196777344,
-				56.97990417480469,
-			},
-			{
-				31.82499885559082,
-				-332.5950012207031,
-				57.01057815551758,
-			},
-			{
-				26.098793029785156,
-				-327.9620056152344,
-				57.76108932495117,
-			},
-			{
-				22.21877098083496,
-				-323.88531494140625,
-				56.60165786743164,
-			},
-			{
-				20.045000076293945,
-				-320.7200012207031,
-				56.08097839355469,
-			},
-			{
-				19.25904083251953,
-				-319.0238342285156,
-				55.330543518066406,
-			},
-			{
-				18.56623649597168,
-				-318.4294738769531,
-				54.83658218383789,
-			},
-			{
-				12.864171981811523,
-				-318.7290344238281,
-				53.92326736450195,
-			},
-			{
-				12.015183448791504,
-				-319.1144714355469,
-				54.126651763916016,
-			},
-			{
-				7.756755828857422,
-				-322.239990234375,
-				54.87598419189453,
-			},
-			{
-				-1.2511061429977417,
-				-328.8514099121094,
-				54.87629699707031,
-			},
-			{
-				-1.8737157583236694,
-				-328.99432373046875,
-				54.8692626953125,
-			},
-			{
-				-3.06534481048584,
-				-329.0838317871094,
-				54.63163375854492,
-			},
-			{
-				-3.9028828144073486,
-				-328.84002685546875,
-				54.23918151855469,
-			},
-			{
-				-11.478819847106934,
-				-328.72576904296875,
-				54.17680740356445,
-			},
-			{
-				-11.961678504943848,
-				-328.85968017578125,
-				54.38789367675781,
-			},
-			{
-				-12.906320571899414,
-				-329.00518798828125,
-				54.77656173706055,
-			},
-			{
-				-13.204476356506348,
-				-329.0055847167969,
-				54.870479583740234,
-			},
-			{
-				-17.249662399291992,
-				-327.64459228515625,
-				54.90201950073242,
-			},
-			{
-				-26.981548309326172,
-				-323.32440185546875,
-				55.246124267578125,
-			},
-			{
-				-28.574695587158203,
-				-322.8738098144531,
-				55.21043014526367,
-			},
-			{
-				-32.305938720703125,
-				-322.8662109375,
-				55.20880126953125,
-			},
-			{
-				-32.70050048828125,
-				-322.9300842285156,
-				55.18162155151367,
-			},
-			{
-				-34.42683792114258,
-				-323.5082092285156,
-				55.19887924194336,
-			},
-			{
-				-41.51499938964844,
-				-327.322509765625,
-				54.183311462402344,
-			},
-			{
-				-44.027950286865234,
-				-328.8862609863281,
-				54.1265983581543,
-			},
-		},
-	},
 	{
 		path_length = 171.21478462219238,
 		nodes = {

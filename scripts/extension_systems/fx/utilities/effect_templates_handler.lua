@@ -70,7 +70,7 @@ EffectTemplatesHandler.add_template_effect = function (self, unit_to_particle_gr
 	if template_effect.is_running then
 		local global_effect_id_to_stop = template_effect.global_effect_id
 
-		self:stop_template_effect(global_effect_id_to_stop)
+		self:remove_template_effect(template_context, global_effect_id_to_stop)
 	end
 
 	self:start_template_effect(unit_to_particle_group_lookup, template_context, template_effect, template, optional_unit, optional_node, optional_position, optional_player_owner_unit)

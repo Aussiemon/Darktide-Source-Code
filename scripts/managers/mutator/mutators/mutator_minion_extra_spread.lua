@@ -19,7 +19,12 @@ MutatorMinionExtraSpread.get_hitscan_template_override = function (self, target_
 	end
 
 	local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
-	local disabled_character_state_component = unit_data_extension:read_component("disabled_character_state")
+	local disabled_character_state_component = unit_data_extension.has_component and unit_data_extension:has_component("disabled_character_state") and unit_data_extension:read_component("disabled_character_state")
+
+	if not disabled_character_state_component then
+		return
+	end
+
 	local vortex_grabbed_timestamp = vortex_grabbed_time_stamps[target_unit]
 	local t = FixedFrame.get_latest_fixed_time()
 	local is_vortex_grabbed = PlayerUnitStatus.is_vortex_grabbed(disabled_character_state_component)

@@ -702,6 +702,7 @@ local level_spawn_template = {
 			local level_slot_unit = Level.unit_by_id(parent_level, level_slot_id)
 
 			section.extraction_unit = level_slot_unit
+			section.extraction_level = level_data.level
 		end,
 		on_registered_function = function (level_data, world)
 			local section = level_data.section
