@@ -76,6 +76,11 @@ local expedition_mission_flags = {
 			display_string = "loc_expeditions_modifier_simple_opportunities_more",
 		},
 	},
+	opps_03 = {
+		ui = {
+			display_string = "loc_expeditions_modifier_simple_opportunities_fewer",
+		},
+	},
 	locs_01 = {
 		ui = {
 			display_string = "loc_expeditions_modifier_simple_locations_more",

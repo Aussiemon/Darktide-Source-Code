@@ -46,6 +46,137 @@ actions.action_underhand_throw_grenade.action_condition_func = function (action_
 	return not _in_expedition_safe_zone()
 end
 
+weapon_template.action_input_hierarchy = {
+	{
+		input = "aim_hold",
+		transition = {
+			{
+				input = "aim_released",
+				transition = "previous",
+			},
+			{
+				input = "block_cancel",
+				transition = {
+					{
+						input = "block_cancel_release",
+						transition = "base",
+					},
+					{
+						input = "wield",
+						transition = "base",
+					},
+					{
+						input = "unwield_to_previous",
+						transition = "base",
+					},
+					{
+						input = "combat_ability",
+						transition = "base",
+					},
+					{
+						input = "grenade_ability",
+						transition = "base",
+					},
+				},
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "unwield_to_previous",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = "base",
+			},
+		},
+	},
+	{
+		input = "short_hand_aim_hold",
+		transition = {
+			{
+				input = "short_hand_aim_released",
+				transition = "previous",
+			},
+			{
+				input = "short_hand_throw",
+				transition = {
+					{
+						input = "short_hand_throw_release",
+						transition = "base",
+					},
+					{
+						input = "wield",
+						transition = "base",
+					},
+					{
+						input = "unwield_to_previous",
+						transition = "base",
+					},
+					{
+						input = "combat_ability",
+						transition = "base",
+					},
+					{
+						input = "grenade_ability",
+						transition = "base",
+					},
+				},
+			},
+			{
+				input = "wield",
+				transition = "base",
+			},
+			{
+				input = "unwield_to_previous",
+				transition = "base",
+			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = "base",
+			},
+		},
+	},
+	{
+		input = "block_cancel",
+		transition = "stay",
+	},
+	{
+		input = "wield",
+		transition = "stay",
+	},
+	{
+		input = "unwield_to_previous",
+		transition = "base",
+	},
+	{
+		input = "combat_ability",
+		transition = "base",
+	},
+	{
+		input = "grenade_ability",
+		transition = "base",
+	},
+	{
+		input = "inspect_start",
+		transition = {
+			{
+				input = "inspect_stop",
+				transition = "base",
+			},
+		},
+	},
+}
 weapon_template.breed_anim_state_machine_3p = {
 	human = "content/characters/player/human/third_person/animations/grenade",
 	ogryn = "content/characters/player/ogryn/third_person/animations/valkyrie_flare",

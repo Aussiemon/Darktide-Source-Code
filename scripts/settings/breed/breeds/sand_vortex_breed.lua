@@ -92,6 +92,7 @@ local breed_data = {
 		ai_attractable = true,
 		ai_radius_change_speed = 1,
 		ai_rotation_speed = 15,
+		deal_wall_slam_damage = false,
 		distance_per_stack = 1,
 		horizontal_angular_delta = 5,
 		inner_radius = 3,

@@ -23,7 +23,7 @@ breed_terror_event_settings.chaos_hound = {
 	point_cost = 12,
 }
 breed_terror_event_settings.chaos_armored_hound = {
-	point_cost = 18,
+	point_cost = math.huge,
 }
 breed_terror_event_settings.chaos_newly_infected = {
 	point_cost = 1,

@@ -2661,7 +2661,6 @@ local grid_blueprints = {
 			{
 				pass_type = "text",
 				style_id = "claim_title",
-				value = "Completed ",
 				value_id = "claim_title",
 				style = {
 					font_size = 22,
@@ -2675,6 +2674,7 @@ local grid_blueprints = {
 						9,
 					},
 				},
+				value = Localize("loc_glossary_completed") .. " ",
 				visibility_function = function (content, style)
 					return content.can_claim and not content.completed
 				end,

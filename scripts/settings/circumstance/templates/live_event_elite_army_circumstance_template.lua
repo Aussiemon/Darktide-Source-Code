@@ -5,11 +5,9 @@ local CircumstanceUtils = require("scripts/settings/circumstance/utilities/circu
 local MissionOverrides = require("scripts/settings/circumstance/mission_overrides")
 local core_mutators = {
 	"mutator_no_hordes",
-	"mutator_higher_stagger_thresholds",
 	"mutator_reduced_ramp_duration_low",
 	"mutator_specials_required_challenge_rating",
 	"mutator_travel_distance_spawning_specials",
-	"mutator_live_elite_army_more_monsters",
 	"mutator_move_specials_timer_when_monster_active",
 	"mutator_live_elite_army_less_roamers",
 	"mutator_live_event_increase_terror_event_points",

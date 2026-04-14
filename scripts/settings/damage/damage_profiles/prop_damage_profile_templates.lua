@@ -554,7 +554,7 @@ local AIRSTRIKE_NUKE_ADM = {
 		[armor_types.void_shield] = 2,
 	},
 }
-local AIRSTRIKE_NUKE_ATTACK = 3200
+local AIRSTRIKE_NUKE_ATTACK = 1600
 local AIRSTRIKE_NUKE_IMPACT = 128
 
 damage_templates.expedition_airstrike_nuke_close = {

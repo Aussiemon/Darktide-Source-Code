@@ -834,6 +834,9 @@ EndView._create_player_widget = function (self, player_info, slot, more_than_one
 
 	if player_title and player_title ~= "" then
 		widget_content.character_title = player_title
+		widget.style.character_archetype_title.offset[2] = widget.style.character_archetype_title.original_offset[2]
+	else
+		widget.style.character_archetype_title.offset[2] = widget.style.character_title.offset[2]
 	end
 
 	widget_content.peer_id = player_info:peer_id()

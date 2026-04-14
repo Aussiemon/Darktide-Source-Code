@@ -138,8 +138,10 @@ BTVortexWanderAction._wander_around = function (self, unit, t, dt, blackboard, s
 		local offset_y = -random_max_distance + math.random() * random_max_distance * 2
 		local random_pos = position and NavQueries.position_on_mesh_guaranteed(nav_world, position + Vector3(offset_x, offset_y, 0), 5, 10, traverse_logic)
 		local from_position = Unit.local_position(unit, 1)
+		local is_indoors = random_pos and VortexLocomotion.is_position_indoors(random_pos, self._physics_world, from_position)
+		local is_close_to_extraction = random_pos and VortexLocomotion.is_close_to_expeditions_extractions_zone(random_pos)
 
-		if random_pos and not VortexLocomotion.is_position_indoors(random_pos, self._physics_world, from_position) then
+		if random_pos and not is_indoors and not is_close_to_extraction then
 			navigation_extension:move_to(random_pos)
 
 			vortex_component.wander_state = "calculating_path"

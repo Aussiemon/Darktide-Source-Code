@@ -256,10 +256,12 @@ local button_options_definitions = {
 
 										parent._input_legend_element:set_display_name(id, display_name)
 
+										local havoc_order = parent.havoc_order
+										local rank = havoc_order and havoc_order.data.rank
 										local tutorial_overlay = active_view and active_view._tutorial_overlay
 										local tutorial_overlay_active = tutorial_overlay and tutorial_overlay:is_active()
 										local mission_board_options = active_view and active_view._mission_board_options
-										local show = active_view and active_view._ongoing_mission_id and active_view:_ongoing_mission_id() and active_view._can_cancel_mission or active_view and (not active_view._ongoing_mission_id or active_view._ongoing_mission_id and not active_view:_ongoing_mission_id())
+										local show = active_view and active_view._ongoing_mission_id and active_view:_ongoing_mission_id() and active_view._can_cancel_mission or active_view and (not active_view._ongoing_mission_id or active_view._ongoing_mission_id and not active_view:_ongoing_mission_id() and rank and rank ~= 1)
 
 										return active_view and active_view.view_name == "havoc_play_view" and not active_view._revoke_popup_id and not tutorial_overlay_active and show and not mission_board_options
 									end,

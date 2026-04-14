@@ -285,7 +285,18 @@ GameModeExpedition.evaluate_end_conditions = function (self)
 	local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
 
 	if current_state == "running" then
-		if failure_conditions_met then
+		if completion_conditions_met then
+			if failure_conditions_met and self._end_reason == "extracted" then
+				self:_print_disable_player_states()
+				Log.exception("ExpeditionLogicServer", "Players considered disabled on extraction")
+			end
+
+			self:_gamemode_complete("won", self._end_reason)
+			self:_change_state("outro_cinematic")
+			Managers.state.minion_spawn:despawn_all_minions()
+			cinematic_scene_system:play_cutscene(CINEMATIC_NAMES.outro_win)
+			_log("[evaluate_end_conditions] Triggering cutscene %q", CINEMATIC_NAMES.outro_win)
+		elseif failure_conditions_met then
 			local disabled_grace_time = settings.mission_end_grace_time_disabled
 			local dead_grace_time = settings.mission_end_grace_time_dead
 			local grace_time = all_players_disabled and disabled_grace_time or all_players_dead and dead_grace_time or 0
@@ -295,12 +306,6 @@ GameModeExpedition.evaluate_end_conditions = function (self)
 
 			self:_change_state(next_state)
 			_log("[evaluate_end_conditions] Failure conditions changed (dead: %s | disabled: %s), game mode will end in %.2f seconds", all_players_dead and "Y" or "N", all_players_disabled and "Y" or "N", grace_time)
-		elseif completion_conditions_met then
-			self:_gamemode_complete("won", self._end_reason)
-			self:_change_state("outro_cinematic")
-			Managers.state.minion_spawn:despawn_all_minions()
-			cinematic_scene_system:play_cutscene(CINEMATIC_NAMES.outro_win)
-			_log("[evaluate_end_conditions] Triggering cutscene %q", CINEMATIC_NAMES.outro_win)
 		end
 	elseif current_state == "about_to_fail_disabled" or current_state == "about_to_fail_dead" then
 		local dead_grace_time = settings.mission_end_grace_time_dead
@@ -416,6 +421,28 @@ GameModeExpedition._all_players_dead = function (self, num_alive_players, alive_
 	end
 
 	return true
+end
+
+GameModeExpedition._print_disable_player_states = function (self)
+	local player_unit_spawn_manager = Managers.state.player_unit_spawn
+	local alive_players = player_unit_spawn_manager:alive_players()
+	local num_alive_players = #alive_players
+
+	_log("[_print_disable_player_states] players alive: %s", num_alive_players)
+
+	for i = 1, num_alive_players do
+		local player = alive_players[i]
+		local player_unit = player.player_unit
+		local unit_data_extension = ScriptUnit.has_extension(player_unit, "unit_data_system")
+
+		if unit_data_extension then
+			local character_state_component = unit_data_extension:read_component("character_state")
+
+			_log("[_print_disable_player_states] players %s, HEALTH_ALIVE: %s, state: %s", i, HEALTH_ALIVE[player_unit] and "Y" or "N", character_state_component.state_name)
+		else
+			_log("[_print_disable_player_states] players %s does not have data system", i)
+		end
+	end
 end
 
 GameModeExpedition._failure_conditions_met = function (self)

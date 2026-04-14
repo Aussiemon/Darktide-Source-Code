@@ -200,6 +200,11 @@ local circumstance_templates = {
 			"mutator_only_traitor_guard_faction",
 		},
 	},
+	exps_blight = {
+		mutators = {
+			"mutator_corrupted_enemies",
+		},
+	},
 	exps_tornadogs = {
 		dialogue_id = "circumstance_vo_exp_vortex",
 		mutators = {
@@ -208,6 +213,31 @@ local circumstance_templates = {
 		},
 		expedition_events = {
 			"spawn_sand_vortex",
+		},
+	},
+	exps_tornadark = {
+		dialogue_id = "circumstance_vo_exp_vortex",
+		theme_tag = "darkness",
+		wwise_state = "darkness_01",
+		mutators = {
+			"mutator_exp_dummy_sand_vortex",
+			"mutator_darkness_los",
+		},
+		expedition_events = {
+			"spawn_sand_vortex",
+		},
+	},
+	exps_stormblight = {
+		dialogue_id = "circumstance_vo_exp_lightning",
+		theme_tag = "darkness",
+		wwise_state = "darkness_01",
+		mutators = {
+			"mutator_exp_dummy_lightning_storm",
+			"mutator_darkness_los",
+			"mutator_corrupted_enemies",
+		},
+		expedition_events = {
+			"lightning_strikes_targeted_random_player_looping",
 		},
 	},
 	exps_auric = {
@@ -299,6 +329,16 @@ local circumstance_templates = {
 			"mutator_auric_tension_modifier",
 		},
 	},
+	exps_blight_au = {
+		mutators = {
+			"mutator_corrupted_enemies",
+			"mutator_waves_of_specials",
+			"mutator_add_resistance",
+			"mutator_increase_terror_event_points",
+			"mutator_reduced_ramp_duration_low",
+			"mutator_auric_tension_modifier",
+		},
+	},
 	exps_tornadogs_au = {
 		dialogue_id = "circumstance_vo_exp_vortex",
 		mutators = {
@@ -312,6 +352,41 @@ local circumstance_templates = {
 		},
 		expedition_events = {
 			"spawn_sand_vortex",
+		},
+	},
+	exps_tornadark_au = {
+		dialogue_id = "circumstance_vo_exp_vortex",
+		theme_tag = "darkness",
+		wwise_state = "darkness_01",
+		mutators = {
+			"mutator_exp_dummy_sand_vortex",
+			"mutator_darkness_los",
+			"mutator_waves_of_specials",
+			"mutator_add_resistance",
+			"mutator_increase_terror_event_points",
+			"mutator_reduced_ramp_duration_low",
+			"mutator_auric_tension_modifier",
+		},
+		expedition_events = {
+			"spawn_sand_vortex",
+		},
+	},
+	exps_stormblight_au = {
+		dialogue_id = "circumstance_vo_exp_lightning",
+		theme_tag = "darkness",
+		wwise_state = "darkness_01",
+		mutators = {
+			"mutator_exp_dummy_lightning_storm",
+			"mutator_darkness_los",
+			"mutator_corrupted_enemies",
+			"mutator_waves_of_specials",
+			"mutator_add_resistance",
+			"mutator_increase_terror_event_points",
+			"mutator_reduced_ramp_duration_low",
+			"mutator_auric_tension_modifier",
+		},
+		expedition_events = {
+			"lightning_strikes_targeted_random_player_looping",
 		},
 	},
 }

@@ -585,6 +585,18 @@ MissionBoardView._set_static_mission_widget = function (self, static_slot_id, wi
 	end
 end
 
+MissionBoardView._set_quickplay_button_state = function (self, is_locked)
+	local widget = self._widgets_by_name.qp_mission_widget
+
+	if not widget then
+		return
+	end
+
+	local content = widget.content
+
+	content.is_locked = is_locked
+end
+
 MissionBoardView._set_quickplay_widget = function (self)
 	local bonus_text
 	local bonus_low, bonus_high = self._mission_board_logic:get_bonus_range("quickplay")
@@ -598,6 +610,8 @@ MissionBoardView._set_quickplay_widget = function (self)
 	end
 
 	local is_unlocked, unlock_prerequisite = self._mission_board_logic:get_quickplay_unlock_status()
+
+	is_unlocked = is_unlocked and not self._mission_board_logic:is_private_match()
 
 	return self:_set_static_mission_widget("static", "qp_mission_widget", "quickplay_tile", {
 		icon = "content/ui/textures/icons/mission_types_pj/mission_type_quick",
@@ -906,14 +920,13 @@ MissionBoardView._poll_issue_localized = function (self, issue_key, priority, sh
 end
 
 MissionBoardView._get_mission_locked_issue_message = function (self)
-	local current_text = ""
 	local selected_mission_id = self._selected_mission_id
 	local unlock_data = {}
 
 	if selected_mission_id == "qp_mission_widget" then
 		local game_modes_data = Managers.data_service.mission_board:get_game_modes_progression_data()
 
-		unlock_data = game_modes_data and game_modes_data.quickplay or {}
+		unlock_data = game_modes_data and not self._mission_board_logic:is_private_match() and game_modes_data.quickplay or nil
 	else
 		local view_element_campaign_mission_list = self:_element("mission_list")
 		local ignore_filter = view_element_campaign_mission_list and view_element_campaign_mission_list:visible()
@@ -962,7 +975,7 @@ MissionBoardView._get_mission_locked_issue_message = function (self)
 		end
 	end
 
-	local requirement_text = ""
+	local requirement_text = Localize("loc_mission_board_locked_issue")
 
 	if not table.is_empty(required_data) then
 		local count = 0
@@ -999,6 +1012,12 @@ MissionBoardView._update_info_state = function (self, t)
 	local party_manager = self._party_manager
 
 	do
+		local is_in_matchmaking = party_manager:is_in_matchmaking()
+
+		self:_poll_issue_localized("matchmaking", 4, is_in_matchmaking, "loc_hud_presence_matchmaking")
+	end
+
+	do
 		local members_can_start = party_manager:are_all_members_in_hub()
 
 		self:_poll_issue_localized("members_not_in_hub", 3, not members_can_start, "loc_mission_board_team_mate_not_available")
@@ -1014,7 +1033,7 @@ MissionBoardView._update_info_state = function (self, t)
 	local mission_id = self._selected_mission_id
 
 	if mission_id == "qp_mission_widget" then
-		local quickplay_unlocked = self._mission_board_logic:get_quickplay_unlock_status()
+		local quickplay_unlocked = self._mission_board_logic:get_quickplay_unlock_status() and not self._mission_board_logic:is_private_match()
 
 		self:_poll_issue_localized("mission_locked", 2, not quickplay_unlocked, "loc_mission_board_locked_issue")
 	else
@@ -1607,6 +1626,7 @@ end
 MissionBoardView._callback_toggle_private_matchmaking = function (self, value)
 	self._mission_board_logic:set_private_matchmaking(value)
 	self:_update_play_button_game_mode_text()
+	self:_set_quickplay_button_state(value)
 end
 
 MissionBoardView._callback_open_options = function (self)

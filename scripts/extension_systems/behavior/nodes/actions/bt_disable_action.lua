@@ -114,7 +114,7 @@ BtDisableAction._play_disable_anim = function (self, unit, blackboard, action_da
 	local disable_type = disable_component.type
 	local disable_anims = action_data.disable_anims[disable_type]
 	local attacker_unit = disable_component.attacker_unit
-	local attack_direction = Vector3.normalize(Quaternion.forward(Unit.local_rotation(attacker_unit, 1)))
+	local attack_direction = attacker_unit and Vector3.normalize(Quaternion.forward(Unit.local_rotation(attacker_unit, 1)))
 
 	scratchpad.disable_component = disable_component
 

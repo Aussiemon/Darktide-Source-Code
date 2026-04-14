@@ -20,6 +20,7 @@ local templates = {
 		spread_function = LiquidSpread.pour,
 	},
 	prop_corruptor = {
+		bots_allowed_to_assist_within = true,
 		cell_size = 0.65,
 		end_pressure = 5,
 		in_liquid_buff_template_name = "prop_in_corruptor_liquid_corruption",

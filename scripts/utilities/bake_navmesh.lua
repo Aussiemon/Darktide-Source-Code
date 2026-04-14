@@ -50,7 +50,7 @@ local function push_units(nav_gen, navtag_settings, units)
 			GwNavGeneration.reset_current_navtag(nav_gen)
 		end
 
-		GwNavGeneration.push_meshes_fromunit(nav_gen, unit, consume_physics_mesh, consume_render_mesh, true)
+		GwNavGeneration.push_unit_meshes(nav_gen, unit, consume_physics_mesh, consume_render_mesh, true)
 	end
 end
 

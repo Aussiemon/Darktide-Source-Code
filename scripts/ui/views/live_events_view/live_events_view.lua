@@ -135,6 +135,10 @@ LiveEventsView.on_enter = function (self)
 	self._events = events
 	self._active_event_id = active_event_id
 
+	local progress_text_widget = self._widgets_by_name.progress_text
+
+	progress_text_widget.visible = false
+
 	self:_setup_events_button_list(events)
 	self:_on_entry_selected(active_event_id, self._selected_button_list_index or 1)
 	LiveEventsView.super.on_enter(self)
@@ -406,7 +410,33 @@ LiveEventsView._update_reward_tooltip = function (self, dt, t, input_service, ui
 			if hotspot and (hotspot.is_hover or InputDevice.gamepad_active and hotspot.is_selected and self._show_reward_tooltip) then
 				local reward = reward_widget.content.reward
 
-				if reward.type == "item" then
+				if reward then
+					if reward.type == "item" then
+						local item = reward_widget.content.item
+						local item_type = item.item_type or "default"
+						local item_type_localization_lookup = UISettings.item_type_localization_lookup
+
+						reward_tooltip_content.reward_tooltip_type = Localize(item_type_localization_lookup[item_type] or "loc_item_type_default")
+						reward_tooltip_content.reward_tooltip_info = Localize(item.display_name)
+
+						local rarity_settings = RaritySettings[item.rarity] or RaritySettings[0]
+
+						reward_tooltip_content.reward_tooltip_rarity = string.format("{#color(%d, %d, %d)}%s{#reset()}", rarity_settings.color[2], rarity_settings.color[3], rarity_settings.color[4], Localize(rarity_settings.display_name))
+						reward_tooltip_style.reward_tooltip_info.visible = true
+						reward_tooltip_style.reward_tooltip_rarity.visible = true
+						reward_tooltip_content.reward_tooltip_target_xp = tostring(self._selected_event_progress) .. " / " .. tostring(reward_widget.content.tier_xp)
+						reward_tooltip_style.reward_tooltip_target_xp.visible = true
+					else
+						local currency_settings = WalletSettings[reward.currency]
+
+						reward_tooltip_content.reward_tooltip_type = tostring(reward.amount) .. " " .. Localize(currency_settings.display_name)
+						reward_tooltip_content.reward_tooltip_rarity = ""
+						reward_tooltip_style.reward_tooltip_rarity.visible = false
+						reward_tooltip_style.reward_tooltip_info.visible = false
+						reward_tooltip_content.reward_tooltip_target_xp = tostring(self._selected_event_progress) .. " / " .. tostring(reward_widget.content.tier_xp)
+						reward_tooltip_style.reward_tooltip_target_xp.visible = true
+					end
+				elseif not reward and reward_widget.content.item then
 					local item = reward_widget.content.item
 					local item_type = item.item_type or "default"
 					local item_type_localization_lookup = UISettings.item_type_localization_lookup
@@ -419,15 +449,8 @@ LiveEventsView._update_reward_tooltip = function (self, dt, t, input_service, ui
 					reward_tooltip_content.reward_tooltip_rarity = string.format("{#color(%d, %d, %d)}%s{#reset()}", rarity_settings.color[2], rarity_settings.color[3], rarity_settings.color[4], Localize(rarity_settings.display_name))
 					reward_tooltip_style.reward_tooltip_info.visible = true
 					reward_tooltip_style.reward_tooltip_rarity.visible = true
-					reward_tooltip_content.reward_tooltip_target_xp = tostring(self._selected_event_progress) .. " / " .. tostring(reward_widget.content.tier_xp)
-				else
-					local currency_settings = WalletSettings[reward.currency]
-
-					reward_tooltip_content.reward_tooltip_type = tostring(reward.amount) .. " " .. Localize(currency_settings.display_name)
-					reward_tooltip_content.reward_tooltip_rarity = ""
-					reward_tooltip_style.reward_tooltip_rarity.visible = false
-					reward_tooltip_style.reward_tooltip_info.visible = false
-					reward_tooltip_content.reward_tooltip_target_xp = tostring(self._selected_event_progress) .. " / " .. tostring(reward_widget.content.tier_xp)
+					reward_tooltip_style.reward_tooltip_target_xp.visible = false
+					reward_tooltip_content.reward_tooltip_target_xp = ""
 				end
 
 				visible = true

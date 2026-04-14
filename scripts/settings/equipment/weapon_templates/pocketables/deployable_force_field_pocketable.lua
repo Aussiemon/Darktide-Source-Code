@@ -5,6 +5,18 @@ local Deployables = require("scripts/settings/deployables/deployables")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local PocketablesTemplateSettings = require("scripts/settings/equipment/weapon_templates/pocketables/settings_templates/pocketables_template_settings")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
+
+local function _in_expedition_safe_zone()
+	local game_mode_manager = Managers.state.game_mode
+	local game_mode = game_mode_manager:game_mode()
+
+	if game_mode.in_safe_zone then
+		return game_mode:in_safe_zone()
+	end
+
+	return false
+end
+
 local weapon_template = {}
 
 weapon_template.action_inputs = {}
@@ -34,6 +46,10 @@ weapon_template.actions = {
 }
 
 table.add_missing(weapon_template.actions, PocketablesTemplateSettings.actions)
+
+weapon_template.actions.action_place_complete.action_condition_func = function (action_settings, condition_func_params, used_input)
+	return not _in_expedition_safe_zone()
+end
 
 weapon_template.keywords = {
 	"pocketable",

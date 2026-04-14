@@ -106,6 +106,14 @@ weapon_template.action_input_hierarchy = {
 				input = "throw",
 				transition = "stay",
 			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = "base",
+			},
 		},
 	},
 	{
@@ -275,6 +283,10 @@ weapon_template.actions = {
 		uninterruptible = false,
 		total_time = math.huge,
 		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability",
+			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			wield = {
 				action_name = "action_unwield",
 			},
@@ -315,6 +327,9 @@ weapon_template.actions = {
 		},
 	},
 }
+
+table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
+
 weapon_template.keywords = {
 	"luggable",
 }

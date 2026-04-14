@@ -253,6 +253,12 @@ MinionSpawnManager._update_spawn_queue = function (self)
 	self._spawn_queue_size = self._spawn_queue_size - 1
 end
 
+MinionSpawnManager.total_allocated_num_enemies = function (self)
+	local total_allocated = self._num_spawned_minions + self._spawn_queue_size
+
+	return total_allocated
+end
+
 MinionSpawnManager._initialize_inventory = function (self, unit, breed, blackboard, optional_attack_selection_template_name)
 	local spawn_inventory_slot = breed.spawn_inventory_slot
 

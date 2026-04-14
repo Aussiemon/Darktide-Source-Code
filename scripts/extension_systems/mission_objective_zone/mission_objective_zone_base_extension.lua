@@ -16,6 +16,7 @@ MissionObjectiveZoneBaseExtension.init = function (self, extension_init_context,
 	self._unit = unit
 	self._activated = false
 	self._mission_objective_target_extension = nil
+	self._is_local_objective_marker_enabled = nil
 	self._zone_type = "base"
 	self._progress_ui_type = "none"
 	self._return_to_skull = false
@@ -164,6 +165,12 @@ MissionObjectiveZoneBaseExtension.set_active = function (self, active)
 		self:set_show_progress(true)
 	else
 		self:_disable_update()
+
+		if self._mission_objective_target_extension and self._is_local_objective_marker_enabled then
+			self._mission_objective_target_extension:remove_unit_marker()
+
+			self._is_local_objective_marker_enabled = false
+		end
 	end
 
 	if self._is_server then

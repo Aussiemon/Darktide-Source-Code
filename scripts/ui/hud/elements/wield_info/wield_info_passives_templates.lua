@@ -12,6 +12,8 @@ local expedition_disallowed_weapon_templates = table.set({
 	"expedition_grenade_artillery_strike_pocketable",
 	"expedition_grenade_valkyrie_hover_pocketable",
 	"expedition_explosive_luggable_01",
+	"expeditions_big_grenade",
+	"deployable_force_field_pocketable",
 })
 local wield_info_passives_templates = {
 	{

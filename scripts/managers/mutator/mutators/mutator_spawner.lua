@@ -175,23 +175,23 @@ MutatorSpawner.on_spawn_points_generated = function (self, level, themes)
 	local mutator_spawners = component_system:get_units_from_component_name("MutatorSpawner")
 
 	if #mutator_spawners == 0 then
-		Log.exception("MutatorToxicGasVolumes", "No MutatorSpawner components found in the level.")
-	else
-		for i = 1, #mutator_spawners do
-			local fog_unit = mutator_spawners[i]
-			local components = Component.get_components_by_name(fog_unit, "MutatorSpawner")
+		Log.warning("MutatorSpawn", "No MutatorSpawner components found in the level.")
+	end
 
-			for ii = 1, #components do
-				local component = components[ii]
-				local component_data = component:get_position_data()
+	for i = 1, #mutator_spawners do
+		local fog_unit = mutator_spawners[i]
+		local components = Component.get_components_by_name(fog_unit, "MutatorSpawner")
 
-				self._dirty_spawn_locations[#self._dirty_spawn_locations + 1] = {
-					position = component_data.position,
-					rotation = component_data.rotation,
-					section = component_data.section,
-					level_size = component_data.level_size,
-				}
-			end
+		for ii = 1, #components do
+			local component = components[ii]
+			local component_data = component:get_position_data()
+
+			self._dirty_spawn_locations[#self._dirty_spawn_locations + 1] = {
+				position = component_data.position,
+				rotation = component_data.rotation,
+				section = component_data.section,
+				level_size = component_data.level_size,
+			}
 		end
 	end
 

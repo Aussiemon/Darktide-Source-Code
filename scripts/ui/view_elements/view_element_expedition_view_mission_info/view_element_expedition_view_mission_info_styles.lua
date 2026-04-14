@@ -181,12 +181,12 @@ Styles.mission_info_page.icon = {
 Styles.mission_info_page.icon_frame = {
 	scale_to_material = true,
 	size = {
-		50,
-		50,
+		32,
+		32,
 	},
 	offset = {
-		5,
-		5,
+		15,
+		15,
 		2,
 	},
 	color = SettingsColors.terminal_frame,

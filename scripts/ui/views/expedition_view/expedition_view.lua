@@ -148,6 +148,7 @@ ExpeditionView.on_enter = function (self)
 	self._widgets_by_name.unlock_button.content.visible = false
 	self._widgets_by_name.mapwide_stats.content.personal_total_number = self._personal_stats and self._personal_stats.total_loot and tonumber(self._personal_stats.total_loot) or 0
 	self._widgets_by_name.mapwide_stats.content.personal_best_number = self._personal_stats and self._personal_stats.best_loot and tonumber(self._personal_stats.best_loot) or 0
+	self._widgets_by_name.mapwide_stats.visible = false
 
 	local save_manager = Managers.save
 	local save_data = save_manager:account_data()
@@ -905,6 +906,11 @@ ExpeditionView._update_nodes = function (self, dt, t, input_service)
 
 			self:_update_node_hover_state()
 		end
+
+		self._sidebar:show_widgets()
+
+		self._widgets_by_name.mapwide_stats.visible = true
+		self.quickplay_button_widget.visible = true
 	end
 end
 
@@ -995,6 +1001,12 @@ ExpeditionView._update_can_start_mission = function (self)
 	end
 
 	local party_manager = self._party_manager
+
+	if party_manager:is_in_matchmaking() then
+		self:_set_can_start_mission(false, "warning", Localize("loc_hud_presence_matchmaking"))
+
+		return
+	end
 
 	if not party_manager:are_all_members_in_hub() then
 		self:_set_can_start_mission(false, "warning", Localize("loc_mission_board_team_mate_not_available"))
@@ -1306,6 +1318,10 @@ ExpeditionView.get_current_selected_difficulty_name = function (self)
 	return self._page_settings[self._page_index].name
 end
 
+ExpeditionView.node_enter_anim_finished = function (self)
+	return self._node_enter_anim_finished
+end
+
 ExpeditionView._setup_quickplay_button = function (self)
 	local bonus_text
 	local bonus_low, bonus_high = self.quickplay_bonus_range[1], self.quickplay_bonus_range[2]
@@ -1342,6 +1358,7 @@ ExpeditionView._setup_quickplay_button = function (self)
 	local callback_function = callback(self, "cb_widget_node_pressed", node)
 
 	widget.content.hotspot.pressed_callback = callback_function
+	widget.visible = false
 end
 
 ExpeditionView._widget_from_blueprint = function (self, widget_id, blueprint_setting_name, mission_data, creation_context, ...)

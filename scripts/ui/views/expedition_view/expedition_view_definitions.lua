@@ -467,7 +467,7 @@ local input_legend_params = {
 			input_action = "confirm_pressed",
 			on_pressed_callback = "cb_on_unlock_node_input_pressed",
 			visibility_function = function (parent)
-				return InputDevice.gamepad_active and parent.selected_node and parent.selected_node.unlock_status == UNLOCK_STATUS.unlockable
+				return InputDevice.gamepad_active and parent.selected_node and parent.selected_node.unlock_status == UNLOCK_STATUS.unlockable and parent:node_enter_anim_finished()
 			end,
 		},
 		{
@@ -475,12 +475,18 @@ local input_legend_params = {
 			display_name = "loc_mission_board_view_options",
 			input_action = "hotkey_menu_special_1",
 			on_pressed_callback = "cb_on_options_pressed",
+			visibility_function = function (parent)
+				return parent:node_enter_anim_finished()
+			end,
 		},
 		{
 			alignment = "right_alignment",
 			display_name = "loc_contracts_contract_complexity_tutorial",
 			input_action = "expedition_menu_show_tutorial",
 			on_pressed_callback = "cb_show_tutorial",
+			visibility_function = function (parent)
+				return parent:node_enter_anim_finished()
+			end,
 		},
 		{
 			alignment = "right_alignment",
@@ -497,7 +503,7 @@ local input_legend_params = {
 					multiple_tabs = tab_count > 1
 				end
 
-				return view_element_expedition_view_mission_info and view_element_expedition_view_mission_info:visible() and multiple_tabs
+				return view_element_expedition_view_mission_info and view_element_expedition_view_mission_info:visible() and multiple_tabs and parent:node_enter_anim_finished()
 			end,
 		},
 	},

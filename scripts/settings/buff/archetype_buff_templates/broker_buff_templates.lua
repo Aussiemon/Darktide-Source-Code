@@ -3022,12 +3022,13 @@ local TOXIN_SPREAD_RESULTS = {}
 templates.broker_passive_toxin_spread_on_kills = {
 	buff_to_add = "neurotoxin_interval_buff3",
 	class_name = "proc_buff",
+	max_stacks_to_add = 2,
 	max_targets = 10,
 	predicted = false,
 	radius = 4,
 	stacks_to_add = 2,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_kill] = 1,
 	},
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_melee_hit, CheckProcFunctions.on_elite_kill),
 	start_func = function (template_data, template_context)
@@ -3043,6 +3044,7 @@ templates.broker_passive_toxin_spread_on_kills = {
 		local enemy_side_names = template_data.enemy_side_names
 		local buff_to_add = template_context.template.buff_to_add
 		local stacks_to_add = template_context.template.stacks_to_add
+		local max_stacks_to_add = template_context.template.max_stacks_to_add
 		local attacked_unit = params.attacked_unit
 		local from_position = POSITION_LOOKUP[attacked_unit] or POSITION_LOOKUP[template_context.unit]
 		local num_hits = broadphase.query(broadphase, from_position, template_context.template.radius, TOXIN_SPREAD_RESULTS, enemy_side_names)
@@ -3059,9 +3061,9 @@ templates.broker_passive_toxin_spread_on_kills = {
 					for _ = 1, stacks_to_add do
 						local current_stacks = enemy_unit_buff_extension:current_stacks(buff_to_add)
 
-						if current_stacks < stacks_to_add then
+						if current_stacks < max_stacks_to_add then
 							enemy_unit_buff_extension:add_internally_controlled_buff(buff_to_add, t, "owner_unit", template_context.unit)
-						elseif stacks_to_add <= current_stacks then
+						elseif max_stacks_to_add <= current_stacks then
 							enemy_unit_buff_extension:refresh_duration_of_stacking_buff(buff_to_add, t)
 						end
 					end
@@ -3290,7 +3292,22 @@ templates.broker_passive_knockback_on_taking_melee_damage = {
 	proc_events = {
 		[proc_events.on_player_hit_received] = 1,
 	},
-	check_proc_func = CheckProcFunctions.on_melee_hit,
+	check_proc_func = function (params, template_data, template_context, t, ...)
+		if not CheckProcFunctions.on_melee_hit(params, template_data, template_context, t) then
+			return false
+		end
+
+		local attacking_unit = params.attack_instigator_unit or params.attacking_unit
+		local target_unit_data_extension = ScriptUnit.has_extension(attacking_unit, "unit_data_system")
+		local breed = target_unit_data_extension and target_unit_data_extension:breed()
+		local enemy_type = breed and Breed.enemy_type(breed)
+
+		if enemy_type == "special" then
+			return false
+		end
+
+		return true
+	end,
 	start_func = function (template_data, template_context)
 		template_data.buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
 	end,
@@ -3586,46 +3603,62 @@ templates.broker_keystone_adrenaline_junkie = {
 	end,
 	proc_events = {
 		[proc_events.on_hit] = 1,
+		[proc_events.on_kill] = 1,
 	},
 	start_func = function (template_data, template_context)
 		template_data.talent_extension = ScriptUnit.extension(template_context.unit, "talent_system")
 	end,
+	specific_proc_func = {
+		[proc_events.on_hit] = function (params, template_data, template_context, t)
+			local template = template_context.template
+			local on_regular = template.regular_grant
+			local stacks_to_grant = on_regular
+
+			if template_data.talent_extension:has_special_rule(special_rules.broker_keystone_adrenaline_junkie_no_regular_stacks) then
+				local sub_1_regular_grant = template.sub_1_regular_grant
+
+				stacks_to_grant = sub_1_regular_grant
+
+				if CheckProcFunctions.on_weakspot_hit(params, template_data, template_context, t) then
+					local sub_1_weakspot_grant = template.regular_grant + template.sub_1_weakspot_additional_grant
+
+					stacks_to_grant = sub_1_weakspot_grant
+				end
+			end
+
+			local is_crit = CheckProcFunctions.on_crit(params, template_data, template_context, t)
+
+			if is_crit then
+				stacks_to_grant = stacks_to_grant + template.crit_grant
+			end
+
+			for _ = 1, stacks_to_grant do
+				local buff_extension = template_context.buff_extension
+
+				buff_extension:add_internally_controlled_buff("broker_keystone_adrenaline_junkie_stack", t)
+			end
+		end,
+		[proc_events.on_kill] = function (params, template_data, template_context, t)
+			local template = template_context.template
+			local stacks_to_grant = 0
+
+			if template_data.talent_extension:has_special_rule(special_rules.broker_keystone_adrenaline_junkie_extra_killing_blow_stacks) then
+				stacks_to_grant = stacks_to_grant + template.sub_2_kill_additional_grant
+
+				if CheckProcFunctions.on_elite_kill(params, template_data, template_context, t) then
+					stacks_to_grant = stacks_to_grant + template.sub_2_kill_additional_elite_grant
+				end
+			end
+
+			for _ = 1, stacks_to_grant do
+				local buff_extension = template_context.buff_extension
+
+				buff_extension:add_internally_controlled_buff("broker_keystone_adrenaline_junkie_stack", t)
+			end
+		end,
+	},
 	proc_func = function (params, template_data, template_context, t)
-		local template = template_context.template
-		local on_regular = template.regular_grant
-		local stacks_to_grant = on_regular
-
-		if template_data.talent_extension:has_special_rule(special_rules.broker_keystone_adrenaline_junkie_no_regular_stacks) then
-			local sub_1_regular_grant = template.sub_1_regular_grant
-
-			stacks_to_grant = sub_1_regular_grant
-
-			if CheckProcFunctions.on_weakspot_hit(params, template_data, template_context, t) then
-				local sub_1_weakspot_grant = template.regular_grant + template.sub_1_weakspot_additional_grant
-
-				stacks_to_grant = sub_1_weakspot_grant
-			end
-		end
-
-		if template_data.talent_extension:has_special_rule(special_rules.broker_keystone_adrenaline_junkie_extra_killing_blow_stacks) then
-			stacks_to_grant = stacks_to_grant + template.sub_2_kill_additional_grant
-
-			if CheckProcFunctions.on_elite_kill(params, template_data, template_context, t) then
-				stacks_to_grant = stacks_to_grant + template.sub_2_kill_additional_elite_grant
-			end
-		end
-
-		local is_crit = CheckProcFunctions.on_crit(params, template_data, template_context, t)
-
-		if is_crit then
-			stacks_to_grant = stacks_to_grant + template.crit_grant
-		end
-
-		for _ = 1, stacks_to_grant do
-			local buff_extension = template_context.buff_extension
-
-			buff_extension:add_internally_controlled_buff("broker_keystone_adrenaline_junkie_stack", t)
-		end
+		return
 	end,
 }
 templates.broker_keystone_adrenaline_junkie_stack = {

@@ -439,9 +439,17 @@ PacingManager._update_mission_progression = function (self, dt, t, side_id, targ
 	Log.error("PacingManager", "Trying to update mission progression but there is no handeling of progressiontype: %s", self._progression_type)
 end
 
+local HARD_ALLOCATED_LIMIT = 145
+
 PacingManager.spawn_type_enabled = function (self, spawn_type)
 	if self._disabled and spawn_type ~= "terror_events" then
 		return false, "pacing_is_disabled"
+	end
+
+	local total_allocated_num_enemies = Managers.state.minion_spawn:total_allocated_num_enemies()
+
+	if total_allocated_num_enemies > HARD_ALLOCATED_LIMIT then
+		return false, "Hard_allocated_limit_reached"
 	end
 
 	local challenge_rating_thresholds = self._challenge_rating_thresholds

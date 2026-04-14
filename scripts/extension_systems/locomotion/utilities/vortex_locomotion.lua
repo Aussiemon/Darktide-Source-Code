@@ -191,4 +191,28 @@ VortexLocomotion.is_position_indoors = function (target_position, physics_world,
 	return false
 end
 
+local CHECK_DISTANCE = 20
+
+VortexLocomotion.is_close_to_expeditions_extractions_zone = function (pos)
+	local game_mode_manager = Managers.state.game_mode
+	local game_mode = game_mode_manager:game_mode()
+	local navigation_handler = game_mode.get_navigation_handler and game_mode:get_navigation_handler()
+
+	if not navigation_handler then
+		return
+	end
+
+	local extraction_positions = navigation_handler:get_registered_extractions()
+
+	for k, v in pairs(extraction_positions) do
+		local extraction_pos = v:unbox()
+
+		if CHECK_DISTANCE > Vector3.distance(pos, extraction_pos) then
+			return true
+		end
+	end
+
+	return false
+end
+
 return VortexLocomotion

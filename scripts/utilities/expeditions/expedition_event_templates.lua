@@ -184,6 +184,25 @@ local function _create_lightning_explosion(world, physics_world, explosion_setti
 	Explosion.create_explosion(world, physics_world, hit_position, Vector3.up(), lightning_unit, explosion_template, power_level, charge_level, attack_type, nil, nil, nil, nil, nil, nil, nil, nil, true)
 end
 
+local AMBIENT_LIGHTNINGS_DAMAGE_DISTANCE = 25
+
+local function _should_ambient_lightning_deal_damage(hit_position)
+	local player_manager = Managers.player
+	local human_players = player_manager:human_players()
+
+	for k, v in pairs(human_players) do
+		local player_unit = v.player_unit
+		local player_position = player_unit and Unit.alive(player_unit) and Unit.local_position(player_unit, 1)
+		local distance = player_position and Vector3.distance(player_position, hit_position)
+
+		if distance and distance < AMBIENT_LIGHTNINGS_DAMAGE_DISTANCE then
+			return true
+		end
+	end
+
+	return false
+end
+
 local function _add_lightning_strikes_close_to_position(context, data, settings, time_into_event, parent_position, min_distance, max_distance, amount, deal_damage, unique_seed)
 	local initial_life_time = settings.initial_life_time
 	local initial_life_time_min = initial_life_time.min
@@ -223,6 +242,9 @@ local function _add_lightning_strikes_close_to_position(context, data, settings,
 
 		if hit_position then
 			local random_rotation = Quaternion.axis_angle(Vector3.forward(), random_angle_multiplier * (math.pi * 2))
+
+			deal_damage = deal_damage or _should_ambient_lightning_deal_damage(hit_position)
+
 			local entry = {
 				boxed_position = Vector3Box(position),
 				boxed_rotation = QuaternionBox(random_rotation),
@@ -318,7 +340,7 @@ expedition_event_templates.spawn_sand_vortex = {
 								local world = context.world
 								local physics_world = World.physics_world(world)
 
-								success = not VortexLocomotion.is_position_indoors(nav_position, physics_world)
+								success = not VortexLocomotion.is_position_indoors(nav_position, physics_world) and not VortexLocomotion.is_close_to_expeditions_extractions_zone(nav_position)
 							end
 
 							if success then
@@ -598,47 +620,52 @@ expedition_event_templates.lightning_strikes_naive = {
 		end
 
 		local fx_system = Managers.state.extension:system("fx_system")
-		local spawner_manager = Managers.state.unit_spawner
 		local dynamic_unit_spawning = data.dynamic_unit_spawning
 
-		if not table.is_empty(dynamic_unit_spawning) then
+		if #dynamic_unit_spawning > 0 then
 			local explosion_settings = settings.explosion_settings
-			local impact_radius = settings.impact_radius
-			local diameter = impact_radius * 2
 			local lightning_units = data.lightning_units
 
 			for i = #dynamic_unit_spawning, 1, -1 do
 				local dynamic_unit_data = dynamic_unit_spawning[i]
-				local delayed_spawn_time = dynamic_unit_data.delayed_spawn_time
+				local start_time = dynamic_unit_data.start_time
 				local deal_damage = dynamic_unit_data.deal_damage
 
-				if delayed_spawn_time <= 0 then
-					local world = context.world
-					local physics_world = context.physics_world
-					local hit_position = dynamic_unit_data.hit_position:unbox()
-					local strike_sound = settings.strike_sound
-					local lightning_unit_name = settings.lightning_unit_name
-					local lightning_unit = World.spawn_unit_ex(world, lightning_unit_name, nil, hit_position)
-
-					lightning_units[#lightning_units + 1] = lightning_unit
-
-					if deal_damage then
-						_destroy_lightning_fx(context.world, dynamic_unit_data, settings, context.is_server)
+				if start_time < t then
+					if deal_damage and not dynamic_unit_data.decal_unit then
+						dynamic_unit_data.particle_id, dynamic_unit_data.decal_unit = _create_lightning_fx(context, settings, dynamic_unit_data.deal_damage, dynamic_unit_data.hit_position:unbox())
 					end
 
-					if context.is_server and deal_damage then
-						_create_lightning_explosion(world, physics_world, explosion_settings, hit_position, lightning_unit)
+					local delayed_spawn_time = dynamic_unit_data.delayed_spawn_time
+
+					if delayed_spawn_time <= 0 then
+						local world = context.world
+						local physics_world = context.physics_world
+						local hit_position = dynamic_unit_data.hit_position:unbox()
+						local strike_sound = settings.strike_sound
+						local lightning_unit_name = settings.lightning_unit_name
+						local lightning_unit = World.spawn_unit_ex(world, lightning_unit_name, nil, hit_position)
+
+						lightning_units[#lightning_units + 1] = lightning_unit
+
+						if deal_damage then
+							_destroy_lightning_fx(context.world, dynamic_unit_data, settings, context.is_server)
+						end
+
+						if context.is_server and deal_damage then
+							_create_lightning_explosion(world, physics_world, explosion_settings, hit_position, lightning_unit)
+						end
+
+						if context.is_server and strike_sound then
+							fx_system:trigger_wwise_event(strike_sound, hit_position)
+						end
+
+						table.remove(dynamic_unit_spawning, i)
+					else
+						_update_lightning_fx(context.world, dynamic_unit_data)
+
+						dynamic_unit_data.delayed_spawn_time = delayed_spawn_time - dt
 					end
-
-					if context.is_server and strike_sound then
-						fx_system:trigger_wwise_event(strike_sound, hit_position)
-					end
-
-					table.remove(dynamic_unit_spawning, i)
-				else
-					_update_lightning_fx(context.world, dynamic_unit_data)
-
-					dynamic_unit_data.delayed_spawn_time = delayed_spawn_time - dt
 				end
 			end
 		else

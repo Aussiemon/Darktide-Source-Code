@@ -180,7 +180,6 @@ function _process_ui_table(expression_table, node_personal_guards, node_global_g
 	local token_2 = expression_table.value
 	local comparison_token = expression_table.operator
 	local value_1, value_2
-	local token_1_type = token_1.token_type
 	local stat_data = _stats_from_token(token_1, node_personal_guards, node_global_guards)
 
 	value_1 = stat_data and stat_data.progress or 0
@@ -212,7 +211,7 @@ ExpeditionService._prepare_guards_data = function (self, node_expression_string,
 
 	local function add_unlock(stat_data, guard_type, is_completed)
 		return {
-			gathered_amount = stat_data.progress,
+			gathered_amount = stat_data.progress or 0,
 			goal_amount = stat_data.limit,
 			node = stat_data.node,
 			type = _get_stat_unlock_type(stat_data.key, guard_type, not not stat_data.node),
@@ -236,7 +235,7 @@ ExpeditionService._prepare_guards_data = function (self, node_expression_string,
 			for i = 1, #node_global_stats do
 				local guard = node_global_stats[i]
 				local limit = tonumber(guard.limit)
-				local progress = tonumber(guard.progress)
+				local progress = tonumber(guard.progress) or 0
 				local is_completed = limit <= progress
 
 				if all_completed and is_completed == false then
@@ -484,7 +483,7 @@ ExpeditionService.fetch_personal_guards = function (self, nodes_by_id)
 										local path = paths[iiii]
 										local stat_path_name = stat_path_names[iiii]
 
-										if path ~= stat_path_names[iiii] then
+										if path ~= stat_path_name then
 											found_path = false
 
 											break
@@ -608,9 +607,9 @@ ExpeditionService.fetch_global_guards = function (self, nodes_by_id)
 
 				for index, stat_data in pairs(node_data) do
 					global_stats_progress[node_name][index] = {
+						key = "stat",
 						limit = stat_data.limit,
 						progress = global_stat.stats[stat_data.name],
-						key = stat_data.name,
 					}
 				end
 			end
@@ -889,7 +888,7 @@ ExpeditionService.fetch_nodes = function (self)
 			local t = Managers.time:time("main")
 			local server_time = Managers.backend:get_server_time(t)
 
-			self._expeditions_track_timer = tonumber(track.validTo) - server_time / 1000 + t
+			self._expeditions_track_timer = (tonumber(track.validTo) - server_time) / 1000 + t
 		end
 
 		local promises = {}

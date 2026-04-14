@@ -2472,10 +2472,6 @@ local Credits = {
 				type = "person",
 			},
 			{
-				text = "New Person",
-				type = "person",
-			},
-			{
 				text = "Jérémie Tauziède",
 				type = "person",
 			},

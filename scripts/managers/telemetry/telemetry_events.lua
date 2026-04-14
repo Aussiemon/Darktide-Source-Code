@@ -660,6 +660,21 @@ TelemetryEvents.chest_opened = function (self, player, chest_size, chest_coordin
 	self._manager:register_event(event)
 end
 
+TelemetryEvents.report_dsl_levels_completion_status = function (self, level_name, template_type, level_slot_id, section_index, started, completed, distances_to_key_points)
+	local event = self:_create_event("expedition_dsl_levels_completion_status")
+
+	event:set_data({
+		section_index = section_index,
+		level_name = level_name,
+		template_type = template_type,
+		level_slot_id = level_slot_id,
+		started = started,
+		completed = completed,
+		distances_to_key_points = distances_to_key_points,
+	})
+	self._manager:register_event(event)
+end
+
 TelemetryEvents.expedition_exited_location_index = function (self, player, index, gameplay_time, time_remaining, total_loot, player_loot, player_currency, player_health)
 	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "expedition_exited_location_index", self:_session_from_player(player))
 

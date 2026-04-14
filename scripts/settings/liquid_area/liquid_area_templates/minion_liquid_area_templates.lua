@@ -70,6 +70,7 @@ local templates = {
 		spread_function = LiquidSpread.pour,
 	},
 	toxic_gas = {
+		bots_allowed_to_assist_within = true,
 		cell_size = 1,
 		disable_covers_within_radius = 3,
 		end_pressure = 30,
@@ -193,6 +194,7 @@ local templates = {
 	},
 	cultist_grenadier_gas = {
 		additional_unit_vfx = "content/fx/particles/enemies/cultist_blight_grenadier/cultist_gas_grenade_detonation",
+		bots_allowed_to_assist_within = true,
 		cell_size = 1.5,
 		end_pressure = 30,
 		forbidden_keyword = "in_toxic_gas",

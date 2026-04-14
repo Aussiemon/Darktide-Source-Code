@@ -159,6 +159,23 @@ LiquidAreaSystem.paint = function (self, liquid_paint_id, max_liquid_paint_dista
 	return closest_liquid_unit
 end
 
+LiquidAreaSystem.is_bots_allowed_to_assist_at_position = function (self, position)
+	for _, extension in pairs(self._unit_to_extension_map) do
+		local result = extension:is_position_inside(position)
+
+		if result then
+			local template_name = extension:area_template_name()
+			local template = LiquidAreaTemplates[template_name]
+
+			if not template.bots_allowed_to_assist_within then
+				return false
+			end
+		end
+	end
+
+	return true
+end
+
 LiquidAreaSystem.is_position_in_liquid = function (self, position)
 	local result = false
 

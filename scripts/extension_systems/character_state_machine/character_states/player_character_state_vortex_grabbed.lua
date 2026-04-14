@@ -240,7 +240,9 @@ PlayerCharacterStateVortexGrabbed._update_collision = function (self, t, player_
 
 		self._resume_spinning_t = t + SPIN_PAUSE_TIME
 
-		self:_deal_slam_damage(player_unit, player_velocity_normalized, vortex_template)
+		if vortex_template.deal_wall_slam_damage then
+			self:_deal_slam_damage(player_unit, player_velocity_normalized, vortex_template)
+		end
 	end
 
 	return colliding

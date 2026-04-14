@@ -930,6 +930,10 @@ PlayerUnitFxExtension.sound_source = function (self, source_name, optional_attac
 	return sound_source
 end
 
+PlayerUnitFxExtension.has_sound_source = function (self, source_name)
+	return self._sources[source_name] ~= nil
+end
+
 PlayerUnitFxExtension.vfx_spawner = function (self, spawner_name, optional_attachment_name)
 	local vfx_spawner = self._vfx_spawners[spawner_name]
 	local reference_attachment_name = optional_attachment_name or VisualLoadoutExtractData.ROOT_ATTACH_NAME

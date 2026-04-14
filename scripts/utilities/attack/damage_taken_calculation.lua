@@ -104,6 +104,7 @@ DamageTakenCalculation.calculate_attack_result = function (damage_amount, damage
 	end
 
 	attack_result = attack_result or attack_results.damaged
+	remaining_damage = math.min(remaining_damage, NetworkConstants.health_large.max)
 
 	return attack_result, remaining_damage, remaining_permanent_damage, toughness_damage, damage_absorbed
 end

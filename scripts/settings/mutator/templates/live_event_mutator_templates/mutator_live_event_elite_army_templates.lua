@@ -71,7 +71,7 @@ local mutator_templates = {
 	mutator_live_event_increase_terror_event_points = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		init_modify_pacing = {
-			terror_event_point_multiplier = 3,
+			terror_event_point_multiplier = 1,
 		},
 	},
 }

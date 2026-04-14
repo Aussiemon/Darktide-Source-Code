@@ -348,7 +348,7 @@ MissionObjectiveSystem.end_mission_objective = function (self, objective_name, g
 		self:send_rpc_to_clients("rpc_end_mission_objective", objective_name_id, group_id)
 	end
 
-	Managers.event:trigger("event_remove_mission_objective", objective)
+	Managers.event:trigger("event_remove_mission_objective", objective, "completed")
 	objective:end_objective()
 	objective:delete()
 
@@ -395,7 +395,7 @@ MissionObjectiveSystem.reset_mission_objective = function (self, objective_name,
 			self:send_rpc_to_clients("rpc_reset_mission_objective", objective_name_id, group_id)
 		end
 
-		Managers.event:trigger("event_remove_mission_objective", objective)
+		Managers.event:trigger("event_remove_mission_objective", objective, "reset")
 		objective:end_objective()
 		objective:delete()
 

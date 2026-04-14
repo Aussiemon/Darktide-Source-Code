@@ -1132,6 +1132,7 @@ Items.unequip_slots = function (unequip_sots)
 	local player_manager = Managers.player
 	local player = player_manager:player(peer_id, local_player_id)
 	local character_id = player:character_id()
+	local ui_manager = Managers.ui
 
 	return Managers.data_service.profiles:unequip_slots(character_id, unequip_sots):next(function (v)
 		Log.debug("Items", "Unequipped loadout slots")
@@ -1141,12 +1142,6 @@ Items.unequip_slots = function (unequip_sots)
 
 			profile_synchronizer_host:profile_changed(peer_id, local_player_id)
 		elseif Managers.connection:is_client() then
-			local ui_manager = Managers.ui
-
-			if ui_manager then
-				ui_manager:update_client_loadout_waiting_state(true)
-			end
-
 			Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
 		end
 
@@ -1189,6 +1184,12 @@ Items.equip_slot_items = function (items)
 			end
 		end
 
+		local ui_manager = Managers.ui
+
+		if ui_manager then
+			ui_manager:update_client_loadout_waiting_state(true)
+		end
+
 		return Managers.data_service.profiles:equip_items_in_slots(character_id, item_gear_ids_by_slots, item_gear_names_by_slots):next(function (v)
 			Log.debug("Items", "Items equipped in loadout slots")
 
@@ -1197,12 +1198,6 @@ Items.equip_slot_items = function (items)
 
 				profile_synchronizer_host:profile_changed(peer_id, local_player_id)
 			elseif Managers.connection:is_client() then
-				local ui_manager = Managers.ui
-
-				if ui_manager then
-					ui_manager:update_client_loadout_waiting_state(true)
-				end
-
 				Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
 			end
 
@@ -1300,6 +1295,12 @@ Items.equip_slot_master_items = function (items)
 			end
 		end
 
+		local ui_manager = Managers.ui
+
+		if ui_manager then
+			ui_manager:update_client_loadout_waiting_state(true)
+		end
+
 		Managers.data_service.profiles:equip_master_items_in_slots(character_id, item_master_ids_by_slots):next(function (v)
 			Log.debug("Items", "Master items equipped in loadout slots")
 
@@ -1308,12 +1309,6 @@ Items.equip_slot_master_items = function (items)
 
 				profile_synchronizer_host:profile_changed(peer_id, local_player_id)
 			elseif Managers.connection:is_client() then
-				local ui_manager = Managers.ui
-
-				if ui_manager then
-					ui_manager:update_client_loadout_waiting_state(true)
-				end
-
 				Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
 			end
 
@@ -1349,6 +1344,12 @@ Items.equip_item_in_slot = function (slot_name, item)
 	local character_id = player:character_id()
 
 	if item then
+		local ui_manager = Managers.ui
+
+		if ui_manager then
+			ui_manager:update_client_loadout_waiting_state(true)
+		end
+
 		Managers.backend.interfaces.characters:equip_item_slot(character_id, slot_name, item.gear_id or item.name):next(function (v)
 			Log.debug("Items", "Equipped!")
 
@@ -1357,12 +1358,6 @@ Items.equip_item_in_slot = function (slot_name, item)
 
 				profile_synchronizer_host:profile_changed(peer_id, local_player_id)
 			elseif Managers.connection:is_client() then
-				local ui_manager = Managers.ui
-
-				if ui_manager then
-					ui_manager:update_client_loadout_waiting_state(true)
-				end
-
 				Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
 			end
 
@@ -1384,12 +1379,6 @@ Items.refresh_equipped_items = function ()
 
 		profile_synchronizer_host:profile_changed(peer_id, local_player_id)
 	elseif Managers.connection:is_client() then
-		local ui_manager = Managers.ui
-
-		if ui_manager then
-			ui_manager:update_client_loadout_waiting_state(true)
-		end
-
 		Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
 	end
 end

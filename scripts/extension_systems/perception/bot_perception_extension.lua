@@ -348,12 +348,16 @@ BotPerceptionExtension._select_ally_by_utility = function (self, self_unit, self
 
 		if player_unit ~= self_unit and HEALTH_ALIVE[player_unit] and self_segment_index <= player_segment_index then
 			local player, player_position = player_unit_spawn_manager:owner(player_unit), POSITION_LOOKUP[player_unit]
-			local is_bot = not player:is_human_controlled()
+			local is_human_controlled = not player:is_human_controlled()
+			local is_bot = not is_human_controlled
 			local priority_target = perception_component.priority_target_enemy
 			local in_need_type, look_at_ally, utility = self:_calculate_ally_need_type(self_position, self_health_utility, can_heal_other, can_give_healing_to_other, player_unit, player_position, target_enemy, is_bot, t, priority_target)
 			local is_position_in_liquid = liquid_area_system:is_position_in_liquid(player_position)
+			local is_liquid_area_system_allowing_bot_assistance = liquid_area_system:is_bots_allowed_to_assist_at_position(player_position)
+			local should_help_player_in_need = in_need_type and is_liquid_area_system_allowing_bot_assistance
+			local allowed_to_follow_player = is_human_controlled and not is_position_in_liquid
 
-			if (in_need_type or not is_bot) and not is_position_in_liquid then
+			if should_help_player_in_need or allowed_to_follow_player then
 				local allowed_follow_path, allowed_aid_path = self:_ally_path_allowed(self_position, self_segment_index, player_unit, player_position, player_segment_index, t)
 
 				if allowed_follow_path then
@@ -397,7 +401,7 @@ BotPerceptionExtension._select_ally_by_utility = function (self, self_unit, self
 						end
 					end
 
-					if in_need_type or not is_bot then
+					if in_need_type or is_human_controlled then
 						local real_distance = Vector3_distance(self_position, player_position)
 						local distance = real_distance - utility
 

@@ -261,7 +261,7 @@ end
 
 CharacterCreate.is_option_available = function (self, option)
 	local is_item = not not option.value and type(option.value) == "table" and (not not option.value.gear_id or option.value.always_owned ~= nil or not not ItemSourceSettings[option.value.source])
-	local start_data_table_path, home_planet_data_table, childhood_data_table, growing_up_data_table, formative_event_data_table
+	local start_data_table_path
 
 	if is_item then
 		start_data_table_path = option.value
@@ -277,8 +277,6 @@ CharacterCreate.is_option_available = function (self, option)
 		local growing_up = self:growing_up()
 		local formative_event = self:formative_event()
 		local source_settings = ItemSourceSettings[start_data_table_path.source]
-		local dlc_name = source_settings and source_settings.dlc_name
-		local owned_dlcs = self._owned_dlcs
 		local external_validation_tables = option.validation_tables
 		local validation_tables = {
 			{
@@ -307,17 +305,17 @@ CharacterCreate.is_option_available = function (self, option)
 			},
 		}
 
-		if dlc_name then
+		if source_settings then
 			table.insert(validation_tables, {
-				reason = "dlc",
+				reason = "source",
 				value = {
-					id = owned_dlcs,
+					id = start_data_table_path.source,
 				},
 				validations = {
-					dlc_name,
+					start_data_table_path.source,
 				},
 				validation_function = self._is_gear_owned,
-				options_data = self._dlc_options_data,
+				options_data = ItemSourceSettings,
 			})
 		end
 
@@ -1387,6 +1385,113 @@ local function _granted_item_to_gear(item)
 	gear.gear_id = nil
 
 	return gear_id, gear
+end
+
+CharacterCreate.filter_changed_items = function (self, real_profile)
+	local original_loadout = real_profile.loadout
+	local filtered_items = {}
+	local identical = true
+	local valid_backends_by_slot = self:valid_backends_by_slot()
+
+	for slot_name, valid_backends in pairs(valid_backends_by_slot) do
+		if not valid_backends[BACKEND_ENV] then
+			items[slot_name] = nil
+
+			if original_loadout[slot_name] then
+				identical = false
+			end
+		end
+	end
+
+	local items = self._profile.loadout
+
+	for slot, item in pairs(items) do
+		local original_item = original_loadout[slot]
+		local item_name = item.name
+		local original_item_name = original_item and original_item.name
+
+		if item_name ~= original_item_name then
+			filtered_items[slot] = item
+			identical = false
+		end
+	end
+
+	if not identical then
+		return filtered_items
+	end
+end
+
+CharacterCreate.has_modifications = function (self, real_profile, whitelist)
+	local use_height = false
+	local use_loadout = false
+	local use_voice = false
+	local use_backstory = false
+	local use_name = false
+
+	if whitelist then
+		for i = 1, #whitelist do
+			local whitelist_id = whitelist[i]
+
+			if whitelist_id == "loadout" then
+				use_loadout = true
+			elseif whitelist_id == "voice" then
+				use_voice = true
+			elseif whitelist_id == "backstory" then
+				use_backstory = true
+			elseif whitelist_id == "height" then
+				use_height = true
+			elseif whitelist_id == "name" then
+				use_name = true
+			end
+		end
+	else
+		use_height = true
+		use_loadout = true
+		use_voice = true
+		use_backstory = true
+		use_name = true
+	end
+
+	local transformed_voice = false
+	local transformed_name = false
+	local transformed_loadout = false
+	local transformed_height = false
+	local transformed_backstory = false
+
+	if use_voice then
+		local voice = self._profile.selected_voice
+		local real_voice = real_profile.selected_voice
+
+		transformed_voice = voice ~= real_voice
+	end
+
+	if use_name then
+		local name = self._profile.name
+		local real_name = real_profile.name
+
+		transformed_name = name ~= real_name
+	end
+
+	if use_height then
+		local height = self._character_height
+		local real_height = real_profile.personal.character_height
+
+		transformed_height = real_height < height - 0.001 or real_height > height + 0.001
+	end
+
+	if use_loadout then
+		transformed_loadout = not not self:filter_changed_items(real_profile)
+	end
+
+	if use_backstory then
+		local backstory = self._profile.lore.backstory
+		local real_backstory = real_profile.lore.backstory
+		local equal_backstory = table.equals(backstory, real_backstory)
+
+		transformed_backstory = not equal_backstory
+	end
+
+	return transformed_voice or transformed_name or transformed_loadout or transformed_height or transformed_backstory
 end
 
 CharacterCreate.transform = function (self, character_id, operation_cost)

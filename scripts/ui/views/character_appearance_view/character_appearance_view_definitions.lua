@@ -375,6 +375,15 @@ local widget_definitions = {
 			},
 		},
 	}, "screen"),
+	error_continue = UIWidget.create_definition({
+		{
+			pass_type = "text",
+			style_id = "text",
+			value = "",
+			value_id = "text",
+			style = CharacterAppearanceViewFontStyle.error_style,
+		},
+	}, "error_input"),
 	continue_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "continue_button", {
 		gamepad_action = "confirm_pressed",
 		original_text = Utf8.upper(Localize("loc_character_creator_continue")),
@@ -530,15 +539,6 @@ local widget_definitions = {
 		},
 	}, "choice_detail"),
 }
-local error_text_definitions = UIWidget.create_definition({
-	{
-		pass_type = "text",
-		style_id = "text",
-		value = "",
-		value_id = "text",
-		style = CharacterAppearanceViewFontStyle.error_style,
-	},
-}, "error_input")
 local legend_inputs = {
 	{
 		alignment = "left_alignment",
@@ -776,6 +776,5 @@ return {
 	legend_inputs = legend_inputs,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
-	error_text_definitions = error_text_definitions,
 	animations = animations,
 }
