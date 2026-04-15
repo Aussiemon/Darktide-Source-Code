@@ -30,6 +30,8 @@ ExpeditionLogicServer.init = function (self, network_event_delegate)
 	self._first_location_pacing_started = false
 	self._pacing_start_time = nil
 	self._telemetry_end_game_result = nil
+	self._telemetry_list_started_any_objective_by_level_index = {}
+	self._telemetry_list_completed_objectives_by_level_index = {}
 	self._transition_activator_units = {}
 	self._minion_despawn_queue = {}
 	self._blocked_start_time = nil
@@ -49,6 +51,8 @@ ExpeditionLogicServer.init = function (self, network_event_delegate)
 	event_manager:register(self, "expedition_register_transition_activator", "expedition_register_transition_activator")
 	event_manager:register(self, "expedition_unregister_transition_activator", "expedition_unregister_transition_activator")
 	event_manager:register(self, "expedition_transition_activator_started", "expedition_transition_activator_started")
+	event_manager:register(self, "event_mission_objective_start", "event_mission_objective_start")
+	event_manager:register(self, "expedition_mark_level_complete", "event_mark_level_complete")
 
 	self._dynamic_unit_spawning = {}
 	self._airstrike_bomb_spawning = {}
@@ -269,7 +273,7 @@ ExpeditionLogicServer.hot_join_sync = function (self, sender, channel)
 		if Unit.alive(unit) then
 			local is_level_unit, unit_id = Managers.state.unit_spawner:game_object_id_or_level_index(unit)
 
-			RPC.rpc_register_expedition_danger_zone(channel, unit_id, is_level_unit, danger_zone.position, danger_zone.proximity_distance)
+			RPC.rpc_register_expedition_danger_zone(channel, unit_id, is_level_unit, danger_zone.position:unbox(), danger_zone.proximity_distance)
 		end
 	end
 
@@ -421,6 +425,7 @@ ExpeditionLogicServer._server_update_safe_zone = function (self, force_update)
 					local existing_pickup_data = purchase_data_by_store_unit[store_unit]
 					local pickup_info = existing_pickup_data and existing_pickup_data.info
 					local has_charges_left = pickup_info and (not pickup_info.charges or pickup_info.charges ~= 0)
+					local num_charges_left = pickup_info and pickup_info.charges or -1
 
 					if not existing_pickup_data or not interaction_only and not Unit.alive(existing_pickup_data.pickup_unit) and has_charges_left then
 						if interaction_only then
@@ -429,7 +434,7 @@ ExpeditionLogicServer._server_update_safe_zone = function (self, force_update)
 							if success then
 								local store_unit_level_id = unit_spawner_manager:level_index(store_unit)
 
-								game_session_manager:send_rpc_clients("rpc_register_safe_zone_store_unit", safe_zone_section_index, store_unit_level_id)
+								game_session_manager:send_rpc_clients("rpc_register_safe_zone_store_unit", safe_zone_section_index, store_unit_level_id, num_charges_left)
 							end
 						else
 							local pickup_unit = not interaction_only and store_unit_pickup_extension:spawn_item()
@@ -439,7 +444,7 @@ ExpeditionLogicServer._server_update_safe_zone = function (self, force_update)
 								local pickup_spawner_level_id = unit_spawner_manager:level_index(store_unit)
 								local pickup_game_object_id = unit_spawner_manager:game_object_id(pickup_unit)
 
-								game_session_manager:send_rpc_clients("rpc_register_safe_zone_pickup_unit_by_pickup_spawner_unit", safe_zone_section_index, pickup_game_object_id, pickup_spawner_level_id)
+								game_session_manager:send_rpc_clients("rpc_register_safe_zone_pickup_unit_by_pickup_spawner_unit", safe_zone_section_index, pickup_game_object_id, pickup_spawner_level_id, num_charges_left)
 							end
 						end
 					end
@@ -464,6 +469,7 @@ ExpeditionLogicServer._server_update_safe_zone = function (self, force_update)
 				local existing_pickup_data = purchase_data_by_store_unit[store_unit]
 				local pickup_info = existing_pickup_data and existing_pickup_data.info
 				local has_charges_left = pickup_info and (not pickup_info.charges or pickup_info.charges ~= 0)
+				local num_charges_left = pickup_info and pickup_info.charges or -1
 
 				if not existing_pickup_data or not interaction_only and not Unit.alive(existing_pickup_data.pickup_unit) and has_charges_left then
 					local component_index
@@ -476,7 +482,7 @@ ExpeditionLogicServer._server_update_safe_zone = function (self, force_update)
 						if success then
 							local store_unit_level_id = unit_spawner_manager:level_index(store_unit)
 
-							game_session_manager:send_rpc_clients("rpc_register_safe_zone_store_unit", safe_zone_section_index, store_unit_level_id)
+							game_session_manager:send_rpc_clients("rpc_register_safe_zone_store_unit", safe_zone_section_index, store_unit_level_id, num_charges_left)
 						end
 					else
 						local pickup_unit = store_unit_pickup_extension:spawn_specific_item(component_index, pickup_name, check_reserve)
@@ -486,7 +492,7 @@ ExpeditionLogicServer._server_update_safe_zone = function (self, force_update)
 							local pickup_spawner_level_id = unit_spawner_manager:level_index(store_unit)
 							local pickup_game_object_id = unit_spawner_manager:game_object_id(pickup_unit)
 
-							game_session_manager:send_rpc_clients("rpc_register_safe_zone_pickup_unit_by_pickup_spawner_unit", safe_zone_section_index, pickup_game_object_id, pickup_spawner_level_id)
+							game_session_manager:send_rpc_clients("rpc_register_safe_zone_pickup_unit_by_pickup_spawner_unit", safe_zone_section_index, pickup_game_object_id, pickup_spawner_level_id, num_charges_left)
 						end
 					end
 				end
@@ -539,16 +545,18 @@ ExpeditionLogicServer._server_hot_join_sync_active_safe_zone = function (self, c
 
 		for store_unit, pickup_data in pairs(purchase_data_by_store_unit) do
 			local pickup_unit = pickup_data.pickup_unit
+			local pickup_info = pickup_data.info
+			local num_charges_left = pickup_info and pickup_info.charges or -1
 
 			if pickup_unit then
 				local pickup_spawner_level_id = unit_spawner_manager:level_index(store_unit)
 				local pickup_game_object_id = unit_spawner_manager:game_object_id(pickup_unit)
 
-				RPC.rpc_register_safe_zone_pickup_unit_by_pickup_spawner_unit(channel_id, safe_zone_section_index, pickup_game_object_id, pickup_spawner_level_id)
+				RPC.rpc_register_safe_zone_pickup_unit_by_pickup_spawner_unit(channel_id, safe_zone_section_index, pickup_game_object_id, pickup_spawner_level_id, num_charges_left)
 			else
 				local store_unit_level_id = unit_spawner_manager:level_index(store_unit)
 
-				RPC.rpc_register_safe_zone_store_unit(channel_id, safe_zone_section_index, store_unit_level_id)
+				RPC.rpc_register_safe_zone_store_unit(channel_id, safe_zone_section_index, store_unit_level_id, num_charges_left)
 			end
 		end
 	end
@@ -1130,6 +1138,8 @@ local function _player_health_percentage(player)
 end
 
 ExpeditionLogicServer.send_gamemode_finished_telemetry = function (self, result, reason)
+	self:_send_telemetry_report_for_dsl_levels_completion_status()
+
 	local end_reason = reason or result == "won" and "victory_default" or "loss_default"
 	local loot_handler = self._loot_handler
 	local location_index = self._current_section_index
@@ -1388,10 +1398,13 @@ ExpeditionLogicServer.destroy = function (self)
 	event_manager:unregister(self, "event_unregister_danger_zone")
 	event_manager:unregister(self, "expedition_register_transition_activator")
 	event_manager:unregister(self, "expedition_unregister_transition_activator")
+	event_manager:unregister(self, "expedition_transition_activator_started")
 	event_manager:unregister(self, "event_players_left_arrival_level")
 	event_manager:unregister(self, "event_start_location_safe_zone_door_defence_sequence")
 	event_manager:unregister(self, "event_end_location_safe_zone_door_defence_sequence")
 	event_manager:unregister(self, "event_expedition_validate_game_mode_completion")
+	event_manager:unregister(self, "event_mission_objective_start")
+	event_manager:unregister(self, "expedition_mark_level_complete")
 
 	local server_rpcs = ExpeditionLogicSettings.server_rpcs
 
@@ -1641,8 +1654,12 @@ ExpeditionLogicServer._trigger_airstrike_spawn = function (self, airstrike_type,
 end
 
 ExpeditionLogicServer._on_airstrike_drop_bomb = function (self, spawn_data)
-	local position = spawn_data.boxed_position:unbox() + Vector3(0, 0, -5)
 	local forward_rotation = Quaternion.flat_no_roll(spawn_data.boxed_rotation:unbox())
+	local fwd = Quaternion.forward(forward_rotation)
+	local right = Quaternion.right(forward_rotation)
+	local up = Quaternion.up(forward_rotation)
+	local offset = fwd * 2.75 + right * 0 + up * -0.15
+	local position = spawn_data.boxed_position:unbox() + offset
 	local projectile_units = {}
 	local units = {}
 	local direction = Vector3.down()
@@ -1885,6 +1902,109 @@ ExpeditionLogicServer.event_expedition_validate_game_mode_completion = function 
 		Managers.state.game_mode:complete_game_mode("extracted")
 	else
 		Managers.state.game_mode:fail_game_mode("extraction_timeout")
+	end
+end
+
+ExpeditionLogicServer.event_mission_objective_start = function (self, objective)
+	local group_id = objective:group_id()
+	local objectives_handler = self._objectives_handler
+
+	if objective:use_hud() then
+		local level_data = objectives_handler:level_data_by_level_id(group_id)
+
+		if level_data then
+			local level = level_data.level
+			local level_index = Managers.state.unit_spawner:index_by_level(level)
+
+			self._telemetry_list_started_any_objective_by_level_index[level_index] = level_data
+		end
+	end
+end
+
+ExpeditionLogicServer.event_mark_level_complete = function (self, level_index)
+	local level_data = self._telemetry_list_started_any_objective_by_level_index[level_index]
+
+	self._telemetry_list_completed_objectives_by_level_index[level_index] = level_data
+end
+
+ExpeditionLogicServer.get_telemetry_status_by_level_data = function (self, level_data)
+	local level_id = level_data.level_id
+	local started = self._telemetry_list_started_any_objective_by_level_index[level_id] ~= nil
+	local completed = started and self._telemetry_list_completed_objectives_by_level_index[level_id] ~= nil
+
+	return started, completed
+end
+
+ExpeditionLogicServer._send_telemetry_report_for_dsl_levels_completion_status = function (self)
+	local send_telemetry_data_by_template_type = {
+		"opportunity_level",
+		"connector_exit_level",
+		"main_objective_level",
+	}
+
+	local function validate_level_data(level_data)
+		local template_type = level_data.template_type
+
+		return table.find(send_telemetry_data_by_template_type, template_type)
+	end
+
+	local template_type_key_points = {
+		"arrival_level",
+		"extraction_level",
+		"connector_entrance_level",
+		"connector_exit_level",
+	}
+	local current_section_index = self._current_section_index
+	local expedition = self._expedition
+
+	for section_index = 1, current_section_index do
+		local next_section = expedition[section_index]
+		local levels_data = next_section.levels_data
+		local key_positions_by_template_type = {}
+
+		for j = 1, #template_type_key_points do
+			local key_point_template_type = template_type_key_points[j]
+
+			for k = 1, #levels_data do
+				local level_data = levels_data[k]
+				local template_type = level_data.template_type
+
+				if template_type == key_point_template_type then
+					local boxed_position = level_data.position
+					local position = boxed_position:unbox()
+					local flattened_position = Vector3(position.x, position.y, 0)
+
+					key_positions_by_template_type[template_type] = flattened_position
+
+					break
+				end
+			end
+		end
+
+		for j = 1, #levels_data do
+			local level_data = levels_data[j]
+			local is_valid = validate_level_data(level_data)
+
+			if is_valid then
+				local level_name = level_data.level_name
+				local started, completed = self:get_telemetry_status_by_level_data(level_data)
+				local custom_data = level_data.custom_data
+				local level_slot_id = custom_data.level_slot_id
+				local template_type = level_data.template_type
+				local boxed_position = level_data.position
+				local position = boxed_position:unbox()
+				local flattened_level_position = Vector3(position.x, position.y, 0)
+				local distances_to_key_points = {}
+
+				for key_point_template_type, key_point_position in pairs(key_positions_by_template_type) do
+					local distance = math.round_with_precision(Vector3.distance(flattened_level_position, key_point_position), 0)
+
+					distances_to_key_points[key_point_template_type] = distance
+				end
+
+				Managers.telemetry_events:report_dsl_levels_completion_status(level_name, template_type, level_slot_id, section_index, started, completed, distances_to_key_points)
+			end
+		end
 	end
 end
 

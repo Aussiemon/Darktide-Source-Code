@@ -106,6 +106,14 @@ weapon_template.action_input_hierarchy = {
 				input = "throw",
 				transition = "stay",
 			},
+			{
+				input = "combat_ability",
+				transition = "base",
+			},
+			{
+				input = "grenade_ability",
+				transition = "base",
+			},
 		},
 	},
 	{
@@ -284,6 +292,10 @@ weapon_template.actions = {
 			aim_cancel_push = {
 				action_name = "action_push",
 			},
+			combat_ability = {
+				action_name = "combat_ability",
+			},
+			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 		},
 		action_movement_curve = {
 			{
@@ -315,6 +327,9 @@ weapon_template.actions = {
 		},
 	},
 }
+
+table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
+
 weapon_template.keywords = {
 	"luggable",
 }

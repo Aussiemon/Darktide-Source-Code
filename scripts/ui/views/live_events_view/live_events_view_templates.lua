@@ -138,6 +138,55 @@ local RewardTemplates = {
 				widget.content.tier_xp = tier.target
 			end,
 		},
+		item_local = {
+			widget_template = UIWidget.create_definition({
+				{
+					pass_type = "texture",
+					style_id = "frame",
+					value = "content/ui/materials/frames/frame_tile_2px",
+					value_id = "frame",
+					style = Styles.reward.frame,
+					change_function = _reward_elements_change_function,
+				},
+				{
+					pass_type = "texture",
+					style_id = "frameframe_corner",
+					value = "content/ui/materials/frames/frame_corner_2px",
+					value_id = "frame_corner",
+					style = Styles.reward.frame_corner,
+					change_function = _reward_elements_change_function,
+				},
+				{
+					pass_type = "texture",
+					style_id = "background",
+					value = "content/ui/materials/backgrounds/terminal_basic",
+					value_id = "background",
+					style = Styles.reward.background,
+				},
+				{
+					content_id = "hotspot",
+					pass_type = "hotspot",
+					style_id = "hotspot",
+					style = Styles.reward.hotspot,
+				},
+				{
+					pass_type = "texture",
+					style_id = "icon",
+					value = "content/ui/materials/icons/items/containers/item_container_landscape",
+					value_id = "icon",
+					style = Styles.reward.icon,
+				},
+			}, "rewards_box"),
+			init = function (parent, widget, item_id)
+				local item = MasterItems.get_item(item_id)
+
+				parent:_request_item_icon(widget, item, parent._ui_renderer)
+
+				widget.content.item = item
+				widget.content.reward = nil
+				widget.content.tier_xp = nil
+			end,
+		},
 	},
 }
 local EntryBodyTemplates = {
@@ -269,7 +318,7 @@ local EntryBodyTemplates = {
 			end
 
 			content.rewards_track_text = entry_data and Localize("loc_mission_voting_view_salary") .. ":" or ""
-			style.rewards_track_text.visible = not not event
+			style.rewards_track_text.visible = not not event or event_data and event_data.item_rewards
 			style.rewards_track_text.offset[2] = height
 			height = height + 20
 			widget.visible = true
@@ -412,11 +461,35 @@ Templates.default = {
 					end
 				end
 			end
+		elseif event_data and event_data.item_rewards then
+			local item_rewards = event_data.item_rewards
+			local rewards_box_width = parent._ui_scenegraph.rewards_box.size[1]
+			local reward_start_x = rewards_box_width * 0.5 - Styles.sizes.reward_size[1] * 0.5
+			local num_rewards = #item_rewards
 
-			entry_reward_widgets.rewards = reward_widgets
-			entry_reward_widgets.lines = line_widgets
-			entry_widgets.rewards = entry_reward_widgets
+			for reward_index, reward in pairs(item_rewards) do
+				local reward_template = rewards_template.item_local
+
+				if reward_template then
+					local reward_widget
+					local widget_definition = reward_template.item_local and reward_template.item_local.widget_template
+
+					reward_widget = UIWidget.init("reward_item_" .. reward_index, reward_template.widget_template)
+
+					reward_template.init(parent, reward_widget, reward, {})
+
+					reward_widgets[#reward_widgets + 1] = reward_widget
+					reward_widget.offset[1] = reward_start_x + (reward_index - 1) * (Styles.sizes.reward_size[1] + 40)
+					reward_widget.offset[2] = Styles.sizes.reward_size[2]
+				end
+			end
+
+			total_height = total_height + Styles.sizes.reward_size[2] + 80
 		end
+
+		entry_reward_widgets.rewards = reward_widgets
+		entry_reward_widgets.lines = line_widgets
+		entry_widgets.rewards = entry_reward_widgets
 
 		if should_increase_size then
 			total_height = total_height + Styles.sizes.reward_size[2] + 10

@@ -164,9 +164,10 @@ for archetype_name, overrides in pairs(choices_presentation_archetype_overrides)
 end
 
 local restriction_datas = {
-	dlc = {
+	source = {
 		icon_texture = "content/ui/textures/icons/generic/placeholder_childhood",
-		title = "loc_term_glossary_dlc",
+		title = "loc_item_source_obtained_title",
+		uses_source = true,
 	},
 	class = {
 		icon_texture = "content/ui/textures/icons/generic/placeholder_childhood",
@@ -462,8 +463,6 @@ CharacterAppearanceView.on_enter = function (self)
 
 		self._original_name = player:name()
 		self._original_companion_name = player:companion_name()
-		self._original_loadout = table.clone_instance(profile.loadout)
-		self._original_height = profile.personal and profile.personal.character_height
 		self._fetch_all_profiles_promise = Managers.data_service.profiles:fetch_all_profiles():next(function (data)
 			self._character_create = CharacterCreate:new(item_definitions, data.gear, profile)
 
@@ -1166,23 +1165,14 @@ CharacterAppearanceView._get_pages = function (self)
 				local loadout = profile and profile.loadout
 
 				if loadout then
-					local items = {
-						slot_body_face = loadout.slot_body_face,
-						slot_body_face_tattoo = loadout.slot_body_face_tattoo,
-						slot_body_face_scar = loadout.slot_body_face_scar,
-						slot_body_face_hair = loadout.slot_body_face_hair,
-						slot_body_face_makeup = loadout.slot_body_face_makeup,
-						slot_body_hair = loadout.slot_body_hair,
-						slot_body_tattoo = loadout.slot_body_tattoo,
-						slot_body_hair_color = loadout.slot_body_hair_color,
-						slot_body_face_hair_color = loadout.slot_body_face_hair_color,
-						slot_body_skin_color = loadout.slot_body_skin_color,
-						slot_body_eye_color = loadout.slot_body_eye_color,
-					}
-					local slots_modified = self:_filter_changed_items(items)
-					local height_modified = self._original_height and (self._original_height < self._character_create:height() - 0.001 or self._original_height > self._character_create:height() + 0.001)
+					local player = Managers.player:local_player(1)
+					local real_profile = player:profile()
+					local has_modifications = self._character_create:has_modifications(real_profile, {
+						"loadout",
+						"height",
+					})
 
-					is_disabled = not slots_modified and not height_modified
+					is_disabled = not has_modifications
 				end
 
 				self:_update_continue_button("slot_modifications", is_disabled)
@@ -1425,22 +1415,21 @@ CharacterAppearanceView._get_pages = function (self)
 		},
 		show_companion = archetype == "adamant" and not self._is_barber_mindwipe,
 		update = function ()
-			if self._is_barber_appearance then
-				local no_modifications = true
+			if self._is_barber_companion_appearance then
+				local has_modifications = true
 				local profile = self._character_create and self._character_create:profile()
 				local loadout = profile and profile.loadout
 
 				if loadout then
-					local items = {
-						slot_companion_body_skin_color = loadout.slot_companion_body_skin_color,
-						slot_companion_body_fur_color = loadout.slot_companion_body_fur_color,
-						slot_companion_body_coat_pattern = loadout.slot_companion_body_coat_pattern,
-					}
+					local player = Managers.player:local_player(1)
+					local real_profile = player:profile()
 
-					no_modifications = not self:_filter_changed_items(items)
+					has_modifications = self._character_create:has_modifications(real_profile, {
+						"loadout",
+					})
 				end
 
-				self:_update_continue_button("slot_modifications", no_modifications)
+				self:_update_continue_button("slot_modifications", not has_modifications)
 			end
 		end,
 	}
@@ -1729,8 +1718,14 @@ CharacterAppearanceView._get_pages = function (self)
 			local input_widget = support_widgets and support_widgets.name_input
 			local name = input_widget and input_widget.content.input_text
 
-			if input_widget and name then
-				self:_check_input_errors(input_widget, name)
+			if name then
+				local error_message = input_widget.content.error_message
+
+				self:_check_input_errors(name, error_message)
+			end
+
+			if self._is_barber_mindwipe then
+				self:_check_mindwipe_changes(true)
 			end
 		end,
 		on_leave = function (page, next_page)
@@ -1768,12 +1763,10 @@ CharacterAppearanceView._get_pages = function (self)
 
 				if data.permitted == false then
 					local support_widgets = self._page_grids and self._page_grids[1] and self._page_grids[1].support_widgets_by_name
-					local error_widget = support_widgets and support_widgets.error
 					local input_widget = support_widgets and support_widgets.name_input
+					local error_message = input_widget and input_widget.content.error_message
 
-					if error_widget then
-						error_widget.content.text = input_widget and input_widget.content.error_message or ""
-					end
+					self:_update_continue_button("input_error", true, error_message)
 
 					return false
 				end
@@ -1815,8 +1808,10 @@ CharacterAppearanceView._get_pages = function (self)
 			local input_widget = support_widgets and support_widgets.companion_name_input
 			local name = input_widget and input_widget.content.input_text
 
-			if input_widget and name then
-				self:_check_input_errors(input_widget, name)
+			if input_widget then
+				local error_message = input_widget.content.error_message
+
+				self:_check_input_errors(name, error_message)
 			end
 		end,
 		update = function ()
@@ -1850,12 +1845,10 @@ CharacterAppearanceView._get_pages = function (self)
 
 				if data.permitted == false then
 					local support_widgets = self._page_grids and self._page_grids[1] and self._page_grids[1].support_widgets_by_name
-					local error_widget = support_widgets and support_widgets.error
 					local input_widget = support_widgets and support_widgets.companion_name_input
+					local error_message = input_widget and input_widget.content.error_message
 
-					if error_widget then
-						error_widget.content.text = input_widget and input_widget.content.error_message or ""
-					end
+					self:_update_continue_button("input_error", true, error_message)
 
 					return false
 				end
@@ -2645,34 +2638,18 @@ CharacterAppearanceView._show_final_popup = function (self)
 							local loadout = profile and profile.loadout
 
 							if loadout then
-								local items = {
-									slot_body_face = loadout.slot_body_face,
-									slot_body_face_tattoo = loadout.slot_body_face_tattoo,
-									slot_body_face_scar = loadout.slot_body_face_scar,
-									slot_body_face_hair = loadout.slot_body_face_hair,
-									slot_body_face_makeup = loadout.slot_body_face_makeup,
-									slot_body_hair = loadout.slot_body_hair,
-									slot_body_tattoo = loadout.slot_body_tattoo,
-									slot_body_hair_color = loadout.slot_body_hair_color,
-									slot_body_face_hair_color = loadout.slot_body_face_hair_color,
-									slot_body_skin_color = loadout.slot_body_skin_color,
-									slot_body_eye_color = loadout.slot_body_eye_color,
-									slot_companion_body_coat_pattern = loadout.slot_companion_body_coat_pattern,
-									slot_companion_body_fur_color = loadout.slot_companion_body_fur_color,
-									slot_companion_body_skin_color = loadout.slot_companion_body_skin_color,
-								}
-								local changed_items = self:_filter_changed_items(items)
+								local changed_items = self._character_create:filter_changed_items(real_profile)
 
 								if changed_items then
 									Items.equip_slot_master_items(changed_items)
 								end
 
-								local player = Managers.player:local_player(1)
-								local real_profile = player:profile()
 								local real_unit = player.player_unit
 								local character_id = real_profile.character_id
 
-								if height ~= self._original_height then
+								if self._character_create:has_modifications(real_profile, {
+									"height",
+								}) then
 									Managers.data_service.profiles:set_character_height(character_id, height)
 
 									real_profile.personal.character_height = height
@@ -3263,13 +3240,56 @@ CharacterAppearanceView.update = function (self, dt, t, input_service)
 	return CharacterAppearanceView.super.update(self, dt, t, input_service)
 end
 
-CharacterAppearanceView._update_continue_button = function (self, check_id, disabled)
+CharacterAppearanceView._update_continue_button = function (self, check_id, disabled, optional_error_message)
 	local widget = self._widgets_by_name.continue_button
+	local text_if_disabled_or_nil
+	local active_error_id = widget.content.active_error_id
+	local previous_active_error_id = active_error_id
 
-	widget.content.disabled_by = widget.content.disabled_by or {}
-	widget.content.disabled_by[check_id] = disabled or nil
+	if active_error_id and not disabled and check_id == active_error_id then
+		active_error_id = nil
+	end
 
-	local is_continue_disabled = not table.is_empty(widget.content.disabled_by)
+	if disabled then
+		text_if_disabled_or_nil = ""
+
+		local error_message = ""
+
+		active_error_id = active_error_id or check_id
+
+		if not optional_error_message then
+			if check_id == "mindwipe_no_changes" then
+				error_message = Localize("loc_barber_vendor_view_required_change")
+			end
+		else
+			error_message = optional_error_message
+		end
+
+		text_if_disabled_or_nil = error_message
+	end
+
+	widget.content.disabled_by_id = widget.content.disabled_by_id or {}
+	widget.content.disabled_by_id[check_id] = text_if_disabled_or_nil
+
+	if not active_error_id then
+		for error_id, error_message in pairs(widget.content.disabled_by_id) do
+			active_error_id = active_error_id or error_id
+
+			if error_message ~= "" then
+				text_if_disabled_or_nil = error_message
+				active_error_id = error_id
+
+				break
+			end
+		end
+	end
+
+	if previous_active_error_id ~= active_error_id then
+		widget.content.active_error_id = active_error_id
+		self._widgets_by_name.error_continue.content.text = active_error_id and widget.content.disabled_by_id and widget.content.disabled_by_id[active_error_id] or ""
+	end
+
+	local is_continue_disabled = widget.content.disabled_by_id and not table.is_empty(widget.content.disabled_by_id)
 	local continue_button_action_display_name, continue_button_text
 
 	continue_button_action_display_name = self._backstory_selection_page and "loc_character_backstory_selection" or self._active_page_number == #self._pages and (self._is_barber and "loc_button_barber_confirm" or "loc_character_create_finish") or "loc_character_create_advance"
@@ -3279,7 +3299,9 @@ CharacterAppearanceView._update_continue_button = function (self, check_id, disa
 end
 
 CharacterAppearanceView._clear_continue_disable_data = function (self)
-	self._widgets_by_name.continue_button.content.disabled_by = nil
+	self._widgets_by_name.continue_button.content.disabled_by_id = nil
+	self._widgets_by_name.continue_button.content.active_error_id = nil
+	self._widgets_by_name.error_continue.content.text = ""
 end
 
 CharacterAppearanceView._toggle_continue_alternative_action = function (self, use_alternative)
@@ -4897,38 +4919,6 @@ end
 CharacterAppearanceView._set_character_height = function (self, scale_factor)
 	self._profile_spawner:set_character_scale(scale_factor)
 	self._character_create:set_height(scale_factor)
-end
-
-CharacterAppearanceView._filter_changed_items = function (self, items)
-	local original_loadout = self._original_loadout
-	local filtered_items = {}
-	local identical = true
-	local valid_backends_by_slot = self._character_create:valid_backends_by_slot()
-
-	for slot_name, valid_backends in pairs(valid_backends_by_slot) do
-		if not valid_backends[BACKEND_ENV] then
-			items[slot_name] = nil
-
-			if original_loadout[slot_name] then
-				identical = false
-			end
-		end
-	end
-
-	for slot, item in pairs(items) do
-		local original_item = original_loadout[slot]
-		local item_name = item.name
-		local original_item_name = original_item and original_item.name
-
-		if item_name ~= original_item_name then
-			filtered_items[slot] = item
-			identical = false
-		end
-	end
-
-	if not identical then
-		return filtered_items
-	end
 end
 
 CharacterAppearanceView._get_appearance_options = function (self)
@@ -7361,17 +7351,6 @@ CharacterAppearanceView._generate_final_page_widgets = function (self, grid_inde
 				},
 			},
 		}, grid_area_scenegraph, nil, background_size),
-		error = UIWidget.create_definition({
-			{
-				pass_type = "text",
-				style_id = "text",
-				value = "",
-				value_id = "text",
-				style = CharacterAppearanceViewFontStyle.error_style,
-			},
-		}, "error_input", nil, {
-			374,
-		}),
 	}
 
 	for name, definition in pairs(support_widget_definitions) do
@@ -7445,11 +7424,7 @@ CharacterAppearanceView._randomize_character_name = function (self, input_widget
 		input_widget.content.input_text = name
 	end
 
-	local error_widget = self._page_grids and self._page_grids[1] and self._page_grids[1].support_widgets_by_name and self._page_grids[1].support_widgets_by_name.error
-
-	if error_widget then
-		self:_check_input_errors(error_widget, name)
-	end
+	self:_check_input_errors(name)
 end
 
 CharacterAppearanceView._randomize_companion_name = function (self, input_widget)
@@ -7465,11 +7440,7 @@ CharacterAppearanceView._randomize_companion_name = function (self, input_widget
 		input_widget.content.input_text = name
 	end
 
-	local error_widget = self._page_grids and self._page_grids[1] and self._page_grids[1].support_widgets_by_name and self._page_grids[1].support_widgets_by_name.error
-
-	if error_widget then
-		self:_check_input_errors(error_widget, name)
-	end
+	self:_check_input_errors(name)
 end
 
 CharacterAppearanceView._set_camera = function (self, camera_focus, no_height_compensation, time)
@@ -7572,6 +7543,25 @@ CharacterAppearanceView._check_widget_choice_detail_visibility = function (self,
 			self._widgets_by_name.choice_detail.content.text = Localize("loc_character_create_unique_reason", true, {
 				reason = reason_display_name,
 			})
+		elseif choice_info.uses_source then
+			local item = widget.content.option.value
+
+			if item and item.item_group then
+				for key, value in pairs(item) do
+					if string.find(key, "slot_") then
+						item = value
+
+						break
+					end
+				end
+			end
+
+			local title, description = Items.obtained_display_name(item)
+
+			self._widgets_by_name.choice_detail.content.text = Localize("loc_character_create_choice_reason", true, {
+				description = description or "",
+				choice = title,
+			})
 		elseif reason_display_name then
 			self._widgets_by_name.choice_detail.content.text = Localize("loc_character_create_choice_reason", true, {
 				description = Localize(choice_info.title),
@@ -7628,7 +7618,7 @@ CharacterAppearanceView._fetch_suggested_names = function (self)
 	end
 end
 
-CharacterAppearanceView._check_input_errors = function (self, widget, name)
+CharacterAppearanceView._check_input_errors = function (self, name, optional_error_message)
 	local input_error = true
 	local string_empty = name and #name < 3
 
@@ -7638,13 +7628,7 @@ CharacterAppearanceView._check_input_errors = function (self, widget, name)
 
 	input_error = string_empty
 
-	self:_update_continue_button("input_error", input_error)
-
-	local error_widget = self._page_grids and self._page_grids[1] and self._page_grids[1].support_widgets_by_name and self._page_grids[1].support_widgets_by_name.error
-
-	if error_widget then
-		error_widget.content.text = input_error and widget.content.error_message or ""
-	end
+	self:_update_continue_button("input_error", input_error, optional_error_message)
 end
 
 CharacterAppearanceView._update_character_custom_name = function (self, widget, name)
@@ -7654,8 +7638,14 @@ CharacterAppearanceView._update_character_custom_name = function (self, widget, 
 end
 
 CharacterAppearanceView._update_character_name = function (self, widget, name)
-	self:_check_input_errors(widget, name)
+	local error_message = widget.content.error_message
+
+	self:_check_input_errors(name, error_message)
 	self._character_create:set_name(name)
+
+	if self._is_barber_mindwipe then
+		self:_check_mindwipe_changes()
+	end
 end
 
 CharacterAppearanceView._update_companion_custom_name = function (self, widget, name)
@@ -7665,8 +7655,32 @@ CharacterAppearanceView._update_companion_custom_name = function (self, widget, 
 end
 
 CharacterAppearanceView._update_companion_name = function (self, widget, name)
-	self:_check_input_errors(widget, name)
+	local error_message = widget.content.error_message
+
+	self:_check_input_errors(name, error_message)
 	self._character_create:set_companion_name(name)
+end
+
+CharacterAppearanceView._check_mindwipe_changes = function (self, check_all_changes)
+	local player = Managers.player:local_player(1)
+	local real_profile = player:profile()
+	local has_modifications
+
+	if check_all_changes then
+		has_modifications = self._character_create:has_modifications(real_profile, {
+			"loadout",
+			"voice",
+			"backstory",
+			"height",
+			"name",
+		})
+	else
+		has_modifications = self._character_create:has_modifications(real_profile, {
+			"name",
+		})
+	end
+
+	self:_update_continue_button("mindwipe_no_changes", not has_modifications)
 end
 
 CharacterAppearanceView._stop_name_input = function (self, input_widget)

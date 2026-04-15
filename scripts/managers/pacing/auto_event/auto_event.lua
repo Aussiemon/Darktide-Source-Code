@@ -430,7 +430,7 @@ end
 
 local FORCE_SKIP_CURRENT_WAVE_TIMING = 35
 local MINIUM_AMOUNT_OF_ENEMIES_REQUIRED = 10
-local DEFAULT_TOTAL_MINIONS_ALLOWED_HARDLIMIT = 150
+local DEFAULT_TOTAL_MINIONS_ALLOWED_HARDLIMIT = 145
 local DEFAULT_TOTAL_MINIONS_ALLOWED_BEFORE_CUTOFF = 115
 local PAUSE_TRICKLE_TIME = 5
 
@@ -438,7 +438,6 @@ AutoEvent.update = function (self, dt, t)
 	self:_check_num_events()
 
 	local total_minions_spawned_stop_threshold = DEFAULT_TOTAL_MINIONS_ALLOWED_HARDLIMIT
-	local total_minions_spawned = Managers.state.minion_spawn:num_spawned_minions()
 	local active_events = self._active_events
 
 	for uuid, data in pairs(active_events) do
@@ -467,6 +466,8 @@ AutoEvent.update = function (self, dt, t)
 
 			self._fx_system:trigger_wwise_event(pre_stinger, nil, nil, nil, nil, nil, optional_ambisonics)
 		end
+
+		local total_minions_spawned = Managers.state.minion_spawn:total_allocated_num_enemies()
 
 		if total_minions_spawned_stop_threshold <= total_minions_spawned then
 			if t > data.wave_cooldown then
@@ -645,10 +646,16 @@ AutoEvent._compose_spawn_list = function (self, event_data)
 	local total_minions_allowed_before_reduction = DEFAULT_TOTAL_MINIONS_ALLOWED_BEFORE_CUTOFF
 	local points_base = template.points_base
 	local resistance_multiplier = template.resistance_multiplier
-	local point_pool
+	local point_pool, num_active_events
+
+	if self._num_active_events > 0 then
+		num_active_events = self._num_active_events
+	else
+		num_active_events = 1
+	end
 
 	if total_minions_allowed_before_reduction < total_minions_spawned then
-		point_pool = template.conditional_function(points_base) * 0.5 / self._num_active_events
+		point_pool = template.conditional_function(points_base) * 0.5 / num_active_events
 	else
 		point_pool = template.conditional_function(points_base)
 	end

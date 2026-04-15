@@ -48,19 +48,19 @@ NavMeshManager.init = function (self, world, nav_world, is_server, network_event
 	self._sparse_nav_graph_disconnecting = {}
 
 	local nav_tag_volume_data = self:_require_nav_tag_volume_data(level_name, {})
-	local nav_tag_volume_layers = self:_create_nav_tag_volumes_from_level_data(nav_tag_volume_data)
 
 	self._level_nav_tags = {}
-	self._nav_tag_volume_data = nav_tag_volume_data
-	self._nav_cost_map_lookup = self:_setup_nav_cost_map_lookup()
-	self._nav_tag_layer_lookup = self:_setup_nav_tag_layer_lookup(nav_tag_volume_layers)
-	self._nav_tag_allowed_layers = table.set(self._nav_tag_layer_lookup)
+	self._nav_tag_allowed_layers = {}
+	self._nav_tag_layer_lookup = {}
 	self._network_layer_id_lookup = {}
 
-	for layer_name in pairs(self._nav_tag_allowed_layers) do
-		self:_register_nav_tag_layer(layer_name)
-	end
+	local nav_tag_volume_layers = self:_create_nav_tag_volumes_from_level_data(nav_tag_volume_data)
 
+	self._nav_tag_volume_data = nav_tag_volume_data
+
+	self:_setup_nav_tag_layer_lookup(nav_tag_volume_layers)
+
+	self._nav_cost_map_lookup = self:_setup_nav_cost_map_lookup()
 	self._nav_cost_map_volume_id_data = {
 		current_id = 1,
 		size = 0,
@@ -84,16 +84,18 @@ NavMeshManager.init = function (self, world, nav_world, is_server, network_event
 end
 
 NavMeshManager._register_nav_tag_layer = function (self, layer_name)
+	local nav_tag_layer_lookup = self._nav_tag_layer_lookup
+	local layer_id = _get_next_free_array_index(nav_tag_layer_lookup)
+
+	nav_tag_layer_lookup[layer_name] = layer_id
+	nav_tag_layer_lookup[layer_id] = layer_name
+
 	local network_layer_id = Script.id_string_32(layer_name)
 	local network_layer_id_lookup = self._network_layer_id_lookup
 
 	self._network_layer_id_lookup[layer_name] = network_layer_id
 	self._network_layer_id_lookup[network_layer_id] = layer_name
-
-	local layer_id = _get_next_free_array_index(self._nav_tag_layer_lookup)
-
-	self._nav_tag_layer_lookup[layer_name] = layer_id
-	self._nav_tag_layer_lookup[layer_id] = layer_name
+	self._nav_tag_allowed_layers[layer_name] = true
 
 	return layer_id
 end
@@ -108,6 +110,7 @@ NavMeshManager._unregister_nav_tag_layer = function (self, layer_name)
 
 	self._nav_tag_layer_lookup[layer_name] = nil
 	self._nav_tag_layer_lookup[layer_id] = nil
+	self._nav_tag_allowed_layers[layer_name] = nil
 end
 
 NavMeshManager._require_nav_tag_volume_data = function (self, level_name, nav_tag_volume_data)
@@ -281,8 +284,6 @@ NavMeshManager.remove_nav_tag_volume = function (self, nav_tag_volume)
 
 		if can_remove_layer then
 			self:_unregister_nav_tag_layer(layer_name)
-
-			self._nav_tag_allowed_layers[layer_name] = nil
 		end
 	end
 
@@ -311,25 +312,22 @@ NavMeshManager._setup_nav_cost_map_lookup = function (self)
 end
 
 NavMeshManager._setup_nav_tag_layer_lookup = function (self, nav_tag_volume_layers)
-	local lookup = table.clone(nav_tag_volume_layers)
+	for index, layer_name in ipairs(nav_tag_volume_layers) do
+		local layer_id = self:_register_nav_tag_layer(layer_name)
+	end
+
 	local default_nav_tag_layers = {}
 
 	table.merge(default_nav_tag_layers, NavigationCostSettings.default_nav_tag_layers_minions)
 	table.merge(default_nav_tag_layers, NavigationCostSettings.default_nav_tag_layers_bots)
 
-	local default_nav_tag_layer_names = table.keys(default_nav_tag_layers)
+	local nav_tag_layer_lookup = self._nav_tag_layer_lookup
 
-	for i = 1, #default_nav_tag_layer_names do
-		local layer_name = default_nav_tag_layer_names[i]
-
-		if not table.contains(lookup, layer_name) then
-			lookup[#lookup + 1] = layer_name
+	for layer_name in pairs(default_nav_tag_layers) do
+		if not table.contains(nav_tag_layer_lookup, layer_name) then
+			self:_register_nav_tag_layer(layer_name)
 		end
 	end
-
-	table.mirror_array_inplace(lookup)
-
-	return lookup
 end
 
 NavMeshManager._initialize_client_traverse_logic = function (self, nav_world)

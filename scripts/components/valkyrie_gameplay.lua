@@ -162,6 +162,36 @@ ValkyrieGameplay.kill_overlap_disable = function (self)
 	end
 end
 
+ValkyrieGameplay.hatch_open = function (self)
+	if not self.is_server then
+		return
+	end
+
+	local valkyrie_unit = self._unit
+	local valkyrie_position = Unit.world_position(valkyrie_unit, 1)
+	local hatch_node_index = Unit.node(valkyrie_unit, "hatch_push")
+	local hatch_position = Unit.world_position(valkyrie_unit, hatch_node_index)
+	local push_direction = Vector3.normalize(hatch_position - valkyrie_position)
+	local players = Managers.player:players()
+
+	for _, player in pairs(players) do
+		local player_unit = player.player_unit
+
+		if player_unit and ALIVE[player_unit] then
+			local player_position = POSITION_LOOKUP[player_unit]
+
+			if math.abs(player_position.x - hatch_position.x) < 2.4 and math.abs(player_position.y - hatch_position.y) < 2.4 then
+				PUSH_TEMPLATE.speed = 11
+
+				local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+				local locomotion_push_component = unit_data_extension:write_component("locomotion_push")
+
+				Push.add(player_unit, locomotion_push_component, push_direction, PUSH_TEMPLATE, "attack")
+			end
+		end
+	end
+end
+
 ValkyrieGameplay.component_data = {
 	kill_overlap = {
 		ui_name = "Kill overlapping",
@@ -179,6 +209,10 @@ ValkyrieGameplay.component_data = {
 			type = "event",
 		},
 		kill_overlap_disable = {
+			accessibility = "public",
+			type = "event",
+		},
+		hatch_open = {
 			accessibility = "public",
 			type = "event",
 		},

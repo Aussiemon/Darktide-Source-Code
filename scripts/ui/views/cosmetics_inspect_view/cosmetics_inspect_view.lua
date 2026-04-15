@@ -932,10 +932,6 @@ CosmeticsInspectView._start_preview_item = function (self)
 		self:_setup_title(item)
 		self:_setup_item_description(description, restriction_text, property_text)
 	elseif self._bundle_data then
-		local description = self._bundle_data.description or ""
-
-		self:_setup_item_description(description)
-
 		if self._bundle_data.image_promise then
 			self._bundle_data.image_promise:next(function (data)
 				self:_adjust_background_image_size(self._widgets_by_name.bundle_background, data)
@@ -950,6 +946,10 @@ CosmeticsInspectView._start_preview_item = function (self)
 		}
 
 		self:_setup_title(title_item_data, true)
+
+		local description = self._bundle_data.description or ""
+
+		self:_setup_item_description(description)
 		self:_set_preview_widgets_visibility(true)
 	end
 end

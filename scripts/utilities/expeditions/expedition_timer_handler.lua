@@ -52,7 +52,7 @@ ExpeditionTimerHandler.init = function (self, template, is_server)
 end
 
 ExpeditionTimerHandler.hot_join_sync = function (self, channel_id)
-	RPC.rpc_expedition_timer_set_active(channel_id, self._enabled)
+	RPC.rpc_expedition_timer_set_active(channel_id, self._is_running)
 end
 
 ExpeditionTimerHandler.setup_timer = function (self)

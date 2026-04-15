@@ -243,6 +243,11 @@ character_archetype_title_style_victory.offset = {
 	140,
 	0,
 }
+character_archetype_title_style_victory.original_offset = {
+	0,
+	140,
+	0,
+}
 character_archetype_title_style_victory.default_color = Color.terminal_text_body_sub_header(255, true)
 character_archetype_title_style_victory.text_color = Color.terminal_text_body_sub_header(255, true)
 player_panel_victory_style.checkmark = table.clone(UIFontSettings.symbol)

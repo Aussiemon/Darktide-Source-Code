@@ -2808,6 +2808,7 @@ do
 			style.static_button_icon_frame.default_color = content.is_locked and table.shallow_copy(mission_type_colors.disabled_color) or table.shallow_copy(mission_type_colors.default_color)
 			style.static_button_icon_frame.selected_color = table.shallow_copy(mission_type_colors.selected_color)
 			style.static_button_icon_frame.hover_color = table.shallow_copy(mission_type_colors.hover_color)
+			style.static_button_icon_frame.disabled_color = table.shallow_copy(mission_type_colors.disabled_color)
 
 			local category_data = Styles.gradient_by_category[is_story and "story" or category] or Styles.gradient_by_category.default
 

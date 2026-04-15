@@ -231,7 +231,11 @@ InventoryBackgroundView._set_player_profile_information = function (self, player
 	widgets_by_name.character_level_next.content.text = ""
 
 	self:_set_experience_bar(0, 0)
-	self:_fetch_character_progression(player)
+
+	if self._is_own_player then
+		self:_fetch_character_progression(player)
+	end
+
 	self:_request_player_icon()
 end
 
@@ -2302,6 +2306,11 @@ InventoryBackgroundView.event_inventory_set_target_camera_offset = function (sel
 end
 
 InventoryBackgroundView.on_exit = function (self)
+	if not self._is_readonly and self:is_inventory_synced() then
+		self:_equip_local_changes()
+		self:_apply_current_talents_to_profile()
+	end
+
 	self:_unload_portrait_icon()
 	self:_unload_portrait_frame(self._ui_renderer)
 	self:_unload_insignia(self._ui_renderer)
@@ -2335,11 +2344,6 @@ InventoryBackgroundView.on_exit = function (self)
 	end
 
 	InventoryBackgroundView.super.on_exit(self)
-
-	if not self._is_readonly and self:is_inventory_synced() then
-		self:_equip_local_changes()
-		self:_apply_current_talents_to_profile()
-	end
 end
 
 InventoryBackgroundView._save_current_talents_to_profile_preset = function (self)
@@ -2575,7 +2579,7 @@ InventoryBackgroundView.update = function (self, dt, t, input_service)
 		if not self._check_for_loadout_update_timeout or self._check_for_loadout_update_timeout < InventoryBackgroundViewSettings.loadout_update_timeout and self._is_own_player then
 			self._check_for_loadout_update_timeout = self._check_for_loadout_update_timeout and self._check_for_loadout_update_timeout + dt or 0
 		else
-			Managers.ui:update_client_loadout_waiting_state(false)
+			Managers.ui:remove_all_client_loadout_waiting_state()
 
 			self._check_for_loadout_update_timeout = nil
 		end

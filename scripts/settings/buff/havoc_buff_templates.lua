@@ -308,6 +308,13 @@ local CORRUPTED_COLOR = mutator_havoc_enemies_corrupted_config_settings.corrupti
 local CORRUPTION_RADIUS = mutator_havoc_enemies_corrupted_config_settings.corruption_radius
 local CORRUPTED_RANK_MULTIPLIE = mutator_havoc_enemies_corrupted_config_settings.rank_multipler
 local DPLUS_RESULTS_2 = {}
+local CORRUPTION_FALLBACK_RANKS_PER_CHALLENGE = {
+	5,
+	10,
+	15,
+	20,
+	25,
+}
 
 local function _corruption_stop_function(template_context, template_data)
 	local unit = template_context.unit
@@ -324,7 +331,15 @@ local function _corruption_stop_function(template_context, template_data)
 	local position = _position(unit)
 	local num_results = broadphase.query(broadphase, position, CORRUPTION_RADIUS, DPLUS_RESULTS_2, target_side_names)
 	local current_time = FixedFrame.get_latest_fixed_time()
-	local rank = Managers.state.game_mode:game_mode():extension("havoc"):get_current_rank()
+	local rank
+	local havoc_extension = Managers.state.game_mode:game_mode():extension("havoc")
+
+	if havoc_extension then
+		rank = Managers.state.game_mode:game_mode():extension("havoc"):get_current_rank()
+	else
+		rank = Managers.state.difficulty:get_table_entry_by_challenge(CORRUPTION_FALLBACK_RANKS_PER_CHALLENGE)
+	end
+
 	local threshold = rank * CORRUPTED_RANK_MULTIPLIE
 	local t = Managers.time:time("gameplay")
 

@@ -17,6 +17,7 @@ PlayerSpawnerSystem.init = function (self, extension_init_context, system_init_d
 
 	if self._is_server then
 		Managers.event:register(self, "in_safe_volume", "in_safe_volume")
+		Managers.event:register(self, "unregister_spawn_points", "unregister_spawn_points")
 	end
 
 	self._physics_world = extension_init_context.physics_world
@@ -33,6 +34,7 @@ end
 PlayerSpawnerSystem.destroy = function (self)
 	if self._is_server then
 		Managers.event:unregister(self, "in_safe_volume")
+		Managers.event:unregister(self, "unregister_spawn_points")
 	end
 end
 
@@ -114,6 +116,21 @@ PlayerSpawnerSystem.add_spawn_point = function (self, unit, side, spawn_identifi
 		self._spawn_points_by_identifier[spawn_identifier] = {
 			spawn_point_data,
 		}
+	end
+end
+
+PlayerSpawnerSystem.unregister_spawn_points = function (self, spawn_identifier)
+	local unit_to_extension_map = self._unit_to_extension_map
+	local spawn_points = self._spawn_points_by_identifier[spawn_identifier]
+
+	if spawn_points then
+		for i = #spawn_points, 1, -1 do
+			local spawn_point_data = spawn_points[i]
+			local unit = spawn_point_data.unit
+			local extension = unit_to_extension_map[unit]
+
+			extension:deactivate_spawner(unit, spawn_identifier)
+		end
 	end
 end
 

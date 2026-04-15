@@ -676,7 +676,7 @@ local blueprints = {
 
 				profile.character_id = widget.content.icon_profile and widget.content.icon_profile.character_id or math:uuid()
 
-				Managers.event:trigger("event_player_profile_updated", nil, nil, profile)
+				Managers.event:trigger("event_player_profile_character_appearance_update", profile)
 			end
 		end,
 	},

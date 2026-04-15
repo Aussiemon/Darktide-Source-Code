@@ -1153,13 +1153,12 @@ StoreView._setup_panels = function (self, category_pages_layout_data)
 
 		for i = 1, #category_pages_layout_data do
 			local function entry_callback_function()
-				local path = {
-					category_index = self._selected_category_index,
-					screen_index = self._selected_screen_index,
-					page_index = i,
-				}
+				if self._selected_page_index == i then
+					return
+				end
 
-				self:_open_navigation_path(path)
+				self:_fade_out_grid(2)
+				self:_on_page_index_selected(i)
 			end
 
 			local cb = callback(entry_callback_function)
@@ -1533,9 +1532,10 @@ StoreView._setup_grid = function (self, layout, grid_settings)
 
 	local widgets = {}
 	local left_click_callback_name = "cb_on_grid_entry_left_pressed"
+	local t = math.round(Managers.time:time("main") * 1000)
 
 	for index, entry in ipairs(layout) do
-		local widget_suffix = entry.display_name
+		local widget_suffix = entry.display_name .. tostring(t)
 		local widget = self:_create_entry_widget_from_config(entry, widget_suffix, left_click_callback_name)
 
 		widgets[#widgets + 1] = widget

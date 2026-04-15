@@ -217,7 +217,9 @@ MinigameDecodeSearch.on_action_pressed = function (self, t)
 	else
 		local player = Managers.player:player_from_session_id(self._player_session_id)
 
-		self:_player_miss_target(player)
+		if player then
+			self:_player_miss_target(player)
+		end
 
 		self._current_stage = math.max(self._current_stage - 1, 1)
 

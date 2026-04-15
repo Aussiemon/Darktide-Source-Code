@@ -90,22 +90,31 @@ UIManager.init = function (self)
 	Managers.event:register(self, "event_remove_ui_popup", "event_remove_ui_popup")
 	Managers.event:register(self, "event_remove_ui_popups_by_priority", "event_remove_ui_popups_by_priority")
 	Managers.event:register(self, "event_player_profile_updated", "event_player_profile_updated")
+	Managers.event:register(self, "event_player_profile_character_appearance_update", "event_player_profile_character_appearance_update")
 	Managers.event:register(self, "event_on_render_settings_applied", "event_on_render_settings_applied")
 	Managers.event:register(self, "event_cinematic_skip_state", "event_cinematic_skip_state")
 	Managers.event:register(self, "event_portrait_render_change", "event_portrait_render_change")
 	Managers.event:register(self, "event_crossplay_change", "event_crossplay_change")
 
 	self._input_hold_tracker = InputHoldTracker:new(input_service_name)
-	self._client_waiting_loadout = false
+	self._client_waiting_loadout = 0
 	self._packages_to_remove = {}
 end
 
 UIManager.update_client_loadout_waiting_state = function (self, state)
-	self._client_waiting_loadout = state
+	if state then
+		self._client_waiting_loadout = self._client_waiting_loadout + 1
+	else
+		self._client_waiting_loadout = self._client_waiting_loadout > 0 and self._client_waiting_loadout - 1 or 0
+	end
 end
 
 UIManager.get_client_loadout_waiting_state = function (self)
-	return self._client_waiting_loadout
+	return self._client_waiting_loadout > 0
+end
+
+UIManager.remove_all_client_loadout_waiting_state = function (self)
+	self._client_waiting_loadout = 0
 end
 
 UIManager.get_delta_time = function (self)
@@ -848,6 +857,7 @@ UIManager.destroy = function (self)
 	Managers.event:unregister(self, "event_show_ui_popup")
 	Managers.event:unregister(self, "event_remove_ui_popup")
 	Managers.event:unregister(self, "event_remove_ui_popups_by_priority")
+	Managers.event:unregister(self, "event_player_profile_character_appearance_update")
 	Managers.event:unregister(self, "event_player_profile_updated")
 	Managers.event:unregister(self, "event_on_render_settings_applied")
 	Managers.event:unregister(self, "event_cinematic_skip_state")
@@ -1052,6 +1062,10 @@ UIManager.render = function (self, dt, t)
 
 	if spectator_hud then
 		spectator_hud:draw(dt, t, self:input_service())
+	end
+
+	if self._noesis_view then
+		self._noesis_view:draw()
 	end
 end
 
@@ -1472,11 +1486,23 @@ UIManager.unload_profile_portrait = function (self, id)
 	instance:unload_profile_portrait(id)
 end
 
+UIManager.event_player_profile_character_appearance_update = function (self, profile)
+	local instance = self._back_buffer_render_handlers.portraits
+
+	instance:profile_updated(profile)
+end
+
 UIManager.event_player_profile_updated = function (self, peer_id, local_player_id, profile)
 	local instance = self._back_buffer_render_handlers.portraits
 
 	instance:profile_updated(profile)
-	self:update_client_loadout_waiting_state(false)
+
+	local player_manager = Managers.player
+	local player = player_manager:local_player(1)
+
+	if peer_id == player:peer_id() then
+		self:update_client_loadout_waiting_state(false)
+	end
 end
 
 UIManager.event_portrait_render_change = function (self, value)

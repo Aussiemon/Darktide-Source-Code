@@ -13,6 +13,11 @@ Sidebar.init = function (self, owner_view)
 	local play_button = self:_get_widget("play_button")
 
 	play_button.content.hotspot.pressed_callback = callback(owner_view, "cb_start_selected_mission")
+	play_button.visible = false
+
+	local play_button_legend = self:_get_widget("play_button_legend")
+
+	play_button_legend.visible = false
 
 	self:_setup_difficulty_selector()
 	self:show_mission_info()
@@ -68,7 +73,7 @@ Sidebar.update = function (self, dt, t, input_service)
 	local has_synced = self._owner_view.has_synced
 	local difficulty_selector = self._owner_view:_element("difficulty_selector")
 
-	difficulty_selector:set_visibility(has_synced)
+	difficulty_selector:set_visibility(has_synced and self._owner_view:node_enter_anim_finished())
 
 	if not self._difficulty_selector_initialized_data and has_synced then
 		difficulty_selector:initialize_data()
@@ -105,6 +110,16 @@ Sidebar.switch_tab = function (self)
 	if element then
 		element:switch_tab()
 	end
+end
+
+Sidebar.show_widgets = function (self)
+	local play_button = self:_get_widget("play_button")
+
+	play_button.visible = true
+
+	local play_button_legend = self:_get_widget("play_button_legend")
+
+	play_button_legend.visible = true
 end
 
 Sidebar._handle_play_button_input = function (self, input_service)

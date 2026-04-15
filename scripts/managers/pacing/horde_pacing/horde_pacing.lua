@@ -738,7 +738,8 @@ HordePacing._update_trickle_horde_pacing = function (self, t, dt, side_id, targe
 				trickle_horde.cooldown = 0
 			end
 
-			local trickle_hordes_allowed = (Managers.state.pacing:spawn_type_enabled("trickle_hordes") or template.ignore_disallowance) and (not template.not_during_terror_events or Managers.state.terror_event:num_active_events() == 0)
+			local allowed, reason = Managers.state.pacing:spawn_type_enabled("trickle_hordes")
+			local trickle_hordes_allowed = (allowed or template.ignore_disallowance and not reason == "Hard_allocated_limit_reached") and (not template.not_during_terror_events or Managers.state.terror_event:num_active_events() == 0)
 
 			if furthest_travel_distance > trickle_horde.current_travel_distance then
 				local diff = furthest_travel_distance - trickle_horde.current_travel_distance

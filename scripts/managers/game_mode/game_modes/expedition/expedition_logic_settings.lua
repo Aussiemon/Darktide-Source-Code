@@ -23,7 +23,7 @@ local CLIENT_RPCS = {
 	"rpc_expedition_top_event",
 	"rpc_expedition_start_location_events",
 	"rpc_expedition_stop_all_events",
-	"rpc_expedition_set_auspex_active",
+	"rpc_expedition_set_navigation_active",
 	"rpc_expedition_navigation_remove_exit",
 }
 local SERVER_RPCS = {

@@ -534,6 +534,7 @@ HordePlayView._update_can_start_mission = function (self)
 	local mission = self._selected_mission
 	local required_level = mission and mission.requiredLevel or 0
 	local is_locked = false
+	local party_manager = self._party_manager
 
 	if player_level < required_level then
 		_required_level_loc_table.required_level = required_level
@@ -541,12 +542,16 @@ HordePlayView._update_can_start_mission = function (self)
 		self:_set_info_text("warning", Localize("loc_mission_board_view_required_level", true, _required_level_loc_table))
 
 		is_locked = true
-	elseif not self._party_manager:are_all_members_in_hub() then
+	elseif party_manager:is_in_matchmaking() then
+		self:_set_info_text("warning", Localize("loc_hud_presence_matchmaking"))
+
+		is_locked = true
+	elseif not party_manager:are_all_members_in_hub() then
 		self:_set_info_text("warning", Localize("loc_mission_board_team_mate_not_available"))
 
 		is_locked = true
 	elseif self._private_match then
-		if self._party_manager:num_other_members() < 1 then
+		if party_manager:num_other_members() < 1 then
 			self:_set_info_text("warning", Localize("loc_mission_board_cannot_private_match"))
 
 			is_locked = true

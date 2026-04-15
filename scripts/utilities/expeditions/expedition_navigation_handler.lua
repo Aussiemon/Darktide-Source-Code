@@ -10,7 +10,8 @@ local ExpeditionNavigationHandler = class("ExpeditionNavigationHandler")
 ExpeditionNavigationHandler.init = function (self, template, is_server, world)
 	self._template = template
 	self._is_server = is_server
-	self._auspex_active = false
+	self._auspex_map = template.auspex_map ~= false
+	self._is_active = false
 	self._registered_exits = {}
 	self._registered_extractions = {}
 	self._registered_opportunities = {}
@@ -42,7 +43,7 @@ ExpeditionNavigationHandler.hot_join_sync = function (self, channel_id)
 		RPC.rpc_expedition_navigation_complete_level(channel_id, level_index)
 	end
 
-	RPC.rpc_expedition_set_auspex_active(channel_id, self._auspex_active)
+	RPC.rpc_expedition_set_navigation_active(channel_id, self._is_active)
 end
 
 ExpeditionNavigationHandler.reset = function (self, index)
@@ -57,12 +58,10 @@ ExpeditionNavigationHandler.reset = function (self, index)
 end
 
 ExpeditionNavigationHandler.set_active = function (self, enabled)
-	if self._is_server then
-		self._auspex_active = enabled and self._template.auspex_map ~= false
+	self._is_active = enabled
 
-		Managers.state.game_session:send_rpc_clients("rpc_expedition_set_auspex_active", self._auspex_active)
-	else
-		self._auspex_active = enabled
+	if self._is_server then
+		Managers.state.game_session:send_rpc_clients("rpc_expedition_set_navigation_active", self._is_active)
 	end
 
 	if not DEDICATED_SERVER then
@@ -76,7 +75,7 @@ ExpeditionNavigationHandler.set_active = function (self, enabled)
 end
 
 ExpeditionNavigationHandler.is_active = function (self)
-	return self._auspex_active
+	return self._is_active
 end
 
 ExpeditionNavigationHandler.destroy = function (self)
@@ -92,32 +91,34 @@ local SLOT_NAME = "slot_device"
 local ITEM_NAME = "content/items/devices/auspex_map"
 
 ExpeditionNavigationHandler.server_update = function (self, dt, t)
-	local should_be_equipped = self._auspex_active
-	local item = MasterItems.get_item(ITEM_NAME)
-	local players = Managers.player:players()
+	if self._auspex_map then
+		local should_be_equipped = self._is_active
+		local item = MasterItems.get_item(ITEM_NAME)
+		local players = Managers.player:players()
 
-	for _, player in pairs(players) do
-		local player_unit = player.player_unit
+		for _, player in pairs(players) do
+			local player_unit = player.player_unit
 
-		if player_unit then
-			local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
-			local inventory_component = unit_data_extension:read_component("inventory")
-			local current_item_name = inventory_component[SLOT_NAME]
-			local is_equipped = current_item_name == ITEM_NAME
+			if player_unit then
+				local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+				local inventory_component = unit_data_extension:read_component("inventory")
+				local current_item_name = inventory_component[SLOT_NAME]
+				local is_equipped = current_item_name == ITEM_NAME
 
-			if should_be_equipped then
-				if not is_equipped and current_item_name == "not_equipped" then
-					PlayerUnitVisualLoadout.equip_item_to_slot(player_unit, item, SLOT_NAME, nil, t)
-				end
-			else
-				local wielded_slot = inventory_component.wielded_slot
+				if should_be_equipped then
+					if not is_equipped and current_item_name == "not_equipped" then
+						PlayerUnitVisualLoadout.equip_item_to_slot(player_unit, item, SLOT_NAME, nil, t)
+					end
+				else
+					local wielded_slot = inventory_component.wielded_slot
 
-				if wielded_slot == SLOT_NAME then
-					PlayerUnitVisualLoadout.wield_previous_weapon_slot(inventory_component, player_unit, t)
-				end
+					if wielded_slot == SLOT_NAME then
+						PlayerUnitVisualLoadout.wield_previous_weapon_slot(inventory_component, player_unit, t)
+					end
 
-				if is_equipped then
-					PlayerUnitVisualLoadout.unequip_item_from_slot(player_unit, SLOT_NAME, t)
+					if is_equipped then
+						PlayerUnitVisualLoadout.unequip_item_from_slot(player_unit, SLOT_NAME, t)
+					end
 				end
 			end
 		end

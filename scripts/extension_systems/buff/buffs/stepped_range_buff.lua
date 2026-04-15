@@ -9,6 +9,7 @@ SteppedRangeBuff.init = function (self, context, template, start_time, instance_
 
 	local lerp_value = self._template_context.buff_lerp_value
 
+	lerp_value = math.round(lerp_value * 100) * 0.01
 	self._duration_progress = 0
 	self._start_time = start_time
 	self._instance_id = instance_id

@@ -569,23 +569,21 @@ PlayerUnitVisualLoadoutExtension.destroy = function (self)
 				Luggable.enable_physics(first_person_component, locomotion_component, slot.unit_3p)
 			end
 
-			if slot_name == "slot_pocketable" or slot_name == "slot_pocketable_small" then
-				local is_grimoire = PlayerUnitVisualLoadout.has_weapon_keyword_from_slot(self, "slot_pocketable", "grimoire")
+			local is_grimoire = PlayerUnitVisualLoadout.has_weapon_keyword_from_slot(self, slot_name, "grimoire")
 
-				if is_grimoire then
-					self:unequip_item_from_slot(slot_name, latest_frame)
+			if is_grimoire then
+				self:unequip_item_from_slot(slot_name, latest_frame)
 
-					if is_server then
-						local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+				if is_server then
+					local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-						mission_objective_system:store_grimoire()
-					end
-				elseif not PlayerUnitVisualLoadout.has_weapon_keyword_from_slot(self, "slot_pocketable", "undroppable") then
-					local unit = self._unit
-					local inventory_component = self._inventory_component
-
-					Pocketable.drop_pocketable(latest_frame, self._physics_world, is_server, unit, inventory_component, self, slot_name)
+					mission_objective_system:store_grimoire()
 				end
+			elseif (slot_name == "slot_pocketable" or slot_name == "slot_pocketable_small") and not PlayerUnitVisualLoadout.has_weapon_keyword_from_slot(self, slot_name, "undroppable") then
+				local unit = self._unit
+				local inventory_component = self._inventory_component
+
+				Pocketable.drop_pocketable(latest_frame, self._physics_world, is_server, unit, inventory_component, self, slot_name)
 			else
 				self:_unequip_item_from_slot(slot_name, false, latest_frame, true)
 			end

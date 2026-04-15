@@ -24,12 +24,10 @@ end
 TimedSynchronizerExtension.objective_started = function (self)
 	TimedSynchronizerExtension.super.objective_started(self)
 
-	if self._is_server then
-		local mission_objective = self._mission_objective_system:active_objective(self._objective_name, self._group_id)
+	local mission_objective = self._mission_objective_system:active_objective(self._objective_name, self._group_id)
 
-		if self._paused then
-			mission_objective:pause()
-		end
+	if self._paused then
+		mission_objective:pause()
 	end
 end
 
@@ -37,7 +35,7 @@ TimedSynchronizerExtension.hot_join_sync = function (self, sender, channel)
 	if self._paused then
 		local level_unit_id = Managers.state.unit_spawner:level_index(self._unit)
 
-		Managers.state.game_session:send_rpc_clients("rpc_event_synchronizer_paused", level_unit_id)
+		RPC.rpc_event_synchronizer_paused(channel, level_unit_id)
 	end
 end
 

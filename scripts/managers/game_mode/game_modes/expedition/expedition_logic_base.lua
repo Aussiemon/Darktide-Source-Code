@@ -258,7 +258,7 @@ ExpeditionLogicBase.rpc_expedition_navigation_complete_level = function (self, c
 	self._navigation_handler:expedition_mark_level_complete(level_index)
 end
 
-ExpeditionLogicBase.rpc_expedition_set_auspex_active = function (self, channel_id, active)
+ExpeditionLogicBase.rpc_expedition_set_navigation_active = function (self, channel_id, active)
 	self._navigation_handler:set_active(active)
 end
 
@@ -549,22 +549,22 @@ ExpeditionLogicBase.expedition_currency = function (self, optional_peer_id)
 	return collected_player_currency
 end
 
-ExpeditionLogicBase.rpc_register_safe_zone_store_unit = function (self, channel_id, section_index, store_unit_level_id)
+ExpeditionLogicBase.rpc_register_safe_zone_store_unit = function (self, channel_id, section_index, store_unit_level_id, num_charges_left)
 	local unit_spawner_manager = Managers.state.unit_spawner
 	local store_unit = unit_spawner_manager:unit(store_unit_level_id, true)
 
-	self:_register_safe_zone_pickup_unit_by_pickup_spawner_unit(section_index, nil, store_unit)
+	self:_register_safe_zone_pickup_unit_by_pickup_spawner_unit(section_index, nil, store_unit, num_charges_left)
 end
 
-ExpeditionLogicBase.rpc_register_safe_zone_pickup_unit_by_pickup_spawner_unit = function (self, channel_id, section_index, pickup_game_object_id, pickup_spawner_level_id)
+ExpeditionLogicBase.rpc_register_safe_zone_pickup_unit_by_pickup_spawner_unit = function (self, channel_id, section_index, pickup_game_object_id, pickup_spawner_level_id, num_charges_left)
 	local unit_spawner_manager = Managers.state.unit_spawner
 	local pickup_spawner_unit = unit_spawner_manager:unit(pickup_spawner_level_id, true)
 	local pickup_unit = unit_spawner_manager:unit(pickup_game_object_id) or pickup_spawner_unit
 
-	self:_register_safe_zone_pickup_unit_by_pickup_spawner_unit(section_index, pickup_unit, pickup_spawner_unit)
+	self:_register_safe_zone_pickup_unit_by_pickup_spawner_unit(section_index, pickup_unit, pickup_spawner_unit, num_charges_left)
 end
 
-ExpeditionLogicBase._register_safe_zone_pickup_unit_by_pickup_spawner_unit = function (self, section_index, pickup_unit, spawner_unit)
+ExpeditionLogicBase._register_safe_zone_pickup_unit_by_pickup_spawner_unit = function (self, section_index, pickup_unit, spawner_unit, num_charges_left)
 	local expedition = self._expedition
 	local current_section = expedition[section_index]
 	local purchase_data_by_store_unit = current_section.purchase_data_by_store_unit or {}
@@ -600,6 +600,12 @@ ExpeditionLogicBase._register_safe_zone_pickup_unit_by_pickup_spawner_unit = fun
 			original_extra_description = unit_interactee_extension:extra_description(),
 			info = product_info,
 		}
+
+		if num_charges_left and num_charges_left > -1 then
+			local pickup_info = product_data.info
+
+			pickup_info.charges = num_charges_left
+		end
 
 		purchase_data_by_store_unit[spawner_unit] = product_data
 
@@ -659,9 +665,7 @@ ExpeditionLogicBase.rpc_client_expedition_on_purchase_performed = function (self
 	local player = player_manager:player(peer_id, local_player_id)
 
 	if player and player:is_human_controlled() then
-		local expedition = self._expedition
-		local current_safe_zone_section_index = self._current_safe_zone_section_index
-		local current_section = expedition[current_safe_zone_section_index]
+		local current_section = self:_get_active_safe_zone_section()
 		local players_purchases = current_section.players_purchases
 		local name = product_data.name
 		local character_id = player:character_id()

@@ -5,9 +5,9 @@ local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local SERVER_STATES = table.enum("progress_inactive", "progress_active", "progress_finished")
 local NETWORK_TIMER_STATES = table.enum("pause", "play")
 local PROGRESSION_PER_PLAYER_AMOUNT = {
-	0.5,
-	0.75,
-	0.875,
+	0.4,
+	0.6,
+	0.8,
 	1,
 }
 
@@ -30,7 +30,6 @@ MissionObjectiveZoneCaptureExtension.init = function (self, extension_init_conte
 	self._border_height_scale = 1
 	self._border_triangles = {}
 	self._border_active = nil
-	self._is_local_objective_marker_enabled = true
 	self._time_with_not_full_team = 0
 	self._use_vo = false
 end
@@ -263,17 +262,17 @@ end
 
 MissionObjectiveZoneCaptureExtension._update_client = function (self)
 	if self._mission_objective_target_extension then
-		local is_local_player_in_zone = self:_is_local_player_in_zone()
+		local is_local_player_outside = not self:_is_local_player_in_zone()
 		local is_local_objective_marker_enabled = self._is_local_objective_marker_enabled
 
-		if is_local_player_in_zone and is_local_objective_marker_enabled then
-			self._mission_objective_target_extension:remove_unit_marker()
+		if is_local_objective_marker_enabled ~= is_local_player_outside then
+			if is_local_player_outside then
+				self._mission_objective_target_extension:add_unit_marker()
+			else
+				self._mission_objective_target_extension:remove_unit_marker()
+			end
 
-			self._is_local_objective_marker_enabled = false
-		elseif not is_local_player_in_zone and not is_local_objective_marker_enabled then
-			self._mission_objective_target_extension:add_unit_marker()
-
-			self._is_local_objective_marker_enabled = true
+			self._is_local_objective_marker_enabled = is_local_player_outside
 		end
 	end
 

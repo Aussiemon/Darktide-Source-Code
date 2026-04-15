@@ -292,8 +292,10 @@ MinigameBase.play_sound = function (self, alias, sync_with_clients, include_clie
 
 		local fx_source_name = self._fx_source_name
 
-		if fx_source_name and self._fx_extension:sound_source(fx_source_name) then
+		if fx_source_name and self._fx_extension:has_sound_source(fx_source_name) then
 			self._fx_extension:trigger_gear_wwise_event_with_source(alias, nil, fx_source_name, sync_with_clients, include_client)
+		else
+			Log.error("MinigameBase", "Trying to play %s, but no fx source %s", alias, fx_source_name or "none")
 		end
 	end
 end

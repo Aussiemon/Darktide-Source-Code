@@ -522,8 +522,10 @@ UnitSpawnerManager.level_index = function (self, unit)
 		return unit_index, NetworkConstants.invalid_level_name_hash
 	end
 
-	if Unit.level(unit) then
-		Log.exception("UnitSpawnerManager", "Could not find a registered level for unit %s.", tostring(unit))
+	local owner_level = Unit.level(unit)
+
+	if owner_level then
+		Log.exception("UnitSpawnerManager", "Unit < %s > was found in level < %s > but the level is not registered.", tostring(unit), Level.name(owner_level))
 	end
 
 	return nil, NetworkConstants.invalid_level_name_hash
