@@ -118,10 +118,10 @@ ExpeditionLogicBase.in_safe_zone = function (self)
 	return self._in_safe_zone
 end
 
-ExpeditionLogicBase.rpc_expedition_on_gameplay_pause = function (self, channel, safe_zone_section_index)
+ExpeditionLogicBase.rpc_expedition_on_gameplay_pause = function (self, channel, safe_zone_section_index, is_hotjoin)
 	self._current_safe_zone_section_index = safe_zone_section_index
 
-	self:_on_gameplay_paused()
+	self:_on_gameplay_paused(is_hotjoin)
 end
 
 ExpeditionLogicBase.update = function (self, dt, t)
@@ -220,8 +220,8 @@ ExpeditionLogicBase.current_location_index = function (self)
 	return self._current_section_index
 end
 
-ExpeditionLogicBase._on_gameplay_paused = function (self)
-	_log("Gameplay Pause")
+ExpeditionLogicBase._on_gameplay_paused = function (self, is_hotjoin)
+	_log("Gameplay Pause", is_hotjoin)
 
 	local current_safe_zone_section_index = self._current_safe_zone_section_index
 
@@ -243,7 +243,7 @@ ExpeditionLogicBase._on_gameplay_paused = function (self)
 				local on_gameplay_pause_function = template and template.on_gameplay_pause_function
 
 				if on_gameplay_pause_function then
-					on_gameplay_pause_function(level_data, belongs_to_current_safe_zone_section)
+					on_gameplay_pause_function(level_data, belongs_to_current_safe_zone_section, is_hotjoin)
 				end
 			end
 		end

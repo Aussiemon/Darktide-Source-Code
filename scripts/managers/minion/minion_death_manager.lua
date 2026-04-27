@@ -48,7 +48,7 @@ local INSTANT_RAGDOLL_STAGGER_TYPES = {
 	running = true,
 }
 
-MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_direction, hit_zone_name_or_nil, damage_profile, attack_type_or_nil, herding_template_or_nil, damage_type_or_nil)
+MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_direction, hit_zone_name_or_nil, damage_profile, attack_type_or_nil, herding_template_or_nil, is_critical_strike_or_nil, damage_type_or_nil)
 	local blackboard = BLACKBOARDS[unit]
 	local death_component = Blackboard.write_component(blackboard, "death")
 
@@ -88,7 +88,7 @@ MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_dir
 		self._unit_id_or_level_index.unit_id = unit_id
 
 		_trigger_kill_vo(unit, attacking_unit_or_nil, hit_zone_name_or_nil, attack_type_or_nil, damage_profile)
-		_trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_or_nil, damage_profile, damage_type_or_nil, self._unit_id_or_level_index)
+		_trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_or_nil, damage_profile, is_critical_strike_or_nil, damage_type_or_nil, self._unit_id_or_level_index)
 
 		local visual_loadout_extension = ScriptUnit.has_extension(unit, "visual_loadout_system")
 
@@ -294,7 +294,7 @@ local locked_in_melee_settings = AttackIntensitySettings.locked_in_melee_setting
 local MAX_TENSION_TO_ADD_DEATH_TENSION = 50
 local CHALLENGE_RATING_TENSION_MULTIPLIER = 0.75
 
-function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_or_nil, damage_profile, damage_type_or_nil, unit_id)
+function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_or_nil, damage_profile, is_critical_strike_or_nil, damage_type_or_nil, unit_id)
 	local pacing_manager = Managers.state.pacing
 
 	if pacing_manager:tension() < MAX_TENSION_TO_ADD_DEATH_TENSION then
@@ -347,6 +347,7 @@ function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_
 			param_table.attack_type = attack_type_or_nil
 			param_table.damage_profile_name = damage_profile.name
 			param_table.damage_type = damage_type_or_nil
+			param_table.is_critical_strike = is_critical_strike_or_nil
 			param_table.breed_name = breed.name
 			param_table.side_name = victim_side:name()
 			param_table.position = Vector3Box(victim_position)
@@ -373,6 +374,7 @@ function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_
 				param_table.attack_result = attack_results.died
 				param_table.damage_profile_name = damage_profile.name
 				param_table.damage_type = damage_type_or_nil
+				param_table.is_critical_strike = is_critical_strike_or_nil
 				param_table.breed_name = breed.name
 				param_table.keywords_on_death_or_nil = victim_keywords_on_death_or_nil
 				param_table.side_name = victim_side:name()
@@ -395,6 +397,7 @@ function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_
 					param_table.attack_result = attack_results.died
 					param_table.damage_profile_name = damage_profile.name
 					param_table.damage_type = damage_type_or_nil
+					param_table.is_critical_strike = is_critical_strike_or_nil
 					param_table.breed_name = breed.name
 					param_table.side_name = victim_side:name()
 					param_table.position = Vector3Box(victim_position)

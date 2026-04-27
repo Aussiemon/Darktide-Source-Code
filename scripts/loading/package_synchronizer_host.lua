@@ -1324,7 +1324,8 @@ PackageSynchronizerHost.rpc_package_synchronizer_ready_peer = function (self, ch
 	end
 end
 
-PackageSynchronizerHost.rpc_alias_loading_complete = function (self, channel_id, peer_id, loaded_peer_id, loaded_local_player_id, alias_index, alias_version)
+PackageSynchronizerHost.rpc_alias_loading_complete = function (self, channel_id, loaded_peer_id, loaded_local_player_id, alias_index, alias_version)
+	local peer_id = Managers.connection:channel_to_peer(channel_id)
 	local sync_states = self._sync_states
 	local data = sync_states[peer_id]
 	local peer_states = data.peer_states

@@ -12,6 +12,7 @@ local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomo
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local SingleLevelLoader = require("scripts/loading/loaders/single_level_loader")
 local Vo = require("scripts/utilities/vo")
+local PlayerDeath = require("scripts/utilities/player_death")
 local locomotion_states = ProjectileLocomotionSettings.states
 local SERVER_LEVEL_STATES = table.enum("blocked", "idle", "load_next_location", "wait_on_clients_level_despawn", "wait_on_server_level_despawn", "wait_on_clients_level_loading_and_spawn", "wait_on_server_levels_spawned", "registering_levels", "wait_on_server_sparse_graph_connected", "server_spawn_loaded_levels", "teleport_players_to_safe_zone", "teleport_players_from_safe_zone")
 
@@ -531,7 +532,7 @@ ExpeditionLogicServer._server_hot_join_sync_active_safe_zone = function (self, c
 	local safe_zone_section_index = safe_zone_section.index
 
 	if self._in_safe_zone then
-		RPC.rpc_expedition_on_gameplay_pause(channel_id, safe_zone_section_index)
+		RPC.rpc_expedition_on_gameplay_pause(channel_id, safe_zone_section_index, true)
 
 		if self._server_level_state == SERVER_LEVEL_STATES.idle then
 			RPC.rpc_can_proceed_to_safe_zone_exit(channel_id, safe_zone_section_index)
@@ -1068,6 +1069,9 @@ ExpeditionLogicServer.event_expedition_airlock_sealed = function (self, hostile_
 		return
 	end
 
+	local optional_despawn_time = 0
+	local optional_attacking_unit
+	local death_reason = "outside_of_airlock"
 	local player_manager = Managers.player
 	local players = player_manager:players()
 
@@ -1079,10 +1083,8 @@ ExpeditionLogicServer.event_expedition_airlock_sealed = function (self, hostile_
 			local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 			local character_state_component = unit_data_extension:read_component("character_state")
 
-			if not PlayerUnitStatus.is_hogtied(character_state_component) and player_position and not Level.is_point_inside_volume(transition_level, volume_name, player_position) then
-				local dead_state_input = unit_data_extension:write_component("dead_state_input")
-
-				dead_state_input.die = true
+			if not PlayerUnitStatus.is_hogtied(character_state_component) and not player_position or not Level.is_point_inside_volume(transition_level, volume_name, player_position) then
+				PlayerDeath.die(player_unit, optional_despawn_time, optional_attacking_unit, death_reason)
 			end
 		end
 	end
@@ -1230,7 +1232,7 @@ ExpeditionLogicServer._server_inform_all_players_on_gameplay_resume = function (
 end
 
 ExpeditionLogicServer._server_inform_all_players_on_gameplay_pause = function (self, section_index)
-	Managers.state.game_session:send_rpc_clients("rpc_expedition_on_gameplay_pause", section_index)
+	Managers.state.game_session:send_rpc_clients("rpc_expedition_on_gameplay_pause", section_index, false)
 	self:_on_gameplay_paused()
 end
 
@@ -1307,16 +1309,20 @@ ExpeditionLogicServer._server_teleport_players_and_objects_to_target = function 
 			if not PlayerUnitStatus.is_hogtied(character_state_component) then
 				local teleport_companions = true
 				local is_human_controlled = player:is_human_controlled()
+				local is_disabled, requires_help = PlayerUnitStatus.is_disabled(character_state_component)
 
-				if player_position and Level.is_point_inside_volume(transition_level, volume_name, player_position) then
+				if player_position and Level.is_point_inside_volume(transition_level, volume_name, player_position) and not is_disabled then
 					PlayerMovement.teleport(player, absolute_position, absolute_rotation)
-				elseif not is_human_controlled then
+				elseif not is_human_controlled or is_disabled then
 					PlayerMovement.teleport(player, POSITION_LOOKUP[target_unit], player_rotation)
 				else
-					local dead_state_input = unit_data_extension:write_component("dead_state_input")
-
-					dead_state_input.die = true
 					teleport_companions = false
+
+					local optional_despawn_time = 0
+					local optional_attacking_unit
+					local death_reason = "outside_of_airlock"
+
+					PlayerDeath.die(player_unit, optional_despawn_time, optional_attacking_unit, death_reason)
 				end
 
 				if teleport_companions then

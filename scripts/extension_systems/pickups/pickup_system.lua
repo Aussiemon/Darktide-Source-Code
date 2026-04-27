@@ -50,6 +50,7 @@ PickupSystem.init = function (self, context, system_init_data, ...)
 	self._rubberband_free_spots = 0
 	self._unit_to_skip_group = {}
 	self._skip_group_count = {}
+	self._run_on_update = {}
 
 	if is_server then
 		self:_create_game_object(self._game_session)
@@ -65,6 +66,8 @@ PickupSystem.init = function (self, context, system_init_data, ...)
 end
 
 PickupSystem.destroy = function (self)
+	table.clear(self._run_on_update)
+
 	if not self._is_server then
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 	end
@@ -907,7 +910,11 @@ end
 
 PickupSystem.update = function (self, system_context, dt, t)
 	if self._is_server then
-		-- Nothing
+		for i = #self._run_on_update, 1, -1 do
+			self._run_on_update[i](self)
+
+			self._run_on_update[i] = nil
+		end
 	end
 end
 
@@ -1272,6 +1279,10 @@ PickupSystem.set_equipped_pickup_retained_charges = function (self, inventory_co
 
 		Ammo.set_current_ammo_in_clips(inventory_slot_component, charges)
 	end
+end
+
+PickupSystem.queue_on_update = function (self, func)
+	self._run_on_update[#self._run_on_update + 1] = func
 end
 
 return PickupSystem

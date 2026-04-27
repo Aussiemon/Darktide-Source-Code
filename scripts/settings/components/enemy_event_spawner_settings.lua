@@ -466,11 +466,22 @@ local enemy_event_spawner_compositions = {
 								4,
 							},
 						},
+					},
+				},
+				{
+					breeds = {
 						{
-							name = "renegade_captain",
+							name = "renegade_melee",
 							amount = {
-								1,
-								1,
+								2,
+								4,
+							},
+						},
+						{
+							name = "renegade_berzerker",
+							amount = {
+								2,
+								4,
 							},
 						},
 					},
@@ -553,11 +564,22 @@ local enemy_event_spawner_compositions = {
 								4,
 							},
 						},
+					},
+				},
+				{
+					breeds = {
 						{
-							name = "cultist_captain",
+							name = "cultist_melee",
 							amount = {
-								1,
-								1,
+								2,
+								4,
+							},
+						},
+						{
+							name = "cultist_berzerker",
+							amount = {
+								2,
+								4,
 							},
 						},
 					},

@@ -3,6 +3,7 @@
 local SmokeFogSystem = class("SmokeFogSystem", "ExtensionSystemBase")
 local DELETE_AFTER_DURATION_TIMER = 8
 local SMOKE_EFFECT_DURATION = 4
+local DEFAULT_PLAYER_RADIUS = 0.5
 
 SmokeFogSystem.init = function (self, context, system_init_data, ...)
 	SmokeFogSystem.super.init(self, context, system_init_data, ...)
@@ -168,7 +169,7 @@ SmokeFogSystem._check_unit_collisions = function (self, t)
 				local unit_pos = POSITION_LOOKUP[unit]
 				local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 				local breed = unit_data_extension:breed()
-				local player_locomotion_constrain_radius = breed.player_locomotion_constrain_radius
+				local player_locomotion_constrain_radius = breed.player_locomotion_constrain_radius or DEFAULT_PLAYER_RADIUS
 				local unit_radius = player_locomotion_constrain_radius and player_locomotion_constrain_radius * 2
 
 				if unit_radius and not extension:is_unit_inside(unit_pos, unit_radius) then
@@ -201,7 +202,7 @@ SmokeFogSystem._check_unit_collisions = function (self, t)
 
 		for unit, _ in pairs(valid_player_units) do
 			local unit_pos = POSITION_LOOKUP[unit]
-			local unit_radius = 0.5
+			local unit_radius = DEFAULT_PLAYER_RADIUS
 
 			if not temp_check_units[unit] and not units_inside[unit] and extension:is_unit_inside(unit_pos, unit_radius) then
 				extension:on_unit_enter(unit, t)

@@ -90,10 +90,21 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 
 		self._is_being_rescued = is_being_rescued
 
+		local game_mode_manager = Managers.state.game_mode
+		local game_mode = game_mode_manager and game_mode_manager:game_mode()
+		local in_expedition_safe_zone = game_mode and game_mode.in_safe_zone and game_mode:in_safe_zone()
+
 		if is_dead then
-			force_switch = self._mode ~= CameraModes.dead
-			new_unit = player.player_unit
-			self._mode = CameraModes.dead
+			if in_expedition_safe_zone then
+				if old_unit == player.player_unit then
+					new_unit = self:_next_follow_unit(player.player_unit)
+					self._mode = CameraModes.observer
+				end
+			else
+				force_switch = self._mode ~= CameraModes.dead
+				new_unit = player.player_unit
+				self._mode = CameraModes.dead
+			end
 		elseif is_hogtied and not was_being_rescued and is_being_rescued then
 			new_unit = player.player_unit
 			self._mode = CameraModes.observer

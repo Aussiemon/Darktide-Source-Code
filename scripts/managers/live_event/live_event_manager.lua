@@ -14,6 +14,7 @@ local CLIENT_RPCS = {
 
 LiveEventManager.init = function (self, is_host, event_delegate)
 	self._events = {}
+	self._backend_events = {}
 	self._active_event_id = nil
 	self._listener_ids = {}
 	self._is_host = not not is_host
@@ -468,9 +469,8 @@ local function get_template_name(backend_data)
 end
 
 LiveEventManager._clear_events = function (self)
-	local events = self._events
-
-	table.clear(events)
+	table.clear(self._events)
+	table.clear(self._backend_events)
 end
 
 LiveEventManager._add_event = function (self, backend_data, ids)
@@ -487,22 +487,25 @@ LiveEventManager._add_event = function (self, backend_data, ids)
 
 	for i = 1, tier_count do
 		local tier = backend_tiers[i]
-		local rewards = {}
 
-		for _, reward in pairs(tier.rewards) do
-			rewards[#rewards + 1] = {
-				id = reward.id,
-				type = reward.type,
-				amount = reward.amount,
-				currency = reward.currency,
+		if tier.xpLimit > 0 then
+			local rewards = {}
+
+			for _, reward in pairs(tier.rewards) do
+				rewards[#rewards + 1] = {
+					id = reward.id,
+					type = reward.type,
+					amount = reward.amount,
+					currency = reward.currency,
+				}
+			end
+
+			tiers[i] = {
+				backend_index = i - 1,
+				target = tier.xpLimit,
+				rewards = rewards,
 			}
 		end
-
-		tiers[i] = {
-			backend_index = i - 1,
-			target = tier.xpLimit,
-			rewards = rewards,
-		}
 	end
 
 	local starts_at = tonumber(backend_data.validFrom)
@@ -521,6 +524,7 @@ LiveEventManager._add_event = function (self, backend_data, ids)
 		starts_at = starts_at,
 		ends_at = ends_at,
 		tiers = tiers,
+		backend_tiers = backend_tiers,
 	}
 end
 
@@ -531,6 +535,8 @@ LiveEventManager._on_refresh_success = function (self, backend_events)
 	local ids = table.set(table.keys(self._events or {}))
 
 	self:_clear_events()
+
+	self._backend_events = backend_events
 
 	for i = 1, #backend_events do
 		local event_data = backend_events[i]
@@ -556,6 +562,10 @@ end
 
 LiveEventManager.events = function (self)
 	return self._events
+end
+
+LiveEventManager.get_raw_backend_events = function (self)
+	return self._backend_events
 end
 
 LiveEventManager._active_event = function (self)

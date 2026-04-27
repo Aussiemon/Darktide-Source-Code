@@ -19,6 +19,11 @@ ShockMaulHitEffects.init = function (self, context, slot, weapon_template, fx_so
 	local owner_unit = context.owner_unit
 
 	self._owner_unit = owner_unit
+
+	if GameParameters.destroy_unmanaged_particles then
+		self._particle_group_id = context.player_particle_group_id
+	end
+
 	self._visual_loadout_extension = context.visual_loadout_extension
 	self._first_person_extension = ScriptUnit.has_extension(owner_unit, "first_person_system")
 	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
@@ -132,7 +137,7 @@ ShockMaulHitEffects._start_particle_effect = function (self, particle_alias)
 
 		self:_stop_particle_effect()
 
-		local new_effect_id = World.create_particles(world, particle_name, Vector3.zero())
+		local new_effect_id = World.create_particles(world, particle_name, Vector3.zero(), nil, nil, self._particle_group_id)
 
 		World.link_particles(world, new_effect_id, vfx_link_unit, vfx_link_node, Matrix4x4.identity(), "stop")
 

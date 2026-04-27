@@ -93,6 +93,7 @@ ShockMine.destroy = function (self, unit)
 	end
 
 	self:_stop_idle_vfx_loop()
+	self:_remove_stale_or_stop_target_vfx(true)
 end
 
 ShockMine.update = function (self, unit, dt, t)
@@ -121,6 +122,9 @@ ShockMine._update_target_effects = function (self, dt, t)
 	table.clear(_broadphase_results)
 
 	local num_results = broadphase.query(broadphase, POSITION_LOOKUP[unit], HARD_CODED_RADIUS, _broadphase_results, enemy_side_names)
+	local stop_target_vfx = false
+
+	self:_remove_stale_or_stop_target_vfx(stop_target_vfx)
 
 	for ii = 1, num_results do
 		local target_unit = _broadphase_results[ii]
@@ -172,6 +176,10 @@ ShockMine._play_target_vfx = function (self, world, unit, target_unit)
 
 	World.set_particles_variable(world, particle_id, length_variable_index, particle_length)
 	World.move_particles(world, particle_id, source_pos, rotation)
+
+	local target_particle_ids = self._target_particle_ids
+
+	target_particle_ids[#target_particle_ids + 1] = particle_id
 end
 
 ShockMine._play_target_sfx = function (self, wwise_world, target_unit)
@@ -203,11 +211,7 @@ ShockMine._setup = function (self)
 	self._broadphase = broadphase_system.broadphase
 	self._cooldowns = {}
 	self._target_particle_ids = {}
-	self._target_playing_ids = {}
 	self._idle_particle_ids = {}
-	self._idle_loop_source_id = nil
-	self._idle_loop_playing_id = nil
-	self._targets_loop_source_id = nil
 	self._targets_loop_playing_id = nil
 
 	local source_id = WwiseWorld.make_manual_source(wwise_world, unit, Unit.node(unit, CENTER_NODE_NAME))
@@ -295,15 +299,38 @@ ShockMine._start_idle_vfx_loop = function (self)
 end
 
 ShockMine._stop_idle_vfx_loop = function (self)
-	local world = self._world
 	local idle_particle_ids = self._idle_particle_ids
 
-	if self._idle_particle_ids then
-		for ii = 1, #idle_particle_ids do
-			World.destroy_particles(world, idle_particle_ids[ii])
-		end
+	if not idle_particle_ids then
+		return
+	end
 
-		table.clear(idle_particle_ids)
+	local world = self._world
+
+	for i = 1, #idle_particle_ids do
+		World.destroy_particles(world, idle_particle_ids[i])
+	end
+
+	table.clear(idle_particle_ids)
+end
+
+ShockMine._remove_stale_or_stop_target_vfx = function (self, stop_particles)
+	local target_particle_ids = self._target_particle_ids
+
+	if not target_particle_ids then
+		return
+	end
+
+	local world = self._world
+
+	for i = #target_particle_ids, 1, -1 do
+		if stop_particles then
+			World.destroy_particles(world, target_particle_ids[i])
+
+			target_particle_ids[i] = nil
+		elseif not World.are_particles_playing(world, target_particle_ids[i]) then
+			table.swap_delete(target_particle_ids, i)
+		end
 	end
 end
 

@@ -9,10 +9,8 @@ local MasterItems = require("scripts/backend/master_items")
 local MissionObjectives = require("scripts/settings/mission_objective/mission_objective_templates")
 local Missions = require("scripts/settings/mission/mission_templates")
 local ParameterResolver = require("scripts/foundation/utilities/parameters/parameter_resolver")
-local RenderSettings = require("scripts/settings/options/render_settings")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local application_console_command = Application.console_command
-local application_memory_tree_to_console = Application.memory_tree_to_console
 local unit_actor = Unit.actor
 local unit_animation_event = Unit.animation_event
 local unit_flow_event = Unit.flow_event
@@ -281,6 +279,7 @@ local StateGameTestify = {
 		return current_state_name
 	end,
 	display_and_graphics_presets_settings = function ()
+		local RenderSettings = require("scripts/settings/options/render_settings")
 		local settings, render_settings, i = RenderSettings.settings, {}, 0
 
 		for j = 1, #settings do

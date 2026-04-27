@@ -465,7 +465,7 @@ PackageSynchronizerClient._update_package_loading = function (self, template, ho
 							local alias_index = table.index_of(PlayerPackageAliases, alias)
 							local alias_version = player_alias_versions[peer_id] and player_alias_versions[peer_id][local_player_id] or 1
 
-							RPC.rpc_alias_loading_complete(self._host_channel_id, client_peer_id, peer_id, local_player_id, alias_index, alias_version)
+							RPC.rpc_alias_loading_complete(self._host_channel_id, peer_id, local_player_id, alias_index, alias_version)
 						end
 					end
 				end
@@ -786,7 +786,7 @@ PackageSynchronizerClient.rpc_set_alias_version = function (self, channel_id, pe
 				if package_data.state == LOADING_STATES.loaded then
 					local alias_index = table.index_of(PlayerPackageAliases, alias)
 
-					RPC.rpc_alias_loading_complete(self._host_channel_id, self._peer_id, peer_id, local_player_id, alias_index, alias_version)
+					RPC.rpc_alias_loading_complete(self._host_channel_id, peer_id, local_player_id, alias_index, alias_version)
 				end
 			end
 		end

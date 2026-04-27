@@ -48,7 +48,7 @@ NewsService.init = function (self, backend_interface)
 	self._cached_promise = {}
 end
 
-NewsService._get_category = function (self, category, use_cache)
+NewsService.get_category = function (self, category, use_cache)
 	local cached_promise = self._cached_promise[category]
 
 	if cached_promise then
@@ -95,15 +95,15 @@ NewsService._get_category = function (self, category, use_cache)
 end
 
 NewsService.get_news = function (self)
-	return self:_get_category("news", true)
+	return self:get_category("news", true)
 end
 
 NewsService.get_events = function (self)
-	return self:_get_category("event", false)
+	return self:get_category("event", false)
 end
 
 NewsService.get_rewards = function (self)
-	return self:_get_category("compensation", false)
+	return self:get_category("compensation", false)
 end
 
 NewsService.claim_rewards = function (self)

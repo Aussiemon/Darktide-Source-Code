@@ -4722,35 +4722,6 @@ local function set_pong_timeout(new_value, old_value)
 	end
 end
 
-function enable_rpc_logging()
-	if not DevParameters.debug_rpc_logging then
-		Network.log("warnings")
-
-		return
-	end
-
-	Log.info("Network", "enabling rpc logging")
-	Network.log("messages")
-
-	local to_ignore = {
-		"rpc_player_input_array",
-		"rpc_player_input_array_ack",
-		"rpc_minion_anim_event",
-		"rpc_player_anim_event",
-		"rpc_set_allowed_nav_tag_layer",
-		"rpc_add_buff",
-		"rpc_minion_wield_slot",
-		"rpc_hazard_prop_hot_join",
-		"rpc_sync_destructible",
-		"rpc_sync_anim_state",
-		"rpc_interaction_set_active",
-	}
-
-	for key, value in ipairs(to_ignore) do
-		Network.ignore_rpc_log(value)
-	end
-end
-
 params.pong_timeout = {
 	category = "Network",
 	value = 10,
@@ -4815,11 +4786,6 @@ params.reliable_rpc_send_count_debug = {
 params.debug_pass_EAC_check = {
 	category = "Network",
 	value = true,
-}
-params.debug_rpc_logging = {
-	category = "Network",
-	value = false,
-	on_value_set = enable_rpc_logging,
 }
 params.debug_breed_resource_dependencies = {
 	category = "Loading",
@@ -6027,38 +5993,6 @@ local function _set_build_override_parameter(parameter_name, value)
 	params[parameter_name].value = value
 end
 
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
 _set_build_override_parameter("debug_change_time_scale", false)
 _set_build_override_parameter("debug_change_time_scale", false)
 _set_build_override_parameter("debug_change_time_scale", false)

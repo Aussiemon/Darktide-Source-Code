@@ -517,11 +517,13 @@ local level_spawn_template = {
 		visibility_function = function (level_data, belongs_to_current_safe_zone_section, in_safe_zone)
 			return in_safe_zone and belongs_to_current_safe_zone_section
 		end,
-		on_gameplay_pause_function = function (level_data, belongs_to_current_safe_zone_section)
+		on_gameplay_pause_function = function (level_data, belongs_to_current_safe_zone_section, is_hotjoin)
 			if belongs_to_current_safe_zone_section then
 				local level = level_data.level
 
-				Level.trigger_event(level, "event_players_entered_safe_zone")
+				if not is_hotjoin then
+					Level.trigger_event(level, "event_players_entered_safe_zone")
+				end
 			end
 		end,
 		on_registered_function = function (level_data, world)

@@ -2441,9 +2441,9 @@ local archetype_talents = {
 					value = talent_settings.zealot_stealth_cooldown_regeneration.other,
 				},
 			},
-			passive = {
-				buff_template_name = "zealot_stealth_cooldown_regeneration",
-				identifier = "zealot_stealth_cooldown_regeneration",
+			special_rule = {
+				identifier = "zealot_invisibility_refund_cooldown",
+				special_rule_name = special_rules.zealot_invisibility_refund_cooldown,
 			},
 		},
 		zealot_sprint_angle_improvements = {

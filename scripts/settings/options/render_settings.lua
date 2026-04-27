@@ -670,6 +670,21 @@ local RENDER_TEMPLATES = {
 	},
 	{
 		apply_on_startup = true,
+		display_name = "loc_fsr_upscaling_version",
+		id = "fsr_upscaling_version",
+		require_apply = true,
+		require_restart = false,
+		save_location = "render_settings",
+		tooltip_text = "loc_fsr_upscaling_version_tooltip",
+		validation_function = function ()
+			local upscaling_mode = Application.render_config("settings", "upscaling_mode")
+
+			return upscaling_mode == "fsr2"
+		end,
+		options = {},
+	},
+	{
+		apply_on_startup = true,
 		default_value = 0,
 		display_name = "loc_setting_ffx_frame_gen",
 		id = "ffx_frame_gen",
@@ -716,6 +731,21 @@ local RENDER_TEMPLATES = {
 				end,
 			},
 		},
+	},
+	{
+		apply_on_startup = true,
+		display_name = "loc_fsr_framegen_version",
+		id = "fsr_framegen_version",
+		require_apply = true,
+		require_restart = false,
+		save_location = "render_settings",
+		tooltip_text = "loc_fsr_framegen_version_tooltip",
+		validation_function = function ()
+			local ffx_framegen = Application.render_config("settings", "ffx_frame_gen_enabled")
+
+			return ffx_framegen
+		end,
+		options = {},
 	},
 	{
 		apply_on_startup = true,
@@ -2898,6 +2928,40 @@ for i = 1, #RENDER_TEMPLATES do
 
 	if template.supported_platforms[platform] then
 		render_settings[#render_settings + 1] = create_render_settings_entry(template)
+	end
+end
+
+if not DEDICATED_SERVER then
+	for i = 1, #render_settings do
+		local setting = render_settings[i]
+
+		if setting.id == "fsr_upscaling_version" then
+			local fsr_upscaling_versions = Application.fsr_upscaling_versions()
+
+			for v = 1, #fsr_upscaling_versions do
+				setting.options[v] = {
+					ignore_localization = true,
+					require_apply = true,
+					require_restart = false,
+					id = v - 1,
+					display_name = fsr_upscaling_versions[v],
+				}
+			end
+		end
+
+		if setting.id == "fsr_framegen_version" then
+			local fsr_framegen_versions = Application.fsr_framegen_versions()
+
+			for v = 1, #fsr_framegen_versions do
+				setting.options[v] = {
+					ignore_localization = true,
+					require_apply = true,
+					require_restart = false,
+					id = v - 1,
+					display_name = fsr_framegen_versions[v],
+				}
+			end
+		end
 	end
 end
 

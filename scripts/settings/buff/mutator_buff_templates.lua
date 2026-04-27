@@ -1209,35 +1209,28 @@ templates.drop_many_pickups_on_death = {
 
 		local unit = template_context.unit
 		local base_position_boxed = Vector3Box(Unit.world_position(unit, 1))
+		local pickup_system = Managers.state.extension:system("pickup_system")
 
-		Promise.delay(0):next(function ()
-			if not Managers.state then
-				return
-			end
+		if not pickup_system then
+			return
+		end
 
-			if not Managers.state.extension then
-				return
-			end
+		local template = template_context.template
 
-			local pickup_system = Managers.state.extension:system("pickup_system")
-
-			if not pickup_system then
-				return
-			end
-
+		pickup_system:queue_on_update(function (pickup_system_self)
 			local nav_world = Managers.state.nav_mesh:nav_world()
 
 			if not nav_world then
 				return
 			end
 
-			local spawn_locations = RoamerSlotPlacementFunctions.circle_placement_guaranteed(nav_world, base_position_boxed, template_context.template.placement_settings, nil)
+			local spawn_locations = RoamerSlotPlacementFunctions.circle_placement_guaranteed(nav_world, base_position_boxed, template.placement_settings, nil)
 
 			for i = 1, #spawn_locations do
 				local spawn_location = spawn_locations[i].position:unbox()
 				local spawn_rotation = spawn_locations[i].rotation:unbox()
 
-				pickup_system:spawn_pickup(template_context.template.pickup_name, spawn_location, spawn_rotation, nil, nil, nil, nil, "stolen_rations")
+				pickup_system_self:spawn_pickup(template.pickup_name, spawn_location, spawn_rotation, nil, nil, nil, nil, "event_spawns")
 			end
 		end)
 	end,

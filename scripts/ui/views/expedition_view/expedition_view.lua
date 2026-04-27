@@ -57,7 +57,7 @@ ExpeditionView._fetch_data = function (self)
 		Managers.data_service.expedition:fetch_player_journey_data(account_id, character_id, false),
 	}
 
-	self._promise_container:cancel_on_destroy(Promise.all(unpack(promises)):next(function (data)
+	self._promise_container:cancel_on_destroy(Promise.all(unpack(promises))):next(function (data)
 		self.regions_latency = data[1]
 		self._personal_stats = data[2] and data[2].personal_stats
 		self.nodes = data[2] and data[2].nodes_by_id
@@ -106,7 +106,7 @@ ExpeditionView._fetch_data = function (self)
 		if Managers.ui:view_active(self.view_name) then
 			Managers.ui:close_view(self.view_name)
 		end
-	end))
+	end)
 end
 
 ExpeditionView.get_saved_match_visibility = function (self)

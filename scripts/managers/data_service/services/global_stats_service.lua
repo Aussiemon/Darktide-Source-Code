@@ -78,6 +78,10 @@ GlobalStatsService._refresh_category = function (self, category_name)
 	backend_promise:catch(function (err)
 		Log.warning("GlobalStatsService", "Failed to fetch global stats for category '%s'. Default to current internally.", category_name, err)
 
+		local refresh_time = REFRESH_INTERVAL + math.random() * REFRESH_JITTER
+
+		self:_queue_refresh(category_name, refresh_time)
+
 		return self._stats_by_category[category_name] or {}
 	end):next(function (stats)
 		self._backend_promises[category_name] = nil

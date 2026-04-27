@@ -84,7 +84,7 @@ end
 templates.veteran_combat_ability_stance_master = {
 	allow_proc_while_active = true,
 	buff_id = "veteran_combat_ability_stance_master",
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_ability_volley_fire",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	predicted = false,
@@ -140,24 +140,27 @@ templates.veteran_combat_ability_stance_master = {
 	refresh_func = function (template_data, template_context, t)
 		template_data.apply_outlines = true
 	end,
-	proc_func = function (params, template_data, template_context, t)
+	check_proc_func = function (params, template_data, template_context, t)
 		if not CheckProcFunctions.on_kill(params, template_data, template_context, t) then
-			return
+			return false
 		end
 
 		_volley_fire_penance_proc(template_data, template_context)
 
 		if not template_data.outlined_kills_extends_duration then
-			return
+			return false
 		end
 
 		local breed_name = params.breed_name
 		local breed = breed_name and Breeds[breed_name]
 
 		if not _can_show_outline(breed, template_data) then
-			return
+			return false
 		end
 
+		return true
+	end,
+	proc_func = function (params, template_data, template_context, t)
 		local buff_extension = template_data.buff_extension
 
 		if buff_extension then
@@ -508,7 +511,7 @@ function _end_outlines(template_data, template_context)
 end
 
 templates.veteran_combat_ability_melee_and_ranged_damage_to_coherency = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
 		[proc_events.on_combat_ability] = 1,
@@ -652,15 +655,15 @@ templates.veteran_movement_bonuses_on_toughness_broken = {
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	hud_priority = 4,
 	predicted = true,
-	proc_events = {
-		[proc_events.on_player_hit_received] = 1,
-	},
 	keywords = {
 		keywords.stun_immune_toughness_broken,
 	},
 	proc_keywords = {
 		keywords.stun_immune,
 		keywords.slowdown_immune,
+	},
+	proc_events = {
+		[proc_events.on_player_hit_received] = 1,
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		return params.attack_result == "toughness_broken"
@@ -678,7 +681,7 @@ local melee_hit_cooldown = talent_settings_2.veteran_ranged_power_out_of_melee.c
 
 templates.veteran_ranged_power_out_of_melee = {
 	always_show_in_hud = true,
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_ranged_power_out_of_melee",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	hud_priority = 4,
@@ -842,7 +845,7 @@ templates.veteran_damage_coherency = {
 	},
 }
 templates.veteran_damage_coherency_tracking_buff = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
 		[proc_events.on_minion_death] = 1,
@@ -986,7 +989,7 @@ templates.veteran_ranged_kills_grant_melee_damage = {
 	},
 }
 templates.veteran_hits_cause_bleed = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	num_stacks_on_hit = 2,
 	predicted = false,
 	proc_events = {
@@ -1273,7 +1276,7 @@ templates.veteran_invisibility = {
 }
 templates.veteran_invisibility_on_combat_ability = {
 	allow_proc_while_active = true,
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	force_predicted_proc = true,
 	predicted = false,
 	proc_events = {
@@ -1320,8 +1323,9 @@ templates.veteran_improved_grenades = {
 	},
 }
 templates.veteran_reload_speed_on_elite_kill = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	max_stacks = 1,
+	max_stacks_cap = 1,
 	predicted = false,
 	proc_events = {
 		[proc_events.on_kill] = 1,
@@ -1338,11 +1342,12 @@ templates.veteran_reload_speed_on_elite_kill = {
 }
 templates.veteran_reload_speed_on_elite_kill_effect = {
 	always_show_in_hud = true,
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_reload_speed_on_elite_kill",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	hud_priority = 1,
 	max_stacks = 1,
+	max_stacks_cap = 1,
 	predicted = false,
 	proc_events = {
 		[proc_events.on_reload] = 1,
@@ -1387,7 +1392,7 @@ templates.veteran_increase_ranged_far_damage = {
 	},
 }
 templates.veteran_toughness_on_elite_kill = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	max_stacks = 1,
 	predicted = false,
 	proc_events = {
@@ -1511,11 +1516,16 @@ templates.veteran_aura_gain_ammo_on_elite_kill = {
 	proc_events = {
 		[proc_events.on_minion_death] = 1,
 	},
-	check_proc_func = CheckProcFunctions.on_elite_or_special_minion_death,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 
 		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
+	end,
+	check_proc_func = function (params, template_data, template_context, t)
+		local is_elite_or_special_minion_death = CheckProcFunctions.on_elite_or_special_minion_death(params, template_data, template_context, t)
+		local player_killed_target = template_context.unit == params.attacking_unit
+
+		return is_elite_or_special_minion_death and player_killed_target
 	end,
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
@@ -1523,11 +1533,6 @@ templates.veteran_aura_gain_ammo_on_elite_kill = {
 		end
 
 		local unit = template_context.unit
-
-		if unit ~= params.attacking_unit then
-			return
-		end
-
 		local units_in_coherence = template_data.coherency_extension:in_coherence_units()
 
 		for coherency_unit, _ in pairs(units_in_coherence) do
@@ -1555,17 +1560,23 @@ templates.veteran_aura_gain_ammo_on_elite_kill_improved = {
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_aura",
 	hud_priority = 5,
 	max_stacks = 1,
+	max_stacks_cap = 1,
 	predicted = false,
 	buff_category = buff_categories.aura,
 	cooldown_duration = talent_settings_2.coherency.cooldown,
 	proc_events = {
 		[proc_events.on_minion_death] = 1,
 	},
-	check_proc_func = CheckProcFunctions.on_elite_or_special_minion_death,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 
 		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
+	end,
+	check_proc_func = function (params, template_data, template_context, t)
+		local is_elite_or_special_minion_death = CheckProcFunctions.on_elite_or_special_minion_death(params, template_data, template_context, t)
+		local player_killed_target = template_context.unit == params.attacking_unit
+
+		return is_elite_or_special_minion_death and player_killed_target
 	end,
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
@@ -1573,11 +1584,6 @@ templates.veteran_aura_gain_ammo_on_elite_kill_improved = {
 		end
 
 		local unit = template_context.unit
-
-		if unit ~= params.attacking_unit then
-			return
-		end
-
 		local units_in_coherence = template_data.coherency_extension:in_coherence_units()
 
 		for coherency_unit, _ in pairs(units_in_coherence) do
@@ -1599,27 +1605,33 @@ templates.veteran_aura_gain_ammo_on_elite_kill_improved = {
 	},
 }
 templates.veteran_replenish_toughness_of_ally_close_to_victim = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	max_stacks = 1,
 	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1,
 	},
-	check_proc_func = CheckProcFunctions.on_ranged_kill,
 	start_func = function (template_data, template_context)
 		local side_system = Managers.state.extension:system("side_system")
 		local unit = template_context.unit
 
 		template_data.side = side_system.side_by_unit[unit]
 	end,
-	proc_func = function (params, template_data, template_context)
+	check_proc_func = function (params, template_data, template_context, t)
+		local is_ranged_kill = CheckProcFunctions.on_ranged_kill(params, template_data, template_context, t)
+
+		if not is_ranged_kill then
+			return false
+		end
+
 		local victim_unit = params.attacked_unit
 		local victim_pos = victim_unit and POSITION_LOOKUP[victim_unit] or params.hit_world_position:unbox()
 
-		if not victim_pos then
-			return
-		end
-
+		return not not victim_pos
+	end,
+	proc_func = function (params, template_data, template_context)
+		local victim_unit = params.attacked_unit
+		local victim_pos = victim_unit and POSITION_LOOKUP[victim_unit] or params.hit_world_position:unbox()
 		local player_units = template_data.side.valid_player_units
 		local local_unit = template_context.unit
 		local chosen_ally_unit
@@ -1674,7 +1686,7 @@ local melee_hit_cooldown_toughness = talent_settings_2.toughness_3.cooldown
 
 templates.veteran_toughness_regen_out_of_melee = {
 	always_show_in_hud = true,
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_replenish_toughness_outside_melee",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	hud_priority = 4,
@@ -1682,19 +1694,18 @@ templates.veteran_toughness_regen_out_of_melee = {
 	proc_events = {
 		[proc_events.on_player_hit_received] = 1,
 	},
-	check_proc_func = CheckProcFunctions.on_melee_hit,
-	proc_func = function (params, template_data, template_context, t)
+	start_func = function (template_data, template_context)
+		template_data.last_hit_t = 0
+	end,
+	check_proc_func = function (params, template_data, template_context, t)
+		local is_melee_hit = CheckProcFunctions.on_melee_hit(params, template_data, template_context, t)
 		local attacked_unit = params.attacked_unit
 		local unit = template_context.unit
 
-		if attacked_unit ~= unit then
-			return
-		end
-
-		template_data.last_hit_t = t
+		return is_melee_hit and attacked_unit == unit
 	end,
-	start_func = function (template_data, template_context)
-		template_data.last_hit_t = 0
+	proc_func = function (params, template_data, template_context, t)
+		template_data.last_hit_t = t
 	end,
 	update_func = function (template_data, template_context, dt, t, template)
 		local is_active = t > template_data.last_hit_t + melee_hit_cooldown_toughness
@@ -1713,7 +1724,7 @@ templates.veteran_toughness_regen_out_of_melee = {
 	},
 }
 templates.veteran_ranged_weakspot_toughness_recovery = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1,
@@ -1784,7 +1795,7 @@ templates.veteran_reload_speed_on_non_empty_clip = {
 	},
 }
 templates.veteran_frag_grenade_bleed = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1,
@@ -1946,17 +1957,17 @@ templates.veteran_reduced_threat_gain = {
 	},
 }
 templates.veteran_buffs_after_combat_ability = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	predicted = false,
-	proc_events = {
-		[proc_events.on_combat_ability] = 1,
-	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 
 		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
 		template_data.talent_extension = ScriptUnit.extension(unit, "talent_system")
 	end,
+	proc_events = {
+		[proc_events.on_combat_ability] = 1,
+	},
 	proc_func = function (params, template_data, template_context, t)
 		local talent_extension = template_data.talent_extension
 
@@ -2033,18 +2044,19 @@ templates.veteran_increased_weakspot_power_after_combat_ability = {
 	},
 }
 templates.veteran_aura_gain_grenade_on_elite_kill = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	max_stacks = 1,
+	max_stacks_cap = 1,
 	predicted = false,
 	proc_events = {
 		[proc_events.on_minion_death] = talent_settings_2.coop_2.proc_chance,
 	},
-	check_proc_func = CheckProcFunctions.on_elite_or_special_minion_death,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 
 		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
 	end,
+	check_proc_func = CheckProcFunctions.on_elite_or_special_minion_death,
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
 			return
@@ -2090,12 +2102,11 @@ templates.veteran_increased_weakspot_damage = {
 	},
 }
 templates.veteran_combat_ability_cooldown_reduction_on_elite_kills = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
 		[proc_events.on_kill] = talent_settings_3.passive_1.on_hit_proc_chance,
 	},
-	check_proc_func = CheckProcFunctions.on_special_kill,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local ability_extension = ScriptUnit.extension(unit, "ability_system")
@@ -2104,6 +2115,7 @@ templates.veteran_combat_ability_cooldown_reduction_on_elite_kills = {
 		template_data.cooldown_reduction = talent_settings_3.passive_1.cooldown_reduction
 		template_data.talent_cooldown_reduction = talent_settings_3.passive_1.talent_cooldown_reduction
 	end,
+	check_proc_func = CheckProcFunctions.on_special_kill,
 	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("veteran_combat_ability_cooldown_reduction_on_elite_kills_buff", t)
 	end,
@@ -2156,7 +2168,7 @@ templates.veteran_suppression_immunity = {
 	},
 }
 templates.veteran_all_kills_replenish_bonus_toughness = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1,
@@ -2200,7 +2212,7 @@ templates.veteran_toughness_damage_reduction_per_ally_in_coherency = {
 	end,
 }
 templates.veteran_allies_kills_chance_to_trigger_increased_damage = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
 		[proc_events.on_minion_death] = talent_settings_3.offensive_3.on_minion_death_proc_chance,
@@ -2288,13 +2300,13 @@ templates.veteran_combat_ability_increase_toughness_to_coherency = {
 	},
 }
 templates.veteran_share_toughness_gained = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	predicted = false,
-	proc_events = {
-		[proc_events.on_toughness_replenished] = 1,
-	},
 	stat_buffs = {
 		[stat_buffs.coherency_radius_modifier] = talent_settings_3.coop_3.radius,
+	},
+	proc_events = {
+		[proc_events.on_toughness_replenished] = 1,
 	},
 	check_proc_func = function (params, template_data, template_context, t)
 		if table.is_empty(params) or not params.amount or params.triggering_proc_event ~= "on_toughness_replenished" then
@@ -2355,7 +2367,7 @@ local assist_interaction_types = {
 
 templates.veteran_increased_move_speed_when_moving_towards_disabled_allies = {
 	always_active = true,
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_movement_speed_towards_downed",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	hud_priority = 4,
@@ -2476,7 +2488,7 @@ templates.veteran_combat_ability_revive_nearby_allies = {
 	},
 }
 templates.veteran_consecutive_hits_apply_rending = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1,
@@ -2525,7 +2537,7 @@ templates.veteran_consecutive_hits_apply_rending = {
 	},
 }
 templates.veteran_crits_apply_rending = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1,
@@ -2548,7 +2560,7 @@ templates.veteran_crits_apply_rending = {
 	end,
 }
 templates.veteran_dodging_grants_crit = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
 		[proc_events.on_successful_dodge] = 1,
@@ -2574,7 +2586,7 @@ templates.veteran_dodging_crit_buff = {
 	},
 }
 templates.veteran_improved_toughness_stamina = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
 		[proc_events.on_block] = 1,
@@ -2715,7 +2727,7 @@ end
 local snipers_focus_stacks_per_weakspot_kill = 3
 
 templates.veteran_snipers_focus = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1,
@@ -2874,7 +2886,7 @@ local max_melee_stacks = 1
 local toughness_cd = 3
 
 templates.veteran_weapon_switch_passive_buff = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
 		[proc_events.on_kill] = 1,
@@ -3019,11 +3031,12 @@ local ammo_replenish_percent = 0.33
 local veteran_weapon_switch_ranged_duration = talent_settings.veteran_weapon_swap_keystone.ranged_duration
 
 templates.veteran_weapon_switch_ranged_buff = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_weapon_switch_crit_bonus",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
 	predicted = false,
 	max_stacks = max_ranged_stacks,
+	max_stacks_cap = max_ranged_stacks,
 	duration = veteran_weapon_switch_ranged_duration,
 	proc_events = {
 		[proc_events.on_shoot] = 1,
@@ -3116,12 +3129,13 @@ templates.veteran_weapon_switch_reload_speed = {
 	},
 }
 templates.veteran_weapon_switch_melee_buff = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	duration = 10,
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_weapon_switch_cleave_bonus",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
 	predicted = false,
 	max_stacks = max_melee_stacks,
+	max_stacks_cap = max_melee_stacks,
 	proc_events = {
 		[proc_events.on_kill] = 1,
 	},
@@ -3190,7 +3204,7 @@ local stamina_gain = 0.05
 templates.veteran_improved_tag = {
 	always_active = true,
 	always_show_in_hud = true,
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_improved_tag",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
 	hud_priority = 1,

@@ -1562,43 +1562,54 @@ templates.zealot_toughness_regen_in_melee = {
 	},
 }
 templates.zealot_bleeding_crits = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1,
+		[proc_events.on_bleeding_minion_death] = 1,
 	},
 	check_proc_func = CheckProcFunctions.on_melee_hit,
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local buff_extension = ScriptUnit.extension(unit, "buff_system")
+	specific_check_proc_funcs = {
+		[proc_events.on_bleeding_minion_death] = function (params, template_data, template_context)
+			local player_unit = template_context.unit
+			local attacking_unit = params.attacking_unit
+			local was_melee_hit = CheckProcFunctions.on_melee_hit(params, template_data, template_context)
 
-		template_data.buff_extension = buff_extension
-	end,
-	proc_func = function (params, template_data, template_context)
-		local victim_unit = params.attacked_unit
-		local victim_buff_extension = ScriptUnit.has_extension(victim_unit, "buff_system")
-		local target_is_bleeding = victim_buff_extension and (victim_buff_extension:has_keyword(keywords.bleeding) or victim_buff_extension:had_keyword(keywords.bleeding))
+			return was_melee_hit and attacking_unit and attacking_unit == player_unit
+		end,
+	},
+	specific_proc_func = {
+		[proc_events.on_hit] = function (params, template_data, template_context)
+			local victim_unit = params.attacked_unit
+			local victim_buff_extension = ScriptUnit.has_extension(victim_unit, "buff_system")
+			local target_is_bleeding = victim_buff_extension and victim_buff_extension:has_keyword(keywords.bleeding)
 
-		if target_is_bleeding then
-			local t = FixedFrame.get_latest_fixed_time()
+			if target_is_bleeding then
+				local t = FixedFrame.get_latest_fixed_time()
 
-			template_data.buff_extension:add_internally_controlled_buff("zealot_bleeding_crits_effect", t)
-		end
-
-		local damage = params.damage or 0
-		local is_damaging_crit = params.is_critical_strike and damage > 0
-
-		if is_damaging_crit and HEALTH_ALIVE[victim_unit] and victim_buff_extension then
-			local bleeding_dot_buff_name = "bleed"
-			local t = FixedFrame.get_latest_fixed_time()
-			local unit = template_context.unit
-			local num_stacks = talent_settings_2.offensive_1.stacks
-
-			for ii = 1, num_stacks do
-				victim_buff_extension:add_internally_controlled_buff(bleeding_dot_buff_name, t, "owner_unit", unit)
+				template_context.buff_extension:add_internally_controlled_buff("zealot_bleeding_crits_effect", t)
 			end
-		end
-	end,
+
+			local damage = params.damage or 0
+			local is_damaging_crit = params.is_critical_strike and damage > 0
+
+			if is_damaging_crit and HEALTH_ALIVE[victim_unit] and victim_buff_extension then
+				local bleeding_dot_buff_name = "bleed"
+				local t = FixedFrame.get_latest_fixed_time()
+				local unit = template_context.unit
+				local num_stacks = talent_settings_2.offensive_1.stacks
+
+				for ii = 1, num_stacks do
+					victim_buff_extension:add_internally_controlled_buff(bleeding_dot_buff_name, t, "owner_unit", unit)
+				end
+			end
+		end,
+		[proc_events.on_bleeding_minion_death] = function (params, template_data, template_context)
+			local t = FixedFrame.get_latest_fixed_time()
+
+			template_context.buff_extension:add_internally_controlled_buff("zealot_bleeding_crits_effect", t)
+		end,
+	},
 }
 templates.zealot_bleeding_crits_effect = {
 	class_name = "buff",
@@ -4120,6 +4131,29 @@ templates.zealot_invisibility = {
 			return
 		end
 
+		if template_data.cooldown_on_kill and template_context.is_server then
+			local is_kill = result == attack_results.died
+
+			if is_kill then
+				local attacked_unit = params.attacked_unit
+				local attacked_unit_breed = Breed.unit_breed_or_nil(attacked_unit)
+				local attacked_breed_tags = attacked_unit_breed and attacked_unit_breed.tags
+				local cooldown_percent = talent_settings.zealot_stealth_cooldown_regeneration.other
+
+				if attacked_breed_tags then
+					if attacked_breed_tags.monster then
+						cooldown_percent = talent_settings.zealot_stealth_cooldown_regeneration.monster
+					elseif attacked_breed_tags.ogryn then
+						cooldown_percent = talent_settings.zealot_stealth_cooldown_regeneration.ogryn
+					end
+				end
+
+				local ability_extension = template_data.ability_extension
+
+				ability_extension:reduce_ability_cooldown_percentage("combat_ability", cooldown_percent)
+			end
+		end
+
 		template_data.finish = true
 	end,
 	conditional_exit_func = function (template_data, template_context)
@@ -4133,6 +4167,10 @@ templates.zealot_invisibility = {
 		_shroudfield_penance_start(template_data, template_context)
 
 		local unit = template_context.unit
+		local ability_extension = ScriptUnit.extension(unit, "ability_system")
+
+		template_data.ability_extension = ability_extension
+
 		local talent_extension = ScriptUnit.has_extension(unit, "talent_system")
 		local zealot_leave_stealth_toughness_regen_talent = talent_extension and talent_extension:has_special_rule(special_rules.zealot_leave_stealth_toughness_regen)
 
@@ -4141,6 +4179,8 @@ templates.zealot_invisibility = {
 
 			Toughness.replenish_percentage(template_context.unit, toughness_to_restore, false, "zealot_stealth")
 		end
+
+		template_data.cooldown_on_kill = talent_extension and talent_extension:has_special_rule(special_rules.zealot_invisibility_refund_cooldown)
 
 		local event_manager = Managers.event
 

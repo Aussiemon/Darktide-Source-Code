@@ -2494,6 +2494,7 @@ templates.ogryn_ranged_stance_fire_shots = {
 	proc_events = {
 		[proc_events.on_hit] = 1,
 		[proc_events.on_shoot] = 1,
+		[proc_events.on_shoot_projectile] = 1,
 	},
 	start_func = function (template_data, template_context)
 		template_data.new_shot = true
@@ -2530,6 +2531,9 @@ templates.ogryn_ranged_stance_fire_shots = {
 					end
 				end
 			end
+		end,
+		on_shoot_projectile = function (params, template_data, template_context)
+			table.clear(fire_targets_hit)
 		end,
 		on_shoot = function (params, template_data, template_context)
 			table.clear(fire_targets_hit)
