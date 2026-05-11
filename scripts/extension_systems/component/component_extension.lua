@@ -17,7 +17,11 @@ ComponentExtension.init = function (self, extension_init_context, unit, extensio
 	self._extension_updates_enabled = true
 	self._component_system = nil
 
-	if Managers.state and Managers.state.extension then
+	if Managers.ui and Managers.ui:has_world_extension_manager(self._world) then
+		local extension_manager = Managers.ui:world_extension_manager(self._world)
+
+		self._component_system = extension_manager:system("component_system")
+	elseif Managers.state and Managers.state.extension then
 		self._component_system = Managers.state.extension:system("component_system")
 	end
 
@@ -90,7 +94,7 @@ ComponentExtension._register_extension_update = function (self)
 	local unit = self._unit
 	local component_system = self._component_system
 
-	if component_system then
+	if component_system and not rawget(component_system, "__deleted") then
 		component_system:enable_update_function("ComponentExtension", "update", unit, self)
 
 		self._extension_updates_enabled = true
@@ -101,7 +105,7 @@ ComponentExtension._unregister_extension_update = function (self)
 	local unit = self._unit
 	local component_system = self._component_system
 
-	if component_system and component_system.disable_update_function then
+	if component_system and not rawget(component_system, "__deleted") and component_system.disable_update_function then
 		component_system:disable_update_function("ComponentExtension", "update", unit)
 
 		self._extension_updates_enabled = false

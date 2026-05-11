@@ -45,9 +45,11 @@ MissionObjectiveBase.init = function (self)
 	self._hide_widget = false
 	self._additional_height = 0
 	self._use_counter = true
+	self._use_counter_changed = false
 	self._required_players = nil
 	self._available_players = 0
 	self._progress_bar = false
+	self._progress_bar_changed = false
 	self._progress_bar_icon = nil
 	self._progress_timer = false
 	self._popups_enabled = true
@@ -615,8 +617,17 @@ MissionObjectiveBase.progress_bar = function (self)
 	return self._progress_bar
 end
 
+MissionObjectiveBase.progress_bar_changed_state = function (self)
+	if not self._progress_bar_changed then
+		return nil
+	end
+
+	return self._progress_bar
+end
+
 MissionObjectiveBase.set_progress_bar = function (self, use_bar)
 	self._progress_bar = use_bar
+	self._progress_bar_changed = true
 end
 
 MissionObjectiveBase.progress_bar_icon = function (self)
@@ -627,8 +638,17 @@ MissionObjectiveBase.progress_timer = function (self)
 	return self._progress_timer
 end
 
+MissionObjectiveBase.progress_timer_changed_state = function (self)
+	if not self._progress_timer_changed then
+		return nil
+	end
+
+	return self._progress_timer
+end
+
 MissionObjectiveBase.set_progress_timer = function (self, use_timer)
 	self._progress_timer = use_timer
+	self._progress_timer_changed = true
 end
 
 MissionObjectiveBase.large_progress_bar = function (self)

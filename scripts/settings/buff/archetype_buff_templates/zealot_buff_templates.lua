@@ -4276,6 +4276,8 @@ templates.zealot_melee_damage_on_stamina_depleted = {
 }
 templates.zealot_more_power_when_low_on_stamina = {
 	class_name = "buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_more_damage_when_low_on_stamina",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	predicted = false,
 	lerped_stat_buffs = {
 		[stat_buffs.melee_damage] = {
@@ -4287,6 +4289,8 @@ templates.zealot_more_power_when_low_on_stamina = {
 		local unit = template_context.unit
 		local current_stamina, max_stamina = Stamina.current_and_max_value(unit, template_data.stamina_component, template_data.base_stamina_template)
 		local current_percent = current_stamina / max_stamina
+
+		template_data.current_percent = current_percent
 
 		return 1 - current_percent
 	end,
@@ -4304,9 +4308,11 @@ templates.zealot_more_power_when_low_on_stamina = {
 
 		local current_stamina, max_stamina = Stamina.current_and_max_value(unit, stamina_component, base_stamina_template)
 	end,
-	related_talents = {
-		"psyker_warp_attacks_rending",
-	},
+	duration_func = function (template_data, template_context)
+		local current_percent = template_data.current_percent or 1
+
+		return math.clamp(1 - current_percent, 0.01, 1)
+	end,
 }
 templates.zealot_damage_reduction_after_dodge = {
 	active_duration = 2.5,

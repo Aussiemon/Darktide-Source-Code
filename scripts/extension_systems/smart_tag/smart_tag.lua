@@ -171,6 +171,10 @@ SmartTag.validate_target_unit = function (target_unit)
 				return false, REMOVE_TAG_REASONS.health_station_depleted
 			end
 		end
+	elseif target_type == "live_event_objective" then
+		if not HEALTH_ALIVE[target_unit] then
+			return false, REMOVE_TAG_REASONS.tagged_unit_died
+		end
 	elseif target_type == "expedition_loot_converter" then
 		return true
 	end

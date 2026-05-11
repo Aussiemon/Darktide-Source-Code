@@ -34,6 +34,18 @@ EventSynchronizerBaseExtension.objective_started = function (self)
 	end
 end
 
+EventSynchronizerBaseExtension.hot_join_sync = function (self, sender, channel)
+	if self._mission_active then
+		local level_unit_id = Managers.state.unit_spawner:level_index(self._unit)
+
+		RPC.rpc_event_synchronizer_set_mission_active(channel, level_unit_id)
+	end
+end
+
+EventSynchronizerBaseExtension.rpc_set_mission_active = function (self)
+	self._mission_active = true
+end
+
 EventSynchronizerBaseExtension.start_event = function (self)
 	if not self._mission_active then
 		self._mission_active = true

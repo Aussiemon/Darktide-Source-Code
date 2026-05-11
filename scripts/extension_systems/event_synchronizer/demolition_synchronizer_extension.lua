@@ -36,8 +36,10 @@ DemolitionSynchronizerExtension.hot_join_sync = function (self, sender, channel)
 	if self._override_objective_markers then
 		local level_unit_id = Managers.state.unit_spawner:level_index(self._unit)
 
-		Managers.state.game_session:send_rpc_clients("rpc_event_synchronizer_demolition_target_override", level_unit_id, true)
+		RPC.rpc_event_synchronizer_demolition_target_override(channel, level_unit_id, true)
 	end
+
+	DemolitionSynchronizerExtension.super.hot_join_sync(self, sender, channel)
 end
 
 DemolitionSynchronizerExtension._seperate_objective_units = function (self, units)

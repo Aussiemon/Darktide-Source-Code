@@ -40,10 +40,6 @@ SideMissionPickupSynchronizerExtension.on_gameplay_post_init = function (self, u
 	end
 end
 
-SideMissionPickupSynchronizerExtension.hot_join_sync = function (self, sender, channel)
-	return
-end
-
 SideMissionPickupSynchronizerExtension.update = function (self, unit, dt, t)
 	if self._is_server and self._participate_in_game then
 		local increment_value = self._increment_value

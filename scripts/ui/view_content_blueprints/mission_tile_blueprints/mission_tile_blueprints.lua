@@ -127,6 +127,7 @@ local function gradient_map_by_category_change_function(content, style, animatio
 	local is_selected_mission_board = hotspot.is_selected_mission_board
 	local is_focused = hotspot.is_focused
 	local is_locked = content.is_locked
+	local is_disabled = hotspot.disabled
 	local was_selected = style.is_selected
 	local currently_selected = is_selected or is_focused or is_selected_mission_board
 
@@ -135,7 +136,7 @@ local function gradient_map_by_category_change_function(content, style, animatio
 
 		if currently_selected then
 			style.material_values.gradient_map = style.selected_gradient
-		elseif is_locked then
+		elseif is_locked or is_disabled then
 			style.material_values.gradient_map = style.disabled_gradient
 		else
 			style.material_values.gradient_map = style.default_gradient
@@ -421,7 +422,7 @@ do
 					offset = {
 						0,
 						0,
-						50,
+						-1,
 					},
 					default_size = Dimensions.small_mission_size,
 					size_addition = {

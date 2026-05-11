@@ -124,5 +124,12 @@ SessionStats.rations = {
 		recovered = "stolen_rations_recovered",
 	},
 }
+SessionStats.skulls_guns = {
+	fill_with_default = true,
+	type = BackendTypes.statistic_by,
+	stats = {
+		recovered = "live_event_skulls_guns_recovered",
+	},
+}
 
 return SessionStats

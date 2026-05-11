@@ -483,11 +483,15 @@ GameModeExpedition.pacing_update = function (self, dt, t)
 end
 
 GameModeExpedition.complete = function (self, reason)
+	_log("[complete] completed, reason: %s", reason or "none")
+
 	self._completed = true
 	self._end_reason = reason
 end
 
 GameModeExpedition.fail = function (self, reason)
+	_log("[fail] failed, reason: %s", reason or "none")
+
 	self._failed = true
 	self._end_reason = reason
 end

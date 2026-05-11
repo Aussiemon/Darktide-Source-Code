@@ -58,6 +58,7 @@ AutoEvent.init = function (self, nav_world, world, side_id, target_side_id, temp
 	self._side_system = side_system
 	self._target_side_id = target_side_id
 	template_name = template_name or "dummy_auto_event_template"
+	self._original_template = AutoEventsTemplates[template_name]
 	self._template = AutoEventsTemplates[template_name]
 	self._active_events = {}
 end
@@ -74,6 +75,10 @@ end
 
 AutoEvent.swap_auto_event_template = function (self, template_name)
 	self._template = AutoEventsTemplates[template_name]
+end
+
+AutoEvent.restore_auto_event_template = function (self)
+	self._template = self._original_template
 end
 
 AutoEvent.request_auto_event = function (self, params, debug_position)
@@ -770,9 +775,9 @@ AutoEvent._check_for_injection_spawn = function (self, event_data, nearby_spawne
 	local monster_settings = template.monster_settings
 
 	if monster_settings and not event_data.tried_spawning_monster then
-		local monster_breeds = self._template.monster_settings.monster_breeds
+		local monster_breeds = monster_settings.monster_breeds
 		local should_force_inject_monster = event_data.should_force_inject_monster
-		local should_inject_monster = self._template.captains_settings.execute(should_force_inject_monster)
+		local should_inject_monster = monster_settings.execute(should_force_inject_monster)
 
 		if should_inject_monster then
 			event_data.injection_spawn_table[#event_data.injection_spawn_table + 1] = monster_breeds[math.random(1, #monster_breeds)]
@@ -845,7 +850,7 @@ AutoEvent._check_for_injection_spawn = function (self, event_data, nearby_spawne
 			success = true
 		end
 
-		if not success then
+		if not success and #nearby_occluded_positions > 0 then
 			for ii = 1, injection_spawn_length do
 				local spawn_position = nearby_occluded_positions[math.random(1, #nearby_occluded_positions)]
 				local minion_spawn_manager = Managers.state.minion_spawn

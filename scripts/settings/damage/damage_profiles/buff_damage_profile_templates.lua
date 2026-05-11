@@ -19,7 +19,7 @@ local burninating_adm = {
 	[armor_types.resistant] = 1.5,
 	[armor_types.player] = 0.125,
 	[armor_types.berserker] = 1,
-	[armor_types.super_armor] = 0.1,
+	[armor_types.super_armor] = 0.2,
 	[armor_types.disgustingly_resilient] = 1.25,
 	[armor_types.void_shield] = 1,
 }
@@ -29,7 +29,7 @@ local burninating_warp_adm = {
 	[armor_types.resistant] = 1.5,
 	[armor_types.player] = 0.125,
 	[armor_types.berserker] = 1,
-	[armor_types.super_armor] = 0.1,
+	[armor_types.super_armor] = 0.25,
 	[armor_types.disgustingly_resilient] = 1.25,
 	[armor_types.void_shield] = 1,
 }
@@ -385,7 +385,7 @@ damage_templates.warpfire = {
 		impact = burninating_warp_adm,
 	},
 	power_distribution = {
-		attack = 250,
+		attack = 255,
 		impact = 0,
 	},
 	cleave_distribution = {
@@ -670,7 +670,7 @@ damage_templates.toxin_variant_3 = {
 		impact = toxin_adm,
 	},
 	power_distribution = {
-		attack = 440,
+		attack = 350,
 		impact = 0,
 	},
 	cleave_distribution = {

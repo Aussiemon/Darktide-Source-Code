@@ -231,6 +231,110 @@ Styles.entry.bottom_detail = {
 		2,
 	},
 }
+Styles.entry.event_view_button = {}
+Styles.entry.event_view_button.hotspot = {
+	horizontal_alignment = "center",
+	vertical_alignment = "top",
+	size = sizes.event_button_size,
+	on_hover_sound = UISoundEvents.default_mouse_hover,
+	on_pressed_sound = UISoundEvents.default_click,
+	offset = {
+		0,
+		0,
+		2,
+	},
+}
+Styles.entry.event_view_button.background = {
+	horizontal_alignment = "center",
+	scale_to_material = true,
+	vertical_alignment = "top",
+	size = sizes.event_button_size,
+	size_addition = {
+		24,
+		24,
+	},
+	color = Color.terminal_grid_background(255, true),
+	offset = {
+		-1,
+		0,
+		2,
+	},
+}
+Styles.entry.event_view_button.gradient = {
+	horizontal_alignment = "center",
+	scale_to_material = true,
+	vertical_alignment = "top",
+	size = sizes.event_button_size,
+	default_color = Color.terminal_background_gradient(nil, true),
+	selected_color = Color.terminal_frame_selected(nil, true),
+	offset = {
+		0,
+		0,
+		3,
+	},
+}
+Styles.entry.event_view_button.frame = {
+	horizontal_alignment = "center",
+	scale_to_material = true,
+	vertical_alignment = "top",
+	size = sizes.event_button_size,
+	default_color = Color.terminal_frame(nil, true),
+	hover_color = Color.terminal_frame_hover(nil, true),
+	offset = {
+		0,
+		0,
+		4,
+	},
+}
+Styles.entry.event_view_button.corner = {
+	horizontal_alignment = "center",
+	scale_to_material = true,
+	vertical_alignment = "top",
+	size = sizes.event_button_size,
+	default_color = Color.terminal_corner(nil, true),
+	hover_color = Color.terminal_corner_hover(nil, true),
+	offset = {
+		0,
+		0,
+		5,
+	},
+}
+Styles.entry.event_view_button.rect = {
+	horizontal_alignment = "center",
+	vertical_alignment = "top",
+	size = sizes.event_button_size,
+	color = {
+		150,
+		0,
+		0,
+		0,
+	},
+	offset = {
+		0,
+		0,
+		4,
+	},
+}
+Styles.entry.event_view_button.text = {
+	drop_shadow = true,
+	font_size = 24,
+	font_type = "proxima_nova_bold",
+	horizontal_alignment = "center",
+	text_horizontal_alignment = "center",
+	text_vertical_alignment = "center",
+	vertical_alignment = "top",
+	default_color = Color.terminal_text_header(255, true),
+	text_color = Color.terminal_text_header(255, true),
+	hover_color = Color.white(255, true),
+	disabled_color = Color.ui_grey_light(255, true),
+	default_color = Color.terminal_text_header(255, true),
+	size = sizes.event_button_size,
+	offset = {
+		0,
+		0,
+		6,
+	},
+}
 Styles.reward = {}
 Styles.reward.background = {
 	horizontal_alignment = "left",

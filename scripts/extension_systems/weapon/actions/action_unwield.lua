@@ -79,6 +79,10 @@ ActionUnwield.start = function (self, action_settings, t, time_scale, action_sta
 	if IS_PLAYSTATION and self._is_local_unit and self._is_human_controlled then
 		Managers.input.haptic_trigger_effects:unwield()
 	end
+
+	if IS_XBS then
+		Application.reset_dlss()
+	end
 end
 
 ActionUnwield.fixed_update = function (self, dt, t, time_in_action)

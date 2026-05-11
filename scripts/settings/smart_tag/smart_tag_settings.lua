@@ -313,6 +313,118 @@ local templates = {
 		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
 		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
 	},
+	expedition_expedition_grenade_airstrike_pocketable_over_here = {
+		group = "object",
+		is_cancelable = true,
+		lifetime = 10,
+		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		replies = {
+			replies.dibs,
+		},
+	},
+	expedition_expedition_grenade_artillery_strike_pocketable_over_here = {
+		group = "object",
+		is_cancelable = true,
+		lifetime = 10,
+		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		replies = {
+			replies.dibs,
+		},
+	},
+	expedition_expedition_grenade_big_pocketable_over_here = {
+		group = "object",
+		is_cancelable = true,
+		lifetime = 10,
+		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		replies = {
+			replies.dibs,
+		},
+	},
+	expedition_expedition_grenade_valkyrie_hover_pocketable_over_here = {
+		group = "object",
+		is_cancelable = true,
+		lifetime = 10,
+		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		replies = {
+			replies.dibs,
+		},
+	},
+	expedition_motion_detection_mine_fire_pocketable_over_here = {
+		group = "object",
+		is_cancelable = true,
+		lifetime = 10,
+		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		replies = {
+			replies.dibs,
+		},
+	},
+	expedition_motion_detection_mine_explosive_pocketable_pickup_over_here = {
+		group = "object",
+		is_cancelable = true,
+		lifetime = 10,
+		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		replies = {
+			replies.dibs,
+		},
+	},
+	expedition_motion_detection_mine_shock_pocketable_over_here = {
+		group = "object",
+		is_cancelable = true,
+		lifetime = 10,
+		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		replies = {
+			replies.dibs,
+		},
+	},
+	expedition_expedition_deployable_force_field_pocketable_pickup_over_here = {
+		group = "object",
+		is_cancelable = true,
+		lifetime = 10,
+		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		replies = {
+			replies.dibs,
+		},
+	},
+	expedition_expedition_time_syringe_timed_over_here = {
+		group = "object",
+		is_cancelable = true,
+		lifetime = 10,
+		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		replies = {
+			replies.dibs,
+		},
+	},
+	expedition_expedition_explosive_luggable_01_over_here = {
+		group = "object",
+		is_cancelable = true,
+		lifetime = 10,
+		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		replies = {
+			replies.dibs,
+		},
+	},
+	expedition_large_ammunition_crate_over_here = {
+		group = "object",
+		is_cancelable = true,
+		lifetime = 10,
+		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		replies = {
+			replies.dibs,
+		},
+		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
+		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_ammo,
+	},
 	small_metal_pickup_over_here = {
 		group = "object",
 		is_cancelable = true,
@@ -380,6 +492,31 @@ local templates = {
 		},
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
 		voice_tag_id = vo_trigger_ids.smart_tag_vo_station_health,
+	},
+	event_pickup_over_here = {
+		group = "object",
+		is_cancelable = true,
+		lifetime = 10,
+		sound_enter_tagger = UISoundEvents.smart_tag_pickup_default_enter,
+		sound_enter_others = UISoundEvents.smart_tag_pickup_default_enter_others,
+		replies = {
+			replies.ok,
+		},
+		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
+	},
+	live_event_objective_over_here = {
+		display_name = "loc_smart_tag_type_attention",
+		group = "location_attention",
+		is_cancelable = true,
+		lifetime = 30,
+		marker_type = "location_attention",
+		sound_enter_tagger = UISoundEvents.smart_tag_location_attention_enter,
+		sound_enter_others = UISoundEvents.smart_tag_location_attention_enter_others,
+		replies = {
+			replies.ok,
+		},
+		voice_tag_concept = vo_concepts.on_demand_com_wheel,
+		voice_tag_id = vo_trigger_ids.com_wheel_vo_over_here,
 	},
 	enemy_over_here = {
 		display_name = "loc_smart_tag_type_threat",

@@ -9,6 +9,7 @@ local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
+local WalletSettings = require("scripts/settings/wallet_settings")
 local header_size = HudElementMissionObjectiveFeedSettings.header_size
 local icon_size = {
 	32,
@@ -1106,6 +1107,487 @@ local live_event_counter = UIWidget.create_definition({
 		end
 	end,
 })
+
+local function live_event_widget_should_show(context, is_hub, circumstance_name)
+	if is_hub then
+		return true
+	end
+
+	local family = context and context.mission_circumstance_family
+
+	if not family then
+		return false
+	end
+
+	if not circumstance_name then
+		return false
+	end
+
+	if circumstance_name == family then
+		return true
+	end
+
+	local prefix = family .. "_"
+
+	return string.sub(circumstance_name, 1, #prefix) == prefix
+end
+
+local _global_reward_counter_currency_text_width = 140
+local _global_reward_counter_default_height = 50
+local _global_reward_counter_max_interpolation_time = 67
+local live_event_global_reward_counter = UIWidget.create_definition({
+	{
+		pass_type = "text",
+		style_id = "title",
+		value = "",
+		value_id = "title",
+		style = {
+			drop_shadow = true,
+			font_size = 20,
+			horizontal_alignment = "left",
+			text_horizontal_alignment = "left",
+			text_vertical_alignment = "top",
+			vertical_alignment = "top",
+			offset = {
+				0,
+				0,
+				6,
+			},
+			size = {
+				live_event_text_width - (_global_reward_counter_currency_text_width + 8),
+				20,
+			},
+			font_type = UIFontSettings.hud_body.font_type,
+			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text,
+			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color,
+		},
+	},
+	{
+		pass_type = "text",
+		style_id = "currency_reward",
+		value = "",
+		value_id = "currency_reward",
+		style = {
+			drop_shadow = true,
+			font_size = 16,
+			horizontal_alignment = "right",
+			text_horizontal_alignment = "right",
+			text_vertical_alignment = "center",
+			vertical_alignment = "top",
+			offset = {
+				0,
+				0,
+				6,
+			},
+			size = {
+				_global_reward_counter_currency_text_width,
+				20,
+			},
+			font_type = UIFontSettings.hud_body.font_type,
+			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text,
+			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color,
+		},
+		visibility_function = function (content)
+			return content.has_currency_reward
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "bar_background",
+		value = "content/ui/materials/backgrounds/default_square",
+		style = {
+			horizontal_alignment = "left",
+			vertical_alignment = "top",
+			offset = {
+				0,
+				24,
+				6,
+			},
+			default_offset = {
+				0,
+				24,
+				6,
+			},
+			size = {
+				nil,
+				10,
+			},
+			color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar_background,
+		},
+		visibility_function = function (content)
+			return not content.all_claimed
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "bar",
+		value = "content/ui/materials/backgrounds/default_square",
+		style = {
+			horizontal_alignment = "left",
+			vertical_alignment = "top",
+			offset = {
+				0,
+				24,
+				7,
+			},
+			default_offset = {
+				0,
+				24,
+				7,
+			},
+			size = {
+				nil,
+				10,
+			},
+			color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar,
+			scale = {
+				0,
+				1,
+			},
+		},
+		visibility_function = function (content)
+			return not content.all_claimed
+		end,
+	},
+	{
+		pass_type = "text",
+		style_id = "progress_text",
+		value = "",
+		value_id = "progress_text",
+		style = {
+			drop_shadow = true,
+			font_size = 14,
+			horizontal_alignment = "left",
+			text_horizontal_alignment = "center",
+			text_vertical_alignment = "center",
+			vertical_alignment = "top",
+			offset = {
+				0,
+				36,
+				6,
+			},
+			size = {
+				live_event_text_width,
+				14,
+			},
+			font_type = UIFontSettings.hud_body.font_type,
+			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.header_text,
+			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color,
+		},
+		visibility_function = function (content)
+			return not content.show_claim_prompt
+		end,
+		change_function = function (content, style, _, dt)
+			local widget = content._widget
+
+			if not widget then
+				return
+			end
+
+			local t = Managers.time:time("main")
+			local interpolated = widget:_get_interpolated_stat(t)
+
+			if interpolated ~= content.current then
+				content.current = interpolated
+
+				widget:_update_display()
+			end
+		end,
+	},
+	{
+		pass_type = "text",
+		style_id = "claim_prompt",
+		value = "",
+		value_id = "claim_prompt",
+		style = {
+			drop_shadow = true,
+			font_size = 14,
+			horizontal_alignment = "left",
+			text_horizontal_alignment = "center",
+			text_vertical_alignment = "center",
+			vertical_alignment = "top",
+			offset = {
+				0,
+				36,
+				6,
+			},
+			size = {
+				live_event_text_width,
+				14,
+			},
+			font_type = UIFontSettings.hud_body.font_type,
+			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar,
+			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color,
+		},
+		visibility_function = function (content)
+			return content.show_claim_prompt
+		end,
+	},
+}, "live_event_text_area", nil, {
+	live_event_text_width,
+	_global_reward_counter_default_height,
+}, nil, {
+	init = function (self, context, ui_renderer)
+		self._track_name = context.track_name
+		self._stat_name = context.stat_name
+		self._stat_category = context.stat_category
+		self.content.title = Localize(context.title)
+		self.content.progress_text = ""
+		self.content.has_currency_reward = false
+		self.content.currency_reward = ""
+		self.content.claim_prompt = Localize("loc_objective_hub_contracts")
+		self.content.show_claim_prompt = false
+		self.content.all_claimed = false
+		self._next_tier_stat_required = 0
+		self._all_claimed = false
+		self._destroyed = false
+		self._backend_track = nil
+		self._track_state = nil
+		self.content.current = Managers.data_service.global_stats:subscribe(self, "cb_on_stat_update", context.stat_category, context.stat_name, 0)
+		self.content._widget = self
+		self._await_initial_stat = self.content.current == 0
+		self._target_stat_value = self.content.current
+		self._previous_stat_value = self.content.current
+		self._interpolation_start_time = Managers.time:time("main")
+
+		self:_fetch_track()
+		self:_update_display()
+		Managers.event:register(self, "event_live_event_track_tier_claimed", "_cb_on_track_tier_claimed")
+	end,
+	destroy = function (self)
+		self._destroyed = true
+
+		Managers.event:unregister(self, "event_live_event_track_tier_claimed")
+		Managers.data_service.global_stats:unsubscribe(self, self._stat_category, self._stat_name)
+
+		if self._track_state_promise and self._track_state_promise.cancel then
+			self._track_state_promise:cancel()
+
+			self._track_state_promise = nil
+		end
+
+		self.content._widget = nil
+	end,
+	cb_on_stat_update = function (self, stat_name, new_value)
+		new_value = new_value or 0
+
+		if self._await_initial_stat then
+			self._await_initial_stat = false
+			self.content.current = new_value
+			self._previous_stat_value = new_value
+			self._target_stat_value = new_value
+		else
+			self._previous_stat_value = self.content.current or 0
+			self._target_stat_value = new_value
+		end
+
+		self._interpolation_start_time = Managers.time:time("main")
+
+		if self._backend_track and self._next_tier_stat_required > 0 and new_value >= self._next_tier_stat_required then
+			self:_recompute_next_tier()
+		end
+
+		self:_update_display()
+	end,
+	_fetch_track = function (self)
+		local backend_events = Managers.live_event and Managers.live_event:get_raw_backend_events() or {}
+
+		for i = 1, #backend_events do
+			local event = backend_events[i]
+
+			if event.name == self._track_name then
+				self._backend_track = event
+
+				break
+			end
+		end
+
+		if not self._backend_track then
+			self._track_state = {}
+
+			self:_recompute_next_tier()
+
+			return
+		end
+
+		self:_refresh_track_state()
+	end,
+	_refresh_track_state = function (self)
+		if not self._backend_track then
+			return
+		end
+
+		if self._track_state_promise and self._track_state_promise.cancel then
+			self._track_state_promise:cancel()
+		end
+
+		local promise = Managers.backend.interfaces.tracks:get_track_state(self._backend_track.id)
+
+		self._track_state_promise = promise
+
+		promise:next(function (track_state)
+			if self._destroyed then
+				return
+			end
+
+			self._track_state_promise = nil
+			self._track_state = track_state or {}
+
+			self:_recompute_next_tier()
+
+			self._previous_stat_value = self._target_stat_value
+			self.content.current = self._target_stat_value
+			self._interpolation_start_time = Managers.time:time("main")
+
+			self:_update_display()
+		end, function (error)
+			if self._destroyed then
+				return
+			end
+
+			self._track_state_promise = nil
+
+			Log.error("HudElementMissionObjectiveFeed", "live_event_global_reward_counter: get_track_state failed: %s", tostring(error))
+
+			self._track_state = {}
+
+			self:_recompute_next_tier()
+			self:_update_display()
+		end)
+	end,
+	_cb_on_track_tier_claimed = function (self, track_id, tier_idx)
+		if self._destroyed then
+			return
+		end
+
+		if not self._backend_track or self._backend_track.id ~= track_id then
+			return
+		end
+
+		self:_refresh_track_state()
+	end,
+	_recompute_next_tier = function (self)
+		self._next_tier_stat_required = 0
+		self._all_claimed = false
+		self.content.has_currency_reward = false
+		self.content.currency_reward = ""
+
+		local backend_track = self._backend_track
+		local tiers = backend_track and backend_track.tiers
+
+		if not tiers or #tiers == 0 then
+			self._all_claimed = true
+
+			return
+		end
+
+		local rewarded_idx = self._track_state and self._track_state.state and self._track_state.state.rewarded or -1
+		local next_tier
+
+		for i = 1, #tiers do
+			local is_claimed = rewarded_idx >= i - 1
+
+			if not is_claimed then
+				next_tier = tiers[i]
+
+				break
+			end
+		end
+
+		if not next_tier then
+			self._all_claimed = true
+
+			return
+		end
+
+		local guards_global = next_tier.guards and next_tier.guards.global
+
+		if guards_global then
+			for i = 1, #guards_global do
+				local guard = guards_global[i]
+
+				if guard.type == "stat" and guard.category == self._stat_category and guard.name == self._stat_name then
+					self._next_tier_stat_required = guard.limit or 0
+
+					break
+				end
+			end
+		end
+
+		local rewards = next_tier.rewards
+
+		if rewards then
+			for _, reward in pairs(rewards) do
+				if reward.type == "currency" then
+					local currency_settings = WalletSettings[reward.currency]
+
+					if currency_settings and currency_settings.string_symbol then
+						self.content.currency_reward = string.format("%s %s", Text.format_currency(reward.amount or 0), currency_settings.string_symbol)
+						self.content.has_currency_reward = true
+					end
+
+					break
+				end
+			end
+		end
+	end,
+	_get_interpolated_stat = function (self, t)
+		local prev = self._previous_stat_value or 0
+		local target = self._target_stat_value or 0
+
+		if prev == target then
+			return target
+		end
+
+		local interpolation_time = t - (self._interpolation_start_time or t)
+		local p = math.clamp01(interpolation_time / _global_reward_counter_max_interpolation_time)
+
+		return math.ceil(math.lerp(prev, target, p))
+	end,
+	_update_display = function (self)
+		local style = self.style
+		local content = self.content
+
+		if self._all_claimed then
+			content.all_claimed = true
+			content.has_currency_reward = false
+			self._can_claim = false
+			content.show_claim_prompt = false
+			content.progress_text = Text.format_currency(content.current or 0)
+			style.progress_text.text_horizontal_alignment = "left"
+
+			return
+		end
+
+		content.all_claimed = false
+		style.progress_text.text_horizontal_alignment = "center"
+
+		if self._next_tier_stat_required > 0 then
+			local current = content.current or 0
+			local required = self._next_tier_stat_required
+			local percent = math.clamp01(current / required)
+
+			style.bar.scale = {
+				percent,
+				1,
+			}
+			content.progress_text = string.format("%s / %s", Text.format_currency(current), Text.format_currency(required))
+			self._can_claim = required <= current
+		else
+			style.bar.scale = {
+				0,
+				1,
+			}
+			content.progress_text = ""
+			self._can_claim = false
+		end
+
+		content.show_claim_prompt = self._can_claim
+	end,
+})
+
+live_event_global_reward_counter.live_event_widget_should_show = live_event_widget_should_show
+
 local tug_o_war = UIWidget.create_definition({
 	{
 		pass_type = "texture",
@@ -1437,6 +1919,7 @@ return {
 	live_event_definition = {
 		counter = live_event_counter,
 		dynamic_description = live_event_dynamic_description,
+		live_event_global_reward_counter = live_event_global_reward_counter,
 		title = live_event_title,
 		tug_o_war = tug_o_war,
 	},

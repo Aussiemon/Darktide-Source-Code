@@ -10,20 +10,21 @@ OptionsElement.init = function (self, owner_view)
 	self._owner_view = owner_view
 end
 
-OptionsElement._cb_close_options_element = function (self)
-	self._owner_view:_remove_element("options_element")
+OptionsElement.is_open = function (self)
+	return self._view_element ~= nil
+end
 
-	self._owner_view.block_legend_input = false
+OptionsElement.close_options_element = function (self)
 	self._view_element = nil
 end
 
-OptionsElement.present = function (self)
+OptionsElement.present = function (self, regions_latency, close_callback)
 	if self._view_element then
 		return
 	end
 
 	self._view_element = self._owner_view:_add_element(ViewElementMissionBoardOptions, "options_element", 200, {
-		on_destroy_callback = callback(self, "_cb_close_options_element"),
+		on_destroy_callback = close_callback,
 	})
 
 	local presentation_data = {
@@ -55,7 +56,7 @@ OptionsElement.present = function (self)
 			options_function = function (template)
 				local options = {}
 
-				for region_name, latency_data in pairs(self._owner_view.regions_latency) do
+				for region_name, latency_data in pairs(regions_latency) do
 					local loc_key = RegionLocalizationMappings[region_name]
 					local ignore_localization = true
 					local region_display_name = loc_key and Localize(loc_key) or region_name
@@ -90,9 +91,9 @@ OptionsElement.present = function (self)
 			id = "private_match",
 			tooltip_text = "loc_mission_board_view_options_private_game_desc",
 			widget_type = "checkbox",
-			start_value = self._owner_view.current_match_visibility == MATCH_VISIBILITY.private,
+			start_value = self._owner_view._current_match_visibility == MATCH_VISIBILITY.private,
 			get_function = function ()
-				return self._owner_view.current_match_visibility == MATCH_VISIBILITY.private
+				return self._owner_view._current_match_visibility == MATCH_VISIBILITY.private
 			end,
 			on_activated = function (value, data)
 				data.changed_callback(value)

@@ -511,8 +511,8 @@ local mutator_templates = {
 				disallow_spawning_too_close_to_other_spawn = true,
 				ignore_disallowance = true,
 				min_players_alive = 2,
-				not_during_terror_events = true,
-				num_trickle_hordes_active_for_cooldown = 20,
+				not_during_terror_events = false,
+				num_trickle_hordes_active_for_cooldown = 2,
 				optional_num_tries = 6,
 				stinger = "wwise/events/minions/play_mutator_abhuman_spawn_stinger",
 				stinger_duration = 8,
@@ -599,12 +599,12 @@ local mutator_templates = {
 						2,
 					},
 					{
+						1,
 						2,
-						3,
 					},
 					{
-						3,
-						4,
+						1,
+						2,
 					},
 				},
 				time_between_waves = {

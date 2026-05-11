@@ -83,6 +83,7 @@ Settings.default_progress_bar_size = {
 }
 Settings.live_events_history_limit = 5
 Settings.live_events_history_entries = {
+	"skulls_guns",
 	"elite_army",
 	"play_expeditions",
 	"abhuman_explosions",

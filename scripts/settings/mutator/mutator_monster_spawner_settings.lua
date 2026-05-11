@@ -946,7 +946,7 @@ MutatorMonsterSpawnerSettings.skulls_locations = {
 		},
 		{
 			section = 2,
-			position = Vector3Box(-149, 33, 2),
+			position = Vector3Box(-149, 35, 2),
 		},
 		{
 			section = 2,

@@ -3,96 +3,128 @@
 local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local ExpeditionService = require("scripts/managers/data_service/services/expedition_service")
 local ExpeditionViewDefinitions = require("scripts/ui/views/expedition_view/expedition_view_definitions")
-local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
-local Settings = require("scripts/ui/views/expedition_view/expedition_view_settings")
-local Promise = require("scripts/foundation/utilities/promise")
-local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local ExpeditionViewOptionsElement = require("scripts/ui/views/expedition_view/expedition_view_options_element")
 local ExpeditionViewSidebar = require("scripts/ui/views/expedition_view/expedition_view_sidebar")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local InputDevice = require("scripts/managers/input/input_device")
-local MissionBoardBlueprints = require("scripts/ui/view_content_blueprints/mission_tile_blueprints/mission_tile_blueprints")
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local QPCode = require("scripts/utilities/qp_code")
-local ViewElementTutorialPopup = require("scripts/ui/view_elements/view_element_tutorial_popup/view_element_tutorial_popup")
 local InputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
+local Promise = require("scripts/foundation/utilities/promise")
+local PromiseContainer = require("scripts/utilities/ui/promise_container")
+local QPCode = require("scripts/utilities/qp_code")
+local Settings = require("scripts/ui/views/expedition_view/expedition_view_settings")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
+local ViewElementTutorialPopup = require("scripts/ui/view_elements/view_element_tutorial_popup/view_element_tutorial_popup")
 local MATCH_VISIBILITY = ExpeditionViewDefinitions.MATCH_VISIBILITY
 local UNLOCK_STATUS = ExpeditionService.UNLOCK_STATUS
 local UNLOCK_TYPE = ExpeditionService.UNLOCK_TYPE
 local ExpeditionView = class("ExpeditionView", "BaseView")
 
 ExpeditionView.init = function (self, settings, context)
-	self._context = context
-	self._promise_container = PromiseContainer:new()
+	self._expedition_service = Managers.data_service.expedition
+	self.save_data = self._expedition_service:get_character_mission_board_save_data()
+	self._current_match_visibility = self:_get_saved_match_visibility()
+	self._page_index = self.save_data.page_index and math.clamp(self.save_data.page_index - 1, 1, #DangerSettings - 1) or 1
+	self._party_manager = Managers.party_immaterium
+	self._player_level = self:_player():profile().current_level
+	self._enable_input_delay = Settings.enable_input_delay
+	self._node_unlock_queue = {}
+	self._nodes = nil
+	self._selectables = nil
+	self._selection_index = nil
+	self._previous_selection_index = nil
+	self._hovered = nil
+	self._previous_hovered = nil
+	self._promise_container = nil
+	self._quickplay_unlocked = self:_is_quickplay_unlocked()
+	self._block_input = nil
 
 	self:_fetch_data()
-
-	self.save_data = Managers.data_service.expedition:get_character_mission_board_save_data()
-	self.current_match_visibility = self:get_saved_match_visibility()
-	self._page_index = self.save_data.page_index and math.clamp(self.save_data.page_index - 1, 1, #DangerSettings - 1) or 1
-	self._player_level = self:_player():profile().current_level
-
-	local party_manager = Managers.party_immaterium
-
-	self._party_manager = party_manager
-	self._enable_input_delay = Settings.enable_input_delay
-	self._selected_node_index = 1
-	self._node_unlock_queue = {}
-
 	ExpeditionView.super.init(self, ExpeditionViewDefinitions, settings, context)
 end
 
+ExpeditionView._get_saved_match_visibility = function (self)
+	local save_data = self.save_data
+	local match_visibility
+
+	if save_data.private_match == false then
+		match_visibility = MATCH_VISIBILITY.public
+	elseif save_data.private_match == true then
+		match_visibility = MATCH_VISIBILITY.private
+	end
+
+	return match_visibility
+end
+
+ExpeditionView._is_quickplay_unlocked = function (self)
+	local progression_data = self._expedition_service:get_game_modes_progression_data()
+
+	return progression_data and progression_data.quickplay and progression_data.quickplay.unlocked or false
+end
+
 ExpeditionView._fetch_data = function (self)
-	self.has_synced = false
+	if self._promise_container then
+		self._promise_container:destroy()
+
+		self._promise_container = nil
+	end
+
+	self._promise_container = PromiseContainer:new()
+
+	self:_despawn_nodes()
+
+	if self._sidebar then
+		self._sidebar:hide_widgets()
+		self._sidebar:remove_mission_info()
+	end
+
+	self._update_node_presentations = true
+
+	self:_set_has_fetched(false)
 
 	local player = self:_player()
 	local account_id = player:account_id()
 	local character_id = player:character_id()
 	local promises = {
 		Managers.data_service.region_latency:fetch_regions_latency(),
-		Managers.data_service.expedition:fetch_nodes(),
-		Managers.data_service.expedition:get_quickplay_bonus(),
-		Managers.data_service.expedition:fetch_player_journey_data(account_id, character_id, false),
+		self._expedition_service:fetch_nodes(),
+		self._expedition_service:get_quickplay_bonus(),
+		self._expedition_service:fetch_player_journey_data(account_id, character_id, false),
 	}
 
 	self._promise_container:cancel_on_destroy(Promise.all(unpack(promises))):next(function (data)
-		self.regions_latency = data[1]
+		self._regions_latency = data[1]
 		self._personal_stats = data[2] and data[2].personal_stats
-		self.nodes = data[2] and data[2].nodes_by_id
-		self._ordered_nodes = data[2] and data[2].nodes_by_index
-		self.quickplay_bonus_range = data[3]
+		self._nodes = data[2] and data[2].nodes_by_id
+		self._selectables = data[2] and data[2].nodes_by_index
+		self._quickplay_bonus_range = data[3]
 
-		if not Managers.data_service.expedition:has_cached_progression_data() then
+		if not self._expedition_service:has_cached_progression_data() then
 			return Promise.rejected("Progression data was unavailable.")
 		end
 
-		self._difficulty_progress_data = Managers.data_service.expedition:get_difficulty_progression_data()
+		self._difficulty_progress_data = self._expedition_service:get_difficulty_progression_data()
 		self._page_settings = self:_create_page_settings(self._difficulty_progress_data)
 
 		local automatic_node_unlock_promises = {}
 
-		for i = 1, #self._ordered_nodes do
-			local node = self._ordered_nodes[i]
+		for _, node in pairs(self._nodes) do
 			local node_id = node.id
 			local unlock_status = node.unlock_status
-			local unlock_type = node.to_unlock[1][1].type
 
-			if unlock_status == UNLOCK_STATUS.unlockable and unlock_type == UNLOCK_TYPE.unlocked_by_default then
-				automatic_node_unlock_promises[#automatic_node_unlock_promises + 1] = Managers.data_service.expedition:claim_track_node(node_id):next(function ()
-					self.nodes[node_id].unlock_status = UNLOCK_STATUS.unlocked
+			if unlock_status == UNLOCK_STATUS.unlockable and self:_is_unlocked_by_default(node) then
+				automatic_node_unlock_promises[#automatic_node_unlock_promises + 1] = self._expedition_service:claim_track_node(node_id):next(function ()
+					node.unlock_status = UNLOCK_STATUS.unlocked
 				end)
 			end
 		end
 
 		return self._promise_container:cancel_on_destroy(Promise.all(unpack(automatic_node_unlock_promises))):next(function ()
-			self.has_synced = true
-		end):catch(function ()
-			self.has_synced = true
+			self:_set_has_fetched(true)
+		end):catch(function (error)
+			return Promise.rejected(error)
 		end)
 	end):catch(function (error)
-		if not error then
+		if not error or type(error) ~= "string" then
 			error = Localize("loc_popup_description_backend_error")
 		else
 			error = Localize("loc_popup_description_backend_error") .. ": " .. error
@@ -109,84 +141,94 @@ ExpeditionView._fetch_data = function (self)
 	end)
 end
 
-ExpeditionView.get_saved_match_visibility = function (self)
-	local save_data = self.save_data
-	local match_visibility
+ExpeditionView._is_unlocked_by_default = function (self, node)
+	local to_unlock_data = node.to_unlock
 
-	if save_data.private_match == false then
-		match_visibility = MATCH_VISIBILITY.public
-	elseif save_data.private_match == true then
-		match_visibility = MATCH_VISIBILITY.private
+	for i = 1, #to_unlock_data do
+		local requirement_package = to_unlock_data[i]
+
+		for j = 1, #requirement_package do
+			local requirement = requirement_package[j]
+			local requirement_type = requirement.type
+
+			if requirement_type == UNLOCK_TYPE.unlocked_by_default then
+				return true
+			end
+		end
 	end
 
-	return match_visibility
+	return false
 end
 
 ExpeditionView.on_enter = function (self)
-	if not self.has_synced then
-		return
-	end
-
 	ExpeditionView.super.on_enter(self)
 	self:_setup_background_world(self._definitions.background_world_params)
 
 	self._options = ExpeditionViewOptionsElement:new(self)
 
 	self:_setup_input_legend(self._definitions.input_legend_params)
-	self:_update_nodes()
+	self:_show_tutorial_popup()
 
-	self._sidebar = ExpeditionViewSidebar:new(self)
+	self._widgets_by_name.play_button.visible = false
+end
 
-	local progression = Managers.data_service.expedition:get_game_modes_progression_data()
+ExpeditionView._setup_node_presentations = function (self)
+	local quickplay_button_node = self._sidebar:quickplay_button_node()
 
-	self.quickplay_unlocked = progression and progression.quickplay and progression.quickplay.unlocked
+	self._selectables[#self._selectables + 1] = quickplay_button_node
 
-	self:_setup_quickplay_button()
+	local nodes = self._selectables
+	local world = self._world_spawner:world()
 
-	self._selected_node_index = #self._ordered_nodes
-	self.selected_node = self._ordered_nodes[#self._ordered_nodes]
-	self._widgets_by_name.unlock_button.content.visible = false
-	self._widgets_by_name.mapwide_stats.content.personal_total_number = self._personal_stats and self._personal_stats.total_loot and tonumber(self._personal_stats.total_loot) or 0
-	self._widgets_by_name.mapwide_stats.content.personal_best_number = self._personal_stats and self._personal_stats.best_loot and tonumber(self._personal_stats.best_loot) or 0
-	self._widgets_by_name.mapwide_stats.visible = false
+	for _, node in pairs(nodes) do
+		if not self:_is_quickplay_button(node) then
+			if not node.ui.root_position_boxed then
+				node.ui.root_position_boxed = Vector3Box(self:_2d_to_3d_position_on_table(node.ui.x, node.ui.y))
+			end
 
-	local save_manager = Managers.save
-	local save_data = save_manager:account_data()
-	local show_tutorial_popup = not save_data or not save_data.expedition_tutorial_popup_shown
+			if not node.ui.node_unit then
+				node.ui.node_unit = World.spawn_unit_ex(world, Settings.node_unit_path, nil, node.ui.root_position_boxed:unbox() + Vector3.up() * Settings.node_height_offset, Quaternion.identity(), true, false)
+				node.ui.drop_timer = 0.01
 
-	if show_tutorial_popup then
-		local context = {
-			close_callback = function ()
-				self._remove_tutorial_popup_next_frame = true
+				local symbol_index = node.ui.display_name_atlas_index
 
-				local save_manager = Managers.save
-				local save_data = save_manager:account_data()
+				Unit.set_scalar_for_materials(node.ui.node_unit, "symbol_atlas_index", symbol_index)
+				Unit.set_scalar_for_materials(node.ui.node_unit, "alpha", 0)
 
-				if save_data and not save_data.expedition_tutorial_popup_shown then
-					save_data.expedition_tutorial_popup_shown = true
-
-					save_manager:queue_save()
+				if node.unlock_status ~= UNLOCK_STATUS.unlocked then
+					Unit.flow_event(node.ui.node_unit, "lock")
 				end
 
-				self._tutorial_popup = nil
-			end,
-			popup_pages = Settings.popup_pages,
-		}
-		local scenegraph_id = "tutorial_popup_pivot"
+				if node.unlock_status == UNLOCK_STATUS.unlockable then
+					node.unlockable_anim_timer = 0.01
+				end
 
-		self._tutorial_popup = self:_add_element(ViewElementTutorialPopup, "tutorial_popup", 90, context, scenegraph_id)
+				if node.next then
+					for _, next_node in pairs(node.next) do
+						local pos_a = node.ui.root_position_boxed:unbox()
+						local pos_b = self:_2d_to_3d_position_on_table(next_node.ui.x, next_node.ui.y)
+						local direction = Quaternion.look(pos_b - pos_a)
+						local distance = Vector3.distance(pos_a, pos_b)
+
+						if not node.ui.dotted_line_units then
+							node.ui.dotted_line_units = {}
+						end
+
+						local dotted_line_unit = World.spawn_unit_ex(world, Settings.hologram_dotted_line_unit_path, nil, node.ui.root_position_boxed:unbox() + Vector3.up() * Settings.node_height_offset, direction, true, false)
+
+						Unit.set_local_scale(dotted_line_unit, 1, Vector3(1, distance * 20, 1))
+
+						node.ui.dotted_line_units[#node.ui.dotted_line_units + 1] = dotted_line_unit
+					end
+				end
+			end
+		end
 	end
-end
 
-local function set_material_animation_duration(unit, name, duration)
-	Unit.set_scalar_for_materials(unit, name, duration)
-end
+	self._selection_index = self:_get_quickplay_button_index()
+	self._update_node_presentations = false
 
-local function start_material_animation(unit, name)
-	local world = Unit.world(unit)
-	local start_time = World.render_time(world) + 0.01
-
-	Unit.set_scalar_for_materials(unit, name, start_time)
+	self:_update_nodes()
 end
 
 ExpeditionView._setup_background_world = function (self, params)
@@ -209,8 +251,8 @@ ExpeditionView._setup_background_world = function (self, params)
 	local terrain_unit = World.units_by_resource(world, Settings.hologram_terrain_unit_path)[1]
 
 	if terrain_unit then
-		start_material_animation(terrain_unit, "start_time_uv_offset")
-		start_material_animation(terrain_unit, "start_time_height")
+		self:_start_material_animation(terrain_unit, "start_time_uv_offset")
+		self:_start_material_animation(terrain_unit, "start_time_height")
 	end
 end
 
@@ -253,196 +295,97 @@ ExpeditionView.add_input_legend_entry = function (self, entry_params)
 	return input_legend:add_entry(display_name, input_action, visibility_function, press_callback, alignment, nil, nil, nil, suffix_function)
 end
 
-ExpeditionView._create_node_from_widget = function (self, widget, id, unlocked_status)
-	if not widget then
-		return nil
-	end
-
-	local node = {}
-
-	node.ui = {}
-
-	local widget_scenegraph_id = widget.scenegraph_id
-	local scenegraph_node = self._ui_scenegraph[widget_scenegraph_id]
-	local widget_offset = widget.offset or {
-		0,
-		0,
-		1,
-	}
-	local scenegraph_position = scenegraph_node.world_position
-
-	node.ui.screen_position = Vector3Box(scenegraph_position[1] + widget_offset[1], scenegraph_position[2] + widget_offset[2], scenegraph_position[3] + widget_offset[3])
-	node.type = "from_widget"
-	node.id = id
-	node.unlocked_status = unlocked_status or UNLOCK_STATUS.unlocked
-	node.widget = widget
-	self._ordered_nodes[#self._ordered_nodes + 1] = node
-
-	return node
-end
-
-ExpeditionView._ensure_selection_variables_synchronised = function (self)
-	if not self._node_enter_anim_finished then
-		return
-	end
-
-	local selected_node = self.selected_node
-	local selected_ordered_node_index = self._selected_node_index
-	local selected_ordered_node = self._ordered_nodes[selected_ordered_node_index]
-
-	if selected_node ~= selected_ordered_node then
-		Log.error("ExpeditionView", "Node selection has diverged between the different variables.")
-	end
-end
-
 ExpeditionView.update = function (self, dt, t, input_service)
-	if not self._entered then
-		if self.has_synced then
-			self:on_enter()
+	if self:get_has_fetched() and self._entered then
+		if self._initialized then
+			if self._expedition_service:has_track_expired() then
+				self:_fetch_data()
+			end
+		else
+			self._sidebar = ExpeditionViewSidebar:new(self, {
+				widgets_by_name = self._widgets_by_name,
+				personal_stats = self._personal_stats,
+				quickplay_bonus_range = self._quickplay_bonus_range,
+				ui_scenegraph = self._ui_scenegraph,
+				quickplay_unlocked = self._quickplay_unlocked,
+			})
+			self._initialized = true
+		end
+	end
+
+	self:_update_tutorial(dt, t, input_service)
+
+	if self._tutorial_popup then
+		input_service = input_service:null_service()
+	end
+
+	local can_update_nodes = self:get_has_fetched()
+
+	if self._update_node_presentations and self:get_has_fetched() and self._entered then
+		self:_setup_node_presentations()
+	end
+
+	if can_update_nodes then
+		self:_update_nodes(dt, t, input_service)
+		self:_update_nodes_mission_data(dt, t, input_service)
+	end
+
+	self:_update_can_start_mission()
+
+	if self._sidebar then
+		self._sidebar:update(dt, t, input_service)
+	end
+
+	ExpeditionView.super.update(self, dt, t, input_service)
+end
+
+ExpeditionView._update_tutorial = function (self, dt, t, input_service)
+	if self._show_tutorial_on_next_update and not self._tutorial_popup then
+		self:_show_tutorial_popup()
+	elseif self._remove_tutorial_popup_next_update then
+		if self:_element("tutorial_popup") then
+			self:_remove_element("tutorial_popup")
 		end
 
-		return
-	end
-
-	self:_ensure_selection_variables_synchronised()
-
-	if self._present_tutorial_popup and not self._tutorial_popup then
-		self:_show_tutorial_popup()
+		self._remove_tutorial_popup_next_update = nil
+	elseif self._tutorial_popup then
+		self._elements.tutorial_popup:update(dt, t, input_service)
 	end
 
 	if self._tutorial_popup then
 		self._stored_input = input_service
-		input_service = input_service:null_service()
-	end
-
-	self:_update_node_unlock_queue(dt, t, input_service)
-	self:_update_nodes(dt, t, input_service)
-	self:_update_nodes_mission_data(dt, t, input_service)
-
-	local selected_node = self.selected_node
-	local widgets_by_name = self._widgets_by_name
-	local is_node_unlockable = selected_node and selected_node.unlock_status == UNLOCK_STATUS.unlockable
-
-	widgets_by_name.unlock_button.content.visible = is_node_unlockable
-	widgets_by_name.play_button.content.visible = not is_node_unlockable
-	widgets_by_name.play_button_legend.content.visible = not is_node_unlockable
-
-	self:_update_can_start_mission()
-	self._sidebar:update(dt, t, input_service)
-
-	if self._remove_tutorial_popup_next_frame then
-		self:_remove_element("tutorial_popup")
-
-		self._remove_tutorial_popup_next_frame = nil
-	end
-
-	ExpeditionView.super.update(self, dt, t, input_service)
-
-	if self._stored_input then
-		input_service = self._stored_input
-		self._stored_input = nil
 	end
 end
 
-ExpeditionView._update_elements = function (self, dt, t, input_service)
-	local elements_array = self._elements_array
+ExpeditionView._show_tutorial_popup = function (self)
+	local save_manager = Managers.save
+	local save_data = save_manager:account_data()
+	local show_tutorial_popup = self._show_tutorial_on_next_update or not save_data or not save_data.expedition_tutorial_popup_shown
 
-	if elements_array then
-		for i = 1, #elements_array do
-			local element = elements_array[i]
-
-			if element then
-				local element_name = element.__class_name
-				local tutorial_popup_element = self._elements.tutorial_popup
-
-				if self._stored_input and tutorial_popup_element == element then
-					element:update(dt, t, self._stored_input)
-				else
-					element:update(dt, t, input_service)
-				end
-			end
-		end
-	end
-end
-
-ExpeditionView._draw_elements = function (self, dt, t, ui_renderer, render_settings, input_service)
-	local elements_array = self._elements_array
-
-	if elements_array then
-		for i = 1, #elements_array do
-			local element = elements_array[i]
-
-			if element then
-				local element_name = element.__class_name
-				local tutorial_popup_element = self._elements.tutorial_popup
-
-				if self._stored_input and tutorial_popup_element == element then
-					element:draw(dt, t, ui_renderer, render_settings, self._stored_input)
-				else
-					element:draw(dt, t, ui_renderer, render_settings, input_service)
-				end
-			end
-		end
-	end
-end
-
-ExpeditionView._update_nodes_mission_data = function (self, dt, t, input_service)
-	local missions_expired = Managers.data_service.expedition:check_missions_expired()
-	local should_refresh_missions = missions_expired and not self._fetching_missions
-
-	if not should_refresh_missions then
+	if not show_tutorial_popup then
 		return
 	end
 
-	local function get_mission_node_id(mission)
-		for flag, _ in pairs(mission.flags) do
-			local start_i, end_i = string.find(flag, "exped%-node%-")
+	self._show_tutorial_on_next_update = nil
 
-			if start_i == 1 and end_i + 1 < #flag then
-				return string.sub(flag, end_i + 1)
-			end
-		end
+	local context = {
+		close_callback = function ()
+			self._remove_tutorial_popup_next_update = true
 
-		return nil
-	end
+			if save_data and not save_data.expedition_tutorial_popup_shown then
+				save_data.expedition_tutorial_popup_shown = true
 
-	local function _replace_mission_data(node, missions_for_all_nodes)
-		if node.id == "quickplay_button" then
-			return
-		end
-
-		local missions = missions_for_all_nodes[node.id]
-
-		if missions == nil or table.is_empty(missions) then
-			Log.exception("ExpeditionView", "Was unable to retrieve new mission data for node %s", node.id)
-
-			return
-		end
-
-		node.missions = missions
-	end
-
-	self._fetching_missions = true
-
-	self._promise_container:cancel_on_destroy(Managers.data_service.expedition:fetch_expedition_missions():next(function (data)
-		local temp_nodes = {}
-
-		for _, new_mission in pairs(data) do
-			local node_id = get_mission_node_id(new_mission)
-
-			if not temp_nodes[node_id] then
-				temp_nodes[node_id] = {}
+				save_manager:queue_save()
 			end
 
-			table.insert(temp_nodes[node_id], new_mission)
-		end
+			self._tutorial_popup = nil
 
-		for _, node in pairs(self._ordered_nodes) do
-			_replace_mission_data(node, temp_nodes)
-		end
+			self:_set_block_input(false)
+		end,
+		popup_pages = Settings.popup_pages,
+	}
 
-		self._fetching_missions = false
-	end))
+	self._tutorial_popup = self:_add_element(ViewElementTutorialPopup, "tutorial_popup", 90, context, "tutorial_popup_pivot")
 end
 
 ExpeditionView._update_node_unlock_queue = function (self, dt, t, input_service)
@@ -457,377 +400,17 @@ ExpeditionView._update_node_unlock_queue = function (self, dt, t, input_service)
 	end
 end
 
-ExpeditionView.draw = function (self, dt, t, input_service, layer)
-	if not self._entered then
-		return
-	end
-
-	if self:_element("tutorial_popup") then
-		self._stored_input = input_service
-		input_service = input_service:null_service()
-	end
-
-	ExpeditionView.super.draw(self, dt, t, input_service, layer)
-
-	if self._stored_input then
-		input_service = self._stored_input
-		self._stored_input = nil
-	end
-end
-
-ExpeditionView._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
-	if self.quickplay_button_widget then
-		UIWidget.draw(self.quickplay_button_widget, ui_renderer)
-	end
-
-	ExpeditionView.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
-end
-
-ExpeditionView._handle_input = function (self, input_service, dt, t)
-	if self._enable_input_delay > 0 then
-		self._enable_input_delay = self._enable_input_delay - dt
-
-		return
-	end
-
-	if self._node_enter_anim_finished ~= true then
-		return
-	end
-
-	if InputDevice.gamepad_active then
-		self:_handle_gamepad_input(input_service, dt, t)
-	else
-		local new_hovered_node = self:_get_hovered_node(dt, t, input_service)
-
-		if new_hovered_node ~= nil and new_hovered_node ~= self._hovered_node then
-			self:_play_sound(UISoundEvents.expedition_view_hover)
-		end
-
-		self._hovered_node = new_hovered_node
-
-		if self._hovered_node then
-			if self._hovered_node ~= self._last_hovered_node then
-				if self._hovered_node.ui and self._hovered_node.ui.node_unit then
-					Unit.flow_event(self._hovered_node.ui.node_unit, "hover")
-				end
-
-				if self._last_hovered_node ~= nil and self._last_hovered_node.ui and self._last_hovered_node.ui.node_unit then
-					Unit.flow_event(self._last_hovered_node.ui.node_unit, "unhover")
-				end
-
-				self._last_hovered_node = self._hovered_node
-			end
-		elseif self._last_hovered_node ~= nil then
-			if self._last_hovered_node and self._last_hovered_node.ui and self._last_hovered_node.ui.node_unit then
-				Unit.flow_event(self._last_hovered_node.ui.node_unit, "unhover")
-			end
-
-			self._last_hovered_node = nil
-		end
-
-		if Mouse.pressed(Mouse.button_id("left")) and self._hovered_node then
-			self:_select_node(self._hovered_node)
-		end
-
-		local selected_node = self.selected_node
-
-		if selected_node and self._widgets_by_name.unlock_button.content.hotspot.on_pressed and selected_node.unlock_status == UNLOCK_STATUS.unlockable then
-			self:_unlock_node(selected_node)
-		end
-	end
-end
-
-ExpeditionView._handle_gamepad_input = function (self, input_service, dt, t)
-	local currently_selected_node = self._ordered_nodes and self._ordered_nodes[self._selected_node_index] or nil
-
-	if not currently_selected_node then
-		return
-	end
-
-	local virtual_axis = input_service:get("navigation_keys_virtual_axis")
-	local controller_input = input_service:get("navigate_controller")
-	local input = virtual_axis + controller_input
-
-	input[2] = -input[2]
-
-	local magnitude = Vector3.length(input)
-
-	if magnitude > 1 then
-		input = input / magnitude
-		magnitude = 1
-	end
-
-	if self._gamepad_input_cooldown and self._gamepad_input_cooldown > 0 then
-		self._gamepad_input_cooldown = self._gamepad_input_cooldown - dt
-
-		return
-	end
-
-	local threshold = Settings.analog_input_threshold
-
-	if threshold < magnitude then
-		self._gamepad_input_cooldown = Settings.gamepad_input_cooldown
-
-		local best_score = -math.huge
-		local best_node_index = self._selected_node_index
-		local current_selected_node = self._ordered_nodes[best_node_index]
-		local current_selected_node_type = current_selected_node.type
-		local current_selected_node_position = current_selected_node_type == "from_widget" and current_selected_node.ui.screen_position:unbox() or self:_get_node_screenspace(current_selected_node, self._world_spawner:camera())
-
-		for i, node in ipairs(self._ordered_nodes) do
-			if i ~= self._selected_node_index and node.ui then
-				local node_type = node.type
-				local node_position = node_type == "from_widget" and node.ui.screen_position:unbox() or self:_get_node_screenspace(node, self._world_spawner:camera())
-				local direction_to_node = Vector3.normalize(node_position - current_selected_node_position)
-				local dot = Vector3.dot(input, direction_to_node)
-				local distance, score
-
-				if dot > Settings.switch_dot_threshold then
-					distance = Vector3.distance(current_selected_node_position, node_position)
-					score = dot / distance
-				else
-					score = -math.huge
-				end
-
-				if best_score < score then
-					best_score = score
-					best_node_index = i
-				end
-			end
-		end
-
-		if best_node_index ~= self._selected_node_index then
-			self._selected_node_index = best_node_index
-
-			local selected_node = self._ordered_nodes[self._selected_node_index]
-
-			self._hovered_node = selected_node
-
-			self:_select_node(selected_node)
-			self:_update_node_hover_state()
-		end
-	end
-end
-
-ExpeditionView.cb_on_unlock_node_input_pressed = function (self)
-	if not InputDevice.gamepad_active then
-		return
-	end
-
-	local selected_node = self.selected_node
-	local hovered_node = self._hovered_node
-
-	if hovered_node ~= selected_node then
-		return
-	end
-
-	local can_unlock = selected_node and selected_node.unlock_status == UNLOCK_STATUS.unlockable
-
-	if can_unlock then
-		self:_unlock_node(selected_node)
-	end
-end
-
-ExpeditionView._update_node_hover_state = function (self)
-	if self._hovered_node then
-		if self._hovered_node ~= self._last_hovered_node then
-			if self._hovered_node.ui and self._hovered_node.ui.node_unit then
-				Unit.flow_event(self._hovered_node.ui.node_unit, "hover")
-			end
-
-			if self._last_hovered_node ~= nil and self._last_hovered_node.ui and self._last_hovered_node.ui.node_unit then
-				Unit.flow_event(self._last_hovered_node.ui.node_unit, "unhover")
-			end
-
-			self._last_hovered_node = self._hovered_node
-		end
-	elseif self._last_hovered_node ~= nil then
-		if self._last_hovered_node.ui and self._last_hovered_node.ui.node_unit then
-			Unit.flow_event(self._last_hovered_node.ui.node_unit, "unhover")
-		end
-
-		self._last_hovered_node = nil
-	end
-end
-
-ExpeditionView._new_selection = function (self, selected_node, unselected_node)
-	if selected_node.type == "from_widget" then
-		local widget = selected_node.widget
-
-		if widget then
-			widget.content.hotspot.is_selected = true
-		end
-	else
-		Unit.flow_event(selected_node.ui.node_unit, "select")
-		Unit.set_scalar_for_materials(selected_node.ui.node_unit, "emissive_multiplier", Settings.node_selection_emissive_multiplier)
-	end
-
-	if unselected_node then
-		if unselected_node.type == "from_widget" then
-			local widget = unselected_node.widget
-
-			if widget then
-				widget.content.hotspot.is_selected = false
-			end
-		else
-			Unit.flow_event(unselected_node.ui.node_unit, "unselect")
-			Unit.set_scalar_for_materials(unselected_node.ui.node_unit, "emissive_multiplier", 1)
-		end
-	end
-
-	if selected_node.unlock_status == UNLOCK_STATUS.locked then
-		self:_play_sound(UISoundEvents.expedition_view_select_locked)
-	elseif selected_node.unlock_status == UNLOCK_STATUS.unlocked then
-		self:_play_sound(UISoundEvents.expedition_view_select_unlocked)
-	elseif selected_node.unlock_status == UNLOCK_STATUS.unlockable then
-		self:_play_sound(UISoundEvents.expedition_view_select_unlockable)
-	end
-
-	if selected_node.unlock_status == UNLOCK_STATUS.unlocked and not self._unlocked_sound_looping then
-		self:_play_sound(UISoundEvents.expedition_view_select_unlocked_loop)
-
-		self._unlocked_sound_looping = true
-	elseif selected_node.unlock_status ~= UNLOCK_STATUS.unlocked then
-		self:_play_sound(UISoundEvents.expedition_view_select_unlocked_end)
-
-		self._unlocked_sound_looping = false
-	end
-
-	self._sidebar:show_mission_info(selected_node)
-end
-
-ExpeditionView._unlock_node = function (self, node)
-	if node.unlock_status ~= UNLOCK_STATUS.unlockable or node.id == "quickplay_button" or self._node_unlock_queue[node.id] ~= nil then
-		return
-	end
-
-	self:_play_sound(UISoundEvents.expedition_view_unlocking)
-	set_material_animation_duration(node.ui.node_unit, "unlock_anim_duration", Settings.unlock_anim_duration)
-	start_material_animation(node.ui.node_unit, "unlock_start_time")
-	Unit.set_flow_variable(node.ui.node_unit, "unlock_delay", Settings.unlock_anim_duration - 0.1)
-	Unit.flow_event(node.ui.node_unit, "unlock")
-
-	self._node_unlock_queue[node.id] = Settings.unlock_anim_duration
-
-	Managers.data_service.expedition:claim_track_node(node.id):next(function ()
-		node.unlock_status = UNLOCK_STATUS.unlocked
-	end):catch(function (error)
-		local error_message = error or "Error calling claim_track_node."
-
-		if type(error_message) == "table" then
-			error_message = table.tostring(error_message, 5)
-		end
-
-		Log.exception("ExpeditionView", "Exception claiming node: ", error_message)
-		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = error_message,
-		})
-	end)
-end
-
-ExpeditionView._select_node = function (self, node)
-	local selected = self.selected_node
-	local hovered = self._hovered_node
-
-	if hovered and hovered ~= selected then
-		self:_new_selection(hovered, selected)
-	end
-
-	if selected == hovered then
-		self:_unlock_node(selected)
-	end
-
-	self.selected_node = self._hovered_node
-	self._selected_node_index = self:_get_ordered_index_from_node(self.selected_node)
-end
-
-ExpeditionView._get_ordered_index_from_node = function (self, node)
-	if not node or not node.id then
-		return nil
-	end
-
-	if not self._ordered_nodes then
-		return nil
-	end
-
-	local node_id = node.id
-
-	for i = 1, #self._ordered_nodes do
-		if self._ordered_nodes[i].id == node_id then
-			return i
-		end
-	end
-end
-
-ExpeditionView._get_hovered_node = function (self, dt, t, input_service)
-	local camera = self._world_spawner:camera()
-	local nodes = self.nodes
-	local cursor = input_service:get("cursor")
-
-	for _, node in pairs(nodes) do
-		local upper_left_corner, size = self:_get_node_screenspace(node, camera)
-
-		if math.point_is_inside_2d_box(cursor, upper_left_corner, size) then
-			return node
-		end
-	end
-
-	return nil
-end
-
 ExpeditionView._update_nodes = function (self, dt, t, input_service)
 	if t and not self._node_enter_anim_time and not self._node_enter_anim_finished then
-		self._node_enter_anim_time = t + Settings.node_drop_delay + Settings.node_drop_frequency * #self._ordered_nodes
+		self._node_enter_anim_time = t + Settings.node_drop_delay + Settings.node_drop_frequency * #self._selectables
 	end
 
-	local nodes = self._ordered_nodes
-	local world = self._world_spawner:world()
-	local selected_node = self.selected_node
+	local nodes = self._selectables
+	local selected_node = self:get_selection()
 	local node_drop_index = 0
 
-	for index, node in ipairs(nodes) do
-		if node.type ~= "from_widget" then
-			if not node.ui.root_position_boxed then
-				node.ui.root_position_boxed = Vector3Box(self:_2d_to_3d_position_on_table(node.ui.x, node.ui.y))
-			end
-
-			if not node.ui.node_unit then
-				node.ui.node_unit = World.spawn_unit_ex(world, Settings.node_unit_path, nil, node.ui.root_position_boxed:unbox() + Vector3.up() * Settings.node_height_offset, Quaternion.identity(), true, false)
-				node.ui.drop_timer = 0.01
-
-				local symbol_index = node.ui.display_name_atlas_index
-
-				Unit.set_scalar_for_materials(node.ui.node_unit, "symbol_atlas_index", symbol_index)
-				Unit.set_scalar_for_materials(node.ui.node_unit, "alpha", 0)
-
-				if node.unlock_status ~= UNLOCK_STATUS.unlocked then
-					Unit.flow_event(node.ui.node_unit, "lock")
-				end
-
-				if node.unlock_status == UNLOCK_STATUS.unlockable then
-					node.unlockable_anim_timer = 0.01
-				end
-
-				if node.next then
-					for _, next_node in pairs(node.next) do
-						local pos_a = node.ui.root_position_boxed:unbox()
-						local pos_b = self:_2d_to_3d_position_on_table(next_node.ui.x, next_node.ui.y)
-						local direction = Quaternion.look(pos_b - pos_a)
-						local distance = Vector3.distance(pos_a, pos_b)
-
-						if not node.ui.dotted_line_units then
-							node.ui.dotted_line_units = {}
-						end
-
-						local dotted_line_unit = World.spawn_unit_ex(world, Settings.hologram_dotted_line_unit_path, nil, node.ui.root_position_boxed:unbox() + Vector3.up() * Settings.node_height_offset, direction, true, false)
-
-						Unit.set_local_scale(dotted_line_unit, 1, Vector3(1, distance * 20, 1))
-
-						node.ui.dotted_line_units[#node.ui.dotted_line_units + 1] = dotted_line_unit
-					end
-				end
-			end
-
+	for _, node in pairs(nodes) do
+		if not self:_is_quickplay_button(node) then
 			if node.ui.drop_timer and dt then
 				node.ui.drop_timer = node.ui.drop_timer + dt
 
@@ -842,11 +425,11 @@ ExpeditionView._update_nodes = function (self, dt, t, input_service)
 					if node.ui.dotted_line_units then
 						for _, dotted_line_unit in pairs(node.ui.dotted_line_units) do
 							if node.unlock_status == UNLOCK_STATUS.unlocked then
-								set_material_animation_duration(dotted_line_unit, "dotted_line_fill_anim_duration", Settings.dotted_line_anim_duration)
-								start_material_animation(dotted_line_unit, "dotted_line_fill_start_time")
+								self:_set_material_animation_duration(dotted_line_unit, "dotted_line_fill_anim_duration", Settings.dotted_line_anim_duration)
+								self:_start_material_animation(dotted_line_unit, "dotted_line_fill_start_time")
 							else
-								set_material_animation_duration(dotted_line_unit, "dotted_line_anim_duration", Settings.dotted_line_anim_duration)
-								start_material_animation(dotted_line_unit, "dotted_line_start_time")
+								self:_set_material_animation_duration(dotted_line_unit, "dotted_line_anim_duration", Settings.dotted_line_anim_duration)
+								self:_start_material_animation(dotted_line_unit, "dotted_line_start_time")
 							end
 						end
 					end
@@ -890,27 +473,17 @@ ExpeditionView._update_nodes = function (self, dt, t, input_service)
 				end
 			end
 		end
-	end
 
-	if self._node_enter_anim_time and t > self._node_enter_anim_time and not self._node_enter_anim_finished then
-		self._node_enter_anim_time = nil
-		self._node_enter_anim_finished = true
+		if self._node_enter_anim_time and t > self._node_enter_anim_time and not self._node_enter_anim_finished then
+			self._node_enter_anim_time = nil
+			self._node_enter_anim_finished = true
 
-		local preselected_node = self._ordered_nodes[self._selected_node_index]
+			self:_preselect_quickplay_button()
 
-		if preselected_node then
-			self:_new_selection(self._ordered_nodes[self._selected_node_index])
-
-			self._hovered_node = preselected_node
-			self.selected_node = preselected_node
-
-			self:_update_node_hover_state()
+			if self._sidebar then
+				self._sidebar:show_widgets()
+			end
 		end
-
-		self._sidebar:show_widgets()
-
-		self._widgets_by_name.mapwide_stats.visible = true
-		self.quickplay_button_widget.visible = true
 	end
 end
 
@@ -932,6 +505,276 @@ ExpeditionView._ray_cast = function (self, world, from, to, collision_filter)
 	local result, hit_position, hit_distance, normal, _ = PhysicsWorld.raycast(physics_world, from, direction, distance, "closest", "collision_filter", collision_filter or "filter_detailed")
 
 	return result, hit_position, hit_distance, normal
+end
+
+ExpeditionView._set_material_animation_duration = function (self, unit, name, duration)
+	Unit.set_scalar_for_materials(unit, name, duration)
+end
+
+ExpeditionView._start_material_animation = function (self, unit, name)
+	local world = Unit.world(unit)
+	local start_time = World.render_time(world) + 0.01
+
+	Unit.set_scalar_for_materials(unit, name, start_time)
+end
+
+ExpeditionView._preselect_quickplay_button = function (self)
+	local quickplay_button = self:_get_quickplay_button()
+
+	self:_set_hovered(nil)
+	self:_set_selection(nil)
+	self:_set_hovered(quickplay_button)
+	self:_set_selection(quickplay_button)
+end
+
+ExpeditionView._update_nodes_mission_data = function (self, dt, t, input_service)
+	self:_update_node_unlock_queue(dt, t, input_service)
+
+	local missions_expired = self._expedition_service:check_missions_expired()
+	local should_refresh_missions = missions_expired and self._has_fetched and not self._fetching_missions
+
+	if not should_refresh_missions then
+		return
+	end
+
+	local function get_mission_node_id(mission)
+		for flag, _ in pairs(mission.flags) do
+			local start_i, end_i = string.find(flag, "exped%-node%-")
+
+			if start_i == 1 and end_i + 1 < #flag then
+				return string.sub(flag, end_i + 1)
+			end
+		end
+
+		return nil
+	end
+
+	local function _replace_mission_data(node, missions_for_all_nodes)
+		local missions = missions_for_all_nodes[node.id]
+
+		if missions == nil or table.is_empty(missions) then
+			Log.exception("ExpeditionView", "Was unable to retrieve new mission data for node %s", node.id)
+
+			return
+		end
+
+		node.missions = missions
+	end
+
+	local loading_widget = self._widgets_by_name and self._widgets_by_name.loading
+
+	if loading_widget then
+		loading_widget.content.visible = true
+	end
+
+	self._fetching_missions = true
+
+	self._promise_container:cancel_on_destroy(self._expedition_service:fetch_expedition_missions():next(function (data)
+		local temp_nodes = {}
+
+		for _, new_mission in pairs(data) do
+			local node_id = get_mission_node_id(new_mission)
+
+			if not temp_nodes[node_id] then
+				temp_nodes[node_id] = {}
+			end
+
+			table.insert(temp_nodes[node_id], new_mission)
+		end
+
+		for _, node in pairs(self._nodes) do
+			_replace_mission_data(node, temp_nodes)
+		end
+
+		self._fetching_missions = false
+
+		local loading_widget = self._widgets_by_name and self._widgets_by_name.loading
+
+		if loading_widget then
+			loading_widget.content.visible = false
+		end
+	end))
+end
+
+ExpeditionView.draw = function (self, dt, t, input_service, layer)
+	if not self._entered then
+		return
+	end
+
+	if self:_element("tutorial_popup") then
+		input_service = input_service:null_service()
+	end
+
+	ExpeditionView.super.draw(self, dt, t, input_service, layer)
+end
+
+ExpeditionView._draw_elements = function (self, dt, t, ui_renderer, render_settings, input_service)
+	local elements_array = self._elements_array
+
+	if elements_array then
+		for i = 1, #elements_array do
+			local element = elements_array[i]
+
+			if element then
+				local tutorial_popup_element = self._elements.tutorial_popup
+
+				if self._stored_input and tutorial_popup_element == element then
+					element:draw(dt, t, ui_renderer, render_settings, self._stored_input)
+				else
+					element:draw(dt, t, ui_renderer, render_settings, input_service)
+				end
+			end
+		end
+	end
+end
+
+ExpeditionView._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
+	if self._sidebar then
+		self._sidebar:draw_widgets(dt, t, input_service, ui_renderer, render_settings)
+	end
+
+	ExpeditionView.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
+end
+
+ExpeditionView._handle_input = function (self, input_service, dt, t)
+	if not self:get_has_fetched() and self._initialized then
+		return
+	end
+
+	if self._enable_input_delay > 0 then
+		self._enable_input_delay = self._enable_input_delay - dt
+
+		return
+	end
+
+	if self._node_enter_anim_finished ~= true or self:_get_block_input() then
+		return
+	end
+
+	if InputDevice.gamepad_active then
+		self:_handle_gamepad_input(input_service, dt, t)
+	else
+		self:_handle_mouse_input(input_service, dt, t)
+	end
+end
+
+ExpeditionView._handle_gamepad_input = function (self, input_service, dt, t)
+	local virtual_axis = input_service:get("navigation_keys_virtual_axis")
+	local controller_input = input_service:get("navigate_controller")
+	local input = virtual_axis + controller_input
+
+	input[2] = -input[2]
+
+	local magnitude = Vector3.length(input)
+
+	if magnitude > 1 then
+		input = input / magnitude
+		magnitude = 1
+	end
+
+	if self._gamepad_input_cooldown and self._gamepad_input_cooldown > 0 then
+		self._gamepad_input_cooldown = self._gamepad_input_cooldown - dt
+
+		return
+	end
+
+	local threshold = Settings.analog_input_threshold
+
+	if threshold < magnitude then
+		self._gamepad_input_cooldown = Settings.gamepad_input_cooldown
+
+		local best_score = -math.huge
+		local current_selection = self:get_selection()
+		local current_selection_position = self:_is_quickplay_button(current_selection) and current_selection.ui.screen_position:unbox() or self:_get_node_screenspace(current_selection, self._world_spawner:camera())
+		local current_selection_index = self:_get_selection_index()
+		local best_selection_index = current_selection_index
+
+		for i, node in ipairs(self._selectables) do
+			if node ~= current_selection and node.ui then
+				local node_position = self:_is_quickplay_button(node) and node.ui.screen_position:unbox() or self:_get_node_screenspace(node, self._world_spawner:camera())
+				local direction_to_node = Vector3.normalize(node_position - current_selection_position)
+				local dot = Vector3.dot(input, direction_to_node)
+				local distance, score
+
+				if dot > Settings.switch_dot_threshold then
+					distance = Vector3.distance(current_selection_position, node_position)
+					score = dot / distance
+				else
+					score = -math.huge
+				end
+
+				if best_score < score then
+					best_score = score
+					best_selection_index = i
+				end
+			end
+		end
+
+		if best_selection_index ~= current_selection_index then
+			self:_set_selection_by_index(best_selection_index)
+
+			local selection = self:get_selection()
+
+			self:_set_hovered(selection)
+		end
+	end
+end
+
+ExpeditionView._handle_mouse_input = function (self, input_service, dt, t)
+	local hovered = self:_determine_mouseover_node(dt, t, input_service)
+
+	self:_set_hovered(hovered)
+
+	if Mouse.pressed(Mouse.button_id("left")) and hovered then
+		local selection = hovered
+
+		self:_set_selection(selection)
+	end
+end
+
+ExpeditionView._determine_mouseover_node = function (self, dt, t, input_service)
+	local camera = self._world_spawner:camera()
+	local nodes = self._nodes
+	local cursor = input_service:get("cursor")
+
+	for _, node in pairs(nodes) do
+		local upper_left_corner, size = self:_get_node_screenspace(node, camera)
+
+		if math.point_is_inside_2d_box(cursor, upper_left_corner, size) then
+			return node
+		end
+	end
+
+	return nil
+end
+
+ExpeditionView._unlock_node_if_eligible = function (self, node)
+	if node == nil or node.unlock_status ~= UNLOCK_STATUS.unlockable or self:_is_quickplay_button(node) or self._node_unlock_queue[node.id] ~= nil then
+		return
+	end
+
+	self:_play_sound(UISoundEvents.expedition_view_unlocking)
+	self:_set_material_animation_duration(node.ui.node_unit, "unlock_anim_duration", Settings.unlock_anim_duration)
+	self:_start_material_animation(node.ui.node_unit, "unlock_start_time")
+	Unit.set_flow_variable(node.ui.node_unit, "unlock_delay", Settings.unlock_anim_duration - 0.1)
+	Unit.flow_event(node.ui.node_unit, "unlock")
+
+	self._node_unlock_queue[node.id] = Settings.unlock_anim_duration
+
+	self._expedition_service:claim_track_node(node.id):next(function ()
+		node.unlock_status = UNLOCK_STATUS.unlocked
+	end):catch(function (error)
+		local error_message = error or "Error calling claim_track_node."
+
+		if type(error_message) == "table" then
+			error_message = table.tostring(error_message, 5)
+		end
+
+		Log.exception("ExpeditionView", "Exception claiming node: ", error_message)
+		Managers.event:trigger("event_add_notification_message", "alert", {
+			text = error_message,
+		})
+	end)
 end
 
 ExpeditionView._get_node_screenspace = function (self, node, camera)
@@ -959,7 +802,7 @@ local _required_level_loc_table = {
 }
 
 ExpeditionView._update_can_start_mission = function (self)
-	local node = self.selected_node
+	local node = self:get_selection()
 
 	if not node then
 		self:_set_can_start_mission(false, "warning", Localize("loc_no_mission_selected"))
@@ -968,8 +811,9 @@ ExpeditionView._update_can_start_mission = function (self)
 	end
 
 	local missions = node.missions
+	local not_quickplay_button = not self:_is_quickplay_button(node)
 
-	if not missions and node.id ~= "quickplay_button" then
+	if not missions and not_quickplay_button then
 		self:_set_can_start_mission(false, "warning", Localize("loc_missing_missions_data"))
 
 		return
@@ -978,13 +822,13 @@ ExpeditionView._update_can_start_mission = function (self)
 	local difficulty = self._page_settings[self._page_index]
 	local mission = self:_find_mission_of_difficulty(missions, difficulty.filter.challenge, difficulty.filter.resistance)
 
-	if not mission and node.id ~= "quickplay_button" then
+	if not mission and not_quickplay_button then
 		self:_set_can_start_mission(false, "warning", Localize("loc_missing_mission_data_for_difficulty"))
 
 		return
 	end
 
-	if mission and not mission.id and node.id ~= "quickplay_button" then
+	if mission and not mission.id and not_quickplay_button then
 		self:_set_can_start_mission(false, "warning", Localize("loc_missing_mission_id"))
 
 		return
@@ -1014,8 +858,8 @@ ExpeditionView._update_can_start_mission = function (self)
 		return
 	end
 
-	if self.current_match_visibility == MATCH_VISIBILITY.private then
-		if node.id == "quickplay_button" then
+	if self._current_match_visibility == MATCH_VISIBILITY.private then
+		if not_quickplay_button then
 			self:_set_can_start_mission(false, "warning", Localize("loc_mission_board_locked_issue"))
 
 			return
@@ -1028,23 +872,15 @@ ExpeditionView._update_can_start_mission = function (self)
 		end
 	end
 
-	if self.selected_node and self.selected_node.unlock_status ~= UNLOCK_STATUS.unlocked and node.id ~= "quickplay_button" then
+	local selected = self:get_selection()
+
+	if selected and selected.unlock_status ~= UNLOCK_STATUS.unlocked and not_quickplay_button then
 		self:_set_can_start_mission(false, "warning", Localize("loc_mission_board_locked_issue"))
 
 		return
 	end
 
 	self:_set_can_start_mission(true, "info", nil)
-end
-
-ExpeditionView._set_can_start_mission = function (self, can_start_mission, info_level, info_text)
-	self._can_start_mission = can_start_mission
-	self._info_level = info_level
-	self._info_text = info_text
-end
-
-ExpeditionView.get_can_start_mission = function (self)
-	return self._can_start_mission, self._info_level, self._info_text
 end
 
 ExpeditionView.event_register_table_spawn_pivot = function (self, pivot_unit)
@@ -1075,21 +911,30 @@ ExpeditionView.event_register_camera = function (self, camera_unit)
 end
 
 ExpeditionView.cb_on_options_pressed = function (self)
-	if self.block_legend_input then
+	if self:_get_block_input() then
 		return
 	end
 
-	self.block_legend_input = true
-
-	self._options:present()
+	self:_set_block_input(true)
+	self._options:present(self._regions_latency, callback(self, "cb_close_options_element"))
 end
 
 ExpeditionView.cb_switch_tab = function (self)
-	self._sidebar:switch_tab()
+	if self._sidebar then
+		self._sidebar:switch_tab()
+	end
+end
+
+ExpeditionView.cb_widget_node_pressed = function (self, node)
+	if not node or not node.widget then
+		return
+	end
+
+	self:_set_selection(node)
 end
 
 ExpeditionView.cb_toggle_private_match = function (self)
-	local match_visibility = self.current_match_visibility
+	local match_visibility = self._current_match_visibility
 
 	if match_visibility == MATCH_VISIBILITY.private then
 		match_visibility = MATCH_VISIBILITY.public
@@ -1099,66 +944,24 @@ ExpeditionView.cb_toggle_private_match = function (self)
 		return
 	end
 
-	self.current_match_visibility = match_visibility
+	self._current_match_visibility = match_visibility
 
 	self:set_saved_match_visibility(match_visibility)
-	self._sidebar:update_match_visibility_text(match_visibility)
 
-	local quickplay_widget = self.quickplay_button_widget
-
-	if quickplay_widget then
-		local content = quickplay_widget.content
-
-		content.is_locked = not self.quickplay_unlocked or match_visibility ~= MATCH_VISIBILITY.public
+	if self._sidebar then
+		self._sidebar:update_match_visibility_text(match_visibility)
+		self._sidebar:update_quickplay_widget_locking()
 	end
 end
 
 ExpeditionView.cb_show_tutorial = function (self)
-	if self.block_legend_input then
+	if self:_get_block_input() then
 		return
 	end
 
-	self.block_legend_input = true
-	self._present_tutorial_popup = true
-end
+	self:_set_block_input(true)
 
-ExpeditionView._show_tutorial_popup = function (self)
-	self._present_tutorial_popup = nil
-
-	local context = {
-		close_callback = function ()
-			self._remove_tutorial_popup_next_frame = true
-			self._tutorial_popup = nil
-			self.block_legend_input = false
-		end,
-		popup_pages = Settings.popup_pages,
-	}
-
-	self._tutorial_popup = self:_add_element(ViewElementTutorialPopup, "tutorial_popup", 90, context, "tutorial_popup_pivot")
-end
-
-ExpeditionView.set_saved_match_visibility = function (self, match_visibility)
-	local save_data = self.save_data
-
-	save_data.page_index = self._page_index + 1
-	save_data.private_match = match_visibility == MATCH_VISIBILITY.private
-
-	Managers.save:queue_save()
-end
-
-ExpeditionView.get_selected_mission_data = function (self, node_override)
-	local node = node_override or self.selected_node
-
-	if not node then
-		return nil
-	end
-
-	local missions = node and node.missions
-	local difficulty = self._page_settings and self._page_index and self._page_settings[self._page_index]
-	local challenge = difficulty and difficulty.filter and difficulty.filter.challenge
-	local resistance = difficulty and difficulty.filter and difficulty.filter.resistance
-
-	return self:_find_mission_of_difficulty(missions, challenge, resistance)
+	self._show_tutorial_on_next_update = true
 end
 
 ExpeditionView._find_mission_of_difficulty = function (self, missions, challenge_filter, resistance_filter)
@@ -1176,6 +979,10 @@ ExpeditionView._find_mission_of_difficulty = function (self, missions, challenge
 end
 
 ExpeditionView.cb_start_selected_mission = function (self)
+	if self:_get_block_input() then
+		return
+	end
+
 	if not self._can_start_mission then
 		Log.exception("ExpeditionView", "Unable to start mission because: %s", self._info_text or "<unknown>")
 
@@ -1183,13 +990,13 @@ ExpeditionView.cb_start_selected_mission = function (self)
 	end
 
 	local preferred_mission_region = Managers.data_service.region_latency:get_prefered_mission_region()
-	local private_match = self.current_match_visibility == MATCH_VISIBILITY.private
+	local private_match = self._current_match_visibility == MATCH_VISIBILITY.private
 
 	self:_play_sound(UISoundEvents.expedition_menu_start)
 	Managers.event:trigger("event_story_mission_started")
 
-	local node_id = self.selected_node and self.selected_node.id or nil
-	local is_quickplay = node_id == "quickplay_button"
+	local node = self:get_selection()
+	local is_quickplay = self:_is_quickplay_button(node)
 
 	if is_quickplay then
 		local page_settings = self._page_settings[self._page_index]
@@ -1202,7 +1009,7 @@ ExpeditionView.cb_start_selected_mission = function (self)
 
 		local qp_string = QPCode.encode(qp_settings)
 
-		self._party_manager:wanted_mission_selected(qp_string, self.current_match_visibility == MATCH_VISIBILITY.private, preferred_mission_region)
+		self._party_manager:wanted_mission_selected(qp_string, self._current_match_visibility == MATCH_VISIBILITY.private, preferred_mission_region)
 		self:cb_on_back_pressed()
 	else
 		local mission = self:get_selected_mission_data()
@@ -1213,9 +1020,38 @@ ExpeditionView.cb_start_selected_mission = function (self)
 	end
 end
 
+ExpeditionView.cb_on_unlock_node_input_pressed = function (self)
+	if not InputDevice.gamepad_active then
+		return
+	end
+
+	local selected_node = self:get_selection()
+	local hovered_node = self:_get_hovered()
+
+	if hovered_node ~= selected_node then
+		return
+	end
+
+	self:_unlock_node_if_eligible(selected_node)
+end
+
 ExpeditionView.cb_on_back_pressed = function (self)
 	self:_play_sound(UISoundEvents.expedition_view_select_unlocked_end)
 	Managers.ui:close_view(self.view_name)
+end
+
+ExpeditionView.cb_close_options_element = function (self)
+	if self:_element("options_element") then
+		self:_remove_element("options_element")
+	end
+
+	self:_set_block_input(false)
+
+	local options = self._options
+
+	if options then
+		options:close_options_element()
+	end
 end
 
 ExpeditionView._create_page_settings = function (self, difficulty_progress_data)
@@ -1322,125 +1158,292 @@ ExpeditionView.node_enter_anim_finished = function (self)
 	return self._node_enter_anim_finished
 end
 
-ExpeditionView._setup_quickplay_button = function (self)
-	local bonus_text
-	local bonus_low, bonus_high = self.quickplay_bonus_range[1], self.quickplay_bonus_range[2]
-
-	if bonus_low and bonus_high then
-		local internal_bonus_text = bonus_low == bonus_high and tostring(bonus_low) or string.format("+%s%% - %s%%", bonus_low, bonus_high)
-
-		bonus_text = Localize("loc_mission_board_card_bonus_text", true, {
-			bonus_text = internal_bonus_text,
-		})
-	end
-
-	local is_unlocked = self.quickplay_unlocked and self.current_match_visibility == MATCH_VISIBILITY.public
-	local widget_id = "quickplay_button"
-	local optional_blueprint_settings = "quickplay_tile"
-	local optional_creation_context = {
-		icon = "content/ui/textures/icons/mission_types_pj/mission_type_quick",
-		is_locked = not is_unlocked,
-		sub_header_text = bonus_text,
-		header_text = Localize("loc_mission_board_quickplay_header"),
-	}
-	local old_widget = self._widgets_by_name[widget_id]
-
-	if old_widget ~= nil then
-		UIWidget.destroy(self._ui_renderer, old_widget)
-		self:_unregister_widget_name(old_widget.name)
-	end
-
-	local widget = self:_widget_from_blueprint(widget_id, optional_blueprint_settings, nil, optional_creation_context)
-
-	self.quickplay_button_widget = widget
-
-	local node = self:_create_node_from_widget(widget, widget_id)
-	local callback_function = callback(self, "cb_widget_node_pressed", node)
-
-	widget.content.hotspot.pressed_callback = callback_function
-	widget.visible = false
+ExpeditionView._is_quickplay_button = function (self, selectable)
+	return selectable and selectable.id == "quickplay_button"
 end
 
-ExpeditionView._widget_from_blueprint = function (self, widget_id, blueprint_setting_name, mission_data, creation_context, ...)
-	local blueprint_settings = {
-		blueprint_name = "small_static_tile_pass_templates",
-		is_large = false,
-		scenegraph_id = "quickplay_button",
-		size = {
-			280,
-			48,
-		},
-	}
+ExpeditionView.sidebar_create_widget = function (self, widget_id, definition)
+	return self:_create_widget(widget_id, definition)
+end
 
-	if not blueprint_settings then
-		Log.error("MissionBoardView", "No blueprint settings found for '%s'.", blueprint_setting_name)
+ExpeditionView.sidebar_add_element = function (self, class, reference_name, layer, context, pivot)
+	if self:_element(reference_name) then
+		self:_remove_element(reference_name)
+	end
+
+	return self:_add_element(class, reference_name, layer, context, pivot)
+end
+
+ExpeditionView.sidebar_remove_element = function (self, reference_name)
+	if self:_element(reference_name) then
+		self:_remove_element(reference_name)
+	end
+end
+
+ExpeditionView.get_has_fetched = function (self)
+	return self._has_fetched
+end
+
+ExpeditionView._set_has_fetched = function (self, value)
+	local loading_widget = self._widgets_by_name and self._widgets_by_name.loading
+
+	if loading_widget then
+		loading_widget.content.visible = not value
+	end
+
+	self._has_fetched = value
+end
+
+ExpeditionView.get_all_nodes = function (self)
+	return self._nodes
+end
+
+ExpeditionView._get_current_match_visibility = function (self)
+	return self._current_match_visibility
+end
+
+ExpeditionView._get_quickplay_button = function (self)
+	local cached_index = self._quickplay_button_index
+
+	if cached_index then
+		return self._selectables[cached_index]
+	end
+
+	for index, selectable in pairs(self._selectables) do
+		if self:_is_quickplay_button(selectable) then
+			return selectable
+		end
+	end
+
+	return #self._selectables
+end
+
+ExpeditionView._get_quickplay_button_index = function (self)
+	local cached_index = self._quickplay_button_index
+
+	if cached_index then
+		return cached_index
+	end
+
+	for index, selectable in pairs(self._selectables) do
+		if self:_is_quickplay_button(selectable) then
+			return index
+		end
+	end
+
+	return #self._selectables
+end
+
+ExpeditionView._set_selection_by_index = function (self, to_select)
+	self:_set_selection(self._selectables[to_select])
+end
+
+ExpeditionView._set_selection = function (self, to_select)
+	local to_select_index
+
+	for i, selectable in pairs(self._selectables) do
+		if selectable == to_select then
+			to_select_index = i
+
+			break
+		end
+	end
+
+	local has_changed = to_select_index ~= self._selection_index
+
+	if not has_changed then
+		self:_unlock_node_if_eligible(to_select)
 
 		return
 	end
 
-	local blueprint_name = blueprint_settings.blueprint_name
-	local blueprint = MissionBoardBlueprints[blueprint_name]
+	self._previous_selection_index = self._selection_index
 
-	if not blueprint then
+	local old = self._previous_selection_index and self._selectables[self._previous_selection_index] or nil
+
+	if old then
+		if self:_is_quickplay_button(old) then
+			local quickplay_widget = old.widget
+
+			quickplay_widget.content.hotspot.is_selected = false
+		else
+			Unit.flow_event(old.ui.node_unit, "unselect")
+			Unit.set_scalar_for_materials(old.ui.node_unit, "emissive_multiplier", 1)
+		end
+	end
+
+	self._selection_index = to_select_index
+
+	local new = self._selection_index and self._selectables[self._selection_index] or nil
+
+	if new then
+		local is_quickplay_button = self:_is_quickplay_button(new)
+
+		if is_quickplay_button then
+			local quickplay_widget = new.widget
+
+			quickplay_widget.content.hotspot.is_selected = true
+		else
+			Unit.flow_event(new.ui.node_unit, "select")
+			Unit.set_scalar_for_materials(new.ui.node_unit, "emissive_multiplier", Settings.node_selection_emissive_multiplier)
+		end
+
+		if is_quickplay_button then
+			self:_play_sound(UISoundEvents.story_mission_option_selected)
+		elseif new.unlock_status == UNLOCK_STATUS.locked then
+			self:_play_sound(UISoundEvents.expedition_view_select_locked)
+		elseif new.unlock_status == UNLOCK_STATUS.unlocked then
+			self:_play_sound(UISoundEvents.expedition_view_select_unlocked)
+		elseif new.unlock_status == UNLOCK_STATUS.unlockable then
+			self:_play_sound(UISoundEvents.expedition_view_select_unlockable)
+		end
+
+		if new.unlock_status == UNLOCK_STATUS.unlocked and not self._unlocked_sound_looping then
+			self:_play_sound(UISoundEvents.expedition_view_select_unlocked_loop)
+
+			self._unlocked_sound_looping = true
+		elseif new.unlock_status ~= UNLOCK_STATUS.unlocked then
+			self:_play_sound(UISoundEvents.expedition_view_select_unlocked_end)
+
+			self._unlocked_sound_looping = false
+		end
+
+		self._sidebar:show_mission_info(new)
+	elseif new == nil and self:_element("view_element_expedition_view_mission_info") then
+		self:_remove_element("view_element_expedition_view_mission_info")
+	end
+end
+
+ExpeditionView.get_selection = function (self)
+	local selectables = self._selectables
+	local selection_index = self._selection_index
+
+	if selectables and selection_index then
+		return selectables[selection_index]
+	end
+end
+
+ExpeditionView._get_selection_index = function (self)
+	return self._selection_index
+end
+
+ExpeditionView._set_hovered = function (self, to_hover)
+	local has_changed = to_hover ~= self._hovered
+
+	if not has_changed then
 		return
 	end
 
-	local size = blueprint_settings.size
-	local scenegraph_id = blueprint_settings.scenegraph_id
+	self._previous_hovered = self._hovered
+	self._hovered = to_hover
 
-	creation_context.is_large = blueprint_settings.is_large
+	local old = self._previous_hovered
+	local old_unit = old and old.ui and old.ui.node_unit or nil
 
-	local definition = MissionBoardBlueprints.make_blueprint(blueprint, scenegraph_id, size)
-	local widget = self:_create_widget(widget_id, definition)
-
-	if not widget then
-		return
+	if old_unit then
+		Unit.flow_event(old_unit, "unhover")
 	end
 
-	local content = widget.content
+	local new = self._hovered
+	local new_unit = new and new.ui and new.ui.node_unit or nil
 
-	for i = 1, select("#", ...), 2 do
-		local key, value = select(i, ...)
+	if new and new_unit then
+		Unit.flow_event(new_unit, "hover")
+		self:_play_sound(UISoundEvents.expedition_view_hover)
+	end
+end
 
-		content[key] = value
+ExpeditionView._get_hovered = function (self)
+	return self._hovered
+end
+
+ExpeditionView._get_previous_hovered = function (self)
+	return self._previous_hovered
+end
+
+ExpeditionView._set_block_input = function (self, value)
+	self._block_input = value
+end
+
+ExpeditionView._get_block_input = function (self)
+	return self._block_input
+end
+
+ExpeditionView._set_can_start_mission = function (self, can_start_mission, info_level, info_text)
+	self._can_start_mission = can_start_mission
+	self._info_level = info_level
+	self._info_text = info_text
+end
+
+ExpeditionView.get_can_start_mission = function (self)
+	return self._can_start_mission, self._info_level, self._info_text
+end
+
+ExpeditionView.set_saved_match_visibility = function (self, match_visibility)
+	local save_data = self.save_data
+
+	save_data.page_index = self._page_index + 1
+	save_data.private_match = match_visibility == MATCH_VISIBILITY.private
+
+	Managers.save:queue_save()
+end
+
+ExpeditionView.get_selected_mission_data = function (self, node_override)
+	local node = node_override or self:get_selection()
+
+	if not node then
+		return nil
 	end
 
-	widget.content.blueprint_name = blueprint_setting_name
-	widget.content.blueprint = definition
+	local missions = node and node.missions
+	local difficulty = self._page_settings and self._page_index and self._page_settings[self._page_index]
+	local challenge = difficulty and difficulty.filter and difficulty.filter.challenge
+	local resistance = difficulty and difficulty.filter and difficulty.filter.resistance
 
-	local init = definition.init
-
-	if init then
-		local width, height = init(definition, widget, mission_data, creation_context)
-
-		return widget, width, height
-	end
-
-	return widget
+	return self:_find_mission_of_difficulty(missions, challenge, resistance)
 end
 
 ExpeditionView.on_exit = function (self)
 	self:_despawn_nodes()
-	self._sidebar:delete()
+
+	if self._sidebar then
+		self._sidebar:delete()
+
+		self._sidebar = nil
+	end
+
 	self._world_spawner:delete()
 	ExpeditionView.super.on_exit(self)
 end
 
 ExpeditionView._despawn_nodes = function (self)
 	local world = self._world_spawner and self._world_spawner:world()
-	local nodes = self.nodes
+	local nodes = self._nodes
 
-	for _, node in pairs(nodes) do
-		World.destroy_unit(world, node.ui.node_unit)
+	if nodes then
+		for _, node in pairs(nodes) do
+			local node_ui = node.ui
 
-		if node.ui.dotted_line_units then
-			for _, dotted_line_unit in pairs(node.ui.dotted_line_units) do
-				World.destroy_unit(world, dotted_line_unit)
+			if node_ui.node_unit then
+				World.destroy_unit(world, node_ui.node_unit)
+			end
+
+			if node_ui.dotted_line_units then
+				for _, dotted_line_unit in pairs(node_ui.dotted_line_units) do
+					World.destroy_unit(world, dotted_line_unit)
+				end
 			end
 		end
 	end
 
-	self.nodes = nil
+	self._nodes = nil
+	self._selectables = nil
+	self._hovered = nil
+	self._previous_hovered = false
+	self._selection_index = nil
+	self._previous_selection_index = nil
+	self._node_enter_anim_time = nil
+	self._node_enter_anim_finished = nil
 end
 
 ExpeditionView.destroy = function (self)
@@ -1449,7 +1452,7 @@ ExpeditionView.destroy = function (self)
 	local save_data = self.save_data
 
 	if save_data then
-		local match_visibility = self.current_match_visibility
+		local match_visibility = self._current_match_visibility
 
 		save_data.private_match = match_visibility == MATCH_VISIBILITY.private
 		save_data.page_index = self._page_index + 1
@@ -1459,20 +1462,6 @@ ExpeditionView.destroy = function (self)
 
 	self._promise_container:delete()
 	ExpeditionView.super.destroy(self)
-end
-
-ExpeditionView.cb_do_nothing = function (self)
-	return
-end
-
-ExpeditionView.cb_widget_node_pressed = function (self, node)
-	if not node or not node.widget then
-		return
-	end
-
-	self._hovered_node = node
-
-	self:_select_node(node)
 end
 
 return ExpeditionView

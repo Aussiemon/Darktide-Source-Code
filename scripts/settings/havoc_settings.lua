@@ -221,16 +221,16 @@ local havoc_settings = {
 				add_more_ogryns = 0.15,
 			},
 			{
-				add_more_ogryns = 0.35,
+				add_more_ogryns = 0.25,
 			},
 			{
-				add_more_ogryns = 0.5,
+				add_more_ogryns = 0.45,
 			},
 			{
-				add_more_ogryns = 0.75,
+				add_more_ogryns = 0.65,
 			},
 			{
-				add_more_ogryns = 1,
+				add_more_ogryns = 0.8,
 			},
 		},
 		melee_minion_attack_speed = {

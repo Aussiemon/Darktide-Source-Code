@@ -13,5 +13,6 @@ end
 _create_auto_event_entry("scripts/managers/pacing/auto_event/templates/expedition_auto_event_template")
 _create_auto_event_entry("scripts/managers/pacing/auto_event/templates/live_event_saints_auto_event_template")
 _create_auto_event_entry("scripts/managers/pacing/auto_event/templates/dummy_auto_event_template")
+_create_auto_event_entry("scripts/managers/pacing/auto_event/templates/live_event_skulls_guns_auto_event_template")
 
 return settings("AutoEventTemplates", auto_event_templates)

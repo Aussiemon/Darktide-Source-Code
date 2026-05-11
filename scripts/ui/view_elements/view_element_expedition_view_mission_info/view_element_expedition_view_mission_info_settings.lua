@@ -2,14 +2,6 @@
 
 local Settings = {}
 
-Settings.tabs = {
-	"unlock_info",
-	"minor_modifiers",
-	"major_modifiers_start",
-	major_modifiers_start = 3,
-	minor_modifiers = 2,
-	unlock_info = 1,
-}
 Settings.dimensions = {
 	divider_center_text_portion = 0.2,
 	divider_left_line_portion = 0.4,

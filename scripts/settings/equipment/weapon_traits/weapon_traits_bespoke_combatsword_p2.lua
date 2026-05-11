@@ -333,7 +333,7 @@ templates.weapon_trait_bespoke_combatsword_p2_rending_on_multiple_hits = {
 				find_value_type = "trait_override",
 				path = {
 					"stat_buffs",
-					stat_buffs.rending_multiplier,
+					stat_buffs.melee_rending_multiplier,
 				},
 			},
 		},
@@ -366,7 +366,7 @@ templates.weapon_trait_bespoke_combatsword_p2_rending_on_multiple_hits = {
 					required_num_hits = 2,
 				},
 				stat_buffs = {
-					[stat_buffs.rending_multiplier] = 0.05,
+					[stat_buffs.melee_rending_multiplier] = 0.05,
 				},
 			},
 			{
@@ -375,7 +375,7 @@ templates.weapon_trait_bespoke_combatsword_p2_rending_on_multiple_hits = {
 					required_num_hits = 2,
 				},
 				stat_buffs = {
-					[stat_buffs.rending_multiplier] = 0.06,
+					[stat_buffs.melee_rending_multiplier] = 0.06,
 				},
 			},
 			{
@@ -384,7 +384,7 @@ templates.weapon_trait_bespoke_combatsword_p2_rending_on_multiple_hits = {
 					required_num_hits = 2,
 				},
 				stat_buffs = {
-					[stat_buffs.rending_multiplier] = 0.07,
+					[stat_buffs.melee_rending_multiplier] = 0.07,
 				},
 			},
 			{
@@ -393,7 +393,7 @@ templates.weapon_trait_bespoke_combatsword_p2_rending_on_multiple_hits = {
 					required_num_hits = 2,
 				},
 				stat_buffs = {
-					[stat_buffs.rending_multiplier] = 0.08,
+					[stat_buffs.melee_rending_multiplier] = 0.08,
 				},
 			},
 		},

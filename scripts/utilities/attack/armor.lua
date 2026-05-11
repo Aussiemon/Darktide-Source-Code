@@ -1,6 +1,8 @@
 ﻿-- chunkname: @scripts/utilities/attack/armor.lua
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local HavocMutatorLocalSettings = require("scripts/settings/havoc/havoc_mutator_local_settings")
+local rotten_armor_config_settings = HavocMutatorLocalSettings.mutator_havoc_rotten_armor.breed_armor_type_overrides
 local Armor = {}
 local armor_types = ArmorSettings.types
 local default_armor = armor_types.unarmored
@@ -21,7 +23,7 @@ Armor.aborts_attack = function (unit, breed_or_nil, hit_zone_name_or_nil)
 end
 
 function _character_armor_type(unit, breed, hit_zone_name_or_nil, attack_type_or_nil)
-	if not hit_zone_name_or_nil == "captain_void_shield" then
+	if hit_zone_name_or_nil ~= "captain_void_shield" then
 		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 		local buff_armor_override = buff_extension and buff_extension:has_keyword("super_armor_override")
 
@@ -33,6 +35,20 @@ function _character_armor_type(unit, breed, hit_zone_name_or_nil, attack_type_or
 
 		if havoc_infested_override and hit_zone_name_or_nil == "head" then
 			return armor_types.disgustingly_resilient
+		end
+
+		local is_rotten_armor_equipped = buff_extension and buff_extension:has_keyword("rotten_armor")
+
+		if is_rotten_armor_equipped then
+			local hitzone = hit_zone_name_or_nil
+
+			if hitzone then
+				local override_type = rotten_armor_config_settings[hitzone]
+
+				if override_type then
+					return armor_types[override_type]
+				end
+			end
 		end
 	end
 

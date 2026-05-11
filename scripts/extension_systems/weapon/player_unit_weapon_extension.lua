@@ -175,6 +175,7 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 	self._action_handler:add_component("weapon_action")
 	self._action_handler:set_weapon_extension_and_tweak_component(self, "weapon_tweak_templates")
 
+	self._last_wield_t = nil
 	self._weapon_action_movement = WeaponActionMovement:new(self, unit_data, buff_extension)
 	self._sway_weapon_module = SwayWeaponModule:new(unit, unit_data)
 	self._last_fixed_t = extension_init_context.fixed_frame_t
@@ -666,6 +667,8 @@ PlayerUnitWeaponExtension.on_wieldable_slot_unequipped = function (self, slot_na
 	self._weapons[slot_name] = nil
 end
 
+local quick_swap_time = 0.2
+
 PlayerUnitWeaponExtension.on_slot_wielded = function (self, slot_name, t, skip_wield_action)
 	local weapon = self._weapons[slot_name]
 	local weapon_item = weapon.item
@@ -679,6 +682,20 @@ PlayerUnitWeaponExtension.on_slot_wielded = function (self, slot_name, t, skip_w
 	local action_handler = self._action_handler
 	local action_name = "action_wield"
 	local action_settings = Action.action_settings(weapon_template, action_name)
+
+	if DEDICATED_SERVER and self._is_human_controlled and self._last_wield_t then
+		local time_since_last_wield = t - self._last_wield_t
+
+		if time_since_last_wield <= quick_swap_time then
+			local weapon_name = weapon_template.name
+			local player = self._player
+
+			Managers.telemetry_reporters:reporter("player_quick_swapped"):register_event(player, weapon_name)
+		end
+	end
+
+	self._last_wield_t = t
+
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
 
 	weapon_tweak_templates_component.ammo_template_name = weapon_template.ammo_template or "none"

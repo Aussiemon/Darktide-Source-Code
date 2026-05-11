@@ -338,7 +338,13 @@ widget_definitions.sidebar_fade = UIWidget.create_definition({
 	},
 }, "screen")
 
-local unlock_button_definition = {
+local unlock_button_content_overrides = {
+	gamepad_action = "confirm_pressed",
+	visible = false,
+	original_text = Utf8.upper(Localize("loc_action_interaction_unlock")),
+}
+
+widget_definitions.unlock_button = UIWidget.create_definition({
 	{
 		content_id = "hotspot",
 		pass_type = "hotspot",
@@ -385,13 +391,7 @@ local unlock_button_definition = {
 			end
 		end,
 	},
-}
-local unlock_button_content_overrides = {
-	gamepad_action = "confirm_pressed",
-	original_text = Utf8.upper(Localize("loc_action_interaction_unlock")),
-}
-
-widget_definitions.unlock_button = UIWidget.create_definition(unlock_button_definition, "unlock_button", unlock_button_content_overrides, nil, play_button_style_overrides)
+}, "unlock_button", unlock_button_content_overrides, nil, play_button_style_overrides)
 widget_definitions.mapwide_stats = UIWidget.create_definition({
 	{
 		pass_type = "texture",
@@ -437,7 +437,36 @@ widget_definitions.mapwide_stats = UIWidget.create_definition({
 		value = Settings.loot_icon,
 		style = Styles.mapwide_stats.personal_total_icon,
 	},
-}, "mapwide_stats")
+}, "mapwide_stats", {
+	visible = false,
+})
+widget_definitions.loading = UIWidget.create_definition({
+	{
+		pass_type = "rect",
+		style = {
+			color = Color.black(127.5, true),
+		},
+	},
+	{
+		pass_type = "texture",
+		value = "content/ui/materials/loading/loading_icon",
+		style = {
+			horizontal_alignment = "center",
+			vertical_alignment = "center",
+			size = {
+				256,
+				256,
+			},
+			offset = {
+				0,
+				0,
+				1,
+			},
+		},
+	},
+}, "screen", {
+	visible = false,
+})
 
 local background_world_params = {
 	level_name = "content/levels/ui/expedition/world",
@@ -467,7 +496,9 @@ local input_legend_params = {
 			input_action = "confirm_pressed",
 			on_pressed_callback = "cb_on_unlock_node_input_pressed",
 			visibility_function = function (parent)
-				return InputDevice.gamepad_active and parent.selected_node and parent.selected_node.unlock_status == UNLOCK_STATUS.unlockable and parent:node_enter_anim_finished()
+				local selection = parent:get_selection()
+
+				return InputDevice.gamepad_active and selection and selection.unlock_status == UNLOCK_STATUS.unlockable and parent:node_enter_anim_finished()
 			end,
 		},
 		{

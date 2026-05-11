@@ -810,7 +810,6 @@ ExpeditionLogicServer.update = function (self, dt, t)
 				self:rpc_can_proceed_to_safe_zone_exit(nil, safe_zone_section.index)
 			end
 
-			self._levels_spawner:apply_location_themes()
 			self:_set_server_level_state(SERVER_LEVEL_STATES.idle)
 		end
 	elseif state == SERVER_LEVEL_STATES.teleport_players_to_safe_zone then

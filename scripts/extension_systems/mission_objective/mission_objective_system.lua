@@ -1065,13 +1065,25 @@ MissionObjectiveSystem.hot_join_sync = function (self, sender, channel)
 		local use_hud_new_state = objective:use_hud_changed_state()
 
 		if use_hud_new_state ~= nil then
-			RPC.rpc_mission_objective_show_counter(channel, objective_name_id, group_id, use_hud_new_state)
+			RPC.rpc_mission_objective_show_ui(channel, objective_name_id, group_id, use_hud_new_state)
 		end
 
 		local use_counter_new_state = objective:use_counter_changed_state()
 
 		if use_counter_new_state ~= nil then
 			RPC.rpc_mission_objective_show_counter(channel, objective_name_id, group_id, use_counter_new_state)
+		end
+
+		local bar_new_state = objective:progress_bar_changed_state()
+
+		if bar_new_state ~= nil then
+			RPC.rpc_mission_objective_show_bar(channel, objective_name_id, group_id, bar_new_state)
+		end
+
+		local timer_new_state = objective:progress_timer_changed_state()
+
+		if timer_new_state ~= nil then
+			RPC.rpc_mission_objective_show_timer(channel, objective_name_id, group_id, timer_new_state)
 		end
 	end
 end

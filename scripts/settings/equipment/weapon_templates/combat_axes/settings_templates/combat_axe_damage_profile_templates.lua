@@ -1393,11 +1393,11 @@ damage_templates.heavy_shovel_tank = {
 			armor_damage_modifier = {
 				attack = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
-					[armor_types.armored] = damage_lerp_values.lerp_0_75,
-					[armor_types.resistant] = damage_lerp_values.lerp_0_75,
+					[armor_types.armored] = damage_lerp_values.lerp_0_8,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
 					[armor_types.player] = damage_lerp_values.lerp_1,
-					[armor_types.berserker] = damage_lerp_values.lerp_0_75,
-					[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_1,
 				},
@@ -1414,11 +1414,11 @@ damage_templates.heavy_shovel_tank = {
 			},
 			power_distribution = {
 				attack = {
-					110,
-					225,
+					125,
+					250,
 				},
 				impact = {
-					10,
+					12,
 					20,
 				},
 			},
@@ -1430,20 +1430,20 @@ damage_templates.heavy_shovel_tank = {
 		{
 			power_distribution = {
 				attack = {
-					75,
-					150,
+					80,
+					175,
 				},
 				impact = {
-					7,
-					14,
+					8,
+					16,
 				},
 			},
 		},
 		{
 			power_distribution = {
 				attack = {
-					40,
-					80,
+					50,
+					110,
 				},
 				impact = {
 					6,
@@ -1454,8 +1454,8 @@ damage_templates.heavy_shovel_tank = {
 		{
 			power_distribution = {
 				attack = {
-					35,
-					70,
+					40,
+					80,
 				},
 				impact = {
 					5,
@@ -1466,8 +1466,8 @@ damage_templates.heavy_shovel_tank = {
 		{
 			power_distribution = {
 				attack = {
-					40,
-					80,
+					30,
+					60,
 				},
 				impact = {
 					5,
@@ -1579,7 +1579,7 @@ overrides.heavy_shovel_sticky = {
 			"armor_damage_modifier",
 			"attack",
 			"super_armor",
-			damage_lerp_values.lerp_0_5,
+			damage_lerp_values.lerp_0_6,
 		},
 		{
 			"targets",
@@ -1603,16 +1603,17 @@ overrides.heavy_shovel_smite = {
 			"power_distribution",
 			"attack",
 			{
-				125,
-				275,
+				145,
+				295,
 			},
 		},
 		{
 			"targets",
 			1,
-			"power_distribution",
-			"impact",
-			15,
+			"armor_damage_modifier",
+			"attack",
+			"super_armor",
+			damage_lerp_values.lerp_0_6,
 		},
 	},
 }
@@ -1634,11 +1635,11 @@ damage_templates.default_light_shovel = {
 			armor_damage_modifier = {
 				attack = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
-					[armor_types.armored] = damage_lerp_values.lerp_0_75,
+					[armor_types.armored] = damage_lerp_values.lerp_0_8,
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.lerp_1,
 					[armor_types.berserker] = damage_lerp_values.lerp_1_1,
-					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_1,
 				},
@@ -1655,8 +1656,8 @@ damage_templates.default_light_shovel = {
 			},
 			power_distribution = {
 				attack = {
-					80,
-					160,
+					85,
+					170,
 				},
 				impact = {
 					3,
@@ -1710,8 +1711,8 @@ overrides.light_shovel_marks_single_target = {
 			"power_distribution",
 			"attack",
 			{
-				95,
-				180,
+				100,
+				190,
 			},
 		},
 	},
@@ -1762,7 +1763,7 @@ overrides.light_shovel_special = {
 			"armor_damage_modifier",
 			"attack",
 			"super_armor",
-			damage_lerp_values.lerp_0_4,
+			damage_lerp_values.lerp_0_5,
 		},
 	},
 }
@@ -1808,7 +1809,7 @@ overrides.light_shovel_sticky = {
 			"armor_damage_modifier",
 			"attack",
 			"super_armor",
-			damage_lerp_values.lerp_0_4,
+			damage_lerp_values.lerp_0_5,
 		},
 	},
 }
@@ -1913,8 +1914,8 @@ damage_templates.default_light_shovel_smack = {
 					[armor_types.armored] = damage_lerp_values.lerp_1,
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.lerp_1,
-					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
-					[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_75,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_35,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_1,
 				},
@@ -1997,7 +1998,7 @@ damage_templates.default_light_shovel_tank = {
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.lerp_1,
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
-					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_1,
 				},
@@ -2014,8 +2015,8 @@ damage_templates.default_light_shovel_tank = {
 			},
 			power_distribution = {
 				attack = {
-					55,
-					120,
+					70,
+					140,
 				},
 				impact = {
 					8,

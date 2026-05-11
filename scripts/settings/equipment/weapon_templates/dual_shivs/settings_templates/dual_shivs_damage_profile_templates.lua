@@ -186,7 +186,7 @@ damage_templates.dual_shivs_light_ninja = {
 	armor_damage_modifier = ninja_light_default_am,
 	targets = {
 		{
-			crit_boost = 0.7,
+			crit_boost = 0.55,
 			armor_damage_modifier = {
 				attack = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1_1,
@@ -279,7 +279,7 @@ overrides.dual_shivs_light_ninja_stabby = {
 			"targets",
 			1,
 			"crit_boost",
-			0.8,
+			0.65,
 		},
 		{
 			"cleave_distribution",
@@ -361,7 +361,7 @@ overrides.dual_shivs_light_ninja_stabby_plus = {
 			"targets",
 			1,
 			"crit_boost",
-			0.8,
+			0.65,
 		},
 		{
 			"targets",
@@ -565,7 +565,7 @@ damage_templates.dual_shivs_heavy_double_stab = {
 	armor_damage_modifier = ninja_light_default_am,
 	targets = {
 		{
-			crit_boost = 0.7,
+			crit_boost = 0.6,
 			armor_damage_modifier = {
 				attack = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -610,7 +610,7 @@ damage_templates.dual_shivs_heavy_double_stab = {
 			},
 		},
 		{
-			crit_boost = 0.7,
+			crit_boost = 0.6,
 			armor_damage_modifier = {
 				attack = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -709,7 +709,7 @@ damage_templates.dual_shivs_heavy_stab = {
 	armor_damage_modifier = ninja_light_default_am,
 	targets = {
 		{
-			crit_boost = 0.7,
+			crit_boost = 0.6,
 			armor_damage_modifier = {
 				attack = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -754,7 +754,7 @@ damage_templates.dual_shivs_heavy_stab = {
 			},
 		},
 		{
-			crit_boost = 0.55,
+			crit_boost = 0.5,
 			armor_damage_modifier = {
 				attack = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -999,7 +999,7 @@ damage_templates.dual_shivs_throwing_knives = {
 		near = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
-				[armor_types.armored] = damage_lerp_values.lerp_0_5,
+				[armor_types.armored] = damage_lerp_values.lerp_0_6,
 				[armor_types.resistant] = damage_lerp_values.lerp_0_6,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_1,
@@ -1021,7 +1021,7 @@ damage_templates.dual_shivs_throwing_knives = {
 		far = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
-				[armor_types.armored] = damage_lerp_values.lerp_0_25,
+				[armor_types.armored] = damage_lerp_values.lerp_0_35,
 				[armor_types.resistant] = damage_lerp_values.lerp_0_4,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_0_8,
@@ -1046,7 +1046,7 @@ damage_templates.dual_shivs_throwing_knives = {
 		impact = 0,
 	},
 	power_distribution = {
-		attack = 190,
+		attack = 235,
 		impact = 5,
 	},
 	gibbing_power = gibbing_power.always,
@@ -1057,7 +1057,7 @@ damage_templates.dual_shivs_throwing_knives = {
 	},
 	targets = {
 		default_target = {
-			boost_curve_multiplier_finesse = 1.2,
+			boost_curve_multiplier_finesse = 1.6,
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			finesse_boost = {
 				[armor_types.unarmored] = 0.65,

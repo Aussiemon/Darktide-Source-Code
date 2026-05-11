@@ -79,7 +79,6 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
-				"chaos_ogryn_executor",
 				elite_berzerker,
 				roamer_melee,
 				"chaos_newly_infected",
@@ -215,7 +214,6 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
-				"chaos_ogryn_executor",
 				elite_shocktrooper,
 				shocktrooper_two,
 				roamer_assault,

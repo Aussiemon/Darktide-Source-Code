@@ -1600,8 +1600,8 @@ overrides.heavy_combatsword_p3_smiter = {
 			1,
 			"boost_curve_multiplier_finesse",
 			{
-				1.1,
-				2.1,
+				1,
+				2,
 			},
 		},
 		{
@@ -1648,6 +1648,7 @@ damage_templates.heavy_combatsword_p3_smiter_stab = {
 	armor_damage_modifier = cutting_am,
 	targets = {
 		{
+			crit_boost = 0.4,
 			armor_damage_modifier = {
 				attack = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -1655,7 +1656,7 @@ damage_templates.heavy_combatsword_p3_smiter_stab = {
 					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
 					[armor_types.player] = damage_lerp_values.no_damage,
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
-					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
 				},
@@ -1671,8 +1672,8 @@ damage_templates.heavy_combatsword_p3_smiter_stab = {
 				},
 			},
 			boost_curve_multiplier_finesse = {
-				1.2,
-				2.4,
+				1.1,
+				2.2,
 			},
 			power_level_multiplier = {
 				0.5,

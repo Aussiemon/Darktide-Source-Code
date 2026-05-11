@@ -474,7 +474,7 @@ templates.weapon_trait_bespoke_chainsword_2h_p1_rending_vs_staggered = {
 				find_value_type = "trait_override",
 				path = {
 					"conditional_stat_buffs",
-					stat_buffs.rending_vs_staggered_multiplier,
+					stat_buffs.melee_rending_vs_staggered_multiplier,
 				},
 			},
 		},
@@ -483,22 +483,22 @@ templates.weapon_trait_bespoke_chainsword_2h_p1_rending_vs_staggered = {
 		weapon_trait_bespoke_chainsword_2h_p1_rending_vs_staggered = {
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.rending_vs_staggered_multiplier] = 0.1,
+					[stat_buffs.melee_rending_vs_staggered_multiplier] = 0.1,
 				},
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.rending_vs_staggered_multiplier] = 0.15,
+					[stat_buffs.melee_rending_vs_staggered_multiplier] = 0.15,
 				},
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.rending_vs_staggered_multiplier] = 0.2,
+					[stat_buffs.melee_rending_vs_staggered_multiplier] = 0.2,
 				},
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.rending_vs_staggered_multiplier] = 0.25,
+					[stat_buffs.melee_rending_vs_staggered_multiplier] = 0.25,
 				},
 			},
 		},

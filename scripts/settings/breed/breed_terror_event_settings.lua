@@ -44,7 +44,7 @@ breed_terror_event_settings.chaos_ogryn_gunner = {
 	point_cost = 10,
 }
 breed_terror_event_settings.chaos_ogryn_executor = {
-	point_cost = 15,
+	point_cost = 18,
 }
 breed_terror_event_settings.chaos_ogryn_houndmaster = {
 	point_cost = math.huge,

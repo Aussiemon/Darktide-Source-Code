@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/settings/pickup/pickups/reward/skulls_01_pickup.lua
 
 local pickup_data = {
+	auto_tag_on_spawn = true,
 	description = "loc_tainted_skull_pickup",
 	group = "rewards",
 	interaction_type = "tainted_skull",

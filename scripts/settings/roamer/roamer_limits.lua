@@ -164,9 +164,22 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 4,
 			},
 			renegade_assault = {
-				extra_replacement = "renegade_shocktrooper",
 				max = 3,
 				num_limitations_to_add_extra = 3,
+				extra_replacement = {
+					cultist = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+					renegade = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+				},
 			},
 			renegade_rifleman = {
 				extra_replacement = "renegade_gunner",
@@ -174,9 +187,20 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 4,
 			},
 			cultist_assault = {
-				extra_replacement = "cultist_gunner",
 				max = 4,
 				num_limitations_to_add_extra = 4,
+				extra_replacement = {
+					cultist = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+					renegade = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+				},
 			},
 			cultist_berzerker = {
 				extra_replacement = "cultist_melee",
@@ -189,9 +213,16 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 2,
 			},
 			chaos_ogryn_executor = {
-				extra_replacement = "renegade_melee",
 				max = 1,
 				num_limitations_to_add_extra = 1,
+				extra_replacement = {
+					renegade = {
+						"renegade_melee",
+					},
+					cultist = {
+						"cultist_melee",
+					},
+				},
 			},
 			renegade_plasma_gunner = {
 				extra_replacement = "renegade_gunner",
@@ -216,9 +247,22 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 4,
 			},
 			renegade_assault = {
-				extra_replacement = "renegade_shocktrooper",
 				max = 3,
 				num_limitations_to_add_extra = 3,
+				extra_replacement = {
+					cultist = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+					renegade = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+				},
 			},
 			renegade_rifleman = {
 				extra_replacement = "renegade_gunner",
@@ -226,9 +270,20 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 4,
 			},
 			cultist_assault = {
-				extra_replacement = "cultist_gunner",
 				max = 4,
 				num_limitations_to_add_extra = 4,
+				extra_replacement = {
+					cultist = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+					renegade = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+				},
 			},
 			chaos_ogryn_bulwark = {
 				extra_replacement = "renegade_melee",
@@ -246,9 +301,16 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 2,
 			},
 			chaos_ogryn_executor = {
-				extra_replacement = "renegade_melee",
 				max = 1,
 				num_limitations_to_add_extra = 1,
+				extra_replacement = {
+					renegade = {
+						"renegade_melee",
+					},
+					cultist = {
+						"cultist_melee",
+					},
+				},
 			},
 			renegade_plasma_gunner = {
 				extra_replacement = "renegade_gunner",
@@ -273,9 +335,22 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 4,
 			},
 			renegade_assault = {
-				extra_replacement = "renegade_shocktrooper",
 				max = 3,
 				num_limitations_to_add_extra = 3,
+				extra_replacement = {
+					cultist = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+					renegade = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+				},
 			},
 			renegade_rifleman = {
 				extra_replacement = "renegade_gunner",
@@ -283,9 +358,20 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 4,
 			},
 			cultist_assault = {
-				extra_replacement = "cultist_gunner",
 				max = 4,
 				num_limitations_to_add_extra = 4,
+				extra_replacement = {
+					cultist = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+					renegade = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+				},
 			},
 			chaos_ogryn_bulwark = {
 				extra_replacement = "renegade_melee",
@@ -303,9 +389,16 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 2,
 			},
 			chaos_ogryn_executor = {
-				extra_replacement = "renegade_melee",
 				max = 1,
 				num_limitations_to_add_extra = 1,
+				extra_replacement = {
+					renegade = {
+						"renegade_melee",
+					},
+					cultist = {
+						"cultist_melee",
+					},
+				},
 			},
 			renegade_plasma_gunner = {
 				extra_replacement = "renegade_gunner",
@@ -335,9 +428,22 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 4,
 			},
 			renegade_assault = {
-				extra_replacement = "renegade_shocktrooper",
 				max = 3,
 				num_limitations_to_add_extra = 3,
+				extra_replacement = {
+					cultist = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+					renegade = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+				},
 			},
 			renegade_rifleman = {
 				extra_replacement = "renegade_gunner",
@@ -345,9 +451,20 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 4,
 			},
 			cultist_assault = {
-				extra_replacement = "cultist_gunner",
 				max = 8,
 				num_limitations_to_add_extra = 4,
+				extra_replacement = {
+					cultist = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+					renegade = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+				},
 			},
 			chaos_ogryn_bulwark = {
 				extra_replacement = "renegade_melee",
@@ -365,9 +482,16 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 2,
 			},
 			chaos_ogryn_executor = {
-				extra_replacement = "renegade_melee",
-				max = 2,
+				max = 1,
 				num_limitations_to_add_extra = 1,
+				extra_replacement = {
+					renegade = {
+						"renegade_melee",
+					},
+					cultist = {
+						"cultist_melee",
+					},
+				},
 			},
 			renegade_plasma_gunner = {
 				extra_replacement = "renegade_gunner",
@@ -400,9 +524,22 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 3,
 			},
 			renegade_assault = {
-				extra_replacement = "renegade_shocktrooper",
 				max = 3,
 				num_limitations_to_add_extra = 2,
+				extra_replacement = {
+					cultist = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+					renegade = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+				},
 			},
 			renegade_rifleman = {
 				extra_replacement = "renegade_gunner",
@@ -410,9 +547,20 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 3,
 			},
 			cultist_assault = {
-				extra_replacement = "cultist_gunner",
 				max = 8,
 				num_limitations_to_add_extra = 3,
+				extra_replacement = {
+					cultist = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+					renegade = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+				},
 			},
 			chaos_ogryn_bulwark = {
 				extra_replacement = "renegade_melee",
@@ -430,9 +578,16 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 2,
 			},
 			chaos_ogryn_executor = {
-				extra_replacement = "renegade_melee",
 				max = 2,
 				num_limitations_to_add_extra = 1,
+				extra_replacement = {
+					renegade = {
+						"renegade_melee",
+					},
+					cultist = {
+						"cultist_melee",
+					},
+				},
 			},
 			renegade_plasma_gunner = {
 				extra_replacement = "renegade_gunner",
@@ -469,15 +624,39 @@ local roamer_limits = {
 				max = 2,
 				num_limitations_to_add_extra = 3,
 			},
-			renegade_rifleman = {
-				extra_replacement = "renegade_gunner",
-				max = 5,
-				num_limitations_to_add_extra = 4,
+			renegade_assault = {
+				max = 2,
+				num_limitations_to_add_extra = 3,
+				extra_replacement = {
+					cultist = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+					renegade = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+				},
 			},
 			cultist_assault = {
-				extra_replacement = "cultist_gunner",
 				max = 4,
 				num_limitations_to_add_extra = 4,
+				extra_replacement = {
+					cultist = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+					renegade = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+				},
 			},
 			chaos_ogryn_bulwark = {
 				extra_replacement = "renegade_melee",
@@ -485,9 +664,16 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 1,
 			},
 			chaos_ogryn_executor = {
-				extra_replacement = "renegade_melee",
 				max = 2,
 				num_limitations_to_add_extra = 1,
+				extra_replacement = {
+					renegade = {
+						"renegade_melee",
+					},
+					cultist = {
+						"cultist_melee",
+					},
+				},
 			},
 			renegade_plasma_gunner = {
 				extra_replacement = "renegade_gunner",
@@ -514,9 +700,22 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 4,
 			},
 			renegade_assault = {
-				extra_replacement = "renegade_shocktrooper",
 				max = 2,
 				num_limitations_to_add_extra = 4,
+				extra_replacement = {
+					cultist = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+					renegade = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+				},
 			},
 			renegade_rifleman = {
 				extra_replacement = "renegade_gunner",
@@ -524,9 +723,20 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 4,
 			},
 			cultist_assault = {
-				extra_replacement = "cultist_gunner",
 				max = 4,
 				num_limitations_to_add_extra = 4,
+				extra_replacement = {
+					cultist = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+					renegade = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+				},
 			},
 			cultist_berzerker = {
 				extra_replacement = "cultist_melee",
@@ -539,9 +749,16 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 2,
 			},
 			chaos_ogryn_executor = {
-				extra_replacement = "renegade_melee",
 				max = 1,
 				num_limitations_to_add_extra = 1,
+				extra_replacement = {
+					renegade = {
+						"renegade_melee",
+					},
+					cultist = {
+						"cultist_melee",
+					},
+				},
 			},
 			renegade_plasma_gunner = {
 				extra_replacement = "renegade_gunner",
@@ -566,9 +783,22 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 4,
 			},
 			renegade_assault = {
-				extra_replacement = "renegade_shocktrooper",
 				max = 3,
 				num_limitations_to_add_extra = 4,
+				extra_replacement = {
+					cultist = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+					renegade = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+				},
 			},
 			renegade_rifleman = {
 				extra_replacement = "renegade_gunner",
@@ -576,9 +806,20 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 4,
 			},
 			cultist_assault = {
-				extra_replacement = "cultist_gunner",
 				max = 4,
 				num_limitations_to_add_extra = 4,
+				extra_replacement = {
+					cultist = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+					renegade = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+				},
 			},
 			chaos_ogryn_bulwark = {
 				extra_replacement = "renegade_melee",
@@ -596,9 +837,16 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 2,
 			},
 			chaos_ogryn_executor = {
-				extra_replacement = "renegade_melee",
 				max = 1,
 				num_limitations_to_add_extra = 1,
+				extra_replacement = {
+					renegade = {
+						"renegade_melee",
+					},
+					cultist = {
+						"cultist_melee",
+					},
+				},
 			},
 			renegade_plasma_gunner = {
 				extra_replacement = "renegade_gunner",
@@ -623,9 +871,22 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 3,
 			},
 			renegade_assault = {
-				extra_replacement = "renegade_shocktrooper",
 				max = 3,
 				num_limitations_to_add_extra = 3,
+				extra_replacement = {
+					cultist = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+					renegade = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+				},
 			},
 			renegade_rifleman = {
 				extra_replacement = "renegade_gunner",
@@ -633,9 +894,20 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 3,
 			},
 			cultist_assault = {
-				extra_replacement = "cultist_gunner",
 				max = 3,
 				num_limitations_to_add_extra = 3,
+				extra_replacement = {
+					cultist = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+					renegade = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+				},
 			},
 			cultist_berzerker = {
 				extra_replacement = "cultist_melee",
@@ -653,9 +925,16 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 1,
 			},
 			chaos_ogryn_executor = {
-				extra_replacement = "renegade_melee",
-				max = 2,
+				max = 1,
 				num_limitations_to_add_extra = 1,
+				extra_replacement = {
+					renegade = {
+						"renegade_melee",
+					},
+					cultist = {
+						"cultist_melee",
+					},
+				},
 			},
 			renegade_plasma_gunner = {
 				extra_replacement = "renegade_gunner",
@@ -688,9 +967,22 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 2,
 			},
 			renegade_assault = {
-				extra_replacement = "renegade_shocktrooper",
 				max = 5,
 				num_limitations_to_add_extra = 2,
+				extra_replacement = {
+					cultist = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+					renegade = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+				},
 			},
 			renegade_rifleman = {
 				extra_replacement = "renegade_gunner",
@@ -698,9 +990,20 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 2,
 			},
 			cultist_assault = {
-				extra_replacement = "cultist_gunner",
 				max = 10,
 				num_limitations_to_add_extra = 2,
+				extra_replacement = {
+					cultist = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+					renegade = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+				},
 			},
 			cultist_berzerker = {
 				extra_replacement = "cultist_melee",
@@ -718,9 +1021,16 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 1,
 			},
 			chaos_ogryn_executor = {
-				extra_replacement = "renegade_melee",
-				max = 3,
+				max = 1,
 				num_limitations_to_add_extra = 1,
+				extra_replacement = {
+					renegade = {
+						"renegade_melee",
+					},
+					cultist = {
+						"cultist_melee",
+					},
+				},
 			},
 			renegade_plasma_gunner = {
 				extra_replacement = "renegade_gunner",
@@ -753,9 +1063,22 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 2,
 			},
 			renegade_assault = {
-				extra_replacement = "renegade_shocktrooper",
 				max = 5,
 				num_limitations_to_add_extra = 2,
+				extra_replacement = {
+					cultist = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+					renegade = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+				},
 			},
 			renegade_rifleman = {
 				extra_replacement = "renegade_gunner",
@@ -763,9 +1086,20 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 2,
 			},
 			cultist_assault = {
-				extra_replacement = "cultist_gunner",
 				max = 11,
 				num_limitations_to_add_extra = 2,
+				extra_replacement = {
+					cultist = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+					renegade = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+				},
 			},
 			chaos_ogryn_bulwark = {
 				extra_replacement = "renegade_melee",
@@ -783,9 +1117,16 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 2,
 			},
 			chaos_ogryn_executor = {
-				extra_replacement = "renegade_melee",
-				max = 4,
+				max = 2,
 				num_limitations_to_add_extra = 1,
+				extra_replacement = {
+					renegade = {
+						"renegade_melee",
+					},
+					cultist = {
+						"cultist_melee",
+					},
+				},
 			},
 			renegade_plasma_gunner = {
 				extra_replacement = "renegade_gunner",
@@ -818,9 +1159,22 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 3,
 			},
 			renegade_assault = {
-				extra_replacement = "renegade_shocktrooper",
 				max = 5,
 				num_limitations_to_add_extra = 3,
+				extra_replacement = {
+					cultist = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+					renegade = {
+						"renegade_gunner",
+						"renegade_berzerker",
+						"renegade_shocktrooper",
+						"renegade_executor",
+					},
+				},
 			},
 			renegade_rifleman = {
 				extra_replacement = "renegade_gunner",
@@ -828,9 +1182,20 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 3,
 			},
 			cultist_assault = {
-				extra_replacement = "cultist_gunner",
 				max = 7,
 				num_limitations_to_add_extra = 3,
+				extra_replacement = {
+					cultist = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+					renegade = {
+						"cultist_gunner",
+						"cultist_berzerker",
+						"cultist_shocktrooper",
+					},
+				},
 			},
 			chaos_ogryn_bulwark = {
 				extra_replacement = "renegade_melee",
@@ -838,9 +1203,16 @@ local roamer_limits = {
 				num_limitations_to_add_extra = 1,
 			},
 			chaos_ogryn_executor = {
-				extra_replacement = "renegade_melee",
-				max = 4,
+				max = 3,
 				num_limitations_to_add_extra = 1,
+				extra_replacement = {
+					renegade = {
+						"renegade_melee",
+					},
+					cultist = {
+						"cultist_melee",
+					},
+				},
 			},
 			renegade_plasma_gunner = {
 				extra_replacement = "renegade_gunner",

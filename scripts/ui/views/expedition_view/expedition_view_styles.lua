@@ -297,7 +297,7 @@ ExpeditionViewStyles.sidebar_fade = {
 	offset = {
 		0,
 		0,
-		1,
+		-99,
 	},
 }
 

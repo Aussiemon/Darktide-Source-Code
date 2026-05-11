@@ -511,7 +511,7 @@ base_templates.rending_on_multiple_hits_child = {
 	predicted = false,
 	stack_offset = -1,
 	conditional_stat_buffs = {
-		[stat_buffs.rending_multiplier] = 0.05,
+		[stat_buffs.melee_rending_multiplier] = 0.05,
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 }
@@ -663,6 +663,22 @@ base_templates.targets_receive_increased_damage_debuff_on_weapon_special = {
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.on_melee_weapon_special_hit),
+	start_func = _add_debuff_on_hit_start,
+	proc_func = _add_debuff_on_hit_proc,
+}
+base_templates.targets_receive_rending_debuff_on_weakspot_hit = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_hit] = 1,
+	},
+	target_buff_data = {
+		internal_buff_name = "rending_debuff",
+		max_stacks = 31,
+		num_stacks_on_proc = 1,
+	},
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_item_match, CheckProcFunctions.attacked_unit_is_minion, CheckProcFunctions.on_weakspot_hit),
 	start_func = _add_debuff_on_hit_start,
 	proc_func = _add_debuff_on_hit_proc,
 }
@@ -987,7 +1003,7 @@ base_templates.rending_vs_staggered = {
 	max_stacks = 1,
 	predicted = false,
 	conditional_stat_buffs = {
-		[stat_buffs.rending_vs_staggered_multiplier] = 0.1,
+		[stat_buffs.melee_rending_vs_staggered_multiplier] = 0.1,
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 }
@@ -2361,7 +2377,7 @@ base_templates.stacking_rending_on_weakspot_child = {
 	predicted = false,
 	stack_offset = -1,
 	conditional_stat_buffs = {
-		[stat_buffs.rending_multiplier] = 0.1,
+		[stat_buffs.melee_rending_multiplier] = 0.1,
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 }

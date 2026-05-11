@@ -219,7 +219,6 @@ local elements = {
 			"in_view",
 			"in_hub_view",
 			"in_loading",
-			"in_mission",
 			"skippable_cinematic",
 		},
 	},

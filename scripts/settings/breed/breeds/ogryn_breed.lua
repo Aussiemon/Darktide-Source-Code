@@ -177,7 +177,7 @@ local breed_data = {
 	},
 	ledge_vault_tweak_values = {
 		allowed_flat_distance_to_ledge = 1.5,
-		allowed_height_distance_max = 0.8,
+		allowed_height_distance_max = 1.3,
 		allowed_height_distance_min = 0.5,
 		always_step_up = true,
 		inair_allowed_height_distance_max = 0.65,

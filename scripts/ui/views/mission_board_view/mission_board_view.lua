@@ -593,8 +593,15 @@ MissionBoardView._set_quickplay_button_state = function (self, is_locked)
 	end
 
 	local content = widget.content
+	local style = widget.style
 
 	content.is_locked = is_locked
+
+	local icon_style = style.static_button_icon
+
+	if icon_style then
+		icon_style.is_selected = true
+	end
 end
 
 MissionBoardView._set_quickplay_widget = function (self)

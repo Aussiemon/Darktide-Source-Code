@@ -19,6 +19,7 @@ local icon_size = {
 
 template.size = size
 template.name = "location_attention"
+template.unit_node = "ui_attention_marker"
 template.using_smart_tag_system = true
 template.max_distance = 200
 template.screen_clamp = true

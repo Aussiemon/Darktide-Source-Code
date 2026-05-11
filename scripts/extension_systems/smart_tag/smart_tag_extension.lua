@@ -117,18 +117,30 @@ local _pickup_name_to_tag_template_name = {
 	control_rod_01_luggable = "luggable_control_rod_over_here",
 	expedition_currency_small_tier_1 = "expeditions_salvage_pickup_over_here",
 	expedition_currency_small_tier_2 = "expeditions_salvage_pickup_over_here",
+	expedition_deployable_force_field_pocketable_pickup = "expedition_expedition_deployable_force_field_pocketable_pickup_over_here",
+	expedition_explosive_luggable_01 = "expedition_expedition_explosive_luggable_01_over_here",
+	expedition_grenade_airstrike_pocketable = "expedition_expedition_grenade_airstrike_pocketable_over_here",
+	expedition_grenade_artillery_strike_pocketable = "expedition_expedition_grenade_artillery_strike_pocketable_over_here",
+	expedition_grenade_big_pocketable = "expedition_expedition_grenade_big_pocketable_over_here",
+	expedition_grenade_valkyrie_hover_pocketable = "expedition_expedition_grenade_valkyrie_hover_pocketable_over_here",
 	expedition_loot_heavy_tier_1 = "expeditions_loot_pickup_over_here",
 	expedition_loot_heavy_tier_2 = "expeditions_loot_pickup_over_here",
 	expedition_loot_heavy_tier_3 = "expeditions_loot_pickup_over_here",
 	expedition_loot_small_tier_1 = "expeditions_loot_pickup_over_here",
 	expedition_loot_small_tier_2 = "expeditions_loot_pickup_over_here",
 	expedition_loot_small_tier_3 = "expeditions_loot_pickup_over_here",
+	expedition_time_syringe_timed = "expedition_expedition_time_syringe_timed_over_here",
 	grimoire = "side_mission_grimoire_over_here",
+	large_ammunition_crate = "expedition_large_ammunition_crate_over_here",
 	large_clip = "large_clip_over_here",
 	large_metal = "large_metal_pickup_over_here",
 	large_platinum = "large_platinum_pickup_over_here",
 	medical_crate_deployable = "deployed_medical_crate_over_here",
 	medical_crate_pocketable = "pocketable_medical_crate_over_here",
+	motion_detection_mine_explosive_pocketable_pickup = "expedition_motion_detection_mine_explosive_pocketable_pickup_over_here",
+	motion_detection_mine_fire_pocketable = "expedition_motion_detection_mine_fire_pocketable_over_here",
+	motion_detection_mine_shock_pocketable = "expedition_motion_detection_mine_shock_pocketable_over_here",
+	skulls_01_pickup = "event_pickup_over_here",
 	small_clip = "small_clip_over_here",
 	small_grenade = "small_grenade_over_here",
 	small_metal = "small_metal_pickup_over_here",
@@ -203,6 +215,8 @@ SmartTagExtension._contextual_tag_template_name = function (self, tagger_unit, a
 		else
 			return "health_station_without_battery_over_here"
 		end
+	elseif target_type == "live_event_objective" then
+		return "live_event_objective_over_here"
 	end
 end
 

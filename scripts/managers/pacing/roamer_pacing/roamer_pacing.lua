@@ -647,6 +647,13 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 							local side_id = 2
 							local roamer_slot = roamer_slots[j + 1]
 							local roamer_id = #roamers + 1
+
+							if type(replaced_breed_name) == "table" then
+								local breeds_from_current_faction = replaced_breed_name[current_faction]
+
+								replaced_breed_name = breeds_from_current_faction[math.random(1, #breeds_from_current_faction)]
+							end
+
 							local roamer = {
 								aggro_sfx = aggro_sfx,
 								ambience_sfx = ambience_sfx,

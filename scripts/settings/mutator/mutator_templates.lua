@@ -24,6 +24,7 @@ _extract_mutator_templates("scripts/settings/mutator/templates/live_event_mutato
 _extract_mutator_templates("scripts/settings/mutator/templates/live_event_mutator_templates/mutator_live_event_broker_stimms_templates")
 _extract_mutator_templates("scripts/settings/mutator/templates/live_event_mutator_templates/mutator_live_event_abhuman_explosions_templates")
 _extract_mutator_templates("scripts/settings/mutator/templates/live_event_mutator_templates/mutator_live_event_elite_army_templates")
+_extract_mutator_templates("scripts/settings/mutator/templates/live_event_mutator_templates/mutator_live_event_skulls_guns_templates")
 
 for name, mutator_data in pairs(mutator_templates) do
 	mutator_data.name = name

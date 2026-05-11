@@ -806,14 +806,35 @@ end
 
 ExpeditionService._get_expeditions_tracks = function (self)
 	return self._backend_interface.tracks:get_expeditions_tracks():next(function (tracks)
-		local track = tracks and tracks[1]
-		local path = track and track.data
+		local active_track, active_track_time_left_until_valid
+
+		if tracks then
+			local t = Managers.time:time("main")
+			local server_time = Managers.backend:get_server_time(t)
+
+			for index, track in ipairs(tracks) do
+				local valid_from = track.validFrom
+				local time_left_until_valid = valid_from and (tonumber(valid_from) - server_time) / 1000
+
+				if not time_left_until_valid or time_left_until_valid <= 0 then
+					local valid_to = track.validTo
+					local time_left_until_invalid = valid_to and (tonumber(valid_to) - server_time) / 1000
+
+					if (not time_left_until_invalid or time_left_until_invalid > 0) and (not active_track or active_track_time_left_until_valid and time_left_until_valid < active_track_time_left_until_valid) then
+						active_track = track
+						active_track_time_left_until_valid = time_left_until_valid
+					end
+				end
+			end
+		end
+
+		local path = active_track and active_track.data
 
 		if path then
 			self._cached_data.personal_stats_path = string.format("expedition|campaign|%s|rotation|%s", path.campaignId, path.rotationId)
 		end
 
-		return Promise.resolved(track)
+		return Promise.resolved(active_track)
 	end)
 end
 
@@ -823,6 +844,16 @@ ExpeditionService.get_node_name_by_id = function (self, node_id)
 
 		return node_name
 	end)
+end
+
+ExpeditionService.has_track_expired = function (self)
+	local t = Managers.time:time("main")
+
+	if self._expeditions_track_timer and t >= self._expeditions_track_timer then
+		return true
+	end
+
+	return false
 end
 
 ExpeditionService.fetch_nodes = function (self)
@@ -859,8 +890,6 @@ ExpeditionService.fetch_nodes = function (self)
 			end)
 		end)
 	end
-
-	local promises = {}
 
 	return self:_get_expeditions_tracks():next(function (track)
 		if not track then

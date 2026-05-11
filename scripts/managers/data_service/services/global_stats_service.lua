@@ -41,6 +41,10 @@ GlobalStatsService._queue_refresh = function (self, category_name, amount)
 			return
 		end
 
+		if self._backend_promises[category_name] then
+			return
+		end
+
 		self:_refresh_category(category_name)
 	end)
 end
@@ -55,7 +59,7 @@ GlobalStatsService._trigger_subscribers = function (self, category_name, old_sta
 		if old_value == new_value then
 			-- Nothing
 		else
-			for object, function_name in pairs(subscribers) do
+			for object, function_name in pairs(table.shallow_copy(subscribers)) do
 				object[function_name](object, stat_name, new_value)
 			end
 		end
@@ -129,13 +133,31 @@ GlobalStatsService.subscribe = function (self, object, function_name, category_n
 end
 
 GlobalStatsService.unsubscribe = function (self, object, category_name, stat_name)
-	self._subscribers_by_category[category_name][stat_name][object] = nil
+	local subscribers_by_category = self._subscribers_by_category[category_name]
 
-	if next(self._subscribers_by_category[category_name][stat_name]) == nil then
-		self._subscribers_by_category[category_name][stat_name] = nil
+	if not subscribers_by_category then
+		return
 	end
 
-	if next(self._subscribers_by_category[category_name]) == nil then
+	local subscribers_by_stat = subscribers_by_category[stat_name]
+
+	if not subscribers_by_stat then
+		return
+	end
+
+	if not subscribers_by_stat[object] then
+		Log.warning("GlobalStatsService", "Object is not subscribed to %s:%s", category_name, stat_name)
+
+		return
+	end
+
+	subscribers_by_stat[object] = nil
+
+	if next(subscribers_by_stat) == nil then
+		subscribers_by_category[stat_name] = nil
+	end
+
+	if next(subscribers_by_category) == nil then
 		self._subscribers_by_category[category_name] = nil
 	end
 end

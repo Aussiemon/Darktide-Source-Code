@@ -2458,8 +2458,8 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_executor",
 					amount = {
-						2,
-						2,
+						1,
+						1,
 					},
 				},
 			},
@@ -2476,8 +2476,8 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_executor",
 					amount = {
-						3,
-						3,
+						1,
+						2,
 					},
 				},
 			},
@@ -2494,8 +2494,8 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_executor",
 					amount = {
-						4,
-						4,
+						2,
+						2,
 					},
 				},
 			},
@@ -2512,8 +2512,8 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_executor",
 					amount = {
-						4,
-						4,
+						2,
+						3,
 					},
 				},
 			},
@@ -2788,8 +2788,8 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_executor",
 					amount = {
-						2,
-						2,
+						1,
+						1,
 					},
 				},
 			},
@@ -2806,8 +2806,8 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_executor",
 					amount = {
-						3,
-						3,
+						1,
+						2,
 					},
 				},
 			},
@@ -2824,8 +2824,8 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_executor",
 					amount = {
-						4,
-						4,
+						2,
+						2,
 					},
 				},
 			},
@@ -2842,8 +2842,8 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_executor",
 					amount = {
-						4,
-						4,
+						2,
+						3,
 					},
 				},
 			},

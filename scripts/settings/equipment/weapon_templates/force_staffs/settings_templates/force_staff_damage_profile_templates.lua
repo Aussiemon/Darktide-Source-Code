@@ -545,7 +545,7 @@ local assault_warpfire_armor_mod = {
 			[armor_types.resistant] = 2,
 			[armor_types.player] = 1,
 			[armor_types.berserker] = 2.5,
-			[armor_types.super_armor] = 0.25,
+			[armor_types.super_armor] = 0.35,
 			[armor_types.disgustingly_resilient] = 1.5,
 			[armor_types.void_shield] = 1,
 		},

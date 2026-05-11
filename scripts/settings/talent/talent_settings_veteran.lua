@@ -132,8 +132,11 @@ local talent_settings = {
 			reload_speed = 0.25,
 		},
 		offensive_1_3 = {
-			grenade_replenishment_cooldown = 60,
+			frag_time = 60,
+			grenade_replenishment_cooldown = 75,
 			grenade_restored = 1,
+			krak_time = 90,
+			smoke_time = 60,
 		},
 		defensive_1 = {
 			toughness_damage_taken_multiplier = 0.25,
@@ -226,7 +229,7 @@ local talent_settings = {
 			ranged_damage = 0.15,
 		},
 		offensive_2 = {
-			max_charges = 4,
+			max_charges = 3,
 		},
 		offensive_3 = {
 			active_duration = 8,

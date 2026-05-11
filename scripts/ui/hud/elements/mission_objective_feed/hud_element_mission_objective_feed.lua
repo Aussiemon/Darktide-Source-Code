@@ -52,17 +52,20 @@ end
 
 HudElementMissionObjectiveFeed._update_live_event = function (self, force, ui_renderer)
 	local live_event_id = Managers.live_event:active_event_id()
+	local game_mode = Managers.state.game_mode:game_mode_name()
+	local circumstance_name = Managers.state.circumstance and Managers.state.circumstance:circumstance_name()
 
-	if not force and self._live_event_id == live_event_id then
+	if not force and self._live_event_id == live_event_id and self._live_event_game_mode == game_mode and self._live_event_circumstance_name == circumstance_name then
 		return
 	end
 
 	self._live_event_id = live_event_id
+	self._live_event_game_mode = game_mode
+	self._live_event_circumstance_name = circumstance_name
 
 	self:_clear_live_event_widgets()
 	self:_set_live_event_visible(false)
 
-	local game_mode = Managers.state.game_mode:game_mode_name()
 	local is_hub = game_mode == "hub"
 	local show_in_mission = game_mode == "coop_complete_objective" and GameParameters.show_live_event_objective_in_adventure
 	local is_visible = live_event_id ~= nil and (is_hub or show_in_mission)
@@ -79,15 +82,30 @@ HudElementMissionObjectiveFeed._update_live_event = function (self, force, ui_re
 	end
 
 	local widgets = live_event_objective.widgets
-	local widget_count = widgets and #widgets or 0
+	local pushed_count = 0
 
-	for i = 1, widget_count do
+	for i = 1, widgets and #widgets or 0 do
 		local widget_data = widgets[i]
 
-		self:_push_live_event_widget(widget_data.template, widget_data.context, ui_renderer)
+		if self:_live_event_widget_should_show(widget_data, is_hub, circumstance_name) then
+			self:_push_live_event_widget(widget_data.template, widget_data.context, ui_renderer)
+
+			pushed_count = pushed_count + 1
+		end
 	end
 
-	self:_set_live_event_visible(widget_count > 0)
+	self:_set_live_event_visible(pushed_count > 0)
+end
+
+HudElementMissionObjectiveFeed._live_event_widget_should_show = function (self, widget_data, is_hub, circumstance_name)
+	local widget_definition = Definitions.live_event_definition[widget_data.template]
+	local live_event_widget_should_show = widget_definition and widget_definition.live_event_widget_should_show
+
+	if not live_event_widget_should_show then
+		return true
+	end
+
+	return live_event_widget_should_show(widget_data.context, is_hub, circumstance_name)
 end
 
 HudElementMissionObjectiveFeed._create_local_objective = function (self, objective_name, objective_type, sort_order)

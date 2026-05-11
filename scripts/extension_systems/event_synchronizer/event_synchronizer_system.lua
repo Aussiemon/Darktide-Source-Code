@@ -11,6 +11,7 @@ require("scripts/extension_systems/event_synchronizer/timed_synchronizer_extensi
 
 local EventSynchronizerSystem = class("EventSynchronizerSystem", "ExtensionSystemBase")
 local RPCS = {
+	"rpc_event_synchronizer_set_mission_active",
 	"rpc_event_synchronizer_started",
 	"rpc_event_synchronizer_paused",
 	"rpc_event_synchronizer_finished",
@@ -82,10 +83,15 @@ EventSynchronizerSystem.hot_join_sync = function (self, sender, channel)
 			end
 		end
 
-		if extension.hot_join_sync then
-			extension:hot_join_sync(sender, channel)
-		end
+		extension:hot_join_sync(sender, channel)
 	end
+end
+
+EventSynchronizerSystem.rpc_event_synchronizer_set_mission_active = function (self, channel_id, unit_id)
+	local is_level_unit = true
+	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
+
+	self._unit_to_extension_map[unit]:rpc_set_mission_active()
 end
 
 EventSynchronizerSystem.rpc_event_synchronizer_started = function (self, channel_id, unit_id)

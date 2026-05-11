@@ -28,5 +28,6 @@ _add_live_event("survival")
 _add_live_event("play_expeditions")
 _add_live_event("abhuman_explosions")
 _add_live_event("elite_army")
+_add_live_event("skulls_guns")
 
 return settings("LiveEvents", live_events)

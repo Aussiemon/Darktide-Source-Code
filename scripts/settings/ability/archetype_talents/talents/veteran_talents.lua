@@ -1950,7 +1950,7 @@ local archetype_talents = {
 			},
 		},
 		veteran_replenish_grenades = {
-			description = "loc_talent_veteran_replenish_grenade_desc",
+			description = "loc_talent_veteran_grenade_regeneration_per_grenade_desc",
 			display_name = "loc_talent_ranger_replenish_grenade",
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_2",
 			name = "Replenish Grenade Continuously - You replenish a grenade every 60 seconds",
@@ -1962,6 +1962,30 @@ local archetype_talents = {
 				time = {
 					format_type = "value",
 					value = talent_settings_2.offensive_1_3.grenade_replenishment_cooldown,
+				},
+				krak_time = {
+					format_type = "value",
+					value = talent_settings_2.offensive_1_3.krak_time,
+				},
+				krak_grenade = {
+					format_type = "loc_string",
+					value = "loc_talent_ability_krak_grenade",
+				},
+				frag_time = {
+					format_type = "value",
+					value = talent_settings_2.offensive_1_3.frag_time,
+				},
+				frag_grenade = {
+					format_type = "loc_string",
+					value = "loc_talent_veteran_grenade_apply_bleed",
+				},
+				smoke_time = {
+					format_type = "value",
+					value = talent_settings_2.offensive_1_3.smoke_time,
+				},
+				smoke_grenade = {
+					format_type = "loc_string",
+					value = "loc_ability_smoke_grenade",
 				},
 			},
 			passive = {

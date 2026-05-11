@@ -197,11 +197,11 @@ talent_settings.broker = {
 			num_kills = 20,
 		},
 		tox_grenade = {
-			max_charges = 3,
+			max_charges = 2,
 			toxin_max_stacks = 6,
 		},
 		missile_launcher = {
-			max_charges = 3,
+			max_charges = 2,
 		},
 	},
 	coherency = {

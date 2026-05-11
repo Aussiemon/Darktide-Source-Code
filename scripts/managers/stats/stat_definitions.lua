@@ -7846,6 +7846,7 @@ stat_definitions.live_event_skulls_forward = {
 		},
 	},
 	data = {
+		stat_override = "live_event_skulls_guns",
 		circumstances = {
 			skulls_event_01 = true,
 			skulls_event_01_02 = true,
@@ -7878,6 +7879,40 @@ stat_definitions.live_event_skulls_count = {
 		},
 	},
 	data = {
+		stat_override = "live_event_skulls_guns",
+		circumstances = {
+			skulls_event_01 = true,
+			skulls_event_01_02 = true,
+			skulls_event_01_03 = true,
+			skulls_event_01_04 = true,
+			skulls_event_01_05 = true,
+			skulls_event_01_06 = true,
+			skulls_event_01_07 = true,
+		},
+	},
+	include_condition = function (self, config)
+		if StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override) then
+			return true
+		end
+
+		local circumstance_name = config.circumstance_name
+
+		return self.data.circumstances[circumstance_name]
+	end,
+}
+stat_definitions.live_event_skulls_guns_count = {
+	flags = {
+		StatFlags.always_log,
+		StatFlags.no_recover,
+	},
+	triggers = {
+		{
+			id = "live_event_skulls_forward",
+			trigger = StatMacros.increment_by,
+		},
+	},
+	data = {
+		stat_override = "live_event_skulls_guns",
 		circumstances = {
 			skulls_event_01 = true,
 			skulls_event_01_02 = true,
@@ -8314,6 +8349,35 @@ stat_definitions.live_event_expeditions_loot_extracted = {
 		local game_mode_name = config.game_mode_name
 
 		return game_mode_name == "expedition"
+	end,
+}
+stat_definitions.hook_live_event_skulls_guns_recovered = {
+	flags = {
+		StatFlags.hook,
+		StatFlags.team,
+	},
+	data = {
+		stat_override = "live_event_skulls_guns",
+	},
+	include_condition = function (self, config)
+		return StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override)
+	end,
+}
+stat_definitions.live_event_skulls_guns_recovered = {
+	flags = {
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "hook_live_event_skulls_guns_recovered",
+			trigger = StatMacros.increment,
+		},
+	},
+	data = {
+		stat_override = "live_event_skulls_guns",
+	},
+	include_condition = function (self, config)
+		return StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override)
 	end,
 }
 stat_definitions = _stat_data

@@ -491,6 +491,18 @@ local havoc_mutator_local_settings = {
 				"havoc_rotten_armor_dr_05",
 			},
 		},
+		breed_armor_type_overrides = {
+			afro = "disgustingly_resilient",
+			head = "disgustingly_resilient",
+			lower_left_arm = "disgustingly_resilient",
+			lower_left_leg = "disgustingly_resilient",
+			lower_right_arm = "disgustingly_resilient",
+			lower_right_leg = "disgustingly_resilient",
+			upper_left_arm = "disgustingly_resilient",
+			upper_left_leg = "disgustingly_resilient",
+			upper_right_arm = "disgustingly_resilient",
+			upper_right_leg = "disgustingly_resilient",
+		},
 	},
 	mutator_havoc_chaos_rituals = {
 		class = "scripts/managers/mutator/mutators/mutator_spawner",

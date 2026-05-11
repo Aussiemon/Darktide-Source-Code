@@ -1328,6 +1328,22 @@ UIManager._update_package_unload_delay = function (self)
 	end
 end
 
+UIManager.has_world_extension_manager = function (self, world)
+	if not world then
+		return false
+	end
+
+	local has_name = World.has_data(world, "__world_name")
+
+	if not has_name then
+		return false
+	end
+
+	local world_name = World.get_data(world, "__world_name")
+
+	return self._ui_extension_managers[world_name] ~= nil
+end
+
 UIManager.world_extension_manager = function (self, world)
 	local world_name = World.get_data(world, "__world_name")
 	local extension_manager = self._ui_extension_managers[world_name]

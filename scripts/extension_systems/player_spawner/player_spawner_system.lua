@@ -132,6 +132,9 @@ PlayerSpawnerSystem.unregister_spawn_points = function (self, spawn_identifier)
 			extension:deactivate_spawner(unit, spawn_identifier)
 		end
 	end
+
+	self._spawn_points_by_identifier[spawn_identifier] = nil
+	self._next_spawn_point_index_by_identifier[spawn_identifier] = nil
 end
 
 PlayerSpawnerSystem.remove_spawn_point = function (self, unit, spawn_identifier)

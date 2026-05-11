@@ -15,6 +15,7 @@ local CLIENT_RPCS = {
 LiveEventManager.init = function (self, is_host, event_delegate)
 	self._events = {}
 	self._backend_events = {}
+	self._events_by_name = {}
 	self._active_event_id = nil
 	self._listener_ids = {}
 	self._is_host = not not is_host
@@ -516,8 +517,7 @@ LiveEventManager._add_event = function (self, backend_data, ids)
 	end
 
 	local events = self._events
-
-	events[id] = {
+	local event_data = {
 		is_active = false,
 		id = id,
 		template_name = template_name,
@@ -526,6 +526,9 @@ LiveEventManager._add_event = function (self, backend_data, ids)
 		tiers = tiers,
 		backend_tiers = backend_tiers,
 	}
+
+	events[id] = event_data
+	self._events_by_name[template_name] = event_data
 end
 
 LiveEventManager._on_refresh_success = function (self, backend_events)
@@ -543,6 +546,10 @@ LiveEventManager._on_refresh_success = function (self, backend_events)
 
 		self:_add_event(event_data, ids)
 	end
+
+	table.sort(self._events, function (a, b)
+		return a.starts_at > b.starts_at
+	end)
 end
 
 LiveEventManager._on_refresh_fail = function (self, error)
@@ -802,6 +809,10 @@ LiveEventManager.is_event_active = function (self, event_id)
 	local event_data = self._events[event_id]
 
 	return event_data and event_data.is_active
+end
+
+LiveEventManager.get_event_data_by_name = function (self, template_name)
+	return self._events_by_name[template_name]
 end
 
 return LiveEventManager

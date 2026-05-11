@@ -37,6 +37,8 @@ TimedSynchronizerExtension.hot_join_sync = function (self, sender, channel)
 
 		RPC.rpc_event_synchronizer_paused(channel, level_unit_id)
 	end
+
+	TimedSynchronizerExtension.super.hot_join_sync(self, sender, channel)
 end
 
 TimedSynchronizerExtension.start_event = function (self)

@@ -1523,9 +1523,8 @@ templates.veteran_aura_gain_ammo_on_elite_kill = {
 	end,
 	check_proc_func = function (params, template_data, template_context, t)
 		local is_elite_or_special_minion_death = CheckProcFunctions.on_elite_or_special_minion_death(params, template_data, template_context, t)
-		local player_killed_target = template_context.unit == params.attacking_unit
 
-		return is_elite_or_special_minion_death and player_killed_target
+		return is_elite_or_special_minion_death
 	end,
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
@@ -1533,6 +1532,11 @@ templates.veteran_aura_gain_ammo_on_elite_kill = {
 		end
 
 		local unit = template_context.unit
+
+		if unit ~= params.attacking_unit then
+			return
+		end
+
 		local units_in_coherence = template_data.coherency_extension:in_coherence_units()
 
 		for coherency_unit, _ in pairs(units_in_coherence) do
@@ -1574,9 +1578,8 @@ templates.veteran_aura_gain_ammo_on_elite_kill_improved = {
 	end,
 	check_proc_func = function (params, template_data, template_context, t)
 		local is_elite_or_special_minion_death = CheckProcFunctions.on_elite_or_special_minion_death(params, template_data, template_context, t)
-		local player_killed_target = template_context.unit == params.attacking_unit
 
-		return is_elite_or_special_minion_death and player_killed_target
+		return is_elite_or_special_minion_death
 	end,
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
@@ -1584,6 +1587,11 @@ templates.veteran_aura_gain_ammo_on_elite_kill_improved = {
 		end
 
 		local unit = template_context.unit
+
+		if unit ~= params.attacking_unit then
+			return
+		end
+
 		local units_in_coherence = template_data.coherency_extension:in_coherence_units()
 
 		for coherency_unit, _ in pairs(units_in_coherence) do
@@ -1838,6 +1846,16 @@ templates.veteran_grenade_replenishment = {
 		template_data.fx_extension = ScriptUnit.extension(unit, "fx_system")
 		template_data.first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 		template_data.missing_charges = 0
+
+		local ability_name = template_data.ability_extension:get_current_grenade_ability_name()
+
+		if ability_name == "veteran_krak_grenade" then
+			grenade_replenishment_cooldown = talent_settings_2.offensive_1_3.krak_time
+		elseif ability_name == "veteran_frag_grenade" then
+			grenade_replenishment_cooldown = talent_settings_2.offensive_1_3.frag_time
+		elseif ability_name == "veteran_smoke_grenade" then
+			grenade_replenishment_cooldown = talent_settings_2.offensive_1_3.smoke_time
+		end
 	end,
 	update_func = function (template_data, template_context, dt, t, template)
 		if not template_data.ability_extension then

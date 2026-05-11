@@ -11,7 +11,7 @@ local prop_data = {
 	hit_mass = 50,
 	name = "nurgle_totem",
 	breed_type = breed_types.objective_prop,
-	armor_type = armor_types.super_armor,
+	armor_type = armor_types.disgustingly_resilient,
 	hit_effect_armor_override = hit_effect_armor_type.nurgle_totem,
 	hit_zones = {
 		{

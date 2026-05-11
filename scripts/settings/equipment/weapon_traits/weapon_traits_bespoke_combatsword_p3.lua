@@ -59,12 +59,22 @@ templates.weapon_trait_bespoke_combatsword_p3_chained_hits_increases_crit_chance
 }
 templates.weapon_trait_bespoke_combatsword_p3_stacking_rending_on_weakspot = {
 	format_values = {
-		rending = {
-			format_type = "percentage",
-			prefix = "+",
+		stacks = {
+			format_type = "number",
 			find_value = {
 				buff_template_name = "weapon_trait_bespoke_combatsword_p3_stacking_rending_on_weakspot_parent",
 				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"num_stacks_on_proc",
+				},
+			},
+		},
+		rending = {
+			format_type = "percentage",
+			find_value = {
+				buff_template_name = "rending_debuff",
+				find_value_type = "buff_template",
 				path = {
 					"stat_buffs",
 					stat_buffs.rending_multiplier,
@@ -74,18 +84,18 @@ templates.weapon_trait_bespoke_combatsword_p3_stacking_rending_on_weakspot = {
 		time = {
 			format_type = "number",
 			find_value = {
-				buff_template_name = "weapon_trait_bespoke_combatsword_p3_stacking_rending_on_weakspot_parent",
+				buff_template_name = "rending_debuff",
 				find_value_type = "buff_template",
 				path = {
-					"child_duration",
+					"duration",
 				},
 			},
 		},
-		stacks = {
+		max_stacks = {
 			format_type = "number",
 			find_value = {
-				buff_template_name = "weapon_trait_bespoke_combatsword_p3_stacking_rending_on_weakspot_parent",
-				find_value_type = "trait_override",
+				buff_template_name = "rending_debuff",
+				find_value_type = "buff_template",
 				path = {
 					"max_stacks",
 				},
@@ -95,27 +105,23 @@ templates.weapon_trait_bespoke_combatsword_p3_stacking_rending_on_weakspot = {
 	buffs = {
 		weapon_trait_bespoke_combatsword_p3_stacking_rending_on_weakspot_parent = {
 			{
-				max_stacks = 5,
-				stat_buffs = {
-					[stat_buffs.rending_multiplier] = 0.12,
+				target_buff_data = {
+					num_stacks_on_proc = 2,
 				},
 			},
 			{
-				max_stacks = 5,
-				stat_buffs = {
-					[stat_buffs.rending_multiplier] = 0.16,
+				target_buff_data = {
+					num_stacks_on_proc = 4,
 				},
 			},
 			{
-				max_stacks = 5,
-				stat_buffs = {
-					[stat_buffs.rending_multiplier] = 0.2,
+				target_buff_data = {
+					num_stacks_on_proc = 6,
 				},
 			},
 			{
-				max_stacks = 5,
-				stat_buffs = {
-					[stat_buffs.rending_multiplier] = 0.24,
+				target_buff_data = {
+					num_stacks_on_proc = 8,
 				},
 			},
 		},

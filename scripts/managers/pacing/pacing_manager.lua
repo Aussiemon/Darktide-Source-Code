@@ -1169,7 +1169,7 @@ PacingManager.add_pacing_modifiers = function (self, modify_settings)
 	local auto_event_template = modify_settings.auto_event_template
 
 	if auto_event_template then
-		self._auto_event:swap_auto_event_template(auto_event_template)
+		self:set_auto_event_template(auto_event_template)
 	end
 end
 
@@ -1252,6 +1252,14 @@ PacingManager.freeze_specials_pacing = function (self, enabled)
 	self._specials_pacing:freeze(enabled)
 
 	self._frozen_spawn_types.specials = enabled
+end
+
+PacingManager.set_auto_event_template = function (self, auto_event_template_name)
+	self._auto_event:swap_auto_event_template(auto_event_template_name)
+end
+
+PacingManager.restore_auto_event_template = function (self)
+	self._auto_event:restore_auto_event_template()
 end
 
 PacingManager.update_only_injected_slots = function (self, should_update_only_injected)

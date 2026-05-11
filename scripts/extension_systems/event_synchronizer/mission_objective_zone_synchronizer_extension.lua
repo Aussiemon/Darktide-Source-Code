@@ -53,8 +53,10 @@ MissionObjectiveZoneSynchronizerExtension.hot_join_sync = function (self, sender
 		local level_unit_id = Managers.state.unit_spawner:level_index(self._unit)
 		local servo_skull_unit_go_id = Managers.state.unit_spawner:game_object_id(servo_skull_unit)
 
-		Managers.state.game_session:send_rpc_clients("rpc_event_synchronizer_set_servo_skull", level_unit_id, servo_skull_unit_go_id)
+		RPC.rpc_event_synchronizer_set_servo_skull(channel, level_unit_id, servo_skull_unit_go_id)
 	end
+
+	MissionObjectiveZoneSynchronizerExtension.super.hot_join_sync(self, sender, channel)
 end
 
 MissionObjectiveZoneSynchronizerExtension.spawn_servo_skull = function (self, position, rotation)

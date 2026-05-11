@@ -697,7 +697,7 @@ ExpeditionSpawner._apply_safe_zone_themes_by_level_key = function (self, key)
 			local levels_data = section.levels_data
 
 			for _, level_data in ipairs(levels_data) do
-				if level_data[key] and level_data.spawned and not level_data.was_delayed_despawn then
+				if level_data[key] and level_data.spawned then
 					local themes = level_data.themes
 					local force_reset = true
 

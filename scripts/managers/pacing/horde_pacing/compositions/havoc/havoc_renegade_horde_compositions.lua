@@ -560,7 +560,7 @@ local horde_compositions = {
 					name = "chaos_ogryn_bulwark",
 					amount = {
 						2,
-						4,
+						3,
 					},
 				},
 				{
@@ -577,7 +577,7 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
-						2,
+						4,
 						5,
 					},
 				},
@@ -602,7 +602,7 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
-						3,
+						4,
 						5,
 					},
 				},
@@ -690,8 +690,8 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
-						1,
-						2,
+						3,
+						4,
 					},
 				},
 				{
@@ -722,8 +722,8 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
-						1,
-						3,
+						4,
+						5,
 					},
 				},
 				{

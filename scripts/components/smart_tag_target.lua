@@ -44,12 +44,14 @@ SmartTagTarget.component_data = {
 			"expedition_loot_converter",
 			"pickup",
 			"hack",
+			"live_event_objective",
 		},
 		options_values = {
 			"health_station",
 			"expedition_loot_converter",
 			"pickup",
 			"hack",
+			"live_event_objective",
 		},
 	},
 	extensions = {

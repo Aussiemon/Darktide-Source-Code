@@ -49,7 +49,6 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
-				"chaos_ogryn_executor",
 				elite_executor,
 				roamer_melee,
 				roamer_melee,
@@ -135,7 +134,6 @@ local roamer_packs = {
 		{
 			weight = 2,
 			breeds = {
-				"chaos_ogryn_executor",
 				elite_executor,
 				elite_executor,
 				elite_executor,
@@ -166,7 +164,6 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
-				"chaos_ogryn_executor",
 				elite_executor,
 				roamer_melee,
 				roamer_melee,
@@ -221,7 +218,6 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
-				"chaos_ogryn_executor",
 				elite_berzerker,
 				elite_berzerker,
 				elite_berzerker,
