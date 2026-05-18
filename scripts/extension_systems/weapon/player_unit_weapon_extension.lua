@@ -689,8 +689,12 @@ PlayerUnitWeaponExtension.on_slot_wielded = function (self, slot_name, t, skip_w
 		if time_since_last_wield <= quick_swap_time then
 			local weapon_name = weapon_template.name
 			local player = self._player
+			local telemetry_reporters = Managers.telemetry_reporters
+			local existing_reporter = telemetry_reporters and telemetry_reporters:reporter("player_quick_swapped")
 
-			Managers.telemetry_reporters:reporter("player_quick_swapped"):register_event(player, weapon_name)
+			if existing_reporter then
+				existing_reporter:register_event(player, weapon_name)
+			end
 		end
 	end
 
