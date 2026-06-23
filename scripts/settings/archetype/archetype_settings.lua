@@ -1,6 +1,14 @@
 ﻿-- chunkname: @scripts/settings/archetype/archetype_settings.lua
 
-local archetype_names = table.enum("adamant", "broker", "ogryn", "psyker", "veteran", "zealot")
+local archetype_names = table.enum(unpack({
+	"adamant",
+	"broker",
+	"cryptic",
+	"ogryn",
+	"psyker",
+	"veteran",
+	"zealot",
+}))
 local ui_selection_order = {
 	archetype_names.veteran,
 	archetype_names.zealot,
@@ -8,6 +16,7 @@ local ui_selection_order = {
 	archetype_names.ogryn,
 	archetype_names.adamant,
 	archetype_names.broker,
+	archetype_names.cryptic,
 }
 local ui_selection_order_lookup = {}
 

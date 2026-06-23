@@ -176,7 +176,7 @@ ProximityBrokerStimmField._handle_end_of_lifetime_triggers = function (self)
 	local explosion_position = shock_mine_position + Vector3.multiply(Vector3.up(), 0.05)
 	local explosion_template = ExplosionTemplates.broker_stimm_field
 
-	Explosion.create_explosion(self._world, self._physics_world, explosion_position, Vector3.up(), owner_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
+	Explosion.create_explosion(self._world, self._physics_world, explosion_position, Quaternion.identity(), owner_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
 end
 
 ProximityBrokerStimmField.start_job = function (self, is_job)

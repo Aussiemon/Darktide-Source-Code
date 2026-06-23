@@ -105,7 +105,7 @@ local function node_icon_change_function(content, style, _, dt, override_availab
 		local icon = node_data.icon
 
 		if icon and not style.ignore_icon then
-			if node_data.type == "start" or node_data.type == "start_center" then
+			if node_data.type == "start" then
 				if icon ~= content.icon then
 					content.icon = icon
 				end
@@ -1750,10 +1750,10 @@ return {
 			style = {
 				horizontal_alignment = "center",
 				ignore_intensity = true,
-				vertical_alignment = "top",
+				vertical_alignment = "center",
 				offset = {
 					0,
-					-104,
+					0,
 					2,
 				},
 				size = {

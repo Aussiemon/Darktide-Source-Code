@@ -25,6 +25,10 @@ Store.get_adamant_credits_goods_store = function (self, t, character_id)
 	return self:_get_storefront(t, "credits_store_bespoke_weapons_adamant", character_id, character_id)
 end
 
+Store.get_cryptic_credits_goods_store = function (self, t, character_id)
+	return self:_get_storefront(t, "credits_store_bespoke_weapons_cryptic", character_id, character_id)
+end
+
 Store.get_broker_credits_goods_store = function (self, t, character_id)
 	return self:_get_storefront(t, "credits_store_bespoke_weapons_broker", character_id, character_id)
 end
@@ -47,6 +51,10 @@ end
 
 Store.get_adamant_credits_store = function (self, t, character_id)
 	return self:_get_storefront(t, "credits_store_adamant", character_id, character_id, true)
+end
+
+Store.get_cryptic_credits_store = function (self, t, character_id)
+	return self:_get_storefront(t, "credits_store_cryptic", character_id, character_id, true)
 end
 
 Store.get_broker_credits_store = function (self, t, character_id)
@@ -73,6 +81,10 @@ Store.get_adamant_credits_cosmetics_store = function (self, t, character_id)
 	return self:_get_storefront(t, "credits_cosmetics_store_adamant", character_id, character_id, false)
 end
 
+Store.get_cryptic_credits_cosmetics_store = function (self, t, character_id)
+	return self:_get_storefront(t, "credits_cosmetics_store_cryptic", character_id, character_id, true)
+end
+
 Store.get_broker_credits_cosmetics_store = function (self, t, character_id)
 	return self:_get_storefront(t, "credits_cosmetics_store_broker", character_id, character_id, false)
 end
@@ -97,6 +109,10 @@ Store.get_adamant_credits_weapon_cosmetics_store = function (self, t, character_
 	return self:_get_storefront(t, "credits_weapon_cosmetics_store_adamant", character_id, character_id, false)
 end
 
+Store.get_cryptic_credits_weapon_cosmetics_store = function (self, t, character_id)
+	return self:_get_storefront(t, "credits_weapon_cosmetics_store_cryptic", character_id, character_id, false)
+end
+
 Store.get_broker_credits_weapon_cosmetics_store = function (self, t, character_id)
 	return self:_get_storefront(t, "credits_weapon_cosmetics_store_broker", character_id, character_id, false)
 end
@@ -119,6 +135,10 @@ end
 
 Store.get_adamant_marks_store = function (self, t, character_id)
 	return self:_get_storefront(t, "marks_store_adamant", character_id, character_id, true)
+end
+
+Store.get_cryptic_marks_store = function (self, t, character_id)
+	return self:_get_storefront(t, "marks_store_cryptic", character_id, character_id, true)
 end
 
 Store.get_broker_marks_store = function (self, t, character_id)

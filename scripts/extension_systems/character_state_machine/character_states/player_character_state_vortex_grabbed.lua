@@ -13,6 +13,8 @@ local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_t
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local damage_types = DamageSettings.damage_types
 local PlayerCharacterStateVortexGrabbed = class("PlayerCharacterStateVortexGrabbed", "PlayerCharacterStateBase")
+local ANIM_EVENT_1P = "airtime_fwd"
+local ANIM_EVENT_3P = "airtime_fwd"
 local SFX_SOURCE = "head"
 local STINGER_ALIAS = "disabled_enter"
 local STINGER_EXIT_ALIAS = "disabled_exit"
@@ -35,7 +37,6 @@ PlayerCharacterStateVortexGrabbed.init = function (self, character_state_init_co
 	self._disabled_character_state_component = disabled_character_state_component
 	self._disabled_state_input = unit_data_extension:read_component("disabled_state_input")
 	self._dead_state_input = unit_data_extension:read_component("dead_state_input")
-	self._execute_anim_played = false
 
 	local game_session = Managers.state.game_session:game_session()
 
@@ -86,12 +87,13 @@ PlayerCharacterStateVortexGrabbed.on_enter = function (self, unit, dt, t, previo
 	self._resume_spinning_t = 0
 	self._entered_state_t = t
 
-	self._animation_extension:anim_event_1p("airtime_fwd")
-
 	local unit_data_extension = ScriptUnit.extension(self._unit, "unit_data_system")
 
 	self._locomotion_component = unit_data_extension:write_component("locomotion")
 	self._locomotion_push_component = unit_data_extension:write_component("locomotion_push")
+
+	self._animation_extension:anim_event_1p(ANIM_EVENT_1P)
+	self._animation_extension:anim_event(ANIM_EVENT_3P)
 end
 
 PlayerCharacterStateVortexGrabbed.on_exit = function (self, unit, t, next_state)
@@ -143,15 +145,6 @@ PlayerCharacterStateVortexGrabbed.on_exit = function (self, unit, t, next_state)
 end
 
 PlayerCharacterStateVortexGrabbed.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
-	local input_component = self._disabled_state_input
-	local trigger_animation = input_component.trigger_animation
-
-	if trigger_animation == "airtime_fwd" and not self._execute_anim_played then
-		self._animation_extension:anim_event("airtime_fwd")
-
-		self._execute_anim_played = true
-	end
-
 	local vortex_unit = self._disabled_state_input.disabling_unit
 
 	if vortex_unit and Unit.alive(vortex_unit) then

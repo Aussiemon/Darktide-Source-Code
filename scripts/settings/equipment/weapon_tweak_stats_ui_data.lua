@@ -544,14 +544,28 @@ local stat_descriptions = {
 			display_type = "default",
 		},
 	},
+	weapon_chain_lightning = {
+		radius = {
+			display_name = "loc_weapon_stats_display_power_output_range",
+			display_type = "default",
+			display_units = " m",
+		},
+		max_angle = {
+			display_name = "loc_weapon_stats_display_power_output_angle",
+			display_type = "angle",
+			display_units = "°",
+		},
+	},
 	weapon_shout = {
 		range = {
 			display_name = "loc_weapon_stats_display_power_output_range",
 			display_type = "default",
+			display_units = " m",
 		},
 		dot = {
 			display_name = "loc_weapon_stats_display_power_output_angle",
-			display_type = "default",
+			display_type = "angle",
+			display_units = "°",
 		},
 	},
 	dodge = {

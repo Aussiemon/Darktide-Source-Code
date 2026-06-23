@@ -24,5 +24,6 @@ _create_breed_shoot_templates("scripts/settings/breed/breed_shoot_templates/rene
 _create_breed_shoot_templates("scripts/settings/breed/breed_shoot_templates/cultist/cultist_assault_shoot_templates")
 _create_breed_shoot_templates("scripts/settings/breed/breed_shoot_templates/cultist/cultist_flamer_shoot_templates")
 _create_breed_shoot_templates("scripts/settings/breed/breed_shoot_templates/cultist/cultist_gunner_shoot_templates")
+_create_breed_shoot_templates("scripts/settings/breed/breed_shoot_templates/companion/companion_servo_skull_shoot_templates")
 
 return settings("BreedShootTemplates", breed_shoot_templates)

@@ -41,6 +41,7 @@ local max_level_unit_id = NetworkConstants.level_unit_id.max
 local max_game_object_id = NetworkConstants.game_object_id.max
 local NUMBER_NETWORK_TYPE_TOLERANCES = {
 	action_time_scale = 0.01,
+	aim_assist_multiplier = 0.025,
 	character_height = 0.01,
 	default = 0.001,
 	projectile_speed = 0.1,
@@ -58,18 +59,6 @@ local VECTOR3_NETWORK_TYPE_TOLERANCES = {
 	high_precision_velocity = 1e-05,
 	locomotion_position = 0.001,
 }
-local FIXED_FRAME_OFFSET_NETWORK_TYPES = {
-	fixed_frame_offset = true,
-	fixed_frame_offset_end_t_4bit = true,
-	fixed_frame_offset_end_t_6bit = true,
-	fixed_frame_offset_end_t_7bit = true,
-	fixed_frame_offset_end_t_9bit = true,
-	fixed_frame_offset_small = true,
-	fixed_frame_offset_start_t_5bit = true,
-	fixed_frame_offset_start_t_6bit = true,
-	fixed_frame_offset_start_t_7bit = true,
-	fixed_frame_offset_start_t_9bit = true,
-}
 local script_id_string_32 = Script.id_string_32
 local NETWORK_NAME_ID_TO_FIELD_ID = {}
 local NETWORK_ID_TO_NAME = {}
@@ -85,15 +74,6 @@ for i = 1, NUM_FIELDS do
 	local component_name = field[1]
 	local field_name = field[2]
 	local network_name = field[4]
-	local network_type = field[5]
-
-	if FIXED_FRAME_OFFSET_NETWORK_TYPES[network_type] then
-		ALWAYS_UPDATE_FIELDS[ALWAYS_UPDATE_FIELDS_N + 1] = component_name
-		ALWAYS_UPDATE_FIELDS[ALWAYS_UPDATE_FIELDS_N + 2] = field_name
-		ALWAYS_UPDATE_FIELDS[ALWAYS_UPDATE_FIELDS_N + 3] = network_name
-		ALWAYS_UPDATE_FIELDS[ALWAYS_UPDATE_FIELDS_N + 4] = network_type
-		ALWAYS_UPDATE_FIELDS_N = ALWAYS_UPDATE_FIELDS_N + ALWAYS_UPDATE_FIELDS_STRIDE
-	end
 
 	FIELDS_LOOKUP[network_name] = i
 
@@ -304,12 +284,8 @@ PlayerUnitDataExtension.game_object_initialized = function (self, session, objec
 			local frame = math.round(value / self._fixed_time_step)
 
 			actual_value = frame
-		elseif FIXED_FRAME_OFFSET_NETWORK_TYPES[network_type] then
-			local type_info = NetworkConstants[network_type]
-			local min_value = type_info.min
-			local frame = math.max(math.round(value / self._fixed_time_step) - last_fixed_frame, min_value)
-
-			actual_value = frame
+		elseif type == "array" then
+			actual_value = rawget(value, "__data")
 		else
 			actual_value = value
 		end
@@ -647,9 +623,10 @@ local WRITE_META = {
 				data[rawget(t, "__blackboard").index][field_name] = value
 			end
 		else
+			local field_network_type = field.field_network_type
+
 			if data_type == "array" then
-				local element_type = field.field_network_type
-				local network_info = NetworkConstants[element_type]
+				local network_info = NetworkConstants[field_network_type]
 				local max_size = network_info.max_size
 				local value_size = #value
 				local orig = data[rawget(t, "__blackboard").index][field_name]
@@ -672,25 +649,22 @@ local WRITE_META = {
 
 		if is_server then
 			local network_type = field.field_network_type
+			local field_lookup = FIELD_NETWORK_LOOKUP[field.lookup_index]
+			local network_name = field_lookup[4]
+			local player_unit_data_ext = rawget(t, "__data_ext")
+			local modified_fields = player_unit_data_ext._modified_update_fields
+			local update_fields = player_unit_data_ext._update_fields_post_update
+			local start_idx = modified_fields[network_name]
 
-			if not FIXED_FRAME_OFFSET_NETWORK_TYPES[network_type] then
-				local field_lookup = FIELD_NETWORK_LOOKUP[field.lookup_index]
-				local network_name = field_lookup[4]
-				local player_unit_data_ext = rawget(t, "__data_ext")
-				local modified_fields = player_unit_data_ext._modified_update_fields
-				local update_fields = player_unit_data_ext._update_fields_post_update
-				local start_idx = modified_fields[network_name]
-
-				if start_idx then
-					update_fields[start_idx + 3] = networked_value or value
-				else
-					start_idx = update_fields[0]
-					modified_fields[network_name] = start_idx
-					update_fields[start_idx + 1] = network_name
-					update_fields[start_idx + 2] = POST_UPDATE_FIELDS[data_type] or POST_UPDATE_FIELDS[network_type] or nop
-					update_fields[start_idx + 3] = networked_value or value
-					update_fields[0] = start_idx + POST_UPDATE_FIELDS_STRIDE
-				end
+			if start_idx then
+				update_fields[start_idx + 3] = networked_value or value
+			else
+				start_idx = update_fields[0]
+				modified_fields[network_name] = start_idx
+				update_fields[start_idx + 1] = network_name
+				update_fields[start_idx + 2] = POST_UPDATE_FIELDS[data_type] or POST_UPDATE_FIELDS[network_type] or nop
+				update_fields[start_idx + 3] = networked_value or value
+				update_fields[0] = start_idx + POST_UPDATE_FIELDS_STRIDE
 			end
 		end
 	end,
@@ -1103,8 +1077,6 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self, t)
 				local string_lookup = use_network_lookup and NetworkLookup[use_network_lookup] or lookup
 
 				component[field_name] = string_lookup[authoritative_value]
-			elseif field_type == "number" and FIXED_FRAME_OFFSET_NETWORK_TYPES[network_type] then
-				component[field_name] = (authoritative_value + frame_index) * self._fixed_time_step
 			elseif field_type == "number" and network_type == "fixed_frame_time" then
 				component[field_name] = authoritative_value * self._fixed_time_step
 			else
@@ -1133,20 +1105,7 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self, t)
 				component[field_name] = string_lookup[authoritative_value]
 			end
 		elseif field_type == "number" then
-			if FIXED_FRAME_OFFSET_NETWORK_TYPES[network_type] then
-				real_simulated_value = math.round(simulated_value / self._fixed_time_step) - frame_index
-
-				local type_info = NetworkConstants[network_type]
-				local min_value = type_info.min
-
-				correct = real_simulated_value == authoritative_value or real_simulated_value <= min_value and authoritative_value <= min_value
-
-				if correct then
-					component[field_name] = simulated_value
-				else
-					component[field_name] = (authoritative_value + frame_index) * self._fixed_time_step
-				end
-			elseif network_type == "fixed_frame_time" then
+			if network_type == "fixed_frame_time" then
 				real_simulated_value = math.round(simulated_value / self._fixed_time_step)
 				correct = real_simulated_value == authoritative_value
 				component[field_name] = authoritative_value * self._fixed_time_step

@@ -12,6 +12,7 @@ local PREDICTABLE_TYPES = BuffArgs.predictable_component_types()
 local PREDICTABLE_DEFAULT_VALUES = BuffArgs.predictable_default_values()
 local MAX_COMPONENT_BUFFS = PlayerCharacterConstants.max_component_buffs
 local COMPONENT_KEY_LOOKUP = PlayerCharacterConstants.buff_component_key_lookup
+local MAX_BUFF_STACKS_ARRAY_SIZE = Network.type_info("buff_index_stacks_array").max_size
 local PlayerUnitBuffExtension = class("PlayerUnitBuffExtension", "BuffExtensionBase")
 
 PlayerUnitBuffExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
@@ -137,6 +138,13 @@ PlayerUnitBuffExtension.fixed_update = function (self, unit, dt, t, fixed_frame)
 	self:_move_looping_sfx_sources(unit)
 	self:_update_proc_events(t)
 	self:_update_stat_buffs_and_keywords(t)
+
+	if is_server then
+		local player = self._player
+		local channel_id = player:channel_id()
+
+		self:_send_batched_proc_active_start_time(channel_id, t)
+	end
 
 	local portable_random = self._portable_random
 	local buff_component = self._buff_component
@@ -346,6 +354,38 @@ PlayerUnitBuffExtension.remove_externally_controlled_buff = function (self, loca
 		self:_remove_predicted_buff(component_index, buff_instance)
 	elseif self._is_server then
 		self:_remove_rpc_synced_buff(local_index)
+	end
+end
+
+local _external_rpc_synched_buff_stacks_to_remove = Script.new_array(MAX_BUFF_STACKS_ARRAY_SIZE)
+
+PlayerUnitBuffExtension.remove_externally_controlled_buff_stacks = function (self, buff_stacks_indexes, component_index)
+	for i = 1, #buff_stacks_indexes do
+		local local_index = buff_stacks_indexes[i]
+		local muted_external_buffs = self._muted_external_buffs
+
+		if muted_external_buffs[local_index] then
+			muted_external_buffs[local_index] = nil
+
+			return
+		end
+
+		local buff_instance = self._buffs_by_index[local_index]
+
+		buff_instance = buff_instance or self._component_buffs[component_index]
+
+		local template = buff_instance:template()
+
+		if template.predicted then
+			self:_remove_predicted_buff(component_index, buff_instance)
+		elseif self._is_server then
+			_external_rpc_synched_buff_stacks_to_remove[#_external_rpc_synched_buff_stacks_to_remove + 1] = local_index
+		end
+	end
+
+	if self._is_server then
+		self:_remove_rpc_synced_buff_stacks(_external_rpc_synched_buff_stacks_to_remove)
+		table.clear(_external_rpc_synched_buff_stacks_to_remove)
 	end
 end
 
@@ -665,12 +705,26 @@ PlayerUnitBuffExtension._remove_rpc_synced_buff = function (self, index)
 	end
 end
 
+PlayerUnitBuffExtension._remove_rpc_synced_buff_stacks = function (self, buff_stacks_indexes)
+	for i = 1, #buff_stacks_indexes do
+		local index = buff_stacks_indexes[i]
+
+		self:_remove_buff(index)
+	end
+
+	local player = self._player
+
+	if player.remote then
+		local channel_id = player:channel_id()
+		local game_object_id = self._game_object_id
+
+		RPC.rpc_remove_buff_stacks(channel_id, game_object_id, buff_stacks_indexes)
+	end
+end
+
 PlayerUnitBuffExtension._set_proc_active_start_time = function (self, index, activation_time, skip_send_active_time_rpc)
 	if self._is_server then
 		if skip_send_active_time_rpc then
-			local buffs_by_index = self._buffs_by_index
-			local buff_instance = buffs_by_index[index]
-
 			return
 		end
 
@@ -680,8 +734,12 @@ PlayerUnitBuffExtension._set_proc_active_start_time = function (self, index, act
 		if player.remote then
 			local channel_id = player:channel_id()
 			local game_object_id = self._game_object_id
+			local buffs_by_index = self._buffs_by_index
+			local buff_instance = buffs_by_index[index]
 
-			RPC.rpc_buff_proc_set_active_time(channel_id, game_object_id, index, activation_frame)
+			if buff_instance and not self._proc_buffs_triggered_this_frame[index] then
+				self._proc_buffs_triggered_this_frame[index] = true
+			end
 		end
 	else
 		local buffs_by_index = self._buffs_by_index
@@ -774,7 +832,7 @@ PlayerUnitBuffExtension._start_fx = function (self, index, template)
 		local effect_template = player_effects.effect_template
 
 		if effect_template and not active_effect_templates[index] then
-			local effect_template_id = self._fx_system:start_template_effect(effect_template, unit)
+			local effect_template_id = self._fx_system:start_player_template_effect(effect_template, unit, unit)
 
 			active_effect_templates[index] = effect_template_id
 		end
@@ -846,8 +904,8 @@ PlayerUnitBuffExtension._stop_fx = function (self, index, template)
 		local effect_template_id = active_effect_templates[index]
 		local effect_template = player_effects.effect_template
 
-		if effect_template and effect_template_id and fx_system:has_running_template_effect_with_global_effect_id(effect_template_id) then
-			fx_system:stop_template_effect(effect_template_id)
+		if effect_template and effect_template_id and fx_system:has_running_player_template_effect_with_global_effect_id(effect_template_id) then
+			fx_system:stop_player_template_effect(effect_template_id)
 
 			active_effect_templates[index] = nil
 		end

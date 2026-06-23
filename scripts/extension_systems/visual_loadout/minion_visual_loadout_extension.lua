@@ -3,6 +3,7 @@
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local MasterItems = require("scripts/backend/master_items")
 local MinionGibbing = require("scripts/managers/minion/minion_gibbing")
+local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
 local MutatorMinionVisualOverrideSettings = require("scripts/settings/mutator/mutator_mininion_visual_overrides_settings")
 local RegionConstants = require("scripts/settings/region/region_constants")
 local SideColor = require("scripts/utilities/side_color")
@@ -18,6 +19,7 @@ local CLIENT_RPCS = {
 	"rpc_minion_override_slot",
 	"rpc_minion_set_slot_visibility",
 	"rpc_minion_gib",
+	"rpc_minion_update_unit_mesh_state",
 }
 local MinionVisualLoadoutExtension = class("MinionVisualLoadoutExtension")
 
@@ -27,93 +29,13 @@ local function _link_unit(world, item_unit, target_unit, attach_node_name, map_n
 	World.link_unit(world, item_unit, 1, target_unit, attach_node_index, map_nodes)
 end
 
-local _attach_settings = {
-	attach_pose = nil,
-	character_unit = nil,
-	extension_manager = nil,
-	from_script_component = false,
-	from_ui_profile_spawner = false,
-	is_minion = true,
-	item_definitions = nil,
-	lod_group = nil,
-	lod_shadow_group = nil,
-	spawn_with_extensions = nil,
-	unit_spawner = nil,
-	world = nil,
-}
-
-local function _create_slot_entry(unit, lod_group, lod_shadow_group, world, item_slot_data, random_seed, item_definitions)
-	local items = item_slot_data.items
-	local num_items = #items
-	local new_seed, item_index = math.next_random(random_seed, 1, num_items)
-	local item_name = items[item_index]
-	local item_data = item_definitions[item_name]
-	local attach_node_name = item_data.unwielded_attach_node or item_data.attach_node
-	local attach_node
-
-	if tonumber(attach_node_name) ~= nil then
-		attach_node = tonumber(attach_node_name)
-	else
-		attach_node = Unit.node(unit, item_data.unwielded_attach_node or item_data.attach_node)
-	end
-
-	local item_unit, attachments
-
-	if DEDICATED_SERVER and not item_slot_data.is_weapon then
-		item_unit = nil
-		attachments = nil
-	else
-		_attach_settings.world = world
-		_attach_settings.unit_spawner = Managers.state.unit_spawner
-		_attach_settings.character_unit = unit
-		_attach_settings.item_definitions = item_definitions
-		_attach_settings.attach_pose = Unit.world_pose(unit, attach_node)
-		_attach_settings.lod_group = lod_group
-		_attach_settings.lod_shadow_group = lod_shadow_group
-
-		if item_slot_data.spawn_with_extensions then
-			_attach_settings.extension_manager = Managers.state.extension
-			_attach_settings.spawn_with_extensions = true
-		else
-			_attach_settings.extension_manager = nil
-			_attach_settings.spawn_with_extensions = nil
-		end
-
-		local mission_template, equipment
-
-		item_unit, attachments = VisualLoadoutCustomization.spawn_item(item_data, _attach_settings, unit, false, false, false, mission_template, equipment)
-		_attach_settings.world = nil
-		_attach_settings.unit_spawner = nil
-		_attach_settings.character_unit = nil
-		_attach_settings.item_definitions = nil
-		_attach_settings.attach_pose = nil
-		_attach_settings.lod_group = nil
-		_attach_settings.lod_shadow_group = nil
-		_attach_settings.extension_manager = nil
-		_attach_settings.spawn_with_extensions = nil
-	end
-
-	local drop_on_death = item_slot_data.drop_on_death
-	local slot_entry = {
-		state = "unwielded",
-		visible = true,
-		unit = item_unit,
-		attachments = attachments and attachments[item_unit],
-		item_data = item_data,
-		drop_on_death = drop_on_death,
-		starts_invisible = item_slot_data.starts_invisible,
-	}
-
-	return slot_entry, new_seed
-end
-
-MinionVisualLoadoutExtension.create_slot_entry = function (self, unit, item_slot_data)
+MinionVisualLoadoutExtension._create_slot_entry = function (self, unit, item_slot_data)
 	local lod_group = VisualLoadoutLodGroup.try_init_and_fetch_lod_group(unit, "lod")
 	local lod_shadow_group = VisualLoadoutLodGroup.try_init_and_fetch_lod_group(unit, "lod_shadow")
 	local item_definitions = MasterItems.get_cached()
 	local seed = math.random_seed()
 	local world = self._world
-	local newly_equipped = _create_slot_entry(unit, lod_group, lod_shadow_group, world, item_slot_data, seed, item_definitions)
+	local newly_equipped = MinionVisualLoadout.create_visual_loadout_slot_entry(unit, lod_group, lod_shadow_group, world, item_slot_data, seed, item_definitions)
 
 	return newly_equipped
 end
@@ -127,7 +49,7 @@ local function _create_material_override_slot_entry(unit, item_slot_data, random
 	local material_override_items = item_data.material_override_items
 
 	if material_override_items then
-		for i, material_override_item in pairs(material_override_items) do
+		for _, material_override_item in pairs(material_override_items) do
 			VisualLoadoutCustomization.apply_material_override_item(unit, unit, false, material_override_item, false, item_definitions)
 		end
 	end
@@ -159,8 +81,9 @@ MinionVisualLoadoutExtension.init = function (self, extension_init_context, unit
 
 	local lod_group = VisualLoadoutLodGroup.try_init_and_fetch_lod_group(unit, "lod")
 	local lod_shadow_group = VisualLoadoutLodGroup.try_init_and_fetch_lod_group(unit, "lod_shadow")
+	local item_definitions = MasterItems.get_cached()
 
-	self._item_definitions = MasterItems.get_cached()
+	self._item_definitions = item_definitions
 
 	local random_seed, inventory = extension_init_data.random_seed, extension_init_data.inventory
 
@@ -179,10 +102,10 @@ MinionVisualLoadoutExtension.init = function (self, extension_init_context, unit
 		if slot_data.is_material_override_slot then
 			material_override_slots[slot_name] = slot_data
 		elseif slot_data.is_weapon then
-			slots[slot_name], random_seed = _create_slot_entry(unit, nil, nil, world, slot_data, random_seed, self._item_definitions)
+			slots[slot_name], random_seed = MinionVisualLoadout.create_visual_loadout_slot_entry(unit, nil, nil, world, slot_data, random_seed, item_definitions)
 			slot_unit = slots[slot_name].unit
 		else
-			slots[slot_name], random_seed = _create_slot_entry(unit, lod_group, lod_shadow_group, world, slot_data, random_seed, self._item_definitions)
+			slots[slot_name], random_seed = MinionVisualLoadout.create_visual_loadout_slot_entry(unit, lod_group, lod_shadow_group, world, slot_data, random_seed, item_definitions)
 			slot_unit = slots[slot_name].unit
 		end
 
@@ -253,8 +176,8 @@ MinionVisualLoadoutExtension.destroy = function (self)
 			local attachments = slot_data.attachments
 
 			if attachments then
-				for i = #attachments, 1, -1 do
-					local attach_unit = attachments[i]
+				for ii = #attachments, 1, -1 do
+					local attach_unit = attachments[ii]
 
 					unit_spawner_manager:mark_for_deletion(attach_unit)
 				end
@@ -336,6 +259,90 @@ MinionVisualLoadoutExtension.set_unit_local = function (self)
 	self._unit_is_local = true
 end
 
+MinionVisualLoadoutExtension.update_unit_mesh_states = function (self, slot_name, optional_num_state)
+	local mesh_index = self:_check_mesh_states(slot_name, nil, optional_num_state)
+	local game_object_id = self._game_object_id
+	local slot_id = NetworkLookup.minion_inventory_slot_names[slot_name]
+
+	Managers.state.game_session:send_rpc_clients("rpc_minion_update_unit_mesh_state", game_object_id, slot_id, mesh_index)
+end
+
+MinionVisualLoadoutExtension._check_mesh_states = function (self, slot_name, index, optional_num_state)
+	local slots = self._slots
+	local slot_data = slots[slot_name]
+	local shield_settings = slot_data.shield_settings
+
+	if self._is_server then
+		local old_state = shield_settings.current_state
+		local new_state
+
+		if optional_num_state then
+			new_state = math.clamp(optional_num_state, 0, #shield_settings.unit_states)
+		else
+			new_state = math.clamp(shield_settings.current_state + 1, 0, #shield_settings.unit_states)
+		end
+
+		shield_settings.current_state = new_state
+
+		if not DEDICATED_SERVER then
+			self:_update_unit_mesh_states(shield_settings, new_state, slot_data, old_state)
+		end
+
+		return shield_settings.current_state
+	end
+
+	self:_update_unit_mesh_states(shield_settings, index, slot_data)
+end
+
+MinionVisualLoadoutExtension._update_unit_mesh_states = function (self, shield_settings, index, slot_data, optional_old_state)
+	local old_state = optional_old_state or shield_settings.current_state
+
+	shield_settings.current_state = index
+
+	local catchup_needed = index - old_state > 1
+
+	if not catchup_needed then
+		local unit_states = shield_settings.unit_states
+		local wanted_unit_state = unit_states[shield_settings.current_state]
+
+		self:_update_unit_mesh_visability_groups(slot_data, wanted_unit_state, shield_settings)
+	elseif catchup_needed then
+		for i = 1, index do
+			local unit_states = shield_settings.unit_states
+			local wanted_unit_state = unit_states[i]
+
+			self:_update_unit_mesh_visability_groups(slot_data, wanted_unit_state, shield_settings)
+			Log.info("MinionVisualLoadoutExtension", "Updating the mesh visabilty on index %s", i)
+		end
+	end
+end
+
+MinionVisualLoadoutExtension._update_unit_mesh_visability_groups = function (self, slot_data, wanted_unit_state, shield_settings)
+	if wanted_unit_state.meshes_to_hide then
+		for ii = 1, #wanted_unit_state.meshes_to_hide do
+			local mesh = wanted_unit_state.meshes_to_hide[ii]
+
+			Unit.set_visibility(slot_data.unit, mesh, false, true)
+		end
+	end
+
+	if wanted_unit_state.meshes_to_show then
+		for ii = 1, #wanted_unit_state.meshes_to_show do
+			local mesh = wanted_unit_state.meshes_to_show[ii]
+
+			Unit.set_visibility(slot_data.unit, mesh, true, true)
+		end
+	end
+
+	if shield_settings.update_material_scalar then
+		local variable_name = shield_settings.update_material_scalar.variable_name
+		local scalar_value = shield_settings.update_material_scalar.scalar_values[shield_settings.current_state]
+		local vectorized_value = Vector3(scalar_value, 1, 0)
+
+		Unit.set_vector2_for_materials(slot_data.unit, variable_name, vectorized_value, true)
+	end
+end
+
 MinionVisualLoadoutExtension._wield_slot = function (self, slot_name)
 	local slots = self._slots
 	local slot_data = slots[slot_name]
@@ -361,7 +368,7 @@ MinionVisualLoadoutExtension._wield_slot = function (self, slot_name)
 end
 
 MinionVisualLoadoutExtension.has_slot = function (self, slot_name)
-	return self._slots[slot_name] and true or false
+	return not not self._slots[slot_name]
 end
 
 MinionVisualLoadoutExtension.wield_slot = function (self, slot_name)
@@ -400,6 +407,44 @@ MinionVisualLoadoutExtension.unwield_slot = function (self, slot_name)
 	Managers.state.game_session:send_rpc_clients("rpc_minion_unwield_slot", game_object_id, slot_id)
 end
 
+MinionVisualLoadoutExtension._multi_actor_drop_slot = function (self, slot_data, shield_settings)
+	local item_unit = slot_data.unit
+	local world = self._world
+	local pose = Unit.world_pose(item_unit, 1)
+	local actor_names = shield_settings.actor_names
+
+	World.unlink_unit(world, item_unit, true)
+
+	slot_data.state = "dropped"
+
+	for ii = 1, #actor_names do
+		local current_name = actor_names[ii]
+		local actor = Unit.create_actor(item_unit, current_name)
+		local collision_filter = "filter_minion_shooting_no_friendly_fire"
+
+		Actor.set_collision_filter(actor, collision_filter)
+		Actor.teleport_pose(actor, pose)
+
+		local random_radius = 0.25
+		local x = math.random() * 2 - 1
+		local y = math.random() * 2 - 1
+		local random_offset = Vector3(x * random_radius, y * random_radius, 0)
+		local direction = Vector3.up() + random_offset
+		local speed = 5
+		local velocity_vector = direction * speed
+
+		Actor.add_velocity(actor, velocity_vector)
+
+		local rotation = Unit.local_rotation(item_unit, 1)
+		local min_angular_x, max_angular_x, max_angular_y, max_angular_z = 3, 6, 0.25, 0.25
+		local torque_vector = Vector3(math.max(math.random() * max_angular_x, min_angular_x), math.random() * max_angular_y, math.random() * max_angular_z)
+
+		torque_vector = Quaternion.rotate(rotation, torque_vector)
+
+		Actor.add_angular_velocity(actor, torque_vector)
+	end
+end
+
 MinionVisualLoadoutExtension._drop_slot = function (self, slot_name)
 	local slots = self._slots
 	local slot_data = slots[slot_name]
@@ -417,6 +462,14 @@ MinionVisualLoadoutExtension._drop_slot = function (self, slot_name)
 
 			outline_system:dropping_loadout_unit(self._unit, slot_data.unit)
 		end
+	end
+
+	local shield_settings = slot_data.shield_settings
+
+	if shield_settings and shield_settings.current_state == #shield_settings.unit_states then
+		self:_multi_actor_drop_slot(slot_data, shield_settings)
+
+		return
 	end
 
 	local world = self._world
@@ -860,6 +913,11 @@ MinionVisualLoadoutExtension.hot_join_sync = function (self, unit, sender, chann
 	for slot_name, slot_data in pairs(slots) do
 		local slot_id = NetworkLookup.minion_inventory_slot_names[slot_name]
 		local slot_state = slot_data.state
+		local shield_settings = slot_data.shield_settings
+
+		if shield_settings and shield_settings.current_state > 0 then
+			RPC.rpc_minion_update_unit_mesh_state(channel, game_object_id, slot_id, shield_settings.current_state)
+		end
 
 		if slot_state == "wielded" then
 			RPC.rpc_minion_wield_slot(channel, game_object_id, slot_id)
@@ -901,6 +959,12 @@ MinionVisualLoadoutExtension.rpc_minion_drop_slot = function (self, channel_id, 
 	self:_drop_slot(slot_name)
 end
 
+MinionVisualLoadoutExtension.rpc_minion_update_unit_mesh_state = function (self, channel_id, go_id, slot_id, mesh_index)
+	local slot_name = NetworkLookup.minion_inventory_slot_names[slot_id]
+
+	self:_check_mesh_states(slot_name, mesh_index)
+end
+
 MinionVisualLoadoutExtension.rpc_minion_send_on_death_event = function (self, channel_id, go_id)
 	self:_send_on_death_event()
 end
@@ -916,9 +980,9 @@ MinionVisualLoadoutExtension.rpc_minion_unequip_slot = function (self, channel_i
 end
 
 MinionVisualLoadoutExtension.override_slot = function (self, override_name, template)
-	self:_override_slot(template, "overriden")
+	self:_override_slot(template)
 
-	local override_id = NetworkLookup.MutatorMinionVisualOverrideSettings[override_name]
+	local override_id = NetworkLookup.mutator_minion_visual_override_settings[override_name]
 
 	self:set_override_id(override_id)
 
@@ -928,7 +992,7 @@ MinionVisualLoadoutExtension.override_slot = function (self, override_name, temp
 end
 
 MinionVisualLoadoutExtension.rpc_minion_override_slot = function (self, channel_id, go_id, override_id)
-	local override_template_name = NetworkLookup.MutatorMinionVisualOverrideSettings[override_id]
+	local override_template_name = NetworkLookup.mutator_minion_visual_override_settings[override_id]
 	local override_template = MutatorMinionVisualOverrideSettings[override_template_name]
 	local breed_name = self._breed_name
 	local overrides
@@ -954,10 +1018,10 @@ MinionVisualLoadoutExtension.rpc_minion_override_slot = function (self, channel_
 
 	local chosen_template = overrides
 
-	self:_override_slot(chosen_template, "overriden")
+	self:_override_slot(chosen_template)
 end
 
-MinionVisualLoadoutExtension._override_slot = function (self, template, new_state, optional_slot_template_name_reference, allow_dedicated_server)
+MinionVisualLoadoutExtension._override_slot = function (self, template, new_state)
 	local slots = self._slots
 	local unit = self._unit
 
@@ -980,8 +1044,8 @@ MinionVisualLoadoutExtension._override_slot = function (self, template, new_stat
 		local attachments = slot_data.attachments
 
 		if attachments then
-			for i = #attachments, 1, -1 do
-				local attach_unit = attachments[i]
+			for ii = #attachments, 1, -1 do
+				local attach_unit = attachments[ii]
 
 				unit_spawner_manager:mark_for_deletion(attach_unit)
 			end
@@ -994,12 +1058,11 @@ MinionVisualLoadoutExtension._override_slot = function (self, template, new_stat
 			Managers.state.out_of_bounds:unregister_soft_oob_unit(item_unit, self)
 		end
 
-		if not DEDICATED_SERVER or allow_dedicated_server then
-			slot_data = self:create_slot_entry(unit, items)
+		if not DEDICATED_SERVER then
+			slot_data = self:_create_slot_entry(unit, items)
 		end
 
 		slot_data.state = new_state
-		slot_data.optional_slot_template_name_reference = optional_slot_template_name_reference
 		slots[slot] = slot_data
 	end
 end

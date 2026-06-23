@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/extension_systems/force_field/force_field_system.lua
 
+require("scripts/extension_systems/force_field/cryptic_personal_force_field_unit_extension")
 require("scripts/extension_systems/force_field/psyker_force_field_unit_extension")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -40,10 +41,10 @@ ForceFieldSystem.update = function (self, context, dt, t, ...)
 				local is_dead = extension:is_dead()
 
 				if remaining_duration <= 0 or is_dead or owner_is_dead and not unit_extension_data.marked_for_deletion then
-					extension:on_death(t)
+					local delete_after_time_override = extension:on_death(t)
 
 					extension.is_expired = true
-					unit_extension_data.remove_t = t + DELETE_AFTER_DURATION_TIMER
+					unit_extension_data.remove_t = t + (delete_after_time_override or DELETE_AFTER_DURATION_TIMER)
 				end
 			elseif remove_t < t then
 				unit_extension_data.marked_for_deletion = true

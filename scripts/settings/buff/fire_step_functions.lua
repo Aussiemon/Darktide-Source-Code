@@ -63,6 +63,21 @@ local FireStepFunctions = {
 
 		return math.max(1, math.floor(max_ammunition_clip * 0.025))
 	end,
+	ogryn_rippergun_continuous_fire_step_func = function (template_data, template_context)
+		if ConditionalFunctions.is_reloading(template_data, template_context) then
+			return 0
+		end
+
+		local inventory_slot_component = template_data.inventory_slot_component
+
+		if not inventory_slot_component then
+			return 0
+		end
+
+		local max_ammunition_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
+
+		return math.max(1, math.floor(max_ammunition_clip * 0.08))
+	end,
 }
 
 return FireStepFunctions

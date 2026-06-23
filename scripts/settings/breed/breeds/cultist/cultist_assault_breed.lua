@@ -124,6 +124,7 @@ local breed_data = {
 		choose_closest_to_target = true,
 		choose_furthest_away = false,
 		default_combat_range = "close",
+		should_switch_to_melee_under_weapon_malfunction = true,
 		valid_combat_ranges = {
 			close = true,
 			far = true,

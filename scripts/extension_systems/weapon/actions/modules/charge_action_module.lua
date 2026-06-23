@@ -18,10 +18,11 @@ ChargeActionModule.start = function (self, t)
 end
 
 ChargeActionModule.reset = function (self, t, charge_duration_override)
+	local charge_template = self._weapon_extension:charge_template()
 	local action_module_charge_component = self._action_module_charge_component
 
 	action_module_charge_component.charge_start_time = t
-	action_module_charge_component.charge_level = 0
+	action_module_charge_component.charge_level = charge_template.starting_charge or 0
 end
 
 ChargeActionModule.fixed_update = function (self, dt, t, charge_duration_override, chained_charge_value)
@@ -39,7 +40,7 @@ ChargeActionModule.fixed_update = function (self, dt, t, charge_duration_overrid
 		local charge_delay = charge_template.charge_delay or 0
 		local max_charge = action_module_charge_component.max_charge
 		local time_charged = math.max(0, t - (charge_start_time + charge_delay))
-		local min_charge = time_charged > 0 and charge_template.min_charge or 0
+		local min_charge = (time_charged > 0 or charge_template.starting_charge) and charge_template.min_charge or 0
 		local charge_time_percentage = time_charged / charge_duration
 		local charge_level = math.min(math.clamp(min_charge + (1 - min_charge) * charge_time_percentage, min_charge, 1), max_charge)
 		local multiplier = chained_charge_value / charge_level
@@ -59,7 +60,7 @@ ChargeActionModule.fixed_update = function (self, dt, t, charge_duration_overrid
 	local charge_delay = charge_template.charge_delay or 0
 	local max_charge = action_module_charge_component.max_charge
 	local time_charged = math.max(0, t - (charge_start_time + charge_delay))
-	local min_charge = time_charged > 0 and charge_template.min_charge or 0
+	local min_charge = (time_charged > 0 or charge_template.starting_charge) and charge_template.min_charge or 0
 	local charge_time_percentage = time_charged / charge_duration
 	local charge_level = math.min(math.clamp(min_charge + (1 - min_charge) * charge_time_percentage, min_charge, 1), max_charge)
 

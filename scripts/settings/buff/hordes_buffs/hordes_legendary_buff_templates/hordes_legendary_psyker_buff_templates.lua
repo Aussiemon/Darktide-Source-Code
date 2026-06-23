@@ -79,7 +79,7 @@ templates.hordes_buff_psyker_overcharge_reduced_damage_taken = {
 		template_data.is_active = template_data.buff_extension:has_keyword(buff_keywords.psyker_overcharge)
 	end,
 	check_proc_func = function (params, template_data, template_context, t)
-		return template_data.is_active
+		return template_data.is_active and params.attacked_unit == template_context.unit
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		template_data.player_fx_extension:trigger_wwise_events_local_only(SFX_NAMES.reduced_damage_hit, false, template_context.unit)

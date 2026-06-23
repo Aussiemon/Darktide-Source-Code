@@ -47,7 +47,7 @@ weapon_template.actions = {
 
 table.add_missing(weapon_template.actions, PocketablesTemplateSettings.actions)
 
-weapon_template.actions.action_place_complete.action_condition_func = function (action_settings, condition_func_params, used_input)
+weapon_template.actions.action_place_complete.action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 	return not _in_expedition_safe_zone()
 end
 
@@ -60,10 +60,12 @@ weapon_template.hud_configuration = {
 	uses_overheat = false,
 }
 weapon_template.breed_anim_state_machine_3p = {
+	cryptic = "content/characters/player/human/third_person/animations/pocketables",
 	human = "content/characters/player/human/third_person/animations/pocketables",
 	ogryn = "content/characters/player/ogryn/third_person/animations/pocketables",
 }
 weapon_template.breed_anim_state_machine_1p = {
+	cryptic = "content/characters/player/human/first_person/animations/pocketables",
 	human = "content/characters/player/human/first_person/animations/pocketables",
 	ogryn = "content/characters/player/ogryn/first_person/animations/pocketables",
 }
@@ -76,6 +78,7 @@ weapon_template.toughness_template = "default"
 weapon_template.swap_pickup_name = "expedition_deployable_force_field_pocketable"
 weapon_template.pickup_name = "expedition_deployable_force_field_pocketable"
 weapon_template.breed_footstep_intervals = {
+	cryptic = FootstepIntervalsTemplates.pocketable_human,
 	human = FootstepIntervalsTemplates.pocketable_human,
 	ogryn = FootstepIntervalsTemplates.pocketable_ogryn,
 }
@@ -106,6 +109,14 @@ weapon_template.action_cant_give_screen_ui_validation = function (wielded_slot_i
 	local target_unit = action_module_target_finder_component.target_unit_1
 
 	return current_action_name == "action_aim_give" and target_unit == nil
+end
+
+weapon_template.action_inspect_3p_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_inspect_3p"
+end
+
+weapon_template.action_inspect_3p_base_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_inspect"
 end
 
 return weapon_template

@@ -1124,6 +1124,12 @@ PacingManager.add_pacing_modifiers = function (self, modify_settings)
 		self._monster_pacing:set_num_boss_patrol_override(num_boss_patrol_override)
 	end
 
+	local num_captains_override = modify_settings.num_captains_override
+
+	if num_captains_override then
+		self._monster_pacing:set_num_captains_override(num_captains_override)
+	end
+
 	local tag_limit_bonus = modify_settings.tag_limit_bonus
 
 	if tag_limit_bonus then

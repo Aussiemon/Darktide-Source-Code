@@ -181,6 +181,10 @@ ExpeditionAnimatedPlatform.reset = function (self)
 	self._networked_timer_extension:stop()
 end
 
+ExpeditionAnimatedPlatform.reverse = function (self)
+	self._networked_timer_extension:rewind()
+end
+
 ExpeditionAnimatedPlatform.finished = function (self)
 	self:_enable_chests()
 end

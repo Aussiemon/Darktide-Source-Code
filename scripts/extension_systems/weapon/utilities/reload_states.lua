@@ -79,6 +79,24 @@ ReloadStates.reload = function (inventory_slot_component)
 	Ammo.transfer_from_reserve_to_clip(inventory_slot_component, missing_ammo_in_clip)
 end
 
+ReloadStates.calculate_next_state_transition = function (reload_template, inventory_slot_component, time_in_action, time_scale)
+	local reload_state = ReloadStates.reload_state(reload_template, inventory_slot_component)
+	local state_transitions = reload_state.state_transitions
+	local highest_completed_state_transition
+	local highest_completed_state_time = 0
+
+	for state_name, time in pairs(state_transitions) do
+		local scaled_time = time / time_scale
+
+		if highest_completed_state_time <= scaled_time and scaled_time <= time_in_action then
+			highest_completed_state_time = scaled_time
+			highest_completed_state_transition = state_name
+		end
+	end
+
+	return highest_completed_state_transition
+end
+
 function _reset_state(reload_template, inventory_slot_component)
 	local first_state = reload_template.states[1]
 

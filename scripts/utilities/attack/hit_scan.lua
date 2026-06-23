@@ -77,8 +77,11 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 	local stop = false
 	local end_position
 	local exploded = false
+	local explode_once = impact_config.explode_once
+	local explode_on_minion_hit = impact_config.explode_on_minion_hit
 	local hit_minion = false
 	local hit_weakspot = false
+	local hit_elite = false
 	local killing_blow = false
 	local hit_result
 	local number_of_units_hit = 0
@@ -221,6 +224,7 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 						hit_position = _block_position(hit_unit, hit_position, direction)
 					end
 
+					hit_elite = hit_elite or target_breed_or_nil and target_breed_or_nil.tags and target_breed_or_nil.tags.elite or false
 					hit_result = attack_result
 					killing_blow = killing_blow or attack_result == AttackSettings.attack_results.died
 
@@ -260,10 +264,10 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 
 					exit_distance = hit_distance + object_thickness
 
-					if penetration_config.exit_explosion_template and is_server then
+					if (not explode_once or not exploded) and penetration_config.exit_explosion_template and is_server then
 						local explosion_attack_type = AttackSettings.attack_types.explosion
 
-						Explosion.create_explosion(world, physics_world, exit_position, exit_normal, attacker_unit, penetration_config.exit_explosion_template, power_level, charge_level, explosion_attack_type, false, false, optional_weapon_item, optional_origin_slot)
+						Explosion.create_explosion(world, physics_world, exit_position, exit_normal and Quaternion.look(exit_normal) or Quaternion.identity(), attacker_unit, penetration_config.exit_explosion_template, power_level, charge_level, explosion_attack_type, false, false, optional_weapon_item, optional_origin_slot)
 
 						exploded = true
 					end
@@ -278,18 +282,18 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 					stop = true
 				end
 
-				if can_explode and not exit_position and penetration_config.stop_explosion_template and is_server then
+				if can_explode and (not explode_once or not exploded) and not exit_position and penetration_config.stop_explosion_template and is_server then
 					local explosion_attack_type = AttackSettings.attack_types.explosion
 
-					Explosion.create_explosion(world, physics_world, hit_position, hit_normal, attacker_unit, penetration_config.stop_explosion_template, power_level, charge_level, explosion_attack_type, false, false, optional_weapon_item, optional_origin_slot)
+					Explosion.create_explosion(world, physics_world, hit_position, Quaternion.look(hit_normal), attacker_unit, penetration_config.stop_explosion_template, power_level, charge_level, explosion_attack_type, false, false, optional_weapon_item, optional_origin_slot)
 
 					exploded = true
 				end
 			else
-				if can_explode and penetrated and penetration_config.stop_explosion_template and is_server then
+				if can_explode and (not explode_once or not exploded) and penetrated and penetration_config.stop_explosion_template and is_server then
 					local explosion_attack_type = AttackSettings.attack_types.explosion
 
-					Explosion.create_explosion(world, physics_world, hit_position, hit_normal, attacker_unit, penetration_config.stop_explosion_template, power_level, charge_level, explosion_attack_type, false, false, optional_weapon_item, optional_origin_slot)
+					Explosion.create_explosion(world, physics_world, hit_position, Quaternion.look(hit_normal), attacker_unit, penetration_config.stop_explosion_template, power_level, charge_level, explosion_attack_type, false, false, optional_weapon_item, optional_origin_slot)
 
 					exploded = true
 				end
@@ -299,10 +303,14 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 				ImpactEffect.play_surface_effect(physics_world, attacker_unit, hit_position, hit_normal, direction, damage_type, surface_hit_types.stop, impact_fx_data)
 			end
 
-			if can_explode and (stop or penetrated) and impact_config.explosion_template and is_server then
-				local explosion_attack_type = AttackSettings.attack_types.explosion
+			local explosion_trigger_met = (not explode_once or not exploded) and (stop or penetrated or explode_on_minion_hit and hit_minion)
+			local impact_explosion_template = impact_config.explosion_template
 
-				Explosion.create_explosion(world, physics_world, hit_position, hit_normal, attacker_unit, impact_config.explosion_template, power_level, charge_level, explosion_attack_type, false, false, optional_weapon_item, optional_origin_slot)
+			if can_explode and explosion_trigger_met and impact_explosion_template and is_server then
+				local explosion_attack_type = AttackSettings.attack_types.explosion
+				local explosion_rotation = impact_explosion_template.vfx_rotation == "attack_direction" and Quaternion.look(direction) or Quaternion.look(hit_normal)
+
+				Explosion.create_explosion(world, physics_world, hit_position, explosion_rotation, attacker_unit, impact_config.explosion_template, power_level, charge_level, explosion_attack_type, false, false, optional_weapon_item, optional_origin_slot)
 
 				exploded = true
 			end
@@ -326,7 +334,7 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 		end
 	end
 
-	return end_position, hit_weakspot, killing_blow, hit_minion, number_of_units_hit, hit_result, _RESULTS_PER_UNIT
+	return end_position, hit_elite, hit_weakspot, killing_blow, hit_minion, number_of_units_hit, hit_result, _RESULTS_PER_UNIT
 end
 
 HitScan.inside_faded_player = function (breed_or_nil, hit_distance)

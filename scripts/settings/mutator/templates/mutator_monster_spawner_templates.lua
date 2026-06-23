@@ -83,6 +83,47 @@ local mutator_templates = {
 			},
 		},
 	},
+	mutator_spawner_size_4_test = {
+		class = "scripts/managers/mutator/mutators/mutator_spawner",
+		num_to_spawn = 4,
+		proximity_trigger_distance = 30,
+		spawn_type = "proximity",
+		trigger_distance = 50,
+		spawn_locations = MutatorSpawnerLocationSources.mission_provided_gizmo(),
+		size = {
+			level_size_4 = true,
+		},
+		spawners = {
+			{
+				class = "scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_level_instance",
+				template = {
+					asset_package = "packages/content/live_events/test_levels/test_level_assets",
+					run_on_init = true,
+					use_slot_specific_levels = true,
+					levels = {
+						level_size_4 = {
+							"content/levels/live_events/test_levels/live_event_size_4_test",
+						},
+					},
+					placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
+					size_lookup = {
+						"level_size_4",
+					},
+					spawn_settings = {
+						randomize_rotation = true,
+					},
+				},
+			},
+			{
+				class = "scripts/managers/mutator/mutators/mutator_spawner/mutator_spawner_node_enemy_template",
+				template = {
+					placement_method = MutatorSpawnerNode.SINGLE_PLACEMENT,
+					composition = EnemyEventSpawnerSettings.nurgle_totem,
+					enemy_placement_method = MutatorSpawnerNode.CIRCLE_PLACEMENT,
+				},
+			},
+		},
+	},
 	mutator_plasma_smuggler_props = {
 		class = "scripts/managers/mutator/mutators/mutator_spawner",
 		num_to_spawn = 3,

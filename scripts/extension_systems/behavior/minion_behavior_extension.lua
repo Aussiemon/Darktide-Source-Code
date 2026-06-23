@@ -9,6 +9,7 @@ MinionBehaviorExtension.init = function (self, extension_init_context, unit, ext
 
 	self._blackboard = blackboard
 	self._unit = unit
+	self._behavior_system = extension_init_context.owner_system
 
 	local breed = extension_init_data.breed
 
@@ -37,7 +38,12 @@ MinionBehaviorExtension._init_brain = function (self, unit, breed, blackboard, b
 	local behavior_system = Managers.state.extension:system("behavior_system")
 	local behavior_tree = behavior_system:behavior_tree(behavior_tree_name)
 
-	self._brain = AiBrain:new(unit, breed, blackboard, behavior_tree)
+	self._brain = AiBrain:new(unit, breed, blackboard, behavior_tree, self)
+	self._brain_name = behavior_tree_name
+end
+
+MinionBehaviorExtension.behavior_state_event = function (self, state_name)
+	self._brain:state_event(state_name)
 end
 
 MinionBehaviorExtension.override_brain = function (self, behavior_tree_name, t)
@@ -68,6 +74,15 @@ MinionBehaviorExtension._init_blackboard_components = function (self, blackboard
 
 		group_data_component.group_target = group_target
 		group_data_component.owning_auto_event_id = owning_auto_event_id or ""
+	end
+
+	if Blackboard.has_component(blackboard, "weapon_malfunction") then
+		local weapon_malfunction_component = Blackboard.write_component(blackboard, "weapon_malfunction")
+
+		weapon_malfunction_component.is_malfunctioning = false
+		weapon_malfunction_component.refresh_malfunctioning_time = false
+		weapon_malfunction_component.malfunctioning_time = 0
+		weapon_malfunction_component.malfunction_buff_id = -1
 	end
 
 	if Blackboard.has_component(blackboard, "vortex_grabbed") then

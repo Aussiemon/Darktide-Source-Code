@@ -221,8 +221,8 @@ ProfilesService.set_character_height = function (self, character_id, value)
 	end)
 end
 
-ProfilesService.check_name = function (self, name)
-	return self._backend_interface.characters:check_name(name):next(function (data)
+ProfilesService.check_name = function (self, name, name_type, archetype)
+	return self._backend_interface.characters:check_name(name, name_type, archetype):next(function (data)
 		return Promise.resolved(data)
 	end):catch(function (error)
 		Managers.error:report_error(BackendError:new(error))

@@ -49,11 +49,6 @@ function _template_settings_test(weapon_template)
 
 	if overheat_configuration and not weapon_template.use_special_charge_template_for_overheat_decay then
 		local auto_vent_delay = overheat_configuration.auto_vent_delay
-		local network_type = weapon_component_data.overheat_last_charge_at_t.network_type
-		local network_type_info = Network.type_info(network_type)
-		local min = network_type_info.min
-		local fixed_time_step = 1 / GameParameters.tick_rate
-		local time_network_type_can_represent_backwards_in_time = math.abs(min * fixed_time_step)
 		local vent_interval = overheat_configuration.vent_interval
 
 		if not vent_interval then
@@ -64,16 +59,6 @@ function _template_settings_test(weapon_template)
 
 		if not vent_duration then
 			return false, "vent_configuration needs vent_duration."
-		end
-
-		network_type = weapon_component_data.overheat_remove_at_t.network_type
-		network_type_info = Network.type_info(network_type)
-
-		local max = network_type_info.max
-		local time_network_type_can_represent_forwards_in_time = math.abs(max * fixed_time_step)
-
-		if time_network_type_can_represent_forwards_in_time < vent_interval then
-			return false, string.format("vent_interval is larger than what the current network_type (%q) can represent forwards in time (%.5f). Change what network_type \"overheat_remove_at_t\" to something that can represent it.", network_type, time_network_type_can_represent_forwards_in_time)
 		end
 	end
 end
@@ -203,6 +188,7 @@ end
 
 local _skip_ability_check_action_kinds = {
 	inspect = true,
+	inspect_3p = true,
 	toggle_special = true,
 	unwield = true,
 	unwield_to_specific = true,

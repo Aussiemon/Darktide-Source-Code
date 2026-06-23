@@ -81,6 +81,7 @@ local action_data = {
 	name = "companion_dog",
 	idle = {
 		anim_events = "idle",
+		update_rate = 0.5,
 	},
 	manual_teleport = {
 		wait_time = 1,

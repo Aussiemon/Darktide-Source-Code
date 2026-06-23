@@ -129,6 +129,52 @@ MissionBuffsHandler.give_buff_to_player = function (self, player, buff_name, ski
 	end
 end
 
+MissionBuffsHandler.remove_buff_from_all = function (self, buff_name)
+	local players = Managers.player:human_players()
+
+	for _, player in pairs(players) do
+		self:remove_buff_from_player(player, buff_name)
+	end
+end
+
+MissionBuffsHandler.remove_buff_from_player = function (self, player, buff_name, skip_notification, skip_updating_player_data)
+	local player_unit = player.player_unit
+	local is_human = player:is_human_controlled()
+
+	if not is_human then
+		return
+	end
+
+	local buff_extension = ScriptUnit.has_extension(player_unit, "buff_system")
+
+	if not ALIVE[player_unit] or not buff_extension then
+		Log.exception("MissionBuffsHandler", "Tried removing buff from player unit without a buff_extension. Buff: %s | PeerID: %s | AccountID: %s", buff_name, player:peer_id(), player:account_id())
+
+		return
+	end
+
+	local buff_index = self._persistent_data:pop_buff_index_for_player(player, buff_name)
+
+	if buff_index == nil then
+		Log.warning("MissionBuffsHandler", "No externally controlled buff %s registered for player (peer_id: %s) - nothing to remove", buff_name, player:peer_id())
+
+		return
+	end
+
+	Log.info("MissionBuffsSelector", "Removing %s from player (peer_id: %s)", buff_name, player:peer_id())
+	buff_extension:remove_externally_controlled_buff(buff_index)
+
+	local update_player_data = not skip_updating_player_data
+
+	if update_player_data then
+		self._persistent_data:remove_buff_for_player(player, buff_name)
+	end
+
+	if not skip_notification then
+		self._mission_buffs_manager:notify_buff_removed_from_player(player, buff_name)
+	end
+end
+
 MissionBuffsHandler.set_legendary_buffs_available_for_player = function (self, player, legendary_buffs, buffs_in_pool_already_given_to_player)
 	self._persistent_data:set_legendary_buffs_available_for_player(player, legendary_buffs, buffs_in_pool_already_given_to_player)
 end

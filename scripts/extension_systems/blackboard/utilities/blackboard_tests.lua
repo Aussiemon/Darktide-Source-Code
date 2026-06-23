@@ -2,33 +2,6 @@
 
 local Blackboard
 local TEST_FAILED_STRING = "[Blackboard] Test Failed, %s!"
-local temp_args = {}
-
-local function format_error_message(message, ...)
-	local num_new_args = select("#", ...)
-
-	for i = 1, num_new_args do
-		temp_args[i] = tostring(select(i, ...))
-	end
-
-	for i = num_new_args + 1, #temp_args do
-		temp_args[i] = nil
-	end
-
-	return string.format(message, unpack(temp_args))
-end
-
-local function mockup_fassert(condition, message, ...)
-	if not condition then
-		message = format_error_message(message, ...)
-	end
-end
-
-local function mockup_ferror(message, ...)
-	message = format_error_message(message, ...)
-
-	error(message)
-end
 
 local function _test_write_component(blackboard, component_name, field_name, field_type, field_value, invalid_field_name)
 	local component = Blackboard.write_component(blackboard, component_name)
@@ -50,11 +23,6 @@ local function _test_read_component(blackboard, component_name, field_name, fiel
 end
 
 local function _init_and_run_tests(blackboard_object)
-	local original_fassert = fassert
-	local original_ferror = ferror
-
-	fassert = mockup_fassert
-	ferror = mockup_ferror
 	Blackboard = blackboard_object
 
 	local component_config = {
@@ -97,9 +65,6 @@ local function _init_and_run_tests(blackboard_object)
 	end
 
 	Blackboard.validate(blackboard)
-
-	fassert = original_fassert
-	ferror = original_ferror
 end
 
 return _init_and_run_tests

@@ -1253,5 +1253,33 @@ projectile_templates.quick_flash_grenade = {
 		},
 	},
 }
+projectile_templates.arc_grenade = {
+	item_name = "content/items/weapons/player/grenade_arc",
+	locomotion_template = ProjectileLocomotionTemplates.arc_grenade,
+	projectile_type = projectile_types.player_grenade,
+	damage = {
+		fuse = {
+			fuse_time = 2,
+			explosion_template = ExplosionTemplates.arc_grenade,
+		},
+		impact = {
+			damage_profile = DamageProfileTemplates.adamant_grenade_impact,
+			damage_type = damage_types.grenade_frag,
+		},
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				link = true,
+				orphaned_policy = "destroy",
+				particle_name = "content/fx/particles/weapons/grenades/grenade_trail",
+			},
+			sfx = {
+				looping_event_name = "wwise/events/weapon/play_player_combat_weapon_grenader_loop",
+				looping_stop_event_name = "wwise/events/weapon/stop_player_combat_weapon_grenader_loop",
+			},
+		},
+	},
+}
 
 return projectile_templates

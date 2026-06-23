@@ -50,6 +50,7 @@ InventoryView.init = function (self, settings, context)
 	self._context = context
 	self._parent = context and context.parent
 	self._preview_player = context.debug and Managers.player:local_player(1) or context.player
+	self._presentation_profile = table.clone_instance(self._preview_player:profile())
 	self._preview_profile_equipped_items = context.preview_profile_equipped_items or {}
 	self._current_profile_equipped_items = context.current_profile_equipped_items or table.clone(self._preview_profile_equipped_items)
 	self._is_own_player = self._preview_player == Managers.player:local_player(1)

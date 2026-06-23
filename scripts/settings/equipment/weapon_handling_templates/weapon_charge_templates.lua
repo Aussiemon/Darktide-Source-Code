@@ -76,11 +76,38 @@ local weapon_charge_templates = {
 			lerp_perfect = 0.01,
 		},
 	},
+	plasmagun_p1_m2_charge_direct = {
+		charge_duration = 0.75,
+		charge_on_action_start = true,
+		full_charge_overheat_percent = 0.025,
+		min_charge = 0.3,
+		overheat_percent = 0.05,
+	},
+	plasmagun_p1_m2_charge = {
+		charge_duration = 1.5,
+		charge_on_action_start = true,
+		full_charge_overheat_percent = 0.05,
+		overheat_percent = 0.2,
+	},
 	missile_launcher = {
 		charge_duration = 0.5,
 		charge_on_action_start = true,
 		fully_charged_charge_level = 1,
 		min_charge = 1,
+	},
+	cryptic_chordclaw = {
+		charge_duration = 0.5,
+		charge_on_action_start = true,
+		fully_charged_charge_level = 1,
+		min_charge = 1,
+		starting_charge = 1,
+	},
+	cryptic_chordclaw_instant = {
+		charge_duration = 1,
+		charge_on_action_start = true,
+		fully_charged_charge_level = 1,
+		min_charge = 1,
+		starting_charge = 1,
 	},
 	psyker_throwing_knives = {
 		psyker_smite = true,

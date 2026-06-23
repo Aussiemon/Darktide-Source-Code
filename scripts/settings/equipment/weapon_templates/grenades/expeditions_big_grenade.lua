@@ -147,14 +147,29 @@ weapon_template.action_input_hierarchy = {
 				input = "inspect_stop",
 				transition = "base",
 			},
+			{
+				input = "inspect_3p_start",
+				transition = {
+					{
+						input = "inspect_3p_stop",
+						transition = "previous",
+					},
+					{
+						input = "inspect_stop",
+						transition = "base",
+					},
+				},
+			},
 		},
 	},
 }
 weapon_template.breed_anim_state_machine_3p = {
+	cryptic = "content/characters/player/human/third_person/animations/big_fing_grenade",
 	human = "content/characters/player/human/third_person/animations/big_fing_grenade",
 	ogryn = "content/characters/player/ogryn/third_person/animations/big_fing_grenade",
 }
 weapon_template.breed_anim_state_machine_1p = {
+	cryptic = "content/characters/player/human/first_person/animations/big_fing_grenade",
 	human = "content/characters/player/human/first_person/animations/big_fing_grenade",
 	ogryn = "content/characters/player/ogryn/first_person/animations/big_fing_grenade",
 }
@@ -170,19 +185,19 @@ weapon_template.actions.action_underhand_throw_grenade.ammunition_usage = AMMUNI
 weapon_template.actions.action_throw_grenade.remove_item_from_inventory = REMOVE_ITEM_FROM_INVENTORY
 weapon_template.actions.action_underhand_throw_grenade.remove_item_from_inventory = REMOVE_ITEM_FROM_INVENTORY
 
-weapon_template.actions.action_aim.action_condition_func = function (action_settings, condition_func_params, used_input)
+weapon_template.actions.action_aim.action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 	return not _in_expedition_safe_zone()
 end
 
-weapon_template.actions.action_throw_grenade.action_condition_func = function (action_settings, condition_func_params, used_input)
+weapon_template.actions.action_throw_grenade.action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 	return not _in_expedition_safe_zone()
 end
 
-weapon_template.actions.action_aim_underhand.action_condition_func = function (action_settings, condition_func_params, used_input)
+weapon_template.actions.action_aim_underhand.action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 	return not _in_expedition_safe_zone()
 end
 
-weapon_template.actions.action_underhand_throw_grenade.action_condition_func = function (action_settings, condition_func_params, used_input)
+weapon_template.actions.action_underhand_throw_grenade.action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 	return not _in_expedition_safe_zone()
 end
 

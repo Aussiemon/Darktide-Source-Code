@@ -227,7 +227,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		action_condition_func = function (action_settings, condition_func_params, used_input)
+		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			return condition_func_params.sprint_character_state_component.is_sprinting
 		end,
 	},
@@ -287,7 +287,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		action_condition_func = function (action_settings, condition_func_params, used_input)
+		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			return condition_func_params.movement_state_component.method == "sliding"
 		end,
 	},
@@ -1516,7 +1516,7 @@ weapon_template.actions = {
 			},
 			start_modifier = 1,
 		},
-		anim_end_event_func = function (action_settings, condition_func_params)
+		anim_end_event_func = function (time_in_action, action_settings, end_reason, condition_func_params)
 			local character_state_component = condition_func_params and condition_func_params.character_state_component
 			local state_name = character_state_component and character_state_component.state_name or "none"
 			local is_sliding = state_name == "sliding"
@@ -1720,7 +1720,7 @@ weapon_template.actions = {
 				chain_time = 0.6,
 			},
 		},
-		action_condition_func = function (action_settings, condition_func_params, used_input)
+		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			return condition_func_params.inventory_slot_component.overheat_state ~= "lockout"
 		end,
 	},
@@ -1755,7 +1755,7 @@ weapon_template.actions = {
 				chain_time = 0.6,
 			},
 		},
-		action_condition_func = function (action_settings, condition_func_params, used_input)
+		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			return condition_func_params.inventory_slot_component.overheat_state ~= "lockout"
 		end,
 	},
@@ -1790,7 +1790,7 @@ weapon_template.actions = {
 				chain_time = 0.6,
 			},
 		},
-		action_condition_func = function (action_settings, condition_func_params, used_input)
+		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			return condition_func_params.inventory_slot_component.overheat_state ~= "lockout"
 		end,
 	},
@@ -1825,7 +1825,7 @@ weapon_template.actions = {
 				chain_time = 0.5,
 			},
 		},
-		action_condition_func = function (action_settings, condition_func_params, used_input)
+		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			return condition_func_params.inventory_slot_component.overheat_state ~= "lockout"
 		end,
 	},
@@ -1860,7 +1860,7 @@ weapon_template.actions = {
 				chain_time = 0.6,
 			},
 		},
-		action_condition_func = function (action_settings, condition_func_params, used_input)
+		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			return condition_func_params.inventory_slot_component.overheat_state ~= "lockout"
 		end,
 	},
@@ -1906,7 +1906,7 @@ weapon_template.actions = {
 				chain_time = 1.2,
 			},
 		},
-		action_condition_func = function (action_settings, condition_func_params, used_input)
+		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			return condition_func_params.inventory_slot_component.overheat_state ~= "lockout" and (condition_func_params.sprint_character_state_component.is_sprinting or condition_func_params.movement_state_component.method == "sliding")
 		end,
 	},
@@ -1942,9 +1942,40 @@ weapon_template.actions = {
 				chain_time = 0.5,
 			},
 		},
-		action_condition_func = function (action_settings, condition_func_params, used_input)
+		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			return condition_func_params.inventory_slot_component.overheat_state ~= "lockout"
 		end,
+	},
+	action_inspect_3p = {
+		action_prevents_jump = true,
+		block_first_person_rotation = true,
+		can_crouch = false,
+		can_jump = false,
+		force_look = true,
+		kind = "inspect_3p",
+		lock_view = false,
+		skip_3p_anims = false,
+		stop_input = "inspect_stop",
+		total_time = math.huge,
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
+		crosshair = {
+			crosshair_type = "inspect",
+		},
+		allowed_chain_actions = {
+			inspect_3p_stop = {
+				action_name = "action_inspect",
+				chain_time = 1.1,
+			},
+		},
+		action_movement_curve = {
+			{
+				modifier = 0,
+				t = 0,
+			},
+			start_modifier = 0,
+		},
 	},
 	action_inspect = {
 		anim_end_event = "inspect_end",
@@ -1963,6 +1994,12 @@ weapon_template.actions = {
 		end,
 		crosshair = {
 			crosshair_type = "inspect",
+		},
+		allowed_chain_actions = {
+			inspect_3p_start = {
+				action_name = "action_inspect_3p",
+				chain_time = 0.75,
+			},
 		},
 	},
 }
@@ -2474,5 +2511,13 @@ weapon_template.weapon_card_data = {
 weapon_template.resources = {
 	trait_explosion_vfx = "content/fx/particles/weapons/power_maul/power_maul_push_shockwave",
 }
+
+weapon_template.action_inspect_3p_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_inspect_3p"
+end
+
+weapon_template.action_inspect_3p_base_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_inspect"
+end
 
 return weapon_template

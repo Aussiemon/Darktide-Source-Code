@@ -14,35 +14,28 @@ local LocalPlayersSyncState = require("scripts/multiplayer/connection/local_stat
 local LocalProfilesSyncState = require("scripts/multiplayer/connection/local_states/local_profiles_sync_state")
 local LocalRequestHostTypeState = require("scripts/multiplayer/connection/local_states/local_request_host_type_state")
 local LocalSlotClaimState = require("scripts/multiplayer/connection/local_states/local_slot_claim_state")
-local LocalSlotReserveState = require("scripts/multiplayer/connection/local_states/local_slot_reserve_state")
 local LocalSyncStatsState = require("scripts/multiplayer/connection/local_states/local_sync_stats_state")
 local LocalTickRateSyncState = require("scripts/multiplayer/connection/local_states/local_tick_rate_sync_state")
 local LocalVersionCheckState = require("scripts/multiplayer/connection/local_states/local_version_check_state")
-local LocalWaitForClaimState = require("scripts/multiplayer/connection/local_states/local_wait_for_claim_state")
 local StateMachine = require("scripts/foundation/utilities/state_machine")
 local ConnectionLocalStateMachine = class("ConnectionLocalStateMachine")
 
 ConnectionLocalStateMachine.TIMEOUT = 15
-ConnectionLocalStateMachine.RESERVE_TIMEOUT = 300
 
 ConnectionLocalStateMachine.init = function (self, event_delegate, engine_lobby, host_peer_id, network_hash, host_type, profile_synchronizer_client, slots_to_reserve, jwt_ticket)
 	local parent
 	local shared_state = {
 		boot_complete = false,
 		channel_id = nil,
-		has_reserved = false,
 		is_dedicated = nil,
 		event_delegate = event_delegate,
 		engine_lobby = engine_lobby,
 		host_peer_id = host_peer_id,
 		timeout = ConnectionLocalStateMachine.TIMEOUT,
-		reserve_timeout = ConnectionLocalStateMachine.RESERVE_TIMEOUT,
 		network_hash = network_hash,
 		host_type = host_type,
-		slots_to_reserve = slots_to_reserve,
 		profile_synchronizer_client = profile_synchronizer_client,
 		jwt_ticket = jwt_ticket,
-		ready_to_claim_slots = slots_to_reserve == nil,
 		event_list = {},
 	}
 
@@ -68,17 +61,10 @@ ConnectionLocalStateMachine.init = function (self, event_delegate, engine_lobby,
 	state_machine:add_transition("LocalRequestHostTypeState", "host type reply", LocalMechanismVerificationState)
 	state_machine:add_transition("LocalRequestHostTypeState", "timeout", LocalDisconnectedState)
 	state_machine:add_transition("LocalRequestHostTypeState", "disconnected", LocalDisconnectedState)
-	state_machine:add_transition("LocalMechanismVerificationState", "mechanism matched", slots_to_reserve and LocalSlotReserveState or LocalSlotClaimState)
+	state_machine:add_transition("LocalMechanismVerificationState", "mechanism matched", LocalSlotClaimState)
 	state_machine:add_transition("LocalMechanismVerificationState", "mechanism mismatched", LocalDisconnectedState)
 	state_machine:add_transition("LocalMechanismVerificationState", "timeout", LocalDisconnectedState)
 	state_machine:add_transition("LocalMechanismVerificationState", "disconnected", LocalDisconnectedState)
-	state_machine:add_transition("LocalSlotReserveState", "slots allocated", LocalWaitForClaimState)
-	state_machine:add_transition("LocalSlotReserveState", "slots rejected", LocalDisconnectedState)
-	state_machine:add_transition("LocalSlotReserveState", "timeout", LocalDisconnectedState)
-	state_machine:add_transition("LocalSlotReserveState", "disconnected", LocalDisconnectedState)
-	state_machine:add_transition("LocalWaitForClaimState", "ready to claim", LocalSlotClaimState)
-	state_machine:add_transition("LocalWaitForClaimState", "timeout", LocalDisconnectedState)
-	state_machine:add_transition("LocalWaitForClaimState", "disconnected", LocalDisconnectedState)
 	state_machine:add_transition("LocalSlotClaimState", "slot claimed", LocalPlayersSyncState)
 	state_machine:add_transition("LocalSlotClaimState", "slot rejected", LocalDisconnectedState)
 	state_machine:add_transition("LocalSlotClaimState", "timeout", LocalDisconnectedState)
@@ -155,14 +141,6 @@ end
 
 ConnectionLocalStateMachine.has_disconnected = function (self)
 	return self._state_machine:state().__class_name == "LocalDisconnectedState"
-end
-
-ConnectionLocalStateMachine.has_reserved = function (self)
-	return self._shared_state.has_reserved
-end
-
-ConnectionLocalStateMachine.ready_to_join = function (self)
-	self._shared_state.ready_to_claim_slots = true
 end
 
 ConnectionLocalStateMachine.boot_complete = function (self)

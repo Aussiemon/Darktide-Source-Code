@@ -26,14 +26,17 @@ local HAND_IK_CONFIG = {
 	right_handle_name = "j_right_hand_ik_handle",
 	right_transform_name = "j_right_hand_ik_transform",
 	hand_length = {
+		cryptic = 0.05,
 		human = 0.05,
 		ogryn = 0.1,
 	},
 	hand_separation = {
+		cryptic = 0.428,
 		human = 0.428,
 		ogryn = 0.896,
 	},
 	hand_thickness = {
+		cryptic = 0.05,
 		human = 0.05,
 		ogryn = 0.1,
 	},

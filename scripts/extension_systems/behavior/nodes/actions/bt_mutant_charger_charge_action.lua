@@ -818,6 +818,7 @@ BtMutantChargerChargeAction._play_smash_anim = function (self, scratchpad, actio
 end
 
 local THROW_TELEPORT_UP_OFFSET = {
+	cryptic = 0.75,
 	human = 0.75,
 	ogryn = 0,
 }

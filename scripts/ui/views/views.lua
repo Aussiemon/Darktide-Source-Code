@@ -86,8 +86,10 @@ local views = {
 		state_bound = true,
 		use_transition_ui = true,
 		levels = {
-			"content/levels/ui/character_create/character_create",
 			"content/levels/ui/cartel_selection/cartel_selection",
+			"content/levels/ui/character_create/character_create",
+			"content/levels/ui/character_create_cryptic/character_create_cryptic",
+			"content/levels/ui/forgeworld_selection/forgeworld_selection",
 		},
 		enter_sound_events = {
 			UISoundEvents.character_appearence_enter,
@@ -267,6 +269,7 @@ local views = {
 		levels = {
 			"content/levels/ui/class_selection/class_selection_adamant/class_selection_adamant",
 			"content/levels/ui/class_selection/class_selection_broker/class_selection_broker",
+			"content/levels/ui/class_selection/class_selection_cryptic/class_selection_cryptic",
 			"content/levels/ui/class_selection/class_selection_ogryn/class_selection_ogryn",
 			"content/levels/ui/class_selection/class_selection_psyker/class_selection_psyker",
 			"content/levels/ui/class_selection/class_selection_veteran/class_selection_veteran",
@@ -467,6 +470,7 @@ local views = {
 		use_transition_ui = true,
 		levels = {
 			"content/levels/ui/barber/barber",
+			"content/levels/ui/barber_character_appearance_cryptic/barber_character_appearance_cryptic",
 			"content/levels/ui/barber_character_appearance/barber_character_appearance",
 			"content/levels/ui/barber_character_mindwipe/barber_character_mindwipe",
 		},
@@ -834,8 +838,6 @@ _declare_view("havoc_reward_presentation_view", require("scripts/ui/views/havoc_
 _declare_view("group_finder_view", require("scripts/ui/views/group_finder_view/group_finder_view_declaration_settings"))
 _declare_view("penance_overview_view", require("scripts/ui/views/penance_overview_view/penance_overview_view_declaration_settings"))
 _declare_view("report_player_view", require("scripts/ui/views/report_player_view/report_player_view_declaration_settings"))
-_declare_view("expedition_play_view", require("scripts/ui/views/expedition_play_view/expedition_play_view_declaration_settings"))
-_declare_view("expedition_background_view", require("scripts/ui/views/expedition_background_view/expedition_background_view_declaration_settings"))
 _declare_view("expedition_view", require("scripts/ui/views/expedition_view/expedition_view_declaration_settings"))
 _declare_view("horde_play_view", require("scripts/ui/views/horde_play_view/horde_play_view_declaration_settings"))
 _declare_view("dlc_purchase_view", require("scripts/ui/views/dlc_purchase_view/dlc_purchase_view_declaration_settings"))

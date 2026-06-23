@@ -19,7 +19,9 @@ SmartTargetingActionModule.init = function (self, is_server, physics_world, play
 	self._combat_ability_action_component = unit_data_extension:read_component("combat_ability_action")
 	self._grenade_ability_action_component = unit_data_extension:read_component("grenade_ability_action")
 	self._smart_targeting_extension = ScriptUnit.extension(player_unit, "smart_targeting_system")
-	self.talent_extension = ScriptUnit.extension(player_unit, "talent_system")
+	self._companion_spawner_extension = ScriptUnit.extension(player_unit, "companion_spawner_system")
+	self._talent_extension = ScriptUnit.extension(player_unit, "talent_system")
+	self._ability_extension = ScriptUnit.extension(player_unit, "ability_system")
 end
 
 SmartTargetingActionModule.start = function (self, action_settings, t)
@@ -52,7 +54,7 @@ SmartTargetingActionModule.fixed_update = function (self, dt, t)
 		local targeting_data = smart_targeting_extension:targeting_data()
 		local new_target_unit = targeting_data.unit
 		local can_target_unit_validate_func = action_settings.can_target_unit_validate_func
-		local can_target_unit = not new_target_unit or not can_target_unit_validate_func or can_target_unit_validate_func(self.talent_extension, new_target_unit)
+		local can_target_unit = not new_target_unit or not can_target_unit_validate_func or can_target_unit_validate_func(self._unit_data_extension, new_target_unit, self._companion_spawner_extension, self._talent_extension, self._ability_extension)
 
 		if can_target_unit and new_target_unit ~= current_target_unit then
 			local is_in_range

@@ -42,6 +42,7 @@ local PresenceManagerDummy = require("scripts/managers/presence/presence_manager
 local ProfileSynchronizationManager = require("scripts/managers/loading/profile_synchronization_manager")
 local ProgressionManager = require("scripts/managers/progression/progression_manager")
 local Promise = require("scripts/foundation/utilities/promise")
+local PropertyFormatter = require("scripts/foundation/utilities/debug/property_formatter")
 local PS5UDSManager = require("scripts/managers/ps5_uds/ps5_uds_manager")
 local SaveManager
 
@@ -106,7 +107,7 @@ StateGame.on_enter = function (self, parent, params)
 		vo_sources_cache = self._vo_sources_cache,
 	}
 
-	self:_init_managers(params.package_manager, params.localization_manager, event_delegate, approve_channel_delegate)
+	self:_init_managers(event_delegate, approve_channel_delegate)
 
 	if GameParameters.testify and not DEDICATED_SERVER then
 		Managers.telemetry_events:system_settings()
@@ -138,21 +139,6 @@ StateGame.on_enter = function (self, parent, params)
 		Managers.wwise_game_sync:set_game_state_machine(self._sm)
 	end
 
-	local app_type = "host"
-
-	if Managers.connection:is_dedicated_mission_server() then
-		app_type = "mission_server"
-	elseif Managers.connection:is_dedicated_hub_server() then
-		app_type = "hub_server"
-	elseif Managers.connection:is_client() then
-		app_type = "client"
-	end
-
-	local program_name = string.format("darktide-%s-%s", app_type, tostring(APPLICATION_SETTINGS.content_revision))
-
-	Profiler.set_program_name(program_name)
-	Managers.event:register(self, "on_pre_suspend", "_on_pre_suspend")
-
 	self._update_running = false
 end
 
@@ -182,15 +168,13 @@ local function _connection_options(is_dedicated_hub_server, is_dedicated_mission
 	return options
 end
 
-StateGame._init_managers = function (self, package_manager, localization_manager, event_delegate, approve_channel_delegate)
+StateGame._init_managers = function (self, event_delegate, approve_channel_delegate)
 	Managers.error = ErrorManager:new()
 	Managers.frame_table = FrameTableManager:new(GameParameters.debug_frame_tables, 64)
-	Managers.package = package_manager
 	Managers.time = TimeManager:new()
 	Managers.world = WorldManager:new()
 	Managers.player = PlayerManager:new()
 	Managers.event = EventManager:new()
-	Managers.localization = localization_manager
 	Managers.transition = TransitionManager:new()
 
 	if DEDICATED_SERVER then
@@ -224,7 +208,7 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 
 	Managers.backend = BackendManager:new(function ()
 		return {
-			["request-id"] = math.uuid(),
+			["request-id"] = Application.guid(),
 			["platform-name"] = version_id,
 			["accept-language"] = language,
 			["is-modded"] = is_modded,
@@ -311,6 +295,9 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 end
 
 StateGame.on_exit = function (self, exit_params)
+	Crashify.print_property("shutdown", true)
+	Managers.package:shutdown_has_started()
+
 	if not DEDICATED_SERVER then
 		Managers.wwise_game_sync:set_game_state_machine(nil)
 	end
@@ -332,7 +319,6 @@ StateGame.on_exit = function (self, exit_params)
 		self._imgui_init = false
 	end
 
-	Managers.event:unregister(self, "on_pre_suspend")
 	Managers:destroy()
 	self._approve_channel_delegate:delete()
 	self._event_delegate:delete()
@@ -350,17 +336,50 @@ StateGame.on_reload = function (self, refreshed_resources)
 	self._sm:on_reload(refreshed_resources)
 end
 
-StateGame._on_recover = function (self)
+StateGame.on_recover = function (self)
 	self._sm:on_recover()
 end
 
-StateGame.update = function (self, dt)
-	if self._update_running then
-		self:_on_recover()
+StateGame.on_suspend = function (self)
+	local error_state = CLASSES.StateError
+	local params = {}
+	local exit_params = {
+		on_suspend = true,
+	}
+
+	self._sm:force_change_state(error_state, params, exit_params)
+	Managers.event:trigger("on_suspend")
+
+	if Managers.party_immaterium then
+		Managers.party_immaterium:reset()
 	end
 
-	self._update_running = true
+	Managers.presence:reset()
+	Managers.grpc:update(0)
+	Managers.telemetry_events:game_suspended()
+end
 
+StateGame.on_resume = function (self)
+	Managers.backend:on_resume()
+	Managers.telemetry_events:game_resumed()
+	Managers.telemetry:post_batch()
+end
+
+StateGame.on_constrained = function (self, is_constrained)
+	Managers.event:trigger("on_constrained", is_constrained)
+end
+
+StateGame.on_activate = function (self, is_active)
+	if is_active then
+		if Managers.dlc then
+			Managers.dlc:evaluate_consumables()
+		end
+
+		Managers.account:refresh_communication_restrictions()
+	end
+end
+
+StateGame.update = function (self, dt)
 	local network_is_active = Network.is_active()
 
 	UPDATE_RESOLUTION_LOOKUP()
@@ -497,6 +516,7 @@ StateGame.render = function (self)
 	Managers.world:render()
 	self._sm:post_render()
 	Managers.frame_table:swap_buffers()
+	Managers.imgui:post_render()
 end
 
 StateGame.current_state_name = function (self)
@@ -505,16 +525,6 @@ end
 
 StateGame.state_machine = function (self)
 	return self._sm
-end
-
-StateGame._on_pre_suspend = function (self)
-	local error_state = CLASSES.StateError
-	local params = {}
-	local exit_params = {
-		on_suspend = true,
-	}
-
-	self._sm:force_change_state(error_state, params, exit_params)
 end
 
 return StateGame

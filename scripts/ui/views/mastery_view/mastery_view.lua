@@ -873,8 +873,8 @@ MasteryView._setup_traits = function (self)
 		local item = MasterItems.get_item(name)
 
 		if item then
-			local icon = item and item.icon
-			local texture_icon = icon or "content/ui/textures/icons/traits/weapon_trait_default"
+			local icon = item and item.mastery_icon
+			local texture_icon = icon or "content/ui/textures/icons/traits/mastery_tree/weapon_trait_unknown"
 			local valid_traits = {}
 			local max_unlocked_rarity_index = 0
 

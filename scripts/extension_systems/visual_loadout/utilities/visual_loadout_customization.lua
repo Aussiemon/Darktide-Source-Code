@@ -10,7 +10,6 @@ local SORT_ORDER = {
 	FACE_SCAR = 1,
 	HAIR = 3,
 }
-local _apply_material_override
 local Unit = Unit
 local Unit_has_node = Unit.has_node
 local Unit_node = Unit.node
@@ -331,8 +330,6 @@ function _spawn_attachment(item_data, attach_settings, parent_unit, optional_mis
 		map_mode = optional_as_leaf_map_mode
 	elseif World[item_data.link_map_mode] then
 		map_mode = World[item_data.link_map_mode]
-	elseif item_type == "COMPANION_GEAR_FULL" then
-		map_mode = World.LINK_MODE_NONE
 	elseif attach_settings.skip_link_children and not item_data.force_link_children then
 		map_mode = World.LINK_MODE_NONE
 	else
@@ -509,66 +506,6 @@ function _attach_hierarchy_children(children, override_lookup, attach_settings, 
 	end
 end
 
-function _apply_material_override(unit, material_override_data, in_editor)
-	if material_override_data.property_overrides ~= nil then
-		for property_name, property_override_data in pairs(material_override_data.property_overrides) do
-			if type(property_override_data) == "number" then
-				Unit_set_scalar_for_materials(unit, property_name, property_override_data, true)
-			else
-				local property_override_data_num = #property_override_data
-
-				if property_override_data_num == 1 then
-					Unit_set_scalar_for_materials(unit, property_name, property_override_data[1], true)
-				elseif property_override_data_num == 2 then
-					Unit_set_vector2_for_materials(unit, property_name, Vector2(property_override_data[1], property_override_data[2]), true)
-				elseif property_override_data_num == 3 then
-					Unit_set_vector3_for_materials(unit, property_name, Vector3(property_override_data[1], property_override_data[2], property_override_data[3]), true)
-				elseif property_override_data_num == 4 then
-					Unit_set_vector4_for_materials(unit, property_name, Color(property_override_data[1], property_override_data[2], property_override_data[3], property_override_data[4]), true)
-				end
-			end
-		end
-	end
-
-	if material_override_data.texture_overrides ~= nil then
-		for texture_slot, texture_override_data in pairs(material_override_data.texture_overrides) do
-			local resource_by_item = texture_override_data.resource_by_item
-
-			if resource_by_item == nil then
-				if texture_override_data.material_slot == nil then
-					Unit_set_texture_for_materials(unit, texture_slot, texture_override_data.resource, true)
-				else
-					Unit_set_texture_for_material(unit, texture_override_data.material_slot, texture_slot, texture_override_data.resource)
-				end
-			elseif in_editor then
-				local items_array_size = Unit.data_table_size(unit, "attached_item_names") or 0
-
-				for ii = 1, items_array_size do
-					local attached_item_name = Unit.get_data(unit, "attached_item_names", ii)
-					local texture_resource = resource_by_item[attached_item_name]
-
-					if texture_resource then
-						local unit_array_size = Unit.data_table_size(unit, "attached_units_lookup", ii) or 0
-
-						for jj = 1, unit_array_size do
-							local attachment_unit = Unit.get_data(unit, "attached_units_lookup", ii, jj)
-
-							Unit_set_texture_for_materials(attachment_unit, texture_slot, texture_resource, true)
-						end
-					end
-				end
-			else
-				local attachment_item_name = Unit.get_data(unit, "attachment_item_name")
-				local texture_resource = resource_by_item[attachment_item_name]
-
-				if texture_resource then
-					Unit_set_texture_for_materials(unit, texture_slot, texture_resource, true)
-				end
-			end
-		end
-	end
-end
-
 function _apply_material_override_item(unit, material_override_item, in_editor)
 	if material_override_item.scalar_material_overrides ~= nil then
 		for _, property_override_data in pairs(material_override_item.scalar_material_overrides) do
@@ -612,7 +549,7 @@ function _apply_material_override_item(unit, material_override_item, in_editor)
 			local material_slot = texture_override_data.material_slot
 			local resource = texture_override_data.texture
 
-			if material_slot == nil then
+			if material_slot == nil or material_slot == "" then
 				Unit_set_texture_for_materials(unit, texture_slot, resource, true)
 			else
 				Unit_set_texture_for_material(unit, material_slot, texture_slot, resource)
@@ -639,7 +576,7 @@ function _apply_material_override_item(unit, material_override_item, in_editor)
 						for jj = 1, unit_array_size do
 							local attachment_unit = Unit.get_data(unit, "attached_units_lookup", ii, jj)
 
-							if material_slot == nil then
+							if material_slot == nil or material_slot == "" then
 								Unit_set_texture_for_materials(attachment_unit, texture_slot, texture_resource, true)
 							else
 								Unit_set_texture_for_material(attachment_unit, material_slot, texture_slot, texture_resource)
@@ -651,7 +588,7 @@ function _apply_material_override_item(unit, material_override_item, in_editor)
 				local attachment_item_name = Unit.get_data(unit, "attachment_item_name")
 
 				if attachment_item_name == item_key then
-					if material_slot == nil then
+					if material_slot == nil or material_slot == "" then
 						Unit_set_texture_for_materials(unit, texture_slot, texture_resource, true)
 					else
 						Unit_set_texture_for_material(unit, material_slot, texture_slot, texture_resource)

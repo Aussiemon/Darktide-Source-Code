@@ -6,7 +6,7 @@ local Crouch = {}
 
 Crouch.crouch_input = function (input_source, is_crouching, requires_press_to_interrupt, force_hold_to_crouch)
 	local wants_crouch
-	local hold_to_crouch = force_hold_to_crouch or input_source:get("hold_to_crouch")
+	local hold_to_crouch = force_hold_to_crouch or input_source:get("hold_to_crouch") or not input_source:is_human_controlled()
 
 	if hold_to_crouch and (is_crouching or not requires_press_to_interrupt) then
 		wants_crouch = input_source:get("crouching")

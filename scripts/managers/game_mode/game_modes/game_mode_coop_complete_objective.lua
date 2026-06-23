@@ -479,7 +479,7 @@ GameModeCoopCompleteObjective._apply_persistent_player_data = function (self, pl
 				local equipped_abilities = ability_extension:equipped_abilities()
 				local grenade_ability = equipped_abilities.grenade_ability
 
-				if not grenade_ability.exclude_from_persistant_player_data then
+				if grenade_ability and not grenade_ability.exclude_from_persistant_player_data then
 					local max_grenades = ability_extension:max_ability_charges("grenade_ability")
 					local num_grenades = math.round(selected_data.grenades_percent * max_grenades)
 
@@ -624,9 +624,10 @@ GameModeCoopCompleteObjective._tag_enemies_inside_area = function (self, origin,
 		Managers.state.game_session:send_rpc_clients("rpc_client_tag_enemies_inside_area", origin, radius)
 	end
 
-	local outline_system = Managers.state.extension:system("outline_system")
+	local has_outline_system = Managers.state.extension:has_system("outline_system")
 
-	if not DEDICATED_SERVER and outline_system then
+	if not DEDICATED_SERVER and has_outline_system then
+		local outline_system = Managers.state.extension:system("outline_system")
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
 		local broadphase = broadphase_system.broadphase
 		local num_hits = broadphase.query(broadphase, origin, radius, BROADPHASE_RESULTS, DEFAULT_ENEMY_SIDE_NAME)

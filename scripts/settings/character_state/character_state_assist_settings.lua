@@ -21,5 +21,6 @@ character_state_assist_settings.anim_settings = {
 		start_anim_event = "revive_start",
 	},
 }
+character_state_assist_settings.force_assist_duration = 1.5
 
 return settings("CharacterStateAssistSettings", character_state_assist_settings)

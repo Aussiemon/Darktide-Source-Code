@@ -1,19 +1,15 @@
 ﻿-- chunkname: @scripts/foundation/utilities/error.lua
 
-local temp_args = {}
+local _stringified_args = {}
 
-local function format_error_message(message, ...)
-	local num_new_args = select("#", ...)
+local function _format_error_message(format, ...)
+	local num_args = select("#", ...)
 
-	for i = 1, num_new_args do
-		temp_args[i] = tostring(select(i, ...))
+	for i = 1, num_args do
+		_stringified_args[i] = tostring(select(i, ...))
 	end
 
-	for i = num_new_args + 1, #temp_args do
-		temp_args[i] = nil
-	end
-
-	return string.format(message, unpack(temp_args))
+	return string.format(format, unpack(_stringified_args, 1, num_args))
 end
 
 Application.warning = function (...)
@@ -22,7 +18,7 @@ Application.warning = function (...)
 			level = "warning",
 			system = "Lua",
 			type = "message",
-			message = format_error_message(...),
+			message = _format_error_message(...),
 		})
 	end
 end
@@ -33,19 +29,30 @@ Application.error = function (...)
 			level = "error",
 			system = "Lua",
 			type = "message",
-			message = format_error_message(...),
+			message = _format_error_message(...),
 		})
 	end
 end
 
-function fassert(condition, message, ...)
-	if not condition then
-		local error_message = format_error_message(message, ...)
+local function _fassert(condition, ...)
+	if condition then
+		return
 	end
+
+	local error_message = _format_error_message(...)
+
+	return error(error_message)
+end
+
+debug_fassert = _fassert
+release_fassert = _fassert
+
+function fassert(...)
+	return _fassert(...)
 end
 
 function ferror(message, ...)
-	local error_message = format_error_message(message, ...)
+	local error_message = _format_error_message(message, ...)
 
-	error(error_message)
+	return error(error_message)
 end

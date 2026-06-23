@@ -1,8 +1,8 @@
 ﻿-- chunkname: @scripts/ui/views/premium_currency_purchase_view/premium_currency_purchase_view.lua
 
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
+local DLCUtils = require("scripts/utilities/dlc_utils")
 local LoadingStateData = require("scripts/ui/loading_state_data")
-local MasterItems = require("scripts/backend/master_items")
 local PremiumCurrencyPurchaseViewContentBlueprints = require("scripts/ui/views/premium_currency_purchase_view/premium_currency_purchase_view_content_blueprints")
 local PremiumCurrencyPurchaseViewDefinitions = require("scripts/ui/views/premium_currency_purchase_view/premium_currency_purchase_view_definitions")
 local PremiumCurrencyPurchaseViewSettings = require("scripts/ui/views/premium_currency_purchase_view/premium_currency_purchase_view_settings")
@@ -366,7 +366,7 @@ PremiumCurrencyPurchaseView._get_platform = function ()
 
 	if authenticate_method == Managers.backend.AUTH_METHOD_STEAM and HAS_STEAM then
 		return "steam"
-	elseif authenticate_method == Managers.backend.AUTH_METHOD_XBOXLIVE and PLATFORM == "win32" then
+	elseif authenticate_method == Managers.backend.AUTH_METHOD_XBOXLIVE and IS_WINDOWS then
 		return "microsoft"
 	elseif authenticate_method == Managers.backend.AUTH_METHOD_XBOXLIVE and Application.xbox_live and Application.xbox_live() == true then
 		return "microsoft"
@@ -1072,7 +1072,8 @@ PremiumCurrencyPurchaseView._cb_platform_purchase_finished = function (self, ele
 
 		self._purchase_promise = nil
 
-		self:_trigger_platform_purchase_dlc_updates(dlc_updates)
+		DLCUtils.show_reward_notifications(dlc_updates)
+		DLCUtils.update_local_gear_cache(dlc_updates)
 
 		self._success = true
 
@@ -1087,36 +1088,6 @@ PremiumCurrencyPurchaseView._cb_platform_purchase_finished = function (self, ele
 		self:_update_wallets()
 		self:cb_on_back_pressed()
 	end)
-end
-
-PremiumCurrencyPurchaseView._trigger_platform_purchase_dlc_updates = function (self, dlc_updates)
-	for i = 1, #dlc_updates do
-		local dlc = dlc_updates[i]
-
-		for j = 1, #dlc.rewards do
-			local reward = dlc.rewards[j]
-
-			if reward.rewardType == "currency" then
-				self:_trigger_currency_notification(reward.currencyType, reward.amount)
-				Managers.data_service.store:change_cached_wallet_balance(reward.currencyType, reward.amount, true, "PremiumCurrencyPurchaseView")
-			elseif reward.rewardType == "item" then
-				local master_id = reward.masterId
-
-				self:_trigger_item_grant_notification(master_id)
-			end
-		end
-	end
-end
-
-PremiumCurrencyPurchaseView._trigger_currency_notification = function (self, currency_type, amount)
-	Managers.event:trigger("event_add_notification_message", "currency", {
-		currency = currency_type,
-		amount = amount,
-	})
-end
-
-PremiumCurrencyPurchaseView._trigger_item_grant_notification = function (self, master_item_id)
-	Managers.event:trigger("event_add_notification_message", "item_granted", MasterItems.get_item(master_item_id))
 end
 
 PremiumCurrencyPurchaseView.can_handle_input = function (self)

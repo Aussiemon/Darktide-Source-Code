@@ -1,12 +1,11 @@
 ﻿-- chunkname: @scripts/ui/views/character_appearance_view/character_appearance_view_definitions.lua
 
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
-local UIWidget = require("scripts/managers/ui/ui_widget")
 local CharacterAppearanceViewFontStyle = require("scripts/ui/views/character_appearance_view/character_appearance_view_font_style")
-local CharacterAppearanceViewSettings = require("scripts/ui/views/character_appearance_view/character_appearance_view_settings")
-local ColorUtilities = require("scripts/utilities/ui/colors")
+local Colors = require("scripts/utilities/ui/colors")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UIWidget = require("scripts/managers/ui/ui_widget")
+local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	canvas = {
@@ -236,6 +235,62 @@ local scenegraph_definition = {
 	grid_4_scrollbar = {
 		horizontal_alignment = "right",
 		parent = "grid_4_area",
+		vertical_alignment = "center",
+		size = {
+			0,
+			0,
+		},
+		position = {
+			0,
+			0,
+			2,
+		},
+	},
+	grid_5_pivot = {
+		horizontal_alignment = "left",
+		parent = "canvas",
+		vertical_alignment = "top",
+		size = {
+			0,
+			0,
+		},
+		position = {
+			25,
+			200,
+			0,
+		},
+	},
+	grid_5_area = {
+		horizontal_alignment = "left",
+		parent = "grid_5_pivot",
+		vertical_alignment = "top",
+		size = {
+			0,
+			0,
+		},
+		position = {
+			0,
+			0,
+			0,
+		},
+	},
+	grid_5_content = {
+		horizontal_alignment = "left",
+		parent = "grid_5_area",
+		vertical_alignment = "top",
+		size = {
+			0,
+			0,
+		},
+		position = {
+			0,
+			0,
+			0,
+		},
+	},
+	grid_5_scrollbar = {
+		horizontal_alignment = "right",
+		parent = "grid_5_area",
 		vertical_alignment = "center",
 		size = {
 			0,
@@ -539,6 +594,19 @@ local widget_definitions = {
 		},
 	}, "choice_detail"),
 }
+
+local function _create_randomization_legend(required_page, callback_function_name)
+	return {
+		alignment = "right_alignment",
+		display_name = "loc_randomize",
+		input_action = "character_create_randomize",
+		visibility_function = function (parent)
+			return parent._is_character_showing and parent._active_page_name == required_page and not parent._is_barber_appearance and not parent._loading_overlay_visible
+		end,
+		on_pressed_callback = callback_function_name,
+	}
+end
+
 local legend_inputs = {
 	{
 		alignment = "left_alignment",
@@ -555,21 +623,22 @@ local legend_inputs = {
 		on_pressed_callback = "_on_close_pressed",
 		visibility_function = nil,
 	},
-	{
-		alignment = "right_alignment",
-		display_name = "loc_randomize",
-		input_action = "character_create_randomize",
-		on_pressed_callback = "_randomize_character_appearance",
-		visibility_function = function (parent)
-			return parent._is_character_showing and parent._active_page_name == "appearance" and not parent._is_barber_appearance and not parent._loading_overlay_visible
-		end,
-	},
+	_create_randomization_legend("appearance", "_randomize_character_appearance_preset"),
+	_create_randomization_legend("voice", "_randomize_voice_effects"),
 	{
 		alignment = "right_alignment",
 		display_name = "loc_rotate",
 		input_action = "navigate_controller_right",
 		visibility_function = function (parent)
-			return not parent._using_cursor_navigation and parent._is_character_showing and not parent._loading_overlay_visible and not parent._in_barber_chair
+			return not parent._using_cursor_navigation and parent._is_character_showing and not parent._loading_overlay_visible and not parent._in_barber_chair and parent._active_page_name ~= "voice"
+		end,
+	},
+	{
+		alignment = "right_alignment",
+		display_name = "loc_character_create_title_voice",
+		input_action = "navigate_controller_right",
+		visibility_function = function (parent)
+			return not parent._using_cursor_navigation and parent._is_character_showing and not parent._loading_overlay_visible and parent._active_page_name == "voice"
 		end,
 	},
 	{
@@ -630,6 +699,12 @@ local animations = {
 			end,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeOutCubic(progress)
+
+				for ii = 1, #widgets do
+					local widget = widgets[ii]
+
+					widget.alpha_multiplier = anim_progress
+				end
 
 				widgets.transition_fade.alpha_multiplier = 1 - anim_progress
 			end,
@@ -717,7 +792,7 @@ local animations = {
 				planet_size_addition[1] = math_lerp(planet_params.start_x, planet_params.end_x, anim_progress)
 				planet_size_addition[2] = math_lerp(planet_params.start_y, planet_params.end_y, anim_progress)
 
-				ColorUtilities.color_lerp(planet_params.start_color, planet_params.end_color, anim_progress, target_planet_style.color)
+				Colors.color_lerp(planet_params.start_color, planet_params.end_color, anim_progress, target_planet_style.color)
 			end,
 			on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				if parent._reset_background then
@@ -739,7 +814,7 @@ local animations = {
 				for planet_id, style in pairs(planets_widget_style) do
 					local is_target_planet = planet_id == current_planet_id
 
-					ColorUtilities.color_copy(is_target_planet and in_focus_color or out_of_focus_color, style.color)
+					Colors.color_copy(is_target_planet and in_focus_color or out_of_focus_color, style.color)
 				end
 
 				planets_widget.content.current_planet = current_planet
@@ -764,7 +839,7 @@ local animations = {
 						planet_size_addition[1] = math_lerp(planet_params.start_x, planet_params.end_x, anim_progress)
 						planet_size_addition[2] = math_lerp(planet_params.start_y, planet_params.end_y, anim_progress)
 
-						ColorUtilities.color_lerp(planet_params.start_color, planet_params.end_color, anim_progress, style.color)
+						Colors.color_lerp(planet_params.start_color, planet_params.end_color, anim_progress, style.color)
 					end
 				end
 			end,

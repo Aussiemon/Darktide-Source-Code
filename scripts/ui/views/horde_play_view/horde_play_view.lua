@@ -217,7 +217,19 @@ HordePlayView.on_enter = function (self)
 	self._widgets_by_name.play_button.content.hotspot.pressed_callback = callback(self, "_cb_on_mission_start")
 
 	self:fetch_regions()
+	self:_set_offset_page_header_description()
 	self:_set_play_button_game_mode_text(self._solo_play, self._private_match)
+end
+
+HordePlayView._set_offset_page_header_description = function (self)
+	local header_widget = self._widgets_by_name.page_header
+	local header_width = self._ui_scenegraph.page_header.size[1]
+	local header_height = Text.text_height(self._ui_renderer, header_widget.content.text, header_widget.style.text, {
+		header_width,
+		1000,
+	})
+
+	self._widgets_by_name.page_header.style.description.offset[2] = header_height + 20
 end
 
 HordePlayView._cb_on_mission_start = function (self)

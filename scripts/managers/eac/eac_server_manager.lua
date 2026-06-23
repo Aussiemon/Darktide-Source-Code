@@ -116,7 +116,7 @@ EACServerManager._check_peer_status = function (self)
 		local peer_status = EOS.peer_status(channel_id)
 
 		if peer_status == EOS.EOS_ACCCAS_Invalid then
-			local peer_id = Managers.connection:channel_to_peer(channel_id)
+			local peer_id = Network.peer_id(channel_id)
 
 			_info("peer %s has EOS_status: *EOS.EOS_ACCCAS_Invalid*. Server will kick peer", peer_id)
 			self:_kick_player(peer_id, "loc_eac_error_server_auth_eac_failed")

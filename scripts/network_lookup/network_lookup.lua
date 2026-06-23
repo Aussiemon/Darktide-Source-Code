@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/network_lookup/network_lookup.lua
 
 local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
+local AreaOfEffectUnitSpawnerTemplates = require("scripts/extension_systems/area_of_effect/area_of_effect_unit_spawner_templates")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BloodSettings = require("scripts/settings/blood/blood_settings")
 local BotCharacterProfiles = require("scripts/settings/bot_character_profiles")
@@ -20,6 +21,8 @@ local DialogueLookupConcepts = require("scripts/settings/dialogue/dialogue_looku
 local DialogueLookupVoiceProfiles = require("scripts/settings/dialogue/dialogue_lookup_voice_profiles")
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
+local ExpeditionAirstrikes = require("scripts/settings/expeditions/expedition_airstrikes")
+local ExpeditionCollectibles = require("scripts/settings/expeditions/expedition_collectibles")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local FlowEvents = require("scripts/settings/fx/flow_events")
 local HavocSettings = require("scripts/settings/havoc_settings")
@@ -43,9 +46,9 @@ local MissionsObjectiveTargetUiTypeStrings = require("scripts/settings/mission_o
 local MissionsObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
 local MissionsObjectiveUiStrings = require("scripts/settings/mission_objective/mission_objective_ui_strings")
 local MissionSoundEvents = require("scripts/settings/sound/mission_sound_events")
+local MoodSettings = require("scripts/settings/camera/mood/mood_settings")
 local MotionTriggeredExplosivesSettings = require("scripts/settings/motion_triggered_explosives/motion_triggered_explosives_settings")
 local MutatorMinionVisualOverrideSettings = require("scripts/settings/mutator/mutator_mininion_visual_overrides_settings")
-local MoodSettings = require("scripts/settings/camera/mood/mood_settings")
 local OutlineSettings = require("scripts/settings/outline/outline_settings")
 local PackagePrioritizationTemplates = require("scripts/loading/package_prioritization_templates")
 local PartyConstants = require("scripts/settings/network/party_constants")
@@ -65,19 +68,17 @@ local ProjectileTemplates = require("scripts/settings/projectile/projectile_temp
 local SmartTagSettings = require("scripts/settings/smart_tag/smart_tag_settings")
 local SoundEvents = require("scripts/settings/sound/sound_events")
 local SoundEvents2d = require("scripts/settings/sound/2d_sound_events")
+local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
 local TimedExplosivesSettings = require("scripts/settings/timed_explosives/timed_explosives_settings")
 local VfxNames = require("scripts/settings/fx/vfx_names")
-local VotingTemplates = require("scripts/settings/voting/voting_templates")
+local VisualLoadoutExtractData = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_extract_data")
 local VotingFlowSettings = require("scripts/settings/voting/voting_flow_settings")
+local VotingTemplates = require("scripts/settings/voting/voting_templates")
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_traits/weapon_trait_templates")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
-local VisualLoadoutExtractData = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_extract_data")
-local ExpeditionCollectibles = require("scripts/settings/expeditions/expedition_collectibles")
-local ExpeditionAirstrikes = require("scripts/settings/expeditions/expedition_airstrikes")
-local AreaOfEffectUnitSpawnerTemplates = require("scripts/extension_systems/area_of_effect/area_of_effect_unit_spawner_templates")
 
 local function _create_lookup(lookup, hashtable)
 	local existing_keys = {}
@@ -147,7 +148,7 @@ NetworkLookup.chest_states = {
 NetworkLookup.cinematic_scene_names = _create_lookup({}, CinematicSceneSettings.CINEMATIC_NAMES)
 NetworkLookup.circumstance_templates = _create_lookup({}, CircumstanceTemplates)
 NetworkLookup.motion_triggered_explosives_settings = _create_lookup({}, MotionTriggeredExplosivesSettings)
-NetworkLookup.MutatorMinionVisualOverrideSettings = _create_lookup({}, MutatorMinionVisualOverrideSettings)
+NetworkLookup.mutator_minion_visual_override_settings = _create_lookup({}, MutatorMinionVisualOverrideSettings)
 NetworkLookup.corruptor_arm_animation_speed_types = _create_lookup({}, CorruptorSettings.animation_speed_multiplier)
 NetworkLookup.damage_efficiencies = _create_lookup({}, AttackSettings.damage_efficiencies)
 NetworkLookup.damage_profile_templates = _create_lookup({}, DamageProfileTemplates)
@@ -267,6 +268,7 @@ local minion_attack_selection_template_names = {}
 NetworkLookup.minion_attack_selection_template_names = _create_lookup(minion_attack_selection_template_names, MinionAttackSelectionTemplates)
 NetworkLookup.minion_fx_source_names = {
 	"muzzle",
+	"fx_muzzle",
 }
 
 local minion_inventory_slot_names = {}
@@ -359,6 +361,9 @@ local player_character_sounds = {
 	["wwise/events/player/play_player_get_hit_2d_corruption_tick_toughness"] = true,
 	["wwise/events/player/play_player_get_hit_corruption_2d"] = true,
 	["wwise/events/player/play_player_get_hit_corruption_2d_tick"] = true,
+	["wwise/events/player/play_player_get_hit_electricity"] = true,
+	["wwise/events/player/play_player_get_hit_electricity_interact"] = true,
+	["wwise/events/player/play_player_get_hit_electricity_toughness"] = true,
 	["wwise/events/player/play_player_get_hit_fire"] = true,
 	["wwise/events/player/play_player_get_hit_fire_toughness"] = true,
 	["wwise/events/player/play_player_get_hit_heavy_2d"] = true,
@@ -426,6 +431,7 @@ NetworkLookup.respawn_beacon_states = {
 	"spawning",
 }
 NetworkLookup.force_field_unit_names = {
+	"content/characters/player/human/attachments_combat/cryptic_force_field/cryptic_force_field_personal_functional",
 	"content/characters/player/human/attachments_combat/psyker_shield/psyker_shield_flat_functional",
 	"content/characters/player/human/attachments_combat/psyker_shield/shield_wall_functional",
 	"content/characters/player/human/attachments_combat/psyker_shield/shield_sphere_functional",
@@ -473,6 +479,8 @@ NetworkLookup.sound_switch_values = {
 
 table.append(NetworkLookup.sound_switch_values, MaterialQuerySettings.surface_materials)
 
+NetworkLookup.special_rules = _create_lookup({}, SpecialRulesSettings.special_rules)
+NetworkLookup.companion_variant_special_rules = _create_lookup({}, SpecialRulesSettings.companion_variant_special_rules)
 NetworkLookup.surface_materials = table.append({}, MaterialQuerySettings.surface_materials)
 NetworkLookup.surface_hit_types = _create_lookup({}, SurfaceMaterialSettings.hit_types)
 NetworkLookup.timed_explosives = _create_lookup({}, TimedExplosivesSettings)

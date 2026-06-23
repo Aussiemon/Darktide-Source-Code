@@ -115,6 +115,10 @@ PlayerCharacterStateWalking.fixed_update = function (self, unit, dt, t, next_sta
 	move_speed = move_speed * action_move_speed_modifier
 	move_speed = move_speed * move_speed_multiplier
 
+	if wants_move and move_speed == 0 then
+		wants_move = false
+	end
+
 	AcceleratedLocalSpaceMovement.set_wanted_movement(locomotion_steering, move_direction, move_speed, new_x, new_y)
 
 	local previous_frame_state = self._previous_frame_state
@@ -158,6 +162,14 @@ PlayerCharacterStateWalking._check_transition = function (self, unit, t, next_st
 		table.merge(next_state_params, ability_transition_params)
 
 		return ability_transition
+	end
+
+	local weapon_transition, weapon_transition_params = self:_poll_weapon_state_transitions(unit, t)
+
+	if weapon_transition then
+		table.merge(next_state_params, weapon_transition_params)
+
+		return weapon_transition
 	end
 
 	local is_colliding_on_hang_ledge, hang_ledge_unit = self:_should_hang_on_ledge(unit, t)

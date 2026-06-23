@@ -5,6 +5,7 @@ require("scripts/ui/views/base_view")
 local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
 local Definitions = require("scripts/ui/views/store_item_detail_view/store_item_detail_view_definitions")
 local Archetypes = require("scripts/settings/archetype/archetypes")
+local BreedQueries = require("scripts/utilities/breed_queries")
 local Breeds = require("scripts/settings/breed/breeds")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ContentBlueprints = require("scripts/ui/views/store_view/store_view_content_blueprints")
@@ -36,11 +37,6 @@ local ViewElementWallet = require("scripts/ui/view_elements/view_element_wallet/
 local VoiceFxPresetSettings = require("scripts/settings/dialogue/voice_fx_preset_settings")
 local WalletSettings = require("scripts/settings/wallet_settings")
 local StoreItemDetailView = class("StoreItemDetailView", "BaseView")
-local URLTextureLoadStatus = {
-	FAILED = 2,
-	OK = 1,
-	PENDING = 0,
-}
 local BUNDLE_BUTTON_SIZE = {
 	542,
 	160,
@@ -241,7 +237,7 @@ end
 
 StoreItemDetailView._fetch_image_data_async = function (self, url)
 	if url == nil then
-		return Promise.rejected()
+		return Promise.rejected("no valid url found")
 	end
 
 	local url_textures = self._url_textures
@@ -1057,9 +1053,17 @@ StoreItemDetailView._present_bundle = function (self, offer)
 		self:_set_bundle_button_image(texture_data)
 
 		return texture_data
+	end, function (error)
+		self._bundle_image = nil
+
+		return Promise.rejected(error)
 	end)
 
-	self._present_bundle_promise = self._bundle_image_promise:next()
+	self._present_bundle_promise = self._bundle_image_promise:next(function (data)
+		return data
+	end, function (error)
+		return Promise.rejected(error)
+	end)
 
 	self._present_bundle_promise:next(function (texture_data)
 		self._details_widget.style.icon.material_values.texture_map = texture_data.texture
@@ -1122,6 +1126,15 @@ StoreItemDetailView._adjust_background_image_size = function (self, bundle_backg
 		return
 	end
 
+	if image_ratio > 1.5 then
+		bundle_background_widget.style.bundle.size = {
+			BUNDLE_BACKGROUND_SIZE[1] * (1 / image_ratio),
+			BUNDLE_BACKGROUND_SIZE[1],
+		}
+
+		return
+	end
+
 	bundle_background_widget.style.bundle.size = BUNDLE_BACKGROUND_SIZE
 end
 
@@ -1140,8 +1153,7 @@ StoreItemDetailView._present_bundle_with_image = function (self, offer, bundle_b
 
 	self:_create_item_name_widget(title_item, "item_name_pivot", ui_renderer)
 
-	local breed_name = self._presentation_profile and self._presentation_profile.archetype.breed or "human"
-	local default_camera_settings = self._breeds_default_camera_settings[breed_name]
+	local default_camera_settings = self:_default_camera_settings()
 
 	self:_set_initial_viewport_camera_position(default_camera_settings)
 end
@@ -1190,8 +1202,7 @@ StoreItemDetailView._present_item = function (self, item, visual_item)
 	end
 
 	if set_initial_viewport then
-		local breed_name = self._presentation_profile and self._presentation_profile.archetype.breed or "human"
-		local default_camera_settings = self._breeds_default_camera_settings[breed_name]
+		local default_camera_settings = self:_default_camera_settings()
 
 		self:_set_initial_viewport_camera_position(default_camera_settings)
 	end
@@ -1373,14 +1384,18 @@ StoreItemDetailView._setup_side_panel = function (self, element)
 	end
 end
 
-local _inspect_on_multiple = {
+local INSPECT_ON_MULTIPLE = {
 	"WEAPON_SKIN",
 	"GEAR_EXTRA_COSMETIC",
 	"GEAR_HEAD",
 	"GEAR_LOWERBODY",
 	"GEAR_UPPERBODY",
+	"ARMS",
+	"LEGS",
+	"CRYPTIC_ARMS",
+	"CRYPTIC_LEGS",
 }
-local _inspect_on_single = {
+local INSPECT_ON_SINGLE = {
 	"WEAPON_SKIN",
 	"GEAR_EXTRA_COSMETIC",
 }
@@ -1401,7 +1416,7 @@ StoreItemDetailView._should_show_inspect = function (self, element)
 	end
 
 	local multiple_items = #self._all_items > 1
-	local appropriate_list = multiple_items and _inspect_on_multiple or _inspect_on_single
+	local appropriate_list = multiple_items and INSPECT_ON_MULTIPLE or INSPECT_ON_SINGLE
 
 	return table.array_contains(appropriate_list, item_type)
 end
@@ -1645,27 +1660,24 @@ end
 
 StoreItemDetailView._setup_background_world = function (self)
 	local level_settings = StoreItemDetailViewSettings.level_settings
-	local breeds_item_camera_by_slot_id = {}
 
-	self._breeds_item_camera_by_slot_id = breeds_item_camera_by_slot_id
-
-	local breeds_default_camera_settings = {}
-
-	self._breeds_default_camera_settings = breeds_default_camera_settings
+	self._body_sizes_default_camera_settings = {}
+	self._body_sizes_item_camera_by_slot_id = {}
 
 	local starting_camera_unit
+	local player_breeds = BreedQueries.player_breeds_array()
 
-	for breed_name, settings in pairs(Breeds) do
-		local is_player = settings.breed_type == "player"
+	for ii = 1, #player_breeds do
+		local breed = player_breeds[ii]
+		local body_size = breed.body_size
+		local default_camera_event_id = string.format("event_register_%s_cosmetics_preview_default_camera", body_size)
 
-		if is_player then
-			local default_camera_event_id = "event_register_cosmetics_preview_default_camera_" .. breed_name
-
+		if not self[default_camera_event_id] then
 			self[default_camera_event_id] = function (instance, camera_unit)
 				local camera_position = Unit.world_position(camera_unit, 1)
 				local camera_rotation = Unit.world_rotation(camera_unit, 1)
 
-				breeds_default_camera_settings[breed_name] = {
+				instance._body_sizes_default_camera_settings[body_size] = {
 					camera_unit = camera_unit,
 					original_position_boxed = Vector3Box(camera_position),
 					original_rotation_boxed = QuaternionBox(camera_rotation),
@@ -1682,16 +1694,21 @@ StoreItemDetailView._setup_background_world = function (self)
 
 			for slot_name, slot in pairs(ItemSlotSettings) do
 				local is_gear = slot.slot_type == "gear"
+				local is_body = slot.slot_type == "body"
+				local is_companion_gear = slot_name == "slot_companion_gear_full"
+				local valid_player_slot = is_gear and not is_companion_gear
 
-				if is_gear then
-					local item_camera_event_id = "event_register_cosmetics_preview_item_camera_" .. breed_name .. "_" .. slot_name
+				valid_player_slot = valid_player_slot or is_body
+
+				if valid_player_slot then
+					local item_camera_event_id = string.format("event_register_%s_%s_cosmetics_preview_item_camera", body_size, slot_name)
 
 					self[item_camera_event_id] = function (instance, camera_unit)
-						if not breeds_item_camera_by_slot_id[breed_name] then
-							breeds_item_camera_by_slot_id[breed_name] = {}
+						if not instance._body_sizes_item_camera_by_slot_id[body_size] then
+							instance._body_sizes_item_camera_by_slot_id[body_size] = {}
 						end
 
-						breeds_item_camera_by_slot_id[breed_name][slot_name] = camera_unit
+						instance._body_sizes_item_camera_by_slot_id[body_size][slot_name] = camera_unit
 
 						instance:_unregister_event(item_camera_event_id)
 					end
@@ -1833,10 +1850,21 @@ StoreItemDetailView._reset_mannequin = function (self, optional_item)
 	end
 end
 
+local ZOOMABLE_ITEM_TYPES = {
+	ARMS = true,
+	CRYPTIC_ARMS = true,
+	CRYPTIC_LEGS = true,
+	GEAR_EXTRA_COSMETIC = true,
+	GEAR_HEAD = true,
+	GEAR_LOWERBODY = true,
+	GEAR_UPPERBODY = true,
+	LEGS = true,
+}
+
 StoreItemDetailView._can_zoom = function (self)
 	local item_type = table.nested_get(self, "_selected_element", "item", "item_type")
 
-	return self._zoom_delay == 0 and (item_type == "GEAR_EXTRA_COSMETIC" or item_type == "GEAR_HEAD" or item_type == "GEAR_LOWERBODY" or item_type == "GEAR_UPPERBODY") and not self._aquilas_showing
+	return self._zoom_delay == 0 and ZOOMABLE_ITEM_TYPES[item_type] and not self._aquilas_showing
 end
 
 StoreItemDetailView._can_preview_voice = function (self)
@@ -1915,19 +1943,29 @@ StoreItemDetailView._trigger_zoom_logic = function (self, instant, optional_slot
 	local func_ptr = math.easeCubic
 	local profile = self._presentation_profile
 	local archetype = profile and profile.archetype
-	local breed_name = profile and archetype.breed or ""
+	local breed_name = profile and archetype.breed
+	local breed = breed_name and Breeds[breed_name]
+	local body_size = breed and breed.body_size or ""
 	local duration = instant and 0 or 0.4
 
 	self._zoom_delay = duration
 
-	self:_set_camera_item_slot_focus(breed_name, selected_slot_name, duration, func_ptr, self._zoom_level)
+	self:_set_camera_item_slot_focus(body_size, selected_slot_name, duration, func_ptr, self._zoom_level)
 end
 
-StoreItemDetailView._set_camera_item_slot_focus = function (self, breed_name, slot_name, time, func_ptr, zoom_percentage)
+StoreItemDetailView._default_camera_settings = function (self)
+	local breed_name = self._presentation_profile and self._presentation_profile.archetype.breed or "human"
+	local breed = Breeds[breed_name]
+	local body_size = breed.body_size
+
+	return self._body_sizes_default_camera_settings[body_size]
+end
+
+StoreItemDetailView._set_camera_item_slot_focus = function (self, body_size, slot_name, time, func_ptr, zoom_percentage)
 	local world_spawner = self._world_spawner
-	local breeds_item_camera_by_slot_id = self._breeds_item_camera_by_slot_id
-	local breed_item_camera_by_slot_id = breeds_item_camera_by_slot_id[breed_name]
-	local slot_camera = breed_item_camera_by_slot_id and breed_item_camera_by_slot_id[slot_name]
+	local body_sizes_item_camera_by_slot_id = self._body_sizes_item_camera_by_slot_id
+	local body_size_item_camera_by_slot_id = body_sizes_item_camera_by_slot_id[body_size]
+	local slot_camera = body_size_item_camera_by_slot_id and body_size_item_camera_by_slot_id[slot_name]
 
 	world_spawner:interpolate_to_camera(slot_camera, zoom_percentage, time, func_ptr)
 end
@@ -2311,7 +2349,7 @@ StoreItemDetailView._spawn_profile = function (self, profile, initial_rotation, 
 	end
 
 	if disable_rotation_input then
-		self._profile_spawner:disable_rotation_input()
+		self._profile_spawner:disable_rotation_input(true)
 	end
 
 	local spawn_position = Unit.world_position(self._spawn_point_unit, 1)
@@ -2323,7 +2361,6 @@ StoreItemDetailView._spawn_profile = function (self, profile, initial_rotation, 
 end
 
 StoreItemDetailView._update_grid_widgets_on_currency_update = function (self)
-	local grid = self._grid
 	local widgets = self._grid_widgets
 	local widget_count = widgets and #widgets or 0
 
@@ -3070,7 +3107,6 @@ StoreItemDetailView._setup_purchase_button_for_nested_bundle = function (self, p
 
 	self:_update_price_presentation()
 
-	local selected_offer = selected_element.offer
 	local purchase_button_text
 
 	if is_selected_item_owned then
@@ -3389,14 +3425,12 @@ StoreItemDetailView.cb_on_inspect_pressed = function (self)
 
 			profile.loadout[slot_name] = item
 
-			local archetype = profile.archetype
-			local breed_name = archetype.breed
-			local breed = Breeds[breed_name]
-			local state_machine = breed.inventory_state_machine
+			local cloned_archetype = profile.archetype
+			local inventory_state_machine = cloned_archetype.inventory_state_machine
 			local animation_event = item.inventory_animation_event or "inventory_idle_default"
 
 			context.disable_zoom = true
-			context.state_machine = state_machine
+			context.state_machine = inventory_state_machine
 			context.animation_event = animation_event
 			context.wield_slot = slot_name
 		end

@@ -228,9 +228,7 @@ TabbedMenuViewBase.spawn_profile = function (self, profile, visible_on_spawn)
 
 	local archetype_settings = profile.archetype
 	local archetype_name = archetype_settings.name
-	local breed_name = archetype_settings.breed
-	local breed_settings = Breeds[breed_name]
-	local character_creation_state_machine = breed_settings.character_creation_state_machine
+	local character_creation_state_machine = archetype_settings.character_creation_state_machine
 	local animations_per_archetype = world_params.animations_per_archetype
 	local animations_settings = animations_per_archetype[archetype_name]
 	local animation_event = animations_settings.initial_event

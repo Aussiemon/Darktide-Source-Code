@@ -105,8 +105,9 @@ ActionBase._use_ability_charge = function (self, optional_num_charges)
 	local action_settings = self._action_settings
 	local ability_type = action_settings.ability_type
 	local ability_extension = self._ability_extension
+	local charges_used = ability_extension:use_ability_charge(ability_type, optional_num_charges)
 
-	ability_extension:use_ability_charge(ability_type, optional_num_charges)
+	return charges_used
 end
 
 return ActionBase

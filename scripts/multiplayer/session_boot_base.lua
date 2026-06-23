@@ -51,8 +51,8 @@ SessionBootBase.event_object = function (self)
 	return self._event_object
 end
 
-SessionBootBase._set_window_title = function (self, ...)
-	return
+SessionBootBase._update_crashify_properties = function (self, app_type)
+	Crashify.print_property("peer_id", Network.peer_id())
 end
 
 return SessionBootBase

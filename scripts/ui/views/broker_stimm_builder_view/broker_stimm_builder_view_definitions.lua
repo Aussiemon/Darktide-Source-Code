@@ -1021,7 +1021,7 @@ local color_cursor = {
 	255,
 	255,
 }
-local layout_widget_definitions = {
+local layout_node_widget_definitions = {
 	layout_background = UIWidget.create_definition({
 		{
 			pass_type = "texture",
@@ -1070,11 +1070,13 @@ local layout_widget_definitions = {
 		},
 	}, "gamepad_cursor"),
 }
+local layout_widget_definitions = {}
 local animations = {}
 local definitions = {
 	animations = animations,
 	widget_definitions = widget_definitions,
 	layout_widget_definitions = layout_widget_definitions,
+	layout_node_widget_definitions = layout_node_widget_definitions,
 	scenegraph_definition = scenegraph_definition,
 	overlay_scenegraph_definition = overlay_scenegraph_definition,
 }

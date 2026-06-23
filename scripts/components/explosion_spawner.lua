@@ -80,7 +80,7 @@ ExplosionSpawner.create_explosion = function (self)
 	local item_or_nil, origin_slot_or_nil, optional_hit_units_table, optional_attacking_unit_owner_unit, optional_apply_owner_buffs
 	local predicted = false
 
-	Explosion.create_explosion(world, physics_world, explosion_position, Vector3.up(), unit, explosion_template, power_level, charge_level, attack_type, is_critical_strike, ignore_cover, item_or_nil, origin_slot_or_nil, optional_hit_units_table, optional_attacking_unit_owner_unit, optional_apply_owner_buffs, predicted)
+	Explosion.create_explosion(world, physics_world, explosion_position, Quaternion.identity(), unit, explosion_template, power_level, charge_level, attack_type, is_critical_strike, ignore_cover, item_or_nil, origin_slot_or_nil, optional_hit_units_table, optional_attacking_unit_owner_unit, optional_apply_owner_buffs, predicted)
 end
 
 ExplosionSpawner.component_data = {

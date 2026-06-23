@@ -194,7 +194,7 @@ local main_menu_list = {
 	},
 }
 
-if PLATFORM == "win32" then
+if IS_WINDOWS then
 	main_menu_list[#main_menu_list + 1] = {
 		type = "spacing_vertical",
 	}
@@ -424,7 +424,9 @@ local default_list = {
 		type = "button",
 		validation_function = validation_is_in_standard_mission,
 		trigger_function = function ()
-			local context = {
+			local context
+
+			context = {
 				description_text = "loc_popup_description_leave_mission",
 				title_text = "loc_popup_header_leave_mission",
 				options = {
@@ -487,7 +489,12 @@ local default_list = {
 				return false
 			end
 
-			if not data_service_manager.account:has_completed_onboarding() then
+			local player = Managers.player:local_player(1)
+			local real_profile = player:profile()
+			local archetype = real_profile and real_profile.archetype
+			local disable_prologue_skip = archetype and archetype.disable_prologue_skip
+
+			if not data_service_manager.account:has_completed_onboarding() or disable_prologue_skip then
 				return false
 			end
 
@@ -624,7 +631,7 @@ local default_list = {
 		text = "loc_quit_game_display_name",
 		type = "button",
 		validation_function = function ()
-			return PLATFORM == "win32"
+			return IS_WINDOWS
 		end,
 		trigger_function = function ()
 			local context = {

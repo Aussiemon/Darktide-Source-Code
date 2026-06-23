@@ -70,31 +70,45 @@ HealthStationExtension.sync_animations = function (self)
 	end
 end
 
+HealthStationExtension._do_first_frame_setup = function (self)
+	if self._first_frame_setup then
+		return
+	end
+
+	self:_spawn_socket()
+
+	local overrides = Managers.state.circumstance:mission_overrides().health_station
+
+	if overrides and overrides.skip_battery_spawning then
+		return
+	end
+
+	local battery_spawning_mode = self._battery_spawning_mode
+	local should_plug = battery_spawning_mode == "plugged"
+	local should_spawn = should_plug or battery_spawning_mode == "pickup_location"
+
+	if self._use_distribution_pool then
+		should_plug = battery_spawning_mode == "plugged_with_charge" and self._plug_from_distribution
+		should_spawn = true
+	end
+
+	if should_spawn then
+		self:spawn_battery()
+	end
+
+	if should_plug then
+		self:_teleport_battery_to_socket()
+		self:socket_luggable(self._spawned_battery_unit)
+		self:_update_indicators()
+	end
+end
+
 HealthStationExtension.fixed_update = function (self, unit, dt, t)
 	if self._is_server then
 		self:_check_battery_alive()
 
 		if not self._first_frame_setup then
-			self:_spawn_socket()
-
-			local battery_spawning_mode = self._battery_spawning_mode
-			local should_plug = battery_spawning_mode == "plugged"
-			local should_spawn = should_plug or battery_spawning_mode == "pickup_location"
-
-			if self._use_distribution_pool then
-				should_plug = battery_spawning_mode == "plugged_with_charge" and self._plug_from_distribution
-				should_spawn = true
-			end
-
-			if should_spawn then
-				self:spawn_battery()
-			end
-
-			if should_plug then
-				self:_teleport_battery_to_socket()
-				self:socket_luggable(self._spawned_battery_unit)
-				self:_update_indicators()
-			end
+			self:_do_first_frame_setup()
 
 			self._first_frame_setup = true
 		elseif not self:battery_in_slot() then

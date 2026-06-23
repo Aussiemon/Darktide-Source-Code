@@ -148,6 +148,30 @@ GameStateMachine.on_recover = function (self)
 	end
 end
 
+GameStateMachine.on_suspend = function (self)
+	if self._state and self._state.on_suspend then
+		self._state:on_suspend()
+	end
+end
+
+GameStateMachine.on_resume = function (self)
+	if self._state and self._state.on_resume then
+		self._state:on_resume()
+	end
+end
+
+GameStateMachine.on_constrained = function (self, is_constrained)
+	if self._state and self._state.on_constrained then
+		self._state:on_constrained(is_constrained)
+	end
+end
+
+GameStateMachine.on_activate = function (self, is_active)
+	if self._state and self._state.on_activate then
+		self._state:on_activate(is_active)
+	end
+end
+
 GameStateMachine.on_close = function (self)
 	if self._state and self._state.on_close then
 		return self._state:on_close()

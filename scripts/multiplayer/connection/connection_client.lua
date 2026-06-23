@@ -40,7 +40,7 @@ ConnectionClient.init = function (self, event_delegate, engine_lobby, destroy_lo
 		elseif type(jwt_payload.instanceId) == "string" and string.find(jwt_payload.instanceId, "dev") == 1 then
 			self._region = "region-dev"
 		else
-			Log.exception("ConnectionClient", "Broken JWT Ticket, instance id: '%s'", tostring(jwt_payload.instanceId))
+			Log.exception("ConnectionClient", "Broken JWT Ticket, instance id: '%s'", jwt_payload.instanceId)
 		end
 
 		local instance_id = jwt_payload.instanceId
@@ -164,14 +164,6 @@ end
 
 ConnectionClient.has_disconnected = function (self)
 	return self._host_connection:has_disconnected()
-end
-
-ConnectionClient.has_reserved = function (self)
-	return self._host_connection:has_reserved()
-end
-
-ConnectionClient.ready_to_join = function (self)
-	self._host_connection:ready_to_join()
 end
 
 ConnectionClient.boot_complete = function (self)

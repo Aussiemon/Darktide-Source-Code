@@ -244,47 +244,26 @@ end
 
 InventoryWeaponCosmeticsView._equip_items_on_server = function (self)
 	local selected_item = self._selected_item
+	local equip_weapon_skin_promise = Promise:resolved()
+	local equip_trinket_promise = Promise:resolved()
 
-	local function equip_weapon_skin_func()
-		if self._equipped_weapon_skin_name ~= self._starting_weapon_skin_name then
-			return Items.equip_weapon_skin(selected_item, self._equipped_weapon_skin)
-		else
-			return Promise:resolved()
-		end
+	if self._equipped_weapon_skin_name ~= self._starting_weapon_skin_name then
+		equip_weapon_skin_promise = Items.equip_weapon_skin(selected_item, self._equipped_weapon_skin)
 	end
 
-	local function equip_trinket_func()
-		if self._equipped_weapon_trinket_name ~= self._starting_weapon_trinket_name then
-			return Items.equip_weapon_trinket(selected_item, self._equipped_weapon_trinket)
-		else
-			return Promise:resolved()
-		end
+	if self._equipped_weapon_trinket_name ~= self._starting_weapon_trinket_name then
+		equip_trinket_promise = Items.equip_weapon_trinket(selected_item, self._equipped_weapon_trinket)
 	end
 
-	local promises_func = {
-		equip_weapon_skin_func,
-		equip_trinket_func,
-	}
-	local run_equip_promise
+	equip_weapon_skin_promise:next(function (skin_equip_result)
+		equip_trinket_promise:next(function (trinket_equip_result)
+			local gear
 
-	function run_equip_promise(promises_list, index, gears)
-		local promise_func = promises_list[index]
-
-		if promise_func then
-			return promise_func():next(function (result)
-				local gear = result and result.item
-
-				if gear then
-					gears[#gears + 1] = gear
-				end
-
-				local next_index = index + 1
-
-				return run_equip_promise(promises_list, next_index, gears)
-			end)
-		else
-			local modified_item = false
-			local gear = gears[#gears]
+			if trinket_equip_result and trinket_equip_result.item then
+				gear = trinket_equip_result.item
+			elseif skin_equip_result and skin_equip_result.item then
+				gear = skin_equip_result.item
+			end
 
 			if gear then
 				local gear_id = selected_item and selected_item.gear_id
@@ -305,14 +284,12 @@ InventoryWeaponCosmeticsView._equip_items_on_server = function (self)
 
 						profile_synchronizer_host:profile_changed(peer_id, local_player_id)
 					else
-						Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
+						Managers.connection:send_rpc_server("rpc_notify_profile_changed", local_player_id)
 					end
 				end
 			end
-		end
-	end
-
-	run_equip_promise(promises_func, 1, {})
+		end)
+	end)
 end
 
 InventoryWeaponCosmeticsView.event_force_refresh_inventory = function (self)
@@ -918,7 +895,12 @@ InventoryWeaponCosmeticsView._fetch_inventory_items = function (self)
 			self._items_by_slot[slot_name] = items_data[i]
 		end
 	end):catch(function (items_data)
-		self._refresh_in_seconds = 5
+		for i = 1, #items_data do
+			if items_data[i].code and Managers.backend:is_retryable_error_code(items_data[i].code) then
+				self._refresh_in_seconds = 5
+			end
+		end
+
 		self._items_by_slot = {}
 
 		for i = 1, #items_data do
@@ -1604,7 +1586,7 @@ InventoryWeaponCosmeticsView._prepare_layout_data = function (self)
 		local has_locked_penance_track_item = next(locked_penance_track_items_by_name) ~= nil
 		local has_locked_store_item = next(locked_store_items_by_name) ~= nil
 
-		if has_locked_achievement_item or has_locked_store_item or has_locked_penance_track_item then
+		if (has_locked_achievement_item or has_locked_store_item or has_locked_penance_track_item) and layout_count > 0 then
 			layout_count = layout_count + 1
 			layout[layout_count] = {
 				sort_group = 4,

@@ -387,6 +387,7 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 					buff_data.icon = nil
 					buff_data.icon_gradient_map = nil
 					buff_data.stack_count = nil
+					buff_data.show_stack_count = nil
 					buff_data.activated_time = math.huge
 
 					self:_return_widget(widget, ui_renderer)
@@ -467,6 +468,7 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 					buff_data.icon = nil
 					buff_data.icon_gradient_map = nil
 					buff_data.stack_count = nil
+					buff_data.show_stack_count = nil
 					buff_data.activated_time = math.huge
 
 					self:_return_widget(widget, ui_renderer)
@@ -501,7 +503,7 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 				end
 			end
 
-			if stack_count ~= buff_data.stack_count or buff_data.stack_count == nil then
+			if stack_count ~= buff_data.stack_count or buff_data.stack_count == nil or buff_data.show_stack_count ~= show_stack_count then
 				local text_style = style.text
 
 				if not show_stack_count then
@@ -532,6 +534,7 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 				end
 
 				buff_data.stack_count = stack_count
+				buff_data.show_stack_count = show_stack_count
 				widget.dirty = true
 			end
 

@@ -188,7 +188,7 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_increased_power_on_weapon_sp
 				find_value_type = "trait_override",
 				path = {
 					"stat_buffs",
-					stat_buffs.power_level_modifier,
+					stat_buffs.melee_power_level_modifier,
 				},
 			},
 		},
@@ -197,22 +197,22 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_increased_power_on_weapon_sp
 		weapon_trait_bespoke_ogryn_combatblade_p1_increased_power_on_weapon_special_follow_up_hits = {
 			{
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.1,
+					[stat_buffs.melee_power_level_modifier] = 0.15,
 				},
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.15,
+					[stat_buffs.melee_power_level_modifier] = 0.2,
 				},
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.2,
+					[stat_buffs.melee_power_level_modifier] = 0.25,
 				},
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.25,
+					[stat_buffs.melee_power_level_modifier] = 0.3,
 				},
 			},
 		},

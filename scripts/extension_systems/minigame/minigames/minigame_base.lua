@@ -14,6 +14,7 @@ MinigameBase.init = function (self, unit, is_server, seed, wwise_world)
 	self._client_side = false
 	self._current_stage = nil
 	self._state_started = nil
+	self._is_automatic = false
 	self._action_held = nil
 
 	if is_server then
@@ -208,6 +209,10 @@ MinigameBase.unequip_on_exit = function (self)
 	return true
 end
 
+MinigameBase.close_on_sprint = function (self)
+	return false
+end
+
 MinigameBase.unit = function (self)
 	return self._minigame_unit
 end
@@ -332,6 +337,18 @@ end
 
 MinigameBase.progressing = function (self)
 	return false
+end
+
+MinigameBase.automatic_minigame_set_up = function (self, automatic_duration)
+	self._is_automatic = true
+end
+
+MinigameBase.automatic_minigame_on_stop = function (self)
+	self._is_automatic = false
+end
+
+MinigameBase.automatic_minigame_complete_manually = function (self)
+	return true
 end
 
 return MinigameBase

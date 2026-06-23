@@ -87,6 +87,9 @@ state_machine_settings["content/characters/player/human/first_person/animations/
 state_machine_settings["content/characters/player/human/first_person/animations/psyker_shield"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
+state_machine_settings["content/characters/player/human/first_person/animations/cryptic_skull_order_point"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
 state_machine_settings["content/characters/player/ogryn/first_person/animations/unarmed"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
@@ -106,6 +109,9 @@ state_machine_settings["content/characters/player/human/first_person/animations/
 	blend_time = DEFAULT_BLEND_TIME,
 }
 state_machine_settings["content/characters/player/human/first_person/animations/adamant_drone"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
+state_machine_settings["content/characters/player/human/first_person/animations/arc_grenade"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
 state_machine_settings["content/characters/player/ogryn/first_person/animations/artillery_strike"] = {

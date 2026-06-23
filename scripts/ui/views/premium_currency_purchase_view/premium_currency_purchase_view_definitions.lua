@@ -316,13 +316,13 @@ local widget_definitions = {
 				horizontal_alignment = "center",
 				vertical_alignment = "top",
 				color = Color.terminal_frame(128, true),
-				size_addition = {
-					320,
-					140,
+				size = {
+					500,
+					90,
 				},
 				offset = {
 					0,
-					-110,
+					-90,
 					0,
 				},
 			},
@@ -340,12 +340,12 @@ local widget_definitions = {
 				},
 				offset = {
 					0,
-					-110,
+					-90,
 					0,
 				},
-				size_addition = {
-					320,
-					140,
+				size = {
+					500,
+					90,
 				},
 			},
 		},

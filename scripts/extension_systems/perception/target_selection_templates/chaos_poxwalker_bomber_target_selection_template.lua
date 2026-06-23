@@ -39,6 +39,7 @@ target_selection_template.chaos_poxwalker_bomber = function (unit, side, percept
 	local position = POSITION_LOOKUP[unit]
 	local best_score, best_target_unit, closest_distance_sq, closest_z_distance
 	local Vector3_distance_squared = Vector3.distance_squared
+	local too_close_to_switch = false
 
 	if target_units[current_target_unit] then
 		local stickiness = breed.target_stickiness_distance or DEFAULT_STICKINESS_DISTANCE
@@ -54,6 +55,13 @@ target_selection_template.chaos_poxwalker_bomber = function (unit, side, percept
 			local is_new_target = false
 
 			best_score = _calculate_score(breed, unit, current_target_unit, distance_sq - stickiness, is_new_target, debug_target_weighting_or_nil)
+
+			local lock_distance = breed.lock_distance
+			local lock_distance_sq = lock_distance * lock_distance
+
+			if distance_sq < lock_distance_sq then
+				too_close_to_switch = true
+			end
 		end
 	else
 		best_target_unit, closest_distance_sq, closest_z_distance = nil, math.huge, math.huge
@@ -62,7 +70,7 @@ target_selection_template.chaos_poxwalker_bomber = function (unit, side, percept
 
 	local lock_target = perception_component.lock_target
 
-	if not lock_target then
+	if not lock_target and not too_close_to_switch then
 		local taunter_unit = buff_extension:owner_of_buff_with_id("taunted")
 
 		if target_units[taunter_unit] then

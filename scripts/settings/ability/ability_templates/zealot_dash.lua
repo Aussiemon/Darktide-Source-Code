@@ -91,8 +91,10 @@ ability_template.equipped_ability_effect_scripts = {
 	"TargetedDashEffects",
 	"LungeEffects",
 }
-ability_template.targeting_fx = {
-	effect_name = "content/fx/particles/abilities/zealot_dash_charge",
+ability_template.equipped_ability_effect_scripts_tweak_data = {
+	targeting_fx = {
+		effect_name = "content/fx/particles/abilities/zealot_dash_charge",
+	},
 }
 
 return ability_template

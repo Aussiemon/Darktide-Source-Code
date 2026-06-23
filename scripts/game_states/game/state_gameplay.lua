@@ -208,7 +208,7 @@ StateGameplay._update_performance_reporter = function (self, dt, t)
 end
 
 StateGameplay.rpc_player_input_array = function (self, channel_id, local_player_id, ...)
-	local sender = Managers.state.game_session:channel_to_peer(channel_id)
+	local sender = Network.peer_id(channel_id)
 	local player = Managers.player:player(sender, local_player_id)
 
 	player.input_handler:rpc_player_input_array(channel_id, local_player_id, ...)

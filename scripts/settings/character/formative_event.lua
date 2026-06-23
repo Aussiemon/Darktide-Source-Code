@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/character/formative_event.lua
 
+local FORMATIVE_EVENT_CRYPTIC = require("scripts/settings/character/formative_event_cryptic")
 local formative_event_options = {
 	{
 		description = "loc_character_event_01_description",
@@ -54,6 +55,7 @@ local formative_event_options = {
 		visibility = {
 			archetypes = {
 				"zealot",
+				"cryptic",
 			},
 		},
 	},
@@ -335,6 +337,9 @@ local formative_event_options = {
 		},
 	},
 }
+
+table.append(formative_event_options, FORMATIVE_EVENT_CRYPTIC)
+
 local formative_event = {}
 
 for ii = 1, #formative_event_options do

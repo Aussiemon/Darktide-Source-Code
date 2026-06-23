@@ -22,6 +22,12 @@ BreedResourceDependencies.generate = function (breeds, item_definitions)
 			BreedResourceDependencies._resolve_impact_fx(actions_data, TEMP_BREED_RESOURCE_PACKAGES)
 		end
 
+		local effect_template_names = breed_data.effect_template_names
+
+		if effect_template_names then
+			BreedResourceDependencies._resolve_recursive(effect_template_names, item_definitions, TEMP_BREED_RESOURCE_PACKAGES)
+		end
+
 		for resource_name, _ in iterator_func(TEMP_BREED_RESOURCE_PACKAGES, temp_package_names) do
 			TEMP_BREED_RESOURCE_PACKAGES[resource_name] = nil
 			resource_packages[resource_name] = true

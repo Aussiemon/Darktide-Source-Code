@@ -9,6 +9,7 @@ action_handler_settings.abort_sprint = {
 	"vent_overheat",
 	"vent_warp_charge",
 	"inspect",
+	"inspect_3p",
 }
 action_handler_settings.prevent_sprint = {
 	"block",
@@ -19,11 +20,13 @@ action_handler_settings.prevent_sprint = {
 	"throw_luggable",
 	"aim_projectile",
 	"inspect",
+	"inspect_3p",
 }
 action_handler_settings.sprint_requires_press_to_interrupt = {
 	"reload_state",
 	"reload_shotgun",
 	"inspect",
+	"inspect_3p",
 }
 action_handler_settings.no_interruption_for_sprint = {
 	"shoot_pellets",
@@ -36,6 +39,7 @@ action_handler_settings.allowed_action_kinds_during_sprint = {
 	"unwield_to_specific",
 	"unwield",
 	"inspect",
+	"inspect_3p",
 }
 action_handler_settings.disallowed_action_kinds_during_lunge = {
 	"reload_shotgun",

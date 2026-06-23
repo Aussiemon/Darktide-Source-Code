@@ -193,6 +193,14 @@ BossExtension._start_boss_template = function (self, boss_template)
 	self._boss_template = boss_template
 end
 
+BossExtension.set_boss_handler = function (self, boss_handler)
+	self._boss_handler = boss_handler
+end
+
+BossExtension.get_boss_handler = function (self)
+	return self._boss_handler
+end
+
 local ALLOWED_BREEDS = {
 	renegade_twin_captain = true,
 	renegade_twin_captain_two = true,

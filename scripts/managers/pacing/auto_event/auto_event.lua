@@ -4,6 +4,7 @@ local AutoEventsTemplates = require("scripts/managers/pacing/auto_event/template
 local BreedQueries = require("scripts/utilities/breed_queries")
 local LoadedDice = require("scripts/utilities/loaded_dice")
 local NavQueries = require("scripts/utilities/nav_queries")
+local MainPathQueries = require("scripts/utilities/main_path_queries")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local aggro_states = PerceptionSettings.aggro_states
@@ -87,7 +88,7 @@ AutoEvent.request_auto_event = function (self, params, debug_position)
 
 		if debug_position then
 			local ahead_unit, _ = Managers.state.main_path:ahead_unit(1)
-			local ahead_position = POSITION_LOOKUP[ahead_unit]
+			local ahead_position = Unit.local_position(ahead_unit, 1)
 
 			param_table.position = Vector3Box(ahead_position)
 		else
@@ -259,6 +260,33 @@ AutoEvent.remove_unit_from_auto_event_frame_tables = function (self, unit)
 			target_units[last_idx] = nil
 			target_units[unit] = nil
 		end
+	end
+end
+
+AutoEvent.update_event_position = function (self, data)
+	local should_update_event_position = self._template.should_update_event_position
+	local ahead_unit, ahead_travel_distance = Managers.state.main_path:ahead_unit(1)
+	local behind_unit, behind_travel_distance = Managers.state.main_path:behind_unit(1)
+	local ahead_position = ahead_unit and Unit.local_position(ahead_unit, 1)
+	local behind_position = behind_unit and Unit.local_position(behind_unit, 1)
+	local wanted_position
+	local wanted_direction = should_update_event_position.wanted_direction
+	local should_be_offset_from_main_path = should_update_event_position.should_be_offset_from_main_path
+
+	if wanted_direction == "fwd" then
+		if should_be_offset_from_main_path and ahead_travel_distance then
+			wanted_position = MainPathQueries.position_from_distance(ahead_travel_distance + should_be_offset_from_main_path)
+		else
+			wanted_position = ahead_position
+		end
+	elseif should_be_offset_from_main_path and behind_travel_distance then
+		wanted_position = MainPathQueries.position_from_distance(behind_travel_distance + should_be_offset_from_main_path)
+	else
+		wanted_position = behind_position
+	end
+
+	if wanted_position then
+		data.position = Vector3Box(wanted_position)
 	end
 end
 
@@ -446,6 +474,12 @@ AutoEvent.update = function (self, dt, t)
 	local active_events = self._active_events
 
 	for uuid, data in pairs(active_events) do
+		local should_update_event_position = self._template.should_update_event_position
+
+		if should_update_event_position then
+			self:update_event_position(data)
+		end
+
 		if self._template.optional_aggro_all_within_range then
 			self:_try_aggro_nearby_groups(data)
 		end
@@ -594,7 +628,10 @@ AutoEvent.update = function (self, dt, t)
 
 		if data.waves_to_spawn == 0 and not data.frame_skipped then
 			data.frame_skipped = true
-			data.force_skip_time = FORCE_SKIP_CURRENT_WAVE_TIMING + t
+
+			local force_skip_current_wave_timing = self._template.minimum_time_before_forced_spawn or FORCE_SKIP_CURRENT_WAVE_TIMING
+
+			data.force_skip_time = force_skip_current_wave_timing + t
 		end
 	end
 end
@@ -623,7 +660,9 @@ AutoEvent._forced_wave_check = function (self, data, t)
 
 	data.total_alive = total_alive
 
-	if total_alive < MINIUM_AMOUNT_OF_ENEMIES_REQUIRED then
+	local minimum_amount_of_enemies_required = self._template.minimum_amount_of_enemies_required or MINIUM_AMOUNT_OF_ENEMIES_REQUIRED
+
+	if total_alive < minimum_amount_of_enemies_required then
 		return should_force_check
 	else
 		should_force_check = false
@@ -933,19 +972,22 @@ AutoEvent.execute = function (self, physics_world, nav_world, side, target_side,
 
 	local num_spawn_locations = 0
 	local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")
+	local skip_using_minion_spawners = self._template.skip_using_minion_spawners
 
-	for i = 1, #minion_spawner_radius_checks do
-		local radius = minion_spawner_radius_checks[i]
-		local spawners = minion_spawn_system:spawners_in_range(navmesh_position, radius)
+	if not skip_using_minion_spawners then
+		for i = 1, #minion_spawner_radius_checks do
+			local radius = minion_spawner_radius_checks[i]
+			local spawners = minion_spawn_system:spawners_in_range(navmesh_position, radius)
 
-		if spawners then
-			for j = 1, #spawners do
-				nearby_spawners[#nearby_spawners + 1] = spawners[j]
-				num_spawn_locations = num_spawn_locations + 1
-			end
+			if spawners then
+				for j = 1, #spawners do
+					nearby_spawners[#nearby_spawners + 1] = spawners[j]
+					num_spawn_locations = num_spawn_locations + 1
+				end
 
-			if max_spawn_locations <= num_spawn_locations then
-				break
+				if max_spawn_locations <= num_spawn_locations then
+					break
+				end
 			end
 		end
 	end
@@ -983,6 +1025,23 @@ AutoEvent.execute = function (self, physics_world, nav_world, side, target_side,
 		end
 	end
 
+	if num_spawn_locations == 0 and num_spawn_locations < max_spawn_locations and not skip_using_minion_spawners and self._template.spawn_on_terror_events then
+		local spawners = Managers.state.terror_event:get_active_events_spawners()
+		local num_spawners = #spawners
+		local spawn_locations_left = max_spawn_locations - num_spawn_locations
+
+		for i = 1, #spawners do
+			nearby_spawners[#nearby_spawners + 1] = spawners[i]
+			spawn_locations_left = spawn_locations_left - 1
+
+			if spawn_locations_left == 0 then
+				break
+			end
+		end
+
+		num_spawn_locations = math.min(num_spawn_locations + num_spawners, max_spawn_locations)
+	end
+
 	if num_spawn_locations == 0 then
 		Log.info("Auto Event", "\t\t for ambush horde! Failed")
 
@@ -1001,6 +1060,7 @@ AutoEvent.execute = function (self, physics_world, nav_world, side, target_side,
 	end
 
 	local num_spawned = 0
+	local spawns_left = num_to_spawn
 
 	if num_spawn_locations <= num_to_spawn then
 		local spawns_per_location = math.floor(num_to_spawn / num_spawn_locations)
@@ -1010,39 +1070,80 @@ AutoEvent.execute = function (self, physics_world, nav_world, side, target_side,
 			local breed_list = {}
 
 			for j = 1, spawns_per_location do
-				local breed_name = spawn_list[num_spawned + 1]
-
 				num_spawned = num_spawned + 1
+
+				local breed_name = spawn_list[num_spawned]
+
 				breed_list[#breed_list + 1] = breed_name
+				spawns_left = spawns_left - 1
 			end
 
-			local param_table = spawner:request_param_table()
+			if #breed_list > 0 then
+				local param_table = spawner:request_param_table()
 
-			param_table.target_side_id = target_side_id
-			param_table.group_id = group_id
-			param_table.optional_owning_auto_event_id = owning_auto_event_id
+				param_table.target_side_id = target_side_id
+				param_table.group_id = group_id
+				param_table.optional_owning_auto_event_id = owning_auto_event_id
 
-			spawner:add_spawns(breed_list, side_id, param_table)
+				spawner:add_spawns(breed_list, side_id, param_table)
+			end
+		end
+	else
+		for i = 1, #nearby_spawners do
+			local spawns_at_location = math.random(0, spawns_left)
+
+			if spawns_at_location > 0 then
+				local spawner = nearby_spawners[i]
+				local breed_list = {}
+
+				for j = 1, spawns_at_location do
+					num_spawned = num_spawned + 1
+
+					local breed_name = spawn_list[num_spawned]
+
+					breed_list[#breed_list + 1] = breed_name
+					spawns_left = spawns_left - 1
+				end
+
+				if #breed_list > 0 then
+					local param_table = spawner:request_param_table()
+
+					param_table.target_side_id = target_side_id
+					param_table.group_id = group_id
+					param_table.optional_owning_auto_event_id = owning_auto_event_id
+
+					spawner:add_spawns(breed_list, side_id, param_table)
+				end
+
+				if spawns_left == 0 then
+					break
+				end
+			end
 		end
 	end
-
-	local spawns_left = num_to_spawn - num_spawned
 
 	if spawns_left > 0 and #nearby_occluded_positions > 0 then
 		local spawn_rotation = Quaternion.identity()
 		local minion_spawn_manager = Managers.state.minion_spawn
 
-		for i = 1, spawns_left do
+		while spawns_left > 0 do
 			local spawn_position = nearby_occluded_positions[math.random(1, #nearby_occluded_positions)]
 
 			if spawn_position then
-				local breed_name = spawn_list[i]
-				local queue_parameters = minion_spawn_manager:queue_minion_to_spawn(breed_name, spawn_position, spawn_rotation, side_id)
+				local spawns_at_location = math.random(1, spawns_left)
 
-				queue_parameters.optional_aggro_state = aggro_states.aggroed
-				queue_parameters.optional_group_id = group_id
-				queue_parameters.optional_owning_auto_event_id = owning_auto_event_id
-				num_spawned = num_spawned + 1
+				for i = 1, spawns_at_location do
+					num_spawned = num_spawned + 1
+
+					local breed_name = spawn_list[num_spawned]
+					local queue_parameters = minion_spawn_manager:queue_minion_to_spawn(breed_name, spawn_position, spawn_rotation, side_id)
+
+					queue_parameters.optional_aggro_state = aggro_states.aggroed
+					queue_parameters.optional_group_id = group_id
+					queue_parameters.optional_owning_auto_event_id = owning_auto_event_id
+				end
+
+				spawns_left = spawns_left - spawns_at_location
 			end
 		end
 	end

@@ -11,6 +11,7 @@ local Interrupt = require("scripts/utilities/attack/interrupt")
 local Luggable = require("scripts/utilities/luggable")
 local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
+local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local INTERACTION_STATES = InteractionSettings.states
 local INTERRUPT_REASON = "minigame"
 local PlayerCharacterStateMinigame = class("PlayerCharacterStateMinigame", "PlayerCharacterStateBase")
@@ -79,6 +80,8 @@ PlayerCharacterStateMinigame.on_enter = function (self, unit, dt, t, previous_st
 	self._previous_action_one_hold = false
 	self._previous_jump_held = false
 	self._previous_interact_hold = false
+
+	local input_source = ScriptUnit.extension(unit, "input_system")
 end
 
 PlayerCharacterStateMinigame.on_exit = function (self, unit, t, next_state)
@@ -98,7 +101,14 @@ PlayerCharacterStateMinigame.on_exit = function (self, unit, t, next_state)
 	local wielded_slot = inventory_component.wielded_slot
 	local keep_equipped = minigame and not minigame:unequip_on_exit()
 
-	if not keep_equipped then
+	if keep_equipped then
+		local anim_ext = ScriptUnit.extension(unit, "animation_system")
+		local first_person_unit = self._first_person_extension:first_person_unit()
+
+		if Unit.has_animation_event(first_person_unit, "auspex_stop_focus") then
+			anim_ext:anim_event_with_variable_floats_1p("auspex_stop_focus", "attack_speed", 1, "action_time_offset", 0)
+		end
+	else
 		if wielded_slot == "slot_device" then
 			PlayerUnitVisualLoadout.wield_previous_weapon_slot(inventory_component, unit, t)
 		end
@@ -133,17 +143,6 @@ PlayerCharacterStateMinigame.fixed_update = function (self, unit, dt, t, next_st
 	local input_extension = self._input_extension
 	local cancelled = self:_update_input(t, fixed_frame, input_extension) or self._force_cancel
 	local transition = self:_check_transition(unit, t, next_state_params, cancelled, input_extension)
-
-	if transition then
-		local anim_ext = ScriptUnit.extension(unit, "animation_system")
-		local action_time_offset = 0
-		local time_scale = 1
-		local first_person_unit = self._first_person_extension:first_person_unit()
-
-		if Unit.has_animation_event(first_person_unit, "auspex_stop_focus") then
-			anim_ext:anim_event_with_variable_floats_1p("auspex_stop_focus", "attack_speed", time_scale, "action_time_offset", action_time_offset)
-		end
-	end
 
 	return transition
 end
@@ -319,6 +318,18 @@ PlayerCharacterStateMinigame._check_transition = function (self, unit, t, next_s
 
 	if not is_minigame_active then
 		return "walking"
+	end
+
+	local minigame = self._minigame
+	local close_on_sprint = minigame and minigame:close_on_sprint()
+
+	if close_on_sprint then
+		local is_sprinting = false
+		local sprint_input = Sprint.sprint_input(input_source, is_sprinting)
+
+		if sprint_input then
+			return "walking"
+		end
 	end
 
 	return nil

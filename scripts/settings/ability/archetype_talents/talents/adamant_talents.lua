@@ -27,7 +27,7 @@ local archetype_talents = {
 				identifier = "adamant_companion_damage_per_level",
 			},
 		},
-		adamant_command_tog_with_tag = {
+		adamant_command_dog_with_tag = {
 			description = "loc_talent_arbites_mastiff_target_description",
 			display_name = "-",
 			name = "",
@@ -401,8 +401,8 @@ local archetype_talents = {
 					"adamant_whistle",
 				},
 				special_rule_name = {
-					special_rules.adamant_hack_to_allow_grenades,
-					special_rules.adamant_hack_to_allow_grenades,
+					special_rules.hack_to_allow_grenades,
+					special_rules.hack_to_allow_grenades,
 				},
 			},
 		},
@@ -432,8 +432,8 @@ local archetype_talents = {
 					"adamant_whistle",
 				},
 				special_rule_name = {
-					special_rules.adamant_hack_to_allow_grenades,
-					special_rules.adamant_hack_to_allow_grenades,
+					special_rules.hack_to_allow_grenades,
+					special_rules.hack_to_allow_grenades,
 				},
 			},
 			passive = {
@@ -503,8 +503,8 @@ local archetype_talents = {
 					"adamant_whistle",
 				},
 				special_rule_name = {
-					special_rules.adamant_hack_to_allow_grenades,
-					special_rules.adamant_hack_to_allow_grenades,
+					special_rules.hack_to_allow_grenades,
+					special_rules.hack_to_allow_grenades,
 				},
 			},
 		},

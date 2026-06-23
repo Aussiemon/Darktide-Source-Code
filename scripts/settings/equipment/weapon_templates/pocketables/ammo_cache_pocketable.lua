@@ -43,10 +43,12 @@ weapon_template.hud_configuration = {
 	uses_overheat = false,
 }
 weapon_template.breed_anim_state_machine_3p = {
+	cryptic = "content/characters/player/human/third_person/animations/pocketables",
 	human = "content/characters/player/human/third_person/animations/pocketables",
 	ogryn = "content/characters/player/ogryn/third_person/animations/pocketables",
 }
 weapon_template.breed_anim_state_machine_1p = {
+	cryptic = "content/characters/player/human/first_person/animations/pocketables",
 	human = "content/characters/player/human/first_person/animations/pocketables",
 	ogryn = "content/characters/player/ogryn/first_person/animations/pocketables",
 }
@@ -59,6 +61,7 @@ weapon_template.toughness_template = "default"
 weapon_template.swap_pickup_name = "ammo_cache_pocketable"
 weapon_template.give_pickup_name = "ammo_cache_pocketable"
 weapon_template.breed_footstep_intervals = {
+	cryptic = FootstepIntervalsTemplates.pocketable_human,
 	human = FootstepIntervalsTemplates.pocketable_human,
 	ogryn = FootstepIntervalsTemplates.pocketable_ogryn,
 }

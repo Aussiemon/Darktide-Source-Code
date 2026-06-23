@@ -389,6 +389,7 @@ local BELOW = 2
 local LATERAL = 2
 local MAX_STEPS, MAX_TIME = 20, 1.25
 local THROW_TELEPORT_UP_OFFSET = {
+	cryptic = 0.75,
 	human = 0.75,
 	ogryn = 0,
 }

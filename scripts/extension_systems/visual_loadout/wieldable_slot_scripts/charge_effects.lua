@@ -79,7 +79,8 @@ ChargeEffects._run_looping_sfx = function (self, frame)
 	if self._looping_sound_alias then
 		local fx_sources = self._fx_sources
 		local sfx_source_name = charge_effects.sfx_source_name
-		local sfx_source = fx_sources[sfx_source_name]
+		local sfx_is_2d = charge_effects.is_2d
+		local sfx_source = not sfx_is_2d and fx_sources[sfx_source_name] or nil
 
 		self._fx_extension:run_looping_sound(self._looping_sound_alias, sfx_source, nil, frame)
 	end

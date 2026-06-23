@@ -567,6 +567,60 @@ function _inject_armor_impact_fx(damage_type, armor_config)
 	else
 		Log.info("ImpactFxInjector", "Found override for \"nurgle_totem\" impact fx on damage_type: %s", damage_type)
 	end
+
+	local has_prop_electrical_fusebox_01_overrides = armor_config[hit_effect_armor_type.prop_electrical_fusebox_01] ~= nil
+
+	if not has_prop_electrical_fusebox_01_overrides then
+		armor_config[hit_effect_armor_type.prop_electrical_fusebox_01] = {
+			sfx = {
+				damage = {
+					{
+						append_husk_to_event_name = true,
+						event = "wwise/events/weapon/play_fusebox_damage_impact",
+					},
+				},
+				damage_negated = {
+					{
+						append_husk_to_event_name = true,
+						event = "wwise/events/weapon/play_fusebox_damage_negated",
+					},
+				},
+			},
+			vfx = {
+				damage = {
+					{
+						effects = {
+							"content/fx/particles/impacts/armor_penetrate",
+						},
+					},
+					{
+						effects = {
+							"content/fx/particles/weapons/swords/chainsword/impact_metal_slash_01",
+						},
+					},
+					{
+						effects = {
+							"content/fx/particles/impacts/armor_ricochet",
+						},
+					},
+				},
+				damage_negated = {
+					{
+						effects = {
+							"content/fx/particles/impacts/damage_blocked",
+						},
+					},
+					{
+						effects = {
+							"content/fx/particles/impacts/surfaces/impact_metal",
+						},
+					},
+				},
+			},
+		}
+	else
+		Log.info("ImpactFxInjector", "Found override for \"prop_electrical_fusebox_01\" impact fx on damage_type: %s", damage_type)
+	end
 end
 
 function _inject_surface_impact_fx(damage_type, surface_config)

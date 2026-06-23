@@ -32,11 +32,11 @@ local DETAIL_FRAME_Y_OFFSET_BY_CATEGORY = {
 	story = -6,
 }
 local DETAIL_FRAME_SIZE_ADDITION_BY_CATEGORY = {
-	common = 1.6,
-	default = 1.25,
-	event = 1.85,
-	maelstrom = 1.85,
-	story = 1.85,
+	common = 1.15,
+	default = 1,
+	event = 1.2,
+	maelstrom = 1.2,
+	story = 1.5,
 	story_no_bg = 1.25,
 }
 
@@ -505,12 +505,12 @@ do
 			end
 
 			style.selected_frame_detail.size = {
-				tile_size[1],
-				tile_size[2],
+				selected_frame_size[1],
+				selected_frame_size[2],
 			}
 			style.selected_frame_detail.default_size = {
-				tile_size[1],
-				tile_size[2],
+				selected_frame_size[1],
+				selected_frame_size[2],
 			}
 			style.frame_glow.size = {
 				tile_size[1] * size_modifier,

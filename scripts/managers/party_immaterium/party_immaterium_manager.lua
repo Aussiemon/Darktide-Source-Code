@@ -1601,7 +1601,7 @@ PartyImmateriumManager._handle_stay_in_party_voting_started = function (self, vo
 	}
 end
 
-PartyImmateriumManager._handle_stay_in_party_voting_completed = function (self, result)
+PartyImmateriumManager._handle_stay_in_party_voting_completed = function (self, result, votes)
 	local new_party_id = self._active_party_vote.party_id
 	local new_party_invite_token = self._active_party_vote.party_invite_token
 
@@ -1621,7 +1621,7 @@ PartyImmateriumManager._handle_stay_in_party_voting_completed = function (self, 
 	self._active_party_vote = nil
 end
 
-PartyImmateriumManager._handle_stay_in_party_voting_aborted = function (self)
+PartyImmateriumManager._handle_stay_in_party_voting_aborted = function (self, votes)
 	self._active_party_vote = nil
 end
 

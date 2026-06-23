@@ -17,7 +17,7 @@ local function _set_backend_response_success(player, extra_data)
 
 		profile_synchronizer_host:profile_changed(peer_id, local_player_id)
 	elseif connection_manager:is_client() then
-		connection_manager:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
+		connection_manager:send_rpc_server("rpc_notify_profile_changed", local_player_id)
 	end
 
 	return extra_data
@@ -70,7 +70,9 @@ TalentsService.load_icons_for_profile = function (self, profile, reference_name,
 
 	local talents_package_path = archetype.talents_package_path
 
-	load_ids[#load_ids + 1] = Managers.package:load(talents_package_path, reference_name, proxy_cb, prioritize)
+	if talents_package_path then
+		load_ids[#load_ids + 1] = Managers.package:load(talents_package_path, reference_name, proxy_cb, prioritize)
+	end
 
 	local specialization_talent_package_path = archetype.specialization_talent_package_path
 

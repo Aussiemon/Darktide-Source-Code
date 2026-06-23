@@ -14,10 +14,12 @@ weapon_template.actions = {
 	},
 }
 weapon_template.breed_anim_state_machine_3p = {
+	cryptic = "content/characters/player/human/third_person/animations/unarmed_hub",
 	human = "content/characters/player/human/third_person/animations/unarmed_hub",
 	ogryn = "content/characters/player/ogryn/third_person/animations/unarmed_hub",
 }
 weapon_template.breed_anim_state_machine_1p = {
+	cryptic = "content/characters/player/human/first_person/animations/unarmed",
 	human = "content/characters/player/human/first_person/animations/unarmed",
 	ogryn = "content/characters/player/ogryn/first_person/animations/unarmed",
 }
@@ -39,5 +41,13 @@ weapon_template.dodge_template = "ogryn"
 weapon_template.sprint_template = "ogryn_hub"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
+
+weapon_template.action_inspect_3p_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_inspect_3p"
+end
+
+weapon_template.action_inspect_3p_base_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_inspect"
+end
 
 return weapon_template

@@ -11,6 +11,7 @@ local ogryn_gunner = "chaos_ogryn_gunner"
 local ogryn_executor = "chaos_ogryn_executor"
 local elite_shocktrooper = "cultist_shocktrooper"
 local shocktrooper_two = "cultist_shocktrooper"
+local roamer_vanguard = "cultist_vanguard"
 local roamer_packs = {
 	cultist_infected_mix_none = {
 		{
@@ -69,7 +70,8 @@ local roamer_packs = {
 		{
 			weight = 0.5,
 			breeds = {
-				"chaos_ogryn_bulwark",
+				roamer_vanguard,
+				roamer_vanguard,
 				"chaos_newly_infected",
 				"chaos_newly_infected",
 				roamer_melee,
@@ -88,7 +90,8 @@ local roamer_packs = {
 		{
 			weight = 2,
 			breeds = {
-				"chaos_ogryn_bulwark",
+				roamer_vanguard,
+				roamer_vanguard,
 				elite_berzerker,
 				roamer_melee,
 				roamer_melee,
@@ -163,7 +166,8 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
-				"chaos_ogryn_bulwark",
+				roamer_vanguard,
+				roamer_vanguard,
 				roamer_melee,
 				roamer_melee,
 			},
@@ -179,7 +183,7 @@ local roamer_packs = {
 		{
 			weight = 2,
 			breeds = {
-				"chaos_ogryn_bulwark",
+				roamer_vanguard,
 				roamer_melee,
 				elite_berzerker,
 				elite_berzerker,
@@ -198,7 +202,8 @@ local roamer_packs = {
 			weight = 1,
 			breeds = {
 				"chaos_ogryn_executor",
-				"chaos_ogryn_bulwark",
+				roamer_vanguard,
+				roamer_vanguard,
 			},
 		},
 		{
@@ -269,7 +274,8 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
-				"chaos_ogryn_bulwark",
+				roamer_vanguard,
+				roamer_vanguard,
 				elite_berzerker,
 				roamer_assault,
 				roamer_assault,
@@ -417,7 +423,8 @@ local roamer_packs = {
 		{
 			weight = 0.5,
 			breeds = {
-				"chaos_ogryn_bulwark",
+				roamer_vanguard,
+				roamer_vanguard,
 				elite_gunner,
 				elite_gunner,
 				"chaos_ogryn_gunner",

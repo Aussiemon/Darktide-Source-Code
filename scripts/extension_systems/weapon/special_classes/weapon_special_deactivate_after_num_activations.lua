@@ -46,6 +46,10 @@ WeaponSpecialDeactivateAfterNumActivations.on_sweep_action_finish = function (se
 	return
 end
 
+WeaponSpecialDeactivateAfterNumActivations.on_weapon_shout_action_finish = function (self, t, aborted)
+	return
+end
+
 WeaponSpecialDeactivateAfterNumActivations.process_hit = function (self, t, weapon, action_settings, num_hit_enemies, target_is_alive, target_unit, damage, result, damage_efficiency, stagger_result, hit_position, attack_direction, abort_attack, optional_origin_slot)
 	if target_is_alive then
 		self._inventory_slot_component.special_active_start_t = t

@@ -123,6 +123,7 @@ local breed_data = {
 		can_flank = true,
 		choose_furthest_away = true,
 		default_combat_range = "far",
+		should_switch_to_melee_under_weapon_malfunction = true,
 		valid_combat_ranges = {
 			close = true,
 			far = true,

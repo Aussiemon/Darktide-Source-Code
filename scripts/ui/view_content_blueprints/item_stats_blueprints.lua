@@ -51,6 +51,8 @@ local function _scale_stat_value_by_type(value, display_type)
 		value = (1 - 1 / value) * 100
 	elseif display_type == "percentage" then
 		value = value * 100
+	elseif display_type == "angle" then
+		value = math.radians_to_degrees(value)
 	end
 
 	return value
@@ -82,7 +84,7 @@ local default_button_content = {
 	on_pressed_sound = UISoundEvents.default_select,
 }
 
-local function generate_blueprints_function(grid_size, optional_item)
+local function _generate_blueprints_function(grid_size, optional_item)
 	local grid_width = grid_size[1]
 	local equipped_display_name_style = table.clone(UIFontSettings.header_3)
 
@@ -4115,7 +4117,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			size_function = function (parent, element, ui_renderer)
 				local item = element.item
-				local text = Items.class_requirement_text(item)
+				local text = Items.archetype_requirement_text(item)
 				local text_height = Text.text_height(ui_renderer, text, weapon_skin_requirement_style, nil, true)
 				local entry_height = math.max(0, text_height + 10)
 
@@ -4138,7 +4140,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				content.element = element
 
 				local item = element.item
-				local text = Items.class_requirement_text(item)
+				local text = Items.archetype_requirement_text(item)
 
 				content.description = text
 			end,
@@ -5230,6 +5232,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 					stat_value = (1 / stat_value - 1) * 100
 				elseif display_type == "percentage" then
 					stat_value = stat_value * 100
+				elseif display_type == "angle" then
+					value = math.radians_to_degrees(value)
 				end
 
 				local value = signed and stat_value or stat_value * math.sign(stat_value)
@@ -6330,4 +6334,4 @@ local function generate_blueprints_function(grid_size, optional_item)
 	return blueprints
 end
 
-return generate_blueprints_function
+return _generate_blueprints_function

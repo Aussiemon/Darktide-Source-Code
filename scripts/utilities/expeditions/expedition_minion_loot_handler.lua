@@ -2,8 +2,7 @@
 
 local Breeds = require("scripts/settings/breed/breeds")
 local ExpeditionMinionLootSettings = require("scripts/settings/minion_loot/expedition_minion_loot_settings")
-local Text = require("scripts/utilities/ui/text")
-local UISettings = require("scripts/settings/ui/ui_settings")
+local NavQueries = require("scripts/utilities/nav_queries")
 local CLIENT_RPCS = {
 	"rpc_player_loot_stolen",
 	"rpc_minion_dropped_loot",
@@ -94,23 +93,23 @@ ExpeditionMinionLootHandler._client_show_minion_loot_dropped_notification = func
 	})
 end
 
-ExpeditionMinionLootHandler._calculate_loot = function (self, player, unit)
+ExpeditionMinionLootHandler._calculate_loot_steal_amount_by_breed_unit = function (self, unit)
 	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
 	local breed_name = unit_data_ext:breed().name
 	local breed_settings = self:_get_breed_loot_settings_by_name(breed_name)
-	local peer_id = player:peer_id()
-	local player_collected_loot = self._loot_handler:collected_player_loot_by_type(peer_id, "small")
-	local amount_to_steal = math.clamp(player_collected_loot, 0, breed_settings.max_per_opportunity)
+	local team_collected_loot = self._loot_handler:collected_team_loot_by_type("small")
+	local amount_to_steal = math.clamp(team_collected_loot, 0, breed_settings.max_per_opportunity)
 	local breed_id = NetworkLookup.breed_names[breed_name]
 
-	return amount_to_steal, breed_settings, breed_id, peer_id
+	return amount_to_steal, breed_settings, breed_id
 end
 
 ExpeditionMinionLootHandler.steal = function (self, player_unit, unit)
 	local player = Managers.state.player_unit_spawn:owner(player_unit)
 
-	if player then
-		local amount_to_steal, breed_settings, breed_id, peer_id = self:_calculate_loot(player, unit)
+	if player and player:is_human_controlled() then
+		local peer_id = player:peer_id()
+		local amount_to_steal, breed_settings, breed_id = self:_calculate_loot_steal_amount_by_breed_unit(unit)
 		local loot_by_minion = self._loot_by_minion[unit]
 
 		if not loot_by_minion then
@@ -137,7 +136,7 @@ ExpeditionMinionLootHandler.steal = function (self, player_unit, unit)
 			return
 		end
 
-		self._loot_handler:server_deduct_player_loot(peer_id, amount_to_steal)
+		self._loot_handler:server_deduct_loot(amount_to_steal, peer_id)
 
 		local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
 
@@ -165,18 +164,25 @@ end
 ExpeditionMinionLootHandler.insta_drop = function (self, player_unit, unit)
 	local player = Managers.state.player_unit_spawn:owner(player_unit)
 
-	if player then
-		local amount_to_steal, _, breed_id, peer_id = self:_calculate_loot(player, unit)
+	if player and player:is_human_controlled() then
+		local peer_id = player:peer_id()
+		local amount_to_steal, _, breed_id = self:_calculate_loot_steal_amount_by_breed_unit(unit)
 
 		if amount_to_steal == 0 then
 			return
 		end
 
-		self._loot_handler:server_deduct_player_loot(peer_id, amount_to_steal)
+		self._loot_handler:server_deduct_loot(amount_to_steal, peer_id)
 
-		local position = Vector3Box(POSITION_LOOKUP[player_unit])
+		local position = POSITION_LOOKUP[player_unit]
+		local navigation_extension = ScriptUnit.has_extension(player_unit, "navigation_system")
+
+		if navigation_extension then
+			position = navigation_extension:latest_position_on_nav_mesh()
+		end
+
 		local spawn_data = {
-			position = position,
+			position = Vector3Box(position),
 			amount = amount_to_steal,
 			breed_id = breed_id,
 		}
@@ -234,6 +240,14 @@ ExpeditionMinionLootHandler.update = function (self, dt, t)
 					local last_aggroed_state = unit_data.last_aggroed_state
 
 					if last_aggroed_state and last_aggroed_state == "aggroed" then
+						local position = unit_data.position:unbox()
+						local nav_world = Managers.state.nav_mesh:nav_world()
+						local nav_position = NavQueries.position_on_mesh_guaranteed(nav_world, position, 0.5, 0.5) or position
+
+						if nav_position then
+							unit_data.position = Vector3Box(nav_position)
+						end
+
 						self:_drop_loot(unit_data)
 					end
 

@@ -106,8 +106,10 @@ WeaponCustomization._customize = function (self, unit, item_definitions)
 
 	self:_spawn_item_attachments(unit, item_data, skin_data)
 
-	for _, material_override in pairs(item_data.material_overrides) do
-		VisualLoadoutCustomization.apply_material_override(unit, unit, false, material_override, self._in_editor)
+	if item_data.material_overrides then
+		for _, material_override in pairs(item_data.material_overrides) do
+			VisualLoadoutCustomization.apply_material_override(unit, unit, false, material_override, self._in_editor)
+		end
 	end
 
 	if skin_data and skin_data.material_override_items then

@@ -738,6 +738,31 @@ do
 	}
 end
 
+local _counter_pass = {
+	pass_type = "text",
+	style_id = "counter_text",
+	value = "",
+	value_id = "counter_text",
+	style = {
+		font_size = 14,
+		horizontal_alignment = "center",
+		text_horizontal_alignment = "center",
+		text_vertical_alignment = "bottom",
+		vertical_alignment = "bottom",
+		visible = false,
+		offset = {
+			0,
+			20,
+			2,
+		},
+		size = {
+			icon_size,
+			14,
+		},
+		text_color = Color.terminal_text_header(255, true),
+	},
+}
+
 Blueprints.text_icon = {
 	size = {
 		icon_size,
@@ -786,11 +811,13 @@ Blueprints.text_icon = {
 				color = Color.terminal_text_header(255, true),
 			},
 		},
+		_counter_pass,
 	},
 	init = function (parent, widget, config, ui_renderer)
 		local value = config.value
 		local selected = config.selected
 		local is_left = config.is_left
+		local counter_text = config.counter_text
 		local content = widget.content
 		local style = widget.style
 
@@ -803,6 +830,14 @@ Blueprints.text_icon = {
 		if not selected or is_left then
 			style.rect.size[1] = 0
 			style.icon.offset[2] = style.icon.offset[2] + (3 + internal_buffer) / 2
+		end
+
+		if counter_text and counter_text ~= "" then
+			content.counter_text = counter_text
+			style.counter_text.visible = true
+			style.counter_text.text_color = selected and Color.terminal_text_header(255, true) or _disabled_color
+		else
+			style.counter_text.visible = false
 		end
 	end,
 }
@@ -851,11 +886,13 @@ Blueprints.texture_icon = {
 				color = Color.terminal_text_header(255, true),
 			},
 		},
+		_counter_pass,
 	},
 	init = function (parent, widget, config, ui_renderer)
 		local value = config.value
 		local selected = config.selected
 		local is_left = config.is_left
+		local counter_text = config.counter_text
 		local content = widget.content
 		local style = widget.style
 
@@ -868,6 +905,14 @@ Blueprints.texture_icon = {
 		if not selected or is_left then
 			style.rect.size[1] = 0
 			style.icon.offset[2] = style.icon.offset[2] + (3 + internal_buffer) / 2
+		end
+
+		if counter_text and counter_text ~= "" then
+			content.counter_text = counter_text
+			style.counter_text.visible = true
+			style.counter_text.text_color = selected and Color.terminal_text_header(255, true) or _disabled_color
+		else
+			style.counter_text.visible = false
 		end
 	end,
 }

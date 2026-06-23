@@ -18,9 +18,12 @@ ProfileSynchronizerHost.init = function (self, event_delegate)
 	self._connected_peers = {}
 	self._registered_channel_ids = {}
 	self._profile_sync_states = {}
+	self._profile_sync_hashes = {}
 	self._profile_updates = {}
 	self._initial_syncs = {}
 	self._delayed_profile_changes = {}
+	self._sync_hash_generator = math.random(2147483647)
+	self._sync_hash_counter = 1
 end
 
 ProfileSynchronizerHost.register_rpcs = function (self, channel_id)
@@ -37,23 +40,37 @@ ProfileSynchronizerHost.register_rpcs = function (self, channel_id)
 	self._rpc_queues[channel_id] = RPCQueue:new(channel_id, rpc_queue_settings)
 end
 
-ProfileSynchronizerHost.sync_player_profile = function (self, channel_id, peer_id, local_player_id, profile_chunks)
+ProfileSynchronizerHost.sync_player_profile = function (self, channel_id, sync_peer_id, sync_local_player_id, profile_chunks)
 	local rpc_queue = self._rpc_queues[channel_id]
-	local new_sync_state = self:_update_sync_states(channel_id, peer_id, local_player_id)
+	local new_sync_state = self:_update_sync_states(channel_id, sync_peer_id, sync_local_player_id)
 
 	if new_sync_state == SYNC_STATES.syncing_need_resync or new_sync_state == SYNC_STATES.initial_synced then
 		return
 	end
 
-	rpc_queue:queue_rpc("rpc_start_profile_sync", peer_id, local_player_id)
+	local peer_id = Network.peer_id(channel_id)
+
+	if not self._profile_sync_hashes[peer_id] then
+		self._profile_sync_hashes[peer_id] = {}
+	end
+
+	local sync_hash = Application.make_hash(self._sync_hash_generator, self._sync_hash_counter, channel_id, sync_peer_id, sync_local_player_id)
+
+	self._profile_sync_hashes[peer_id][sync_hash] = {
+		sync_peer_id = sync_peer_id,
+		sync_local_player_id = sync_local_player_id,
+	}
+	self._sync_hash_counter = self._sync_hash_counter + 1
+
+	rpc_queue:queue_rpc("rpc_start_profile_sync", sync_peer_id, sync_local_player_id)
 
 	for j = 1, #profile_chunks do
 		local profile_chunk = profile_chunks[j]
 
-		rpc_queue:queue_rpc("rpc_sync_player_profile_data", peer_id, local_player_id, profile_chunk)
+		rpc_queue:queue_rpc("rpc_sync_player_profile_data", sync_peer_id, sync_local_player_id, profile_chunk)
 	end
 
-	rpc_queue:queue_rpc("rpc_profile_sync_complete", peer_id, local_player_id)
+	rpc_queue:queue_rpc("rpc_profile_sync_complete", sync_hash, sync_peer_id, sync_local_player_id)
 end
 
 ProfileSynchronizerHost._handle_player_profile_synced = function (self, channel_id, peer_states, profile_peer_id, profile_local_player_id)
@@ -459,6 +476,7 @@ ProfileSynchronizerHost.peer_disconnected = function (self, peer_id, channel_id)
 	self._initial_syncs[channel_id] = nil
 	self._connected_peers[peer_id] = nil
 	self._profile_updates[peer_id] = nil
+	self._profile_sync_hashes[peer_id] = nil
 end
 
 ProfileSynchronizerHost.update = function (self, dt)
@@ -527,8 +545,18 @@ ProfileSynchronizerHost.destroy = function (self)
 	self._rpc_queues = nil
 end
 
-ProfileSynchronizerHost.rpc_player_profile_synced = function (self, channel_id, profile_peer_id, profile_local_player_id)
+ProfileSynchronizerHost.rpc_player_profile_synced = function (self, channel_id, sync_hash)
 	local peer_id = Network.peer_id(channel_id)
+
+	if not self._profile_sync_hashes[peer_id] or not self._profile_sync_hashes[peer_id][sync_hash] then
+		return
+	end
+
+	local sync_data = self._profile_sync_hashes[peer_id][sync_hash]
+	local profile_peer_id = sync_data.sync_peer_id
+	local profile_local_player_id = sync_data.sync_local_player_id
+
+	self._profile_sync_hashes[peer_id][sync_hash] = nil
 
 	if not self._profile_sync_states[profile_peer_id] and profile_peer_id ~= self._peer_id then
 		return
@@ -552,7 +580,8 @@ ProfileSynchronizerHost.rpc_player_profile_synced = function (self, channel_id, 
 	self:_handle_player_profile_synced(channel_id, peer_states, profile_peer_id, profile_local_player_id)
 end
 
-ProfileSynchronizerHost.rpc_notify_profile_changed = function (self, channel_id, peer_id, local_player_id)
+ProfileSynchronizerHost.rpc_notify_profile_changed = function (self, channel_id, local_player_id)
+	local peer_id = Network.peer_id(channel_id)
 	local player = Managers.player:player(peer_id, local_player_id)
 
 	if not Managers.mechanism:profile_changes_are_allowed() then

@@ -15,8 +15,9 @@ local ViewElementInventoryWeaponPreview = class("ViewElementInventoryWeaponPrevi
 
 ViewElementInventoryWeaponPreview.init = function (self, parent, draw_layer, start_scale, context)
 	local definitions = require(definition_path)
+	local class_name = self.__class_name
 
-	self._reference_name = "ViewElementInventoryWeaponPreview_" .. tostring(self)
+	self._reference_name = class_name .. "_" .. string.gsub(tostring(self), "table: ", "")
 
 	ViewElementInventoryWeaponPreview.super.init(self, parent, draw_layer, start_scale, definitions)
 
@@ -38,8 +39,13 @@ ViewElementInventoryWeaponPreview._setup_background_gui = function (self)
 	local world_layer = WORLD_LAYER_BACKGROUND + self._draw_layer
 	local world_name = reference_name .. "_ui_background_world"
 	local view_name = self._parent.view_name
+	local flags = {
+		Application.DISABLE_PHYSICS,
+		Application.ENABLE_RAY_TRACING,
+		Application.ENABLE_VOLUMETRICS,
+	}
 
-	self._background_world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+	self._background_world = ui_manager:create_world(world_name, world_layer, timer_name, view_name, flags)
 
 	local shading_environment = "content/shading_environments/ui/ui_popup_background"
 	local shading_callback = callback(self, "cb_background_shading_callback")

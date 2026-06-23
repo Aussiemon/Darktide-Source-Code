@@ -30,6 +30,7 @@ _create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_pox
 _create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_poxwalker_bomber_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_spawn_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/cultist/cultist_assault_actions")
+_create_breed_action_entry("scripts/settings/breed/breed_actions/cultist/cultist_vanguard_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/cultist/cultist_berzerker_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/cultist/cultist_captain_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/cultist/cultist_flamer_actions")
@@ -56,11 +57,13 @@ _create_breed_action_entry("scripts/settings/breed/breed_actions/renegade/renega
 _create_breed_action_entry("scripts/settings/breed/breed_actions/renegade/renegade_sniper_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/renegade/renegade_twin_captain_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/renegade/renegade_twin_captain_two_actions")
+_create_breed_action_entry("scripts/settings/breed/breed_actions/renegade/renegade_vanguard_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/vortex/sand_vortex_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/flies/nurgle_flies_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/valkyrie/attack_valkyrie_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/companion/companion_dog_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/companion/companion_dog_hub_actions")
+_create_breed_action_entry("scripts/settings/breed/breed_actions/companion/companion_servo_skull_actions")
 
 for _, actions_data in pairs(breed_actions) do
 	for action_name, action_data in pairs(actions_data) do

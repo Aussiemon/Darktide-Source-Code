@@ -255,7 +255,7 @@ damage_templates.psyker_smite_heavy = {
 		attack = 120,
 		impact = 8,
 	},
-	wounds_template = WoundsTemplates.psyker_ball,
+	wounds_template = WoundsTemplates.force_projectile,
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default,

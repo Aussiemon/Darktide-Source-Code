@@ -8,6 +8,7 @@ local CLIENT_RPCS = {
 	"rpc_health_station_hot_join",
 	"rpc_health_station_on_socket_spawned",
 	"rpc_health_station_sync_charges",
+	"rpc_health_station_despawn",
 }
 local DISTRIBUTION_CHARGES_PER_STATION = {
 	2.5,
@@ -39,6 +40,20 @@ end
 HealthStationSystem.on_gameplay_post_init = function (self, level)
 	if self._is_server then
 		self:_distribute_charges_to_stations()
+	end
+end
+
+HealthStationSystem.on_location_setup = function (self)
+	if self._is_server then
+		local mission_settings_health_station = self._mission_settings_health_station
+
+		if mission_settings_health_station then
+			local unit_to_extension_map = self._unit_to_extension_map
+
+			for _, extension in pairs(unit_to_extension_map) do
+				extension:sync_charge_amount()
+			end
+		end
 	end
 end
 
@@ -96,6 +111,13 @@ HealthStationSystem._distribute_charges_to_stations = function (self)
 				}
 			else
 				local charges = extension:charge_amount()
+
+				if mission_settings_health_station.remove_plugged_charges then
+					extension:set_charge_amount(0)
+					extension:sync_charge_amount()
+
+					charges = 0
+				end
 
 				extension:track_for_telemetry(charges, true)
 			end
@@ -205,6 +227,21 @@ HealthStationSystem.rpc_health_station_sync_charges = function (self, channel_id
 	local health_station_extension = self._unit_to_extension_map[unit]
 
 	health_station_extension:set_charge_amount(charge_amount)
+end
+
+HealthStationSystem.rpc_health_station_despawn = function (self, channel_id, level_unit_id)
+	local unit_spawner_manager = Managers.state.unit_spawner
+	local unit = unit_spawner_manager:unit(level_unit_id, true)
+
+	if not unit or not Unit.alive(unit) then
+		return
+	end
+
+	if unit_spawner_manager:is_marked_for_deletion(unit) then
+		return
+	end
+
+	unit_spawner_manager:mark_for_deletion(unit)
 end
 
 return HealthStationSystem

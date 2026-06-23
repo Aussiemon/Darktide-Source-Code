@@ -231,7 +231,7 @@ PartyImmateriumMissionSessionBoot.update = function (self, dt)
 end
 
 PartyImmateriumMissionSessionBoot.result = function (self)
-	self:_set_window_title("client %s", Network.peer_id())
+	self:_update_crashify_properties("client")
 
 	local connection_client = self._connection_client
 

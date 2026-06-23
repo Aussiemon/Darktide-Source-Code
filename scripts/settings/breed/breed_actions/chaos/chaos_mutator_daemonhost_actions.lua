@@ -184,6 +184,7 @@ local action_data = {
 				},
 			},
 			[STAGES.about_to_wake_up] = {
+				full_health_required = true,
 				anim_events = {
 					"alerted_2",
 				},

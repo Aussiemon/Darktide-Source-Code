@@ -87,6 +87,10 @@ WeaponSpecialBlockCharges.on_exit_damage_window = function (self, t, num_hit_ene
 	return
 end
 
+WeaponSpecialBlockCharges.on_weapon_shout_action_finish = function (self, t, aborted)
+	return
+end
+
 implements(WeaponSpecialBlockCharges, WeaponSpecialInterface)
 
 return WeaponSpecialBlockCharges

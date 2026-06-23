@@ -22,6 +22,18 @@ string.split = function (str, sep)
 	return array
 end
 
+string.fixed_split = function (str, sep, start_index)
+	start_index = start_index or 1
+
+	local i, j = string.find(str, sep, start_index, true)
+
+	if i then
+		return sub(str, start_index, i - 1), string.fixed_split(str, sep, j + 1)
+	else
+		return sub(str, start_index)
+	end
+end
+
 string.double_dash_split = function (str)
 	local array = {}
 	local dash_byte = string.byte("-")

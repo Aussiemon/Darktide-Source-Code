@@ -151,6 +151,9 @@ burning_settings.buff_effects = {
 				},
 			},
 		},
+		phosphor = {
+			ailment_effect = ailment_effects.phosphor,
+		},
 	},
 }
 

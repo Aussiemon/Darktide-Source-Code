@@ -76,34 +76,6 @@ local scenegraph_definition = {
 			1,
 		},
 	},
-	category_panel_pivot = {
-		horizontal_alignment = "center",
-		parent = "grid_background",
-		vertical_alignment = "top",
-		size = {
-			0,
-			0,
-		},
-		position = {
-			0,
-			-70,
-			1,
-		},
-	},
-	category_panel_background = {
-		horizontal_alignment = "center",
-		parent = "category_panel_pivot",
-		vertical_alignment = "top",
-		size = {
-			500,
-			61,
-		},
-		position = {
-			0,
-			-12,
-			1,
-		},
-	},
 	page_panel_pivot = {
 		horizontal_alignment = "center",
 		parent = "grid_background",
@@ -115,6 +87,49 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
+			1,
+		},
+	},
+	category_panel_pivot = {
+		horizontal_alignment = "left",
+		parent = "screen",
+		vertical_alignment = "top",
+		size = {
+			0,
+			0,
+		},
+		position = {
+			120,
+			0,
+			1,
+		},
+	},
+	sub_category_panel_background = {
+		horizontal_alignment = "left",
+		parent = "screen",
+		scale = "fit_width",
+		vertical_alignment = "top",
+		size = {
+			1920,
+			60,
+		},
+		position = {
+			0,
+			85,
+			1,
+		},
+	},
+	sub_category_panel_pivot = {
+		horizontal_alignment = "left",
+		parent = "sub_category_panel_background",
+		vertical_alignment = "top",
+		size = {
+			0,
+			0,
+		},
+		position = {
+			120,
+			10,
 			1,
 		},
 	},
@@ -186,12 +201,12 @@ local scenegraph_definition = {
 		},
 	},
 	get_dlc_button = {
-		horizontal_alignment = "left",
+		horizontal_alignment = "right",
 		parent = "screen",
 		vertical_alignment = "top",
 		size = ButtonPassTemplates.aquila_button.size,
 		position = {
-			100,
+			-500,
 			5,
 			12,
 		},
@@ -425,7 +440,27 @@ local widget_definitions = {
 	}, "aquilas_background", {
 		visible = false,
 	}),
-	category_panel_background = UIWidget.create_definition({
+	sub_category_panel_background = UIWidget.create_definition({
+		{
+			pass_type = "texture",
+			style_id = "divider_top",
+			value = "content/ui/materials/dividers/skull_rendered_03_divider",
+			value_id = "divider_bottom",
+			style = {
+				horizontal_alignment = "center",
+				scale_to_material = true,
+				vertical_alignment = "top",
+				size = {
+					nil,
+					26,
+				},
+				offset = {
+					0,
+					-2,
+					2,
+				},
+			},
+		},
 		{
 			pass_type = "texture",
 			value = "content/ui/materials/backgrounds/terminal_basic",
@@ -447,22 +482,25 @@ local widget_definitions = {
 		},
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/frames/premium_store/tabs",
+			style_id = "divider_bottom",
+			value = "content/ui/materials/dividers/skull_rendered_03_divider",
+			value_id = "divider_bottom",
 			style = {
 				horizontal_alignment = "center",
 				scale_to_material = true,
-				size_addition = {
-					490,
-					0,
+				vertical_alignment = "bottom",
+				size = {
+					nil,
+					26,
 				},
 				offset = {
 					0,
-					0,
-					1,
+					6,
+					2,
 				},
 			},
 		},
-	}, "category_panel_background", {
+	}, "sub_category_panel_background", {
 		visible = false,
 	}),
 	grid_interaction = UIWidget.create_definition({
@@ -538,11 +576,6 @@ local widget_definitions = {
 					0,
 				},
 			},
-		},
-		{
-			pass_type = "text",
-			value = Localize("loc_premium_store_main_title"),
-			style = emporium_font_style,
 		},
 	}, "screen"),
 	aquila_button = UIWidget.create_definition(ButtonPassTemplates.aquila_button, "aquila_button", {

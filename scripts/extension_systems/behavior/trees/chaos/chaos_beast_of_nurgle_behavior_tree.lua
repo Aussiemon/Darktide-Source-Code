@@ -160,7 +160,9 @@ local behavior_tree = {
 	{
 		"BtExitSpawnerAction",
 		condition = "is_exiting_spawner",
+		exit_state = "base",
 		name = "exit_spawner",
+		state = "exiting_spawner",
 		action_data = action_data.exit_spawner,
 	},
 	{

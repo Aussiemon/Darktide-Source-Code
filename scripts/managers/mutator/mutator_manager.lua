@@ -128,6 +128,53 @@ MutatorManager.activate_mutator = function (self, mutator_name)
 	mutator:activate()
 end
 
+MutatorManager.load_mutator_from_name = function (self, mutator_name)
+	local existing = self._mutators[mutator_name]
+
+	if existing then
+		Log.warning("MutatorManager", "load_mutator_from_name: Mutator(%s) is already loaded.", mutator_name)
+
+		return existing
+	end
+
+	local mutator_template = MutatorTemplates[mutator_name]
+
+	if not mutator_template then
+		Log.warning("MutatorManager", "load_mutator_from_name: Mutator(%s) does not exist.", mutator_name)
+
+		return nil
+	end
+
+	local mutator_class = require(mutator_template.class)
+	local mutator = mutator_class:new(self._is_server, self._network_event_delegate, mutator_template, self._nav_world, self._world, self._level_seed)
+
+	self._mutators[mutator_name] = mutator
+
+	if mutator_template.activate_on_load then
+		self:activate_mutator(mutator_name)
+	end
+
+	return mutator
+end
+
+MutatorManager.unload_mutator_from_name = function (self, mutator_name)
+	local mutator = self._mutators[mutator_name]
+
+	if not mutator then
+		Log.warning("MutatorManager", "unload_mutator_from_name: Mutator(%s) is not loaded.", mutator_name)
+
+		return
+	end
+
+	if mutator:is_active() then
+		mutator:deactivate()
+	end
+
+	mutator:delete()
+
+	self._mutators[mutator_name] = nil
+end
+
 MutatorManager.deactivate_mutator = function (self, mutator_name)
 	local mutator = self._mutators[mutator_name]
 

@@ -289,6 +289,7 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 			local stagger_component = target_blackboard.stagger
 
 			if stagger_component then
+				target_stagger_count = stagger_component.count
 				num_triggered_staggers = stagger_component.num_triggered_staggers
 				was_staggered_before_attack = num_triggered_staggers > 0
 
@@ -311,7 +312,9 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 			damage_immune = damage_immune or random_damage_immune
 		end
 
-		if damage_immune or untargetable then
+		local is_prop_invulnerable = target_breed_or_nil and target_breed_or_nil.breed_type == "objective_prop" and ScriptUnit.extension(attacked_unit, "health_system"):is_invulnerable()
+
+		if damage_immune or untargetable or is_prop_invulnerable then
 			calculated_damage = 0
 			damage_efficiency = "negated"
 		else
@@ -359,7 +362,7 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 	attack_result, damage_dealt, damage_absorbed, damage, permanent_damage, one_hit_kill, actual_damage_dealt = _handle_attack(is_server, instakill, target_is_assisted, target_is_hogtied, attacked_unit, target_breed_or_nil, calculated_damage, attacking_unit, attacking_unit_owner_unit, hit_zone_name, damage_profile, attack_direction, hit_actor, attack_type, herding_template, is_critical_strike, hit_world_position, damage_type, target_weapon_template, target_buff_extension, unit_data_extension, wounds_shape, attacker_buff_extension, target_index)
 
 	if is_server then
-		stagger_result, stagger_type = HitReaction.apply(damage_profile, damage_profile_lerp_values, target_weapon_template, target_breed_or_nil, target_buff_extension, attack_result, attacked_unit, attacking_unit, attack_direction, hit_world_position, target_settings, power_level, charge_level, is_critical_strike, effective_backstab, effective_flanking, hit_weakspot, dropoff_scalar, attack_type, herding_template, hit_shield)
+		stagger_result, stagger_type = HitReaction.apply(damage_profile, damage_profile_lerp_values, target_weapon_template, target_breed_or_nil, target_buff_extension, attack_result, attacked_unit, attacking_unit, attack_direction, hit_world_position, target_settings, power_level, charge_level, is_critical_strike, effective_backstab, effective_flanking, hit_weakspot, dropoff_scalar, attack_type, herding_template, hit_shield, damage_type)
 	end
 
 	if was_alive_at_attack_start and target_breed_or_nil then
@@ -488,10 +491,10 @@ function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogt
 			damage_absorbed = 0
 			result = attack_results.dodged
 		else
-			local is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacking_unit_stat_buffs = DamageTakenCalculation.calculation_parameters(attacked_unit, target_breed_or_nil, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor, attacker_buff_extension, attack_type)
+			local is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacking_unit_stat_buffs, shield_template = DamageTakenCalculation.calculation_parameters(attacked_unit, target_breed_or_nil, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor, attacker_buff_extension, attack_type)
 			local tougness_damage
 
-			result, damage, permanent_damage, tougness_damage, damage_absorbed = DamageTakenCalculation.calculate_attack_result(calculated_damage, damage_profile, attack_type, attack_direction, instakill, is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacked_unit, damage_type, attacking_unit_stat_buffs)
+			result, damage, permanent_damage, tougness_damage, damage_absorbed = DamageTakenCalculation.calculate_attack_result(calculated_damage, damage_profile, attack_type, attack_direction, instakill, is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacked_unit, damage_type, attacking_unit_stat_buffs, shield_template)
 			damage_dealt = damage + permanent_damage
 			one_hit_kill = result == attack_results.died and max_health <= damage_dealt and current_health_damage <= 0
 
@@ -601,6 +604,49 @@ function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, 
 
 			attacker_owner_buff_extension_or_nil:add_proc_event(proc_events.on_hit, attacker_param_table)
 			_add_buffs_to_target(t, target_buff_extension_or_nil, attacking_owner_unit, damage_profile_buffs, proc_events.on_hit)
+		end
+	end
+
+	if should_proc and attacker_owner_buff_extension_or_nil and damage_profile.on_weapon_special_hit_proc and not _already_procced(triggered_proc_events_or_nil, proc_events.on_bleed_on_activated_hit_trait_hit) then
+		local attacker_param_table = attacker_owner_buff_extension_or_nil:request_proc_event_param_table()
+
+		if attacker_param_table then
+			attacker_param_table.alternative_fire = alternative_fire
+			attacker_param_table.attack_direction = attack_direction_box
+			attacker_param_table.attack_instigator_unit = attacking_unit
+			attacker_param_table.attack_instigator_unit_breed_name = attacker_breed_or_nil and attacker_breed_or_nil.name
+			attacker_param_table.attack_type = attack_type
+			attacker_param_table.attacked_unit = attacked_unit
+			attacker_param_table.attacking_unit = attacking_owner_unit
+			attacker_param_table.attacking_unit_breed_name = attacker_owner_breed_or_nil and attacker_owner_breed_or_nil.name
+			attacker_param_table.breed_name = target_breed_or_nil and target_breed_or_nil.name
+			attacker_param_table.damage = damage
+			attacker_param_table.overkill_damage = overkill_damage
+			attacker_param_table.damage_efficiency = damage_efficiency
+			attacker_param_table.damage_profile = damage_profile
+			attacker_param_table.damage_type = damage_type
+			attacker_param_table.actual_damage_dealt = actual_damage_dealt
+			attacker_param_table.hit_weakspot = hit_weakspot
+			attacker_param_table.hit_world_position = hit_world_position_box_or_nil
+			attacker_param_table.is_backstab = is_backstab
+			attacker_param_table.is_critical_strike = is_critical_strike
+			attacker_param_table.is_instakill = instakill
+			attacker_param_table.melee_attack_strength = damage_profile.melee_attack_strength
+			attacker_param_table.one_hit_kill = one_hit_kill
+			attacker_param_table.attack_result = attack_result
+			attacker_param_table.stagger_result = stagger_result
+			attacker_param_table.sticky_attack = damage_profile.sticky_attack
+			attacker_param_table.tags = target_breed_or_nil and target_breed_or_nil.tags
+			attacker_param_table.target_index = target_index
+			attacker_param_table.target_number = target_number
+			attacker_param_table.weapon_special = damage_profile.weapon_special
+			attacker_param_table.charge_level = charge_level
+			attacker_param_table.hit_zone_name = hit_zone_name
+			attacker_param_table.attacking_item = attacking_item_or_nil
+			attacker_param_table.close_explosion_hit = close_explosion_hit
+
+			attacker_owner_buff_extension_or_nil:add_proc_event(proc_events.on_bleed_on_activated_hit_trait_hit, attacker_param_table)
+			_add_buffs_to_target(t, target_buff_extension_or_nil, attacking_owner_unit, damage_profile_buffs, proc_events.on_bleed_on_activated_hit_trait_hit)
 		end
 	end
 

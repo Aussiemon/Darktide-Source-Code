@@ -14,12 +14,10 @@ local widget_definitions = {
 			value = "content/ui/materials/backgrounds/scanner/scanner_decode_symbol_frame",
 			style = {
 				hdr = true,
-				color = {
-					255,
-					0,
-					0,
-					0,
-				},
+				horizontal_alignment = "center",
+				vertical_alignment = "center",
+				size = ScannerDisplayViewExpeditionsMapSettings.cursor_widget_size,
+				color = Color.terminal_text_key_value(255, true),
 			},
 		},
 	}, "center_pivot", nil, ScannerDisplayViewExpeditionsMapSettings.target_widget_size),

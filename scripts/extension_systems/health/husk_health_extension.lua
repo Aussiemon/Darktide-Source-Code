@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/health/husk_health_extension.lua
 
 local HealthExtensionInterface = require("scripts/extension_systems/health/health_extension_interface")
-local HuskHealthExtension = class("HuskHealthExtension")
+local HuskHealthExtension = class("HuskHealthExtension", "HealthExtensionBase")
 
 local function _health_and_damage(game_session, game_object_id)
 	local health = GameSession.game_object_field(game_session, game_object_id, "health")

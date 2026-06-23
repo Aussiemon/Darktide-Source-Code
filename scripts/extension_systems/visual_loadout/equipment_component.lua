@@ -860,6 +860,8 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 		VisualLoadoutCustomization.apply_material_override_item(slot_body_face_unit, unit_3p, false, "content/items/material_overrides/player_hair_headgear_mask/facial_hair_no_mask", false, item_definitions)
 	end
 
+	local stabilize_neck
+
 	for slot_name, slot in pairs(equipment) do
 		local is_hidden_3p, is_hidden_1p
 		local hide_unit_in_slot = slot.hide_unit_in_slot
@@ -884,20 +886,20 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 
 		local item = slot.item
 
-		if slot_body_face_unit then
-			if item and item.hide_eyebrows ~= nil then
+		if item and slot_body_face_unit then
+			if item.hide_eyebrows ~= nil then
 				local hide_eyebrows = first_person_mode or item.hide_eyebrows or false
 
 				unit_set_visibility(slot_body_face_unit, "eyebrows", not hide_eyebrows, true)
 			end
 
-			if item and item.hide_beard ~= nil then
+			if item.hide_beard ~= nil then
 				local hide_beard = first_person_mode or item.hide_beard or false
 
 				unit_set_visibility(slot_body_face_unit, "beard", not hide_beard, true)
 			end
 
-			if item and item.mask_facial_hair_item ~= nil then
+			if item.mask_facial_hair_item ~= nil then
 				local mask_facial_hair_item = item.mask_facial_hair_item
 
 				if mask_facial_hair_item == "" or mask_facial_hair_item == nil then
@@ -907,7 +909,7 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 				VisualLoadoutCustomization.apply_material_override_item(slot_body_face_unit, unit_3p, false, mask_facial_hair_item, false, item_definitions)
 			end
 
-			if item and item.mask_hair_item ~= nil then
+			if item.mask_hair_item ~= nil then
 				local mask_hair_item = item.mask_hair_item
 
 				if mask_hair_item == "" or mask_hair_item == nil then
@@ -917,7 +919,7 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 				VisualLoadoutCustomization.apply_material_override_item(slot_body_face_unit, unit_3p, false, mask_hair_item, false, item_definitions)
 			end
 
-			if item and item.mask_hair_override ~= nil then
+			if item.mask_hair_override ~= nil then
 				local mask_hair_override = item.mask_hair_override
 
 				for i = 1, #mask_hair_override do
@@ -935,7 +937,7 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 				end
 			end
 
-			if item and item.mask_face_item ~= nil then
+			if item.mask_face_item ~= nil then
 				local mask_face_item = item.mask_face_item
 
 				if mask_face_item == "" or mask_face_item == nil then
@@ -945,7 +947,7 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 				VisualLoadoutCustomization.apply_material_override_item(slot_body_face_unit, unit_3p, false, mask_face_item, false, item_definitions)
 			end
 
-			if item and item.mask_face_accessory_item ~= nil then
+			if item.mask_face_accessory_item ~= nil then
 				local mask_face_accessory_item = item.mask_face_accessory_item
 
 				if mask_face_accessory_item == "" or mask_face_accessory_item == nil then
@@ -954,17 +956,46 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 
 				VisualLoadoutCustomization.apply_material_override_item(slot_body_face_unit, unit_3p, false, mask_face_accessory_item, false, item_definitions)
 			end
-		end
 
-		if item and item.stabilize_neck ~= nil and Unit.has_animation_event(unit_3p, "lock_head") and Unit.has_animation_event(unit_3p, "unlock_head") then
-			if item.stabilize_neck >= 50 then
-				Unit.animation_event(unit_3p, "lock_head")
-			else
-				Unit.animation_event(unit_3p, "unlock_head")
+			if item.stabilize_neck and item.stabilize_neck > (stabilize_neck or -math.huge) then
+				stabilize_neck = item.stabilize_neck
 			end
 		end
 
 		_set_slot_hidden(slot, is_hidden_3p, is_hidden_1p)
+	end
+
+	if stabilize_neck and Unit.has_animation_state_machine(unit_3p) then
+		if Unit.has_animation_event(unit_3p, "lock_head") and Unit.has_animation_event(unit_3p, "unlock_head") then
+			if stabilize_neck > 0 then
+				Unit.animation_event(unit_3p, "lock_head")
+
+				local sm_variable_index = Unit.animation_find_variable(unit_3p, "lock_neck_weight")
+				local stabilize_amount
+
+				if sm_variable_index then
+					stabilize_amount = math.clamp(stabilize_neck, 0, 80) / 80
+
+					Unit.animation_set_variable(unit_3p, sm_variable_index, stabilize_amount)
+				end
+
+				sm_variable_index = Unit.animation_find_variable(unit_3p, "lock_head_weight")
+
+				if sm_variable_index then
+					if stabilize_neck >= 50 then
+						stabilize_amount = (stabilize_neck - 50) / 50
+
+						Unit.animation_set_variable(unit_3p, sm_variable_index, stabilize_amount)
+					else
+						Unit.animation_set_variable(unit_3p, sm_variable_index, 0)
+					end
+				end
+			else
+				Unit.animation_event(unit_3p, "unlock_head")
+			end
+		elseif stabilize_neck > 0 then
+			Log.info("EquipmentComponent", "Neck lock events not found in state machine for %s", unit_3p)
+		end
 	end
 
 	if first_person_mode then

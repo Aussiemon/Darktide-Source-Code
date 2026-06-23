@@ -11,6 +11,7 @@ weapon_template.swap_pickup_name = "motion_detection_mine_explosive_pocketable"
 weapon_template.pickup_name = "motion_detection_mine_explosive_pocketable"
 weapon_template.ammo_template = "motion_detection_mine"
 weapon_template.breed_footstep_intervals = {
+	cryptic = FootstepIntervalsTemplates.pocketable_human,
 	human = FootstepIntervalsTemplates.pocketable_human,
 	ogryn = FootstepIntervalsTemplates.pocketable_ogryn,
 }

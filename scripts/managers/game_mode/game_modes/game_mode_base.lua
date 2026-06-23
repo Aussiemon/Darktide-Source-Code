@@ -206,6 +206,10 @@ GameModeBase.hot_join_sync = function (self, sender, channel)
 	end
 end
 
+GameModeBase.on_client_left = function (self, removed_players_data)
+	self._loot_handler:on_client_left(removed_players_data)
+end
+
 GameModeBase._cinematic_active = function (self)
 	if Managers.state.cinematic:cinematic_active() then
 		return true

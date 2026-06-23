@@ -33,13 +33,14 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_increase_power_on_kill_child
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_increased_attack_cleave_on_multiple_hits = table.clone(BaseWeaponTraitBuffTemplates.increased_attack_cleave_on_multiple_hits)
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_increased_power_on_weapon_special_follow_up_hits = {
 	class_name = "proc_buff",
+	force_predicted_proc = true,
 	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1,
 		[proc_events.on_sweep_finish] = 1,
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.power_level_modifier] = 0.1,
+		[stat_buffs.melee_power_level_modifier] = 0.1,
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		return ConditionalFunctions.is_item_slot_wielded(template_data, template_context) and template_data.active
@@ -67,6 +68,9 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_increased_power_on_weapon_sp
 	},
 	check_active_func = function (template_data, template_context)
 		return ConditionalFunctions.is_item_slot_wielded(template_data, template_context) and template_data.active
+	end,
+	visual_stack_count = function (template_data, template_context)
+		return template_data.number_of_attacks_left or 1
 	end,
 }
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_pass_past_armor_on_heavy_attack = {

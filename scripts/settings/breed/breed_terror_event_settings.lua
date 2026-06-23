@@ -76,6 +76,12 @@ breed_terror_event_settings.renegade_radio_operator = {
 breed_terror_event_settings.renegade_melee = {
 	point_cost = 3,
 }
+breed_terror_event_settings.renegade_vanguard = {
+	point_cost = 5,
+}
+breed_terror_event_settings.cultist_vanguard = {
+	point_cost = 4,
+}
 breed_terror_event_settings.renegade_captain = {
 	point_cost = 10,
 }

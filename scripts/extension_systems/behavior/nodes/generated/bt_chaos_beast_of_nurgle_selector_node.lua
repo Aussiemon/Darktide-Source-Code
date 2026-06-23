@@ -2,51 +2,31 @@
 
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
+local Profiler_start = Profiler.start
+local Profiler_stop = Profiler.stop
 local BtChaosBeastOfNurgleSelectorNode = class("BtChaosBeastOfNurgleSelectorNode", "BtNode")
 
 BtChaosBeastOfNurgleSelectorNode.init = function (self, ...)
 	BtChaosBeastOfNurgleSelectorNode.super.init(self, ...)
 
-	self._children = {}
-end
-
-BtChaosBeastOfNurgleSelectorNode.init_values = function (self, blackboard, action_data, node_data)
-	BtChaosBeastOfNurgleSelectorNode.super.init_values(self, blackboard, action_data, node_data)
-
-	local children = self._children
-
-	for i = 1, #children do
-		local child_node = children[i]
-		local child_tree_node = child_node.tree_node
-		local child_action_data = child_tree_node.action_data
-
-		child_node:init_values(blackboard, child_action_data, node_data)
-	end
+	self._selector_children = {}
 end
 
 BtChaosBeastOfNurgleSelectorNode.add_child = function (self, node)
-	self._children[#self._children + 1] = node
+	BtChaosBeastOfNurgleSelectorNode.super.add_child(self, node)
+
+	if not node.tree_node.state then
+		self._selector_children[#self._selector_children + 1] = node
+	end
 end
 
 BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
 	local node_identifier = self.identifier
 	local last_running_node = old_running_child_nodes[node_identifier]
-	local children = self._children
+	local children = self._selector_children
 
 	do
-		local node_exit_spawner = children[1]
-		local spawn_component = blackboard.spawn
-		local condition_result = spawn_component.is_exiting_spawner
-
-		if condition_result then
-			new_running_child_nodes[node_identifier] = node_exit_spawner
-
-			return node_exit_spawner
-		end
-	end
-
-	do
-		local node_smart_object = children[2]
+		local node_smart_object = children[1]
 		local condition_result
 
 		repeat
@@ -105,7 +85,7 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 	end
 
 	do
-		local node_death = children[3]
+		local node_death = children[2]
 		local death_component = blackboard.death
 		local is_dead = death_component.is_dead
 		local condition_result = is_dead
@@ -118,7 +98,7 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 	end
 
 	do
-		local node_stagger = children[4]
+		local node_stagger = children[3]
 		local stagger_component = blackboard.stagger
 		local is_staggered = stagger_component.num_triggered_staggers > 0 and stagger_component.type == "explosion"
 		local condition_result = is_staggered
@@ -131,7 +111,7 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 	end
 
 	do
-		local node_weakspot_stagger = children[5]
+		local node_weakspot_stagger = children[4]
 		local is_running = last_leaf_node_running and last_running_node == node_weakspot_stagger
 		local condition_result
 
@@ -165,7 +145,7 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 	end
 
 	do
-		local node_spit_out = children[6]
+		local node_spit_out = children[5]
 		local tree_node = node_spit_out.tree_node
 		local action_data = tree_node.action_data
 		local is_running = last_leaf_node_running and last_running_node == node_spit_out
@@ -261,7 +241,7 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 	end
 
 	do
-		local node_dashing_and_consuming = children[7]
+		local node_dashing_and_consuming = children[6]
 		local is_running = last_leaf_node_running and last_running_node == node_dashing_and_consuming
 		local condition_result
 
@@ -365,7 +345,7 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 	end
 
 	do
-		local node_melee_push_back_attacks = children[8]
+		local node_melee_push_back_attacks = children[7]
 		local condition_result
 
 		repeat
@@ -388,7 +368,7 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 	end
 
 	do
-		local node_alerted_sequence = children[9]
+		local node_alerted_sequence = children[8]
 		local is_running = last_leaf_node_running and last_running_node == node_alerted_sequence
 		local condition_result
 
@@ -471,7 +451,7 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 	end
 
 	do
-		local node_change_target = children[10]
+		local node_change_target = children[9]
 		local is_running = last_leaf_node_running and last_running_node == node_change_target
 		local condition_result
 
@@ -504,7 +484,7 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 	end
 
 	do
-		local node_run_away = children[11]
+		local node_run_away = children[10]
 		local tree_node = node_run_away.tree_node
 		local action_data = tree_node.action_data
 		local is_running = last_leaf_node_running and last_running_node == node_run_away
@@ -588,7 +568,7 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 	end
 
 	do
-		local node_consume_minion = children[12]
+		local node_consume_minion = children[11]
 		local tree_node = node_consume_minion.tree_node
 		local action_data = tree_node.action_data
 		local is_running = last_leaf_node_running and last_running_node == node_consume_minion
@@ -634,7 +614,7 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 	end
 
 	do
-		local node_consuming = children[13]
+		local node_consuming = children[12]
 		local is_running = last_leaf_node_running and last_running_node == node_consuming
 		local condition_result
 
@@ -737,7 +717,7 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 	end
 
 	do
-		local node_vomiting = children[14]
+		local node_vomiting = children[13]
 		local tree_node = node_vomiting.tree_node
 		local condition_args = tree_node.condition_args
 		local is_running = last_leaf_node_running and last_running_node == node_vomiting
@@ -866,7 +846,7 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 	end
 
 	do
-		local node_movement = children[15]
+		local node_movement = children[14]
 		local is_running = last_leaf_node_running and last_running_node == node_movement
 		local condition_result
 
@@ -955,7 +935,7 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 	end
 
 	do
-		local node_passive_alerted = children[16]
+		local node_passive_alerted = children[15]
 		local is_running = last_leaf_node_running and last_running_node == node_passive_alerted
 		local condition_result
 
@@ -1004,7 +984,7 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 	end
 
 	do
-		local node_patrol = children[17]
+		local node_patrol = children[16]
 		local is_running = last_leaf_node_running and last_running_node == node_patrol
 		local condition_result
 
@@ -1055,7 +1035,7 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 		end
 	end
 
-	local node_idle = children[18]
+	local node_idle = children[17]
 
 	new_running_child_nodes[node_identifier] = node_idle
 
@@ -1067,9 +1047,9 @@ BtChaosBeastOfNurgleSelectorNode.run = function (self, unit, breed, blackboard, 
 	local running_node = running_child_nodes[node_identifier]
 	local running_tree_node = running_node.tree_node
 	local running_action_data = running_tree_node.action_data
-	local result, evaluate_utility_next_frame = running_node:run(unit, breed, blackboard, scratchpad, running_action_data, dt, t, node_data, running_child_nodes)
+	local result, evaluate_utility_next_frame, update_rate = running_node:run(unit, breed, blackboard, scratchpad, running_action_data, dt, t, node_data, running_child_nodes)
 
-	return result, evaluate_utility_next_frame
+	return result, evaluate_utility_next_frame, update_rate
 end
 
 return BtChaosBeastOfNurgleSelectorNode

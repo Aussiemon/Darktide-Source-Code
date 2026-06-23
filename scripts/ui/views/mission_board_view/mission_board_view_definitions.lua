@@ -12,6 +12,7 @@ local ColorUtilities = require("scripts/utilities/ui/colors")
 local StepperPassTemplates = require("scripts/ui/pass_templates/stepper_pass_templates")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local InputDevice = require("scripts/managers/input/input_device")
+local InputUtils = require("scripts/managers/input/input_utils")
 local MissionBoardViewDefinitions = {}
 local Dimensions = Settings.dimensions
 local screen_width = Dimensions.screen_width
@@ -558,6 +559,7 @@ end
 
 local play_button_content_overrides = {
 	gamepad_action = "confirm_pressed",
+	gamepad_input = "confirm",
 }
 local play_button_style_overrides = {
 	text = {
@@ -598,6 +600,7 @@ widget_definitions.play_button = UIWidget.create_definition({
 	{
 		pass_type = "text",
 		style_id = "default_text",
+		value_id = "default_text",
 		value = Utf8.upper(Localize("loc_mission_board_view_accept_mission")),
 		style = Styles.play_button.default_text,
 		visibility_function = function (content, style)
@@ -605,8 +608,33 @@ widget_definitions.play_button = UIWidget.create_definition({
 		end,
 		change_function = function (content, style, animations, dt)
 			local hotspot_data = content.hotspot
+			local font_highlight_multiplier = style.font_highlight_multiplier or 4
 
-			style.font_size = 28 + 4 * hotspot_data.anim_hover_progress
+			style.font_size = style.default_font_size + font_highlight_multiplier * hotspot_data.anim_hover_progress
+
+			local was_gamepad_active = content.was_gamepad_active
+			local previous_selected_mission_id = content.previous_selected_mission_id
+			local current_selected_mission_id = content.current_selected_mission_id
+
+			if was_gamepad_active ~= InputDevice.gamepad_active or previous_selected_mission_id ~= current_selected_mission_id then
+				if InputDevice.gamepad_active then
+					local input_service = Managers.input:get_input_service("View")
+					local gamepad_input = content.gamepad_input
+					local service_type = "View"
+					local input_key = "confirm"
+					local input_text = InputUtils.input_text_for_current_input_device(service_type, input_key)
+					local loc_key = content.default_text_key or ""
+
+					content.default_text = string.format("%s %s", input_text, Utf8.upper(Localize(loc_key)))
+				else
+					local loc_key = content.default_text_key or ""
+
+					content.default_text = Utf8.upper(Localize(loc_key))
+				end
+
+				content.was_gamepad_active = InputDevice.gamepad_active
+				content.previous_selected_mission_id = content.current_selected_mission_id
+			end
 		end,
 	},
 	{

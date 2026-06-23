@@ -8,6 +8,7 @@ local ui_hud_settings = {
 		HudElementCutsceneFading = 998,
 		HudElementCutsceneOverlay = 999,
 		HudElementInteraction = 371,
+		HudElementMinionShieldHealth = 351,
 		HudElementSpectateFading = 998,
 		HudElementSuppressionIndicators = 0,
 		HudElementWorldMarkers = 0,

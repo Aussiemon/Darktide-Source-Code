@@ -35,7 +35,7 @@ local right_header_size = {
 	ElementSettings.right_header_height,
 }
 local expedition_currency_info_size = {
-	450,
+	300,
 	33,
 }
 local left_panel_x_position = 25
@@ -751,9 +751,9 @@ local left_panel_widgets_definitions = {
 		},
 		{
 			pass_type = "text",
-			style_id = "loot_title",
-			value_id = "loot_title",
-			value = Localize("loc_expeditions_loot_name_hud") .. " ",
+			style_id = "salvage_title",
+			value_id = "salvage_title",
+			value = Localize("loc_expeditions_currency_name_hud") .. " ",
 			style = {
 				font_size = 22,
 				font_type = "proxima_nova_bold",
@@ -762,42 +762,6 @@ local left_panel_widgets_definitions = {
 				text_color = Color.terminal_text_body(255, true),
 				offset = {
 					10,
-					5,
-					3,
-				},
-			},
-		},
-		{
-			pass_type = "text",
-			style_id = "total_loot",
-			value = "0",
-			value_id = "total_loot",
-			style = {
-				font_size = 22,
-				font_type = "proxima_nova_bold",
-				text_horizontal_alignment = "right",
-				text_vertical_alignment = "top",
-				text_color = Color.terminal_text_body(255, true),
-				offset = {
-					-150,
-					5,
-					3,
-				},
-			},
-		},
-		{
-			pass_type = "text",
-			style_id = "salvage_title",
-			value_id = "salvage_title",
-			value = Localize("loc_expeditions_currency_name_hud") .. " ",
-			style = {
-				font_size = 22,
-				font_type = "proxima_nova_bold",
-				text_horizontal_alignment = "right",
-				text_vertical_alignment = "top",
-				text_color = Color.terminal_text_body(255, true),
-				offset = {
-					-10,
 					5,
 					3,
 				},
@@ -824,25 +788,6 @@ local left_panel_widgets_definitions = {
 		},
 		{
 			pass_type = "text",
-			style_id = "loot",
-			value = "0",
-			value_id = "loot",
-			style = {
-				font_size = 18,
-				font_type = "proxima_nova_bold",
-				line_spacing = 1.5,
-				text_horizontal_alignment = "right",
-				text_vertical_alignment = "center",
-				text_color = Color.terminal_text_body(255, true),
-				offset = {
-					-150,
-					18,
-					3,
-				},
-			},
-		},
-		{
-			pass_type = "text",
 			style_id = "salvage",
 			value = "0",
 			value_id = "salvage",
@@ -857,23 +802,6 @@ local left_panel_widgets_definitions = {
 					-10,
 					18,
 					3,
-				},
-			},
-		},
-		{
-			pass_type = "rect",
-			style_id = "vertical_line",
-			style = {
-				horizontal_alignment = "right",
-				vertical_alignment = "top",
-				color = Color.terminal_frame(255, true),
-				size = {
-					1,
-				},
-				offset = {
-					-140,
-					0,
-					0,
 				},
 			},
 		},

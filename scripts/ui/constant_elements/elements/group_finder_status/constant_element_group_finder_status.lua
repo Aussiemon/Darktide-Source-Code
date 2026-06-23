@@ -2,8 +2,8 @@
 
 local Definitions = require("scripts/ui/constant_elements/elements/group_finder_status/constant_element_group_finder_status_definitions")
 local ConstantGroupFinderStatusSettings = require("scripts/ui/constant_elements/elements/group_finder_status/constant_element_group_finder_status_settings")
-local UISettings = require("scripts/settings/ui/ui_settings")
 local PlayerCompositions = require("scripts/utilities/players/player_compositions")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ConstantGroupFinderStatus = class("ConstantGroupFinderStatus", "ConstantElementBase")
 
@@ -117,7 +117,7 @@ ConstantGroupFinderStatus._update_party_size = function (self)
 
 		if player then
 			local archetype_name = player:archetype_name()
-			local archetype_font_icon = archetype_name and UISettings.archetype_font_icon_simple[archetype_name]
+			local archetype_font_icon = archetype_name and UISettings.archetype_font_icon[archetype_name]
 
 			team_counter = team_counter + 1
 			content["team_member_icon_" .. index] = archetype_font_icon or ""

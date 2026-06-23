@@ -1,8 +1,8 @@
 ﻿-- chunkname: @scripts/settings/network/matchmaking_constants.lua
 
-local MatchmakingConstants = {}
+local matchmaking_constants = {}
 
-MatchmakingConstants.HOST_TYPES = table.enum("player", "mission_server", "hub_server", "party", "singleplay", "singleplay_backend_session")
-MatchmakingConstants.SINGLEPLAY_TYPES = table.enum("onboarding", "training_grounds")
+matchmaking_constants.HOST_TYPES = table.enum("player", "mission_server", "hub_server", "party", "singleplay", "singleplay_backend_session")
+matchmaking_constants.SINGLEPLAY_TYPES = table.enum("onboarding", "training_grounds")
 
-return settings("MatchmakingConstants", MatchmakingConstants)
+return settings("MatchmakingConstants", matchmaking_constants)

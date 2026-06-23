@@ -592,31 +592,31 @@ local background_world_params = {
 	world_name = "ui_credits_cosmetics_vendor_world",
 	animations_per_archetype = {
 		psyker = {
-			initial_event = "character_customization_idle",
+			initial_event = "character_apperance_idle",
 			events = {
-				body = "character_customization_idle",
-				head = "character_customization_idle_head",
+				body = "character_apperance_idle",
+				head = "character_apperance_idle_head",
 			},
 		},
 		veteran = {
-			initial_event = "character_customization_idle",
+			initial_event = "character_apperance_idle",
 			events = {
-				body = "character_customization_idle",
-				head = "character_customization_idle_head",
+				body = "character_apperance_idle",
+				head = "character_apperance_idle_head",
 			},
 		},
 		zealot = {
-			initial_event = "character_customization_idle",
+			initial_event = "character_apperance_idle",
 			events = {
-				body = "character_customization_idle",
-				head = "character_customization_idle_head",
+				body = "character_apperance_idle",
+				head = "character_apperance_idle_head",
 			},
 		},
 		ogryn = {
-			initial_event = "character_customization_idle",
+			initial_event = "character_apperance_idle",
 			events = {
-				body = "character_customization_idle",
-				head = "character_customization_idle_head",
+				body = "character_apperance_idle",
+				head = "character_apperance_idle_head",
 			},
 		},
 	},

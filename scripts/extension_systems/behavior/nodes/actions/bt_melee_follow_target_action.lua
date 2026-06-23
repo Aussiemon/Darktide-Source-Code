@@ -317,10 +317,10 @@ BtMeleeFollowTargetAction._update_walking = function (self, unit, breed, t, dt, 
 
 	if should_leave_walk then
 		self:_change_state(unit, breed, scratchpad, action_data, "running")
-	elseif action_data.start_move_anim_events then
+	elseif action_data.start_move_anim_events and t >= scratchpad.walk_anim_switch_duration then
 		local moving_direction_name = MinionMovement.get_moving_direction_name(unit, scratchpad)
 
-		if moving_direction_name ~= scratchpad.moving_direction_name and t >= scratchpad.walk_anim_switch_duration then
+		if moving_direction_name ~= scratchpad.moving_direction_name then
 			self:_start_walk_anim(scratchpad, action_data, moving_direction_name)
 			self:_set_state_max_speed(breed, scratchpad, action_data)
 

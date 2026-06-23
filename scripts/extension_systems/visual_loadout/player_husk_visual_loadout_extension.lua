@@ -534,6 +534,17 @@ PlayerHuskVisualLoadoutExtension.unit_and_attachments_from_slot = function (self
 	return slot.unit_1p, slot.unit_3p, slot.attachments_by_unit_1p, slot.attachments_by_unit_3p
 end
 
+PlayerHuskVisualLoadoutExtension.item_in_slot = function (self, slot_name)
+	local slot = self._equipment[slot_name]
+	local item = slot.item
+
+	if not item then
+		return nil
+	end
+
+	return item.item or item
+end
+
 PlayerHuskVisualLoadoutExtension.telemetry_wielded_weapon = function (self)
 	local equipment = self._equipment
 	local item = equipment[self._wielded_slot]

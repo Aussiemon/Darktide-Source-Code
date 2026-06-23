@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/settings/character/home_planets.lua
 
 local HOME_PLANETS_BROKER = require("scripts/settings/character/home_planets_broker")
+local HOME_PLANETS_CRYPTIC = require("scripts/settings/character/home_planets_cryptic")
 local home_planet_options = {
 	{
 		description = "loc_character_birthplace_planet_01_description",
@@ -20,11 +21,11 @@ local home_planet_options = {
 		},
 		visibility = {
 			archetypes = {
+				"adamant",
+				"ogryn",
+				"psyker",
 				"veteran",
 				"zealot",
-				"psyker",
-				"ogryn",
-				"adamant",
 			},
 		},
 	},
@@ -46,11 +47,11 @@ local home_planet_options = {
 		},
 		visibility = {
 			archetypes = {
+				"adamant",
+				"ogryn",
+				"psyker",
 				"veteran",
 				"zealot",
-				"psyker",
-				"ogryn",
-				"adamant",
 			},
 		},
 	},
@@ -72,11 +73,11 @@ local home_planet_options = {
 		},
 		visibility = {
 			archetypes = {
+				"adamant",
+				"ogryn",
+				"psyker",
 				"veteran",
 				"zealot",
-				"psyker",
-				"ogryn",
-				"adamant",
 			},
 		},
 	},
@@ -98,11 +99,11 @@ local home_planet_options = {
 		},
 		visibility = {
 			archetypes = {
+				"adamant",
+				"ogryn",
+				"psyker",
 				"veteran",
 				"zealot",
-				"psyker",
-				"ogryn",
-				"adamant",
 			},
 		},
 	},
@@ -124,11 +125,11 @@ local home_planet_options = {
 		},
 		visibility = {
 			archetypes = {
+				"adamant",
+				"ogryn",
+				"psyker",
 				"veteran",
 				"zealot",
-				"psyker",
-				"ogryn",
-				"adamant",
 			},
 		},
 	},
@@ -150,11 +151,11 @@ local home_planet_options = {
 		},
 		visibility = {
 			archetypes = {
+				"adamant",
+				"ogryn",
+				"psyker",
 				"veteran",
 				"zealot",
-				"psyker",
-				"ogryn",
-				"adamant",
 			},
 		},
 	},
@@ -176,11 +177,11 @@ local home_planet_options = {
 		},
 		visibility = {
 			archetypes = {
+				"adamant",
+				"ogryn",
+				"psyker",
 				"veteran",
 				"zealot",
-				"psyker",
-				"ogryn",
-				"adamant",
 			},
 		},
 	},
@@ -202,23 +203,24 @@ local home_planet_options = {
 		},
 		visibility = {
 			archetypes = {
+				"adamant",
+				"ogryn",
+				"psyker",
 				"veteran",
 				"zealot",
-				"psyker",
-				"ogryn",
-				"adamant",
 			},
 		},
 	},
 }
 
 table.append(home_planet_options, HOME_PLANETS_BROKER)
+table.append(home_planet_options, HOME_PLANETS_CRYPTIC)
 
 local home_planet_options_by_id = {}
 
-for i = 1, #home_planet_options do
-	local home_planet_option = home_planet_options[i]
-	local id = string.format("option_%d", i)
+for ii = 1, #home_planet_options do
+	local home_planet_option = home_planet_options[ii]
+	local id = string.format("option_%d", ii)
 
 	home_planet_option.id = id
 	home_planet_options_by_id[id] = home_planet_option

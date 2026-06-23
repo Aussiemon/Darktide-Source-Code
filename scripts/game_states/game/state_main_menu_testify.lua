@@ -16,8 +16,9 @@ local StateMainMenuTestify = {
 		end
 
 		character_create:set_archetype(archetype)
-		character_create:randomize_backstory_properties()
 		character_create:set_gender(gender)
+		character_create:randomize_personality()
+		character_create:randomize_backstory_properties()
 		character_create:upload_profile()
 		state_main_menu:set_wait_for_character_profile_upload(true)
 	end,

@@ -16,15 +16,30 @@ ActionAbilityBase.init = function (self, action_context, action_params, action_s
 	self._ability_component = action_params.ability_component
 	self._weapon_extension = action_context.weapon_extension
 	self._ability_extension = action_context.ability_extension
+	self._ability_charges_used_at_start = 0
+	self._ability_charges_used_at_finish = 0
+	self._remaining_ability_charges_before_use_at_start = 0
+	self._remaining_ability_charges_before_use_at_finish = 0
 end
 
 ActionAbilityBase.start = function (self, action_settings, t, time_scale, action_start_params)
 	ActionAbilityBase.super.start(self, action_settings, t, time_scale, action_start_params)
 
+	local ability_extension = self._ability_extension
+	local ability_type = action_settings.ability_type
+
+	self._remaining_ability_charges_before_use_at_start = ability_extension:remaining_ability_charges(ability_type) or 0
+
 	local use_ability_charge = self._ability_template_tweak_data.use_ability_charge == nil and action_settings.use_ability_charge or self._ability_template_tweak_data.use_ability_charge
 
 	if use_ability_charge and action_settings.use_charge_at_start then
-		self:_use_ability_charge()
+		local ability_charges_used = self:_use_ability_charge()
+
+		self._ability_charges_used_at_start = ability_charges_used
+
+		if self._is_server then
+			Managers.stats:record_private("hook_ability_charges_used_from_action", self._player, ability_type, ability_charges_used)
+		end
 	end
 
 	if self._ability_pause_cooldown_setting then
@@ -42,7 +57,18 @@ ActionAbilityBase.finish = function (self, reason, data, t, time_in_action)
 		local should_use_charge = not action_settings.use_charge_at_start
 
 		if use_ability_charge and should_use_charge then
-			self:_use_ability_charge()
+			local ability_extension = self._ability_extension
+			local ability_type = action_settings.ability_type
+
+			self._remaining_ability_charges_before_use_at_finish = ability_extension:remaining_ability_charges(ability_type)
+
+			local ability_charges_used = self:_use_ability_charge()
+
+			self._ability_charges_used_at_finish = ability_charges_used
+
+			if self._is_server then
+				Managers.stats:record_private("hook_ability_charges_used_from_action", self._player, action_settings.ability_type, ability_charges_used)
+			end
 		end
 	end
 end

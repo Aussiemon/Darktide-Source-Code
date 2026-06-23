@@ -185,13 +185,13 @@ local function _update_forcesword_wind_slash(template_data, template_context, dt
 			local lerp_values = DamageProfile.lerp_values(damage_profile, player_unit)
 			local charge_level
 			local instakill = false
-			local weapon_item = template_context.source_item
+			local weapon_item = template_context.item
 			local triggered_proc_events_or_nil
 			local damage_dealt, attack_result, damage_efficiency, hit_weakspot = RangedAction.execute_attack(target_index, player_unit, unit, hit_actor, hit_position, distance, attack_direction, hit_normal, hit_zone_name, damage_profile, lerp_values, power_level, charge_level, penetrated, instakill, damage_type, is_critical_strike, weapon_item, triggered_proc_events_or_nil)
 
 			ImpactEffect.play(unit, nil, damage_dealt, damage_type, hit_zone_name, attack_result, hit_position, nil, attack_direction, player_unit, nil, false, attack_type, damage_efficiency, damage_profile)
 
-			hit_position[unit] = nil
+			hit_positions[unit] = nil
 			hit_distances[unit] = nil
 		end
 	end

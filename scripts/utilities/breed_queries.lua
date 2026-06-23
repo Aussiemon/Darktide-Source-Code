@@ -26,6 +26,18 @@ for name, breed in pairs(Breeds) do
 	end
 end
 
+local minion_companion_breeds_array = {}
+local minion_companion_breeds_by_name = {}
+local minion_companion_breed_names_array = {}
+
+for name, breed in pairs(Breeds) do
+	if Breed.is_companion(breed) then
+		minion_companion_breeds_array[#minion_companion_breeds_array + 1] = breed
+		minion_companion_breeds_by_name[name] = breed
+		minion_companion_breed_names_array[#minion_companion_breed_names_array + 1] = name
+	end
+end
+
 local BreedQueries = {}
 
 BreedQueries.match_minions_by_tags = function (template_breed_tags, optional_excluded_breed_tags, wanted_sub_faction)
@@ -183,6 +195,18 @@ end
 
 BreedQueries.player_breed_names_array = function ()
 	return player_breed_names_array
+end
+
+BreedQueries.minion_companion_breeds_by_name = function ()
+	return minion_companion_breeds_by_name
+end
+
+BreedQueries.minion_companion_breeds_array = function ()
+	return minion_companion_breeds_array
+end
+
+BreedQueries.minion_companion_breed_names_array = function ()
+	return minion_companion_breed_names_array
 end
 
 return BreedQueries

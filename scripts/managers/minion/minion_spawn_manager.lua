@@ -174,7 +174,7 @@ MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation
 	local blackboard = BLACKBOARDS[unit]
 
 	self:_initialize_inventory(unit, breed, blackboard, temp_data.optional_attack_selection_template_name)
-	self:_initialize_blackboard_components(breed, blackboard, seed, temp_data.optional_spawner_unit, temp_data.optional_spawner_spawn_index)
+	self:_initialize_blackboard_components(unit, breed, blackboard, seed, temp_data.optional_spawner_unit, temp_data.optional_spawner_spawn_index)
 
 	if temp_data.spawn_source then
 		local spawn_component = Blackboard.write_component(blackboard, "spawn")
@@ -272,7 +272,7 @@ MinionSpawnManager._initialize_inventory = function (self, unit, breed, blackboa
 	end
 end
 
-MinionSpawnManager._initialize_blackboard_components = function (self, breed, blackboard, seed, optional_spawner_unit, optional_spawner_spawn_index)
+MinionSpawnManager._initialize_blackboard_components = function (self, unit, breed, blackboard, seed, optional_spawner_unit, optional_spawner_spawn_index)
 	local spawn_component = Blackboard.write_component(blackboard, "spawn")
 	local size_variation_range = breed.size_variation_range
 
@@ -286,6 +286,10 @@ MinionSpawnManager._initialize_blackboard_components = function (self, breed, bl
 	if optional_spawner_unit then
 		spawn_component.is_exiting_spawner = true
 		spawn_component.spawner_unit = optional_spawner_unit
+
+		local behavior_extension = ScriptUnit.extension(unit, "behavior_system")
+
+		behavior_extension:behavior_state_event("exiting_spawner")
 
 		if optional_spawner_spawn_index then
 			spawn_component.spawner_spawn_index = optional_spawner_spawn_index

@@ -16,11 +16,14 @@ HudElementInteraction.init = function (self, parent, draw_layer, start_scale)
 	self._scan_delay_duration = 0
 	self._previous_interactee_unit = nil
 
-	self:_set_event_popup_visibility(false)
+	self:_set_event_popup_text(nil)
 end
 
-HudElementInteraction._set_event_popup_visibility = function (self, visible)
-	self._widgets_by_name.event_background.content.visible = visible
+HudElementInteraction._set_event_popup_text = function (self, text)
+	local content = self._widgets_by_name.event_background.content
+
+	content.text = text and Utf8.upper(Localize(text)) or ""
+	content.visible = not not text
 end
 
 HudElementInteraction._set_extra_info_popup_visibility = function (self, visible)
@@ -507,6 +510,10 @@ HudElementInteraction.is_synchronized_with_interactee = function (self, interact
 		return false
 	end
 
+	if previous_interactee_data.is_electrified ~= interactee_extension:is_electrified() then
+		return false
+	end
+
 	if previous_interactee_data.input_block_text ~= interactor_extension:hud_block_text() then
 		return false
 	end
@@ -582,8 +589,9 @@ HudElementInteraction._setup_interaction_information = function (self, interacte
 	widgets_by_name.type_description_text.content.text = ""
 
 	local is_event_interaction = interactee_extension.display_start_event and interactee_extension:display_start_event()
+	local is_electrified = interactee_extension.is_electrified and interactee_extension:is_electrified()
 
-	self:_set_event_popup_visibility(is_event_interaction)
+	self:_set_event_popup_text(is_electrified and "loc_interaction_electrified_text" or is_event_interaction and "loc_interaction_start_event_text")
 
 	self._previous_interactee_data = {
 		hold_required = hold_required,
@@ -591,6 +599,7 @@ HudElementInteraction._setup_interaction_information = function (self, interacte
 		input_block_text = input_block_text,
 		hud_description = hud_description,
 		is_event = is_event_interaction,
+		is_electrified = is_electrified,
 	}
 end
 

@@ -5,6 +5,7 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 local Animation = require("scripts/utilities/animation")
 local AttackIntensity = require("scripts/utilities/attack_intensity")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local MinionAttack = require("scripts/utilities/minion_attack")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local MinionPerception = require("scripts/utilities/minion_perception")
@@ -24,6 +25,8 @@ BtShootAction.enter = function (self, unit, breed, blackboard, scratchpad, actio
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.navigation_extension = ScriptUnit.has_extension(unit, "navigation_system")
 	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
+	scratchpad._game_session = Managers.state.game_session:game_session()
+	scratchpad._game_object_id = Managers.state.unit_spawner:game_object_id(unit)
 
 	local perception_component = Blackboard.write_component(blackboard, "perception")
 
@@ -34,6 +37,10 @@ BtShootAction.enter = function (self, unit, breed, blackboard, scratchpad, actio
 
 	scratchpad.stat_buffs = buff_extension:stat_buffs()
 	scratchpad.buff_extension = buff_extension
+
+	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
+	scratchpad._is_companion = unit_data_extension:is_companion()
 
 	if Blackboard.has_component(blackboard, "combat_vector") then
 		scratchpad.combat_vector_component = blackboard.combat_vector
@@ -50,7 +57,16 @@ BtShootAction.enter = function (self, unit, breed, blackboard, scratchpad, actio
 	local target_unit = perception_component.target_unit
 	local attack_allowed = AttackIntensity.minion_can_attack(unit, action_data.attack_intensity_type, target_unit)
 
-	if attack_allowed then
+	if action_data.force_start_in_cooldown then
+		scratchpad.behavior_component.move_state = "attacking"
+
+		local shoot_cooldown_range = action_data.shoot_cooldown
+		local diff_cooldown_range = Managers.state.difficulty:get_table_entry_by_challenge(shoot_cooldown_range)
+		local cooldown = math.random_range(diff_cooldown_range[1], diff_cooldown_range[2])
+		local current_cooldown_percent = self:_game_object_shooting_cooldown(unit, scratchpad, action_data, t) or 0
+
+		self:_start_cooldown(unit, t, scratchpad, action_data, cooldown, current_cooldown_percent)
+	elseif attack_allowed then
 		local vo_event = action_data.vo_event
 
 		if vo_event then
@@ -128,6 +144,12 @@ BtShootAction.leave = function (self, unit, breed, blackboard, scratchpad, actio
 		end
 	end
 
+	local charged_effect_template = scratchpad.charged_effect_template
+
+	if charged_effect_template then
+		scratchpad.fx_system:stop_template_effect(charged_effect_template)
+	end
+
 	scratchpad.locomotion_extension:set_rotation_speed(scratchpad.original_rotation_speed)
 end
 
@@ -169,13 +191,13 @@ BtShootAction.run = function (self, unit, breed, blackboard, scratchpad, action_
 	end
 
 	if state == "aiming" then
-		self:_update_aiming(unit, t, scratchpad, action_data)
+		self:_update_aiming(unit, t, scratchpad, action_data, breed)
 	elseif state == "shooting" then
-		self:_update_shooting(unit, t, scratchpad, action_data)
+		self:_update_shooting(unit, t, scratchpad, action_data, breed)
 	elseif state == "trying_to_strafe_shoot" then
 		self:_update_trying_to_strafe_shoot(unit, t, scratchpad, action_data)
 	elseif state == "strafe_shooting" then
-		self:_update_strafe_shooting(unit, t, scratchpad, action_data)
+		self:_update_strafe_shooting(unit, t, scratchpad, action_data, breed)
 	elseif state == "cooldown" then
 		local done = self:_update_cooldown(unit, t, scratchpad, action_data, breed)
 
@@ -322,8 +344,8 @@ BtShootAction._update_aim_turning = function (self, unit, scratchpad, aim_dot, f
 	return is_facing_target
 end
 
-BtShootAction._update_aiming = function (self, unit, t, scratchpad, action_data)
-	MinionAttack.aim_at_target(unit, scratchpad, t, action_data)
+BtShootAction._update_aiming = function (self, unit, t, scratchpad, action_data, breed)
+	MinionAttack.aim_at_target(unit, scratchpad, t, action_data, breed)
 
 	local attack_delay = MinionAttack.get_attack_delay(unit)
 	local aim_duration = math.max(scratchpad.aim_duration - t, 0)
@@ -372,8 +394,8 @@ BtShootAction._start_shooting = function (self, unit, t, scratchpad, action_data
 	end
 end
 
-BtShootAction._update_shooting = function (self, unit, t, scratchpad, action_data)
-	local valid_angle, aim_dot, flat_to_target = MinionAttack.aim_at_target(unit, scratchpad, t, action_data)
+BtShootAction._update_shooting = function (self, unit, t, scratchpad, action_data, breed)
+	local valid_angle, aim_dot, flat_to_target = MinionAttack.aim_at_target(unit, scratchpad, t, action_data, breed)
 	local override_non_valid_angle = action_data.override_non_valid_angle
 
 	if not valid_angle and not override_non_valid_angle then
@@ -413,6 +435,12 @@ BtShootAction._update_shooting = function (self, unit, t, scratchpad, action_dat
 
 				scratchpad.current_aim_rotation_direction_name = "fwd"
 			end
+		end
+
+		local charged_effect_template = scratchpad.charged_effect_template
+
+		if charged_effect_template then
+			scratchpad.fx_system:stop_template_effect(charged_effect_template)
 		end
 
 		self:_start_cooldown(unit, t, scratchpad, action_data)
@@ -525,7 +553,7 @@ end
 
 local STRAFE_ANIM_SWITCH_DURATION = 0.25
 
-BtShootAction._update_strafe_shooting = function (self, unit, t, scratchpad, action_data)
+BtShootAction._update_strafe_shooting = function (self, unit, t, scratchpad, action_data, breed)
 	local navigation_extension = scratchpad.navigation_extension
 	local is_following_path = navigation_extension:is_following_path()
 	local has_upcoming_smart_object = is_following_path and navigation_extension:path_distance_to_next_smart_object(MIN_NEEDED_PATH_DISTANCE)
@@ -537,7 +565,7 @@ BtShootAction._update_strafe_shooting = function (self, unit, t, scratchpad, act
 	end
 
 	local target_unit = scratchpad.perception_component.target_unit
-	local valid_angle = MinionAttack.aim_at_target(unit, scratchpad, t, action_data)
+	local valid_angle = MinionAttack.aim_at_target(unit, scratchpad, t, action_data, breed)
 
 	if not valid_angle then
 		self:_stop_strafe_shooting(unit, t, scratchpad, action_data)
@@ -666,7 +694,7 @@ end
 
 local DEFAULT_COOLDOWN_ANIM_EVENT = "idle"
 
-BtShootAction._start_cooldown = function (self, unit, t, scratchpad, action_data, optional_cooldown_duration)
+BtShootAction._start_cooldown = function (self, unit, t, scratchpad, action_data, optional_cooldown_duration, optional_current_cooldown_percent)
 	local cooldown_range = action_data.shoot_cooldown
 	local cooldown = optional_cooldown_duration
 
@@ -684,7 +712,7 @@ BtShootAction._start_cooldown = function (self, unit, t, scratchpad, action_data
 
 		cooldown = math.random_range(diff_cooldown_range[1], diff_cooldown_range[2])
 
-		if Managers.state.pacing:is_auric() then
+		if not scratchpad._is_companion and Managers.state.pacing:is_auric() then
 			cooldown = cooldown * 0.5
 		end
 	end
@@ -694,8 +722,12 @@ BtShootAction._start_cooldown = function (self, unit, t, scratchpad, action_data
 	cooldown = math.max(0, cooldown * minion_shoot_cooldown_modifier)
 	scratchpad._current_minion_shoot_cooldown_modifier = minion_shoot_cooldown_modifier
 	scratchpad._cooldown_amount = cooldown
-	scratchpad._cooldown_starting_t = t
-	scratchpad.cooldown = t + cooldown
+
+	local cooldown_passed = cooldown * (optional_current_cooldown_percent or 0)
+	local cooldown_start = t - cooldown_passed
+
+	scratchpad._cooldown_starting_t = cooldown_start
+	scratchpad.cooldown = cooldown_start + cooldown
 	scratchpad.state = "cooldown"
 
 	local behavior_component = scratchpad.behavior_component
@@ -727,12 +759,22 @@ BtShootAction._start_cooldown = function (self, unit, t, scratchpad, action_data
 
 		Vo.enemy_generic_vo_event(unit, cooldown_vo_event, breed.name)
 	end
+
+	local charged_effect_template = action_data.charged_effect_template
+
+	if charged_effect_template then
+		local fx_system = Managers.state.extension:system("fx_system")
+		local effect_template = EffectTemplates[charged_effect_template]
+
+		scratchpad.fx_system = fx_system
+		scratchpad.charged_effect_template = fx_system:start_template_effect(effect_template, unit)
+	end
 end
 
 BtShootAction._update_cooldown = function (self, unit, t, scratchpad, action_data, breed)
 	local target_unit = scratchpad.perception_component.target_unit
 
-	MinionAttack.aim_at_target(unit, scratchpad, t, action_data)
+	MinionAttack.aim_at_target(unit, scratchpad, t, action_data, breed)
 
 	if not scratchpad.is_anim_rotation_driven then
 		local flat_rotation = MinionMovement.rotation_towards_unit_flat(unit, target_unit)
@@ -764,8 +806,12 @@ BtShootAction._update_cooldown = function (self, unit, t, scratchpad, action_dat
 			end
 		end
 
+		self:_update_game_object_shooting_cooldown(unit, scratchpad, action_data, t)
+
 		return true
 	end
+
+	self:_update_game_object_shooting_cooldown(unit, scratchpad, action_data, t)
 end
 
 BtShootAction._has_clear_shot = function (self, unit, scratchpad, action_data)
@@ -776,6 +822,40 @@ BtShootAction._has_clear_shot = function (self, unit, scratchpad, action_data)
 	local has_clear_shot = perception_extension:has_line_of_sight_by_id(target_unit, line_of_sight_id)
 
 	return has_clear_shot
+end
+
+BtShootAction._update_game_object_shooting_cooldown = function (self, unit, scratchpad, action_data, t)
+	if not action_data.update_game_object_shooting_cooldown or not ALIVE[unit] then
+		return
+	end
+
+	local game_session = scratchpad._game_session
+	local game_object_id = scratchpad._game_object_id
+	local game_object_exists = GameSession.game_object_exists(game_session, game_object_id)
+
+	if not game_object_exists then
+		return
+	end
+
+	local shooting_cooldown_percent = math.max(1 - math.max(scratchpad.cooldown - t, 0) / scratchpad._cooldown_amount, 0)
+
+	GameSession.set_game_object_field(game_session, game_object_id, "shooting_cooldown_percent", shooting_cooldown_percent)
+end
+
+BtShootAction._game_object_shooting_cooldown = function (self, unit, scratchpad, action_data, t)
+	if not action_data.update_game_object_shooting_cooldown or not ALIVE[unit] then
+		return
+	end
+
+	local game_session = scratchpad._game_session
+	local game_object_id = scratchpad._game_object_id
+	local game_object_exists = GameSession.game_object_exists(game_session, game_object_id)
+
+	if not game_object_exists then
+		return
+	end
+
+	return GameSession.game_object_field(game_session, game_object_id, "shooting_cooldown_percent")
 end
 
 return BtShootAction

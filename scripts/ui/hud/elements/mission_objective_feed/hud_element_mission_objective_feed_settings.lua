@@ -11,6 +11,8 @@ local hud_element_mission_objective_feed_settings = {
 	},
 	events = {
 		event_add_mission_objective = "event_add_objective",
+		event_live_event_activated = "_on_live_event_activated",
+		event_live_event_deactivated = "_on_live_event_deactivated",
 		event_remove_mission_objective = "_remove_objective",
 	},
 	entry_spacing_by_category = {

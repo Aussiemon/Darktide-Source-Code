@@ -18,51 +18,35 @@ local special_functions = {
 	super = true,
 }
 
-local function _component_data_default_value(component_data, unit, guid, ...)
+local function _component_data_default_value(component_data, unit, guid, variable_name)
 	if not component_data then
 		return nil
 	end
 
-	local num_args = select("#", ...)
-	local data = component_data
+	local data = component_data[variable_name]
 
-	for i = 1, num_args do
-		local key = select(i, ...)
-
-		data = data[key]
-
-		if not data then
-			return nil
-		end
-
-		if num_args == i then
-			if data.value ~= nil then
-				return data.value
-			end
-
-			Log.error("Component", "[_component_data_default_value][Unit: %s][Component: %s] Missing default value for variable(%s)", Unit.id_string(unit), guid, key)
-		end
+	if not data then
+		return nil
 	end
+
+	if data.value ~= nil then
+		return data.value
+	end
+
+	Log.error("Component", "[_component_data_default_value][Unit: %s][Component: %s] Missing default value for variable(%s)", Unit.id_string(unit), guid, variable_name)
 
 	return nil
 end
 
-local function _component_data_default_array_values(component_data, unit, guid, data_type, ...)
+local function _component_data_default_array_values(component_data, unit, guid, data_type, variable_name)
 	if not component_data then
 		return nil
 	end
 
-	local num_args = select("#", ...)
-	local data = component_data
+	local data = component_data[variable_name]
 
-	for i = 1, num_args do
-		local key = select(i, ...)
-
-		data = data[key]
-
-		if not data then
-			return nil
-		end
+	if not data then
+		return nil
 	end
 
 	if data.values then
@@ -99,34 +83,23 @@ local function _component_data_default_array_values(component_data, unit, guid, 
 		return nil
 	end
 
-	local path = select(num_args, ...)
-
-	Log.error("Component", "[_component_data_default_array_values][Unit: %s][Component: %s] Missing default values for array(%s)", Unit.id_string(unit), guid, path)
+	Log.error("Component", "[_component_data_default_array_values][Unit: %s][Component: %s] Missing default values for array(%s)", Unit.id_string(unit), guid, variable_name)
 
 	return nil
 end
 
-local function _component_data_type(component_data, ...)
+local function _component_data_type(component_data, variable_name)
 	if not component_data then
 		return nil
 	end
 
-	local num_args = select("#", ...)
-	local data = component_data
+	local data = component_data[variable_name]
 
-	for i = 1, num_args do
-		local key = select(i, ...)
-
-		data = data[key]
-
-		if not data then
-			return nil
-		end
-
-		if num_args == i then
-			return data.ui_type, data.definition
-		end
+	if not data then
+		return nil
 	end
+
+	return data.ui_type, data.definition
 end
 
 local function _is_vector3(type_name)
@@ -151,24 +124,16 @@ end
 
 local EMPTY_TABLE = {}
 
-local function _component_data_get_array(self, unit, data_type, ...)
-	local unit_array_size = Unit.data_table_size(unit, "components", self.guid, "component_data", ...) or 0
+local function _component_data_get_array(self, unit, data_type, variable_name)
+	local unit_array_size = Unit.data_table_size(unit, "components", self.guid, "component_data", variable_name) or 0
 
 	if unit_array_size <= 0 then
 		return nil
 	end
 
-	local default_data = self.component_data
+	local default_data = self.component_data[variable_name]
 
-	for i = 1, select("#", ...) do
-		local key = select(i, ...)
-
-		default_data = default_data[key]
-
-		if not default_data then
-			break
-		end
-	end
+	default_data = default_data or nil
 
 	local default_values = default_data and default_data.values or EMPTY_TABLE
 	local default_size = default_data and default_data.size or 0
@@ -187,7 +152,7 @@ local function _component_data_get_array(self, unit, data_type, ...)
 
 	if data_type == "resource_array" then
 		while found_array_elements < unit_array_size or ii <= num_default_values or ii <= default_size do
-			data = Unit.get_data(unit, "components", self.guid, "component_data", ..., ii, "resource") or Unit.get_data(unit, "components", self.guid, "component_data", ..., ii)
+			data = Unit.get_data(unit, "components", self.guid, "component_data", variable_name, ii, "resource") or Unit.get_data(unit, "components", self.guid, "component_data", variable_name, ii)
 
 			if data then
 				found_array_elements = found_array_elements + 1
@@ -202,7 +167,7 @@ local function _component_data_get_array(self, unit, data_type, ...)
 		end
 	else
 		while found_array_elements < unit_array_size or ii <= num_default_values or ii <= default_size do
-			data = Unit.get_data(unit, "components", self.guid, "component_data", ..., ii)
+			data = Unit.get_data(unit, "components", self.guid, "component_data", variable_name, ii)
 
 			if data then
 				found_array_elements = found_array_elements + 1
@@ -227,16 +192,16 @@ local function _component_data_get_array(self, unit, data_type, ...)
 	return array
 end
 
-local function _component_data_get_vector3(self, unit, guid, ...)
+local function _component_data_get_vector3(self, unit, guid, variable_name)
 	local vector = Vector3(0, 0, 0)
-	local default_boxed_vector = _component_data_default_value(self.component_data, unit, guid, ...)
+	local default_boxed_vector = _component_data_default_value(self.component_data, unit, guid, variable_name)
 
 	if default_boxed_vector then
 		vector = default_boxed_vector:unbox()
 	end
 
 	for i = 1, 3 do
-		local data = Unit.get_data(unit, "components", guid, "component_data", ..., i)
+		local data = Unit.get_data(unit, "components", guid, "component_data", variable_name, i)
 
 		if data then
 			vector[i] = data
@@ -246,14 +211,14 @@ local function _component_data_get_vector3(self, unit, guid, ...)
 	return Vector3Box(Vector3(vector[1], vector[2], vector[3]))
 end
 
-local function _component_data_get_color(self, unit, guid, ...)
+local function _component_data_get_color(self, unit, guid, variable_name)
 	local elements = {
 		255,
 		255,
 		255,
 		255,
 	}
-	local default_boxed_color = _component_data_default_value(self.component_data, unit, guid, ...)
+	local default_boxed_color = _component_data_default_value(self.component_data, unit, guid, variable_name)
 
 	if default_boxed_color then
 		local _, r, g, b = Quaternion.to_elements(default_boxed_color:unbox())
@@ -267,7 +232,7 @@ local function _component_data_get_color(self, unit, guid, ...)
 	end
 
 	for i = 1, 4 do
-		local data = Unit.get_data(unit, "components", guid, "component_data", ..., i)
+		local data = Unit.get_data(unit, "components", guid, "component_data", variable_name, i)
 
 		if data then
 			elements[i] = data * 255
@@ -277,14 +242,14 @@ local function _component_data_get_color(self, unit, guid, ...)
 	return QuaternionBox(Color(elements[1], elements[2], elements[3], elements[4]))
 end
 
-local function _component_data_get_resource(component_data, unit, guid, ...)
-	return Unit.get_data(unit, "components", guid, "component_data", ..., "resource") or Unit.get_data(unit, "components", guid, "component_data", ...)
+local function _component_data_get_resource(component_data, unit, guid, variable_name)
+	return Unit.get_data(unit, "components", guid, "component_data", variable_name, "resource") or Unit.get_data(unit, "components", guid, "component_data", variable_name)
 end
 
-local function _component_data_get_struct_array(self, definition, unit, guid, ...)
+local function _component_data_get_struct_array(self, definition, unit, guid, variable_name)
 	local result_array = {}
 	local array_entry_index = 1
-	local child_info_exists = Unit.has_data(unit, "components", guid, "component_data", ..., array_entry_index)
+	local child_info_exists = Unit.has_data(unit, "components", guid, "component_data", variable_name, array_entry_index)
 
 	while child_info_exists do
 		local new_entry = {}
@@ -293,7 +258,7 @@ local function _component_data_get_struct_array(self, definition, unit, guid, ..
 			local member_type_name = member_data.ui_type
 
 			if _is_resource(member_type_name) then
-				local value = Unit.get_data(unit, "components", guid, "component_data", ..., array_entry_index, member_name, "resource")
+				local value = Unit.get_data(unit, "components", guid, "component_data", variable_name, array_entry_index, member_name, "resource")
 
 				if value == nil then
 					value = member_data.value
@@ -309,7 +274,7 @@ local function _component_data_get_struct_array(self, definition, unit, guid, ..
 				end
 
 				for i = 1, 3 do
-					local data = Unit.get_data(unit, "components", guid, "component_data", ..., array_entry_index, member_name, i)
+					local data = Unit.get_data(unit, "components", guid, "component_data", variable_name, array_entry_index, member_name, i)
 
 					if data then
 						vector[i] = data
@@ -338,7 +303,7 @@ local function _component_data_get_struct_array(self, definition, unit, guid, ..
 				end
 
 				for i = 1, 4 do
-					local data = Unit.get_data(unit, "components", guid, "component_data", ..., array_entry_index, member_name, i)
+					local data = Unit.get_data(unit, "components", guid, "component_data", variable_name, array_entry_index, member_name, i)
 
 					if data then
 						color_elements[i] = data * 255
@@ -347,7 +312,7 @@ local function _component_data_get_struct_array(self, definition, unit, guid, ..
 
 				new_entry[member_name] = QuaternionBox(Color(color_elements[1], color_elements[2], color_elements[3], color_elements[4]))
 			else
-				local value = Unit.get_data(unit, "components", guid, "component_data", ..., array_entry_index, member_name)
+				local value = Unit.get_data(unit, "components", guid, "component_data", variable_name, array_entry_index, member_name)
 
 				if value == nil then
 					value = member_data.value
@@ -360,7 +325,7 @@ local function _component_data_get_struct_array(self, definition, unit, guid, ..
 		table.insert(result_array, new_entry)
 
 		array_entry_index = array_entry_index + 1
-		child_info_exists = Unit.has_data(unit, "components", guid, "component_data", ..., array_entry_index)
+		child_info_exists = Unit.has_data(unit, "components", guid, "component_data", variable_name, array_entry_index)
 	end
 
 	return result_array
@@ -414,38 +379,42 @@ function component(component_name, super_name, ...)
 			setmetatable(self, destroyed_mt)
 		end
 
-		component_table.get_data = function (self, unit, ...)
-			local data_type, array_struct_definition = _component_data_type(self.component_data, ...)
+		component_table.get_data = function (self, unit, variable_name)
+			local data_type, array_struct_definition = _component_data_type(self.component_data, variable_name)
 
 			if data_type ~= nil then
 				if _is_resource(data_type) then
-					return _component_data_get_resource(self.component_data, unit, self.guid, ...) or _component_data_default_value(self.component_data, unit, self.guid, ...)
+					return _component_data_get_resource(self.component_data, unit, self.guid, variable_name) or _component_data_default_value(self.component_data, unit, self.guid, variable_name)
 				end
 
 				if _is_vector3(data_type) then
-					return _component_data_get_vector3(self, unit, self.guid, ...)
+					return _component_data_get_vector3(self, unit, self.guid, variable_name)
 				end
 
 				if _is_struct_array(data_type) then
-					return _component_data_get_struct_array(self, array_struct_definition, unit, self.guid, ...)
+					return _component_data_get_struct_array(self, array_struct_definition, unit, self.guid, variable_name)
 				end
 
 				if _is_color(data_type) then
-					return _component_data_get_color(self, unit, self.guid, ...)
+					return _component_data_get_color(self, unit, self.guid, variable_name)
 				end
 
 				if _is_array(data_type) then
-					return _component_data_get_array(self, unit, data_type, ...) or _component_data_default_array_values(self.component_data, unit, self.guid, data_type, ...)
+					return _component_data_get_array(self, unit, data_type, variable_name) or _component_data_default_array_values(self.component_data, unit, self.guid, data_type, variable_name)
 				end
 			end
 
-			local value = Unit.get_data(unit, "components", self.guid, "component_data", ...)
+			local value = Unit.get_data(unit, "components", self.guid, "component_data", variable_name)
 
 			if value == nil then
-				value = _component_data_default_value(self.component_data, unit, self.guid, ...)
+				value = _component_data_default_value(self.component_data, unit, self.guid, variable_name)
 			end
 
 			return value
+		end
+
+		component_table.get_data_raw = function (self, unit, ...)
+			return Unit.get_data(unit, "components", self.guid, "component_data", ...)
 		end
 
 		component_table.name = function (self)
@@ -517,6 +486,7 @@ _require_component("scripts/components/corruptor_arm")
 _require_component("scripts/components/corruptor")
 _require_component("scripts/components/count_player_hits")
 _require_component("scripts/components/cover")
+_require_component("scripts/components/cryptic_character_create_voice_screen")
 _require_component("scripts/components/cutscene_camera")
 _require_component("scripts/components/cutscene_character")
 _require_component("scripts/components/cutscene_companion")
@@ -532,6 +502,7 @@ _require_component("scripts/components/door")
 _require_component("scripts/components/driven_keys")
 _require_component("scripts/components/druglab_tank_shield")
 _require_component("scripts/components/druglab_tank")
+_require_component("scripts/components/electric_floor")
 _require_component("scripts/components/emissive_light")
 _require_component("scripts/components/enemy_event_spawner")
 _require_component("scripts/components/expedition_animated_platform")
@@ -550,6 +521,7 @@ _require_component("scripts/components/foot_ik")
 _require_component("scripts/components/gyroscope_particle_effect")
 _require_component("scripts/components/hazard_prop")
 _require_component("scripts/components/health_station")
+_require_component("scripts/components/health_bar_gauge")
 _require_component("scripts/components/heresy_finale_material_variables")
 _require_component("scripts/components/hideable_ammo")
 _require_component("scripts/components/holo_sight")

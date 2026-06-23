@@ -437,6 +437,10 @@ LoadingHost.stop_load_mission = function (self)
 		self._host = nil
 	end
 
+	table.clear(self._spawned_peers)
+	table.clear(self._package_sync_enabled_peers)
+	table.clear(self._sync_issue_history)
+
 	for _, channel_id in ipairs(old_channels) do
 		local client = LoadingRemoteStateMachine:new(self._network_delegate, channel_id, self._spawn_queue, self._done_loading_level_func, self._mission_seed)
 

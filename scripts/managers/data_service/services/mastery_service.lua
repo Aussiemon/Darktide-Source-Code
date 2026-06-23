@@ -147,13 +147,13 @@ MasteryService._get_masteries_tracks = function (self)
 	end
 end
 
-MasteryService.get_all_masteries = function (self, optional_account_id)
+MasteryService.get_all_masteries = function (self)
 	return self:_get_masteries_tracks():next(function ()
 		return self._backend_interface.tracks:get_track_state()
 	end):next(function (tracks_state_data)
 		local mastery_data_by_id = {}
 
-		for id, mastery_track in pairs(self._mastery_tracks) do
+		for id in pairs(self._mastery_tracks) do
 			local track_state
 
 			if tracks_state_data then
@@ -162,7 +162,9 @@ MasteryService.get_all_masteries = function (self, optional_account_id)
 
 			local mastery_data = self:_get_mastery_track_and_state(id, track_state)
 
-			mastery_data_by_id[mastery_data.mastery_id] = mastery_data
+			if mastery_data then
+				mastery_data_by_id[mastery_data.mastery_id] = mastery_data
+			end
 		end
 
 		return mastery_data_by_id
@@ -387,6 +389,10 @@ MasteryService.claim_levels_by_new_exp = function (self, mastery_data, new_exp)
 end
 
 MasteryService.check_and_claim_all_masteries_levels = function (self, masteries_data)
+	if not masteries_data then
+		return Promise.resolved({})
+	end
+
 	local promises = {}
 
 	for id, mastery_data in pairs(masteries_data) do

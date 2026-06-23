@@ -1,12 +1,12 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/utilities/wieldable_slot_scripts.lua
 
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/adamant_buff_drone_placement_preview_effects")
-require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/adamant_whistle_targeting_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/aim_luggable_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/aim_projectile_ads_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/aim_projectile_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/ammo_belt")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/ammo_count_effects")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/arc_rifle_ammo_counter")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/auspex_device_map_interface")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/auspex_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/auspex_scanning_effects")
@@ -17,8 +17,10 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_l
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_weapon_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/charge_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/communication_hack_device_interface")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/cryptic_servo_skull_order_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/deployable_device_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/device")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/dual_wielded_idling_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/flamer_gas_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/flamer_pilot_light_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/flashlight")
@@ -27,6 +29,7 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/force_w
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/force_weapon_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/force_weapon_wind_slash_activation_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/force_weapon_wind_slash_stage_effects")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/galvanic_rifle_spin")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/grimoire_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/holo_sight")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/lasgun_ammo_display")
@@ -38,6 +41,7 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/overhea
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/plasmagun_overheat_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/power_weapon_charges_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/power_weapon_effects")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/power_sword_p3_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/power_weapon_overheat_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/psyker_force_field_placement_preview_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/psyker_single_target_effects")
@@ -58,7 +62,9 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/syringe
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/target_units")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/thunder_hammer_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/tox_grenade_effects")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/transonic_weapon_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/warp_charge_venting_effects")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/weapon_shout_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/weapon_special_display")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/weapon_temperature_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wielded_idling_effects")
@@ -76,7 +82,7 @@ local SCRIPT_INDEX = table.mirror_array({
 	"STRIDE",
 })
 
-WieldableSlotScripts._register_script = function (script_name, unit_1p, unit_3p, num_scripts)
+local function _register_script(script_name, unit_1p, unit_3p, num_scripts)
 	if script_name == "" then
 		return num_scripts
 	end
@@ -112,7 +118,7 @@ WieldableSlotScripts.create = function (wieldable_slot_scripts_context, wieldabl
 						local attachment_path = slot.attachment_id_lookup_1p[unit_1p]
 						local unit_3p = slot.attachment_id_lookup_3p[attachment_path]
 
-						num_scripts = WieldableSlotScripts._register_script(script_name, unit_1p, unit_3p, num_scripts)
+						num_scripts = _register_script(script_name, unit_1p, unit_3p, num_scripts)
 					end
 				end
 			end
@@ -129,7 +135,7 @@ WieldableSlotScripts.create = function (wieldable_slot_scripts_context, wieldabl
 			for slot_script_i = 1, #slot_scripts do
 				local script_name = slot_scripts[slot_script_i]
 
-				num_scripts = WieldableSlotScripts._register_script(script_name, root_unit_1p, root_unit_3p, num_scripts)
+				num_scripts = _register_script(script_name, root_unit_1p, root_unit_3p, num_scripts)
 			end
 		end
 
@@ -138,7 +144,7 @@ WieldableSlotScripts.create = function (wieldable_slot_scripts_context, wieldabl
 		for ii = 1, #weapon_template_wieldable_slot_scripts do
 			local script_name = weapon_template_wieldable_slot_scripts[ii]
 
-			num_scripts = WieldableSlotScripts._register_script(script_name, root_unit_1p, root_unit_3p, num_scripts)
+			num_scripts = _register_script(script_name, root_unit_1p, root_unit_3p, num_scripts)
 		end
 	end
 

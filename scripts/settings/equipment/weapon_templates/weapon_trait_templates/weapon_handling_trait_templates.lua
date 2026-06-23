@@ -241,5 +241,25 @@ weapon_handling_trait_templates.saw_p1_m1_finesse_stat = {
 		},
 	},
 }
+weapon_handling_trait_templates.transonic_sword_transonic_knife_p1_m1_finesse_stat = {
+	{
+		"time_scale",
+		{
+			max = 0.7,
+			min = 0.37,
+		},
+	},
+}
+weapon_handling_trait_templates.galvanic_rifle_p1_m1_finesse_stat = {
+	{
+		"targets",
+		"default_target",
+		"boost_curve_multiplier_finesse",
+		{
+			max = 0.7,
+			min = 0.2,
+		},
+	},
+}
 
 return weapon_handling_trait_templates

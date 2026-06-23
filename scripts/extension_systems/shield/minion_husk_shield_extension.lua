@@ -24,6 +24,16 @@ MinionHuskShieldExtension.add_damage = function (self, damage_amount, damage_pro
 	return remaining_damage, absorbed_attack
 end
 
+MinionHuskShieldExtension.template = function (self)
+	return self._template
+end
+
+MinionHuskShieldExtension.current_health = function (self)
+	local shield_health = GameSession.game_object_field(self._game_session, self._game_object_id, "shield_health")
+
+	return shield_health
+end
+
 MinionHuskShieldExtension.can_block_attack = function (self, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor)
 	if damage_profile.ignore_shield or not attacking_unit then
 		return false

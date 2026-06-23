@@ -419,7 +419,7 @@ AreaOfEffectUnitSpawnerExtension._play_explosion = function (self, explosion_tem
 	local optional_line_of_sight = false
 	local skip_sync = true
 
-	explosion_func(self._world, self._physics_world, position, nil, attacking_unit, explosion_template, power_level, charge_level, attack_type, is_critical_strike, ignore_cover, item_or_nil, origin_slot_or_nil, optional_hit_units_table, optional_attacking_unit_owner_unit, optional_apply_owner_buffs, predicted, optional_line_of_sight, skip_sync)
+	explosion_func(self._world, self._physics_world, position, Quaternion.identity(), attacking_unit, explosion_template, power_level, charge_level, attack_type, is_critical_strike, ignore_cover, item_or_nil, origin_slot_or_nil, optional_hit_units_table, optional_attacking_unit_owner_unit, optional_apply_owner_buffs, predicted, optional_line_of_sight, skip_sync)
 end
 
 AreaOfEffectUnitSpawnerExtension._check_should_mark_for_deletion = function (self, salvo_data, dt)

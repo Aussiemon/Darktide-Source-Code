@@ -3200,7 +3200,7 @@ ButtonPassTemplates.menu_panel_button = {
 			},
 		},
 		visibility_function = function (content, style)
-			return content.hotspot.is_selected
+			return content.hotspot.is_selected or content.hotspot.is_focused
 		end,
 	},
 	{
@@ -3231,7 +3231,7 @@ ButtonPassTemplates.menu_panel_button = {
 			style.size_addition[2] = 80 * content.hotspot.anim_select_progress
 		end,
 		visibility_function = function (content, style)
-			return content.hotspot.is_selected
+			return content.hotspot.is_selected or content.hotspot.is_focused
 		end,
 	},
 	{
@@ -3772,7 +3772,7 @@ ButtonPassTemplates.page_indicator_terminal = {
 			color = Color.terminal_text_header(255, true),
 		},
 		visibility_function = function (content, style)
-			return content.hotspot.is_focused
+			return content.hotspot.is_selected or content.hotspot.is_focused
 		end,
 	},
 }

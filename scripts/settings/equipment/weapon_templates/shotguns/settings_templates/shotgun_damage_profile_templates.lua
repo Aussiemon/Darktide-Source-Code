@@ -113,7 +113,7 @@ damage_templates.default_shotgun_killshot = {
 		0.25,
 		0.75,
 	},
-	wounds_template = WoundsTemplates.shotgun,
+	wounds_template = WoundsTemplates.shotgun_small,
 	on_kill_area_suppression = {
 		suppression_value = {
 			1,
@@ -234,7 +234,7 @@ damage_templates.default_shotgun_assault = {
 		0.25,
 		0.75,
 	},
-	wounds_template = WoundsTemplates.shotgun,
+	wounds_template = WoundsTemplates.shotgun_small,
 	on_kill_area_suppression = {
 		suppression_value = {
 			1,
@@ -346,7 +346,7 @@ damage_templates.shotgun_assault_p2 = {
 		0.6,
 		1.6,
 	},
-	wounds_template = WoundsTemplates.shotgun,
+	wounds_template = WoundsTemplates.shotgun_small,
 	on_kill_area_suppression = {
 		suppression_value = {
 			1,
@@ -562,7 +562,7 @@ damage_templates.shotgun_cleaving_special = {
 		0.25,
 		0.75,
 	},
-	wounds_template = WoundsTemplates.shotgun,
+	wounds_template = WoundsTemplates.shotgun_small,
 	on_kill_area_suppression = {
 		suppression_value = {
 			1,
@@ -732,7 +732,7 @@ damage_templates.shotgun_assault_burninating = {
 	damage_type = damage_types.pellet,
 	gibbing_power = gibbing_power.light,
 	gibbing_type = gibbing_types.ballistic,
-	wounds_template = WoundsTemplates.shotgun,
+	wounds_template = WoundsTemplates.shotgun_small,
 	on_kill_area_suppression = {
 		suppression_value = {
 			1,
@@ -842,7 +842,7 @@ damage_templates.shotgun_slug_special = {
 		3.5,
 		4.5,
 	},
-	wounds_template = WoundsTemplates.shotgun,
+	wounds_template = WoundsTemplates.shotgun_small,
 	on_kill_area_suppression = {
 		suppression_value = {
 			10,
@@ -957,7 +957,7 @@ damage_templates.shotgun_p1_m2_assault = {
 		0.15,
 		0.45,
 	},
-	wounds_template = WoundsTemplates.shotgun,
+	wounds_template = WoundsTemplates.shotgun_small,
 	on_kill_area_suppression = {
 		suppression_value = {
 			1,
@@ -1072,7 +1072,7 @@ damage_templates.shotgun_p1_m2_killshot = {
 		0.15,
 		0.45,
 	},
-	wounds_template = WoundsTemplates.shotgun,
+	wounds_template = WoundsTemplates.shotgun_small,
 	on_kill_area_suppression = {
 		suppression_value = {
 			1,
@@ -1187,7 +1187,7 @@ damage_templates.shotgun_p1_m3_assault = {
 		7,
 		8,
 	},
-	wounds_template = WoundsTemplates.shotgun,
+	wounds_template = WoundsTemplates.shotgun_small,
 	on_kill_area_suppression = {
 		distance = 5,
 		suppression_value = {
@@ -1299,7 +1299,7 @@ damage_templates.shotgun_p1_m3_killshot = {
 		7,
 		8,
 	},
-	wounds_template = WoundsTemplates.shotgun,
+	wounds_template = WoundsTemplates.shotgun_small,
 	on_kill_area_suppression = {
 		distance = 5,
 		suppression_value = {
@@ -1418,7 +1418,7 @@ damage_templates.shotgun_p4_m1 = {
 		1.5,
 		2.5,
 	},
-	wounds_template = WoundsTemplates.shotgun,
+	wounds_template = WoundsTemplates.shotgun_small,
 	on_kill_area_suppression = {
 		suppression_value = {
 			3.5,
@@ -1534,7 +1534,7 @@ damage_templates.shotgun_p4_m2 = {
 		0.75,
 		1.55,
 	},
-	wounds_template = WoundsTemplates.shotgun,
+	wounds_template = WoundsTemplates.shotgun_small,
 	on_kill_area_suppression = {
 		suppression_value = {
 			5,

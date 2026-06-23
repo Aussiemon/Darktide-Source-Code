@@ -82,7 +82,7 @@ ExplosiveLuggable._create_explosion = function (self)
 
 		self._exploded = true
 
-		Explosion.create_explosion(self._world, self._physics_world, explosion_position, Vector3.up(), unit, self._explosion_template, power_level, charge_level, attack_type, nil, nil, nil, nil, nil, attacking_unit_owner_unit)
+		Explosion.create_explosion(self._world, self._physics_world, explosion_position, Quaternion.identity(), unit, self._explosion_template, power_level, charge_level, attack_type, nil, nil, nil, nil, nil, attacking_unit_owner_unit)
 
 		if self._liquid_area_template then
 			LiquidArea.try_create(explosion_position, Vector3.down(), self._nav_world, self._liquid_area_template)

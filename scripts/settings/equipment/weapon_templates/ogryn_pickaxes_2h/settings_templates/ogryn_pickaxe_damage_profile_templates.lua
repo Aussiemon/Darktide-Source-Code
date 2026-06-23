@@ -625,7 +625,7 @@ damage_templates.ogryn_pickaxe_pushfollowup_m2 = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.default,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.ogryn_club,
+	wounds_template = WoundsTemplates.blunt,
 	armor_damage_modifier = am_default,
 	targets = {
 		{
@@ -774,7 +774,7 @@ damage_templates.ogryn_pickaxe_blunt = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.default,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.ogryn_club,
+	wounds_template = WoundsTemplates.blunt,
 	armor_damage_modifier = am_default,
 	targets = {
 		{
@@ -882,7 +882,7 @@ damage_templates.ogryn_pickaxe_blunt_m3 = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.default,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.ogryn_club,
+	wounds_template = WoundsTemplates.blunt,
 	armor_damage_modifier = am_default,
 	targets = {
 		{

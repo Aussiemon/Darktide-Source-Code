@@ -10,5 +10,8 @@ MutatorSettings.dark_themes = {
 	"darkness",
 	"ventilation_purge",
 }
+MutatorSettings.half_dark_themes = {
+	"dawn",
+}
 
 return settings("MutatorSettings", MutatorSettings)

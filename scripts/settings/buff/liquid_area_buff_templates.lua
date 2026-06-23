@@ -199,7 +199,7 @@ templates.shock_trap_liquid_area = {
 		0.8,
 	},
 	keywords = {
-		buff_keywords.electrocuted,
+		buff_keywords.electrocuted_shock_mine,
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit

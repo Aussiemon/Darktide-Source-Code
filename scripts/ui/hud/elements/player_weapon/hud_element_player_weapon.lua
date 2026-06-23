@@ -37,6 +37,10 @@ HudElementPlayerWeapon.init = function (self, parent, draw_layer, start_scale, d
 
 	self._talent_extension = talent_extension
 
+	local unit_data_extension = ScriptUnit.has_extension(player_unit, "unit_data_system")
+
+	self._unit_data_extension = unit_data_extension
+
 	local weapon_template = data.weapon_template
 
 	self._weapon_name = data.weapon_name
@@ -229,6 +233,11 @@ HudElementPlayerWeapon.update = function (self, dt, t, ui_renderer, render_setti
 			local max_ability_cooldown = ability_extension:max_ability_cooldown(ability_type)
 			local remaining_ability_cooldown = ability_extension:remaining_ability_cooldown(ability_type)
 			local cooldown_progress = max_ability_cooldown > 0 and remaining_ability_cooldown / max_ability_cooldown or 0
+			local is_ability_disabled = not ability_extension:ability_enabled(ability_type)
+
+			if is_ability_disabled then
+				cooldown_progress = 1
+			end
 
 			if remaining_ability_charges ~= self._remaining_ability_charges then
 				if self._remaining_ability_charges and remaining_ability_charges > self._remaining_ability_charges then
@@ -808,6 +817,14 @@ HudElementPlayerWeapon.set_icon = function (self, icon, is_weapon)
 		icon_style.default_size[1] = weapon_icon_size[1]
 		widget.dirty = true
 	end
+end
+
+HudElementPlayerWeapon.icon = function (self)
+	local widgets_by_name = self._widgets_by_name
+	local widget = widgets_by_name.icon
+	local content = widget.content
+
+	return content.icon
 end
 
 HudElementPlayerWeapon._register_events = function (self)

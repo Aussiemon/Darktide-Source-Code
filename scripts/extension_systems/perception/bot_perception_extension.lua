@@ -348,7 +348,7 @@ BotPerceptionExtension._select_ally_by_utility = function (self, self_unit, self
 
 		if player_unit ~= self_unit and HEALTH_ALIVE[player_unit] and self_segment_index <= player_segment_index then
 			local player, player_position = player_unit_spawn_manager:owner(player_unit), POSITION_LOOKUP[player_unit]
-			local is_human_controlled = not player:is_human_controlled()
+			local is_human_controlled = player:is_human_controlled()
 			local is_bot = not is_human_controlled
 			local priority_target = perception_component.priority_target_enemy
 			local in_need_type, look_at_ally, utility = self:_calculate_ally_need_type(self_position, self_health_utility, can_heal_other, can_give_healing_to_other, player_unit, player_position, target_enemy, is_bot, t, priority_target)

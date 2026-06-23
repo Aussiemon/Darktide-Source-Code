@@ -1,5 +1,7 @@
 ﻿-- chunkname: @scripts/ui/views/mission_intro_view/mission_intro_view.lua
 
+require("scripts/ui/views/base_view")
+
 local Definitions = require("scripts/ui/views/mission_intro_view/mission_intro_view_definitions")
 local Breeds = require("scripts/settings/breed/breeds")
 local MissionIntroViewSettings = require("scripts/ui/views/mission_intro_view/mission_intro_view_settings")
@@ -37,7 +39,7 @@ MissionIntroView.init = function (self, settings, context)
 	self._camera = nil
 	self._profile_loaders = {}
 	self._spawn_slots = {}
-	self._prioritized_ogryn_slots = table.clone(MissionIntroViewSettings.prioritized_ogryn_slots)
+	self._prioritized_ogryn_sized_slots = table.clone(MissionIntroViewSettings.prioritized_ogryn_sized_slots)
 
 	local backend_mission_id = Managers.mechanism:backend_mission_id()
 
@@ -263,13 +265,15 @@ MissionIntroView._get_free_slot_id = function (self, player)
 	local profile = player:profile()
 	local archetype_settings = profile.archetype
 	local breed_name = archetype_settings.breed
-	local is_ogryn = breed_name == "ogryn"
-	local prioritized_ogryn_slots = self._prioritized_ogryn_slots
-	local back_slots_decided = #prioritized_ogryn_slots == 2
+	local breed = Breeds[breed_name]
+	local body_size = breed.body_size
+	local is_ogryn_sized = body_size == "ogryn_sized"
+	local prioritized_ogryn_sized_slots = self._prioritized_ogryn_sized_slots
+	local back_slots_decided = #prioritized_ogryn_sized_slots == 2
 
-	if is_ogryn and back_slots_decided then
-		for ii = 1, #prioritized_ogryn_slots do
-			local slot_index = prioritized_ogryn_slots[ii]
+	if is_ogryn_sized and back_slots_decided then
+		for ii = 1, #prioritized_ogryn_sized_slots do
+			local slot_index = prioritized_ogryn_sized_slots[ii]
 			local slot = spawn_slots[slot_index]
 
 			if not slot.occupied then
@@ -282,10 +286,10 @@ MissionIntroView._get_free_slot_id = function (self, player)
 
 			if not slot.occupied then
 				if not back_slots_decided then
-					if is_ogryn then
-						table.remove(prioritized_ogryn_slots, ii)
+					if is_ogryn_sized then
+						table.remove(prioritized_ogryn_sized_slots, ii)
 					else
-						table.remove(prioritized_ogryn_slots, ii + 1)
+						table.remove(prioritized_ogryn_sized_slots, ii + 1)
 					end
 				end
 
@@ -378,35 +382,48 @@ MissionIntroView._update_player_slots = function (self, dt, t, input_service)
 	end
 end
 
+local function _bot_sort_function(a, b)
+	local a_slot_index = a:slot() + (a:is_human_controlled() and 0 or 100)
+	local b_slot_index = b:slot() + (b:is_human_controlled() and 0 or 100)
+
+	return a_slot_index < b_slot_index
+end
+
+local function _ogryn_sort_function(a, b)
+	local a_slot_index = a:slot() + (a:breed_name() == "ogryn" and 100 or 0)
+	local b_slot_index = b:slot() + (b:breed_name() == "ogryn" and 100 or 0)
+
+	return a_slot_index < b_slot_index
+end
+
 local temp_sorted_players = {}
 
 MissionIntroView._assign_player_slots = function (self)
 	local player_manager = Managers.player
-	local players = player_manager:players()
-
-	local function bot_sort_function(a, b)
-		local a_slot_index = a:slot() + (a:is_human_controlled() and 0 or 100)
-		local b_slot_index = b:slot() + (b:is_human_controlled() and 0 or 100)
-
-		return a_slot_index < b_slot_index
-	end
-
-	local function ogryn_sort_function(a, b)
-		local a_slot_index = a:slot() + (a:breed_name() == "ogryn" and 100 or 0)
-		local b_slot_index = b:slot() + (b:breed_name() == "ogryn" and 100 or 0)
-
-		return a_slot_index < b_slot_index
-	end
+	local human_players = player_manager:human_players()
+	local bot_players = player_manager:bot_players()
 
 	table.clear(temp_sorted_players)
 
-	for unique_id, player in pairs(players) do
+	for unique_id, player in pairs(human_players) do
+		if #temp_sorted_players >= 4 then
+			break
+		end
+
+		temp_sorted_players[#temp_sorted_players + 1] = player
+	end
+
+	for unique_id, player in pairs(bot_players) do
+		if #temp_sorted_players >= 4 then
+			break
+		end
+
 		temp_sorted_players[#temp_sorted_players + 1] = player
 	end
 
 	if #temp_sorted_players > 1 then
-		table.sort(temp_sorted_players, bot_sort_function)
-		table.sort(temp_sorted_players, ogryn_sort_function)
+		table.sort(temp_sorted_players, _bot_sort_function)
+		table.sort(temp_sorted_players, _ogryn_sort_function)
 	end
 
 	local spawn_slots = self._spawn_slots
@@ -438,9 +455,7 @@ MissionIntroView._assign_player_to_slot = function (self, player, slot)
 	local profile_spawner = slot.profile_spawner
 	local archetype_settings = profile.archetype
 	local archetype_name = archetype_settings.name
-	local breed_name = archetype_settings.breed
-	local breed_settings = Breeds[breed_name]
-	local mission_intro_state_machine = breed_settings.mission_intro_state_machine
+	local mission_intro_state_machine = archetype_settings.mission_intro_state_machine
 	local animations_per_archetype = MissionIntroViewSettings.animations_per_archetype
 	local animations_settings = animations_per_archetype[archetype_name]
 	local animation_event

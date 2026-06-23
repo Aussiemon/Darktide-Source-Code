@@ -45,6 +45,12 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 		boss_extension_or_nil:damaged()
 	end
 
+	local shield_extension = ScriptUnit.has_extension(unit, "shield_system")
+
+	if shield_extension then
+		actual_toughness_damage_dealt = shield_extension:add_damage(damage_absorbed, attack_result, hit_actor, damage_profile, attack_type, attack_direction, hit_world_position_or_nil)
+	end
+
 	if toughness_extension then
 		actual_toughness_damage_dealt = toughness_extension:add_damage(tougness_damage, attack_result, hit_actor, damage_profile, attack_type, attack_direction, hit_world_position_or_nil)
 	end

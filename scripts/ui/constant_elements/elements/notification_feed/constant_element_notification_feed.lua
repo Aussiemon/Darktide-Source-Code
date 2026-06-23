@@ -1,16 +1,21 @@
 ﻿-- chunkname: @scripts/ui/constant_elements/elements/notification_feed/constant_element_notification_feed.lua
 
-local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
+local AchievementUiHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
 local ConstantElementNotificationFeedSettings = require("scripts/ui/constant_elements/elements/notification_feed/constant_element_notification_feed_settings")
 local ContractCriteriaParser = require("scripts/utilities/contract_criteria_parser")
 local Definitions = require("scripts/ui/constant_elements/elements/notification_feed/constant_element_notification_feed_definitions")
 local Items = require("scripts/utilities/items")
 local Text = require("scripts/utilities/ui/text")
-local UISettings = require("scripts/settings/ui/ui_settings")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local UIWidget = require("scripts/managers/ui/ui_widget")
+local UiSettings = require("scripts/settings/ui/ui_settings")
+local UiSoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UiWidget = require("scripts/managers/ui/ui_widget")
 local WalletSettings = require("scripts/settings/wallet_settings")
-local DEBUG_RELOAD = true
+local ITEM_TYPE_LOCALIZATION_LOOKUP = UiSettings.item_type_localization_lookup
+local DEFAULT_ALPHA_VALUE = ConstantElementNotificationFeedSettings.default_alpha_value
+local ENTRY_SPACING = ConstantElementNotificationFeedSettings.entry_spacing
+local MAX_VISIBLE_NOTIFICATIONS = ConstantElementNotificationFeedSettings.max_visible_notifications
+local SOUND_EVENT_BY_ITEM_TYPE = ConstantElementNotificationFeedSettings.sound_event_by_item_type
+local TRAIT_SOUND_EVENTS_BY_RARITY = ConstantElementNotificationFeedSettings.trait_sound_events_by_rarity
 local _localization_context = {}
 
 local function _apply_package_item_icon_cb_func(widget, item)
@@ -39,7 +44,7 @@ local function _apply_package_item_icon_cb_func(widget, item)
 end
 
 local function _remove_package_item_icon_cb_func(widget, ui_renderer)
-	UIWidget.set_visible(widget, ui_renderer, false)
+	UiWidget.set_visible(widget, ui_renderer, false)
 
 	if widget.content.old_icon then
 		widget.content.icon = widget.content.old_icon
@@ -65,7 +70,7 @@ local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, 
 end
 
 local function _remove_live_item_icon_cb_func(widget, ui_renderer)
-	UIWidget.set_visible(widget, ui_renderer, false)
+	UiWidget.set_visible(widget, ui_renderer, false)
 
 	local material_values = widget.style.icon.material_values
 
@@ -86,7 +91,7 @@ local function _apply_player_portrait_icon_cb_func(widget, grid_index, rows, col
 end
 
 local function _remove_player_portrait_icon_cb_func(widget, ui_renderer)
-	UIWidget.set_visible(widget, ui_renderer, false)
+	UiWidget.set_visible(widget, ui_renderer, false)
 
 	local material_values = widget.style.icon.material_values
 
@@ -111,7 +116,7 @@ local function _add_player_frame_cb_func(widget, item)
 end
 
 local function _remove_player_frame_cb_func(widget, ui_renderer)
-	UIWidget.set_visible(widget, ui_renderer, false)
+	UiWidget.set_visible(widget, ui_renderer, false)
 
 	local material_values = widget.style.icon.material_values
 
@@ -120,7 +125,7 @@ local function _remove_player_frame_cb_func(widget, ui_renderer)
 end
 
 local ConstantElementNotificationFeed = class("ConstantElementNotificationFeed", "ConstantElementBase")
-local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "voting", "matchmaking", "penance_item_can_be_claimed", "player_assist", "collectible", "helped_collect_collectible", "destructible", "minion_loot_steal", "minion_loot_drop", "player_loot_drop", "havoc_status", "mutator")
+local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "voting", "matchmaking", "penance_item_can_be_claimed", "player_assist", "collectible", "helped_collect_collectible", "destructible", "minion_loot_steal", "minion_loot_drop", "player_loot_drop", "mutator", "havoc_status")
 
 ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start_scale)
 	ConstantElementNotificationFeed.super.init(self, parent, draw_layer, start_scale, Definitions)
@@ -254,17 +259,17 @@ ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start
 			total_time = 5,
 			widget_definition = Definitions.notification_message,
 		},
-		havoc_status = {
-			animation_enter = "popup_enter",
-			animation_exit = "popup_leave",
-			priority_order = 1,
-			widget_definition = Definitions.notification_message,
-		},
 		mutator = {
 			animation_enter = "popup_enter",
 			animation_exit = "popup_leave",
 			priority_order = 1,
 			total_time = 3,
+			widget_definition = Definitions.notification_message,
+		},
+		havoc_status = {
+			animation_enter = "popup_enter",
+			animation_exit = "popup_leave",
+			priority_order = 1,
 			widget_definition = Definitions.notification_message,
 		},
 	}
@@ -342,6 +347,22 @@ ConstantElementNotificationFeed.event_add_notification_message = function (self,
 		}
 	else
 		self:_add_notification_message(message_type, data, callback, sound_event, done_callback)
+	end
+end
+
+ConstantElementNotificationFeed.event_update_notification_progress = function (self, notification_id, progress)
+	local notification = self:_notification_by_id(notification_id)
+
+	if notification then
+		notification.data.progress = progress
+
+		local widget = notification.widget
+
+		widget.content.progress = progress
+
+		if progress then
+			widget.style.progress.size[1] = widget.style.progress.full_width * math.clamp(progress, 0, 1)
+		end
 	end
 end
 
@@ -450,7 +471,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 				},
 			},
 			color = {
-				255 * ConstantElementNotificationFeedSettings.default_alpha_value,
+				255 * DEFAULT_ALPHA_VALUE,
 				85,
 				26,
 				26,
@@ -473,9 +494,9 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			208,
 			208,
 		}
-		var_1_0.enter_sound_event = UISoundEvents.notification_warning
+		var_1_0.enter_sound_event = UiSoundEvents.notification_warning
 		notification_data = var_1_0
-	elseif message_type == MESSAGE_TYPES.item_granted then
+	elseif message_type == MESSAGE_TYPES.item_granted and not data.ignore_in_notifications then
 		local item, reason = data
 
 		if data.reason then
@@ -483,46 +504,50 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			item = data.item
 		end
 
-		local item_type = item.item_type
 		local visual_item = item
-		local has_rarity = not not visual_item.rarity
+		local has_rarity = not not visual_item.rarity and visual_item.rarity >= 0
+		local item_type = visual_item.item_type
 		local texts, rarity_color, background_rarity_color
-		local enter_sound_event = UISoundEvents.notification_item_received_rarity_1
+		local enter_sound_event = UiSoundEvents.notification_item_received_rarity_1
 		local icon_material_values
 
 		if has_rarity then
 			local sound_event_name = string.format("notification_item_received_rarity_%d", visual_item.rarity)
 
-			enter_sound_event = UISoundEvents[sound_event_name] or enter_sound_event
+			enter_sound_event = UiSoundEvents[sound_event_name] or enter_sound_event
 			rarity_color, background_rarity_color = Items.rarity_color(visual_item)
 			rarity_color = table.clone(rarity_color)
+
+			local rarity_display_name = Items.rarity_display_name(data)
+			local item_type_display_name = Localize(ITEM_TYPE_LOCALIZATION_LOOKUP[item_type])
+
+			Log.exception("ConstantElementNotificationFeed", "Item type %q is not defined in UiSettings.item_type_localization_lookup!", item_type)
+
 			texts = {
 				{
 					display_name = (item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED") and string.format("%s • %s", Items.weapon_card_display_name(visual_item), Items.weapon_card_sub_display_name(visual_item)) or Items.display_name(visual_item),
-					color = rarity_color,
 				},
 				{
-					display_name = Items.rarity_display_name(item),
-					color = rarity_color,
+					display_name = string.format("{#color(%d, %d, %d)}%s{#reset()} • %s", rarity_color[2], rarity_color[3], rarity_color[4], rarity_display_name, item_type_display_name or "N/A"),
 				},
 				{
 					display_name = Localize("loc_notification_desc_added_to_inventory"),
 				},
 			}
 		else
-			if item_type == "WEAPON_SKIN" then
-				enter_sound_event = UISoundEvents.notification_weapon_skin_received
-			elseif item_type == "GEAR_EXTRA_COSMETIC" or item_type == "GEAR_HEAD" or item_type == "GEAR_UPPERBODY" or item_type == "GEAR_LOWERBODY" then
-				enter_sound_event = UISoundEvents.notification_cosmetic_received
-			end
+			enter_sound_event = SOUND_EVENT_BY_ITEM_TYPE[item_type] or enter_sound_event
+
+			local item_type_display_name = ITEM_TYPE_LOCALIZATION_LOOKUP[item_type]
+
+			Log.exception("ConstantElementNotificationFeed", "Item type %q is not defined in UiSettings.item_type_localization_lookup!", item_type)
 
 			texts = {
 				{
 					display_name = Items.display_name(visual_item),
 				},
 				{
-					display_name = Localize(UISettings.item_type_localization_lookup[visual_item.item_type]),
-					color = Color.terminal_frame(255, true),
+					display_name = item_type_display_name and Localize(item_type_display_name) or "N/A",
+					color = Color.white(255, true),
 				},
 				{
 					display_name = Localize("loc_notification_desc_added_to_inventory"),
@@ -564,19 +589,21 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 				icon = texture_icon,
 				frame = texture_frame,
 			}
-
-			local trait_sound_events_by_rarity = ConstantElementNotificationFeedSettings.trait_sound_events_by_rarity
-
-			enter_sound_event = trait_sound_events_by_rarity[rarity]
+			enter_sound_event = TRAIT_SOUND_EVENTS_BY_RARITY[rarity]
 		elseif item_type == "CHARACTER_TITLE" then
 			icon = nil
 			icon_size = nil
+
+			local item_type_display_name = ITEM_TYPE_LOCALIZATION_LOOKUP[item_type]
+
+			Log.exception("ConstantElementNotificationFeed", "Item type %q is not defined in UiSettings.item_type_localization_lookup!", item_type)
+
 			texts = {
 				{
 					display_name = string.format("'%s'", Items.display_name(visual_item)),
 				},
 				{
-					display_name = Localize(UISettings.item_type_localization_lookup[visual_item.item_type]),
+					display_name = item_type_display_name and Localize(item_type_display_name) or "N/A",
 				},
 				{
 					display_name = Localize("loc_notification_desc_added_to_inventory"),
@@ -589,7 +616,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 
 		if background_rarity_color then
 			background_rarity_color = table.clone(background_rarity_color)
-			background_rarity_color[1] = background_rarity_color[1] * ConstantElementNotificationFeedSettings.default_alpha_value
+			background_rarity_color[1] = background_rarity_color[1] * DEFAULT_ALPHA_VALUE
 		end
 
 		if reason and texts[3] then
@@ -693,12 +720,12 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 				37,
 			},
 			color = {
-				255 * ConstantElementNotificationFeedSettings.default_alpha_value,
+				255 * DEFAULT_ALPHA_VALUE,
 				255,
 				215,
 				0,
 			},
-			enter_sound_event = UISoundEvents.notification_collectible_pickup,
+			enter_sound_event = UiSoundEvents.notification_collectible_pickup,
 		}
 	elseif message_type == MESSAGE_TYPES.helped_collect_collectible and challenge then
 		local helped_string = data.helped_string
@@ -739,12 +766,12 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 				37,
 			},
 			color = {
-				255 * ConstantElementNotificationFeedSettings.default_alpha_value,
+				255 * DEFAULT_ALPHA_VALUE,
 				255,
 				215,
 				0,
 			},
-			enter_sound_event = UISoundEvents.notification_collectible_pickup_helped,
+			enter_sound_event = UiSoundEvents.notification_collectible_pickup_helped,
 		}
 	elseif message_type == MESSAGE_TYPES.minion_loot_drop then
 		local currency_type = "expedition_loot"
@@ -779,14 +806,14 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 				icon = icon_texture_large,
 				line_color = Color.terminal_text_body(255, true),
 				color = Color.terminal_grid_background(100, true),
-				enter_sound_event = UISoundEvents.notification_collectible_pickup_helped,
+				enter_sound_event = UiSoundEvents.notification_collectible_pickup_helped,
 			}
 		end
 	elseif message_type == MESSAGE_TYPES.minion_loot_steal then
 		local player = data.player
 		local player_name = player and player:name()
 		local player_slot = player and player.slot and player:slot()
-		local player_slot_colors = UISettings.player_slot_colors
+		local player_slot_colors = UiSettings.player_slot_colors
 		local player_slot_color = player_slot and player_slot_colors[player_slot]
 
 		if player_name and player_slot_color then
@@ -805,7 +832,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			amount = amount_text,
 		})
 		local line_color = Color.ui_hud_red_light(255, true)
-		local background_color = Color.ui_hud_red_medium(255 * ConstantElementNotificationFeedSettings.default_alpha_value, true)
+		local background_color = Color.ui_hud_red_medium(255 * DEFAULT_ALPHA_VALUE, true)
 
 		notification_data = {
 			icon = "content/ui/materials/icons/notifications/tech_dropped",
@@ -824,7 +851,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			player = player,
 			line_color = line_color,
 			color = background_color,
-			enter_sound_event = UISoundEvents.notification_collectible_pickup_helped,
+			enter_sound_event = UiSoundEvents.notification_collectible_pickup_helped,
 		}
 	elseif message_type == MESSAGE_TYPES.player_loot_drop then
 		local player = data.player
@@ -832,7 +859,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 
 		if not player.__deleted then
 			local player_slot = player and player.slot and player:slot()
-			local player_slot_colors = UISettings.player_slot_colors
+			local player_slot_colors = UiSettings.player_slot_colors
 			local player_slot_color = player_slot and player_slot_colors[player_slot]
 
 			if player_name and player_slot_color then
@@ -848,7 +875,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			amount = amount_text,
 		})
 		local line_color = Color.ui_hud_red_light(255, true)
-		local background_color = Color.ui_hud_red_medium(255 * ConstantElementNotificationFeedSettings.default_alpha_value, true)
+		local background_color = Color.ui_hud_red_medium(255 * DEFAULT_ALPHA_VALUE, true)
 
 		notification_data = {
 			icon = "content/ui/materials/icons/notifications/tech_dropped",
@@ -867,7 +894,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			player = player,
 			line_color = line_color,
 			color = background_color,
-			enter_sound_event = UISoundEvents.notification_collectible_pickup_helped,
+			enter_sound_event = UiSoundEvents.notification_collectible_pickup_helped,
 		}
 	elseif message_type == MESSAGE_TYPES.destructible and challenge then
 		local player_name = data.player_name
@@ -911,19 +938,19 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 				149,
 			},
 			color = {
-				255 * ConstantElementNotificationFeedSettings.default_alpha_value,
+				255 * DEFAULT_ALPHA_VALUE,
 				82,
 				73,
 				45,
 			},
-			enter_sound_event = UISoundEvents.notification_destroyed_destructible,
+			enter_sound_event = UiSoundEvents.notification_destroyed_destructible,
 		}
 	elseif message_type == MESSAGE_TYPES.player_assist and self:_can_show_assist_notification() then
 		local assist_type = data.assist_type
 		local player = data.player
 		local player_name = player and player:name()
 		local player_slot = player and player.slot and player:slot()
-		local player_slot_colors = UISettings.player_slot_colors
+		local player_slot_colors = UiSettings.player_slot_colors
 		local player_slot_color = player_slot and player_slot_colors[player_slot]
 
 		if player_name and player_slot_color then
@@ -936,9 +963,9 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 
 		localization_context.player_name = player_name
 
-		local text = Localize(UISettings.assist_type_localization_lookup[assist_type], true, localization_context)
-		local enter_sound_event_alias = UISettings.assist_type_enter_sound_lookup[assist_type]
-		local enter_sound_event = enter_sound_event_alias and UISoundEvents[enter_sound_event_alias]
+		local text = Localize(UiSettings.assist_type_localization_lookup[assist_type], true, localization_context)
+		local enter_sound_event_alias = UiSettings.assist_type_enter_sound_lookup[assist_type]
+		local enter_sound_event = enter_sound_event_alias and UiSoundEvents[enter_sound_event_alias]
 
 		notification_data = {
 			icon = "content/ui/materials/base/ui_portrait_frame_base",
@@ -954,7 +981,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			enter_sound_event = enter_sound_event,
 		}
 	elseif message_type == MESSAGE_TYPES.achievement then
-		local achievement_title = AchievementUIHelper.localized_title(data)
+		local achievement_title = AchievementUiHelper.localized_title(data)
 
 		notification_data = {
 			icon = "content/ui/materials/icons/achievements/achievement_icon_container_v2",
@@ -989,12 +1016,12 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 				149,
 			},
 			color = {
-				255 * ConstantElementNotificationFeedSettings.default_alpha_value,
+				255 * DEFAULT_ALPHA_VALUE,
 				82,
 				73,
 				45,
 			},
-			enter_sound_event = UISoundEvents.notification_achievement,
+			enter_sound_event = UiSoundEvents.notification_achievement,
 		}
 	elseif message_type == MESSAGE_TYPES.contract then
 		local criteria = data.criteria
@@ -1015,7 +1042,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			},
 			icon_material_values = {
 				checkbox = 1,
-				contract_type = type and UISettings.contracts_icons_by_type[type] or UISettings.contracts_icons_by_type.default,
+				contract_type = type and UiSettings.contracts_icons_by_type[type] or UiSettings.contracts_icons_by_type.default,
 			},
 			icon_color = Color.terminal_text_header(255, true),
 		}
@@ -1102,48 +1129,52 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 				},
 			},
 		}
-	elseif message_type == MESSAGE_TYPES.penance_item_can_be_claimed then
+	elseif message_type == MESSAGE_TYPES.penance_item_can_be_claimed and not data.ignore_in_notifications then
 		local item = data
-		local item_type = item.item_type
 		local visual_item = item
-		local has_rarity = not not visual_item.rarity
+		local has_rarity = not not visual_item.rarity and visual_item.rarity >= 0
+		local item_type = visual_item.item_type
 		local texts, rarity_color, background_rarity_color
-		local enter_sound_event = UISoundEvents.notification_item_received_rarity_1
+		local enter_sound_event = UiSoundEvents.notification_item_received_rarity_1
 		local icon_material_values
 
 		if has_rarity then
 			local sound_event_name = string.format("notification_item_received_rarity_%d", visual_item.rarity)
 
-			enter_sound_event = UISoundEvents[sound_event_name] or enter_sound_event
+			enter_sound_event = UiSoundEvents[sound_event_name] or enter_sound_event
 			rarity_color, background_rarity_color = Items.rarity_color(visual_item)
 			rarity_color = table.clone(rarity_color)
+
+			local rarity_display_name = Items.rarity_display_name(data)
+			local item_type_display_name = Localize(ITEM_TYPE_LOCALIZATION_LOOKUP[item_type])
+
+			Log.exception("ConstantElementNotificationFeed", "Item type %q is not defined in UiSettings.item_type_localization_lookup!", item_type)
+
 			texts = {
 				{
 					display_name = (item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED") and string.format("%s • %s", Items.weapon_card_display_name(visual_item), Items.weapon_card_sub_display_name(visual_item)) or Items.display_name(visual_item),
-					color = rarity_color,
 				},
 				{
-					display_name = Items.rarity_display_name(data),
-					color = rarity_color,
+					display_name = string.format("{#color(%d, %d, %d)}%s{#reset()} • %s", rarity_color[2], rarity_color[3], rarity_color[4], rarity_display_name, item_type_display_name or "N/A"),
 				},
 				{
-					display_name = Localize("loc_notification_desc_penance_item_can_be_claimed"),
+					display_name = Localize("loc_notification_desc_added_to_inventory"),
 				},
 			}
 		else
-			if item_type == "WEAPON_SKIN" then
-				enter_sound_event = UISoundEvents.notification_weapon_skin_received
-			elseif item_type == "GEAR_EXTRA_COSMETIC" or item_type == "GEAR_HEAD" or item_type == "GEAR_UPPERBODY" or item_type == "GEAR_LOWERBODY" then
-				enter_sound_event = UISoundEvents.notification_cosmetic_received
-			end
+			enter_sound_event = SOUND_EVENT_BY_ITEM_TYPE[item_type] or enter_sound_event
+
+			local item_type_display_name = ITEM_TYPE_LOCALIZATION_LOOKUP[item_type]
+
+			Log.exception("ConstantElementNotificationFeed", "Item type %q is not defined in UiSettings.item_type_localization_lookup!", item_type)
 
 			texts = {
 				{
 					display_name = Items.display_name(visual_item),
 				},
 				{
-					display_name = Localize(UISettings.item_type_localization_lookup[visual_item.item_type]),
-					color = Color.terminal_frame(255, true),
+					display_name = item_type_display_name and Localize(item_type_display_name) or "N/A",
+					color = Color.white(255, true),
 				},
 				{
 					display_name = Localize("loc_notification_desc_penance_item_can_be_claimed"),
@@ -1185,19 +1216,21 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 				icon = texture_icon,
 				frame = texture_frame,
 			}
-
-			local trait_sound_events_by_rarity = ConstantElementNotificationFeedSettings.trait_sound_events_by_rarity
-
-			enter_sound_event = trait_sound_events_by_rarity[rarity]
+			enter_sound_event = TRAIT_SOUND_EVENTS_BY_RARITY[rarity]
 		elseif item_type == "CHARACTER_TITLE" then
 			icon = nil
 			icon_size = nil
+
+			local item_type_display_name = ITEM_TYPE_LOCALIZATION_LOOKUP[item_type]
+
+			Log.exception("ConstantElementNotificationFeed", "Item type %q is not defined in UiSettings.item_type_localization_lookup!", item_type)
+
 			texts = {
 				{
 					display_name = string.format("'%s'", Items.display_name(visual_item)),
 				},
 				{
-					display_name = Localize(UISettings.item_type_localization_lookup[visual_item.item_type]),
+					display_name = item_type_display_name and Localize(item_type_display_name) or "N/A",
 				},
 				{
 					display_name = Localize("loc_notification_desc_added_to_inventory"),
@@ -1210,7 +1243,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 
 		if background_rarity_color then
 			background_rarity_color = table.clone(background_rarity_color)
-			background_rarity_color[1] = background_rarity_color[1] * ConstantElementNotificationFeedSettings.default_alpha_value
+			background_rarity_color[1] = background_rarity_color[1] * DEFAULT_ALPHA_VALUE
 		end
 
 		notification_data = {
@@ -1246,8 +1279,8 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 	end
 
 	notification_data.type = message_type
-	notification_data.enter_sound_event = notification_data.enter_sound_event or UISoundEvents.notification_default_enter
-	notification_data.exit_sound_event = notification_data.exit_sound_event or UISoundEvents.notification_default_exit
+	notification_data.enter_sound_event = notification_data.enter_sound_event or UiSoundEvents.notification_default_enter
+	notification_data.exit_sound_event = notification_data.exit_sound_event or UiSoundEvents.notification_default_exit
 
 	return notification_data
 end
@@ -1268,7 +1301,7 @@ ConstantElementNotificationFeed._add_notification_message = function (self, mess
 	local notifications = self._notifications
 	local num_notifications = #notifications
 
-	if num_notifications >= ConstantElementNotificationFeedSettings.max_visible_notifications then
+	if num_notifications >= MAX_VISIBLE_NOTIFICATIONS then
 		self._queue_notifications[#self._queue_notifications + 1] = {
 			message_type = message_type,
 			data = data,
@@ -1358,7 +1391,7 @@ ConstantElementNotificationFeed._remove_notification = function (self, notificat
 			end
 
 			self:_unregister_widget_name(widget.name)
-			UIWidget.destroy(ui_renderer, widget)
+			UiWidget.destroy(ui_renderer, widget)
 			table.remove(notifications, i)
 
 			local done_callback = notification.done_callback
@@ -1367,14 +1400,14 @@ ConstantElementNotificationFeed._remove_notification = function (self, notificat
 				done_callback()
 			end
 
-			if self._queue_notifications[1] and not (#self._notifications >= ConstantElementNotificationFeedSettings.max_visible_notifications) then
-				local notification = self._queue_notifications[1]
-				local message_type = notification.message_type
-				local data = notification.data
-				local callback = notification.callback
-				local sound_event = notification.sound_event
+			if self._queue_notifications[1] and not (#self._notifications >= MAX_VISIBLE_NOTIFICATIONS) then
+				local queued_notification = self._queue_notifications[1]
+				local message_type = queued_notification.message_type
+				local queued_data = queued_notification.data
+				local callback = queued_notification.callback
+				local sound_event = queued_notification.sound_event
 
-				self:_add_notification_message(message_type, data, callback, sound_event)
+				self:_add_notification_message(message_type, queued_data, callback, sound_event)
 				table.remove(self._queue_notifications, 1)
 				self:_update_notification_queue_counter()
 			end
@@ -1390,7 +1423,7 @@ ConstantElementNotificationFeed._create_notification_entry = function (self, not
 	local name = "notification_" .. id
 	local pass_template_function = notification_template.widget_definition.pass_template_function
 	local pass_template = pass_template_function and pass_template_function(self) or notification_template.widget_definition.pass_template
-	local widget_definition = UIWidget.create_definition(pass_template, "background", nil)
+	local widget_definition = UiWidget.create_definition(pass_template, "background", nil)
 	local widget = self:_create_widget(name, widget_definition)
 	local notification = {}
 
@@ -1424,7 +1457,7 @@ ConstantElementNotificationFeed._create_notification_entry = function (self, not
 			local item_animation_event = item.animation_event
 			local item_companion_state_machine = item.companion_state_machine ~= nil and item.companion_state_machine ~= "" and item.companion_state_machine or nil
 			local item_companion_animation_event = item.companion_animation_event ~= nil and item.companion_animation_event ~= "" and item.companion_animation_event or nil
-			local context = {
+			local render_context = {
 				camera_focus_slot_name = slot_name,
 				state_machine = item_state_machine,
 				animation_event = item_animation_event,
@@ -1432,7 +1465,7 @@ ConstantElementNotificationFeed._create_notification_entry = function (self, not
 				companion_animation_event = item_companion_animation_event,
 			}
 			local on_load_callback = callback(self, "_on_item_icon_loaded", notification, item)
-			local icon_load_id = Managers.ui:load_item_icon(item, on_load_callback, context)
+			local icon_load_id = Managers.ui:load_item_icon(item, on_load_callback, render_context)
 
 			notification.item_loaded_info = {
 				icon_load_id = icon_load_id,
@@ -1519,12 +1552,6 @@ ConstantElementNotificationFeed._get_notifications_text_height = function (self,
 end
 
 ConstantElementNotificationFeed.update = function (self, dt, t, ui_renderer, render_settings, input_service)
-	if DEBUG_RELOAD then
-		DEBUG_RELOAD = false
-
-		self:clear(ui_renderer)
-	end
-
 	local notification_message_delay_queue = self._notification_message_delay_queue
 
 	for i = #notification_message_delay_queue, 1, -1 do
@@ -1550,7 +1577,6 @@ ConstantElementNotificationFeed.update = function (self, dt, t, ui_renderer, ren
 end
 
 ConstantElementNotificationFeed._align_notification_widgets = function (self, dt)
-	local entry_spacing = ConstantElementNotificationFeedSettings.entry_spacing
 	local offset_y = 0
 	local notifications = self._notifications
 
@@ -1568,7 +1594,7 @@ ConstantElementNotificationFeed._align_notification_widgets = function (self, dt
 				widget_offset[2] = math.lerp(widget_offset[2], offset_y, dt * 2)
 			end
 
-			offset_y = offset_y + widget_height + entry_spacing
+			offset_y = offset_y + widget_height + ENTRY_SPACING
 		end
 	end
 end
@@ -1612,7 +1638,7 @@ ConstantElementNotificationFeed._draw_widgets = function (self, dt, t, input_ser
 
 			local widget = notification.widget
 
-			UIWidget.draw(widget, ui_renderer)
+			UiWidget.draw(widget, ui_renderer)
 
 			local total_time = notification.total_time
 			local time = notification.time

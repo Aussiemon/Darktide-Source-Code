@@ -338,7 +338,7 @@ PlayerUnitFxExtension.destroy = function (self, unit)
 			local force_stop = true
 			local is_moving_sound_source = false
 
-			self:_stop_looping_wwise_event(looping_sounds_alias, force_stop, is_moving_sound_source)
+			self:_trigger_looping_wwise_sound_stop_event(looping_sounds_alias, force_stop, is_moving_sound_source)
 		end
 	end
 
@@ -909,7 +909,7 @@ PlayerUnitFxExtension.move_sound_source = function (self, source_name, parent_un
 			local force_stop = false
 			local is_moving_sound_source = true
 
-			self:_stop_looping_wwise_event(sound_alias, force_stop, is_moving_sound_source)
+			self:_trigger_looping_wwise_sound_stop_event(sound_alias, force_stop, is_moving_sound_source)
 		end
 	end
 
@@ -917,7 +917,7 @@ PlayerUnitFxExtension.move_sound_source = function (self, source_name, parent_un
 	self:_register_sound_source(sources, source_name, parent_unit, attachments_by_unit, attachment_name_lookup, node_name)
 
 	for sound_alias, attachment_name in pairs(temp_playing_looping_sounds) do
-		self:_trigger_looping_wwise_event(sound_alias, source_name, attachment_name)
+		self:_trigger_looping_wwise_sound_start_event(sound_alias, source_name, attachment_name)
 	end
 end
 
@@ -986,7 +986,7 @@ PlayerUnitFxExtension._unregister_sound_source = function (self, source_name)
 				local force_stop = true
 				local is_moving_sound_source = false
 
-				self:_stop_looping_wwise_event(looping_sound_alias, force_stop, is_moving_sound_source)
+				self:_trigger_looping_wwise_sound_stop_event(looping_sound_alias, force_stop, is_moving_sound_source)
 			end
 
 			data.should_trigger = false
@@ -1212,12 +1212,32 @@ PlayerUnitFxExtension.spawn_unit_fx_line = function (self, line_effect, is_criti
 
 	if self._is_server then
 		local channel_id, game_object_id = self._player:channel_id(), self._game_object_id
+		local line_effect_id = NetworkLookup.line_effects[line_effect.name]
 
-		Managers.state.game_session:send_rpc_clients_except("rpc_spawn_player_fx_line", channel_id, game_object_id, NetworkLookup.line_effects[line_effect.name], is_critical_strike, NetworkLookup.player_character_fx_sources[source_name], NetworkLookup.player_attachment_names[attachment_name], end_position, link, scale or Vector3(1, 1, 1), not not append_husk_to_event_name)
+		Managers.state.game_session:send_rpc_clients_except("rpc_spawn_player_fx_line", channel_id, game_object_id, line_effect_id, is_critical_strike, NetworkLookup.player_character_fx_sources[source_name], NetworkLookup.player_attachment_names[attachment_name], end_position, link, scale or Vector3(1, 1, 1), not not append_husk_to_event_name)
 	end
 end
 
 local MAX_EMITTERS = 100
+
+PlayerUnitFxExtension._spawn_particles_on_line_with_interval = function (self, world, spawner_position, line_direction, line_rotation, line_length, vfx, interval)
+	local num_emitters = 0
+	local spawn_emitters = true
+
+	while spawn_emitters do
+		local new_emitter_distance = interval * num_emitters + (num_emitters == 0 and 1 or 0)
+
+		if line_length < new_emitter_distance + 1 or num_emitters >= MAX_EMITTERS then
+			spawn_emitters = false
+		else
+			local spawn_pos = spawner_position + line_direction * new_emitter_distance
+
+			self:_create_particles_wrapper(world, vfx, spawn_pos, line_rotation, nil, false)
+
+			num_emitters = num_emitters + 1
+		end
+	end
+end
 
 PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_critical_strike, spawner_name, end_position, link, orphaned_policy, scale, append_husk_to_event_name, optional_attachment_name)
 	if DEDICATED_SERVER then
@@ -1240,7 +1260,6 @@ PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_crit
 	local moving_sfx_config = line_effect.moving_sfx
 	local keep_aligned = line_effect.keep_aligned
 	local emitters = line_effect.emitters
-	local critical_emitters = line_effect.emitters_crit
 	local line = end_position - spawner_position
 	local line_length = Vector3.length(line)
 	local line_direction = Vector3.normalize(line)
@@ -1291,55 +1310,31 @@ PlayerUnitFxExtension._spawn_unit_fx_line = function (self, line_effect, is_crit
 	end
 
 	if emitters then
-		local emitter_effect_name = emitters.vfx.default
-		local start_emitter_effect_name = emitters.vfx.start or emitter_effect_name
-		local interval = emitters.interval
-		local distance = interval.distance
-		local increase = interval.increase
-		local emitter_distance = 0
-		local num_emitters = 0
-		local spawn_emitters = true
+		local world = self._world
 
-		while spawn_emitters do
-			local new_emitter_distance = emitter_distance + distance * math.pow(1 + increase, num_emitters)
+		emitters = is_critical_strike and emitters.critical_strike or emitters.default
 
-			if line_length < new_emitter_distance + 1 or num_emitters >= MAX_EMITTERS then
-				spawn_emitters = false
-			else
-				local spawn_pos = spawner_position + line_direction * new_emitter_distance
-				local chosen_effect_name = num_emitters == 0 and start_emitter_effect_name or emitter_effect_name
+		for ii = 1, #emitters do
+			local emitter = emitters[ii]
 
-				self:_create_particles_wrapper(self._world, chosen_effect_name, spawn_pos, line_rotation, nil, false)
+			if emitter.emitter_type == "fill" then
+				local particle_length = emitter.particle_length
+				local vfx = emitter.vfx
 
-				emitter_distance = new_emitter_distance
-				num_emitters = num_emitters + 1
-			end
-		end
-	end
+				self:_spawn_particles_on_line_with_interval(world, spawner_position, line_direction, line_rotation, line_length, vfx, particle_length)
+			elseif emitter.emitter_type == "random" then
+				local vfx = emitter.vfx
+				local start_offset = emitter.start_offset_percentage or 1
+				local end_offset = emitter.end_offset_percentage or 0
+				local adjusted_line_length = line_length * (end_offset - start_offset) * math.random()
+				local spawn_pos = spawner_position + line_direction * (adjusted_line_length + line_length * start_offset)
 
-	if critical_emitters and is_critical_strike then
-		local emitter_effect_name = critical_emitters.vfx.default
-		local start_emitter_effect_name = critical_emitters.vfx.start or emitter_effect_name
-		local interval = critical_emitters.interval
-		local distance = interval.distance
-		local increase = interval.increase
-		local emitter_distance = 0
-		local num_critical_emitters = 0
-		local spawn_critical_emitters = true
+				self:_create_particles_wrapper(world, vfx, spawn_pos, line_rotation, nil, false)
+			elseif emitter.emitter_type == "interval" then
+				local interval = emitter.interval
+				local vfx = emitter.vfx
 
-		while spawn_critical_emitters do
-			local new_emitter_distance = emitter_distance + distance * math.pow(1 + increase, num_critical_emitters)
-
-			if line_length < new_emitter_distance + 1 or num_critical_emitters >= MAX_EMITTERS then
-				spawn_critical_emitters = false
-			else
-				local spawn_pos = spawner_position + line_direction * new_emitter_distance
-				local chosen_effect_name = num_critical_emitters == 0 and start_emitter_effect_name or emitter_effect_name
-
-				self:_create_particles_wrapper(self._world, chosen_effect_name, spawn_pos, line_rotation, nil, false)
-
-				emitter_distance = new_emitter_distance
-				num_critical_emitters = num_critical_emitters + 1
+				self:_spawn_particles_on_line_with_interval(world, spawner_position, line_direction, line_rotation, line_length, vfx, interval)
 			end
 		end
 	end
@@ -1826,11 +1821,11 @@ PlayerUnitFxExtension._update_looping_sounds = function (self, fixed_frame)
 
 		if trigger_data.should_trigger then
 			if data.is_playing then
-				self:stop_looping_wwise_event(sound_alias)
+				self:_stop_looping_wwise_event(sound_alias)
 			end
 
 			if not trigger_data.source_name or self._sources[trigger_data.source_name] then
-				self:trigger_looping_wwise_event(sound_alias, trigger_data.source_name, trigger_data.source_attach_name)
+				self:_start_looping_wwise_event(sound_alias, trigger_data.source_name, trigger_data.source_attach_name)
 			else
 				trigger_data.should_trigger = false
 			end
@@ -1838,7 +1833,7 @@ PlayerUnitFxExtension._update_looping_sounds = function (self, fixed_frame)
 			local previous_frame = fixed_frame - 1
 
 			if previous_frame > data.timestamp then
-				self:stop_looping_wwise_event(sound_alias)
+				self:_stop_looping_wwise_event(sound_alias)
 			end
 		end
 	end
@@ -1848,10 +1843,10 @@ PlayerUnitFxExtension.is_looping_sound_playing = function (self, sound_alias)
 	return self._looping_sounds[sound_alias].is_playing
 end
 
-PlayerUnitFxExtension.trigger_looping_wwise_event = function (self, sound_alias, optional_source_name, optional_attachment_name)
+PlayerUnitFxExtension._start_looping_wwise_event = function (self, sound_alias, optional_source_name, optional_attachment_name)
 	local is_server, is_local = self._is_server, self._is_local_unit
 
-	self:_trigger_looping_wwise_event(sound_alias, optional_source_name, optional_attachment_name)
+	self:_trigger_looping_wwise_sound_start_event(sound_alias, optional_source_name, optional_attachment_name)
 
 	if is_server then
 		local channel_id, game_object_id, sound_alias_id = self._player:channel_id(), self._game_object_id, NetworkLookup.player_character_looping_sound_aliases[sound_alias]
@@ -1861,7 +1856,7 @@ PlayerUnitFxExtension.trigger_looping_wwise_event = function (self, sound_alias,
 	end
 end
 
-PlayerUnitFxExtension._trigger_looping_wwise_event = function (self, sound_alias, optional_source_name, optional_attachment_name)
+PlayerUnitFxExtension._trigger_looping_wwise_sound_start_event = function (self, sound_alias, optional_source_name, optional_attachment_name)
 	local data = self._looping_sounds[sound_alias]
 	local sound_config = PlayerCharacterLoopingSoundAliases[sound_alias]
 	local has_husk_events = not not sound_config.has_husk_events
@@ -1919,12 +1914,12 @@ PlayerUnitFxExtension._trigger_looping_wwise_event = function (self, sound_alias
 	data.is_playing, data.is_husk, data.source_name, data.source_attach_name, data.ignored_as_exclusive_event = true, is_husk, optional_source_name, optional_attachment_name, ignored_as_exclusive_event
 end
 
-PlayerUnitFxExtension.stop_looping_wwise_event = function (self, sound_alias)
+PlayerUnitFxExtension._stop_looping_wwise_event = function (self, sound_alias)
 	local is_server, is_local = self._is_server, self._is_local_unit
 	local force_stop = false
 	local is_moving_sound_source = false
 
-	self:_stop_looping_wwise_event(sound_alias, force_stop, is_moving_sound_source)
+	self:_trigger_looping_wwise_sound_stop_event(sound_alias, force_stop, is_moving_sound_source)
 
 	if is_server then
 		local channel_id, game_object_id, sound_alias_id = self._player:channel_id(), self._game_object_id, NetworkLookup.player_character_looping_sound_aliases[sound_alias]
@@ -1933,7 +1928,7 @@ PlayerUnitFxExtension.stop_looping_wwise_event = function (self, sound_alias)
 	end
 end
 
-PlayerUnitFxExtension._stop_looping_wwise_event = function (self, sound_alias, force_stop, is_moving_sound_source)
+PlayerUnitFxExtension._trigger_looping_wwise_sound_stop_event = function (self, sound_alias, force_stop, is_moving_sound_source)
 	local data = self._looping_sounds[sound_alias]
 	local config = PlayerCharacterLoopingSoundAliases[sound_alias]
 	local is_husk = data.is_husk
@@ -2438,7 +2433,7 @@ PlayerUnitFxExtension.rpc_play_looping_player_sound = function (self, channel_id
 	local sound_alias = NetworkLookup.player_character_looping_sound_aliases[sound_alias_id]
 	local source_name = optional_source_id and NetworkLookup.player_character_fx_sources[optional_source_id]
 
-	self:_trigger_looping_wwise_event(sound_alias, source_name)
+	self:_trigger_looping_wwise_sound_start_event(sound_alias, source_name)
 end
 
 PlayerUnitFxExtension.rpc_stop_looping_player_sound = function (self, channel_id, game_object_id, sound_alias_id)
@@ -2451,7 +2446,7 @@ PlayerUnitFxExtension.rpc_stop_looping_player_sound = function (self, channel_id
 		return
 	end
 
-	self:_stop_looping_wwise_event(sound_alias, false, false)
+	self:_trigger_looping_wwise_sound_stop_event(sound_alias, false, false)
 end
 
 PlayerUnitFxExtension.rpc_spawn_player_particles = function (self, channel_id, game_object_id, particle_name_id, particle_spawner_id, attachment_id, link, position_offset, rotation_offset, scale, optional_server_particle_index)

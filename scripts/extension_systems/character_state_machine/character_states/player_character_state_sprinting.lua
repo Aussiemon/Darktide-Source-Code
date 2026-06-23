@@ -142,7 +142,8 @@ PlayerCharacterStateSprinting.fixed_update = function (self, unit, dt, t, next_s
 	local stat_buffs = buff_extension:stat_buffs()
 	local has_sprinting_buff = buff_extension:has_keyword(buff_keywords.allow_hipfire_during_sprint)
 	local weapon_template = PlayerUnitVisualLoadout.wielded_weapon_template(self._visual_loadout_extension, self._inventory_component)
-	local has_weapon_action_input, weapon_action_input = _check_input(t, self._action_input_extension, self._weapon_extension, weapon_template, has_sprinting_buff)
+	local grenade_ability_template = AbilityTemplate.current_ability_template(self._grenade_ability_action_component)
+	local has_weapon_action_input, weapon_action_input = _check_input(t, self._action_input_extension, self._weapon_extension, weapon_template, has_sprinting_buff, grenade_ability_template)
 	local wants_sprint = sprint_input and not has_weapon_action_input
 	local sprint_character_state_component = self._sprint_character_state_component
 	local move_direction, move_speed, new_x, new_y, wants_to_stop, _ = self:_wanted_movement(dt, sprint_character_state_component, input_extension, locomotion_steering, locomotion, move_settings, self._first_person_component, wants_sprint, weapon_extension, stat_buffs, t)
@@ -271,6 +272,14 @@ PlayerCharacterStateSprinting._check_transition = function (self, unit, t, next_
 		return ability_transition
 	end
 
+	local weapon_transition, weapon_transition_params = self:_poll_weapon_state_transitions(unit, t)
+
+	if weapon_transition then
+		table.merge(next_state_params, weapon_transition_params)
+
+		return weapon_transition
+	end
+
 	local weapon_template = PlayerUnitVisualLoadout.wielded_weapon_template(self._visual_loadout_extension, self._inventory_component)
 
 	if wants_to_stop then
@@ -380,14 +389,15 @@ local ALLOWED_INPUTS_IN_SPRINT = {
 	wield = true,
 }
 
-function _check_input(t, action_input_extension, weapon_extension, weapon_template, has_hip_fire_buff)
+function _check_input(t, action_input_extension, weapon_extension, weapon_template, has_hip_fire_buff, grenade_ability_template)
 	local peeked_next_input = action_input_extension:peek_next_input("weapon_action")
 
 	if not peeked_next_input then
 		return false, nil
 	end
 
-	local is_allowed = peeked_next_input and (weapon_template and weapon_template.allowed_inputs_in_sprint or ALLOWED_INPUTS_IN_SPRINT)[peeked_next_input]
+	local allowed_inputs_in_sprint = weapon_template and weapon_template.allowed_inputs_in_sprint or grenade_ability_template and grenade_ability_template.allowed_inputs_in_sprint
+	local is_allowed = peeked_next_input and (allowed_inputs_in_sprint or ALLOWED_INPUTS_IN_SPRINT)[peeked_next_input]
 	local is_hipfire_input = peeked_next_input and weapon_template and weapon_template.hipfire_inputs and weapon_template.hipfire_inputs[peeked_next_input]
 	local is_hipfire_allowed_in_sprint = is_hipfire_input and has_hip_fire_buff
 

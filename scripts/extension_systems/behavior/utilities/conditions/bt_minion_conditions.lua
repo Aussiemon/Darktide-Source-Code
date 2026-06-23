@@ -1549,9 +1549,9 @@ conditions.is_minion_disabled_with_type = function (unit, blackboard, scratchpad
 end
 
 conditions.has_weapon_malfunction = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-	local buff_extension = ScriptUnit.extension(unit, "buff_system")
+	local weapon_malfunction_component = blackboard.weapon_malfunction
 
-	return buff_extension and buff_extension:has_keyword("weapon_malfunction")
+	return weapon_malfunction_component.is_malfunctioning
 end
 
 conditions.has_manual_teleport = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
@@ -1679,6 +1679,41 @@ conditions.is_correct_pounce_action = function (unit, blackboard, scratchpad, co
 	return companion_pounce_setting.companion_pounce_action == condition_args.pounce_action
 end
 
+conditions.is_correct_state = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local game_session = Managers.state.game_session:game_session()
+	local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
+	local current_state = GameSession.game_object_field(game_session, game_object_id, "state")
+	local args_state = condition_args.state
+	local is_table = type(args_state) == "table"
+
+	if is_table then
+		local found = false
+
+		for i = 1, #args_state do
+			if current_state == args_state[i] then
+				found = true
+
+				break
+			end
+		end
+
+		return found
+	else
+		return current_state == condition_args.state
+	end
+end
+
+conditions.owner_has_special_rule = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local behavior_component = blackboard.behavior
+	local owner_unit = behavior_component.owner_unit
+	local special_rule = condition_args.special_rule
+	local talent_extension = owner_unit and ScriptUnit.has_extension(owner_unit, "talent_system")
+
+	if talent_extension and talent_extension:has_special_rule(special_rule) then
+		return true
+	end
+end
+
 conditions.companion_has_pounce_target = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
 	local pounce_component = blackboard.pounce
 
@@ -1720,7 +1755,8 @@ conditions.companion_is_aggroed = function (unit, blackboard, scratchpad, condit
 	local behavior_component = blackboard.behavior
 	local owner_unit = behavior_component.owner_unit
 	local owner_attack_intensity_extension = ScriptUnit.has_extension(owner_unit, "attack_intensity_system")
-	local in_combat = not owner_attack_intensity_extension or owner_attack_intensity_extension:in_combat_for_companion()
+	local companion_buff_extension = ScriptUnit.has_extension(unit, "buff_extension")
+	local in_combat = not owner_attack_intensity_extension or owner_attack_intensity_extension:in_combat_for_companion(companion_buff_extension)
 	local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 	local owner_unit_data_extension = ScriptUnit.has_extension(owner_unit, "unit_data_system")
 	local character_state = owner_unit_data_extension and owner_unit_data_extension:read_component("character_state")
@@ -1728,28 +1764,8 @@ conditions.companion_is_aggroed = function (unit, blackboard, scratchpad, condit
 
 	in_combat = in_combat or owner_unit_is_disabled
 
-	local companion_whistle_target
-	local smart_tag_system = Managers.state.extension:system("smart_tag_system")
-	local tag_target, _ = smart_tag_system:unit_tagged_by_player_unit(owner_unit, "unit_threat_adamant")
-
-	if tag_target then
-		local unit_data_extension = ScriptUnit.has_extension(tag_target, "unit_data_system")
-		local breed = unit_data_extension and unit_data_extension:breed()
-		local daemonhost = breed and breed.tags.witch
-
-		if daemonhost then
-			local daemonhost_blackboard = BLACKBOARDS[tag_target]
-			local daemonhost_perception_component = daemonhost_blackboard.perception
-			local host_is_aggroed = daemonhost_perception_component.aggro_state == "aggroed"
-
-			if host_is_aggroed then
-				companion_whistle_target = tag_target
-			end
-		else
-			companion_whistle_target = tag_target
-		end
-	end
-
+	local companion_whistle_component = blackboard.whistle
+	local companion_whistle_target = companion_whistle_component.current_target
 	local force_combat = HEALTH_ALIVE[companion_whistle_target]
 	local pounce_component = blackboard.pounce
 
@@ -1795,6 +1811,13 @@ conditions.wants_flee = function (unit, blackboard, scratchpad, condition_args, 
 	local flee_component = blackboard.flee
 
 	return flee_component.wants_flee
+end
+
+conditions.can_servo_skull_shoot = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local has_target_unit = conditions.has_target_unit(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local can_shoot = blackboard.behavior.can_shoot
+
+	return can_shoot and has_target_unit
 end
 
 return conditions

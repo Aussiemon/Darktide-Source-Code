@@ -216,6 +216,37 @@ weapon_template.actions = {
 			},
 		},
 	},
+	action_inspect_3p = {
+		action_prevents_jump = true,
+		block_first_person_rotation = true,
+		can_crouch = false,
+		can_jump = false,
+		force_look = true,
+		kind = "inspect_3p",
+		lock_view = false,
+		skip_3p_anims = false,
+		stop_input = "inspect_stop",
+		total_time = math.huge,
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
+		crosshair = {
+			crosshair_type = "inspect",
+		},
+		allowed_chain_actions = {
+			inspect_3p_stop = {
+				action_name = "action_inspect",
+				chain_time = 1.1,
+			},
+		},
+		action_movement_curve = {
+			{
+				modifier = 0,
+				t = 0,
+			},
+			start_modifier = 0,
+		},
+	},
 	action_inspect = {
 		anim_end_event = "inspect_end",
 		anim_event = "inspect_start",
@@ -228,6 +259,12 @@ weapon_template.actions = {
 		crosshair = {
 			crosshair_type = "inspect",
 		},
+		allowed_chain_actions = {
+			inspect_3p_start = {
+				action_name = "action_inspect_3p",
+				chain_time = 0.75,
+			},
+		},
 	},
 }
 weapon_template.keywords = {
@@ -235,10 +272,12 @@ weapon_template.keywords = {
 }
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.breed_anim_state_machine_3p = {
+	cryptic = "content/characters/player/human/third_person/animations/lugging",
 	human = "content/characters/player/human/third_person/animations/lugging",
 	ogryn = "content/characters/player/ogryn/third_person/animations/lugging",
 }
 weapon_template.breed_anim_state_machine_1p = {
+	cryptic = "content/characters/player/human/first_person/animations/lugging_mission",
 	human = "content/characters/player/human/first_person/animations/lugging_mission",
 	ogryn = "content/characters/player/ogryn/first_person/animations/lugging_mission",
 }
@@ -255,6 +294,11 @@ weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.breed_footstep_intervals = {
+	cryptic = {
+		crouch_walking = 0.61,
+		sprinting = 0.37,
+		walking = 0.4,
+	},
 	human = {
 		crouch_walking = 0.61,
 		sprinting = 0.37,
@@ -266,5 +310,13 @@ weapon_template.breed_footstep_intervals = {
 		walking = 0.1,
 	},
 }
+
+weapon_template.action_inspect_3p_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_inspect_3p"
+end
+
+weapon_template.action_inspect_3p_base_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_inspect"
+end
 
 return weapon_template

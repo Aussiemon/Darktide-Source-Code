@@ -157,6 +157,8 @@ ActionSpawnProjectile.start = function (self, action_settings, t, ...)
 
 		if param_table then
 			param_table.unit = self._player_unit
+			param_table.ability_charges_used = self._ability_charges_used_at_start
+			param_table.remaining_ability_charges_before_use = self._remaining_ability_charges_before_use_at_start
 
 			self._buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
 		end
@@ -590,6 +592,12 @@ ActionSpawnProjectile._fire_projectile = function (self, t, projectile_unit, tim
 			local skip_update_component_data = true
 
 			shoot_rotation = self._weapon_spread_extension:randomized_spread(shoot_rotation, skip_update_component_data)
+		end
+
+		local enable_auto_aim = self._buff_extension and self._buff_extension:has_keyword("enable_auto_aim")
+
+		if enable_auto_aim then
+			shoot_rotation = self._smart_targeting_extension:assisted_hitscan_trajectory(nil, nil, shoot_rotation)
 		end
 	end
 

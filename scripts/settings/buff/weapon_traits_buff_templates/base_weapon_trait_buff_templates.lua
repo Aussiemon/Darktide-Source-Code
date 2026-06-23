@@ -1141,11 +1141,29 @@ base_templates.guaranteed_melee_crit_on_activated_kill_effect_percentage = {
 		return template_data.finish
 	end,
 }
+base_templates.guaranteed_melee_crit_on_activated_kill_effect_percentage_capped = {
+	class_name = "proc_buff",
+	duration = 5,
+	max_stacks = 8,
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.melee_critical_strike_chance] = 0.05,
+	},
+	proc_events = {
+		[proc_events.on_sweep_start] = 1,
+	},
+	proc_func = function (params, template_data, template_context)
+		template_data.finish = true
+	end,
+	conditional_exit_func = function (template_data, template_context)
+		return template_data.finish
+	end,
+}
 base_templates.bleed_on_activated_hit = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_bleed_on_activated_hit_trait_hit] = 1,
 	},
 	target_buff_data = {
 		internal_buff_name = "bleed",
@@ -2271,6 +2289,38 @@ base_templates.warp_burninating_on_crits_melee = {
 	start_func = _add_debuff_on_hit_start,
 	proc_func = _add_debuff_on_hit_proc,
 }
+base_templates.warp_burninating_on_crits_melee_and_special = {
+	class_name = "proc_buff",
+	max_stacks = 1,
+	predicted = false,
+	proc_events = {
+		[proc_events.on_hit] = 1,
+	},
+	target_buff_data = {
+		allow_weapon_special = true,
+		internal_buff_name = "warp_fire",
+		max_stacks = 6,
+		num_stacks_on_proc = 2,
+	},
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	check_proc_func = function (params, template_data, template_context, t)
+		if not CheckProcFunctions.on_item_match(params, template_data, template_context, t) then
+			return false
+		end
+
+		if not CheckProcFunctions.on_damaging_hit(params, template_data, template_context, t) then
+			return false
+		end
+
+		if not CheckProcFunctions.on_melee_crit_hit(params, template_data, template_context, t) and not CheckProcFunctions.on_warp_slice_crit_hit(params, template_data, template_context, t) then
+			return false
+		end
+
+		return true
+	end,
+	start_func = _add_debuff_on_hit_start,
+	proc_func = _add_debuff_on_hit_proc,
+}
 base_templates.wind_slash_crits = {
 	class_name = "proc_buff",
 	cooldown_duration = 50,
@@ -2396,6 +2446,19 @@ base_templates.dodge_grants_finesse_bonus = {
 }
 base_templates.dodge_grants_critical_strike_chance = {
 	active_duration = 6,
+	allow_proc_while_active = true,
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_successful_dodge] = 1,
+	},
+	proc_stat_buffs = {
+		[stat_buffs.critical_strike_chance] = 0.05,
+	},
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+}
+base_templates.dodge_grants_critical_strike_chance_low_duration = {
+	active_duration = 4,
 	allow_proc_while_active = true,
 	class_name = "proc_buff",
 	predicted = false,
@@ -2839,7 +2902,7 @@ base_templates.chance_to_explode_elites_on_kill = {
 		local explosion_position = HitZone.hit_zone_center_of_mass(dying_unit, HitZone.hit_zone_names.center_mass, false) + Vector3.up() * 0.01
 		local explosion_template = template_context.template.proc_data.explosion_template
 
-		Explosion.create_explosion(template_context.world, template_context.physics_world, explosion_position, Vector3.up(), template_context.unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
+		Explosion.create_explosion(template_context.world, template_context.physics_world, explosion_position, Quaternion.identity(), template_context.unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
 	end,
 }
 base_templates.faster_reload_on_empty_clip = {

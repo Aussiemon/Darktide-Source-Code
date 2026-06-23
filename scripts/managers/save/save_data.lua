@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/managers/save/save_data.lua
 
 local SaveData = class("SaveData")
-local default_hold = PLATFORM == "win32"
+local default_hold = IS_WINDOWS
 
 SaveData.default_account_data = {
 	crossplay_accepted = false,
@@ -59,6 +59,12 @@ SaveData.default_account_data = {
 		character_nameplates_in_mission_type = "name_and_title",
 		character_titles_color_type = "rarity_colors",
 		character_titles_in_mission_color_type = "rarity_colors",
+		chat_bubbles_background_opacity = 70,
+		chat_bubbles_hub_enabled = true,
+		chat_bubbles_lifetime_multiplier = 100,
+		chat_bubbles_strike_team_enabled = true,
+		chat_bubbles_text_opacity = 100,
+		chat_bubbles_text_size = 24,
 		combat_feed_enabled = true,
 		combat_feed_max_messages = 8,
 		combat_feed_message_duration = 5,

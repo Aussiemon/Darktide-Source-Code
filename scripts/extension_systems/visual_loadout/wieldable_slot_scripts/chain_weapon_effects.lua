@@ -3,7 +3,6 @@
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wielded_idling_effects")
 
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
-local _vfx_external_properties = {}
 local _sfx_external_properties = {}
 local ChainWeaponEffects = class("ChainWeaponEffects", "WieldedIdlingEffects")
 local SPECIAL_ACTIVE_LOOPING_VFX_ALIAS = "weapon_special_loop"
@@ -121,12 +120,12 @@ end
 
 ChainWeaponEffects._update_active = function (self)
 	local special_active = self._inventory_slot_component.special_active
-	local current_effect_id = self._looping_effect_id
+	local current_effect_id = self:_looping_effect_id()
 	local should_start_vfx = not current_effect_id and special_active
 	local should_stop_vfx = current_effect_id and not special_active
 
 	if should_start_vfx then
-		self:_start_vfx_loop()
+		self:_start_vfx_loop(SPECIAL_ACTIVE_LOOPING_VFX_ALIAS)
 	elseif should_stop_vfx then
 		self:_stop_vfx_loop(false)
 		self:_play_single_sfx(SPECIAL_OFF_SOUND_ALIAS, self._special_active_fx_source_name)
@@ -274,35 +273,6 @@ ChainWeaponEffects._update_intensity = function (self, dt, t)
 	local resistance = is_sawing and 1 - math.random() * 0.1 or 0
 
 	WwiseWorld.set_source_parameter(wwise_world, wielded_idling_source, "combat_chainsword_cut", resistance)
-end
-
-ChainWeaponEffects._start_vfx_loop = function (self)
-	local resolved, effect_name = self._visual_loadout_extension:resolve_gear_particle(SPECIAL_ACTIVE_LOOPING_VFX_ALIAS, _vfx_external_properties)
-
-	if resolved then
-		local world = self._world
-		local fx_extension = self._fx_extension
-		local new_effect_id = fx_extension:spawn_particles_local(effect_name, Vector3.zero())
-		local vfx_link_unit, vfx_link_node = fx_extension:vfx_spawner_unit_and_node(self._wielded_idling_fx_source_name)
-
-		World.link_particles(world, new_effect_id, vfx_link_unit, vfx_link_node, Matrix4x4.identity(), "stop")
-
-		self._looping_effect_id = new_effect_id
-	end
-end
-
-ChainWeaponEffects._stop_vfx_loop = function (self, destroy)
-	local current_effect_id = self._looping_effect_id
-
-	if current_effect_id then
-		if destroy then
-			World.destroy_particles(self._world, current_effect_id)
-		else
-			World.stop_spawning_particles(self._world, current_effect_id)
-		end
-	end
-
-	self._looping_effect_id = nil
 end
 
 implements(ChainWeaponEffects, WieldableSlotScriptInterface)

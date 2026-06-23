@@ -6,8 +6,8 @@ local behavior_tree = {
 	"BtSelectorNode",
 	{
 		"BtDieAction",
-		condition = "is_dead",
 		name = "death",
+		state = "dead",
 		action_data = action_data.death,
 	},
 	{

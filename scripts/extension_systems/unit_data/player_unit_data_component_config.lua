@@ -461,20 +461,20 @@ local PlayerComponentConfig = {
 		},
 	},
 	locomotion_force_rotation = {
-		end_time = "fixed_frame_offset",
+		end_time = "fixed_frame_time",
 		start_rotation = "Quaternion",
-		start_time = "fixed_frame_offset",
+		start_time = "fixed_frame_time",
 		use_force_rotation = "bool",
 	},
 	locomotion_force_translation = {
-		end_time = "fixed_frame_offset",
-		start_time = "fixed_frame_offset",
+		end_time = "fixed_frame_time",
+		start_time = "fixed_frame_time",
 		start_translation = "Vector3",
 		use_force_translation = "bool",
 	},
 	locomotion_push = {
 		new_velocity = "Vector3",
-		time_to_apply = "fixed_frame_offset_end_t_4bit",
+		time_to_apply = "fixed_frame_time",
 		velocity = "Vector3",
 	},
 	movement_state = {
@@ -482,7 +482,7 @@ local PlayerComponentConfig = {
 		can_exit_crouch = "bool",
 		can_jump = "bool",
 		is_crouching = "bool",
-		is_crouching_transition_start_t = "fixed_frame_offset_small",
+		is_crouching_transition_start_t = "fixed_frame_time",
 		is_dodging = "bool",
 		is_effective_dodge = "bool",
 		method = {
@@ -502,16 +502,16 @@ local PlayerComponentConfig = {
 	},
 	intoxicated_movement = {
 		in_stagger = "bool",
-		stagger_cooldown = "fixed_frame_offset_end_t_7bit",
+		stagger_cooldown = "fixed_frame_time",
 		stagger_direction = "high_precision_direction",
-		stagger_end_t = "fixed_frame_offset_end_t_7bit",
-		stagger_start_t = "fixed_frame_offset_start_t_7bit",
+		stagger_end_t = "fixed_frame_time",
+		stagger_start_t = "fixed_frame_time",
 	},
 	hub_jog_character_state = {
-		force_old_input_end_t = "fixed_frame_offset_end_t_6bit",
-		force_old_input_start_t = "fixed_frame_offset_start_t_6bit",
-		move_start_delay_t = "fixed_frame_offset_end_t_6bit",
-		move_state_start_t = "fixed_frame_offset_start_t_6bit",
+		force_old_input_end_t = "fixed_frame_time",
+		force_old_input_start_t = "fixed_frame_time",
+		move_start_delay_t = "fixed_frame_time",
+		move_state_start_t = "fixed_frame_time",
 		method = {
 			"moving",
 			"idle",
@@ -532,11 +532,11 @@ local PlayerComponentConfig = {
 		previous_state_allowed_slide = "bool",
 	},
 	sprint_character_state = {
-		cooldown = "fixed_frame_offset",
+		cooldown = "fixed_frame_time",
 		is_sprint_jumping = "bool",
 		is_sprinting = "bool",
-		last_sprint_time = "fixed_frame_offset",
-		sprint_overtime = "fixed_frame_offset",
+		last_sprint_time = "fixed_frame_time",
+		sprint_overtime = "fixed_frame_time",
 		use_sprint_start_slowdown = "bool",
 		wants_sprint_camera = "bool",
 	},
@@ -557,7 +557,7 @@ local PlayerComponentConfig = {
 		was_sprinting = "bool",
 	},
 	character_state = {
-		entered_t = "fixed_frame_offset",
+		entered_t = "fixed_frame_time",
 		state_name = CHARACTER_STATES,
 		previous_state_name = CHARACTER_STATES,
 	},
@@ -571,7 +571,7 @@ local PlayerComponentConfig = {
 	inair_state = {
 		fell_from_height = "high_precision_position_component",
 		flying_frames = "mover_frames",
-		inair_entered_t = "fixed_frame_offset",
+		inair_entered_t = "fixed_frame_time",
 		on_ground = "bool",
 		standing_frames = "mover_frames",
 	},
@@ -601,7 +601,7 @@ local PlayerComponentConfig = {
 	first_person = {
 		height = "character_height",
 		height_change_duration = "short_time",
-		height_change_start_time = "fixed_frame_offset",
+		height_change_start_time = "fixed_frame_time",
 		old_height = "character_height",
 		position = "locomotion_position",
 		previous_rotation = "locomotion_rotation",
@@ -613,16 +613,16 @@ local PlayerComponentConfig = {
 		},
 	},
 	force_look_rotation = {
-		end_time = "fixed_frame_offset",
+		end_time = "fixed_frame_time",
 		start_pitch = "rotation_single",
-		start_time = "fixed_frame_offset",
+		start_time = "fixed_frame_time",
 		start_yaw = "rotation_single",
 		use_force_look_rotation = "bool",
 		wanted_pitch = "rotation_single",
 		wanted_yaw = "rotation_single",
 	},
 	first_person_mode = {
-		show_1p_equipment_at_t = "fixed_frame_offset",
+		show_1p_equipment_at_t = "fixed_frame_time",
 		wants_1p_camera = "bool",
 	},
 	inventory = inventory_component,
@@ -637,10 +637,10 @@ local PlayerComponentConfig = {
 	},
 	ladder_character_state = {
 		end_position = "Vector3",
-		ladder_cooldown = "fixed_frame_offset",
+		ladder_cooldown = "fixed_frame_time",
 		ladder_unit_id = "level_unit_id",
 		start_position = "Vector3",
-		top_enter_leave_timer = "fixed_frame_offset",
+		top_enter_leave_timer = "fixed_frame_time",
 	},
 	assisted_state_input = {
 		force_assist = "bool",
@@ -649,12 +649,12 @@ local PlayerComponentConfig = {
 	},
 	dodge_character_state = {
 		consecutive_dodges = "consecutive_dodges",
-		consecutive_dodges_cooldown = "fixed_frame_offset",
-		cooldown = "fixed_frame_offset",
+		consecutive_dodges_cooldown = "fixed_frame_time",
+		cooldown = "fixed_frame_time",
 		distance_left = "short_distance",
 		dodge_direction = "Vector3",
-		dodge_time = "fixed_frame_offset",
-		jump_override_time = "fixed_frame_offset",
+		dodge_time = "fixed_frame_time",
+		jump_override_time = "fixed_frame_time",
 		started_from_crouch = "bool",
 	},
 	lunge_character_state = {
@@ -683,7 +683,7 @@ local PlayerComponentConfig = {
 	stunned_character_state = {
 		actions_interrupted = "bool",
 		exit_event_played = "bool",
-		start_time = "fixed_frame_offset",
+		start_time = "fixed_frame_time",
 		stunned = "bool",
 		disorientation_type = DISORIENTATION_TYPES,
 	},
@@ -742,15 +742,15 @@ local PlayerComponentConfig = {
 		self_assist = "bool",
 	},
 	ledge_hanging_character_state = {
-		end_time_position_transition = "fixed_frame_offset",
+		end_time_position_transition = "fixed_frame_time",
 		hang_ledge_unit = "Unit",
 		is_interactible = "bool",
 		position_hanging = "Vector3",
 		position_pre_hanging = "Vector3",
 		rotation_hanging = "Quaternion",
 		rotation_pre_hanging = "Quaternion",
-		start_time_position_transition = "fixed_frame_offset",
-		time_to_fall_down = "fixed_frame_offset",
+		start_time_position_transition = "fixed_frame_time",
+		time_to_fall_down = "fixed_frame_time",
 	},
 	interacting_character_state = {
 		interaction_template = INTERACTION_TEMPLATES,
@@ -772,11 +772,11 @@ local PlayerComponentConfig = {
 	},
 	weapon_action = {
 		combo_count = "action_combo_count",
-		end_t = "fixed_frame_offset",
+		end_t = "fixed_frame_time",
 		is_infinite_duration = "bool",
 		special_active_at_start = "bool",
-		sprint_ready_time = "fixed_frame_offset",
-		start_t = "fixed_frame_offset",
+		sprint_ready_time = "fixed_frame_time",
+		start_t = "fixed_frame_time",
 		time_scale = "action_time_scale",
 		template_name = WEAPON_TEMPLATES,
 		current_action_name = WEAPON_ACTIONS,
@@ -784,11 +784,11 @@ local PlayerComponentConfig = {
 	},
 	combat_ability_action = {
 		combo_count = "action_combo_count",
-		end_t = "fixed_frame_offset",
+		end_t = "fixed_frame_time",
 		is_infinite_duration = "bool",
 		special_active_at_start = "bool",
-		sprint_ready_time = "fixed_frame_offset",
-		start_t = "fixed_frame_offset",
+		sprint_ready_time = "fixed_frame_time",
+		start_t = "fixed_frame_time",
 		time_scale = "action_time_scale",
 		template_name = ABILITY_TEMPLATES,
 		current_action_name = ABILITY_ACTIONS,
@@ -796,11 +796,11 @@ local PlayerComponentConfig = {
 	},
 	grenade_ability_action = {
 		combo_count = "action_combo_count",
-		end_t = "fixed_frame_offset",
+		end_t = "fixed_frame_time",
 		is_infinite_duration = "bool",
 		special_active_at_start = "bool",
-		sprint_ready_time = "fixed_frame_offset",
-		start_t = "fixed_frame_offset",
+		sprint_ready_time = "fixed_frame_time",
+		start_t = "fixed_frame_time",
 		time_scale = "action_time_scale",
 		template_name = ABILITY_TEMPLATES,
 		current_action_name = ABILITY_ACTIONS,
@@ -808,11 +808,11 @@ local PlayerComponentConfig = {
 	},
 	pocketable_ability_action = {
 		combo_count = "action_combo_count",
-		end_t = "fixed_frame_offset",
+		end_t = "fixed_frame_time",
 		is_infinite_duration = "bool",
 		special_active_at_start = "bool",
-		sprint_ready_time = "fixed_frame_offset",
-		start_t = "fixed_frame_offset",
+		sprint_ready_time = "fixed_frame_time",
+		start_t = "fixed_frame_time",
 		time_scale = "action_time_scale",
 		template_name = ABILITY_TEMPLATES,
 		current_action_name = ABILITY_ACTIONS,
@@ -825,7 +825,7 @@ local PlayerComponentConfig = {
 	action_place = {
 		aiming_place = "bool",
 		can_place = "bool",
-		can_place_time = "fixed_frame_offset",
+		can_place_time = "fixed_frame_time",
 		placed_on_unit = "Unit",
 		position = "Vector3",
 		rotation = "Quaternion",
@@ -851,7 +851,7 @@ local PlayerComponentConfig = {
 		reference_rotation = "Quaternion",
 		sweep_aborted_actor_index = "hit_zone_actor_index",
 		sweep_aborted_bit_array = "lookup_2bit0",
-		sweep_aborted_t = "fixed_frame_offset",
+		sweep_aborted_t = "fixed_frame_time",
 		sweep_aborted_unit = "Unit",
 		sweep_state = {
 			"before_damage_window",
@@ -861,8 +861,8 @@ local PlayerComponentConfig = {
 	},
 	action_shoot = {
 		current_fire_config = "lookup_1bit",
-		fire_at_time = "fixed_frame_offset",
-		fire_last_t = "fixed_frame_offset_start_t_9bit",
+		fire_at_time = "fixed_frame_time",
+		fire_last_t = "fixed_frame_time",
 		num_shots_fired = "ammunition_small",
 		shooting_charge_level = "weapon_charge_level",
 		shooting_position = "Vector3",
@@ -889,7 +889,7 @@ local PlayerComponentConfig = {
 	},
 	action_module_charge = {
 		charge_level = "weapon_charge_level",
-		charge_start_time = "fixed_frame_offset",
+		charge_start_time = "fixed_frame_time",
 		max_charge = "weapon_charge_level",
 	},
 	action_module_position_finder = {
@@ -898,6 +898,11 @@ local PlayerComponentConfig = {
 		position_valid = "bool",
 	},
 	action_module_target_finder = {
+		target_unit_1 = "Unit",
+		target_unit_2 = "Unit",
+		target_unit_3 = "Unit",
+	},
+	action_module_ability_target_finder = {
 		target_unit_1 = "Unit",
 		target_unit_2 = "Unit",
 		target_unit_3 = "Unit",
@@ -929,7 +934,7 @@ local PlayerComponentConfig = {
 		spread_yaw = "weapon_spread",
 		sway_pitch = "weapon_sway",
 		sway_yaw = "weapon_sway",
-		time = "fixed_frame_offset",
+		time = "fixed_frame_time",
 	},
 	recoil = {
 		pitch_offset = "recoil_angle",
@@ -939,7 +944,7 @@ local PlayerComponentConfig = {
 	recoil_control = {
 		num_shots = "ammunition_small",
 		recoiling = "bool",
-		rise_end_time = "fixed_frame_offset",
+		rise_end_time = "fixed_frame_time",
 		seed = "random_seed",
 		shooting = "bool",
 		starting_rotation = "Quaternion",
@@ -949,7 +954,7 @@ local PlayerComponentConfig = {
 	shooting_status = {
 		num_shots = "ammunition_small",
 		shooting = "bool",
-		shooting_end_time = "fixed_frame_offset",
+		shooting_end_time = "fixed_frame_time",
 	},
 	block = {
 		has_blocked = "bool",
@@ -958,7 +963,7 @@ local PlayerComponentConfig = {
 	},
 	alternate_fire = {
 		is_active = "bool",
-		start_t = "fixed_frame_offset",
+		start_t = "fixed_frame_time",
 	},
 	peeking = {
 		has_significant_obstacle_in_front = "bool",
@@ -969,7 +974,7 @@ local PlayerComponentConfig = {
 	},
 	interaction = {
 		done_time = "fixed_frame_time",
-		duration = "fixed_frame_offset",
+		duration = "fixed_frame_time",
 		start_time = "fixed_frame_time",
 		target_actor_node_index = "actor_node_index",
 		target_unit = "Unit",
@@ -982,7 +987,7 @@ local PlayerComponentConfig = {
 	},
 	stamina = {
 		current_fraction = "stamina_fraction",
-		last_drain_time = "fixed_frame_offset",
+		last_drain_time = "fixed_frame_time",
 		regeneration_paused = "bool",
 	},
 	equipped_abilities = {
@@ -1048,14 +1053,14 @@ local PlayerComponentConfig = {
 		weapon_shout_template_name = WEAPON_SHOUT_TEMPLATES,
 	},
 	aim_assist_ramp = {
-		decay_end_time = "fixed_frame_offset_end_t_7bit",
+		decay_end_time = "fixed_frame_time",
 		multiplier = "aim_assist_multiplier",
 	},
 	warp_charge = {
 		current_percentage = "warp_charge",
-		last_charge_at_t = "fixed_frame_offset_start_t_6bit",
+		last_charge_at_t = "fixed_frame_time",
 		ramping_modifier = "warp_charge_ramping_modifier",
-		remove_at_t = "fixed_frame_offset_end_t_7bit",
+		remove_at_t = "fixed_frame_time",
 		starting_percentage = "warp_charge",
 		state = {
 			"idle",
@@ -1103,8 +1108,8 @@ for ii = 1, max_component_buffs do
 	local extra_duration_key = key_lookup.extra_duration_key
 
 	buff_component_config[template_name_key] = PREDICTED_BUFF_TEMPLATES
-	buff_component_config[start_time_key] = "fixed_frame_offset"
-	buff_component_config[active_start_time_key] = "fixed_frame_offset"
+	buff_component_config[start_time_key] = "fixed_frame_time"
+	buff_component_config[active_start_time_key] = "fixed_frame_time"
 	buff_component_config[stack_count_key] = "buff_stack_count"
 	buff_component_config[proc_count_key] = "buff_proc_count"
 	buff_component_config[extra_duration_key] = "signed_medium_time"

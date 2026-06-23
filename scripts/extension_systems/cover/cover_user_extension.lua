@@ -49,6 +49,7 @@ end
 CoverUserExtension.extensions_ready = function (self, world, unit)
 	self._combat_vector_extension = ScriptUnit.extension(unit, "combat_vector_system")
 	self._perception_extension = ScriptUnit.extension(unit, "perception_system")
+	self._buff_extension = ScriptUnit.extension(unit, "buff_system")
 end
 
 CoverUserExtension.update = function (self, unit, dt, t)
@@ -67,6 +68,9 @@ CoverUserExtension.update = function (self, unit, dt, t)
 	local behavior_component = self._behavior_component
 	local combat_range = behavior_component.combat_range
 	local can_use_cover = cover_config.cover_combat_ranges[combat_range]
+	local has_weapon_malfunction = self._buff_extension:has_keyword("weapon_malfunction")
+
+	can_use_cover = can_use_cover or has_weapon_malfunction
 
 	if not can_use_cover then
 		return

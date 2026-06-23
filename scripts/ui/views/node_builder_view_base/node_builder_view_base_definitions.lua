@@ -71,7 +71,7 @@ local widget_definitions = {
 		},
 	}, "screen", nil, nil),
 }
-local layout_widget_definitions = {
+local layout_node_widget_definitions = {
 	layout_background = UIWidget.create_definition({
 		{
 			pass_type = "texture",
@@ -92,10 +92,12 @@ local layout_widget_definitions = {
 		},
 	}, "layout_background", nil, nil),
 }
+local layout_widget_definitions = {}
 
 return {
 	widget_definitions = widget_definitions,
 	layout_widget_definitions = layout_widget_definitions,
+	layout_node_widget_definitions = layout_node_widget_definitions,
 	scenegraph_definition = scenegraph_definition,
 	overlay_scenegraph_definition = overlay_scenegraph_definition,
 }

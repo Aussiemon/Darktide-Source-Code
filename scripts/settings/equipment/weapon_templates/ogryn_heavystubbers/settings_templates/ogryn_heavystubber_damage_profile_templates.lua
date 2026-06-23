@@ -40,7 +40,7 @@ damage_templates.default_ogryn_heavystubber_assault_snp = {
 			40,
 		},
 	},
-	wounds_template = WoundsTemplates.heavy_stubber,
+	wounds_template = WoundsTemplates.stubber,
 	armor_damage_modifier_ranged = {
 		near = {
 			attack = {
@@ -127,7 +127,7 @@ damage_templates.default_ogryn_heavystubber_assault_snp_m2 = {
 			60,
 		},
 	},
-	wounds_template = WoundsTemplates.heavy_stubber,
+	wounds_template = WoundsTemplates.stubber,
 	armor_damage_modifier_ranged = {
 		near = {
 			attack = {
@@ -214,7 +214,7 @@ damage_templates.default_ogryn_heavystubber_assault_snp_m3 = {
 			35,
 		},
 	},
-	wounds_template = WoundsTemplates.heavy_stubber,
+	wounds_template = WoundsTemplates.stubber,
 	armor_damage_modifier_ranged = {
 		near = {
 			attack = {
@@ -300,7 +300,7 @@ damage_templates.default_ogryn_heavystubber_assault = {
 		},
 	},
 	herding_template = HerdingTemplates.shot,
-	wounds_template = WoundsTemplates.heavy_stubber,
+	wounds_template = WoundsTemplates.stubber,
 	armor_damage_modifier_ranged = {
 		near = {
 			attack = {
@@ -509,7 +509,7 @@ damage_templates.ogryn_heavystubber_damage_p2_m1 = {
 			70,
 		},
 	},
-	wounds_template = WoundsTemplates.heavy_stubber,
+	wounds_template = WoundsTemplates.stubber,
 	armor_damage_modifier_ranged = heavy_stubber_armor_mod_p2,
 	critical_strike = {
 		gibbing_power = gibbing_power.medium,
@@ -592,7 +592,7 @@ damage_templates.ogryn_heavystubber_damage_p2_m2 = {
 			80,
 		},
 	},
-	wounds_template = WoundsTemplates.heavy_stubber,
+	wounds_template = WoundsTemplates.stubber,
 	armor_damage_modifier_ranged = heavy_stubber_armor_mod_p2,
 	critical_strike = {
 		gibbing_power = gibbing_power.medium,
@@ -741,7 +741,7 @@ damage_templates.ogryn_heavystubber_damage_p2_m3 = {
 			100,
 		},
 	},
-	wounds_template = WoundsTemplates.heavy_stubber,
+	wounds_template = WoundsTemplates.stubber,
 	armor_damage_modifier_ranged = heavy_stubber_armor_mod_p2_m3,
 	critical_strike = {
 		gibbing_power = gibbing_power.medium,

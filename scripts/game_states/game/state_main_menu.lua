@@ -24,6 +24,7 @@ StateMainMenu.on_enter = function (self, parent, params, creation_context)
 	local selected_profile = params.selected_profile
 	local has_created_first_character = params.has_created_first_character
 	local main_menu_loader = params.main_menu_loader
+	local max_character_slots = params.max_character_slots
 
 	self._main_menu_loader = main_menu_loader
 	self._is_booting = params.is_booting or false
@@ -37,6 +38,7 @@ StateMainMenu.on_enter = function (self, parent, params, creation_context)
 	self._profiles_are_syncing = false
 	self._character_is_syncing = false
 	self._migration_data = params.migration_data
+	self._max_character_slots = params.max_character_slots
 
 	self:_register_menu_events()
 
@@ -85,6 +87,7 @@ StateMainMenu._register_menu_events = function (self)
 		event_manager:register(self, "event_request_select_new_profile", "event_request_select_new_profile")
 		event_manager:register(self, "event_request_delete_character", "event_request_delete_character")
 		event_manager:register(self, "event_main_menu_entered", "event_main_menu_entered")
+		event_manager:register(self, "event_gear_refresh_requested", "_on_event_gear_refresh_requested")
 
 		self._events_registered = true
 	end
@@ -101,6 +104,7 @@ StateMainMenu._unregister_menu_events = function (self)
 		event_manager:unregister(self, "event_request_select_new_profile")
 		event_manager:unregister(self, "event_request_delete_character")
 		event_manager:unregister(self, "event_main_menu_entered")
+		event_manager:unregister(self, "event_gear_refresh_requested")
 
 		self._events_registered = nil
 	end
@@ -127,8 +131,16 @@ StateMainMenu.event_request_delete_character = function (self, character_id)
 end
 
 StateMainMenu.event_main_menu_entered = function (self)
-	Managers.event:trigger("event_main_menu_profiles_changed", self._profiles)
+	Managers.event:trigger("event_main_menu_profiles_changed", self._profiles, self._max_character_slots)
 	Managers.event:trigger("event_main_menu_selected_profile_changed", self._selected_profile)
+end
+
+StateMainMenu._on_event_gear_refresh_requested = function (self)
+	Managers.data_service.gear:fetch_gear():next(function (gear)
+		self._gear = gear
+	end, function (error)
+		Log.error("StateMainMenu", "error fetching gear '%s'", error)
+	end)
 end
 
 StateMainMenu.event_create_new_character_start = function (self)

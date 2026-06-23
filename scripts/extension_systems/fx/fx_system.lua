@@ -12,6 +12,7 @@ local MaterialQuerySettings = require("scripts/settings/material_query_settings"
 local FxSystem = class("FxSystem", "ExtensionSystemBase")
 local INTERFACE_POSITION_OFFSET_DISTANCE = 2
 local IS_DIRECTION_INTERFACE = true
+local MAX_NUM_LOCAL_RUNNING_EFFECT_TEMPLATES = 128
 local PI = math.pi
 local impact_fx_templates = ImpactEffectSettings.impact_fx_templates
 local surface_material_groups_lookup = MaterialQuerySettings.surface_material_groups_lookup
@@ -34,6 +35,11 @@ FxSystem.init = function (self, extension_system_creation_context, ...)
 
 	self._physics_world = extension_system_creation_context.physics_world
 	self._effect_templates_handler = EffectTemplatesHandler:new(NetworkConstants.max_template_effect_buffer_index, false)
+	self._player_effect_templates_handler = EffectTemplatesHandler:new(NetworkConstants.max_template_effect_buffer_index, true)
+
+	if not DEDICATED_SERVER then
+		self._local_effect_templates_handler = EffectTemplatesHandler:new(MAX_NUM_LOCAL_RUNNING_EFFECT_TEMPLATES, true)
+	end
 
 	local is_server, game_session = self._is_server, extension_system_creation_context.game_session
 
@@ -83,6 +89,11 @@ FxSystem.on_remove_extension = function (self, unit, extension_name)
 	local template_context = self._template_context
 
 	self._effect_templates_handler:remove_effects_on_unit(template_context, unit)
+	self._player_effect_templates_handler:remove_effects_on_unit(template_context, unit)
+
+	if not DEDICATED_SERVER then
+		self._local_effect_templates_handler:remove_effects_on_unit(template_context, unit)
+	end
 
 	local unit_to_particle_group_lookup = self.unit_to_particle_group_lookup
 	local particle_group_id = unit_to_particle_group_lookup[unit]
@@ -111,6 +122,11 @@ FxSystem.destroy = function (self)
 	local template_context = self._template_context
 
 	self._effect_templates_handler:clear(template_context)
+	self._player_effect_templates_handler:clear(template_context)
+
+	if not DEDICATED_SERVER then
+		self._local_effect_templates_handler:clear(template_context)
+	end
 
 	if not self._is_server then
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
@@ -122,6 +138,7 @@ end
 
 FxSystem.hot_join_sync = function (self, sender, channel)
 	self._effect_templates_handler:hot_join_sync(sender, channel)
+	self._player_effect_templates_handler:hot_join_sync(sender, channel)
 	FxSystem.super.hot_join_sync(self, sender, channel)
 end
 
@@ -129,6 +146,12 @@ FxSystem.update = function (self, context, dt, t, ...)
 	local template_context = self._template_context
 
 	self._effect_templates_handler:update(template_context, dt, t)
+	self._player_effect_templates_handler:update(template_context, dt, t)
+
+	if not DEDICATED_SERVER then
+		self._local_effect_templates_handler:update(template_context, dt, t)
+	end
+
 	FxSystem.super.update(self, context, dt, t, ...)
 end
 
@@ -143,20 +166,46 @@ FxSystem.start_template_effect = function (self, template, optional_unit, option
 	return global_effect_id
 end
 
+FxSystem.start_player_template_effect = function (self, template, player_owner_unit, optional_unit, optional_node, optional_position)
+	local template_name = template.name
+	local global_effect_id = self._player_effect_templates_handler:add_template_effect(self.unit_to_particle_group_lookup, self._template_context, template, optional_unit, optional_node, optional_position, player_owner_unit)
+
+	return global_effect_id
+end
+
+FxSystem.start_local_template_effect = function (self, template, optional_unit, optional_node, optional_position)
+	local template_name = template.name
+	local local_effect_id = self._local_effect_templates_handler:add_template_effect(self.unit_to_particle_group_lookup, self._template_context, template, optional_unit, optional_node, optional_position, nil)
+
+	return local_effect_id
+end
+
 FxSystem.stop_template_effect = function (self, global_effect_id)
 	self._effect_templates_handler:remove_template_effect(self._template_context, global_effect_id)
+end
+
+FxSystem.stop_player_template_effect = function (self, global_effect_id)
+	self._player_effect_templates_handler:remove_template_effect(self._template_context, global_effect_id)
+end
+
+FxSystem.stop_local_template_effect = function (self, local_effect_id)
+	self._local_effect_templates_handler:remove_template_effect(self._template_context, local_effect_id)
 end
 
 FxSystem.has_running_template_effect_with_global_effect_id = function (self, global_effect_id)
 	return self._effect_templates_handler:has_running_effect_with_global_id(global_effect_id)
 end
 
-FxSystem.play_impact_fx = function (self, impact_fx, position, direction, source_parameters, attacking_unit, optional_target_unit, optional_node_index, optional_hit_normal, optional_will_be_predicted, local_only_or_nil)
+FxSystem.has_running_player_template_effect_with_global_effect_id = function (self, global_effect_id)
+	return self._player_effect_templates_handler:has_running_effect_with_global_id(global_effect_id)
+end
+
+FxSystem.play_impact_fx = function (self, impact_fx, hit_position, attack_direction, source_parameters, attacking_unit, optional_target_unit, optional_node_index, optional_hit_normal, optional_will_be_predicted, local_only_or_nil)
 	local world = self._world
 	local t = World.time(world)
 	local particle_group_id_or_nil = self.unit_to_particle_group_lookup[attacking_unit]
 
-	_play_impact_fx_template(t, world, self._wwise_world, self._unit_to_extension_map, self._spawned_impact_fx_units, impact_fx, position, direction, source_parameters, attacking_unit, particle_group_id_or_nil, optional_target_unit, optional_node_index, optional_hit_normal)
+	_play_impact_fx_template(t, world, self._wwise_world, self._unit_to_extension_map, self._spawned_impact_fx_units, impact_fx, hit_position, attack_direction, source_parameters, attacking_unit, particle_group_id_or_nil, optional_target_unit, optional_node_index, optional_hit_normal)
 
 	if self._is_server then
 		local impact_fx_name = impact_fx.name
@@ -175,9 +224,9 @@ FxSystem.play_impact_fx = function (self, impact_fx, position, direction, source
 				local predicting_player = Managers.state.player_unit_spawn:owner(attacking_unit)
 				local except = predicting_player:channel_id()
 
-				Managers.state.game_session:send_rpc_clients_except("rpc_play_impact_fx", except, impact_fx_name_id, position, direction, attacking_unit_id, optional_target_unit_id, optional_node_index, optional_hit_normal, attacking_unit_has_particle_id)
+				Managers.state.game_session:send_rpc_clients_except("rpc_play_impact_fx", except, impact_fx_name_id, hit_position, attack_direction, attacking_unit_id, optional_target_unit_id, optional_node_index, optional_hit_normal, attacking_unit_has_particle_id)
 			else
-				Managers.state.game_session:send_rpc_clients("rpc_play_impact_fx", impact_fx_name_id, position, direction, attacking_unit_id, optional_target_unit_id, optional_node_index, optional_hit_normal, attacking_unit_has_particle_id)
+				Managers.state.game_session:send_rpc_clients("rpc_play_impact_fx", impact_fx_name_id, hit_position, attack_direction, attacking_unit_id, optional_target_unit_id, optional_node_index, optional_hit_normal, attacking_unit_has_particle_id)
 			end
 		end
 	end
@@ -416,14 +465,14 @@ FxSystem.rpc_start_template_effect = function (self, channel_id, buffer_index, t
 	local optional_unit = Managers.state.unit_spawner:unit(optional_unit_id)
 	local optional_player_owner_unit = Managers.state.unit_spawner:unit(optional_player_owner_unit_id)
 	local template_context = self._template_context
-	local effect_templates_handler = self._effect_templates_handler
+	local effect_templates_handler = not optional_player_owner_unit and self._effect_templates_handler or self._player_effect_templates_handler
 
 	effect_templates_handler:start_template_effect_from_rpc(self.unit_to_particle_group_lookup, template_context, buffer_index, template, optional_unit, optional_node, optional_position, optional_player_owner_unit)
 end
 
 FxSystem.rpc_stop_template_effect = function (self, channel_id, buffer_index, is_player_effect)
 	local template_context = self._template_context
-	local effect_templates_handler = self._effect_templates_handler
+	local effect_templates_handler = not is_player_effect and self._effect_templates_handler or self._player_effect_templates_handler
 
 	effect_templates_handler:stop_template_effect_from_rpc(template_context, buffer_index)
 end
@@ -537,7 +586,7 @@ FxSystem.rpc_projectile_trigger_fx = function (self, channel_id, unit_id, event_
 	end
 end
 
-function _create_impact_vfx(world, vfx, position, direction, normal, optional_particle_group_id)
+function _create_impact_vfx(world, vfx, hit_position, attack_direction, hit_normal, optional_particle_group_id)
 	local num_vfx = #vfx
 
 	if num_vfx > 0 then
@@ -552,20 +601,20 @@ function _create_impact_vfx(world, vfx, position, direction, normal, optional_pa
 			local rotation
 
 			if use_normal_rotation and reverse then
-				reverse_normal_rotation = reverse_normal_rotation or Quaternion.look(normal and -normal or -direction)
+				reverse_normal_rotation = reverse_normal_rotation or Quaternion.look(hit_normal and -hit_normal or -attack_direction)
 				rotation = reverse_normal_rotation
 			elseif use_normal_rotation then
-				normal_rotation = normal_rotation or Quaternion.look(normal or direction)
+				normal_rotation = normal_rotation or Quaternion.look(hit_normal or attack_direction)
 				rotation = normal_rotation
 			elseif reverse then
-				reverse_direction_rotation = reverse_direction_rotation or Quaternion.look(-direction)
+				reverse_direction_rotation = reverse_direction_rotation or Quaternion.look(-attack_direction)
 				rotation = reverse_direction_rotation
 			else
-				direction_rotation = direction_rotation or Quaternion.look(direction)
+				direction_rotation = direction_rotation or Quaternion.look(attack_direction)
 				rotation = direction_rotation
 			end
 
-			World.create_particles(world, effect_name, position, rotation, nil, optional_particle_group_id)
+			World.create_particles(world, effect_name, hit_position, rotation, nil, optional_particle_group_id)
 		end
 	end
 end
@@ -680,20 +729,24 @@ function _create_projection_decal(t, decal_settings, position, rotation, normal,
 	Managers.state.decal:add_projection_decal(decal_unit_name, position, rotation, normal, decal_extents, hit_actor, hit_unit, t)
 end
 
-function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, spawned_impact_fx_units, impact_fx, position, direction, source_parameters, attacking_unit, optional_particle_group_id, optional_target_unit, optional_node_index, optional_hit_normal, only_decal)
+function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, spawned_impact_fx_units, impact_fx, hit_position, attack_direction, source_parameters, attacking_unit, optional_particle_group_id, optional_target_unit, optional_node_index, optional_hit_normal, only_decal)
 	local impact_fx_name = impact_fx.name
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local target_player = optional_target_unit and player_unit_spawn_manager:owner(optional_target_unit)
 	local target_first_person_extension = optional_target_unit and ScriptUnit.has_extension(optional_target_unit, "first_person_system")
 	local attacker_first_person_extension = attacking_unit and ScriptUnit.has_extension(attacking_unit, "first_person_system")
+	local target_owner_unit = target_player and target_player.player_unit
+	local target_owner_first_person_extension = target_owner_unit and ScriptUnit.has_extension(target_owner_unit, "first_person_system")
+	local target_unit_is_owner_unit = target_owner_unit and target_owner_unit == optional_target_unit
 	local target_player_is_in_1p = target_player and target_first_person_extension and target_first_person_extension:is_in_first_person_mode()
-	local opposite_direction = -direction
+	local target_owner_player_is_in_1p = target_owner_unit and target_owner_first_person_extension and target_owner_first_person_extension:is_in_first_person_mode()
+	local opposite_direction = -attack_direction
 
 	if not only_decal then
 		local sfx = _impact_fx(impact_fx, attacking_unit, unit_to_extension_map, "sfx", "sfx_husk", target_player_is_in_1p)
 
 		if sfx then
-			_create_impact_sfx(wwise_world, sfx, source_parameters, position, opposite_direction, optional_hit_normal)
+			_create_impact_sfx(wwise_world, sfx, source_parameters, hit_position, opposite_direction, optional_hit_normal)
 		end
 
 		if attacker_first_person_extension then
@@ -704,34 +757,34 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 				local sfx_1p = _impact_fx(impact_fx, attacking_unit, unit_to_extension_map, "sfx_1p")
 
 				if sfx_1p then
-					_create_impact_sfx(wwise_world, sfx_1p, source_parameters, position, opposite_direction)
+					_create_impact_sfx(wwise_world, sfx_1p, source_parameters, hit_position, opposite_direction)
 				end
 			end
 		end
 
-		if target_player_is_in_1p then
+		if target_player_is_in_1p or target_owner_player_is_in_1p then
 			local sfx_1p_direction_interface = _impact_fx(impact_fx, attacking_unit, unit_to_extension_map, "sfx_1p_direction_interface")
 
 			if sfx_1p_direction_interface then
-				local interface_position = position + opposite_direction * INTERFACE_POSITION_OFFSET_DISTANCE
+				local interface_position = hit_position + opposite_direction * INTERFACE_POSITION_OFFSET_DISTANCE
 
-				_create_impact_sfx(wwise_world, sfx_1p_direction_interface, source_parameters, interface_position, direction, nil, IS_DIRECTION_INTERFACE)
+				_create_impact_sfx(wwise_world, sfx_1p_direction_interface, source_parameters, interface_position, attack_direction, nil, IS_DIRECTION_INTERFACE)
 			end
 		end
 
 		local sfx_3p = _impact_fx(impact_fx, attacking_unit, unit_to_extension_map, "sfx_3p", nil, target_player_is_in_1p)
 
-		if sfx_3p and not target_player_is_in_1p then
-			_create_impact_sfx(wwise_world, sfx_3p, source_parameters, position, opposite_direction)
+		if sfx_3p and not target_player_is_in_1p and not target_owner_player_is_in_1p then
+			_create_impact_sfx(wwise_world, sfx_3p, source_parameters, hit_position, opposite_direction)
 		end
 
 		local material_switch_sfx = _impact_fx(impact_fx, attacking_unit, unit_to_extension_map, "material_switch_sfx", "material_switch_sfx_husk")
 
 		if material_switch_sfx and optional_hit_normal then
-			_create_material_switch_sfx(wwise_world, material_switch_sfx, position, opposite_direction, optional_hit_normal)
+			_create_material_switch_sfx(wwise_world, material_switch_sfx, hit_position, opposite_direction, optional_hit_normal)
 		end
 
-		local play_vfx = not target_player_is_in_1p
+		local play_vfx = not target_player_is_in_1p or not target_unit_is_owner_unit
 		local play_1p_vfx, play_3p_vfx
 
 		if attacker_first_person_extension and not target_player_is_in_1p then
@@ -739,6 +792,9 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 
 			play_1p_vfx = in_first_person
 			play_3p_vfx = not in_first_person
+		elseif target_owner_first_person_extension and not target_unit_is_owner_unit then
+			play_1p_vfx = target_owner_player_is_in_1p
+			play_3p_vfx = not target_owner_player_is_in_1p
 		else
 			play_1p_vfx = false
 			play_3p_vfx = not target_player_is_in_1p
@@ -748,7 +804,7 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 			local vfx = _impact_fx(impact_fx, attacking_unit, unit_to_extension_map, "vfx")
 
 			if vfx then
-				_create_impact_vfx(world, vfx, position, opposite_direction, optional_hit_normal, optional_particle_group_id)
+				_create_impact_vfx(world, vfx, hit_position, opposite_direction, optional_hit_normal, optional_particle_group_id)
 			end
 		end
 
@@ -756,7 +812,7 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 			local vfx_1p = _impact_fx(impact_fx, attacking_unit, unit_to_extension_map, "vfx_1p")
 
 			if vfx_1p then
-				_create_impact_vfx(world, vfx_1p, position, opposite_direction, optional_hit_normal, optional_particle_group_id)
+				_create_impact_vfx(world, vfx_1p, hit_position, opposite_direction, optional_hit_normal, optional_particle_group_id)
 			end
 		end
 
@@ -764,7 +820,7 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 			local vfx_3p = _impact_fx(impact_fx, attacking_unit, unit_to_extension_map, "vfx_3p")
 
 			if vfx_3p then
-				_create_impact_vfx(world, vfx_3p, position, opposite_direction, optional_hit_normal, optional_particle_group_id)
+				_create_impact_vfx(world, vfx_3p, hit_position, opposite_direction, optional_hit_normal, optional_particle_group_id)
 			end
 		end
 	end
@@ -772,11 +828,11 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 	local decal = impact_fx.decal
 
 	if decal and optional_hit_normal then
-		local dot_value = Vector3.dot(optional_hit_normal, direction)
-		local tangent = Vector3.normalize(direction - dot_value * optional_hit_normal)
+		local dot_value = Vector3.dot(optional_hit_normal, attack_direction)
+		local tangent = Vector3.normalize(attack_direction - dot_value * optional_hit_normal)
 		local decal_rotation = Quaternion.look(tangent, optional_hit_normal)
 
-		_create_projection_decal(t, decal, position, decal_rotation, optional_hit_normal, nil, nil, impact_fx_name)
+		_create_projection_decal(t, decal, hit_position, decal_rotation, optional_hit_normal, nil, nil, impact_fx_name)
 	end
 
 	local linked_decal = impact_fx.linked_decal
@@ -791,7 +847,7 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 			local decal_normal = opposite_direction
 			local hit_actor = Unit.actor(optional_target_unit, hit_actors[1])
 
-			_create_projection_decal(t, linked_decal, position, decal_rotation, decal_normal, optional_target_unit, hit_actor, impact_fx_name)
+			_create_projection_decal(t, linked_decal, hit_position, decal_rotation, decal_normal, optional_target_unit, hit_actor, impact_fx_name)
 		end
 	end
 
@@ -804,7 +860,7 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 			local blood_ball_unit = blood_ball[ii]
 			local impact_fx_damage_type = impact_fx.damage_type
 
-			Managers.state.blood:queue_blood_ball(position, direction, blood_ball_unit, impact_fx_damage_type)
+			Managers.state.blood:queue_blood_ball(hit_position, attack_direction, blood_ball_unit, impact_fx_damage_type)
 		end
 	end
 
@@ -818,7 +874,7 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 			local unit_name = unit_settings.unit_name
 			local flow_event = unit_settings.flow_event
 			local random_rotation = Quaternion.from_yaw_pitch_roll(math.random() * PI, math.random() * PI, math.random() * PI)
-			local fx_unit = World.spawn_unit_ex(world, unit_name, nil, position, random_rotation)
+			local fx_unit = World.spawn_unit_ex(world, unit_name, nil, hit_position, random_rotation)
 
 			if flow_event then
 				Unit.flow_event(fx_unit, flow_event)

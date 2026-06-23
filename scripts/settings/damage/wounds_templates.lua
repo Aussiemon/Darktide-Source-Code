@@ -27,6 +27,10 @@ local plasma_blue = {
 	0.6,
 	1,
 }
+local phosphor_white = {
+	0.95,
+	1,
+}
 local energy_blue = {
 	0.6,
 	0.5,
@@ -214,6 +218,66 @@ wounds_templates.plasma = {
 				},
 				color_brightness = plasma_blue,
 				duration = linger_heavy,
+			},
+		},
+	},
+}
+wounds_templates.phosphor = {
+	[attack_results.damaged] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
+				shape_scaling = false,
+				radius = {
+					3,
+					5,
+				},
+				color_brightness = phosphor_white,
+				duration = linger_light,
+			},
+		},
+	},
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
+				shape_scaling = false,
+				radius = {
+					3,
+					5,
+				},
+				color_brightness = phosphor_white,
+				duration = linger_light,
+			},
+		},
+	},
+}
+wounds_templates.arc_ranged = {
+	[attack_results.damaged] = {
+		default = {
+			default_shape = shapes.lasgun,
+			[shapes.lasgun] = {
+				shape_scaling = false,
+				radius = {
+					0,
+					5,
+				},
+				color_brightness = electric_blue,
+				duration = linger_light,
+			},
+		},
+	},
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.lasgun,
+			[shapes.lasgun] = {
+				shape_scaling = false,
+				radius = {
+					5,
+					5.25,
+				},
+				color_brightness = electric_blue,
+				duration = linger_medium,
 			},
 		},
 	},
@@ -1286,6 +1350,108 @@ wounds_templates.energy_blunt = {
 		},
 	},
 }
+wounds_templates.arc_blunt = {
+	[attack_results.damaged] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
+				shape_scaling = true,
+				radius = {
+					4,
+					5,
+				},
+				color_brightness = electric_blue,
+				duration = linger_light,
+			},
+			[shapes.left_45_slash_coarse] = {
+				shape_scaling = true,
+				radius = {
+					4,
+					5,
+				},
+				color_brightness = electric_blue,
+				duration = linger_light,
+			},
+			[shapes.right_45_slash_coarse] = {
+				shape_scaling = true,
+				radius = {
+					4,
+					5,
+				},
+				color_brightness = electric_blue,
+				duration = linger_light,
+			},
+			[shapes.horizontal_slash_coarse] = {
+				shape_scaling = true,
+				radius = {
+					4,
+					5,
+				},
+				color_brightness = electric_blue,
+				duration = linger_light,
+			},
+			[shapes.vertical_slash_coarse] = {
+				shape_scaling = true,
+				radius = {
+					4,
+					5,
+				},
+				color_brightness = electric_blue,
+				duration = linger_light,
+			},
+		},
+	},
+	[attack_results.died] = {
+		default = {
+			default_shape = shapes.default,
+			[shapes.default] = {
+				shape_scaling = true,
+				radius = {
+					4,
+					5,
+				},
+				color_brightness = electric_blue,
+				duration = linger_light,
+			},
+			[shapes.left_45_slash_coarse] = {
+				shape_scaling = true,
+				radius = {
+					4,
+					5,
+				},
+				color_brightness = electric_blue,
+				duration = linger_light,
+			},
+			[shapes.right_45_slash_coarse] = {
+				shape_scaling = true,
+				radius = {
+					4,
+					5,
+				},
+				color_brightness = electric_blue,
+				duration = linger_light,
+			},
+			[shapes.horizontal_slash_coarse] = {
+				shape_scaling = true,
+				radius = {
+					4,
+					5,
+				},
+				color_brightness = electric_blue,
+				duration = linger_light,
+			},
+			[shapes.vertical_slash_coarse] = {
+				shape_scaling = true,
+				radius = {
+					4,
+					5,
+				},
+				color_brightness = electric_blue,
+				duration = linger_light,
+			},
+		},
+	},
+}
 wounds_templates.energy_slash = {
 	[attack_results.damaged] = {
 		default = {
@@ -1580,45 +1746,6 @@ wounds_templates.boltshell = {
 		},
 	},
 }
-wounds_templates.lasgun = table.clone(wounds_templates.laser)
-wounds_templates.laspistol = table.clone(wounds_templates.laser)
-wounds_templates.autogun = table.clone(wounds_templates.ballistic)
-wounds_templates.autopistol = table.clone(wounds_templates.ballistic)
-wounds_templates.stubrevolver = table.clone(wounds_templates.stubber)
-wounds_templates.plasma_rifle = table.clone(wounds_templates.plasma)
-wounds_templates.psyker_ball = table.clone(wounds_templates.force_projectile)
-wounds_templates.chainsword_2h = table.clone(wounds_templates.chain_heavy)
-wounds_templates.chainsword_sawing_2h = table.clone(wounds_templates.chain_heavy)
-wounds_templates.chainsword = table.clone(wounds_templates.chain_light)
-wounds_templates.chainsword_sawing = table.clone(wounds_templates.chain_light)
-wounds_templates.chainaxe = table.clone(wounds_templates.chain_light)
-wounds_templates.chainaxe_sawing = table.clone(wounds_templates.chain_light)
-wounds_templates.saw = table.clone(wounds_templates.chain_toxin)
-wounds_templates.saw_secondary = table.clone(wounds_templates.chain_toxin_purple)
-wounds_templates.thunder_hammer = table.clone(wounds_templates.blunt)
-wounds_templates.thunder_hammer_active = table.clone(wounds_templates.energy_blunt)
-wounds_templates.power_maul = table.clone(wounds_templates.shock_blunt)
-wounds_templates.ogryn_power_maul = table.clone(wounds_templates.blunt)
-wounds_templates.ogryn_power_maul_activated = table.clone(wounds_templates.energy_blunt)
-wounds_templates.combat_sword = table.clone(wounds_templates.slash)
-wounds_templates.power_sword = table.clone(wounds_templates.slash)
-wounds_templates.power_sword_active = table.clone(wounds_templates.energy_slash)
-wounds_templates.force_sword = table.clone(wounds_templates.slash)
-wounds_templates.force_sword_active = table.clone(wounds_templates.slash_force)
-wounds_templates.combat_knife = table.clone(wounds_templates.slash)
-wounds_templates.combat_axe = table.clone(wounds_templates.slash)
-wounds_templates.combat_blade = table.clone(wounds_templates.slash_large)
-wounds_templates.rippergun = table.clone(wounds_templates.shotgun_large)
-wounds_templates.shotgun = table.clone(wounds_templates.shotgun_small)
-wounds_templates.bolter = table.clone(wounds_templates.boltshell)
-wounds_templates.bayonet = table.clone(wounds_templates.slash)
-wounds_templates.thumper_shotgun = table.clone(wounds_templates.shotgun_large)
-wounds_templates.gauntlet_melee = table.clone(wounds_templates.blunt)
-wounds_templates.ogryn_shovel = table.clone(wounds_templates.blunt)
-wounds_templates.ogryn_club = table.clone(wounds_templates.blunt)
-wounds_templates.heavy_stubber = table.clone(wounds_templates.stubber)
-wounds_templates.shovel = table.clone(wounds_templates.blunt)
-wounds_templates.needle = table.clone(wounds_templates.needle)
 
 for template_name, template in pairs(wounds_templates) do
 	template.name = template_name

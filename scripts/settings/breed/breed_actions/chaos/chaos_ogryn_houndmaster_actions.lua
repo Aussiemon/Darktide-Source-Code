@@ -15,6 +15,7 @@ local action_data = {
 		ignore_rotate_towards_target = false,
 		initial_delay = 3,
 		pre_stinger = "wwise/events/minions/play_chaos_hound_mutator_houndmaster_stinger",
+		scale_breeds_by_resistance = true,
 		should_close_spawn_outside_los = true,
 		should_patrol = true,
 		shout_radius = 10,
@@ -37,17 +38,99 @@ local action_data = {
 		},
 		breed_data = {
 			{
-				name = "chaos_hound",
-				amount = {
-					1,
-					2,
+				{
+					name = "chaos_hound",
+					amount = {
+						1,
+						1,
+					},
+				},
+				{
+					name = "chaos_armored_hound",
+					amount = {
+						1,
+						1,
+					},
 				},
 			},
 			{
-				name = "chaos_armored_hound",
-				amount = {
-					1,
-					2,
+				{
+					name = "chaos_hound",
+					amount = {
+						1,
+						2,
+					},
+				},
+				{
+					name = "chaos_armored_hound",
+					amount = {
+						1,
+						2,
+					},
+				},
+			},
+			{
+				{
+					name = "chaos_hound",
+					amount = {
+						2,
+						3,
+					},
+				},
+				{
+					name = "chaos_armored_hound",
+					amount = {
+						1,
+						2,
+					},
+				},
+			},
+			{
+				{
+					name = "chaos_hound",
+					amount = {
+						1,
+						2,
+					},
+				},
+				{
+					name = "chaos_armored_hound",
+					amount = {
+						2,
+						4,
+					},
+				},
+			},
+			{
+				{
+					name = "chaos_hound",
+					amount = {
+						1,
+						1,
+					},
+				},
+				{
+					name = "chaos_armored_hound",
+					amount = {
+						3,
+						5,
+					},
+				},
+			},
+			{
+				{
+					name = "chaos_hound",
+					amount = {
+						1,
+						1,
+					},
+				},
+				{
+					name = "chaos_armored_hound",
+					amount = {
+						3,
+						6,
+					},
 				},
 			},
 		},
@@ -227,6 +310,7 @@ local action_data = {
 		aoe_threat_timing = 0.4,
 		attack_type = "oobb",
 		bot_power_level_modifier = 0.25,
+		catch_up_movementspeed = true,
 		collision_filter = "filter_minion_melee_friendly_fire",
 		dodge_range = 2.75,
 		dodge_width = 1.1,
@@ -378,6 +462,7 @@ local action_data = {
 	moving_melee_attack_cleave = {
 		attack_type = "oobb",
 		bot_power_level_modifier = 0.25,
+		catch_up_movementspeed = true,
 		collision_filter = "filter_minion_melee_friendly_fire",
 		dodge_range = 2.75,
 		dodge_width = 1.1,

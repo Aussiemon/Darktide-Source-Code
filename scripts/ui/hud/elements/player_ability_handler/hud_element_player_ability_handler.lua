@@ -56,6 +56,11 @@ HudElementPlayerAbilityHandler._player_scan = function (self, ui_renderer)
 
 			if has_scenegraph then
 				local hud_icon = ability_settings.hud_icon
+				local hud_icon_ramp = ability_settings.hud_icon_ramp
+				local hud_icon_mask = ability_settings.hud_icon_mask
+				local hud_icon_frame = ability_settings.hud_icon_frame
+				local hud_icon_frame_glow = ability_settings.hud_icon_frame_glow
+				local hud_icon_frame_glow_spin = ability_settings.hud_icon_frame_glow_spin
 				local ability_name = ability_settings.name
 				local instance_data = instance_data_tables[ability_id]
 				local name_differs = instance_data and instance_data.ability_name ~= ability_name
@@ -75,6 +80,11 @@ HudElementPlayerAbilityHandler._player_scan = function (self, ui_renderer)
 							slot_id = slot_id,
 							ability_id = ability_id,
 							icon = hud_icon,
+							icon_ramp = hud_icon_ramp,
+							icon_mask = hud_icon_mask,
+							frame = hud_icon_frame,
+							frame_glow = hud_icon_frame_glow,
+							frame_glow_spin = hud_icon_frame_glow_spin,
 							definition_path = definition_path,
 						}
 

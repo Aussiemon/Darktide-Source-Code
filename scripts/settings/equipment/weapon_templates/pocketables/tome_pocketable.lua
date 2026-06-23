@@ -190,6 +190,37 @@ weapon_template.actions = {
 			voice_tag_id = "com_take_this",
 		},
 	},
+	action_inspect_3p = {
+		action_prevents_jump = true,
+		block_first_person_rotation = true,
+		can_crouch = false,
+		can_jump = false,
+		force_look = true,
+		kind = "inspect_3p",
+		lock_view = false,
+		skip_3p_anims = false,
+		stop_input = "inspect_stop",
+		total_time = math.huge,
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
+		crosshair = {
+			crosshair_type = "inspect",
+		},
+		allowed_chain_actions = {
+			inspect_3p_stop = {
+				action_name = "action_inspect",
+				chain_time = 1.1,
+			},
+		},
+		action_movement_curve = {
+			{
+				modifier = 0,
+				t = 0,
+			},
+			start_modifier = 0,
+		},
+	},
 	action_inspect = {
 		anim_end_event = "inspect_end",
 		anim_event = "inspect_start",
@@ -201,6 +232,12 @@ weapon_template.actions = {
 		total_time = math.huge,
 		crosshair = {
 			crosshair_type = "inspect",
+		},
+		allowed_chain_actions = {
+			inspect_3p_start = {
+				action_name = "action_inspect_3p",
+				chain_time = 0.75,
+			},
 		},
 	},
 }
@@ -216,10 +253,12 @@ weapon_template.hud_configuration = {
 	uses_overheat = false,
 }
 weapon_template.breed_anim_state_machine_3p = {
+	cryptic = "content/characters/player/human/third_person/animations/pocketables",
 	human = "content/characters/player/human/third_person/animations/pocketables",
 	ogryn = "content/characters/player/ogryn/third_person/animations/pocketables",
 }
 weapon_template.breed_anim_state_machine_1p = {
+	cryptic = "content/characters/player/human/first_person/animations/grimoire",
 	human = "content/characters/player/human/first_person/animations/grimoire",
 	ogryn = "content/characters/player/ogryn/first_person/animations/grimoire",
 }
@@ -254,6 +293,14 @@ weapon_template.action_cant_give_screen_ui_validation = function (wielded_slot_i
 	local target_unit = action_module_target_finder_component.target_unit_1
 
 	return current_action_name == "action_aim_give" and target_unit == nil
+end
+
+weapon_template.action_inspect_3p_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_inspect_3p"
+end
+
+weapon_template.action_inspect_3p_base_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_inspect"
 end
 
 return weapon_template

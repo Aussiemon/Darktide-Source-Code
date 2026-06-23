@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/utilities/attack_intensity.lua
 
 local AttackIntensity = {}
+local Breed = require("scripts/utilities/breed")
 
 AttackIntensity.add_intensity = function (target_unit, attack_intensities)
 	local target_attack_intensity_extension = ScriptUnit.has_extension(target_unit, "attack_intensity_system")
@@ -101,9 +102,22 @@ AttackIntensity.monster_attacker = function (target_unit)
 end
 
 AttackIntensity.player_can_be_attacked = function (player_unit, type)
-	local attack_intensity_extension = ScriptUnit.extension(player_unit, "attack_intensity_system")
+	local target_has_unit_data_extension = ScriptUnit.has_extension(player_unit, "unit_data_system")
 
-	return attack_intensity_extension:attack_allowed(type)
+	if not target_has_unit_data_extension then
+		return false
+	end
+
+	local target_unit_data_extension = ScriptUnit.has_extension(player_unit, "unit_data_system")
+	local breed = target_unit_data_extension:breed()
+
+	if Breed.is_player(breed) then
+		local attack_intensity_extension = ScriptUnit.extension(player_unit, "attack_intensity_system")
+
+		return attack_intensity_extension:attack_allowed(type)
+	else
+		return false
+	end
 end
 
 AttackIntensity.player_is_locked_in_melee = function (player_unit)

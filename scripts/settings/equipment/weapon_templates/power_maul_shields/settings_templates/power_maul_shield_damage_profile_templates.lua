@@ -121,7 +121,7 @@ damage_templates.powermaul_shield_light_linesman = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.power_maul,
+	wounds_template = WoundsTemplates.shock_blunt,
 	stagger_duration_modifier = {
 		0.1,
 		0.5,
@@ -217,7 +217,7 @@ damage_templates.powermaul_shield_light_tank = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.power_maul,
+	wounds_template = WoundsTemplates.shock_blunt,
 	stagger_duration_modifier = {
 		0.1,
 		0.5,
@@ -318,7 +318,7 @@ damage_templates.powermaul_shield_heavy_tank = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.power_maul,
+	wounds_template = WoundsTemplates.shock_blunt,
 	stagger_duration_modifier = {
 		0.1,
 		0.5,
@@ -543,7 +543,7 @@ damage_templates.powermaul_shield_light_smiter = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.power_maul,
+	wounds_template = WoundsTemplates.shock_blunt,
 	stagger_duration_modifier = {
 		0.1,
 		2.5,
@@ -629,7 +629,7 @@ damage_templates.powermaul_shield_light_smiter_shield = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.power_maul,
+	wounds_template = WoundsTemplates.shock_blunt,
 	stagger_duration_modifier = {
 		0.1,
 		2.5,
@@ -697,7 +697,7 @@ damage_templates.powermaul_shield_heavy_smiter = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.power_maul,
+	wounds_template = WoundsTemplates.shock_blunt,
 	stagger_duration_modifier = {
 		0.1,
 		0.5,
@@ -782,7 +782,7 @@ damage_templates.powermaul_shield_heavy_smiter_shield = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.power_maul,
+	wounds_template = WoundsTemplates.shock_blunt,
 	stagger_duration_modifier = {
 		0.1,
 		0.5,
@@ -902,7 +902,7 @@ overrides.powermaul_shield_weapon_special = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.power_maul,
+			WoundsTemplates.shock_blunt,
 		},
 		{
 			"melee_attack_strength",

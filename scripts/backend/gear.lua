@@ -102,8 +102,8 @@ Gear.create = function (self, master_id, slot, character_id, overrides, allow_du
 				},
 				masterDataInstance = {
 					id = master_id,
+					overrides = overrides,
 				},
-				overrides = overrides,
 			},
 		}):next(function (data)
 			return data.body

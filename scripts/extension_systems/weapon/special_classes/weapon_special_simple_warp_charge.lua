@@ -62,6 +62,10 @@ WeaponSpecialSimpleWarpCharge.on_exit_damage_window = function (self, t, num_hit
 	return
 end
 
+WeaponSpecialSimpleWarpCharge.on_weapon_shout_action_finish = function (self, t, aborted)
+	return
+end
+
 implements(WeaponSpecialSimpleWarpCharge, WeaponSpecialInterface)
 
 return WeaponSpecialSimpleWarpCharge

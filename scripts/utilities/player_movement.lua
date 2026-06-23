@@ -2,8 +2,8 @@
 
 local PlayerMovement = {}
 
-PlayerMovement.teleport = function (player, position, rotation, send_character_state_disruption_event)
-	local cb = callback(PlayerMovement._teleport_callback, player.player_unit, Vector3Box(position), rotation and QuaternionBox(rotation) or nil, send_character_state_disruption_event or false)
+PlayerMovement.teleport = function (player, position, rotation, keep_velocity, send_character_state_disruption_event)
+	local cb = callback(PlayerMovement._teleport_callback, player.player_unit, Vector3Box(position), rotation and QuaternionBox(rotation) or nil, keep_velocity or false, send_character_state_disruption_event or false)
 
 	Managers.state.game_mode:register_physics_safe_callback(cb)
 end
@@ -12,13 +12,13 @@ PlayerMovement.teleport_fixed_update = function (player_unit, position, rotation
 	PlayerMovement._teleport(player_unit, position, rotation)
 end
 
-PlayerMovement._teleport_callback = function (player_unit, boxed_position, boxed_rotation, send_character_state_disruption_event)
+PlayerMovement._teleport_callback = function (player_unit, boxed_position, boxed_rotation, keep_velocity, send_character_state_disruption_event)
 	if ALIVE[player_unit] then
 		PlayerMovement._teleport(player_unit, boxed_position:unbox(), boxed_rotation and boxed_rotation:unbox() or nil, send_character_state_disruption_event or false)
 	end
 end
 
-PlayerMovement._teleport = function (player_unit, position, rotation, send_character_state_disruption_event)
+PlayerMovement._teleport = function (player_unit, position, rotation, keep_velocity, send_character_state_disruption_event)
 	local mover = Unit.mover(player_unit)
 	local old_position = Mover.position(mover)
 
@@ -29,15 +29,20 @@ PlayerMovement._teleport = function (player_unit, position, rotation, send_chara
 	local inair_state_component = unit_data_extension:write_component("inair_state")
 
 	locomotion_component.position = position
-	inair_state_component.fell_from_height = inair_state_component.fell_from_height + (position.z - old_position.z)
 
 	if rotation then
 		locomotion_component.rotation = rotation
 	end
 
-	local locomotion_steering = unit_data_extension:write_component("locomotion_steering")
+	if keep_velocity then
+		inair_state_component.fell_from_height = inair_state_component.fell_from_height + (position.z - old_position.z)
+	else
+		inair_state_component.fell_from_height = position.z
 
-	locomotion_steering.velocity_wanted = Vector3.zero()
+		local locomotion_steering = unit_data_extension:write_component("locomotion_steering")
+
+		locomotion_steering.velocity_wanted = Vector3.zero()
+	end
 
 	local player = Managers.state.player_unit_spawn:owner(player_unit)
 

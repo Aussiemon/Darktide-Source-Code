@@ -25,7 +25,7 @@ GameVersionError.loc_title = function (self)
 end
 
 GameVersionError.loc_description = function (self)
-	if PLATFORM == "win32" then
+	if IS_WINDOWS then
 		return "loc_popup_description_wrong_game_version_win"
 	else
 		return "loc_popup_description_wrong_game_version_console"

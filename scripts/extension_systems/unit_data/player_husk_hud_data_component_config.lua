@@ -12,6 +12,11 @@ local husk_hud_data_component_config = {
 		"target_unit_2",
 		"target_unit_3",
 	},
+	action_module_ability_target_finder = {
+		"target_unit_1",
+		"target_unit_2",
+		"target_unit_3",
+	},
 	warp_charge = {
 		"current_percentage",
 	},

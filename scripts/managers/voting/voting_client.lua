@@ -151,7 +151,7 @@ VotingClient.member_list = function (self)
 
 	local member_list = self._member_list
 
-	for i = 1, member_list do
+	for i = 1, #member_list do
 		member_list_copy[i] = member_list[i]
 	end
 

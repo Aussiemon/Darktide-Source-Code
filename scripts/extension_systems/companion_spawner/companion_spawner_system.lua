@@ -28,10 +28,10 @@ CompanionSpawnerSystem.rpc_companion_despawn_units = function (self, channel_id,
 	local unit = Managers.state.unit_spawner:unit(unit_id)
 	local extension = self._unit_to_extension_map[unit]
 
-	extension:despawn_units()
+	extension:despawn_companion_units()
 end
 
-CompanionSpawnerSystem.rpc_companion_spawn_unit = function (self, channel_id, unit_id, spawned_unit_id, optional_look_up_key)
+CompanionSpawnerSystem.rpc_companion_spawn_unit = function (self, channel_id, unit_id, spawned_unit_id, companion_variant_special_rule_id)
 	local unit = Managers.state.unit_spawner:unit(unit_id)
 	local extension = self._unit_to_extension_map[unit]
 	local unit_spawner = Managers.state.unit_spawner
@@ -39,8 +39,10 @@ CompanionSpawnerSystem.rpc_companion_spawn_unit = function (self, channel_id, un
 
 	extension:register_spawned_companion_unit(spawned_unit)
 
-	if optional_look_up_key then
-		extension:rpc_add_spawned_unit_lookup(optional_look_up_key, spawned_unit)
+	local companion_variant_special_rule = companion_variant_special_rule_id and NetworkLookup.companion_variant_special_rules[companion_variant_special_rule_id]
+
+	if companion_variant_special_rule then
+		extension:add_spawned_unit_lookup(companion_variant_special_rule, spawned_unit)
 	end
 end
 

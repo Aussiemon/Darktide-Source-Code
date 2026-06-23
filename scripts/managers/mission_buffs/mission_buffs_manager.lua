@@ -5,6 +5,8 @@ local MissionBuffsManager = class("MissionBuffsManager")
 local CLIENT_RPCS = {
 	"rpc_client_mission_buffs_buff_received",
 	"rpc_client_mission_buffs_family_received",
+	"rpc_client_mission_buffs_buff_removed",
+	"rpc_client_mission_buffs_family_removed",
 }
 local EVENTS = {
 	{
@@ -16,8 +18,16 @@ local EVENTS = {
 		"notify_buff_given_to_player",
 	},
 	{
+		"mission_buffs_event_notify_buff_removed_from_player",
+		"notify_buff_removed_from_player",
+	},
+	{
 		"mission_buffs_event_add_externally_controlled_to_player",
 		"_add_externally_controlled_buff_to_player",
+	},
+	{
+		"mission_buffs_event_remove_externally_controlled_from_player",
+		"_remove_externally_controlled_buff_from_player",
 	},
 	{
 		"mission_buffs_event_request_specific_buff",
@@ -147,6 +157,20 @@ MissionBuffsManager.rpc_client_mission_buffs_family_received = function (self, c
 	self._local_player_active_buff_family = buff_family_name
 end
 
+MissionBuffsManager.rpc_client_mission_buffs_buff_removed = function (self, channel_id, buff_template_id, wave_num)
+	local buff_name = NetworkLookup.buff_templates[buff_template_id]
+
+	Log.info("MissionBuffsManager", "Buff removed %s", buff_name)
+end
+
+MissionBuffsManager.rpc_client_mission_buffs_family_removed = function (self, channel_id, buff_family_id)
+	local buff_family_name = NetworkLookup.hordes_build_families[buff_family_id]
+
+	Log.info("MissionBuffsManager", "Buff Family removed %s", buff_family_name)
+
+	self._local_player_active_buff_family = nil
+end
+
 MissionBuffsManager._request_buff_for_all = function (self, buff_name)
 	if self:_is_hosting_client() then
 		self._mission_buffs_handler:give_buff_to_all(buff_name)
@@ -162,7 +186,7 @@ MissionBuffsManager._request_buff_for_self = function (self, buff_name)
 		self._mission_buffs_handler:give_buff_to_player(local_player, buff_name)
 	elseif self:_is_client() then
 		local buff_template_id = NetworkLookup.buff_templates[buff_name]
-		local peer_id, local_player_id = self._get_local_player_peer_and_local_id()
+		local _, local_player_id = self._get_local_player_peer_and_local_id()
 	end
 end
 
@@ -201,6 +225,57 @@ MissionBuffsManager._add_externally_controlled_buff_to_player = function (self, 
 	end
 
 	self._mission_buffs_handler:give_buff_to_player(player, buff_name, true)
+end
+
+MissionBuffsManager.remove_buff_from_player = function (self, player, buff_name)
+	self._mission_buffs_handler:remove_buff_from_player(player, buff_name)
+end
+
+MissionBuffsManager.remove_buff_from_all = function (self, buff_name)
+	self._mission_buffs_handler:remove_buff_from_all(buff_name)
+end
+
+MissionBuffsManager.remove_buff_from_player_silently = function (self, player, buff_name)
+	self._mission_buffs_handler:remove_buff_from_player(player, buff_name, true, true)
+end
+
+MissionBuffsManager._remove_externally_controlled_buff_from_player = function (self, player, buff_name)
+	if not self:_is_server_or_host() then
+		return
+	end
+
+	self._mission_buffs_handler:remove_buff_from_player(player, buff_name, true)
+end
+
+MissionBuffsManager.notify_buff_removed_from_player = function (self, player, buff_name)
+	local buff_template_id = NetworkLookup.buff_templates[buff_name]
+	local is_player_hosting_client = self._is_hosting_player(player)
+	local wave_num = self._game_mode._waves_completed
+
+	if DEDICATED_SERVER or not is_player_hosting_client then
+		local player_peer_id = player:peer_id()
+		local game_session = Managers.state.game_session
+		local is_connected_to_client = Managers.state.game_session:connected_to_client(player_peer_id)
+
+		if is_connected_to_client then
+			game_session:send_rpc_client("rpc_client_mission_buffs_buff_removed", player_peer_id, buff_template_id, wave_num)
+		end
+
+		Log.info("MissionBuffsManager", "Buff removed (server-side notification) %s for peer_id %s, wave_num %d", buff_name, player:peer_id(), wave_num or -1)
+	elseif self:_is_hosting_client() and is_player_hosting_client then
+		-- Nothing
+	end
+end
+
+MissionBuffsManager._notify_buff_family_removed_from_player = function (self, player, buff_family_name)
+	local buff_family_id = NetworkLookup.hordes_build_families[buff_family_name]
+	local is_player_hosting_client = self._is_hosting_player(player)
+
+	if DEDICATED_SERVER or not is_player_hosting_client then
+		Managers.state.game_session:send_rpc_client("rpc_client_mission_buffs_family_removed", player:peer_id(), buff_family_id)
+	elseif self:_is_hosting_client() and is_player_hosting_client then
+		self._local_player_active_buff_family = buff_family_name
+	end
 end
 
 MissionBuffsManager._notify_ui = function (context)

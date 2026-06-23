@@ -28,6 +28,7 @@ local slot_configuration = PlayerCharacterConstants.slot_configuration
 local slot_configuration_by_type = PlayerCharacterConstants.slot_configuration_by_type
 local template_types = WeaponTweakTemplateSettings.template_types
 local _block_anim_event
+local enabled_quick_swap_event = false
 local PlayerUnitWeaponExtension = class("PlayerUnitWeaponExtension")
 
 PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -85,6 +86,7 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 	self._character_state_component = unit_data:read_component("character_state")
 	self._inair_state_component = unit_data:read_component("inair_state")
 	self._locomotion_component = unit_data:read_component("locomotion")
+	self._lunge_character_state_component = unit_data:read_component("lunge_character_state")
 	self._movement_state_component = unit_data:read_component("movement_state")
 	self._sprint_character_state_component = unit_data:read_component("sprint_character_state")
 	self._stamina_read_component = unit_data:read_component("stamina")
@@ -180,6 +182,7 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 	self._sway_weapon_module = SwayWeaponModule:new(unit, unit_data)
 	self._last_fixed_t = extension_init_context.fixed_frame_t
 	self.last_shoot_action_t = 0
+	self.last_sweep_action_t = 0
 	self._wwise_ammo_parameter_value = 0
 	self._fixed_time_step = Managers.state.game_session.fixed_time_step
 	self._persistent_data_by_slot = {}
@@ -323,6 +326,10 @@ PlayerUnitWeaponExtension.extensions_ready = function (self, world, unit)
 
 	self._ability_extension = ability_extension
 
+	local companion_spawner_extension = ScriptUnit.has_extension(unit, "companion_spawner_system")
+
+	self._companion_spawner_extension = companion_spawner_extension
+
 	local coherency_extension = ScriptUnit.extension(unit, "coherency_system")
 
 	self._coherency_extension = coherency_extension
@@ -354,6 +361,7 @@ PlayerUnitWeaponExtension.extensions_ready = function (self, world, unit)
 	action_context.world = self._world
 	action_context.physics_world = self._physics_world
 	action_context.wwise_world = Managers.world:wwise_world(self._world)
+	action_context.player = self._player
 	action_context.player_unit = self._unit
 	action_context.is_server = self._is_server
 	action_context.is_local_unit = self._is_local_unit
@@ -683,7 +691,7 @@ PlayerUnitWeaponExtension.on_slot_wielded = function (self, slot_name, t, skip_w
 	local action_name = "action_wield"
 	local action_settings = Action.action_settings(weapon_template, action_name)
 
-	if DEDICATED_SERVER and self._is_human_controlled and self._last_wield_t then
+	if enabled_quick_swap_event and DEDICATED_SERVER and self._is_human_controlled and self._last_wield_t then
 		local time_since_last_wield = t - self._last_wield_t
 
 		if time_since_last_wield <= quick_swap_time then
@@ -794,6 +802,29 @@ PlayerUnitWeaponExtension.can_wield = function (self, slot_name)
 	return true
 end
 
+PlayerUnitWeaponExtension.can_be_scroll_wielded = function (self, slot_name)
+	local weapons = self._weapons
+	local weapon = weapons[slot_name]
+
+	if not weapon then
+		return false
+	end
+
+	local weapon_template = weapon.weapon_template
+
+	if not weapon_template then
+		return false
+	end
+
+	local not_scroll_wieldable = weapon_template.not_scroll_wieldable
+
+	if not_scroll_wieldable then
+		return false
+	end
+
+	return true
+end
+
 local action_params_temp = {}
 
 PlayerUnitWeaponExtension._start_action = function (self, action_name, action_settings, t, used_input, transition_type)
@@ -830,10 +861,18 @@ PlayerUnitWeaponExtension.start_action = function (self, action_name, t)
 end
 
 PlayerUnitWeaponExtension.stop_action = function (self, reason, data, t, allow_reason_chain_action)
-	local weapon, wielded_slot = self:_wielded_weapon(self._inventory_component, self._weapons)
+	local inventory_component = self._inventory_component
+	local weapon, wielded_slot = self:_wielded_weapon(inventory_component, self._weapons)
 
-	if not allow_reason_chain_action or wielded_slot == "none" then
-		self._action_handler:stop_action("weapon_action", reason, data, t)
+	if not allow_reason_chain_action then
+		local condition_func_params = self:condition_func_params(wielded_slot)
+
+		self._action_handler:stop_action("weapon_action", reason, data, t, nil, nil, nil, condition_func_params)
+	elseif wielded_slot == "none" then
+		local previously_wielded_weapon_slot = inventory_component.previously_wielded_weapon_slot
+		local condition_func_params = self:condition_func_params(previously_wielded_weapon_slot)
+
+		self._action_handler:stop_action("weapon_action", reason, data, t, nil, nil, nil, condition_func_params)
 	else
 		local condition_func_params = self:condition_func_params(wielded_slot)
 		local actions = weapon.weapon_template.actions
@@ -1042,6 +1081,7 @@ PlayerUnitWeaponExtension.condition_func_params = function (self, wielded_slot)
 	temp_table.talent_extension = self._talent_extension
 	temp_table.unit_data_extension = self._unit_data_extension
 	temp_table.visual_loadout_extension = self._visual_loadout_extension
+	temp_table.companion_spawner_extension = self._companion_spawner_extension
 	temp_table.weapon_extension = self
 	temp_table.action_place_component = self._action_place_component
 	temp_table.action_shoot_component = self._action_shoot_component
@@ -1050,6 +1090,7 @@ PlayerUnitWeaponExtension.condition_func_params = function (self, wielded_slot)
 	temp_table.character_state_component = self._character_state_component
 	temp_table.inventory_read_component = self._inventory_component
 	temp_table.inventory_slot_component = inventory_slot_component
+	temp_table.lunge_character_state_component = self._lunge_character_state_component
 	temp_table.movement_state_component = self._movement_state_component
 	temp_table.sprint_character_state_component = self._sprint_character_state_component
 	temp_table.stamina_read_component = self._stamina_read_component
@@ -1470,6 +1511,10 @@ end
 
 PlayerUnitWeaponExtension.running_action_settings = function (self)
 	return self._action_handler:running_action_settings("weapon_action")
+end
+
+PlayerUnitWeaponExtension.wanted_character_state_transition = function (self)
+	return self._action_handler:wanted_character_state_transition()
 end
 
 PlayerUnitWeaponExtension.weapon_template = function (self)

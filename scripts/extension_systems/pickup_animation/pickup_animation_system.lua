@@ -3,7 +3,7 @@
 require("scripts/extension_systems/pickup_animation/pickup_animation_extension")
 
 local PickupAnimationSystem = class("PickupAnimationSystem", "ExtensionSystemBase")
-local RPCS = {
+local CLIENT_RPCS = {
 	"rpc_start_pickup_animation",
 	"rpc_start_place_animation",
 }
@@ -11,9 +11,17 @@ local RPCS = {
 PickupAnimationSystem.init = function (self, context, system_init_data, ...)
 	PickupAnimationSystem.super.init(self, context, system_init_data, ...)
 
-	self._network_event_delegate = context.network_event_delegate
+	if not self._is_server then
+		self._network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
+	end
+end
 
-	self._network_event_delegate:register_session_events(self, unpack(RPCS))
+PickupAnimationSystem.destroy = function (self)
+	if not self._is_server then
+		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
+	end
+
+	PickupAnimationSystem.super.destroy(self)
 end
 
 PickupAnimationSystem.start_animation_to_unit = function (self, pickup_unit, destination_unit)
@@ -78,10 +86,6 @@ PickupAnimationSystem.rpc_start_place_animation = function (self, channel_id, pi
 	if pickup_animation_extension then
 		pickup_animation_extension:start_place_animation(end_unit, swapped_pickup_unit)
 	end
-end
-
-PickupAnimationSystem.destroy = function (self)
-	self._network_event_delegate:unregister_events(unpack(RPCS))
 end
 
 return PickupAnimationSystem

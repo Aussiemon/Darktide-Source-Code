@@ -3,7 +3,10 @@
 local template = {}
 
 template.dummy_auto_event_template = {
+	minimum_amount_of_enemies_required = 40,
+	minimum_time_before_forced_spawn = 5,
 	name = "dummy_auto_event_template",
+	skip_using_minion_spawners = true,
 	cooldown = {
 		{
 			22,
@@ -14,7 +17,7 @@ template.dummy_auto_event_template = {
 			22,
 		},
 		{
-			14,
+			5,
 			16,
 		},
 		{
@@ -57,6 +60,10 @@ template.dummy_auto_event_template = {
 		3,
 		4,
 		5,
+	},
+	should_update_event_position = {
+		should_be_offset_from_main_path = 50,
+		wanted_direction = "fwd",
 	},
 	pause_pacing_on_event = {
 		all = {},

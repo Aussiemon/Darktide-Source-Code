@@ -9,7 +9,7 @@ local BtConditionalSequenceNode = class("BtConditionalSequenceNode", "BtNode")
 BtConditionalSequenceNode.init = function (self, ...)
 	BtConditionalSequenceNode.super.init(self, ...)
 
-	self._children = {}
+	self._conditional_children = {}
 end
 
 BtConditionalSequenceNode.init_values = function (self, blackboard, action_data, node_data)
@@ -18,20 +18,14 @@ BtConditionalSequenceNode.init_values = function (self, blackboard, action_data,
 	local node_identifier = self.identifier
 
 	node_data[node_identifier] = 1
-
-	local children = self._children
-
-	for i = 1, #children do
-		local child_node = children[i]
-		local child_tree_node = child_node.tree_node
-		local child_action_data = child_tree_node.action_data
-
-		child_node:init_values(blackboard, child_action_data, node_data)
-	end
 end
 
 BtConditionalSequenceNode.add_child = function (self, node)
-	self._children[#self._children + 1] = node
+	BtConditionalSequenceNode.super.add_child(self, node)
+
+	if not node.tree_node.state then
+		self._conditional_children[#self._conditional_children + 1] = node
+	end
 end
 
 local function _reset_child_to_run_index(node_data, node_identifier)
@@ -49,7 +43,7 @@ BtConditionalSequenceNode.evaluate = function (self, unit, blackboard, scratchpa
 	local leaf_node
 	local node_identifier = self.identifier
 	local last_running_node = old_running_child_nodes[node_identifier]
-	local children = self._children
+	local children = self._conditional_children
 	local child_to_run_index = node_data[node_identifier] or 1
 
 	for i = child_to_run_index, #children do
@@ -83,14 +77,14 @@ BtConditionalSequenceNode.run = function (self, unit, breed, blackboard, scratch
 	local running_node = running_child_nodes[node_identifier]
 	local running_tree_node = running_node.tree_node
 	local running_action_data = running_tree_node.action_data
-	local result, evaluate_utility_next_frame = running_node:run(unit, breed, blackboard, scratchpad, running_action_data, dt, t, node_data, running_child_nodes)
+	local result, evaluate_utility_next_frame, update_rate = running_node:run(unit, breed, blackboard, scratchpad, running_action_data, dt, t, node_data, running_child_nodes)
 
 	if result == "running" then
-		return "running", evaluate_utility_next_frame
+		return "running", evaluate_utility_next_frame, update_rate
 	elseif result == "done" then
 		local next_child_index = node_data[node_identifier] + 1
 
-		if next_child_index > #self._children then
+		if next_child_index > #self._conditional_children then
 			_reset_child_to_run_index(node_data, node_identifier)
 
 			return "done"

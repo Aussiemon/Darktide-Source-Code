@@ -9,7 +9,6 @@ local ForceRotation = require("scripts/extension_systems/locomotion/utilities/fo
 local LagCompensation = require("scripts/utilities/lag_compensation")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
-local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local PlayerCharacterStateHogtied = class("PlayerCharacterStateHogtied", "PlayerCharacterStateBase")
 local assist_anims = CharacterStateAssistSettings.anim_settings.hogtied
 local ANIM_EVENT_ON_ENTER = "captured_idle"
@@ -97,14 +96,14 @@ PlayerCharacterStateHogtied.on_exit = function (self, unit, t, next_state)
 
 		if is_player_alive then
 			local companion_spawner_extension = ScriptUnit.has_extension(unit, "companion_spawner_system")
-			local have_companions = companion_spawner_extension and companion_spawner_extension:have_companions()
+			local has_any_spawned_companions = companion_spawner_extension and companion_spawner_extension:has_any_spawned_companions()
 			local should_have_companion = companion_spawner_extension and companion_spawner_extension:should_have_companion()
 
 			if should_have_companion then
-				companion_spawner_extension:despawn_units()
-				companion_spawner_extension:spawn_units()
-			elseif not should_have_companion and have_companions then
-				companion_spawner_extension:despawn_units()
+				companion_spawner_extension:despawn_companion_units()
+				companion_spawner_extension:spawn_companion_units()
+			elseif not should_have_companion and has_any_spawned_companions then
+				companion_spawner_extension:despawn_companion_units()
 			end
 
 			local rescued_by_player = true

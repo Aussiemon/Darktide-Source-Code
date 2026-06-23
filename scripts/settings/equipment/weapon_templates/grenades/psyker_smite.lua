@@ -136,6 +136,26 @@ weapon_template.action_inputs = {
 			},
 		},
 	},
+	inspect_3p_start = {
+		buffer_time = 0,
+		input_sequence = {
+			{
+				hold_input = "weapon_inspect_hold",
+				input = "action_two_pressed",
+				value = true,
+			},
+		},
+	},
+	inspect_3p_stop = {
+		buffer_time = 0,
+		input_sequence = {
+			{
+				hold_input = "weapon_inspect_hold",
+				input = "action_two_pressed",
+				value = true,
+			},
+		},
+	},
 	combat_ability = {
 		buffer_time = 0,
 		clear_input_queue = true,
@@ -241,6 +261,19 @@ weapon_template.action_input_hierarchy = {
 			{
 				input = "inspect_stop",
 				transition = "base",
+			},
+			{
+				input = "inspect_3p_start",
+				transition = {
+					{
+						input = "inspect_3p_stop",
+						transition = "previous",
+					},
+					{
+						input = "inspect_stop",
+						transition = "base",
+					},
+				},
 			},
 		},
 	},
@@ -611,6 +644,37 @@ weapon_template.actions = {
 			buff_stat_buffs.smite_attack_speed,
 		},
 	},
+	action_inspect_3p = {
+		action_prevents_jump = true,
+		block_first_person_rotation = true,
+		can_crouch = false,
+		can_jump = false,
+		force_look = true,
+		kind = "inspect_3p",
+		lock_view = false,
+		skip_3p_anims = false,
+		stop_input = "inspect_stop",
+		total_time = math.huge,
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
+		crosshair = {
+			crosshair_type = "inspect",
+		},
+		allowed_chain_actions = {
+			inspect_3p_stop = {
+				action_name = "action_inspect",
+				chain_time = 1.1,
+			},
+		},
+		action_movement_curve = {
+			{
+				modifier = 0,
+				t = 0,
+			},
+			start_modifier = 0,
+		},
+	},
 	action_inspect = {
 		anim_end_event = "inspect_end",
 		anim_event = "inspect_start",
@@ -622,6 +686,12 @@ weapon_template.actions = {
 		total_time = math.huge,
 		crosshair = {
 			crosshair_type = "inspect",
+		},
+		allowed_chain_actions = {
+			inspect_3p_start = {
+				action_name = "action_inspect_3p",
+				chain_time = 0.75,
+			},
 		},
 	},
 	combat_ability = {
@@ -637,10 +707,12 @@ weapon_template.keywords = {
 	"psyker",
 }
 weapon_template.breed_anim_state_machine_3p = {
+	cryptic = "content/characters/player/human/third_person/animations/psyker_smite",
 	human = "content/characters/player/human/third_person/animations/psyker_smite",
 	ogryn = "content/characters/player/ogryn/third_person/animations/unarmed",
 }
 weapon_template.breed_anim_state_machine_1p = {
+	cryptic = "content/characters/player/human/first_person/animations/psyker_smite",
 	human = "content/characters/player/human/first_person/animations/psyker_smite",
 	ogryn = "content/characters/player/ogryn/first_person/animations/unarmed",
 }
@@ -730,6 +802,14 @@ end
 
 weapon_template.action_one_charging_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
 	return current_action_name == "action_charge_target_sticky" or current_action_name == "action_charge_target_lock_on"
+end
+
+weapon_template.action_inspect_3p_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_inspect_3p"
+end
+
+weapon_template.action_inspect_3p_base_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_inspect"
 end
 
 return weapon_template

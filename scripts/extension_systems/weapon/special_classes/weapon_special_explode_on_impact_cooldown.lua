@@ -99,7 +99,7 @@ WeaponSpecialExplodeOnImpactCooldown.process_hit = function (self, t, weapon, ac
 	local explosion_template = tweak_data.explosion_template
 
 	for i = 1, num_explosions do
-		Explosion.create_explosion(self._world, self._physics_world, hit_position + explosion_direction, attack_direction, self._player_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion, false, false, weapon.item, optional_origin_slot, nil, nil, nil, true)
+		Explosion.create_explosion(self._world, self._physics_world, hit_position + explosion_direction, Quaternion.look(attack_direction), self._player_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion, false, false, weapon.item, optional_origin_slot, nil, nil, nil, true)
 	end
 end
 
@@ -141,6 +141,10 @@ WeaponSpecialExplodeOnImpactCooldown.on_exit_damage_window = function (self, t, 
 	end
 
 	self._num_hit_enemies = 0
+end
+
+WeaponSpecialExplodeOnImpactCooldown.on_weapon_shout_action_finish = function (self, t, aborted)
+	return
 end
 
 implements(WeaponSpecialExplodeOnImpactCooldown, WeaponSpecialInterface)

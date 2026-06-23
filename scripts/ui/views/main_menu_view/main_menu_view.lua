@@ -292,14 +292,17 @@ MainMenuView._event_character_sync_changed = function (self, waiting)
 	self._waiting_on_character = waiting
 end
 
-MainMenuView._event_profiles_changed = function (self, profiles)
+MainMenuView._event_profiles_changed = function (self, profiles, max_characters_slots)
 	self._character_profiles = profiles
 
 	self:_sync_character_slots()
 
 	local profile_list = self._character_profiles
 	local num_characters = #profile_list or 0
-	local max_num_characters = MainMenuViewSettings.max_num_characters
+	local max_num_characters = max_characters_slots or MainMenuViewSettings.max_num_characters
+
+	self._max_num_characters = max_num_characters
+
 	local slots_remaining = num_characters < max_num_characters and max_num_characters - num_characters or 0
 
 	self._widgets_by_name.slots_count.content.text = Localize("loc_main_menu_slots_remaining", true, {
@@ -590,7 +593,7 @@ MainMenuView._handle_input = function (self, input_service, dt, t)
 				self:_on_character_widget_selected(selected_character_list_index - 1)
 			end
 		elseif input_service:get("navigate_down_continuous") then
-			local max_num_characters = MainMenuViewSettings.max_num_characters
+			local max_num_characters = self._max_num_characters or MainMenuViewSettings.max_num_characters
 
 			if selected_character_list_index and selected_character_list_index < num_character_slots and selected_character_list_index <= max_num_characters then
 				self:_on_character_widget_selected(selected_character_list_index + 1)
@@ -925,7 +928,7 @@ end
 MainMenuView._are_slots_full = function (self)
 	local profiles = self._character_profiles
 	local num_characters = profiles and #profiles or 0
-	local max_num_characters = MainMenuViewSettings.max_num_characters
+	local max_num_characters = self._max_num_characters or MainMenuViewSettings.max_num_characters
 
 	return max_num_characters <= num_characters
 end

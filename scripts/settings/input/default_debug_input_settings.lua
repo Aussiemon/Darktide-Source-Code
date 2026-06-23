@@ -132,30 +132,6 @@ local default_debug_input_settings = {
 		minion_auto_stagger_start = {
 			"keyboard_left shift+keyboard_l",
 		},
-		mission_buffs_buff_choice_one = {
-			"keyboard_left alt+keyboard_left ctrl+keyboard_1",
-			"xbox_controller_left_thumb+xbox_controller_d_left",
-			"ps4_controller_l3+ps4_controller_d_left",
-		},
-		mission_buffs_buff_choice_three = {
-			"keyboard_left alt+keyboard_left ctrl+keyboard_3",
-			"xbox_controller_left_thumb+xbox_controller_d_right",
-			"ps4_controller_l3+ps4_controller_d_right",
-		},
-		mission_buffs_buff_choice_two = {
-			"keyboard_left alt+keyboard_left ctrl+keyboard_2",
-			"xbox_controller_left_thumb+xbox_controller_d_up",
-			"ps4_controller_l3+ps4_controller_d_up",
-		},
-		mission_buffs_family_buff_for_all = {
-			"keyboard_left shift+keyboard_left ctrl+keyboard_m",
-		},
-		mission_buffs_legendary_buff_choice = {
-			"keyboard_left alt+keyboard_left ctrl+keyboard_m",
-		},
-		mission_buffs_trigger_catchup_for_player = {
-			"keyboard_left shift+keyboard_left ctrl+keyboard_k",
-		},
 		open_selected = {
 			"keyboard_f5",
 		},
@@ -505,30 +481,6 @@ local default_debug_input_settings = {
 		},
 		minion_auto_stagger_start = {
 			key_alias = "minion_auto_stagger_start",
-			type = "pressed",
-		},
-		mission_buffs_buff_choice_one = {
-			key_alias = "mission_buffs_buff_choice_one",
-			type = "pressed",
-		},
-		mission_buffs_buff_choice_three = {
-			key_alias = "mission_buffs_buff_choice_three",
-			type = "pressed",
-		},
-		mission_buffs_buff_choice_two = {
-			key_alias = "mission_buffs_buff_choice_two",
-			type = "pressed",
-		},
-		mission_buffs_family_buff_for_all = {
-			key_alias = "mission_buffs_family_buff_for_all",
-			type = "pressed",
-		},
-		mission_buffs_legendary_buff_choice = {
-			key_alias = "mission_buffs_legendary_buff_choice",
-			type = "pressed",
-		},
-		mission_buffs_trigger_catchup_for_player = {
-			key_alias = "mission_buffs_trigger_catchup_for_player",
 			type = "pressed",
 		},
 		open_selected = {

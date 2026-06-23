@@ -5,7 +5,7 @@ require("scripts/extension_systems/spline_follower/spline_follower_extension")
 local Graph = require("scripts/utilities/graph")
 local LevelEventSettings = require("scripts/settings/level_event/level_event_settings")
 local SplineFollowerSystem = class("SplineFollowerSystem", "ExtensionSystemBase")
-local RPCS = {
+local CLIENT_RPCS = {
 	"rpc_spline_follower_hot_join_sync",
 }
 
@@ -19,12 +19,19 @@ SplineFollowerSystem.init = function (self, context, system_init_data, ...)
 	self._spline_connection_radius = LevelEventSettings.spline_follower.spline_connection_radius
 	self._seed = system_init_data.level_seed
 
-	local network_event_delegate = context.network_event_delegate
+	if not self._is_server then
+		self._network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
+	end
 
-	network_event_delegate:register_session_events(self, unpack(RPCS))
-
-	self._network_event_delegate = network_event_delegate
 	self._graph = Graph:new()
+end
+
+SplineFollowerSystem.destroy = function (self)
+	if not self._is_server then
+		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
+	end
+
+	SplineFollowerSystem.super.destroy(self)
 end
 
 SplineFollowerSystem.on_gameplay_post_init = function (self, level)
@@ -35,10 +42,6 @@ end
 SplineFollowerSystem.on_location_setup = function (self)
 	self:_setup_splines()
 	self:_setup_spline_paths()
-end
-
-SplineFollowerSystem.destroy = function (self)
-	self._network_event_delegate:unregister_events(unpack(RPCS))
 end
 
 SplineFollowerSystem.hot_join_sync = function (self, sender, channel)

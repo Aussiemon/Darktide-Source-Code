@@ -169,44 +169,10 @@ Characters.delete_character = function (self, character_id)
 end
 
 Characters.set_talents_v2 = function (self, character_id, talent_info, specialization_talent_info)
-	local promise = Promise.new()
-	local num_requests = (talent_info and 1 or 0) + (specialization_talent_info and 1 or 0)
-	local num_completed = 0
-	local talent_result, specialization_talents_result
-
-	if talent_info then
-		self:set_data(character_id, "vocation", {
-			talents = talent_info.packed_talents,
-		}):next(function (result)
-			num_completed = num_completed + 1
-			talent_result = result
-
-			if num_completed == num_requests then
-				promise:resolve({
-					talents = talent_result,
-					expertise = specialization_talents_result,
-				})
-			end
-		end)
-	end
-
-	if specialization_talent_info then
-		self:set_data(character_id, "vocation", {
-			expertise = specialization_talent_info.packed_talents,
-		}):next(function (result)
-			num_completed = num_completed + 1
-			specialization_talents_result = result
-
-			if num_completed == num_requests then
-				promise:resolve({
-					talents = talent_result,
-					expertise = specialization_talents_result,
-				})
-			end
-		end)
-	end
-
-	return promise
+	return self:set_data(character_id, "vocation", {
+		talents = talent_info and talent_info.packed_talents or nil,
+		expertise = specialization_talent_info and specialization_talent_info.packed_talents or nil,
+	})
 end
 
 Characters.get_talents_v2 = function (self, character_id)
@@ -368,6 +334,22 @@ Characters._pop_data_queue = function (self, character_id, section)
 
 	if next_request.mode == DATA_MODES.set then
 		local num_bundled_requests = 1
+		local bundled_data
+
+		for i = 2, #section_queue do
+			local potential_request = section_queue[i]
+
+			if potential_request.mode == DATA_MODES.set then
+				bundled_data = bundled_data or table.shallow_copy(next_request.data)
+
+				table.merge(bundled_data, potential_request.data)
+
+				next_request.data = bundled_data
+				num_bundled_requests = num_bundled_requests + 1
+			else
+				break
+			end
+		end
 
 		return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/data/" .. section), {
 			method = "PUT",
@@ -417,12 +399,16 @@ Characters._pop_data_queue = function (self, character_id, section)
 	end
 end
 
-Characters.check_name = function (self, name, name_type)
+Characters.check_name = function (self, name, name_type, archetype)
 	local sanitized_name = Http.url_encode(name)
 	local url = BackendUtilities.url_builder("/data/characters/name/" .. sanitized_name .. "/check")
 
 	if name_type then
 		url:query("nameType", name_type)
+	end
+
+	if archetype then
+		url:query("archetype", archetype)
 	end
 
 	return Managers.backend:title_request(url:to_string(), {

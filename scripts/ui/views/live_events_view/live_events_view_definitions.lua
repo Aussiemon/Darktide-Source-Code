@@ -2,11 +2,13 @@
 
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local Styles = require("scripts/ui/views/live_events_view/live_events_view_styles")
 local Settings = require("scripts/ui/views/live_events_view/live_events_view_settings")
 local WalletSettings = require("scripts/settings/wallet_settings")
 local BarPassTemplates = require("scripts/ui/pass_templates/bar_pass_templates")
 local InputDevice = require("scripts/managers/input/input_device")
+local default_entry_width = Settings.default_entry_width
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	canvas = {
@@ -75,7 +77,63 @@ local scenegraph_definition = {
 			1,
 		},
 		size = {
-			1420,
+			default_entry_width,
+			1,
+		},
+	},
+	navigation_arrow_left = {
+		horizontal_alignment = "left",
+		parent = "entries_anchor",
+		vertical_alignment = "center",
+		position = {
+			10,
+			0,
+			10,
+		},
+		size = {
+			48,
+			48,
+		},
+	},
+	navigation_arrow_right = {
+		horizontal_alignment = "right",
+		parent = "entries_anchor",
+		vertical_alignment = "center",
+		position = {
+			-10,
+			0,
+			10,
+		},
+		size = {
+			48,
+			48,
+		},
+	},
+	entries = {
+		horizontal_alignment = "center",
+		parent = "entries_anchor",
+		vertical_alignment = "center",
+		position = {
+			0,
+			0,
+			1,
+		},
+		size = {
+			default_entry_width,
+			1,
+		},
+	},
+	entries_mask = {
+		horizontal_alignment = "center",
+		parent = "entries_anchor",
+		vertical_alignment = "center",
+		position = {
+			0,
+			0,
+			1,
+		},
+		size = {
+			default_entry_width,
 			1,
 		},
 	},
@@ -136,82 +194,6 @@ local scenegraph_definition = {
 		},
 	},
 }
-local entry_base = UIWidget.create_definition({
-	{
-		pass_type = "texture",
-		style_id = "top_detail",
-		value = "content/ui/materials/dividers/horizontal_frame_big_upper",
-		value_id = "top_detail",
-		style = Styles.entry.top_detail,
-	},
-	{
-		pass_type = "texture",
-		style_id = "top_center_detail",
-		value = "content/ui/materials/frames/end_of_round/reward_levelup_upper_skull_gray",
-		value_id = "top_center_detail",
-		style = Styles.entry.top_center_detail,
-	},
-	{
-		pass_type = "texture",
-		style_id = "bottom_detail",
-		value = "content/ui/materials/dividers/horizontal_frame_big_lower",
-		value_id = "bottom_detail",
-		style = Styles.entry.bottom_detail,
-	},
-	{
-		pass_type = "text",
-		style_id = "event_name",
-		value = "event_name",
-		value_id = "event_name",
-		style = Styles.texts.event_name,
-	},
-	{
-		pass_type = "texture",
-		style_id = "event_name_divider",
-		value = "content/ui/materials/dividers/skull_center_02",
-		value_id = "event_name_divider",
-		style = Styles.texts.event_name_divider,
-	},
-	{
-		pass_type = "text",
-		style_id = "event_lore",
-		value = "event_lore",
-		value_id = "event_lore",
-		style = Styles.texts.event_lore,
-	},
-	{
-		pass_type = "text",
-		style_id = "event_context",
-		value = "event_context",
-		value_id = "event_context",
-		style = Styles.texts.event_context,
-	},
-	{
-		pass_type = "text",
-		style_id = "event_description",
-		value = "event_description",
-		value_id = "event_description",
-		style = Styles.texts.event_description,
-	},
-	{
-		pass_type = "text",
-		style_id = "rewards_track_text",
-		value_id = "rewards_track_text",
-		style = Styles.texts.rewards_track_text,
-	},
-	{
-		pass_type = "rect",
-		style_id = "background_rect",
-		style = Styles.entry.background_rect,
-	},
-	{
-		pass_type = "texture",
-		style_id = "background",
-		value = "content/ui/materials/backgrounds/terminal_basic",
-		value_id = "background",
-		style = Styles.entry.background,
-	},
-}, "entries_anchor")
 local reward_info_tooltip = UIWidget.create_definition({
 	{
 		pass_type = "texture",
@@ -264,19 +246,136 @@ local reward_info_tooltip = UIWidget.create_definition({
 		style = Styles.tooltip.reward_tooltip_background,
 	},
 }, "reward_tooltip")
-local widget_definitions = {
-	reward_info_tooltip = reward_info_tooltip,
-	progress_text = UIWidget.create_definition({
-		{
-			pass_type = "text",
-			style_id = "progress_text",
-			value_id = "progress_text",
-			style = Styles.event_progress_bar.progress_text,
+local background_masked = UIWidget.create_definition({
+	{
+		pass_type = "texture",
+		style_id = "top_detail",
+		value = "content/ui/materials/dividers/horizontal_frame_big_upper",
+		value_id = "top_detail",
+		style = Styles.entry.top_detail,
+	},
+	{
+		pass_type = "texture",
+		style_id = "top_center_detail",
+		value = "content/ui/materials/frames/end_of_round/reward_levelup_upper_skull_gray",
+		value_id = "top_center_detail",
+		style = Styles.entry.top_center_detail,
+	},
+	{
+		pass_type = "texture",
+		style_id = "bottom_detail",
+		value = "content/ui/materials/dividers/horizontal_frame_big_lower",
+		value_id = "bottom_detail",
+		style = Styles.entry.bottom_detail,
+	},
+	{
+		pass_type = "rect",
+		style_id = "background_rect",
+		style = Styles.entry.background_rect,
+	},
+	{
+		pass_type = "texture",
+		style_id = "background",
+		value = "content/ui/materials/backgrounds/terminal_basic",
+		value_id = "background",
+		style = Styles.entry.background,
+	},
+	{
+		pass_type = "texture",
+		scenegraph_id = "entries_mask",
+		value = "content/ui/materials/offscreen_masks/ui_overlay_offscreen_straight_blur",
+	},
+}, "entries_anchor")
+local navigation_arrow_left = UIWidget.create_definition({
+	{
+		content_id = "hotspot",
+		pass_type = "hotspot",
+	},
+	{
+		pass_type = "texture_uv",
+		style_id = "arrow",
+		value = "content/ui/materials/buttons/premium_store_button_next_page",
+		value_id = "arrow",
+		style = {
+			uvs = {
+				{
+					1,
+					0,
+				},
+				{
+					0,
+					1,
+				},
+			},
 		},
-	}, "event_progress_bar"),
+		visibility_function = function (content, style)
+			local hotspot = content.hotspot
+
+			return not hotspot.is_selected and not hotspot.is_hover and not hotspot.is_focused
+		end,
+	},
+	{
+		pass_type = "texture_uv",
+		style_id = "arrow_active",
+		value = "content/ui/materials/buttons/premium_store_button_next_page_hover",
+		value_id = "arrow_active",
+		style = {
+			uvs = {
+				{
+					1,
+					0,
+				},
+				{
+					0,
+					1,
+				},
+			},
+		},
+		visibility_function = function (content, style)
+			local hotspot = content.hotspot
+
+			return hotspot.is_selected or hotspot.is_hover or hotspot.is_focused
+		end,
+	},
+}, "navigation_arrow_left")
+local navigation_arrow_right = UIWidget.create_definition({
+	{
+		content_id = "hotspot",
+		pass_type = "hotspot",
+	},
+	{
+		pass_type = "texture",
+		style_id = "arrow",
+		value = "content/ui/materials/buttons/premium_store_button_next_page",
+		value_id = "arrow",
+		visibility_function = function (content, style)
+			local hotspot = content.hotspot
+
+			return not hotspot.is_selected and not hotspot.is_hover and not hotspot.is_focused
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "arrow_active",
+		value = "content/ui/materials/buttons/premium_store_button_next_page_hover",
+		value_id = "arrow_active",
+		visibility_function = function (content, style)
+			local hotspot = content.hotspot
+
+			return hotspot.is_selected or hotspot.is_hover or hotspot.is_focused
+		end,
+	},
+}, "navigation_arrow_right")
+local widget_definitions = {
+	background_masked = background_masked,
+	reward_info_tooltip = reward_info_tooltip,
+	navigation_arrow_left = navigation_arrow_left,
+	navigation_arrow_right = navigation_arrow_right,
 }
+local animations = {}
 
 return {
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
+	animations = animations,
 }

@@ -211,7 +211,7 @@ CorruptorExtension._update_explosion = function (self, unit, dt)
 	local up = Quaternion.up(Unit.local_rotation(unit, 1))
 	local explosion_position = self._root_position:unbox() + up
 
-	Explosion.create_explosion(self._world, self._physics_world, explosion_position, up, unit, explosion_template, power_level, charge_level, attack_type)
+	Explosion.create_explosion(self._world, self._physics_world, explosion_position, Quaternion.look(up), unit, explosion_template, power_level, charge_level, attack_type)
 
 	self._explosion_timer = nil
 end

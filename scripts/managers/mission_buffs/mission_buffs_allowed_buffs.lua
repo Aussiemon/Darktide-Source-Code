@@ -211,6 +211,38 @@ allowed_buffs.legendary_buffs.broker = {
 	},
 }
 allowed_buffs.legendary_buffs.broker.grenade_ability.broker_flash_grenade_improved = table.clone(allowed_buffs.legendary_buffs.broker.grenade_ability.broker_flash_grenade)
+allowed_buffs.legendary_buffs.cryptic = {
+	generic = {
+		"hordes_buff_cryptic_dodge_costs_cooldown",
+	},
+	grenade_ability = {
+		cryptic_servo_skull_order_base = {},
+		cryptic_force_field = {
+			"hordes_buff_cryptic_force_field_leaves_fire_liquid_area",
+		},
+		arc_grenade = table.append(table.shallow_copy(legendary_grenade_buffs_applied_to_all), {
+			"hordes_buff_spawn_dome_shield_on_grenade_explosion",
+			"hordes_buff_cryptic_arc_grenade_extra_arcs",
+		}),
+	},
+	combat_ability = {
+		cryptic_discharge = {
+			"hordes_buff_cryptic_discharge_ability_always_full_charges_bonus",
+		},
+		cryptic_precision_stance = {
+			"hordes_buff_cryptic_precision_stance_duration_extension_on_kill",
+		},
+		cryptic_chordclaw = {
+			"hordes_buff_cryptic_chordclaw_kills_replenish_charge",
+		},
+	},
+	talent_specific = {
+		cryptic_flamethrower = {
+			"hordes_buff_cryptic_servo_skull_flamethrower_uses_no_charge",
+		},
+	},
+}
+allowed_buffs.legendary_buffs.cryptic.grenade_ability.cryptic_servo_skull_order = table.clone(allowed_buffs.legendary_buffs.cryptic.grenade_ability.cryptic_servo_skull_order_base)
 allowed_buffs.available_family_builds = {
 	"fire",
 	"unkillable",

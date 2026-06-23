@@ -2,6 +2,7 @@
 
 local DialogueCategoryConfig = require("scripts/settings/dialogue/dialogue_category_config")
 local RuleLoadingConditions = require("scripts/settings/dialogue/rule_loading_conditions")
+local RuleOverrides = require("scripts/settings/dialogue/rule_overrides")
 local TagQuery = require("scripts/extension_systems/dialogue/tag_query")
 local TagQueryDatabase = class("TagQueryDatabase")
 
@@ -230,6 +231,14 @@ TagQueryDatabase.validate_rule = function (self, rule_definition)
 	return true
 end
 
+TagQueryDatabase._rule_override = function (self, original_rule_name, user_context_list)
+	local override_rule_name = RuleOverrides.should_override(original_rule_name, user_context_list)
+	local override_rule_index = override_rule_name and self._rule_id_mapping[override_rule_name]
+	local override_rule = self._rule_id_mapping[override_rule_index]
+
+	return override_rule, override_rule_index
+end
+
 TagQueryDatabase.define_rule = function (self, rule_definition)
 	local rule_allowed = self:validate_rule(rule_definition)
 
@@ -353,13 +362,16 @@ end
 
 local best_queries = Script.new_array(8)
 local temp_queries = Script.new_array(16)
+local candidate_queries = Script.new_array(16)
 
 TagQueryDatabase.iterate_queries = function (self, t)
 	table.clear_array(best_queries, #best_queries)
 	table.clear_array(temp_queries, #temp_queries)
+	table.clear_array(candidate_queries, #candidate_queries)
 
 	local num_iterations, num_temp_queries = #self._queries, 0
-	local best_query, best_query_value, best_query_category, best_query_category_name = nil, 0
+	local best_query_category_score = 0
+	local num_candidate_queries = 0
 
 	for i = 1, num_iterations do
 		local query = self:_iterate_query(t)
@@ -376,31 +388,41 @@ TagQueryDatabase.iterate_queries = function (self, t)
 			end
 
 			local category_score = category.query_score
-			local value = validated_rule.n_criterias + category_score
 
-			if best_query_value < value then
-				best_query, best_query_value, best_query_category, best_query_category_name = query, value, category, category_name
-			elseif value == best_query_value and math.random() > 0.5 then
-				best_query, best_query_value, best_query_category, best_query_category_name = query, value, category, category_name
+			if best_query_category_score < category_score then
+				num_candidate_queries = 1
+				candidate_queries[num_candidate_queries] = query
+				best_query_category_score = category_score
+			elseif category_score == best_query_category_score then
+				num_candidate_queries = num_candidate_queries + 1
+				candidate_queries[num_candidate_queries] = query
 			end
 		end
 	end
 
-	if best_query and best_query_category.multiple_allowed then
-		local num_best_queries = 0
+	if num_candidate_queries > 0 then
+		local best_query_index = math.random(1, num_candidate_queries)
+		local best_query = candidate_queries[best_query_index]
+		local best_validated_rule = best_query.validated_rule
+		local best_query_category_name = best_validated_rule.category
+		local best_query_category = DialogueCategoryConfig[best_query_category_name]
 
-		for i = 1, num_temp_queries do
-			local query = temp_queries[i]
-			local validated_rule = query.validated_rule
-			local category_name = validated_rule.category
+		if best_query_category.multiple_allowed then
+			local num_best_queries = 0
 
-			if category_name == best_query_category_name then
-				num_best_queries = num_best_queries + 1
-				best_queries[num_best_queries] = query
+			for i = 1, num_temp_queries do
+				local query = temp_queries[i]
+				local validated_rule = query.validated_rule
+				local category_name = validated_rule.category
+
+				if category_name == best_query_category_name then
+					num_best_queries = num_best_queries + 1
+					best_queries[num_best_queries] = query
+				end
 			end
+		else
+			best_queries[1] = best_query
 		end
-	elseif best_query then
-		best_queries[1] = best_query
 	end
 
 	return best_queries
@@ -438,10 +460,21 @@ TagQueryDatabase._iterate_query = function (self, t)
 		self._dialogue_system:populate_faction_contexts(nice_array, 6, dialogue_extension:faction_name(), source)
 	end
 
-	local rule_index_found = RuleDatabase.iterate_query(self._database, nice_array, t)
+	local prio_by_num_contexts = true
+	local rule_index_found = RuleDatabase.iterate_query(self._database, nice_array, t, prio_by_num_contexts)
 
 	if rule_index_found then
 		local rule = self._rule_id_mapping[rule_index_found]
+		local original_rule_name = rule.response
+		local user_contexts = user_context_list.user_context
+		local override_rule, override_rule_index = self:_rule_override(original_rule_name, user_contexts)
+
+		if override_rule then
+			rule = override_rule
+			rule_index_found = override_rule_index
+			rule.overridden_rule_name = original_rule_name
+		end
+
 		local response = rule.response
 		local has_event = dialogue_extension:has_dialogue(response)
 

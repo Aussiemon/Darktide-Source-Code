@@ -123,26 +123,8 @@ ActionReloadState._update_functionality = function (self, reload_state, time_in_
 	end
 end
 
-ActionReloadState._calculate_next_state_transition = function (self, reload_template, inventory_slot_component, time_in_action, time_scale)
-	local reload_state = ReloadStates.reload_state(reload_template, inventory_slot_component)
-	local state_transitions = reload_state.state_transitions
-	local highest_completed_state_transition
-	local highest_completed_state_time = 0
-
-	for state_name, time in pairs(state_transitions) do
-		local scaled_time = time / time_scale
-
-		if highest_completed_state_time <= scaled_time and scaled_time <= time_in_action then
-			highest_completed_state_time = scaled_time
-			highest_completed_state_transition = state_name
-		end
-	end
-
-	return highest_completed_state_transition
-end
-
 ActionReloadState._handle_state_transition = function (self, reload_template, inventory_slot_component, time_in_action, time_scale)
-	local highest_completed_state_transition = self:_calculate_next_state_transition(reload_template, inventory_slot_component, time_in_action, time_scale)
+	local highest_completed_state_transition = ReloadStates.calculate_next_state_transition(reload_template, inventory_slot_component, time_in_action, time_scale)
 
 	if highest_completed_state_transition then
 		inventory_slot_component.reload_state = highest_completed_state_transition

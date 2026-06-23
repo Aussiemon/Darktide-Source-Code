@@ -33,10 +33,11 @@ PlayerCharacterStateGrabbed.init = function (self, character_state_init_context,
 	self._entered_state_t = nil
 end
 
-local ENTER_TELEPORT_NODE = "rp_base"
+local ENTER_TELEPORT_NODE = "root_point"
 local DISABLING_UNIT_LINK_NODE = "j_lefthand"
 local DISABLED_UNIT_LINK_NODE = "j_hips"
 local START_EAT_TIMING = {
+	cryptic = 1.5666666666666667,
 	human = 1.2,
 	ogryn = 1.5666666666666667,
 }

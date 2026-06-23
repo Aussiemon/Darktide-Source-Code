@@ -415,6 +415,8 @@ ViewElementWeaponInfo._scale_value_by_type = function (self, value, display_type
 		value = (1 / value - 1) * 100
 	elseif display_type == "percentage" then
 		value = value * 100
+	elseif display_type == "angle" then
+		value = math.radians_to_degrees(value)
 	end
 
 	return value

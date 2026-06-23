@@ -403,7 +403,7 @@ MoveablePlatformExtension._check_for_end_flow_events = function (self)
 
 	if story_state == story_states.playing then
 		local story_time = network_story_manager:get_story_time(story_name, level)
-		local story_length = self._network_story_manager:get_story_length(story_name, level)
+		local story_length = network_story_manager:get_story_length(story_name, level)
 		local remaining_time = story_length - story_time
 
 		if self._story_direction == MOVEABLE_PLATFORM_DIRECTION.backward then

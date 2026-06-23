@@ -29,5 +29,8 @@ _add_live_event("play_expeditions")
 _add_live_event("abhuman_explosions")
 _add_live_event("elite_army")
 _add_live_event("skulls_guns")
+_add_live_event("leftover")
+_add_live_event("barren")
+_add_live_event("endless_hordes")
 
 return settings("LiveEvents", live_events)

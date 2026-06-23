@@ -246,6 +246,73 @@ TerrorEventManager.update = function (self, dt, t)
 	self:_update_terror_trickle(dt, t)
 end
 
+TerrorEventManager.get_active_events_spawners = function (self)
+	local all_spawners = {}
+	local active_events = self._active_events
+
+	for i = 1, #active_events do
+		local active_event = active_events[i]
+		local nodes = active_event.nodes
+		local scratchpad = active_event.scratchpad
+
+		for ii = 1, #nodes do
+			local node = nodes[ii]
+			local spawner_group = node.spawner_group
+			local proximity_spawners, limit_spawners, inverse_proximity_spawners = node.proximity_spawners, node.limit_spawners, node.inverse_proximity_spawners
+			local spawn_side_name = node.side_name or "villains"
+			local side_system = Managers.state.extension:system("side_system")
+			local spawn_side = side_system:get_side_from_name(spawn_side_name)
+			local target_side
+			local target_side_name = node.target_side_name
+
+			if target_side_name then
+				target_side = side_system:get_side_from_name(target_side_name)
+			else
+				local enemy_sides = spawn_side:relation_sides("enemy")
+
+				target_side = enemy_sides[math.random(1, #enemy_sides)]
+			end
+
+			local target_side_id = target_side.side_id
+			local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")
+			local spawners
+			local proximity_spawning = proximity_spawners or inverse_proximity_spawners
+
+			if spawner_group then
+				if proximity_spawning then
+					local average_position = Vector3(0, 0, 0)
+					local side = side_system:get_side(target_side_id)
+					local valid_player_units = side.valid_player_units
+					local num_valid_player_units = #valid_player_units
+
+					for i = 1, num_valid_player_units do
+						local target_unit = valid_player_units[i]
+						local position = POSITION_LOOKUP[target_unit]
+
+						average_position = average_position + position
+					end
+
+					average_position = average_position / num_valid_player_units
+
+					local optional_inverse = inverse_proximity_spawners
+
+					spawners = minion_spawn_system:spawners_in_group_distance_sorted(spawner_group, average_position, optional_inverse, node.group_in_level_data, scratchpad.level)
+				else
+					spawners = minion_spawn_system:spawners_in_group(spawner_group, node.group_in_level_data, scratchpad.level)
+				end
+			end
+
+			if spawners then
+				for iii = 1, #spawners do
+					all_spawners[#all_spawners + 1] = spawners[iii]
+				end
+			end
+		end
+	end
+
+	return all_spawners
+end
+
 local TEMP_SPAWN_SIDE_NAME = "villains"
 local DEFAULT_WAVE_TIMER = 0
 
@@ -460,15 +527,8 @@ TerrorEventManager._update_terror_trickle = function (self, dt, t)
 	end
 end
 
-local function _disable_nodes_with_lower_difficulty(nodes)
-	return
-end
-
 TerrorEventManager._start_event = function (self, event_name, data)
 	local nodes = self._event_templates[event_name]
-
-	_disable_nodes_with_lower_difficulty(nodes)
-
 	local new_event = {
 		node_index = 1,
 		stopped = false,

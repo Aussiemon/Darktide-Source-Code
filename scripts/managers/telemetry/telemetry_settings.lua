@@ -7,12 +7,54 @@ if APPLICATION_SETTINGS.teamcity_build_id ~= "" then
 	teamcity_build_id = APPLICATION_SETTINGS.teamcity_build_id
 end
 
+local function get_platform_detailed()
+	if IS_XBS then
+		local console_type = Xbox.console_type()
+
+		if console_type == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_ANACONDA then
+			return "xbs_anaconda"
+		elseif console_type == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_LOCKHEART then
+			return "xbs_lockheart"
+		elseif console_type == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_DEVKIT then
+			return "xbs_devkit"
+		end
+	elseif IS_PLAYSTATION then
+		if Playstation.device_type() == "ps5_pro" then
+			return "ps5_pro"
+		elseif Playstation.device_type() == "ps5" then
+			return "ps5_standard"
+		end
+	elseif IS_WINDOWS then
+		if HAS_STEAM and Steam.is_running_on_steamdeck() then
+			return "windows_steamdeck"
+		elseif Application.wine_version() then
+			return "windows_wine"
+		elseif Backend.get_auth_method() == Backend.AUTH_METHOD_XBOXLIVE then
+			return "windows_msstore"
+		elseif Backend.get_auth_method() == Backend.AUTH_METHOD_STEAM then
+			return "windows_steam"
+		elseif Backend.get_auth_method() == Backend.AUTH_METHOD_DEV_USER then
+			return "windows_devuser"
+		elseif Application.is_dedicated_server() then
+			return "windows_server"
+		end
+	elseif PLATFORM == "linux_server" and Application.is_dedicated_server() then
+		return "linux_server"
+	end
+
+	if PLATFORM then
+		return PLATFORM .. "_unknown"
+	end
+
+	return "unknown"
+end
+
 local settings = {
 	enabled = true,
 	source = {
 		id = "bishop",
 		platform = PLATFORM,
-		platform_detailed = PLATFORM_DETAILED,
+		platform_detailed = get_platform_detailed(),
 		environment = BUILD,
 		version = {
 			game = APPLICATION_SETTINGS.game_version,

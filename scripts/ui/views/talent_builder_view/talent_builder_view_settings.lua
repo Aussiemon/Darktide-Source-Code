@@ -51,6 +51,9 @@ local talent_builder_view_settings = {
 		"content/ui/textures/color_ramps/class_node_colors/adamant_01",
 		"content/ui/textures/color_ramps/class_node_colors/adamant_02",
 		"content/ui/textures/color_ramps/class_node_colors/adamant_03",
+		"content/ui/textures/color_ramps/class_node_colors/cryptic_01",
+		"content/ui/textures/color_ramps/class_node_colors/cryptic_02",
+		"content/ui/textures/color_ramps/class_node_colors/cryptic_03",
 		"content/ui/textures/color_ramps/class_node_colors/ogryn_01",
 		"content/ui/textures/color_ramps/class_node_colors/ogryn_02",
 		"content/ui/textures/color_ramps/class_node_colors/ogryn_03",
@@ -68,8 +71,8 @@ local talent_builder_view_settings = {
 		start = {
 			node_definition = node_definitions.node_definition_start,
 			size = {
-				10,
-				10,
+				120,
+				120,
 			},
 		},
 		stat = {
@@ -227,8 +230,16 @@ local talent_builder_view_settings = {
 			},
 		},
 	},
-	starting_talent_nodes_offset_by_name = {
+	archetype_starting_talent_nodes_offset = {
 		adamant = {
+			2,
+			-20,
+		},
+		broker = {
+			0,
+			0,
+		},
+		cryptic = {
 			2,
 			-20,
 		},
@@ -249,17 +260,10 @@ local talent_builder_view_settings = {
 			35,
 		},
 	},
-	archetype_badge_texture_by_name = {
-		adamant = "content/ui/textures/icons/class_badges/adamant_01",
-		broker = "content/ui/textures/icons/class_badges/broker_01",
-		ogryn = "content/ui/textures/icons/class_badges/ogryn_01",
-		psyker = "content/ui/textures/icons/class_badges/psyker_01",
-		veteran = "content/ui/textures/icons/class_badges/veteran_01",
-		zealot = "content/ui/textures/icons/class_badges/zealot_01",
-	},
 	archetype_backgrounds_by_name = {
 		adamant = "content/ui/materials/frames/talents/talent_bg_top_gradient_adamant",
 		broker = "content/ui/materials/frames/talents/talent_bg_top_gradient_broker",
+		cryptic = "content/ui/materials/frames/talents/talent_bg_top_gradient_cryptic",
 		ogryn = "content/ui/materials/frames/talents/talent_bg_top_gradient_ogryn",
 		psyker = "content/ui/materials/frames/talents/talent_bg_top_gradient_psyker",
 		veteran = "content/ui/materials/frames/talents/talent_bg_top_gradient_veteran",
@@ -285,8 +289,38 @@ local talent_builder_view_settings = {
 			255,
 		},
 	},
-	glow_colors_by_class = {
+	archetype_glow_colors = {
 		adamant = {
+			line_chosen = {
+				fill_color = {
+					255,
+					224,
+					250,
+					255,
+				},
+				blur_color = {
+					255,
+					99,
+					167,
+					176,
+				},
+			},
+			line_available = {
+				fill_color = {
+					255,
+					39,
+					74,
+					78,
+				},
+				blur_color = {
+					127,
+					42,
+					55,
+					59,
+				},
+			},
+		},
+		cryptic = {
 			line_chosen = {
 				fill_color = {
 					255,
@@ -478,7 +512,9 @@ local talent_builder_view_settings = {
 		default_size_x = 115,
 		default_size_y = 135,
 		edge_margin_bottom = 140,
+		edge_margin_bottom_centered = 0,
 		edge_margin_top = 200,
+		edge_margin_top_centered = 200,
 		selected_stickiness_radius = 25,
 		size_resize_rate = 0.0001,
 		snap_delay = 0.001,

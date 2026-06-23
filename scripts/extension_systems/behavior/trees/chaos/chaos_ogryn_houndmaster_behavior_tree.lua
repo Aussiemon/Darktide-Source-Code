@@ -78,20 +78,24 @@ local behavior_tree = {
 	"BtSelectorNode",
 	{
 		"BtDieAction",
-		condition = "is_dead",
 		name = "death",
+		state = "dead",
 		action_data = action_data.death,
 	},
 	{
 		"BtDisableAction",
 		condition = "is_minion_disabled",
+		exit_state = "base",
 		name = "disable",
+		state = "disabled",
 		action_data = action_data.disable,
 	},
 	{
 		"BtExitSpawnerAction",
 		condition = "is_exiting_spawner",
+		exit_state = "base",
 		name = "exit_spawner",
+		state = "exiting_spawner",
 		action_data = action_data.exit_spawner,
 	},
 	{

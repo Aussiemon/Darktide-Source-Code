@@ -115,7 +115,7 @@ ActionOverloadExplosion._explode = function (self, action_settings)
 		local weapon = self._weapon
 		local item = weapon and weapon.item
 		local wielded_slot = weapon and self._inventory_component.wielded_slot
-		local queue_index = Explosion.create_explosion(self._world, self._physics_world, position, impact_normal, self._player_unit, explosion_template, power_level, charge_level, attack_types.explosion, is_critical_strike, ignore_cover, item, wielded_slot, explosion_results)
+		local queue_index = Explosion.create_explosion(self._world, self._physics_world, position, Quaternion.identity(), self._player_unit, explosion_template, power_level, charge_level, attack_types.explosion, is_critical_strike, ignore_cover, item, wielded_slot, explosion_results)
 
 		if action_settings.overload_type == "warp_charge" then
 			Managers.state.extension:system("weapon_system"):queue_perils_of_the_warp_elite_kills_achievement(self._player, queue_index)

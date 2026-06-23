@@ -15,7 +15,7 @@ local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings"
 local HordesModeSettings = require("scripts/settings/hordes_mode_settings")
 local MaterialFx = require("scripts/utilities/material_fx")
 local MaterialQuery = require("scripts/utilities/material_query")
-local MutatorSettings = require("scripts/settings/mutator/mutator_settings")
+local MutatorUtility = require("scripts/utilities/mutator/mutator_utility")
 local NavQueries = require("scripts/utilities/nav_queries")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerMovement = require("scripts/utilities/player_movement")
@@ -158,6 +158,21 @@ FlowCallbacks.set_component_data = function (params)
 	local value = params.value
 
 	Unit.set_data(unit, "components", guid, "component_data", key, value)
+end
+
+FlowCallbacks.call_component_event = function (params)
+	local unit = params.unit
+	local function_name = params.event
+
+	Component.event(unit, function_name)
+end
+
+FlowCallbacks.call_component_event_with_parameter = function (params)
+	local unit = params.unit
+	local function_name = params.event
+	local value = params.value
+
+	Component.event(unit, function_name, value)
 end
 
 FlowCallbacks.volume_event_set_enabled = function (params)
@@ -306,6 +321,18 @@ FlowCallbacks.minion_fx = function (params)
 	local breed = ScriptUnit.extension(unit, "unit_data_system"):breed()
 	local sounds = breed.sounds
 	local wwise_events, use_proximity_culling = sounds.events, sounds.use_proximity_culling
+	local has_shield_extension = ScriptUnit.has_extension(unit, "shield_system")
+
+	if has_shield_extension then
+		local template = has_shield_extension:template()
+		local current_health = has_shield_extension:current_health()
+		local shield_sound_events = template.shield_sound_events
+
+		if current_health > 0 and shield_sound_events and shield_sound_events[name] then
+			name = shield_sound_events[name]
+		end
+	end
+
 	local wwise_event = wwise_events[name]
 	local sound_uses_proximity_culling = use_proximity_culling[name]
 	local legacy_v2_proximity_extension = ScriptUnit.extension(unit, "legacy_v2_proximity_system")
@@ -1456,6 +1483,21 @@ FlowCallbacks.local_player_archetype_name = function (params)
 	local profile = local_player:profile()
 
 	flow_return_table.archetype_name = profile.archetype.name
+
+	return flow_return_table
+end
+
+FlowCallbacks.local_player_archetype_onboarding_data = function (params)
+	local local_player = Managers.player:local_player(1)
+
+	if not local_player then
+		return
+	end
+
+	local profile = local_player:profile()
+
+	flow_return_table.archetype_name = profile.archetype.name
+	flow_return_table.destination_id_after_intro_video = profile.archetype.onboarding_hub_destination_id_after_intro_video or "default"
 
 	return flow_return_table
 end
@@ -3485,6 +3527,15 @@ FlowCallbacks.set_unit_material_scalar = function (params)
 	Unit.set_scalar_for_material(unit, material_name, material_variable_name, material_scalar)
 end
 
+FlowCallbacks.set_vector3_for_material = function (params)
+	local unit = params.unit
+	local material_name = params.material_name
+	local material_variable_name = params.variable_name
+	local material_value = params.value or Vector3.zero()
+
+	Unit.set_vector3_for_material(unit, material_name, material_variable_name, material_value)
+end
+
 FlowCallbacks.set_particle_material_scalar = function (params)
 	local world = Application.flow_callback_context_world()
 	local effect_id = params.effect_id
@@ -3505,33 +3556,13 @@ FlowCallbacks.pj_feature_check = function ()
 end
 
 FlowCallbacks.is_level_dark = function (params)
-	flow_return_table.is_dark = false
+	flow_return_table.is_dark = MutatorUtility.is_current_level_dark()
 
-	local mutator_manager = Managers.state.mutator
+	return flow_return_table
+end
 
-	if mutator_manager then
-		for i = 1, #MutatorSettings.dark_mutators do
-			if mutator_manager:mutator(MutatorSettings.dark_mutators[i]) then
-				flow_return_table.is_dark = true
-
-				break
-			end
-		end
-	end
-
-	if not flow_return_table.is_dark then
-		local circumstance_manager = Managers.state.circumstance
-
-		if circumstance_manager then
-			for i = 1, #MutatorSettings.dark_themes do
-				if circumstance_manager:active_theme_tag() == MutatorSettings.dark_themes[i] then
-					flow_return_table.is_dark = true
-
-					break
-				end
-			end
-		end
-	end
+FlowCallbacks.is_level_half_dark = function (params)
+	flow_return_table.is_half_dark = MutatorUtility.is_current_level_half_dark()
 
 	return flow_return_table
 end

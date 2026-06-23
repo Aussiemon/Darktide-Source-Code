@@ -5,6 +5,7 @@ local settings = {
 	class_file_name = "scripts/managers/game_mode/game_modes/game_mode_training_grounds",
 	default_player_side_name = "heroes",
 	disable_hologram = true,
+	disable_minion_perception = true,
 	host_singleplay = true,
 	name = "shooting_range",
 	use_side_color = false,
@@ -48,6 +49,9 @@ local settings = {
 	hotkeys = {
 		hotkey_inventory = "inventory_background_view",
 		hotkey_system = "system_view",
+	},
+	hotkeys_disabled_on_gamepad = {
+		hotkey_inventory = true,
 	},
 	default_init_scripted_scenario = {
 		alias = "shooting_range",

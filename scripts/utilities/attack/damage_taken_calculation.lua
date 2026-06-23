@@ -49,12 +49,13 @@ DamageTakenCalculation.calculation_parameters = function (attacked_unit, attacke
 	end
 
 	local shield_extension = ScriptUnit.has_extension(attacked_unit, "shield_system")
-	local shield_setting
+	local shield_setting, shield_template
 
 	if shield_extension then
 		local can_shield_block = shield_extension:can_block_attack(damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor)
 
-		shield_setting = can_shield_block and shield_settings.block_all
+		shield_template = shield_extension:template()
+		shield_setting = can_shield_block
 	end
 
 	local buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
@@ -62,10 +63,10 @@ DamageTakenCalculation.calculation_parameters = function (attacked_unit, attacke
 	local attacked_unit_keywords = buff_extension and buff_extension:keywords()
 	local attacking_unit_stat_buffs = attacker_buff_extension and attacker_buff_extension:stat_buffs()
 
-	return is_invulnerable, damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacking_unit_stat_buffs
+	return is_invulnerable, damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacking_unit_stat_buffs, shield_template
 end
 
-DamageTakenCalculation.calculate_attack_result = function (damage_amount, damage_profile, attack_type, attack_direction, instakill, is_invulnerable, damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacked_unit, damage_type, attacking_unit_stat_buffs)
+DamageTakenCalculation.calculate_attack_result = function (damage_amount, damage_profile, attack_type, attack_direction, instakill, is_invulnerable, damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacked_unit, damage_type, attacking_unit_stat_buffs, shield_template)
 	if not damage_allowed then
 		return attack_results.friendly_fire, 0, 0, 0, damage_amount
 	end
@@ -74,7 +75,7 @@ DamageTakenCalculation.calculate_attack_result = function (damage_amount, damage
 	local damage_absorbed = 0
 	local toughness_damage = 0
 	local attack_result
-	local shield_attack_result, remaining_damage, shield_damage_absorbed = _calculate_shield_damage(damage_amount, damage_profile, shield_setting, instakill)
+	local shield_attack_result, remaining_damage, shield_damage_absorbed = _calculate_shield_damage(attacked_unit, damage_amount, damage_profile, shield_setting, shield_template, instakill)
 
 	damage_absorbed = damage_absorbed + shield_damage_absorbed
 
@@ -109,12 +110,36 @@ DamageTakenCalculation.calculate_attack_result = function (damage_amount, damage
 	return attack_result, remaining_damage, remaining_permanent_damage, toughness_damage, damage_absorbed
 end
 
-function _calculate_shield_damage(damage_amount, damage_profile, shield_setting, instakill)
+function _calculate_shield_damage(attacked_unit, damage_amount, damage_profile, shield_setting, shield_template, instakill)
 	local ignore_shield = damage_profile.ignore_shield or instakill
 	local block_damage = shield_setting == shield_settings.block_all
+	local shield_absorbed = shield_setting == shield_settings.absorb_all
+	local remaining_damage = 0
+
+	if shield_absorbed then
+		local shield_extension = ScriptUnit.has_extension(attacked_unit, "shield_system")
+		local max_shield_health = shield_template and shield_template.health and Managers.state.difficulty:get_table_entry_by_challenge(shield_template.health)
+		local max_damage_percentage = shield_template and shield_template.max_damage_percentage and Managers.state.difficulty:get_table_entry_by_challenge(shield_template.max_damage_percentage)
+		local current_shield_health = shield_extension and shield_extension:current_health()
+		local shield_breaker = damage_profile.shield_breaker
+
+		if max_damage_percentage and not shield_breaker then
+			if max_shield_health and current_shield_health then
+				local max_damage = math.round(max_shield_health * max_damage_percentage)
+				local clamped_damage_amount = math.min(max_damage, damage_amount)
+
+				damage_amount = clamped_damage_amount
+			end
+		elseif shield_breaker and max_shield_health and current_shield_health then
+			damage_amount = max_shield_health
+			remaining_damage = damage_amount / 2
+		end
+	end
 
 	if not ignore_shield and block_damage then
 		return attack_results.shield_blocked, 0, damage_amount
+	elseif not ignore_shield and shield_absorbed then
+		return attack_results.shield_absorbed, remaining_damage, damage_amount
 	end
 
 	return nil, damage_amount, 0
@@ -331,6 +356,33 @@ function _calculate_health_damage_player(damage_amount, damage_profile, damage_t
 
 		if has_max_damage_taken_buff then
 			local limit = attacked_unit_stat_buffs.max_health_damage_taken_per_hit
+
+			permanent_damage = math.min(permanent_damage, limit)
+			health_damage = math.min(health_damage, limit)
+		end
+
+		local limit_ogryn_damage = attacked_unit_keywords and attacked_unit_keywords[buff_keywords.limit_health_damage_taken_from_ogryns]
+
+		if limit_ogryn_damage then
+			local limit = attacked_unit_stat_buffs.max_health_damage_taken_per_hit_from_ogryns
+
+			permanent_damage = math.min(permanent_damage, limit)
+			health_damage = math.min(health_damage, limit)
+		end
+
+		local limit_monster_damage = attacked_unit_keywords and attacked_unit_keywords[buff_keywords.limit_health_damage_taken_from_monsters]
+
+		if limit_monster_damage then
+			local limit = attacked_unit_stat_buffs.max_health_damage_taken_per_hit_from_monsters
+
+			permanent_damage = math.min(permanent_damage, limit)
+			health_damage = math.min(health_damage, limit)
+		end
+
+		local limit_captain_damage = attacked_unit_keywords and attacked_unit_keywords[buff_keywords.limit_health_damage_taken_from_captains]
+
+		if limit_captain_damage then
+			local limit = attacked_unit_stat_buffs.max_health_damage_taken_per_hit_from_captains
 
 			permanent_damage = math.min(permanent_damage, limit)
 			health_damage = math.min(health_damage, limit)

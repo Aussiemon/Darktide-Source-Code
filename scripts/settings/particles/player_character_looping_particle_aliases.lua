@@ -85,6 +85,11 @@ local PlayerCharacterLoopingParticleAliases = {
 		particle_alias = "weapon_special_loop",
 		external_properties = {},
 	},
+	weapon_special_extra_loop = {
+		exclude_from_unit_data_components = true,
+		particle_alias = "weapon_special_extra_loop",
+		external_properties = {},
+	},
 	critical_health_loop = {
 		particle_alias = "critical_health",
 		screen_space = true,

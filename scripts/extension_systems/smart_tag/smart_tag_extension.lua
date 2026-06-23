@@ -76,7 +76,7 @@ end
 SmartTagExtension._setup_display_name = function (self, unit)
 	local target_type = self._target_type
 
-	if target_type == "pickup" or target_type == "health_station" then
+	if target_type == "pickup" or target_type == "health_station" or target_type == "hack" then
 		local interactee_extension = ScriptUnit.has_extension(unit, "interactee_system")
 
 		if interactee_extension then
@@ -135,6 +135,9 @@ local _pickup_name_to_tag_template_name = {
 	large_clip = "large_clip_over_here",
 	large_metal = "large_metal_pickup_over_here",
 	large_platinum = "large_platinum_pickup_over_here",
+	live_event_leftover_01_pickup_large = "event_pickup_over_here",
+	live_event_leftover_01_pickup_medium = "event_pickup_over_here",
+	live_event_leftover_01_pickup_small = "event_pickup_over_here",
 	medical_crate_deployable = "deployed_medical_crate_over_here",
 	medical_crate_pocketable = "pocketable_medical_crate_over_here",
 	motion_detection_mine_explosive_pocketable_pickup = "expedition_motion_detection_mine_explosive_pocketable_pickup_over_here",
@@ -195,10 +198,16 @@ SmartTagExtension._contextual_tag_template_name = function (self, tagger_unit, a
 
 			if companion_order then
 				local companion_spawner_extension = ScriptUnit.has_extension(tagger_unit, "companion_spawner_system")
-				local has_companion = companion_spawner_extension and companion_spawner_extension:should_have_companion()
+				local companions = companion_spawner_extension and companion_spawner_extension:companion_units()
 
-				if has_companion then
-					return "enemy_companion_target"
+				if companions and #companions > 0 then
+					local companion_unit = companions[1]
+					local unit_data_extension = ScriptUnit.has_extension(companion_unit, "unit_data_system")
+					local breed = unit_data_extension and unit_data_extension:breed()
+
+					if breed then
+						return breed.companion_double_tag_template_name
+					end
 				end
 
 				return nil
@@ -215,7 +224,42 @@ SmartTagExtension._contextual_tag_template_name = function (self, tagger_unit, a
 		else
 			return "health_station_without_battery_over_here"
 		end
+	elseif target_type == "hack" then
+		local companion_order = alternate
+
+		if companion_order then
+			local companion_spawner_extension = ScriptUnit.has_extension(tagger_unit, "companion_spawner_system")
+			local companions = companion_spawner_extension and companion_spawner_extension:companion_units()
+
+			if companions and #companions > 0 then
+				local companion_unit = companions[1]
+				local unit_data_extension = ScriptUnit.has_extension(companion_unit, "unit_data_system")
+				local breed = unit_data_extension and unit_data_extension:breed()
+
+				if breed and breed.companion_allow_hack_double_tag then
+					local interactee_extension = ScriptUnit.has_extension(unit, "interactee_system")
+
+					if interactee_extension then
+						local interactee_interaction_type = interactee_extension:interaction_type()
+
+						if interactee_extension and interactee_interaction_type == "decoding" then
+							local can_interact = interactee_extension:can_interact(unit, interactee_interaction_type)
+
+							if can_interact then
+								return "hacking_over_here_companion"
+							end
+						end
+					end
+				else
+					return "hacking_over_here"
+				end
+			end
+		else
+			return "hacking_over_here"
+		end
 	elseif target_type == "live_event_objective" then
+		return "live_event_objective_over_here"
+	elseif target_type == "live_event_interest_point" then
 		return "live_event_objective_over_here"
 	end
 end

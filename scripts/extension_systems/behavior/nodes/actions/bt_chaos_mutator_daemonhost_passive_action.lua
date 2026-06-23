@@ -13,12 +13,13 @@ local MinionPerception = require("scripts/utilities/minion_perception")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local NavQueries = require("scripts/utilities/nav_queries")
 local Suppression = require("scripts/utilities/attack/suppression")
+local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local Threat = require("scripts/utilities/threat")
 local Vo = require("scripts/utilities/vo")
 local STAGES = ChaosDaemonhostSettings.stages
 local BtChaosMutatorDaemonhostPassiveAction = class("BtChaosMutatorDaemonhostPassiveAction", "BtNode")
 local NAV_MESH_ABOVE, NAV_MESH_BELOW = 5, 5
-local _setup_progress_bar, _closets_aggro_target
+local _setup_progress_bar, _update_progress_bar, _closets_aggro_target
 
 BtChaosMutatorDaemonhostPassiveAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local side_system = Managers.state.extension:system("side_system")
@@ -30,13 +31,7 @@ BtChaosMutatorDaemonhostPassiveAction.enter = function (self, unit, breed, black
 
 	scratchpad.spawn_component = spawn_component
 	scratchpad.suppression_component = Blackboard.write_component(blackboard, "suppression")
-	scratchpad.fx_system = Managers.state.extension:system("fx_system")
 	scratchpad.physics_world = spawn_component.physics_world
-
-	local aim_component = Blackboard.write_component(blackboard, "aim")
-
-	scratchpad.aim_component = aim_component
-	aim_component.controlled_aiming = true
 
 	local animation_extension = ScriptUnit.extension(unit, "animation_system")
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
@@ -55,12 +50,6 @@ BtChaosMutatorDaemonhostPassiveAction.enter = function (self, unit, breed, black
 
 	scratchpad.original_rotation_speed = current_rotation_speed
 	scratchpad.ritual_timings = Managers.state.difficulty:get_table_entry_by_challenge(action_data.ritual_timings)
-	scratchpad.next_flashed_fx_t = 0
-	scratchpad.next_anger_t = 0
-	scratchpad.anger = 0
-	scratchpad.anger_tick = 0
-	scratchpad.flashing_units = {}
-	scratchpad.distance_threat_units = {}
 	scratchpad.next_vo_trigger_t = 0
 
 	Threat.set_threat_decay_enabled(unit, false)
@@ -95,13 +84,6 @@ BtChaosMutatorDaemonhostPassiveAction.enter = function (self, unit, breed, black
 	end
 
 	scratchpad.on_enter_buffs = on_enter_buffs
-	scratchpad.old_anger = 0
-	scratchpad.old_flashlight_flat = 0
-	scratchpad.old_distance_flat = 0
-	scratchpad.old_health_flat = 0
-	scratchpad.old_suppression_flat = 0
-	scratchpad.old_distance_tick = 0
-	scratchpad.old_flashlight_tick = 0
 	scratchpad.move_stage = 1
 	scratchpad.t_until_next_stage = self:_get_time_until_next_stage(scratchpad)
 	scratchpad.delay = 10
@@ -155,8 +137,6 @@ BtChaosMutatorDaemonhostPassiveAction.leave = function (self, unit, breed, black
 			scratchpad.health_extension:add_heal(scratchpad.heal_needed_per_t)
 		end
 
-		local stagger_component = blackboard.stagger
-		local num_triggered_staggers = stagger_component.num_triggered_staggers
 		local perception_extension = scratchpad.perception_extension
 
 		perception_extension:set_use_action_controlled_alert(false)
@@ -194,10 +174,6 @@ BtChaosMutatorDaemonhostPassiveAction.leave = function (self, unit, breed, black
 	local statistics_component = Blackboard.write_component(blackboard, "statistics")
 
 	Managers.state.pacing:set_minion_listening_for_player_deaths(unit, statistics_component, true)
-
-	local aim_component = scratchpad.aim_component
-
-	aim_component.controlled_aiming = true
 end
 
 BtChaosMutatorDaemonhostPassiveAction._switch_stage = function (self, unit, breed, scratchpad, action_data, stage, t)
@@ -288,21 +264,6 @@ BtChaosMutatorDaemonhostPassiveAction._switch_stage = function (self, unit, bree
 			end
 		end
 
-		local trigger_health_bar = stage_settings.trigger_health_bar and not scratchpad.triggered_health_bar
-
-		if trigger_health_bar then
-			local boss_extension = ScriptUnit.extension(unit, "boss_system")
-
-			boss_extension:start_boss_encounter()
-
-			local spawn_component = scratchpad.spawn_component
-			local game_object_id = spawn_component.game_object_id
-
-			Managers.state.game_session:send_rpc_clients("rpc_start_boss_encounter", game_object_id)
-
-			scratchpad.triggered_health_bar = true
-		end
-
 		if stage_settings.reset_suppression then
 			scratchpad.suppression_component.suppress_value = 0
 			scratchpad.suppression_component.is_suppressed = false
@@ -350,7 +311,7 @@ BtChaosMutatorDaemonhostPassiveAction._update = function (self, unit, breed, bla
 			return
 		end
 
-		_setup_progress_bar(unit, breed, blackboard, scratchpad, action_data, t)
+		_update_progress_bar(unit, breed, blackboard, scratchpad, action_data, t)
 
 		local half_time_multiplier = action_data.half_time_multiplier
 		local dt = Managers.time:delta_time("gameplay")
@@ -358,11 +319,26 @@ BtChaosMutatorDaemonhostPassiveAction._update = function (self, unit, breed, bla
 
 		if current_speed == "half" then
 			scratchpad.timer = scratchpad.timer + dt * (multiplier / half_time_multiplier)
+			scratchpad.health_timer = scratchpad.health_timer + dt * (multiplier / half_time_multiplier)
 		elseif current_speed == "full" then
 			scratchpad.timer = scratchpad.timer + dt * multiplier
+			scratchpad.health_timer = scratchpad.health_timer + dt * multiplier
 		end
 
-		if scratchpad.timer > scratchpad.t_until_next_stage then
+		local allowed_to_switch_stage = true
+		local stage_settings = action_data.stage_settings[scratchpad.stage]
+		local full_health_required = stage_settings.full_health_required
+
+		if full_health_required then
+			local health_extension = scratchpad.health_extension
+			local damage_taken = health_extension:damage_taken()
+
+			if damage_taken > 0 then
+				allowed_to_switch_stage = false
+			end
+		end
+
+		if scratchpad.timer > scratchpad.t_until_next_stage and allowed_to_switch_stage then
 			scratchpad.timer = 0
 			scratchpad.move_stage = scratchpad.move_stage + 1
 
@@ -471,6 +447,12 @@ BtChaosMutatorDaemonhostPassiveAction._get_closest_player = function (self, unit
 		return
 	end
 
+	local perception_extension = scratchpad.perception_extension
+
+	if perception_extension:is_perception_disabled() then
+		return false
+	end
+
 	local ahead_unit, ahead_travel_distance = Managers.state.main_path:ahead_unit(1)
 
 	if not ahead_travel_distance then
@@ -482,19 +464,21 @@ BtChaosMutatorDaemonhostPassiveAction._get_closest_player = function (self, unit
 	end
 
 	local nav_mesh_position = NavQueries.position_on_mesh(nav_world, POSITION_LOOKUP[unit], NAV_MESH_ABOVE, NAV_MESH_BELOW)
-	local _, travel_distance = MainPathQueries.closest_position(nav_mesh_position)
+	local _, monster_travel_distance = MainPathQueries.closest_position(nav_mesh_position)
 	local damage_override = self:_check_damage(scratchpad)
 	local close_distance_offset, far_distance_offset = action_data.close_distance_offset, action_data.far_distance_offset
-	local close_distance = travel_distance - close_distance_offset
-	local far_distance = travel_distance - far_distance_offset
+	local closest_position = MainPathQueries.position_from_distance(monster_travel_distance - close_distance_offset)
+	local _, closest_position_distance = MainPathQueries.closest_position(closest_position)
+	local far_position = MainPathQueries.position_from_distance(monster_travel_distance - far_distance_offset)
+	local _, far_position_distance = MainPathQueries.closest_position(far_position)
 
-	if close_distance < ahead_travel_distance or damage_override then
+	if closest_position_distance < ahead_travel_distance or damage_override then
 		scratchpad.speed = "full"
 
 		return true
 	end
 
-	if far_distance < ahead_travel_distance then
+	if far_position_distance < ahead_travel_distance then
 		scratchpad.speed = "half"
 	end
 
@@ -544,12 +528,6 @@ BtChaosMutatorDaemonhostPassiveAction.run = function (self, unit, breed, blackbo
 		local flat_rotation = MinionMovement.rotation_towards_unit_flat(unit, wanted_target)
 
 		scratchpad.locomotion_extension:set_wanted_rotation(flat_rotation)
-	end
-
-	if wanted_target and HEALTH_ALIVE[wanted_target] then
-		local aim_pos = Unit.world_position(wanted_target, Unit.node(wanted_target, "j_head"))
-
-		scratchpad.aim_component.controlled_aim_position:store(aim_pos)
 	end
 
 	local duration = scratchpad.duration
@@ -615,50 +593,52 @@ BtChaosMutatorDaemonhostPassiveAction._start_chanting = function (self, unit, sc
 	scratchpad.currently_chanting = true
 end
 
-function _setup_progress_bar(unit, breed, blackboard, scratchpad, action_data, t)
-	scratchpad.health_extension = ScriptUnit.extension(unit, "health_system")
+function _update_progress_bar(unit, breed, blackboard, scratchpad, action_data, t)
+	local progress_bar_setup_done = scratchpad.progress_bar_setup_done
 
-	if not scratchpad.triggered_health_bar then
-		local boss_extension = ScriptUnit.extension(unit, "boss_system")
+	if not progress_bar_setup_done then
+		_setup_progress_bar(unit, breed, blackboard, scratchpad, action_data, t)
 
-		boss_extension:start_boss_encounter()
+		scratchpad.progress_bar_setup_done = true
 
-		local spawn_component = scratchpad.spawn_component
-		local game_object_id = spawn_component.game_object_id
-
-		Managers.state.game_session:send_rpc_clients("rpc_start_boss_encounter", game_object_id)
-
-		scratchpad.max_health = scratchpad.health_extension:max_health()
-		scratchpad.to_damage = scratchpad.max_health - scratchpad.max_health * 0.01
-		scratchpad.heal_needed_per_t = scratchpad.max_health / scratchpad.total_t_to_spawn
-
-		scratchpad.health_extension:add_damage(scratchpad.to_damage, nil, nil, nil, nil, nil, nil)
-
-		scratchpad.triggered_health_bar = true
-		scratchpad._health_timer = 0
-	elseif scratchpad.triggered_health_bar then
-		local half_time_multiplier = action_data.half_time_multiplier
-		local dt = Managers.time:delta_time("gameplay")
-		local current_speed = scratchpad.speed
-		local multiplier = scratchpad.multiplier
-
-		if not scratchpad._health_timer_threshold then
-			scratchpad._health_timer_threshold = dt
-		end
-
-		if current_speed == "half" then
-			scratchpad._health_timer = scratchpad._health_timer + dt * (multiplier / half_time_multiplier)
-		elseif current_speed == "full" then
-			scratchpad._health_timer = scratchpad._health_timer + dt * multiplier
-		end
-
-		if scratchpad._health_timer >= scratchpad._health_timer_threshold then
-			scratchpad._health_timer = 0
-			scratchpad._health_timer_threshold = dt + 1
-
-			scratchpad.health_extension:add_heal(scratchpad.heal_needed_per_t)
-		end
+		return
 	end
+
+	local percentage = math.min(scratchpad.health_timer / scratchpad.total_time_to_spawn, 1)
+	local max_health = scratchpad.max_health
+	local wanted_health = math.lerp(1, max_health, percentage)
+	local health_extension = scratchpad.health_extension
+
+	health_extension:set_health_instant(wanted_health)
+end
+
+function _setup_progress_bar(unit, breed, blackboard, scratchpad, action_data, t)
+	local health_extension = scratchpad.health_extension
+	local boss_extension = ScriptUnit.extension(unit, "boss_system")
+	local spawn_component = scratchpad.spawn_component
+	local game_object_id = spawn_component.game_object_id
+
+	boss_extension:start_boss_encounter()
+	Managers.state.game_session:send_rpc_clients("rpc_start_boss_encounter", game_object_id)
+
+	scratchpad.max_health = health_extension:max_health()
+	scratchpad.to_damage = scratchpad.max_health - (scratchpad.max_health - (scratchpad.max_health - 1))
+
+	health_extension:add_damage(scratchpad.to_damage, nil, nil, nil, nil, nil, nil)
+
+	scratchpad.triggered_health_bar = true
+	scratchpad.health_timer = 0
+	scratchpad.percentage_t_spawn = 0
+
+	local total_time_to_spawn = 0
+
+	for i = 1, #scratchpad.fixed_timings do
+		local time_per_stage = scratchpad.fixed_timings[i]
+
+		total_time_to_spawn = total_time_to_spawn + time_per_stage
+	end
+
+	scratchpad.total_time_to_spawn = total_time_to_spawn
 end
 
 function _closets_aggro_target(unit, breed, blackboard, scratchpad, action_data, t)

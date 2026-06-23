@@ -52,7 +52,7 @@ ActionExplosion._explode = function (self, charge_level)
 	local ignore_cover = true
 	local is_critical_strike = self._critical_strike_component.is_active
 
-	Explosion.create_explosion(world, physics_world, position, Vector3.up(), player_unit, explosion_template, power_level, charge_level, attack_type, is_critical_strike, ignore_cover, item, origin_item_slot)
+	Explosion.create_explosion(world, physics_world, position, Quaternion.identity(), player_unit, explosion_template, power_level, charge_level, attack_type, is_critical_strike, ignore_cover, item, origin_item_slot)
 end
 
 ActionExplosion.finish = function (self, reason, data, t, time_in_action)

@@ -376,7 +376,9 @@ task_reward_text_style.fulfilled_color = {
 task_reward_text_style.material = wallet_settings.font_gradient_material
 task_reward_text_style.size = nil
 task_list_item_style.progress_bar_frame = {}
-progress_bar_frame_style = task_list_item_style.progress_bar_frame
+
+local progress_bar_frame_style = task_list_item_style.progress_bar_frame
+
 progress_bar_frame_style.vertical_alignment = "bottom"
 progress_bar_frame_style.offset = {
 	task_list_item_icon_style.size[1] + 22,

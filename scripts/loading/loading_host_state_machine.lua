@@ -46,10 +46,7 @@ LoadingHostStateMachine.init = function (self, loading_context, level_editor_lev
 	state_machine:add_transition("HostCreateWorldState", "load_done", HostThemeState)
 	state_machine:add_transition("HostThemeState", "load_done", HostLevelState)
 	state_machine:add_transition("HostLevelState", "load_done", HostMechanismLevelState)
-
-	local loading_done_state = single_player and HostWaitForMissionBriefingDoneState or HostIngameState
-
-	state_machine:add_transition("HostMechanismLevelState", "spawning_done", loading_done_state)
+	state_machine:add_transition("HostMechanismLevelState", "spawning_done", HostWaitForMissionBriefingDoneState)
 	state_machine:add_transition("HostWaitForMissionBriefingDoneState", "mission_briefing_done", HostIngameState)
 	state_machine:set_initial_state(HostDetermineSpawnGroupState)
 

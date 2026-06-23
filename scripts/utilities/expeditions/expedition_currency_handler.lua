@@ -6,9 +6,7 @@ local CLIENT_RPCS = {
 	"rpc_client_expedition_currency_collected",
 	"rpc_client_expedition_remove_currency_collected",
 }
-local SERVER_RPCS = {
-	"rpc_server_expedition_currency_collected",
-}
+local SERVER_RPCS = {}
 local ExpeditionCurrencyHandler = class("ExpeditionCurrencyHandler")
 
 ExpeditionCurrencyHandler.init = function (self, expedition_template, is_server, network_event_delegate)
@@ -99,11 +97,6 @@ ExpeditionCurrencyHandler.rpc_client_expedition_currency_collected = function (s
 	if expedition_currency_show_notification then
 		self:_show_collected_materials_notification(peer_id, amount)
 	end
-end
-
-ExpeditionCurrencyHandler.rpc_server_expedition_currency_collected = function (self, channel_id, peer_id, amount)
-	Managers.state.game_session:send_rpc_clients("rpc_client_expedition_currency_collected", peer_id, amount, true)
-	self:_show_collected_materials_notification(peer_id, amount)
 end
 
 ExpeditionCurrencyHandler._show_collected_materials_notification = function (self, peer_id, amount)

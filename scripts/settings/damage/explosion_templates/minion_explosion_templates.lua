@@ -109,6 +109,30 @@ local explosion_templates = {
 			"wwise/events/weapon/play_explosion_refl_gen",
 		},
 	},
+	poxwalker_bomber_mild = {
+		close_radius = 1.5,
+		collision_filter = "filter_minion_explosion",
+		damage_falloff = false,
+		min_close_radius = 0.5,
+		min_radius = 1.5,
+		override_friendly_fire = true,
+		radius = 3,
+		scalable_radius = true,
+		close_damage_profile = DamageProfileTemplates.poxwalker_explosion_close_mild,
+		damage_profile = DamageProfileTemplates.poxwalker_explosion_mild,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
+		vfx = {
+			"content/fx/particles/explosions/poxwalker_explode",
+		},
+		sfx = {
+			"wwise/events/minions/play_explosion_bomber",
+			"wwise/events/weapon/play_explosion_refl_gen",
+		},
+	},
 	beast_of_nurgle_death = {
 		close_radius = 3,
 		collision_filter = "filter_minion_explosion",

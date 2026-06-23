@@ -83,4 +83,8 @@ PlayerUnitInputExtension.had_received_input = function (self, fixed_frame)
 	return result
 end
 
+PlayerUnitInputExtension.is_human_controlled = function (self)
+	return self._player:is_human_controlled()
+end
+
 return PlayerUnitInputExtension

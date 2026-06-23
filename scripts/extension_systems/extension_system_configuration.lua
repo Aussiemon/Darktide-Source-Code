@@ -27,6 +27,7 @@ _system_require("cinematic_scene", "cinematic_scene_system")
 _system_require("coherency", "coherency_system")
 _system_require("combat_vector", "combat_vector_system")
 _system_require("companion_spawner", "companion_spawner_system")
+_system_require("companion_tag_manager", "companion_tag_manager_base_extension", "companion_tag_manager_dog_extension", "companion_tag_manager_servo_skull_extension")
 _system_require("component", "component_system")
 _system_require("corruptor_arm", "corruptor_arm_system")
 _system_require("corruptor", "corruptor_system")
@@ -95,6 +96,7 @@ _system_require("recoil", "player_unit_weapon_recoil_extension")
 _system_require("respawn_beacon", "respawn_beacon_system")
 _system_require("scanner_display", "scanner_display_extension")
 _system_require("scanning_event", "scanning_event_system")
+_system_require("flying_companion_movement", "flying_companion_movement_extension", "flying_companion_husk_movement_extension")
 _system_require("servo_skull", "servo_skull_system")
 _system_require("shading_environment", "shading_environment_system")
 _system_require("shield", "minion_shield_extension", "minion_husk_shield_extension", "prop_shield_extension")
@@ -435,6 +437,8 @@ local systems = {
 		true,
 		false,
 		{
+			"CrypticPersonalForceFieldUnitHealthExtension",
+			"CrypticPersonalForceFieldHuskHealthExtension",
 			"HealthExtension",
 			"HuskHealthExtension",
 			"PropHealthExtension",
@@ -841,6 +845,7 @@ local systems = {
 		true,
 		false,
 		{
+			"CrypticPersonalForceFieldUnitExtension",
 			"PsykerForceFieldUnitExtension",
 		},
 	},
@@ -1565,6 +1570,33 @@ local systems = {
 		false,
 		{
 			"ExpeditionLootConverterExtension",
+		},
+	},
+	{
+		"flying_companion_movement_system",
+		"ExtensionSystemBase",
+		false,
+		true,
+		true,
+		true,
+		false,
+		{
+			"FlyingCompanionMovementExtension",
+			"FlyingCompanionHuskMovementExtension",
+		},
+	},
+	{
+		"companion_tag_manager_system",
+		"ExtensionSystemBase",
+		false,
+		true,
+		false,
+		true,
+		false,
+		{
+			"CompanionTagManagerBaseExtension",
+			"CompanionTagManagerServoSkullExtension",
+			"CompanionTagManagerDogExtension",
 		},
 	},
 }

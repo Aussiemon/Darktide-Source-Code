@@ -324,4 +324,89 @@ PickupOverrides.pickups_more_syringes = {
 	},
 }
 
+do
+	local no_ammo_pickup = {
+		small_clip = removed,
+		large_clip = removed,
+		ammo_cache_pocketable = removed,
+		ammo_cache_deployable = removed,
+	}
+	local no_health_pickups = {
+		syringe_ability_boost_pocketable = removed,
+		syringe_power_boost_pocketable = removed,
+		syringe_speed_boost_pocketable = removed,
+		syringe_corruption_pocketable = removed,
+		medical_crate_deployable = removed,
+		medical_crate_pocketable = removed,
+	}
+	local no_currency_pickup = {
+		small_metal = removed,
+		small_platinum = removed,
+		large_metal = removed,
+		large_platinum = removed,
+	}
+	local no_stimms = {
+		syringe_ability_boost_pocketable = removed,
+		syringe_power_boost_pocketable = removed,
+		syringe_speed_boost_pocketable = removed,
+		syringe_corruption_pocketable = removed,
+		syringe_generic_pocketable = removed,
+	}
+
+	PickupOverrides.no_resource_pickups = {
+		pickup_settings = {
+			rubberband_pool = {
+				forge_material = no_currency_pickup,
+				ammo = no_ammo_pickup,
+				grenade = {
+					small_grenade = removed,
+				},
+				wounds = no_health_pickups,
+				health = no_health_pickups,
+				stimms = no_stimms,
+			},
+			mid_event = {
+				forge_material = no_currency_pickup,
+				ammo = no_ammo_pickup,
+				grenade = {
+					small_grenade = removed,
+				},
+				wounds = no_health_pickups,
+				health = no_health_pickups,
+				stimms = no_stimms,
+			},
+			end_event = {
+				forge_material = no_currency_pickup,
+				ammo = no_ammo_pickup,
+				grenade = {
+					small_grenade = removed,
+				},
+				wounds = no_health_pickups,
+				health = no_health_pickups,
+				stimms = no_stimms,
+			},
+			primary = {
+				forge_material = no_currency_pickup,
+				ammo = no_ammo_pickup,
+				grenade = {
+					small_grenade = removed,
+				},
+				wounds = no_health_pickups,
+				health = no_health_pickups,
+				stimms = no_stimms,
+			},
+			secondary = {
+				forge_material = no_currency_pickup,
+				ammo = no_ammo_pickup,
+				grenade = {
+					small_grenade = removed,
+				},
+				wounds = no_health_pickups,
+				health = no_health_pickups,
+				stimms = no_stimms,
+			},
+		},
+	}
+end
+
 return PickupOverrides

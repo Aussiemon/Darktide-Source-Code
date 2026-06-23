@@ -4,9 +4,11 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_traits_buff_templates/base_weapon_trait_buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local ConditionalFunctions = require("scripts/settings/buff/helper_functions/conditional_functions")
+local MinionState = require("scripts/utilities/minion_state")
 local stagger_results = AttackSettings.stagger_results
 local damage_efficiencies = AttackSettings.damage_efficiencies
 local buff_keywords = BuffSettings.keywords
+local group_keywords = BuffSettings.group_keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
 local templates = {}
@@ -150,7 +152,7 @@ templates.weapon_trait_bespoke_powermaul_p1_hitting_electrocuted_spreads = {
 				return
 			end
 
-			local is_target_electrocuted = target_buff_extension:has_keyword(buff_keywords.electrocuted)
+			local is_target_electrocuted = MinionState.is_electrocuted(target_buff_extension, group_keywords.electrocuted)
 
 			if not is_target_electrocuted then
 				return

@@ -32,6 +32,16 @@ disorientation_settings.disorientation_templates = {
 		screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light",
 		sound_event = "wwise/events/player/play_player_get_hit_light_2d",
 	},
+	electrocuting = {
+		hit_react_anim_1p = "shake_light",
+		hit_react_anim_3p = "hit_react",
+		sound_event = "wwise/events/player/play_player_get_hit_electricity",
+	},
+	toughness_electrocuting = {
+		hit_react_anim_1p = nil,
+		hit_react_anim_3p = "hit_react",
+		sound_event = "wwise/events/player/play_player_get_hit_electricity_toughness",
+	},
 	burninating = {
 		hit_react_anim_1p = "shake_light",
 		hit_react_anim_3p = "hit_react",

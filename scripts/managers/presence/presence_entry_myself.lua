@@ -5,31 +5,8 @@ local PresenceSettings = require("scripts/settings/presence/presence_settings")
 local Promise = require("scripts/foundation/utilities/promise")
 local PresenceEntryMyself = class("PresenceEntryMyself")
 
-PresenceEntryMyself.get_platform = function ()
-	local platform
-	local authenticate_method = Managers.backend:get_auth_method()
-
-	if authenticate_method == Managers.backend.AUTH_METHOD_STEAM and HAS_STEAM then
-		platform = "steam"
-	elseif authenticate_method == Managers.backend.AUTH_METHOD_XBOXLIVE and PLATFORM == "win32" then
-		platform = "xbox"
-	elseif authenticate_method == Managers.backend.AUTH_METHOD_XBOXLIVE and Application.xbox_live and Application.xbox_live() == true then
-		platform = "xbox"
-	elseif authenticate_method == Managers.backend.AUTH_METHOD_PSN then
-		platform = "psn"
-	else
-		Log.warning("PresenceEntryMyself", "Could not resolve a platform for authenticate_method: " .. tostring(authenticate_method))
-
-		platform = "unknown"
-	end
-
-	return platform
-end
-
 PresenceEntryMyself.init = function (self)
-	local platform = self.get_platform()
-
-	self._platform = platform
+	self._platform = AUTH_PLATFORM
 	self._profile_version_counter = 1
 
 	self:set_activity_id("splash_screen")

@@ -150,6 +150,7 @@ BtStaggerAction.init_values = function (self, blackboard)
 	stagger_component.duration = 0
 	stagger_component.immune_time = 0
 	stagger_component.num_triggered_staggers = 0
+	stagger_component.staggered_by_melee_push = false
 	stagger_component.controlled_stagger = false
 	stagger_component.stagger_strength_multiplier = 0
 	stagger_component.stagger_strength_pool = 0

@@ -12,7 +12,6 @@ local PowerLevelSettings = require("scripts/settings/damage/power_level_settings
 local SharedBuffFunctions = require("scripts/settings/buff/helper_functions/shared_buff_functions")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local RoamerSlotPlacementFunctions = require("scripts/settings/roamer/roamer_slot_placement_functions")
-local Promise = require("scripts/foundation/utilities/promise")
 local attack_types = AttackSettings.attack_types
 local buff_keywords = BuffSettings.keywords
 local buff_proc_events = BuffSettings.proc_events
@@ -40,7 +39,7 @@ local function _parasite_head_stop_function(template_data, template_context)
 	local world, physics_world, impact_normal, charge_level, attack_type = template_context.world, template_context.physics_world, Vector3.up(), 1
 	local explosion_template = ExplosionTemplates.nurgle_head_parasite
 
-	Explosion.create_explosion(world, physics_world, position, impact_normal, unit, explosion_template, DEFAULT_POWER_LEVEL, charge_level, attack_type)
+	Explosion.create_explosion(world, physics_world, position, Quaternion.look(impact_normal), unit, explosion_template, DEFAULT_POWER_LEVEL, charge_level, attack_type)
 
 	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 
@@ -370,7 +369,7 @@ templates.mutator_stimmed_minion_purple = {
 						local power_level = 0
 						local explosion_template = ExplosionTemplates.purple_stimmed_explosion
 
-						Explosion.create_explosion(world, physics_world, POSITION_LOOKUP[unit], impact_normal, unit, explosion_template, power_level, charge_level, attack_type)
+						Explosion.create_explosion(world, physics_world, POSITION_LOOKUP[unit], Quaternion.look(impact_normal), unit, explosion_template, power_level, charge_level, attack_type)
 					end
 				end
 			end
@@ -1161,7 +1160,7 @@ templates.drop_stolen_rations_01_pickup_medium_many_on_death = {
 		local unit = template_context.unit
 		local base_position_boxed = Vector3Box(Unit.world_position(unit, 1))
 
-		Promise.delay(0):next(function ()
+		Managers.state.game_mode:register_physics_safe_callback(function ()
 			local pickup_system = Managers.state.extension:system("pickup_system")
 
 			if not pickup_system then
@@ -1193,8 +1192,11 @@ templates.drop_stolen_rations_01_pickup_medium_many_on_death = {
 	end,
 }
 templates.drop_many_pickups_on_death = {
+	auto_tag_on_spawn = nil,
 	class_name = "buff",
+	func_get_pickup = nil,
 	pickup_name = "invalid_pickup_name",
+	pickup_skip_group = "event_spawns",
 	predicted = false,
 	placement_settings = {
 		circle_radius = 0.75,
@@ -1209,15 +1211,15 @@ templates.drop_many_pickups_on_death = {
 
 		local unit = template_context.unit
 		local base_position_boxed = Vector3Box(Unit.world_position(unit, 1))
-		local pickup_system = Managers.state.extension:system("pickup_system")
-
-		if not pickup_system then
-			return
-		end
-
 		local template = template_context.template
 
-		pickup_system:queue_on_update(function (pickup_system_self)
+		Managers.state.game_mode:register_physics_safe_callback(function ()
+			local pickup_system = Managers.state.extension:system("pickup_system")
+
+			if not pickup_system then
+				return
+			end
+
 			local nav_world = Managers.state.nav_mesh:nav_world()
 
 			if not nav_world then
@@ -1229,8 +1231,13 @@ templates.drop_many_pickups_on_death = {
 			for i = 1, #spawn_locations do
 				local spawn_location = spawn_locations[i].position:unbox()
 				local spawn_rotation = spawn_locations[i].rotation:unbox()
+				local pickup_name = template.pickup_name
 
-				pickup_system_self:spawn_pickup(template.pickup_name, spawn_location, spawn_rotation, nil, nil, nil, nil, "event_spawns")
+				if template.func_get_pickup then
+					pickup_name = template.func_get_pickup()
+				end
+
+				pickup_system:spawn_pickup(pickup_name, spawn_location, spawn_rotation, nil, nil, nil, nil, template.pickup_skip_group, template.auto_tag_on_spawn)
 			end
 		end)
 	end,

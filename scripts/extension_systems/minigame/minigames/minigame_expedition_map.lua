@@ -104,6 +104,10 @@ MinigameExpeditionMap.unequip_on_exit = function (self)
 	return false
 end
 
+MinigameExpeditionMap.close_on_sprint = function (self)
+	return true
+end
+
 MinigameExpeditionMap.on_axis_set = function (self, t, x, y)
 	MinigameExpeditionMap.super.on_axis_set(self, t, x, y)
 

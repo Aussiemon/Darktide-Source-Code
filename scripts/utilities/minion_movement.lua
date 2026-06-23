@@ -4,6 +4,9 @@ local Animation = require("scripts/utilities/animation")
 local Breed = require("scripts/utilities/breed")
 local NavQueries = require("scripts/utilities/nav_queries")
 local MinionMovement = {}
+local Vector3 = Vector3
+local Quaternion = Quaternion
+local Matrix4x4 = Matrix4x4
 local RELATIVE_DIR_NAME_RIGHT = "right"
 local RELATIVE_DIR_NAME_LEFT = "left"
 local RELATIVE_DIR_NAME_FWD = "fwd"
@@ -616,7 +619,7 @@ MinionMovement.rotate_towards_target_unit = function (unit, scratchpad)
 	local target_unit = perception_component.target_unit
 
 	if not ALIVE[target_unit] then
-		return
+		return false
 	end
 
 	local flat_rotation
@@ -638,7 +641,11 @@ MinionMovement.rotate_towards_target_unit = function (unit, scratchpad)
 		local locomotion_extension = scratchpad.locomotion_extension
 
 		locomotion_extension:set_wanted_rotation(flat_rotation)
+
+		return true
 	end
+
+	return false
 end
 
 MinionMovement.smooth_speed_based_on_distance = function (unit, scratchpad, dt, action_data, breed, use_slow_action_data, threshold, ignore_max_acc, ignore_max_dec)

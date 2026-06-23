@@ -82,7 +82,7 @@ PrecisionTargetFinder.update_precision_target = function (self, unit, smart_targ
 	local collision_filter = precision_target_settings.collision_filter or smart_tagging and "filter_player_ping_target_selection" or "filter_ray_aim_assist"
 	local within_distance_to_box_x = precision_target_settings.within_distance_to_box_x or 0.7
 	local within_distance_to_box_y = precision_target_settings.within_distance_to_box_y or 0.2
-	local hits, num_hits = PhysicsWorld.raycast(physics_world, ray_origin, forward, max_range, "all", "collision_filter", collision_filter, "rewind_ms", rewind_ms)
+	local hits, num_hits, num_columns = PhysicsWorld.raycast(physics_world, ray_origin, forward, max_range, "all", "collision_filter", collision_filter, "rewind_ms", rewind_ms)
 	local num_insignificant_targets = 0
 	local ignore_caster = precision_target_settings.ignore_caster
 	local i = 0
@@ -191,9 +191,10 @@ PrecisionTargetFinder.update_precision_target = function (self, unit, smart_targ
 						local epsilon = 0.01
 						local direct_hit = x_diff <= half_width + epsilon and y_diff <= half_height + epsilon
 						local only_direct_hit = smart_targeting_template.only_direct_hit
+						local ignore_visibility_target_check = precision_target_settings.ignore_visibility_target_check
 						local visible_target, aim_position
 
-						if breed then
+						if breed and not ignore_visibility_target_check then
 							visible_target, aim_position = self:_target_visibility_and_aim_position(ray_origin, forward, right, up, hit_unit_center_pos, distance, half_width, half_height, x_diff_no_abs, hit_unit, fixed_frame, visibility_cache, visibility_check_frame)
 
 							if optional_line_of_sight_cache and visible_target then

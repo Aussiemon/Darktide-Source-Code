@@ -10,15 +10,15 @@ LevelScriptdataTesterComponent.editor_init = function (self, unit)
 	self:enable(unit)
 end
 
-local function get_neighbour_data_as_table(level, ...)
+local function get_neighbour_data_as_table(level)
 	local i = 1
 	local data = {}
 
-	while Level.has_data(level, ..., i) do
+	while Level.has_data(level, "neighbour_states", i) do
 		local d = {}
 
-		d.level = Level.get_data(level, ..., i, "level")
-		d.state = Level.get_data(level, ..., i, "state")
+		d.level = Level.get_data(level, "neighbour_states", i, "level")
+		d.state = Level.get_data(level, "neighbour_states", i, "state")
 		data[i] = d
 		i = i + 1
 	end

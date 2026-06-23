@@ -184,7 +184,19 @@ local unread_entry_pass = {
 		style.angle = style.rotation_progress * math.pi * 2
 	end,
 	visibility_function = function (content, style)
-		return content._is_preview_image_loaded and (not content.element.data_entry.mail_read or not content.element.data_entry.reward_claimed)
+		if not content._is_preview_image_loaded then
+			return false
+		end
+
+		if content.element.data_entry.reward_claimed ~= nil and not content.element.data_entry.reward_claimed then
+			return true
+		end
+
+		if content.element.data_entry.mail_read ~= nil and not content.element.data_entry.mail_read then
+			return true
+		end
+
+		return false
 	end,
 }
 local _progress_bar_size = {
@@ -307,6 +319,10 @@ local button_progress_passes = {
 }
 
 local function _currency_visibility_function(content, style)
+	if not content.currency_icon then
+		return false
+	end
+
 	local is_next = content.element.data_entry.first_locked_idx == content.element.data_entry.idx
 
 	if content.element.data_entry.locked then
@@ -468,14 +484,16 @@ local blueprints = {
 
 			local currency_reward
 
-			for _, reward in pairs(element.data_entry.rewards) do
-				if reward.type == "currency" then
-					currency_reward = {
-						currency = reward.currency,
-						amount = reward.amount,
-					}
+			if element.data_entry.rewards then
+				for _, reward in pairs(element.data_entry.rewards) do
+					if reward.type == "currency" then
+						currency_reward = {
+							currency = reward.currency,
+							amount = reward.amount,
+						}
 
-					break
+						break
+					end
 				end
 			end
 
@@ -484,6 +502,9 @@ local blueprints = {
 
 				content.currency_icon = currency_settings and currency_settings.icon_texture_big
 				content.currency_amount = currency_reward.amount
+			else
+				content.currency_icon = nil
+				content.currency_amount = ""
 			end
 		end,
 		update = function (self, widget, input_service, dt, t, ui_renderer, template)

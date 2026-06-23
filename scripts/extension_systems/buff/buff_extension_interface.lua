@@ -11,14 +11,16 @@ local BuffExtensionInterface = {
 	"is_frame_unique_proc",
 	"refresh_duration_of_stacking_buff",
 	"remove_externally_controlled_buff",
+	"remove_externally_controlled_buff_stacks",
 	"request_proc_event_param_table",
 	"set_frame_unique_proc",
 	"stat_buffs",
 	"rpc_add_buff",
-	"rpc_buff_proc_set_active_time",
+	"rpc_buff_batched_proc_set_active_time",
 	"rpc_buff_set_start_time",
 	"rpc_buff_set_extra_duration",
 	"rpc_remove_buff",
+	"rpc_remove_buff_stacks",
 }
 
 return BuffExtensionInterface

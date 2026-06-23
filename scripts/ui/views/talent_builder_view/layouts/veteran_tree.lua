@@ -15,12 +15,16 @@ return {
 			talent = "veteran_combat_ability_stance",
 			type = "start",
 			widget_name = "node_8376d017-537b-45f4-b3c5-e653fd1ac6d2",
-			x = 1029.4690551757812,
-			y = 360.4424743652344,
+			x = 975,
+			y = 263,
 			children = {
 				"node_06b90705-95b0-44bd-b357-bbb061cf0cb4",
 				"node_f0744989-1f87-4da4-aa97-30a821197ed9",
 				"node_ba8679cd-fc19-435d-a317-ebeccb210f87",
+			},
+			connector_offset = {
+				0,
+				42,
 			},
 			parents = {},
 			requirements = {
@@ -40,6 +44,10 @@ return {
 			y = 1955,
 			children = {
 				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_8dae58e9-9625-4e01-ac1b-209a13301c56",
@@ -66,6 +74,10 @@ return {
 				"node_90d61df3-340c-4ddf-b802-ef29d3878e0c",
 				"node_41d2b96f-c399-47c0-88c3-9e60a07638fc",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_864a1e68-33d3-4beb-86ee-e18a6351a637",
 				"node_06b90705-95b0-44bd-b357-bbb061cf0cb4",
@@ -91,6 +103,10 @@ return {
 				"node_90d61df3-340c-4ddf-b802-ef29d3878e0c",
 				"node_62b7b680-7096-40ed-9303-7ba124a5d812",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_864a1e68-33d3-4beb-86ee-e18a6351a637",
 				"node_f0744989-1f87-4da4-aa97-30a821197ed9",
@@ -113,6 +129,10 @@ return {
 			y = 1955,
 			children = {
 				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_12b3bc42-7582-41cd-b56e-af8a9685bb15",
@@ -138,6 +158,10 @@ return {
 				"node_39129a53-b8c1-4d7e-82bd-e2b9d49315a1",
 				"node_e0e0d8de-9787-4ecb-b7b8-43cb0eb133d9",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_12b3bc42-7582-41cd-b56e-af8a9685bb15",
 				"node_8c17e249-1082-43cd-82b1-42e18c7f29e8",
@@ -152,7 +176,7 @@ return {
 		},
 		{
 			cost = 1,
-			icon = "content/ui/textures/icons/talents/veteran/veteran_default_general_talent",
+			icon = "content/ui/textures/frames/talents/circular_small_frame",
 			max_points = 1,
 			talent = "base_toughness_node_buff_medium_1",
 			type = "stat",
@@ -162,6 +186,10 @@ return {
 			children = {
 				"node_96335f86-60f8-46e4-a6df-47c0a4ee2719",
 				"node_a8044c1f-dda9-4a0b-b503-d549fd2ad5f9",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf",
@@ -186,6 +214,10 @@ return {
 				"node_41d2b96f-c399-47c0-88c3-9e60a07638fc",
 				"node_be2f4721-6e3e-4594-9393-6654b6c234cd",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_8376d017-537b-45f4-b3c5-e653fd1ac6d2",
 			},
@@ -207,6 +239,10 @@ return {
 			children = {
 				"node_a8044c1f-dda9-4a0b-b503-d549fd2ad5f9",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf",
 			},
@@ -227,6 +263,10 @@ return {
 			y = 2225,
 			children = {
 				"node_09bb7c07-c733-4d08-9387-50f404da5ce5",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_39129a53-b8c1-4d7e-82bd-e2b9d49315a1",
@@ -251,6 +291,10 @@ return {
 				"node_6dd3ceaa-4d3c-4493-9836-79584c994fcf",
 				"node_6cb969f2-3011-4d7f-b73f-68afd28c958c",
 				"node_079ac2c7-5e1d-41d2-a31d-6c3ce9fcec12",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_90d61df3-340c-4ddf-b802-ef29d3878e0c",
@@ -278,6 +322,10 @@ return {
 				"node_6469a1ec-589f-49a3-a53e-3676c3181dad",
 				"node_a85c31ac-40a1-48e3-8585-0e04d85adfcf",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_5888acc4-4572-49ef-b277-f38b174bb166",
 				"node_8acdddd9-366b-4601-bf16-13574eb1cb24",
@@ -301,6 +349,10 @@ return {
 			children = {
 				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_e38451de-f4cc-4490-89b6-ae9f7bfefbde",
 			},
@@ -322,6 +374,10 @@ return {
 			children = {
 				"node_8acdddd9-366b-4601-bf16-13574eb1cb24",
 				"node_bbd51147-0e4f-4bec-a020-b23d16efb29a",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_5ae6929c-f9fe-43b2-b2d9-079d6737de23",
@@ -345,6 +401,10 @@ return {
 			children = {
 				"node_181e4412-cb3f-4b80-b3f9-10c5bb61d022",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a",
 			},
@@ -366,6 +426,10 @@ return {
 			children = {
 				"node_8acdddd9-366b-4601-bf16-13574eb1cb24",
 				"node_5888acc4-4572-49ef-b277-f38b174bb166",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_3a5e822f-27dd-4ec0-ab2f-ee8638d959af",
@@ -389,6 +453,10 @@ return {
 			children = {
 				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_fa0ae054-51ac-4488-90ee-58d24f90fb63",
 			},
@@ -409,6 +477,10 @@ return {
 			y = 2135,
 			children = {
 				"node_96335f86-60f8-46e4-a6df-47c0a4ee2719",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf",
@@ -431,6 +503,10 @@ return {
 			children = {
 				"node_3a5e822f-27dd-4ec0-ab2f-ee8638d959af",
 				"node_eb62ac80-bd39-4ad3-bf09-49e25ae55af9",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_51cd0e84-38e8-4df8-b703-bf34e5b166eb",
@@ -457,6 +533,10 @@ return {
 				"node_51cd0e84-38e8-4df8-b703-bf34e5b166eb",
 				"node_60000569-87a7-4c75-874b-02b86af43f52",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_60000569-87a7-4c75-874b-02b86af43f52",
 				"node_6dd3ceaa-4d3c-4493-9836-79584c994fcf",
@@ -482,6 +562,10 @@ return {
 				"node_c933a40e-4bf6-4c60-a83f-ed8bbdfb885f",
 				"node_09bb7c07-c733-4d08-9387-50f404da5ce5",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_e0e0d8de-9787-4ecb-b7b8-43cb0eb133d9",
 				"node_38aad78e-4d8f-4fba-b66c-947b4486f34e",
@@ -494,7 +578,7 @@ return {
 		},
 		{
 			cost = 1,
-			icon = "content/ui/textures/icons/talents/veteran/veteran_default_general_talent",
+			icon = "content/ui/textures/frames/talents/circular_small_frame",
 			max_points = 1,
 			talent = "base_toughness_node_buff_medium_2",
 			type = "stat",
@@ -504,6 +588,10 @@ return {
 			children = {
 				"node_93ef2e46-69f8-46b1-a48a-9c35ad057681",
 				"node_181e4412-cb3f-4b80-b3f9-10c5bb61d022",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a",
@@ -524,6 +612,10 @@ return {
 			x = 1415,
 			y = 1805,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_04923c84-a6e7-428b-9074-19b157f088bb",
 			},
@@ -546,6 +638,10 @@ return {
 				"node_5ae6929c-f9fe-43b2-b2d9-079d6737de23",
 				"node_bd398c77-960a-41f8-af1c-e4e15ef9ee7d",
 				"node_06b8c8de-0e09-40c9-af16-a6018e9984a8",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_40c7bc1e-e4a2-40c1-ab28-459d599cc30b",
@@ -573,6 +669,10 @@ return {
 				"node_3a5e822f-27dd-4ec0-ab2f-ee8638d959af",
 				"node_92ce0aa9-e7c8-4620-9ad3-de2cedbf9431",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_51cd0e84-38e8-4df8-b703-bf34e5b166eb",
 				"node_92ce0aa9-e7c8-4620-9ad3-de2cedbf9431",
@@ -594,6 +694,10 @@ return {
 			y = 2225,
 			children = {
 				"node_548adb63-0554-4ab5-a044-439fd851c521",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_9f8799fb-9107-462b-9adb-204b2d257650",
@@ -622,6 +726,10 @@ return {
 				"node_0a5464cb-bd8e-4fbc-87b5-a005d73d809c",
 				"node_c9c09c7f-211c-4cf3-8192-2d532bcaffee",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_0c9d022b-d4ea-4a0e-9a0e-84d560eac1f0",
 				"node_8c9efccd-3b95-45aa-a620-98f9d4d7133e",
@@ -646,6 +754,10 @@ return {
 			children = {
 				"node_548adb63-0554-4ab5-a044-439fd851c521",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_9f8799fb-9107-462b-9adb-204b2d257650",
 			},
@@ -665,6 +777,10 @@ return {
 			x = 515,
 			y = 1715,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_bbd51147-0e4f-4bec-a020-b23d16efb29a",
 			},
@@ -686,6 +802,10 @@ return {
 			children = {
 				"node_3a5e822f-27dd-4ec0-ab2f-ee8638d959af",
 				"node_40c7bc1e-e4a2-40c1-ab28-459d599cc30b",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_06272211-2d9a-47c7-bf84-8e7ea1eb8a01",
@@ -709,6 +829,10 @@ return {
 			y = 1805,
 			children = {
 				"node_129ff9f1-a7ba-4556-8617-c63d53c68f7c",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_bbd51147-0e4f-4bec-a020-b23d16efb29a",
@@ -735,6 +859,10 @@ return {
 				"node_62b7b680-7096-40ed-9303-7ba124a5d812",
 				"node_d99d3163-8528-4232-af21-f29cbf453fb1",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_8376d017-537b-45f4-b3c5-e653fd1ac6d2",
 			},
@@ -754,6 +882,10 @@ return {
 			x = 1235,
 			y = 1805,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_129ff9f1-a7ba-4556-8617-c63d53c68f7c",
 				"node_04923c84-a6e7-428b-9074-19b157f088bb",
@@ -777,6 +909,10 @@ return {
 				"node_9f8799fb-9107-462b-9adb-204b2d257650",
 				"node_630f40a6-c9ca-4337-8af3-541d274dbcab",
 				"node_a3f092bc-651f-457d-9791-9c38ff2b99fd",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_129ff9f1-a7ba-4556-8617-c63d53c68f7c",
@@ -802,6 +938,10 @@ return {
 			children = {
 				"node_181e4412-cb3f-4b80-b3f9-10c5bb61d022",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a",
 			},
@@ -823,6 +963,10 @@ return {
 			children = {
 				"node_8acdddd9-366b-4601-bf16-13574eb1cb24",
 				"node_04923c84-a6e7-428b-9074-19b157f088bb",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_06b8c8de-0e09-40c9-af16-a6018e9984a8",
@@ -848,6 +992,10 @@ return {
 				"node_7163a098-c55a-47f0-a861-38509acc0d44",
 				"node_33819d8f-8635-4356-97b1-4cf1d67dd6d5",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_7faaad0d-aebf-44f2-ba30-6a23ce68d320",
 				"node_743e6ff1-6bb2-4816-9270-ef9c92d9d376",
@@ -870,6 +1018,10 @@ return {
 			y = 800.0000010697572,
 			children = {
 				"node_6dd3ceaa-4d3c-4493-9836-79584c994fcf",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_90d61df3-340c-4ddf-b802-ef29d3878e0c",
@@ -896,6 +1048,10 @@ return {
 				"node_66fbd2b5-f51e-4e1e-a77f-ae8aa2687303",
 				"node_e38451de-f4cc-4490-89b6-ae9f7bfefbde",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_525102a2-f841-4434-b141-f126ec88103f",
 				"node_8acdddd9-366b-4601-bf16-13574eb1cb24",
@@ -917,6 +1073,10 @@ return {
 			x = 1115,
 			y = 1775,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_73319c64-81e7-4234-8fb7-4e65ebb620f5",
 			},
@@ -941,6 +1101,10 @@ return {
 				"node_73319c64-81e7-4234-8fb7-4e65ebb620f5",
 				"node_04923c84-a6e7-428b-9074-19b157f088bb",
 				"node_bbd51147-0e4f-4bec-a020-b23d16efb29a",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_5ae6929c-f9fe-43b2-b2d9-079d6737de23",
@@ -971,6 +1135,10 @@ return {
 				"node_3a5e822f-27dd-4ec0-ab2f-ee8638d959af",
 				"node_eb62ac80-bd39-4ad3-bf09-49e25ae55af9",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_60000569-87a7-4c75-874b-02b86af43f52",
 				"node_340ef70a-75c5-4a84-9627-6ccd00409d01",
@@ -994,6 +1162,10 @@ return {
 			children = {
 				"node_8acdddd9-366b-4601-bf16-13574eb1cb24",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_3a5e822f-27dd-4ec0-ab2f-ee8638d959af",
 			},
@@ -1016,6 +1188,10 @@ return {
 			children = {
 				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_b40ef26d-5e6e-4f30-87e6-a96091d5ce0a",
 			},
@@ -1037,6 +1213,10 @@ return {
 			children = {
 				"node_90d61df3-340c-4ddf-b802-ef29d3878e0c",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_ba8679cd-fc19-435d-a317-ebeccb210f87",
 			},
@@ -1057,6 +1237,10 @@ return {
 			y = 1955,
 			children = {
 				"node_efcadf37-2626-40eb-b9e5-5baecdcecd0a",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_acd02218-225d-418d-ad97-9b9ee7d4c5b1",
@@ -1083,6 +1267,10 @@ return {
 				"node_f607f1a6-5fe0-4814-b534-4177cbe9b2c0",
 				"node_41d2b96f-c399-47c0-88c3-9e60a07638fc",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_8376d017-537b-45f4-b3c5-e653fd1ac6d2",
 			},
@@ -1102,6 +1290,10 @@ return {
 			x = 875,
 			y = 1775,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_73319c64-81e7-4234-8fb7-4e65ebb620f5",
 			},
@@ -1121,6 +1313,10 @@ return {
 			x = 1475,
 			y = 1715,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_04923c84-a6e7-428b-9074-19b157f088bb",
 			},
@@ -1143,6 +1339,10 @@ return {
 				"node_29b3560b-2a50-46cd-b0bb-352b34897c49",
 				"node_0800a598-65f0-4293-a838-43c21ce1849c",
 				"node_4bde1a72-40bd-46ad-950f-8546a48ccb9f",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_f607f1a6-5fe0-4814-b534-4177cbe9b2c0",
@@ -1170,6 +1370,10 @@ return {
 				"node_90d61df3-340c-4ddf-b802-ef29d3878e0c",
 				"node_d99d3163-8528-4232-af21-f29cbf453fb1",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_ba8679cd-fc19-435d-a317-ebeccb210f87",
 				"node_f0744989-1f87-4da4-aa97-30a821197ed9",
@@ -1194,6 +1398,10 @@ return {
 				"node_90d61df3-340c-4ddf-b802-ef29d3878e0c",
 				"node_be2f4721-6e3e-4594-9393-6654b6c234cd",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_ba8679cd-fc19-435d-a317-ebeccb210f87",
 				"node_06b90705-95b0-44bd-b357-bbb061cf0cb4",
@@ -1217,6 +1425,10 @@ return {
 			children = {
 				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_b40ef26d-5e6e-4f30-87e6-a96091d5ce0a",
 			},
@@ -1237,6 +1449,10 @@ return {
 			y = 2225,
 			children = {
 				"node_18f58702-92f4-4084-afc3-934731f36b83",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_c36508a3-b4f2-4b5a-837e-132101c8739d",
@@ -1262,6 +1478,10 @@ return {
 				"node_8c9efccd-3b95-45aa-a620-98f9d4d7133e",
 				"node_8acdddd9-366b-4601-bf16-13574eb1cb24",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_3a5e822f-27dd-4ec0-ab2f-ee8638d959af",
 			},
@@ -1285,6 +1505,10 @@ return {
 				"node_6dd3ceaa-4d3c-4493-9836-79584c994fcf",
 				"node_0a263862-582d-4b55-80fa-6978c907efd5",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_90d61df3-340c-4ddf-b802-ef29d3878e0c",
 			},
@@ -1297,6 +1521,7 @@ return {
 		},
 		{
 			cost = 1,
+			icon = "content/ui/textures/frames/talents/circular_small_frame",
 			max_points = 1,
 			talent = "base_reload_speed_node_buff_medium_1",
 			type = "stat",
@@ -1309,6 +1534,10 @@ return {
 				"node_0e2e135f-4bcc-4497-9a1b-fc9555cb6105",
 				"node_06272211-2d9a-47c7-bf84-8e7ea1eb8a01",
 				"node_6dd3ceaa-4d3c-4493-9836-79584c994fcf",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_69c3cc17-56a9-4c39-b702-451bf3d0f5ab",
@@ -1325,6 +1554,7 @@ return {
 		},
 		{
 			cost = 1,
+			icon = "content/ui/textures/frames/talents/circular_small_frame",
 			max_points = 1,
 			talent = "base_melee_damage_node_buff_high_1",
 			type = "stat",
@@ -1337,6 +1567,10 @@ return {
 				"node_e17c1b44-cbfd-4f58-bc7e-dc80ff90fbcc",
 				"node_7c08ee90-6528-4188-915f-41e330db49f5",
 				"node_e38451de-f4cc-4490-89b6-ae9f7bfefbde",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_04923c84-a6e7-428b-9074-19b157f088bb",
@@ -1351,6 +1585,7 @@ return {
 		},
 		{
 			cost = 1,
+			icon = "content/ui/textures/frames/talents/circular_small_frame",
 			max_points = 1,
 			talent = "base_ranged_damage_node_buff_medium_1",
 			type = "stat",
@@ -1363,6 +1598,10 @@ return {
 				"node_7adfbd19-7df3-4337-875b-2a9dfa00d378",
 				"node_6dca445f-a83e-442c-89dd-04a1deb408ee",
 				"node_e38451de-f4cc-4490-89b6-ae9f7bfefbde",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_acd02218-225d-418d-ad97-9b9ee7d4c5b1",
@@ -1389,6 +1628,10 @@ return {
 				"node_51cd0e84-38e8-4df8-b703-bf34e5b166eb",
 				"node_60000569-87a7-4c75-874b-02b86af43f52",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_60000569-87a7-4c75-874b-02b86af43f52",
 				"node_6dd3ceaa-4d3c-4493-9836-79584c994fcf",
@@ -1411,6 +1654,10 @@ return {
 			y = 1955,
 			children = {
 				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_fa0ae054-51ac-4488-90ee-58d24f90fb63",
@@ -1435,6 +1682,10 @@ return {
 				"node_06272211-2d9a-47c7-bf84-8e7ea1eb8a01",
 				"node_340ef70a-75c5-4a84-9627-6ccd00409d01",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_6dd3ceaa-4d3c-4493-9836-79584c994fcf",
 				"node_06272211-2d9a-47c7-bf84-8e7ea1eb8a01",
@@ -1448,6 +1699,7 @@ return {
 		},
 		{
 			cost = 1,
+			icon = "content/ui/textures/frames/talents/circular_small_frame",
 			max_points = 1,
 			talent = "base_toughness_damage_reduction_node_buff_medium_1",
 			type = "stat",
@@ -1457,6 +1709,10 @@ return {
 			children = {
 				"node_891f1d0a-96ac-40b0-8a37-7dd491212599",
 				"node_b0c4f49c-fd47-4b1c-9279-82e12dc3ac7d",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992",
@@ -1469,6 +1725,7 @@ return {
 		},
 		{
 			cost = 1,
+			icon = "content/ui/textures/frames/talents/circular_small_frame",
 			max_points = 1,
 			talent = "base_toughness_node_buff_low_5",
 			type = "stat",
@@ -1483,6 +1740,10 @@ return {
 				"node_6cb969f2-3011-4d7f-b73f-68afd28c958c",
 				"node_0a263862-582d-4b55-80fa-6978c907efd5",
 				"node_079ac2c7-5e1d-41d2-a31d-6c3ce9fcec12",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_0800a598-65f0-4293-a838-43c21ce1849c",
@@ -1501,6 +1762,7 @@ return {
 		},
 		{
 			cost = 1,
+			icon = "content/ui/textures/frames/talents/circular_small_frame",
 			max_points = 1,
 			talent = "base_stamina_regen_delay_2",
 			type = "stat",
@@ -1510,6 +1772,10 @@ return {
 			children = {
 				"node_d195ddb0-73e5-4774-8bd7-e8f93e1e7ab2",
 				"node_b0c4f49c-fd47-4b1c-9279-82e12dc3ac7d",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992",
@@ -1532,6 +1798,10 @@ return {
 			children = {
 				"node_7e94349b-d6c6-446e-bb39-0b367f6477bf",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_fa0ae054-51ac-4488-90ee-58d24f90fb63",
 			},
@@ -1553,6 +1823,10 @@ return {
 			children = {
 				"node_548adb63-0554-4ab5-a044-439fd851c521",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_630f40a6-c9ca-4337-8af3-541d274dbcab",
 			},
@@ -1564,6 +1838,7 @@ return {
 		},
 		{
 			cost = 1,
+			icon = "content/ui/textures/frames/talents/circular_small_frame",
 			max_points = 1,
 			talent = "base_stamina_node_buff_low_2",
 			type = "stat",
@@ -1576,6 +1851,10 @@ return {
 				"node_b40ef26d-5e6e-4f30-87e6-a96091d5ce0a",
 				"node_fa0ae054-51ac-4488-90ee-58d24f90fb63",
 				"node_c6d92993-58ab-4f1c-ac76-0e3b36af29a5",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_73319c64-81e7-4234-8fb7-4e65ebb620f5",
@@ -1590,6 +1869,7 @@ return {
 		},
 		{
 			cost = 1,
+			icon = "content/ui/textures/frames/talents/circular_small_frame",
 			max_points = 1,
 			talent = "base_movement_speed_node_buff_low_1",
 			type = "stat",
@@ -1599,6 +1879,10 @@ return {
 			children = {
 				"node_340ef70a-75c5-4a84-9627-6ccd00409d01",
 				"node_6dd3ceaa-4d3c-4493-9836-79584c994fcf",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_4bde1a72-40bd-46ad-950f-8546a48ccb9f",
@@ -1620,6 +1904,10 @@ return {
 			x = 755,
 			y = 1805,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_bbd51147-0e4f-4bec-a020-b23d16efb29a",
 			},
@@ -1646,6 +1934,10 @@ return {
 				"node_c426c7f4-97d1-4176-810c-9dd935ef89cd",
 				"node_da3643f8-6d4e-48f5-8e7c-05b100aeaae1",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_891f1d0a-96ac-40b0-8a37-7dd491212599",
 				"node_d195ddb0-73e5-4774-8bd7-e8f93e1e7ab2",
@@ -1668,6 +1960,10 @@ return {
 			x = 575,
 			y = 2435,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_548adb63-0554-4ab5-a044-439fd851c521",
 			},
@@ -1687,6 +1983,10 @@ return {
 			x = 755,
 			y = 2435,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_548adb63-0554-4ab5-a044-439fd851c521",
 			},
@@ -1706,6 +2006,10 @@ return {
 			x = 665,
 			y = 2495,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_4398f8ca-1637-481c-bd85-8c27355fcff7",
 				"node_548adb63-0554-4ab5-a044-439fd851c521",
@@ -1730,6 +2034,10 @@ return {
 				"node_78c14d65-e167-4148-ac90-b53c00f2d4f4",
 				"node_18ddfb8a-8035-4232-90b2-c114a1451ac7",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_a8044c1f-dda9-4a0b-b503-d549fd2ad5f9",
 				"node_96335f86-60f8-46e4-a6df-47c0a4ee2719",
@@ -1751,6 +2059,10 @@ return {
 			x = 1325,
 			y = 2495,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_09bb7c07-c733-4d08-9387-50f404da5ce5",
 			},
@@ -1772,6 +2084,10 @@ return {
 			children = {
 				"node_9151734a-c321-41f6-973b-4793c5913b1b",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_09bb7c07-c733-4d08-9387-50f404da5ce5",
 			},
@@ -1792,6 +2108,10 @@ return {
 			y = 2435,
 			children = {
 				"node_33bf1346-2601-4a06-9e7e-f70aed5e441f",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_09bb7c07-c733-4d08-9387-50f404da5ce5",
@@ -1816,6 +2136,10 @@ return {
 				"node_ac52f1fe-53d7-4e5a-8872-21c6db29db9e",
 				"node_97953f03-3524-42f4-b653-da2e3468823f",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_181e4412-cb3f-4b80-b3f9-10c5bb61d022",
 			},
@@ -1836,6 +2160,10 @@ return {
 			x = 905,
 			y = 2435,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_18f58702-92f4-4084-afc3-934731f36b83",
 			},
@@ -1855,6 +2183,10 @@ return {
 			x = 1085,
 			y = 2435,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_18f58702-92f4-4084-afc3-934731f36b83",
 			},
@@ -1874,6 +2206,10 @@ return {
 			x = 995,
 			y = 2495,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_18f58702-92f4-4084-afc3-934731f36b83",
 			},
@@ -1894,6 +2230,10 @@ return {
 			y = 2135,
 			children = {
 				"node_b0c4f49c-fd47-4b1c-9279-82e12dc3ac7d",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_c56789ed-287a-4fe0-9e94-f50ffabe1992",
@@ -1916,6 +2256,10 @@ return {
 			children = {
 				"node_3a5e822f-27dd-4ec0-ab2f-ee8638d959af",
 				"node_9971a100-0ec5-4252-a20f-f33e94a34442",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_51cd0e84-38e8-4df8-b703-bf34e5b166eb",

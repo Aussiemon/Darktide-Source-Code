@@ -91,7 +91,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			1,
+			3,
 		},
 	},
 }
@@ -133,6 +133,73 @@ local widget_definitions = {
 				},
 			},
 		},
+		{
+			pass_type = "texture",
+			style_id = "arrows_right",
+			value = "content/ui/materials/icons/generic/animated/arrows_right",
+			value_id = "arrows",
+			style = {
+				horizontal_alignment = "right",
+				static = true,
+				vertical_alignment = "center",
+				offset = {
+					-38,
+					4,
+					1,
+				},
+				size = {
+					20,
+					20,
+				},
+				color = {
+					255,
+					114,
+					247,
+					119,
+				},
+			},
+			visibility_function = function (content, style)
+				return content.show_arrow_right
+			end,
+		},
+		{
+			pass_type = "texture_uv",
+			style_id = "arrows_left",
+			value_id = "arrows",
+			style = {
+				horizontal_alignment = "left",
+				static = true,
+				vertical_alignment = "center",
+				uvs = {
+					{
+						1,
+						0,
+					},
+					{
+						0,
+						1,
+					},
+				},
+				size = {
+					20,
+					20,
+				},
+				offset = {
+					36,
+					4,
+					1,
+				},
+				color = {
+					255,
+					114,
+					247,
+					119,
+				},
+			},
+			visibility_function = function (content, style)
+				return content.show_arrow_left
+			end,
+		},
 	}, "background"),
 	navigation_lines = UIWidget.create_definition({
 		{
@@ -172,21 +239,69 @@ local default_widget_icon_definition = UIWidget.create_definition({
 	{
 		pass_type = "texture",
 		style_id = "frame",
-		value = "content/ui/materials/backgrounds/scanner/scanner_decode_symbol_frame",
+		value = "content/ui/materials/backgrounds/scanner/scanner_map_marker",
 		value_id = "frame",
 		style = {
 			hdr = true,
+			horizontal_alignment = "center",
+			static = true,
+			vertical_alignment = "center",
+			size_addition = {
+				0,
+				0,
+			},
+			default_size_addition = {
+				10,
+				10,
+			},
+			offset = {
+				0,
+				0,
+				1,
+			},
 			color = {
 				255,
 				255,
 				255,
 				255,
 			},
-			size = {
+		},
+		visibility_function = function (content, style)
+			return content.marked
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "background",
+		value = "content/ui/materials/masks/gradient_radial",
+		value_id = "background",
+		style = {
+			horizontal_alignment = "center",
+			static = true,
+			vertical_alignment = "center",
+			size_addition = {
 				50,
 				50,
 			},
+			default_size_addition = {
+				50,
+				50,
+			},
+			offset = {
+				0,
+				0,
+				-1,
+			},
+			color = {
+				160,
+				0,
+				0,
+				0,
+			},
 		},
+		visibility_function = function (content, style)
+			return content.draw_background
+		end,
 	},
 	{
 		pass_type = "texture",
@@ -194,10 +309,16 @@ local default_widget_icon_definition = UIWidget.create_definition({
 		value = "content/ui/materials/hud/interactions/icons/location",
 		value_id = "icon",
 		style = {
+			horizontal_alignment = "center",
+			vertical_alignment = "center",
+			size_addition = {
+				0,
+				0,
+			},
 			offset = {
 				0,
 				0,
-				1,
+				2,
 			},
 			color = Color.ui_hud_green_light(255, true),
 		},
@@ -207,10 +328,60 @@ local default_widget_icon_definition = UIWidget.create_definition({
 	},
 	{
 		pass_type = "texture",
+		style_id = "icon_2",
+		value_id = "icon",
+		style = {
+			horizontal_alignment = "center",
+			vertical_alignment = "center",
+			size_addition = {
+				0,
+				0,
+			},
+			offset = {
+				0,
+				0,
+				1,
+			},
+			color = Color.ui_hud_green_light(255, true),
+		},
+		visibility_function = function (content, style)
+			return content.icon ~= nil and content.animating
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "icon_3",
+		value_id = "icon",
+		style = {
+			horizontal_alignment = "center",
+			vertical_alignment = "center",
+			size_addition = {
+				0,
+				0,
+			},
+			offset = {
+				0,
+				0,
+				1,
+			},
+			color = Color.ui_hud_green_light(255, true),
+		},
+		visibility_function = function (content, style)
+			return content.icon ~= nil and content.animating
+		end,
+	},
+	{
+		pass_type = "texture",
 		style_id = "title_icon",
 		value = "content/ui/materials/hud/interactions/icons/location",
 		value_id = "title_icon",
 		style = {
+			horizontal_alignment = "center",
+			vertical_alignment = "center",
+			size_addition = {
+				0,
+				0,
+			},
 			offset = {
 				0,
 				0,
@@ -223,6 +394,55 @@ local default_widget_icon_definition = UIWidget.create_definition({
 		end,
 	},
 	{
+		pass_type = "texture",
+		style_id = "title_icon_2",
+		value_id = "title_icon",
+		style = {
+			horizontal_alignment = "center",
+			vertical_alignment = "center",
+			size_addition = {
+				0,
+				0,
+			},
+			offset = {
+				0,
+				0,
+				1,
+			},
+			color = Color.ui_hud_green_light(255, true),
+		},
+		visibility_function = function (content, style)
+			return content.title_icon ~= nil and content.animating
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "title_icon_3",
+		value_id = "title_icon",
+		style = {
+			horizontal_alignment = "center",
+			vertical_alignment = "center",
+			size_addition = {
+				0,
+				0,
+			},
+			offset = {
+				0,
+				0,
+				1,
+			},
+			color = Color.ui_hud_green_light(255, true),
+		},
+		visibility_function = function (content, style)
+			return content.title_icon ~= nil and content.animating
+		end,
+	},
+}, "default_icon", nil, {
+	20,
+	20,
+})
+local default_compass_coordinate_definition = UIWidget.create_definition({
+	{
 		pass_type = "text",
 		style_id = "text",
 		value = "",
@@ -234,11 +454,21 @@ local default_widget_icon_definition = UIWidget.create_definition({
 			vertical_alignment = "center",
 			offset = {
 				0,
-				20,
+				0,
 				2,
+			},
+			default_offset = {
+				0,
+				0,
+				2,
+			},
+			size_addition = {
+				0,
+				0,
 			},
 			font_type = header_font_settings.font_type,
 			font_size = header_font_settings.font_size,
+			default_font_size = header_font_settings.font_size,
 			text_color = header_font_color,
 			default_text_color = header_font_color,
 			size = {
@@ -250,10 +480,14 @@ local default_widget_icon_definition = UIWidget.create_definition({
 			return content.text ~= nil and content.text ~= ""
 		end,
 	},
-}, "default_icon")
+}, "default_icon", nil, {
+	20,
+	20,
+})
 
 return {
 	default_widget_icon_definition = default_widget_icon_definition,
+	default_compass_coordinate_definition = default_compass_coordinate_definition,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
 }

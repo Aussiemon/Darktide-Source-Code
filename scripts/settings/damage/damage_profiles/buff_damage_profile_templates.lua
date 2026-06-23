@@ -3,10 +3,13 @@
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local armor_types = ArmorSettings.types
 local damage_types = DamageSettings.damage_types
 local damage_lerp_values = DamageProfileSettings.damage_lerp_values
+local gibbing_power = GibbingSettings.gibbing_power
+local gibbing_types = GibbingSettings.gibbing_types
 local damage_templates = {}
 local overrides = {}
 
@@ -42,6 +45,16 @@ local burninating_barrel_adm = {
 	[armor_types.super_armor] = 0.1,
 	[armor_types.disgustingly_resilient] = 2.25,
 	[armor_types.void_shield] = 2,
+}
+local phosphor_burninating_adm = {
+	[armor_types.unarmored] = 1,
+	[armor_types.armored] = 1,
+	[armor_types.resistant] = 1,
+	[armor_types.player] = 0.125,
+	[armor_types.berserker] = 1,
+	[armor_types.super_armor] = 0.1,
+	[armor_types.disgustingly_resilient] = 1,
+	[armor_types.void_shield] = 1,
 }
 local bleeding_adm = {
 	[armor_types.unarmored] = 0.5,
@@ -313,6 +326,34 @@ damage_templates.burning = {
 		"burning_damage",
 	},
 }
+damage_templates.phosphor_burning = {
+	disorientation_type = "burninating",
+	ignore_shield = true,
+	is_buff_damage = true,
+	ogryn_disorientation_type = "burninating",
+	stagger_category = "flamer",
+	toughness_multiplier = 3,
+	armor_damage_modifier = {
+		attack = phosphor_burninating_adm,
+		impact = phosphor_burninating_adm,
+	},
+	power_distribution = {
+		attack = 20,
+		impact = 0,
+	},
+	cleave_distribution = {
+		attack = 0.125,
+		impact = 0,
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+	stat_buffs = {
+		"burning_damage",
+	},
+}
 
 local PROMETHIUM_ADM = burninating_adm
 
@@ -489,6 +530,22 @@ damage_templates.killing_blow = {
 	targets = {
 		default_target = {},
 	},
+}
+damage_templates.chain_lightning_killing_blow = {
+	ignore_shield = true,
+	random_gib_hitzone = true,
+	stagger_category = "sticky",
+	power_distribution = {
+		attack = 0,
+		impact = 0,
+	},
+	targets = {
+		default_target = {},
+	},
+	damage_type = damage_types.electrocution,
+	gibbing_power = gibbing_power.infinite,
+	gibbing_type = gibbing_types.warp_lightning,
+	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
 }
 damage_templates.trait_powersword_2h_p1_trade_overheat_lockout_for_damage = {
 	disorientation_type = "trait_bespoke_powersword_2h_p1_trade_overheat_lockout_for_damage",

@@ -52,6 +52,9 @@ AchievementWeaponGroups.weapons = {
 		pattern = "powermaul_p2",
 	},
 	{
+		pattern = "powermaul_p3",
+	},
+	{
 		pattern = "powermaul_shield_p1",
 	},
 	{
@@ -64,6 +67,9 @@ AchievementWeaponGroups.weapons = {
 		pattern = "powersword_p2",
 	},
 	{
+		pattern = "powersword_p3",
+	},
+	{
 		pattern = "powersword_2h_p1",
 	},
 	{
@@ -71,6 +77,9 @@ AchievementWeaponGroups.weapons = {
 	},
 	{
 		pattern = "thunderhammer_2h_p1",
+	},
+	{
+		pattern = "transonic_sword_transonic_knife_p1",
 	},
 	{
 		pattern = "ogryn_club_p1",
@@ -89,6 +98,9 @@ AchievementWeaponGroups.weapons = {
 	},
 	{
 		pattern = "ogryn_powermaul_slabshield_p1",
+	},
+	{
+		pattern = "arc_rifle_p1",
 	},
 	{
 		pattern = "autopistol_p1",
@@ -136,6 +148,9 @@ AchievementWeaponGroups.weapons = {
 		pattern = "forcestaff_p4",
 	},
 	{
+		pattern = "galvanic_rifle_p1",
+	},
+	{
 		pattern = "needlepistol_p1",
 	},
 	{
@@ -149,6 +164,9 @@ AchievementWeaponGroups.weapons = {
 	},
 	{
 		pattern = "lasgun_p3",
+	},
+	{
+		pattern = "phosphor_pistol_p1",
 	},
 	{
 		pattern = "plasmagun_p1",

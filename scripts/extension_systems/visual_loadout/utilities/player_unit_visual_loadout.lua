@@ -346,6 +346,10 @@ function _can_wield_from_scroll_input(slot_name, visual_loadout_extension, weapo
 		return false
 	end
 
+	if not weapon_extension:can_be_scroll_wielded(slot_name) then
+		return false
+	end
+
 	if not ability_extension:can_wield(slot_name) then
 		return false
 	end

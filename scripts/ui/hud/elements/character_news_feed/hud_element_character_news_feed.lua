@@ -11,147 +11,68 @@ local HudElementCharacterNewsFeed = class("HudElementCharacterNewsFeed", "HudEle
 local character_cached_inventory = {}
 
 HudElementCharacterNewsFeed.init = function (self, parent, draw_layer, start_scale, definitions)
+	self._new_presentation_items = {}
+
 	HudElementCharacterNewsFeed.super.init(self, parent, draw_layer, start_scale, Definitions)
-
-	local local_player_id = 1
-	local local_player = Managers.player:local_player(local_player_id)
-	local character_id = local_player:character_id()
-
-	if not character_cached_inventory[character_id] then
-		self:_fetch_inventory_items()
-	else
-		self._inventory_items = character_cached_inventory[character_id]
-		self._new_presentation_items = self:_fetch_new_items()
-	end
-
 	self:_register_event("event_resync_character_news_feed", "event_resync_character_news_feed")
+	self:event_resync_character_news_feed()
 end
 
-HudElementCharacterNewsFeed._fetch_inventory_items = function (self)
-	local local_player_id = 1
-	local local_player = Managers.player:local_player(local_player_id)
-	local character_id = local_player:character_id()
+HudElementCharacterNewsFeed.event_resync_character_news_feed = function (self)
+	local new_item_notifications = ItemUtils.new_item_notification_ids()
 
-	if self._gear_promise then
-		self._gear_promise:cancel()
+	if new_item_notifications and not table.is_empty(new_item_notifications) then
+		local local_player_id = 1
+		local local_player = Managers.player:local_player(local_player_id)
+		local character_id = local_player:character_id()
 
-		self._gear_promise = nil
-	end
+		if self._gear_promise then
+			self._gear_promise:cancel()
 
-	self._inventory_items = nil
-	self._new_presentation_items = nil
+			self._gear_promise = nil
+		end
 
-	local gear_promise
+		self._gear_promise = Managers.data_service.gear:fetch_gear(character_id):next(function (gear_list)
+			self._gear_promise = nil
 
-	if Managers.backend:authenticated() then
-		gear_promise = Managers.data_service.gear:fetch_gear()
-
-		local function next_function(gear_list)
 			if self._destroyed then
 				return
 			end
 
-			local inventory = {}
+			for gear_id, notification_data in pairs(new_item_notifications) do
+				local gear = gear_list and gear_list[gear_id]
 
-			for gear_id, gear in pairs(gear_list) do
-				local gear_item = MasterItems.get_item_instance(gear, gear_id)
+				if gear and type(notification_data) == "table" then
+					local show_notification = notification_data.show_notification
 
-				inventory[gear_id] = gear_item
-			end
+					if show_notification == nil then
+						show_notification = false
+					end
 
-			self._inventory_items = inventory
-			character_cached_inventory[character_id] = inventory
-			self._new_presentation_items = self:_fetch_new_items()
-			self._gear_promise = nil
-		end
-
-		local next_promise = gear_promise:next(next_function)
-
-		local function catch_function(errors)
-			local error_string
-
-			if type(errors) == "table" then
-				local gear_list_error = unpack(errors)
-
-				error_string = tostring(gear_list_error)
-			else
-				error_string = errors
-			end
-
-			Log.error("HudElementCharacterNewsFeed", "Error fetching inventory: %s", error_string)
-
-			self._gear_promise = nil
-		end
-
-		next_promise:catch(catch_function)
-	end
-
-	self._gear_promise = gear_promise
-end
-
-HudElementCharacterNewsFeed.event_resync_character_news_feed = function (self)
-	self:_fetch_inventory_items()
-end
-
-HudElementCharacterNewsFeed.destroy = function (self, ui_renderer)
-	if self._gear_promise then
-		self._gear_promise:cancel()
-
-		self._gear_promise = nil
-	end
-
-	HudElementCharacterNewsFeed.super.destroy(self, ui_renderer)
-end
-
-HudElementCharacterNewsFeed._fetch_new_items = function (self)
-	local new_item_notifications = ItemUtils.new_item_notification_ids()
-
-	if new_item_notifications and not table.is_empty(new_item_notifications) then
-		local new_items_by_inventory = {}
-
-		for gear_id, notification_data in pairs(new_item_notifications) do
-			local has_item, item = self:_has_item_in_inventory(gear_id)
-
-			if has_item and type(notification_data) == "table" then
-				local show_notification = notification_data.show_notification
-
-				if show_notification == nil then
-					show_notification = false
+					self._new_presentation_items[#self._new_presentation_items + 1] = {
+						item = MasterItems.get_item_instance(gear, gear_id),
+						show_notification = show_notification,
+					}
+				else
+					ItemUtils.unmark_item_notification_id_as_new(gear_id)
 				end
-
-				new_items_by_inventory[#new_items_by_inventory + 1] = {
-					item = item,
-					show_notification = show_notification,
-				}
-			else
-				ItemUtils.unmark_item_notification_id_as_new(gear_id)
 			end
-		end
-
-		if #new_items_by_inventory > 0 then
-			return new_items_by_inventory
-		end
+		end)
 	end
 end
 
 HudElementCharacterNewsFeed._present_next_new_item = function (self, dt)
-	local new_presentation_items = self._new_presentation_items
-
-	if not new_presentation_items then
-		return
-	end
-
 	if self._item_presentation_delay then
 		self._item_presentation_delay = self._item_presentation_delay - dt
 
-		if self._item_presentation_delay < 0 then
+		if self._item_presentation_delay <= 0 then
 			self._item_presentation_delay = nil
 		else
 			return
 		end
 	end
 
-	local item_data = table.remove(new_presentation_items, 1)
+	local item_data = table.remove(self._new_presentation_items, 1)
 
 	if item_data.show_notification then
 		local event_name = "event_add_notification_message"
@@ -164,24 +85,25 @@ HudElementCharacterNewsFeed._present_next_new_item = function (self, dt)
 
 	ItemUtils.unmark_item_notification_id_as_new(gear_id)
 
-	if #new_presentation_items > 0 then
+	if #self._new_presentation_items > 0 then
 		self._item_presentation_delay = HudElementCharacterNewsFeedSettings.item_presentation_delay
-	else
-		self._new_presentation_items = nil
 	end
 end
 
-HudElementCharacterNewsFeed._has_item_in_inventory = function (self, gear_id)
-	local item = self._inventory_items[gear_id]
-	local has_item = item ~= nil
+HudElementCharacterNewsFeed.destroy = function (self, ui_renderer)
+	if self._gear_promise then
+		self._gear_promise:cancel()
 
-	return has_item, item
+		self._gear_promise = nil
+	end
+
+	HudElementCharacterNewsFeed.super.destroy(self, ui_renderer)
 end
 
 HudElementCharacterNewsFeed.update = function (self, dt, t, ui_renderer, render_settings, input_service)
 	HudElementCharacterNewsFeed.super.update(self, dt, t, ui_renderer, render_settings, input_service)
 
-	if self._new_presentation_items and self._inventory_items then
+	if not table.is_empty(self._new_presentation_items) then
 		self:_present_next_new_item(dt)
 	end
 end

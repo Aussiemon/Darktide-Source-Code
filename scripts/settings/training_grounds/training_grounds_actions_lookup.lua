@@ -31,6 +31,12 @@ local actions_lookup = {
 			input_action = "weapon_extra_pressed",
 		},
 	},
+	weapon_special_powermaul_p3 = {
+		{
+			description = "loc_tg_weapon_special_powermaul_p3",
+			input_action = "weapon_extra_pressed",
+		},
+	},
 	attack_chains_heavy = {
 		{
 			description = "loc_heavy_attack",
@@ -41,6 +47,18 @@ local actions_lookup = {
 		{
 			description = "loc_talents_category_tactical",
 			input_action = "grenade_ability_pressed",
+		},
+	},
+	activate_servo_skull_blitz_ability = {
+		{
+			description = "loc_talents_category_tactical",
+			input_action = "grenade_ability_pressed",
+		},
+	},
+	activate_servo_skull_tag_order = {
+		{
+			description = "loc_setting_com_wheel_double_tap",
+			input_action = "smart_tag",
 		},
 	},
 	wield_grenade = {

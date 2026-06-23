@@ -194,6 +194,10 @@ default_melee_action_input_setup.action_input_hierarchy = {
 				transition = "base",
 			},
 			{
+				input = "combat_ability",
+				transition = "base",
+			},
+			{
 				input = "special_action",
 				transition = "base",
 			},

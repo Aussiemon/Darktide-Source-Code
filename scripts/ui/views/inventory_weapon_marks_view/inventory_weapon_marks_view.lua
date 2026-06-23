@@ -153,7 +153,7 @@ InventoryWeaponMarksView.on_exit = function (self)
 		local gear_id = self._presentation_item.__original_gear_id
 		local mark_id = self._equipped_item.name
 
-		Managers.event:trigger("event_switch_mark", gear_id, mark_id, self._selected_item)
+		Managers.event:trigger("event_switch_mark", gear_id, mark_id)
 	end
 
 	InventoryWeaponMarksView.super.on_exit(self)

@@ -2,6 +2,7 @@
 
 local RoamerLimits = require("scripts/settings/roamer/roamer_limits")
 local RoamerPacks = require("scripts/settings/roamer/roamer_packs")
+local limits = RoamerLimits.havoc
 local default_packs = {
 	melee_low = {
 		renegade = RoamerPacks.renegade_melee_low,
@@ -101,7 +102,7 @@ local roamer_pacing_template = {
 					default_packs.none,
 					default_packs.none,
 				},
-				limits = RoamerLimits.low,
+				limits = limits.low,
 			},
 			high = {
 				zone_range = {
@@ -135,7 +136,7 @@ local roamer_pacing_template = {
 					default_packs.close_high,
 					default_packs.far_high,
 				},
-				limits = RoamerLimits.high,
+				limits = limits.high,
 			},
 			none = {
 				zone_range = {
@@ -244,7 +245,7 @@ local roamer_pacing_template = {
 					default_packs.close_low,
 					default_packs.far_low,
 				},
-				limits = RoamerLimits.low,
+				limits = limits.low,
 			},
 			high = {
 				zone_range = {
@@ -278,7 +279,7 @@ local roamer_pacing_template = {
 					default_packs.close_high,
 					default_packs.far_high,
 				},
-				limits = RoamerLimits.high,
+				limits = limits.high,
 			},
 			none = {
 				zone_range = {
@@ -388,7 +389,7 @@ local roamer_pacing_template = {
 					default_packs.mixed_low,
 					default_packs.mixed_low,
 				},
-				limits = RoamerLimits.low,
+				limits = limits.low,
 			},
 			high = {
 				zone_range = {
@@ -423,7 +424,7 @@ local roamer_pacing_template = {
 					default_packs.mixed_high,
 					default_packs.mixed_high,
 				},
-				limits = RoamerLimits.high,
+				limits = limits.high,
 			},
 			none = {
 				zone_range = {
@@ -458,7 +459,7 @@ local roamer_pacing_template = {
 					default_packs.none,
 					default_packs.none,
 				},
-				limits = RoamerLimits.none,
+				limits = limits.none,
 			},
 			poxwalkers = {
 				shared_aggro_trigger = true,
@@ -534,7 +535,7 @@ local roamer_pacing_template = {
 					default_packs.mixed_low,
 					default_packs.mixed_low,
 				},
-				limits = RoamerLimits.low,
+				limits = limits.low,
 			},
 			high = {
 				zone_range = {
@@ -569,7 +570,7 @@ local roamer_pacing_template = {
 					default_packs.mixed_high,
 					default_packs.mixed_high,
 				},
-				limits = RoamerLimits.high,
+				limits = limits.high,
 			},
 			none = {
 				zone_range = {
@@ -604,7 +605,7 @@ local roamer_pacing_template = {
 					default_packs.none,
 					default_packs.none,
 				},
-				limits = RoamerLimits.none,
+				limits = limits.none,
 			},
 			poxwalkers = {
 				shared_aggro_trigger = true,
@@ -680,7 +681,7 @@ local roamer_pacing_template = {
 					default_packs.mixed_low,
 					default_packs.mixed_low,
 				},
-				limits = RoamerLimits.low,
+				limits = limits.low,
 			},
 			high = {
 				chance_to_skip_limits = 1,
@@ -716,7 +717,7 @@ local roamer_pacing_template = {
 					default_packs.mixed_high,
 					default_packs.mixed_high,
 				},
-				limits = RoamerLimits.high,
+				limits = limits.high,
 			},
 			none = {
 				zone_range = {
@@ -751,7 +752,7 @@ local roamer_pacing_template = {
 					default_packs.none,
 					default_packs.none,
 				},
-				limits = RoamerLimits.none,
+				limits = limits.none,
 			},
 			poxwalkers = {
 				shared_aggro_trigger = true,
@@ -828,7 +829,7 @@ local roamer_pacing_template = {
 					default_packs.mixed_low,
 					default_packs.mixed_low,
 				},
-				limits = RoamerLimits.low,
+				limits = limits.low,
 			},
 			high = {
 				chance_to_skip_limits = 1,
@@ -865,7 +866,7 @@ local roamer_pacing_template = {
 					default_packs.mixed_high,
 					default_packs.mixed_high,
 				},
-				limits = RoamerLimits.high,
+				limits = limits.high,
 			},
 			none = {
 				zone_range = {
@@ -899,7 +900,7 @@ local roamer_pacing_template = {
 					default_packs.none,
 					default_packs.none,
 				},
-				limits = RoamerLimits.none,
+				limits = limits.none,
 			},
 			poxwalkers = {
 				shared_aggro_trigger = true,

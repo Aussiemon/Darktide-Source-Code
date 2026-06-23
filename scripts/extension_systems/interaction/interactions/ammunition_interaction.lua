@@ -120,7 +120,7 @@ function _can_refill_grenades(interactor_unit, pickup_data)
 		return false, false
 	end
 
-	if pickup_data.refill_blitz then
+	if pickup_data.refill_grenades then
 		return true, has_missing_charges
 	end
 

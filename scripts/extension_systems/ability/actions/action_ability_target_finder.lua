@@ -2,6 +2,7 @@
 
 require("scripts/extension_systems/weapon/actions/action_ability_base")
 
+local AbilityTemplates = require("scripts/settings/ability/ability_templates/ability_templates")
 local ActionModules = require("scripts/extension_systems/weapon/actions/modules/action_modules")
 local ActionAbilityTargetFinder = class("ActionAbilityTargetFinder", "ActionAbilityBase")
 
@@ -11,7 +12,11 @@ ActionAbilityTargetFinder.init = function (self, action_context, action_params, 
 	local player_unit = self._player_unit
 	local unit_data_extension = action_context.unit_data_extension
 	local target_finder_module_class_name = action_settings.target_finder_module_class_name
-	local action_module_target_finder_component = unit_data_extension:write_component("action_module_target_finder")
+	local ability = action_params.ability
+	local ability_template_name = ability and ability.ability_template
+	local ability_template = ability_template_name and AbilityTemplates[ability_template_name]
+	local module_target_component_name = ability_template.module_target_component_name or "action_module_target_finder"
+	local action_module_target_finder_component = unit_data_extension:write_component(module_target_component_name)
 
 	self._action_module_target_finder_component = action_module_target_finder_component
 	self._target_finder_module = ActionModules[target_finder_module_class_name]:new(self._is_server, self._physics_world, player_unit, action_module_target_finder_component, action_settings)
@@ -25,10 +30,6 @@ end
 
 ActionAbilityTargetFinder.start = function (self, action_settings, t, time_scale, action_start_params)
 	ActionAbilityTargetFinder.super.start(self, action_settings, t, time_scale, action_start_params)
-
-	local weapon_extension = ScriptUnit.extension(self._player_unit, "weapon_system")
-
-	weapon_extension:block_actions("weapon_action")
 	self._target_finder_module:start(t)
 end
 
@@ -38,10 +39,6 @@ end
 
 ActionAbilityTargetFinder.finish = function (self, reason, data, t, time_in_action)
 	ActionAbilityTargetFinder.super.finish(self, reason, data, t, time_in_action)
-
-	local weapon_extension = ScriptUnit.extension(self._player_unit, "weapon_system")
-
-	weapon_extension:unblock_actions("weapon_action")
 	self._target_finder_module:finish(reason, data, t)
 end
 

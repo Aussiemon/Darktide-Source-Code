@@ -43,6 +43,7 @@ AchievementBreedGroups.all = {
 	"chaos_poxwalker",
 	"chaos_spawn",
 	"cultist_assault",
+	"cultist_vanguard",
 	"cultist_berzerker",
 	"cultist_captain",
 	"cultist_flamer",
@@ -70,6 +71,7 @@ AchievementBreedGroups.all = {
 	"renegade_sniper",
 	"renegade_twin_captain_two",
 	"renegade_twin_captain",
+	"renegade_vanguard",
 }
 AchievementBreedGroups.chaos = {
 	"chaos_hound",
@@ -101,6 +103,7 @@ AchievementBreedGroups.cultist = {
 	"cultist_melee",
 	"cultist_mutant",
 	"cultist_shocktrooper",
+	"cultist_vanguard",
 }
 AchievementBreedGroups.cultist_special = {
 	"cultist_flamer",
@@ -125,6 +128,7 @@ AchievementBreedGroups.renegade = {
 	"renegade_rifleman",
 	"renegade_shocktrooper",
 	"renegade_sniper",
+	"renegade_vanguard",
 }
 AchievementBreedGroups.renegade_special = {
 	"renegade_flamer",

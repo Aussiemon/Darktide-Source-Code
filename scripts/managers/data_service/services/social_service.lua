@@ -3,7 +3,6 @@
 local PartyConstants = require("scripts/settings/network/party_constants")
 local PlayerCompositions = require("scripts/utilities/players/player_compositions")
 local PlayerInfo = require("scripts/managers/data_service/services/social/player_info")
-local PresenceEntryMyself = require("scripts/managers/presence/presence_entry_myself")
 local PresenceSettings = require("scripts/settings/presence/presence_settings")
 local Promise = require("scripts/foundation/utilities/promise")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
@@ -33,7 +32,7 @@ SocialService.init = function (self, backend_interfaces)
 
 		self._invites = InvitesDummy:new()
 	else
-		local platform = PresenceEntryMyself.get_platform()
+		local platform = AUTH_PLATFORM
 
 		self._platform = platform
 

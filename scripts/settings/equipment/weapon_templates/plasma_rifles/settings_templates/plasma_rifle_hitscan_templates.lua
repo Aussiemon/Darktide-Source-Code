@@ -135,6 +135,82 @@ hitscan_templates.default_plasma_rifle_demolition = {
 		},
 	},
 }
+hitscan_templates.plasma_p1_m2_hitscan_light = {
+	range = 100,
+	damage = {
+		impact = {
+			destroy_on_impact = false,
+			explosion_template = nil,
+			damage_profile = DamageProfileTemplates.plasma_p1_m2_light,
+			armor_explosion = {
+				[armor_types.unarmored] = ExplosionTemplates.light_plasma_p1_m2_explosion,
+				[armor_types.armored] = ExplosionTemplates.light_plasma_p1_m2_explosion,
+				[armor_types.resistant] = ExplosionTemplates.light_plasma_p1_m2_explosion,
+				[armor_types.berserker] = ExplosionTemplates.light_plasma_p1_m2_explosion,
+				[armor_types.super_armor] = ExplosionTemplates.light_plasma_p1_m2_explosion,
+				[armor_types.disgustingly_resilient] = ExplosionTemplates.light_plasma_p1_m2_explosion,
+				[armor_types.void_shield] = ExplosionTemplates.light_plasma_p1_m2_explosion,
+			},
+		},
+		penetration = {
+			depth = 1.25,
+			destroy_on_exit = false,
+			target_index_increase = 2,
+			exit_explosion_template = ExplosionTemplates.plasma_p1_m2_exit_explosion,
+		},
+	},
+	collision_tests = {
+		{
+			against = "statics",
+			collision_filter = "filter_player_character_shooting_raycast_statics",
+			test = "ray",
+		},
+		{
+			against = "dynamics",
+			collision_filter = "filter_player_character_shooting_raycast_dynamics",
+			radius = 0.1,
+			test = "sphere",
+		},
+	},
+}
+hitscan_templates.plasma_p1_m2_hitscan_charged = {
+	range = 100,
+	damage = {
+		impact = {
+			destroy_on_impact = false,
+			explosion_template = nil,
+			damage_profile = DamageProfileTemplates.plasma_p1_m2_charged,
+			armor_explosion = {
+				[armor_types.unarmored] = ExplosionTemplates.charged_plasma_p1_m2_explosion,
+				[armor_types.armored] = ExplosionTemplates.charged_plasma_p1_m2_explosion,
+				[armor_types.resistant] = ExplosionTemplates.charged_plasma_p1_m2_explosion,
+				[armor_types.berserker] = ExplosionTemplates.charged_plasma_p1_m2_explosion,
+				[armor_types.super_armor] = ExplosionTemplates.charged_plasma_p1_m2_explosion,
+				[armor_types.disgustingly_resilient] = ExplosionTemplates.charged_plasma_p1_m2_explosion,
+				[armor_types.void_shield] = ExplosionTemplates.charged_plasma_p1_m2_explosion,
+			},
+		},
+		penetration = {
+			depth = 2,
+			destroy_on_exit = false,
+			target_index_increase = 2,
+			exit_explosion_template = ExplosionTemplates.plasma_p1_m2_exit_explosion,
+		},
+	},
+	collision_tests = {
+		{
+			against = "statics",
+			collision_filter = "filter_player_character_shooting_raycast_statics",
+			test = "ray",
+		},
+		{
+			against = "dynamics",
+			collision_filter = "filter_player_character_shooting_raycast_dynamics",
+			radius = 0.1,
+			test = "sphere",
+		},
+	},
+}
 
 return {
 	base_templates = hitscan_templates,

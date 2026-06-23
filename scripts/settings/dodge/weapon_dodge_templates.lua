@@ -359,6 +359,29 @@ weapon_dodge_templates.shotgun = {
 		lerp_perfect = 1,
 	},
 }
+weapon_dodge_templates.transonics = {
+	consecutive_dodges_reset = 0,
+	distance_scale = {
+		lerp_basic = 1.1,
+		lerp_perfect = 1.1,
+	},
+	diminishing_return_distance_modifier = {
+		lerp_basic = 0.5,
+		lerp_perfect = 0.25,
+	},
+	diminishing_return_start = {
+		lerp_basic = 3,
+		lerp_perfect = 6,
+	},
+	diminishing_return_limit = {
+		lerp_basic = 2,
+		lerp_perfect = 4,
+	},
+	speed_modifier = {
+		lerp_basic = 1,
+		lerp_perfect = 1.2,
+	},
+}
 
 local ninja_knife_distance = 2.9
 local ninja_knife_time = 0.35

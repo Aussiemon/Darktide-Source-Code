@@ -202,13 +202,11 @@ end
 
 ActionHandler._finish_action = function (self, handler_data, reason, data, t, next_action_params, condition_func_params)
 	local running_action = handler_data.running_action
-	local action_settings = running_action:action_settings()
-
-	self:_anim_end_event(action_settings, running_action, data, reason, condition_func_params)
-
 	local component = handler_data.component
 	local time_in_action = t - component.start_t
+	local action_settings = running_action:action_settings()
 
+	self:_anim_end_event(time_in_action, action_settings, running_action, data, reason, condition_func_params)
 	running_action:finish(reason, data, t, time_in_action, action_settings, next_action_params)
 
 	local buff_extension = self._buff_extension
@@ -476,12 +474,12 @@ ActionHandler._anim_event = function (self, action_settings, action, condition_f
 	end
 end
 
-ActionHandler._anim_end_event = function (self, action_settings, action, data, reason, condition_func_params)
+ActionHandler._anim_end_event = function (self, time_in_action, action_settings, action, data, end_reason, condition_func_params)
 	local anim_end_event, anim_end_event_3p
 	local anim_end_event_func = action_settings.anim_end_event_func
 
 	if anim_end_event_func then
-		anim_end_event, anim_end_event_3p = anim_end_event_func(action_settings, condition_func_params)
+		anim_end_event, anim_end_event_3p = anim_end_event_func(time_in_action, action_settings, end_reason, condition_func_params)
 		anim_end_event_3p = anim_end_event_3p or anim_end_event
 	else
 		anim_end_event = action_settings.anim_end_event
@@ -494,7 +492,7 @@ ActionHandler._anim_end_event = function (self, action_settings, action, data, r
 
 	local anim_end_event_condition_func = action_settings.anim_end_event_condition_func
 
-	if anim_end_event_condition_func and not anim_end_event_condition_func(self._unit, data, reason) then
+	if anim_end_event_condition_func and not anim_end_event_condition_func(self._unit, data, end_reason) then
 		return
 	end
 
@@ -694,17 +692,17 @@ ActionHandler.update_actions = function (self, fixed_frame, id, condition_func_p
 	end
 end
 
-ActionHandler._validate_action = function (self, action_settings, condition_func_params, t, used_input)
+ActionHandler._validate_action = function (self, action_settings, condition_func_params, t, time_in_action, used_input)
 	local kind = action_settings.kind
 	local action_kind_condition_func = self._action_kind_condition_funcs[kind]
 
-	if action_kind_condition_func and not action_kind_condition_func(action_settings, condition_func_params, used_input) then
+	if action_kind_condition_func and not action_kind_condition_func(action_settings, condition_func_params, used_input, t, time_in_action) then
 		return false
 	end
 
 	local action_condition_func = action_settings.action_condition_func
 
-	if action_condition_func and not action_condition_func(action_settings, condition_func_params, used_input, t) then
+	if action_condition_func and not action_condition_func(action_settings, condition_func_params, used_input, t, time_in_action) then
 		return false
 	end
 
@@ -843,15 +841,15 @@ ActionHandler._check_chain_actions = function (self, handler_data, current_actio
 	end
 end
 
-ActionHandler._validate_chain_action = function (self, chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input, running_action_state)
+ActionHandler._validate_chain_action = function (self, chain_action, t, time_in_action, time_scale, actions, condition_func_params, used_input, running_action_state)
 	local num_chain_actions = #chain_action
 
 	if num_chain_actions == 0 then
-		return self:_validate_single_chain_action(chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input, running_action_state)
+		return self:_validate_single_chain_action(chain_action, t, time_in_action, time_scale, actions, condition_func_params, used_input, running_action_state)
 	else
 		for ii = 1, num_chain_actions do
 			local action = chain_action[ii]
-			local action_is_validated, action_name, action_settings, reset_combo = self:_validate_single_chain_action(action, t, current_action_t, time_scale, actions, condition_func_params, used_input, running_action_state)
+			local action_is_validated, action_name, action_settings, reset_combo = self:_validate_single_chain_action(action, t, time_in_action, time_scale, actions, condition_func_params, used_input, running_action_state)
 
 			if action_is_validated then
 				return action_is_validated, action_name, action_settings, reset_combo
@@ -860,7 +858,7 @@ ActionHandler._validate_chain_action = function (self, chain_action, t, current_
 	end
 end
 
-ActionHandler._validate_single_chain_action = function (self, chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input, running_action_state)
+ActionHandler._validate_single_chain_action = function (self, chain_action, t, time_in_action, time_scale, actions, condition_func_params, used_input, running_action_state)
 	local chain_time, chain_until, chain_validated
 
 	if time_scale < 1 then
@@ -880,7 +878,7 @@ ActionHandler._validate_single_chain_action = function (self, chain_action, t, c
 		chain_until = chain_action.chain_until and chain_action.chain_until / time_scale
 	end
 
-	chain_validated = not chain_time or (chain_time and chain_time <= current_action_t or not not chain_until and current_action_t <= chain_until) and true
+	chain_validated = not chain_time or (chain_time and chain_time <= time_in_action or not not chain_until and time_in_action <= chain_until) and true
 
 	local running_action_state_requirement = chain_action.running_action_state_requirement
 
@@ -891,12 +889,12 @@ ActionHandler._validate_single_chain_action = function (self, chain_action, t, c
 	local action_name = chain_action.action_name
 	local action_settings = actions[action_name]
 	local reset_combo = chain_action.reset_combo
-	local action_is_validated = chain_validated and self:_validate_action(action_settings, condition_func_params, t, used_input)
+	local action_is_validated = chain_validated and self:_validate_action(action_settings, condition_func_params, t, time_in_action, used_input)
 
 	return action_is_validated, action_name, action_settings, reset_combo
 end
 
-ActionHandler._valid_action_from_action_input = function (self, actions, action_input, t, condition_func_params, used_input)
+ActionHandler._valid_action_from_action_input = function (self, actions, action_input, t, time_in_action, condition_func_params, used_input)
 	local current_settings, current_name
 	local current_priority = -math.huge
 
@@ -905,7 +903,7 @@ ActionHandler._valid_action_from_action_input = function (self, actions, action_
 		local priority = settings.action_priority or math.huge
 
 		if start_input == action_input and current_priority < priority then
-			local is_validated = self:_validate_action(settings, condition_func_params, t, used_input)
+			local is_validated = self:_validate_action(settings, condition_func_params, t, time_in_action, used_input)
 
 			if is_validated then
 				current_settings = settings
@@ -922,7 +920,7 @@ ActionHandler._valid_action_from_action_input = function (self, actions, action_
 	return current_name, current_settings
 end
 
-ActionHandler._check_start_actions = function (self, handler_data, t, actions, condition_func_params, action_params, template, action_input, used_input)
+ActionHandler._check_start_actions = function (self, handler_data, t, time_in_action, actions, condition_func_params, action_params, template, action_input, used_input)
 	if not actions then
 		return nil, nil, nil, nil, nil
 	end
@@ -930,7 +928,7 @@ ActionHandler._check_start_actions = function (self, handler_data, t, actions, c
 	local wanted_action, wanted_action_settings, automatic_input
 
 	if action_input then
-		wanted_action, wanted_action_settings = self:_valid_action_from_action_input(actions, action_input, t, condition_func_params, used_input)
+		wanted_action, wanted_action_settings = self:_valid_action_from_action_input(actions, action_input, t, time_in_action, condition_func_params, used_input)
 	end
 
 	if not wanted_action then
@@ -944,7 +942,7 @@ ActionHandler._check_start_actions = function (self, handler_data, t, actions, c
 
 			if func(condition_func_params, action_params, nil, t) then
 				local conditional_action_input = conditional_state_config.input_name
-				local action, action_settings = self:_valid_action_from_action_input(actions, conditional_action_input, t, condition_func_params, used_input)
+				local action, action_settings = self:_valid_action_from_action_input(actions, conditional_action_input, t, time_in_action, condition_func_params, used_input)
 
 				if action then
 					wanted_action = action
@@ -974,7 +972,7 @@ ActionHandler._check_new_actions = function (self, handler_data, actions, condit
 	local action_input, used_input = self._action_input_extension:peek_next_input(id)
 
 	if not has_running_action then
-		return self:_check_start_actions(handler_data, t, actions, condition_func_params, action_params, template, action_input, used_input)
+		return self:_check_start_actions(handler_data, t, 0, actions, condition_func_params, action_params, template, action_input, used_input)
 	else
 		local action_settings = running_action:action_settings()
 		local start_t = component.start_t
@@ -1117,7 +1115,7 @@ ActionHandler.action_input_is_currently_valid = function (self, id, actions, con
 			is_valid = true
 		end
 	else
-		local action_name, _ = self:_valid_action_from_action_input(actions, action_input, t, condition_func_params, used_input)
+		local action_name, _ = self:_valid_action_from_action_input(actions, action_input, t, 0, condition_func_params, used_input)
 
 		if action_name then
 			is_valid = true

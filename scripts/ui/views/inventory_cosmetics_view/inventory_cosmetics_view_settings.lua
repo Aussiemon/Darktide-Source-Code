@@ -39,6 +39,29 @@ local inventory_cosmetics_view = {
 		"slot_combat_ability",
 		"slot_grenade_ability",
 	},
+	animations_per_archetype = {
+		adamant = {
+			initial_event = "character_cosmetics_idle",
+		},
+		cryptic = {
+			initial_event = "character_cosmetics_idle",
+		},
+		ogryn = {
+			initial_event = "character_cosmetics_idle",
+		},
+		psyker = {
+			initial_event = "character_cosmetics_idle",
+		},
+		veteran = {
+			initial_event = "character_cosmetics_idle",
+		},
+		zealot = {
+			initial_event = "character_cosmetics_idle",
+		},
+		broker = {
+			initial_event = "character_cosmetics_idle",
+		},
+	},
 	grid_spacing = grid_spacing,
 	grid_size = grid_size,
 	mask_size = mask_size,

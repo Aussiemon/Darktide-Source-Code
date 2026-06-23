@@ -8,6 +8,7 @@ local WeaponSpecialInterface = {
 	"on_special_deactivation",
 	"on_sweep_action_finish",
 	"on_sweep_action_start",
+	"on_weapon_shout_action_finish",
 	"on_wieldable_slot_equipped",
 	"process_hit",
 }

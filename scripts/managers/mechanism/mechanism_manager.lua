@@ -51,8 +51,8 @@ MechanismManager.EVENTS = {
 	failed_fetching_session_report = {
 		rpc_name = "rpc_mechanism_event_failed_fetching_session_report",
 		type = EVENT_TYPES.server,
-		pack_function = function (self, peer_id)
-			return peer_id
+		pack_function = function (self, ...)
+			return nil
 		end,
 	},
 	game_score_end_time = {
@@ -360,8 +360,9 @@ MechanismManager.rpc_mechanism_event = function (self, channel_id, event_id)
 	event_function(mechanism)
 end
 
-MechanismManager.rpc_mechanism_event_failed_fetching_session_report = function (self, channel_id, peer_id)
+MechanismManager.rpc_mechanism_event_failed_fetching_session_report = function (self, channel_id)
 	local mechanism = self._mechanism
+	local peer_id = Network.peer_id(channel_id)
 
 	mechanism:failed_fetching_session_report(peer_id)
 end

@@ -11,6 +11,12 @@ character_state_netted_settings.anim_settings = {
 local DEFAULT_DRAG_SPEED = 10
 
 character_state_netted_settings.breed_specific_settings = {
+	cryptic = {
+		max_slowdown_factor = 1,
+		min_slowdown_factor = 0.15,
+		slowdown_distance = 4,
+		drag_speed = DEFAULT_DRAG_SPEED,
+	},
 	human = {
 		max_slowdown_factor = 1,
 		min_slowdown_factor = 0.15,

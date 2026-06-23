@@ -1,8 +1,8 @@
 ﻿-- chunkname: @scripts/extension_systems/character_state_machine/character_states/utilities/assist.lua
 
+local CharacterStateAssistSettings = require("scripts/settings/character_state/character_state_assist_settings")
 local PlayerAssistNotifications = require("scripts/utilities/player_assist_notifications")
 local Assist = class("Assist")
-local FORCE_ASSIST_DURATION = 1.5
 
 Assist.init = function (self, anim_settings, is_server, unit, game_session_or_nil, game_object_id_or_nil, assist_type_or_nil)
 	self._is_server = is_server
@@ -48,6 +48,20 @@ Assist.update = function (self, dt, t)
 				PlayerAssistNotifications.show_notification(self._unit, interactor_unit, assist_type)
 
 				self._last_interactor_unit = nil
+
+				local interactor_buff_extension = ScriptUnit.has_extension(interactor_unit, "buff_system")
+
+				if interactor_buff_extension then
+					local param_table = interactor_buff_extension:request_proc_event_param_table()
+
+					if param_table then
+						param_table.interactor_unit = interactor_unit
+						param_table.assisted_unit = self._unit
+						param_table.assist_type = assist_type
+
+						interactor_buff_extension:add_proc_event("on_player_assist_done", param_table)
+					end
+				end
 			end
 		end
 	end
@@ -100,7 +114,7 @@ Assist._try_start_anim = function (self)
 	local in_progress = assisted_state_input_component.in_progress
 	local interactee_extension = self._interactee_extension
 	local force_assist = self._assisted_state_input_component.force_assist
-	local duration = force_assist and FORCE_ASSIST_DURATION or interactee_extension:interaction_length()
+	local duration = force_assist and CharacterStateAssistSettings.force_assist_duration or interactee_extension:interaction_length()
 
 	if not was_in_progress and in_progress then
 		local anim_settings = self._anim_settings
@@ -173,7 +187,7 @@ Assist._synchronize_interaction_duration = function (self)
 end
 
 Assist._update_force_assist = function (self, dt)
-	if self._force_assist_timer <= FORCE_ASSIST_DURATION then
+	if self._force_assist_timer <= CharacterStateAssistSettings.force_assist_duration then
 		self._force_assist_timer = self._force_assist_timer + dt
 
 		return false

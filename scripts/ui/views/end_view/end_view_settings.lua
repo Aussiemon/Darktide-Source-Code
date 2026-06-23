@@ -11,7 +11,6 @@ local end_view_settings = {
 	min_delay_before_summary = 2,
 	overlay_draw_layer = 300,
 	skip_grace_time = 0.5,
-	state_machine_id = "end_of_round_state_machine",
 	stay_in_party_vote_button = "hotkey_menu_special_1",
 	stay_in_party_vote_text = "loc_eor_stay_in_party_vote_text",
 	timer_name = "ui",

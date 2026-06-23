@@ -195,7 +195,7 @@ local function _can_node_traverse_to_start(node, selected_talents, layout, ignor
 			local parent_node = _node_by_name(parent_name, layout)
 
 			if parent_node then
-				if parent_node.type == "start" or parent_node.type == "start_center" then
+				if parent_node.type == "start" then
 					return true, step_count
 				elseif selected_talents[parent_name] then
 					local could_traverse_parent, parent_step_count = _can_node_traverse_to_start(parent_node, selected_talents, layout, ignore_list, step_count)
@@ -294,7 +294,7 @@ TalentLayoutParser.validate_talent_layouts = function (selected_talents, layouts
 	end
 
 	if not is_node_format then
-		local out_talents = table.shallow_copy(archetype.base_talents)
+		local out_talents = archetype and table.shallow_copy(archetype.base_talents) or {}
 
 		for i = 1, #layouts do
 			local layout = layouts[i]
@@ -313,10 +313,12 @@ TalentLayoutParser.validate_talent_layouts = function (selected_talents, layouts
 end
 
 TalentLayoutParser.archetype_layouts = function (archetype)
-	return {
-		require(archetype.talent_layout_file_path),
-		archetype.specialization_talent_layout_file_path and require(archetype.specialization_talent_layout_file_path) or nil,
-	}
+	local out = {}
+
+	out[#out + 1] = archetype.talent_layout_file_path and require(archetype.talent_layout_file_path) or nil
+	out[#out + 1] = archetype.specialization_talent_layout_file_path and require(archetype.specialization_talent_layout_file_path) or nil
+
+	return out
 end
 
 local function _num_decimals(value)
@@ -699,6 +701,11 @@ end
 
 TalentLayoutParser.profile_percent_points_used = function (profile, optional_node_tiers)
 	local archetype = profile.archetype
+
+	if not archetype.talent_layout_file_path then
+		return 1
+	end
+
 	local talent_layout = require(archetype.talent_layout_file_path)
 	local node_tiers = optional_node_tiers or profile.selected_nodes
 	local max_points = profile.talent_points

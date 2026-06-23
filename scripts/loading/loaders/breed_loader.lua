@@ -22,16 +22,20 @@ end
 
 BreedLoader.start_loading = function (self, context)
 	local mission_name = context.mission_name
-	local level_editor_level = context.level_editor_level
-	local circumstance_name = context.circumstance_name
-	local chosen_breeds = {}
 	local mission_settings = Missions[mission_name]
 	local is_hub = mission_settings.is_hub
+	local chosen_breeds = {}
 
 	if is_hub then
 		local player_breeds = BreedQueries.player_breeds_by_name()
 
 		for breed_name, breed in pairs(player_breeds) do
+			chosen_breeds[breed_name] = breed
+		end
+
+		local minion_companion_breeds = BreedQueries.minion_companion_breeds_by_name()
+
+		for breed_name, breed in pairs(minion_companion_breeds) do
 			chosen_breeds[breed_name] = breed
 		end
 	else

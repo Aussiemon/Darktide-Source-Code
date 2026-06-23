@@ -9,7 +9,7 @@ local BtRandomUtilityNode = class("BtRandomUtilityNode", "BtNode")
 BtRandomUtilityNode.init = function (self, ...)
 	BtRandomUtilityNode.super.init(self, ...)
 
-	self._children = {}
+	self._random_utility_children = {}
 	self._action_list = {}
 
 	local tree_node = self.tree_node
@@ -22,7 +22,7 @@ BtRandomUtilityNode.init_values = function (self, blackboard, action_data, node_
 	BtRandomUtilityNode.super.init_values(self, blackboard, action_data, node_data)
 
 	local node_identifier = self.identifier
-	local children = self._children
+	local children = self._random_utility_children
 	local num_children = table.size(children)
 	local utility_node_data = Script.new_map(num_children)
 
@@ -32,11 +32,6 @@ BtRandomUtilityNode.init_values = function (self, blackboard, action_data, node_
 	}
 
 	for identifier, node in pairs(children) do
-		local tree_node = node.tree_node
-		local child_action_data = tree_node.action_data
-
-		node:init_values(blackboard, child_action_data, node_data)
-
 		utility_node_data[identifier] = {
 			last_time = -math.huge,
 			last_done_time = -math.huge,
@@ -46,7 +41,7 @@ end
 
 BtRandomUtilityNode.ready = function (self, lua_node)
 	local action_list = self._action_list
-	local children = self._children
+	local children = self._random_utility_children
 
 	for name, child_node in pairs(children) do
 		local action_data = child_node.tree_node.action_data
@@ -56,7 +51,11 @@ BtRandomUtilityNode.ready = function (self, lua_node)
 end
 
 BtRandomUtilityNode.add_child = function (self, node)
-	self._children[node.identifier] = node
+	BtRandomUtilityNode.super.add_child(self, node)
+
+	if not node.tree_node.state then
+		self._random_utility_children[node.identifier] = node
+	end
 end
 
 local function _swap(t, i, j)
@@ -164,7 +163,7 @@ BtRandomUtilityNode.evaluate = function (self, unit, blackboard, scratchpad, dt,
 	end
 
 	local actions = self._action_list
-	local node_children = self._children
+	local node_children = self._random_utility_children
 	local utility_node_data = data.utility_node_data
 	local fallback_node_name = self._fallback_node_name
 	local num_actions, fallback_node = _randomize_actions(unit, actions, blackboard, scratchpad, t, utility_node_data, node_children, fallback_node_name, running_child_node, last_leaf_node_running)
@@ -219,7 +218,7 @@ BtRandomUtilityNode.run = function (self, unit, breed, blackboard, scratchpad, a
 	local running_node_id = running_node.identifier
 	local running_tree_node = running_node.tree_node
 	local running_action_data = running_tree_node.action_data
-	local result, evaluate_utility_next_frame = running_node:run(unit, breed, blackboard, scratchpad, running_action_data, dt, t, node_data, running_child_nodes)
+	local result, evaluate_utility_next_frame, update_rate = running_node:run(unit, breed, blackboard, scratchpad, running_action_data, dt, t, node_data, running_child_nodes)
 
 	if result == "done" then
 		local data = node_data[node_identifier]
@@ -229,7 +228,7 @@ BtRandomUtilityNode.run = function (self, unit, breed, blackboard, scratchpad, a
 		utility_data.last_done_time = t
 	end
 
-	return result, evaluate_utility_next_frame
+	return result, evaluate_utility_next_frame, update_rate
 end
 
 return BtRandomUtilityNode

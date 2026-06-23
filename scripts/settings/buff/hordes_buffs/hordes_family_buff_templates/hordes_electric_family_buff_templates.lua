@@ -38,6 +38,7 @@ local PI = math.pi
 local PI_2 = PI * 2
 local buff_categories = BuffSettings.buff_categories
 local buff_keywords = BuffSettings.keywords
+local group_keywords = BuffSettings.group_keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
 local armor_types = ArmorSettings.types
@@ -216,7 +217,7 @@ templates.hordes_buff_instakill_melee_hit_on_electrocuted_enemy = {
 			local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
 
 			if buff_extension then
-				local target_is_electrocuted = buff_extension:has_keyword(buff_keywords.electrocuted)
+				local target_is_electrocuted = MinionState.is_electrocuted(buff_extension, group_keywords.electrocuted)
 
 				if target_is_electrocuted then
 					local player_pos = POSITION_LOOKUP[player_unit]
@@ -396,7 +397,7 @@ templates.hordes_buff_damage_taken_close_to_electrocuted_enemy = {
 		[proc_events.on_damage_taken] = 1,
 	},
 	check_proc_func = function (params, template_data, template_context, t)
-		return template_data.is_active
+		return template_data.is_active and params.attacked_unit == template_context.unit
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		template_data.player_fx_extension:trigger_wwise_events_local_only(SFX_NAMES.reduced_damage_hit, false, template_context.unit)
@@ -454,7 +455,7 @@ templates.hordes_buff_damage_taken_close_to_electrocuted_enemy = {
 			if HEALTH_ALIVE[enemy_unit] then
 				local buff_extension = ScriptUnit.extension(enemy_unit, "buff_system")
 
-				is_active = buff_extension:has_keyword(buff_keywords.electrocuted)
+				is_active = MinionState.is_electrocuted(buff_extension, group_keywords.electrocuted)
 
 				if is_active then
 					break
@@ -550,7 +551,7 @@ templates.hordes_buff_coherency_damage_taken_close_to_electrocuted_enemy_effect 
 			if HEALTH_ALIVE[enemy_unit] then
 				local buff_extension = ScriptUnit.extension(enemy_unit, "buff_system")
 
-				is_active = buff_extension:has_keyword(buff_keywords.electrocuted)
+				is_active = MinionState.is_electrocuted(buff_extension, group_keywords.electrocuted)
 
 				if is_active then
 					break

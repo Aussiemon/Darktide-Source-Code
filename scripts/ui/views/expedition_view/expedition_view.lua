@@ -330,6 +330,7 @@ ExpeditionView.update = function (self, dt, t, input_service)
 		self:_update_nodes_mission_data(dt, t, input_service)
 	end
 
+	self:_update_play_button()
 	self:_update_can_start_mission()
 
 	if self._sidebar then
@@ -730,6 +731,12 @@ ExpeditionView._handle_mouse_input = function (self, input_service, dt, t)
 
 		self:_set_selection(selection)
 	end
+
+	local selected_node = self:get_selection()
+
+	if selected_node and self._widgets_by_name.unlock_button.content.hotspot.on_pressed and selected_node.unlock_status == UNLOCK_STATUS.unlockable then
+		self:_unlock_node_if_eligible(selected_node)
+	end
 end
 
 ExpeditionView._determine_mouseover_node = function (self, dt, t, input_service)
@@ -746,6 +753,17 @@ ExpeditionView._determine_mouseover_node = function (self, dt, t, input_service)
 	end
 
 	return nil
+end
+
+ExpeditionView._update_play_button = function (self)
+	local selected_node = self:get_selection()
+	local widgets_by_name = self._widgets_by_name
+	local is_node_unlockable = selected_node and selected_node.unlock_status == UNLOCK_STATUS.unlockable
+	local enter_anim_finished = self._node_enter_anim_finished
+
+	widgets_by_name.unlock_button.content.visible = is_node_unlockable and enter_anim_finished
+	widgets_by_name.play_button.content.visible = not is_node_unlockable and enter_anim_finished
+	widgets_by_name.play_button_legend.content.visible = not is_node_unlockable and enter_anim_finished
 end
 
 ExpeditionView._unlock_node_if_eligible = function (self, node)
@@ -859,7 +877,7 @@ ExpeditionView._update_can_start_mission = function (self)
 	end
 
 	if self._current_match_visibility == MATCH_VISIBILITY.private then
-		if not_quickplay_button then
+		if self:_is_quickplay_button(node) then
 			self:_set_can_start_mission(false, "warning", Localize("loc_mission_board_locked_issue"))
 
 			return
@@ -952,6 +970,8 @@ ExpeditionView.cb_toggle_private_match = function (self)
 		self._sidebar:update_match_visibility_text(match_visibility)
 		self._sidebar:update_quickplay_widget_locking()
 	end
+
+	self:_set_quickplay_button_state(self._current_match_visibility == MATCH_VISIBILITY.private)
 end
 
 ExpeditionView.cb_show_tutorial = function (self)
@@ -962,6 +982,24 @@ ExpeditionView.cb_show_tutorial = function (self)
 	self:_set_block_input(true)
 
 	self._show_tutorial_on_next_update = true
+end
+
+ExpeditionView._set_quickplay_button_state = function (self, is_locked)
+	local quickplay_button_index = self:_get_quickplay_button_index()
+	local quickplay_button = self._selectables[quickplay_button_index]
+
+	if quickplay_button then
+		local content = quickplay_button.widget and quickplay_button.widget.content
+		local style = quickplay_button.widget and quickplay_button.widget.style
+
+		content.is_locked = is_locked
+
+		local icon_style = style and style.static_button_icon
+
+		if icon_style then
+			icon_style.is_selected = true
+		end
+	end
 end
 
 ExpeditionView._find_mission_of_difficulty = function (self, missions, challenge_filter, resistance_filter)

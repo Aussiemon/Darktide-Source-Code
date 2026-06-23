@@ -20,6 +20,14 @@ PropShieldExtension.update = function (self, context, dt, t)
 	return
 end
 
+PropShieldExtension.template = function (self)
+	return nil
+end
+
+PropShieldExtension.add_damage = function (self)
+	return 0
+end
+
 PropShieldExtension.set_blocking = function (self, is_blocking)
 	ferror("PropShieldExtension does not support set_blocking.")
 end

@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/components/cutscene_character.lua
 
 local Breed = require("scripts/utilities/breed")
+local Breeds = require("scripts/settings/breed/breeds")
 local CutsceneCharacter = component("CutsceneCharacter")
 
 CutsceneCharacter.init = function (self, unit)
@@ -18,9 +19,9 @@ CutsceneCharacter.init = function (self, unit)
 
 	self._character_type = character_type
 
-	local breed_name = self:get_data(unit, "breed_name")
+	local body_size = self:get_data(unit, "body_size")
 
-	self._breed_name = breed_name
+	self._body_size = body_size
 
 	local companion_inclusion_setting = self:get_data(unit, "companion_inclusion_setting")
 
@@ -37,7 +38,7 @@ CutsceneCharacter.init = function (self, unit)
 		local prop_items = self:get_data(unit, "prop_items")
 		local animation_event = self:get_data(unit, "animation_event")
 
-		cutscene_character_extension:setup_from_component(cinematic_name, character_type, breed_name, prop_items, cinematic_slot, animation_event, equip_slot_on_loadout_assign, companion_inclusion_setting)
+		cutscene_character_extension:setup_from_component(cinematic_name, character_type, body_size, prop_items, cinematic_slot, animation_event, equip_slot_on_loadout_assign, companion_inclusion_setting)
 	end
 
 	if self:get_data(unit, "materialize") ~= "disabled" then
@@ -63,22 +64,6 @@ CutsceneCharacter.destroy = function (self, unit)
 	return
 end
 
-CutsceneCharacter.cinematic_name = function (self)
-	return self._cinematic_name
-end
-
-CutsceneCharacter.character_type = function (self)
-	return self._character_type
-end
-
-CutsceneCharacter.breed_name = function (self)
-	return self._breed_name
-end
-
-CutsceneCharacter.companion_inclusion_setting = function (self)
-	return self._companion_inclusion_setting
-end
-
 CutsceneCharacter.start_weapon_specific_walk_animation = function (self)
 	if DEDICATED_SERVER then
 		return false
@@ -99,8 +84,8 @@ CutsceneCharacter.start_inventory_specific_walk_animation = function (self)
 	cutscene_character_extension:start_inventory_specific_walk_animation()
 end
 
-local function set_eye_visibility(unit, state)
-	local size = state and Vector3(1, 1, 1) or Vector3(0, 0, 0)
+local function _set_eye_visibility(unit, state)
+	local size = state and Vector3.one() or Vector3.zero()
 	local children = Unit.get_child_units(unit)
 
 	if children ~= nil then
@@ -138,7 +123,7 @@ CutsceneCharacter.update = function (self, unit, dt, t)
 		if not data.eyes_set and lerp_t > data.eyes_per then
 			data.eyes_set = true
 
-			set_eye_visibility(unit, data.visible)
+			_set_eye_visibility(unit, data.visible)
 		end
 
 		if not data.wielded_set and lerp_t >= data.wielded_per then
@@ -165,18 +150,32 @@ CutsceneCharacter.editor_update = function (self, unit, dt, t)
 	return self:update(unit, dt, t)
 end
 
-local function get_min(unit)
+local function _materialize_min_value(unit)
 	local pos = Unit.world_position(unit, 1)
 
 	return -0.1 + pos.z
 end
 
-local function get_max(unit, breed_name)
+local DEFAULT_HEIGHTS = {
+	human_sized = 1.85,
+	ogryn_sized = 2.8,
+}
+
+local function _materialize_max_value(unit, body_size)
 	local pos = Unit.world_position(unit, 1)
 	local cutscene_character_extension = ScriptUnit.extension(unit, "cutscene_character_system")
-	local breed = cutscene_character_extension:breed()
-	local z_scale = Unit.local_scale(unit, 1).z
-	local height = Breed.height(unit, breed) * 1.3 * z_scale
+	local profile = cutscene_character_extension:player_profile()
+	local height
+
+	if not profile then
+		height = DEFAULT_HEIGHTS[body_size]
+	else
+		local breed_name = profile.archetype.breed
+		local breed = Breeds[breed_name]
+		local z_scale = Unit.local_scale(unit, 1).z
+
+		height = Breed.height(unit, breed) * 1.3 * z_scale
+	end
 
 	return height + pos.z + 0.1
 end
@@ -190,11 +189,11 @@ CutsceneCharacter.init_materialize = function (self)
 
 	if self:get_data(unit, "materialize") == "enabled_visible" then
 		Unit.set_permutation_for_materials(unit, "HAS_DEMATERIALIZE", true, true)
-		Unit.set_scalar_for_materials(unit, "materialize_data", get_max(unit), true)
+		Unit.set_scalar_for_materials(unit, "materialize_data", _materialize_max_value(unit, self._body_size), true)
 	else
 		Unit.set_permutation_for_materials(unit, "HAS_DEMATERIALIZE", true, true)
-		Unit.set_scalar_for_materials(unit, "materialize_data", get_min(unit), true)
-		set_eye_visibility(unit, false)
+		Unit.set_scalar_for_materials(unit, "materialize_data", _materialize_min_value(unit, self._body_size), true)
+		_set_eye_visibility(unit, false)
 
 		local cutscene_character_extension = ScriptUnit.extension(unit, "cutscene_character_system")
 
@@ -223,8 +222,8 @@ CutsceneCharacter.start_materialize = function (self)
 		wielded_per = 0.6,
 		wielded_set = false,
 		wielded_vis = true,
-		from = get_min(unit),
-		to = get_max(unit, self._breed_name),
+		from = _materialize_min_value(unit),
+		to = _materialize_max_value(unit, self._body_size),
 	}
 	self._should_update = true
 
@@ -255,8 +254,8 @@ CutsceneCharacter.start_dematerialize = function (self)
 		wielded_per = 0.5,
 		wielded_set = false,
 		wielded_vis = false,
-		from = get_max(unit, self._breed_name),
-		to = get_min(unit),
+		from = _materialize_max_value(unit, self._body_size),
+		to = _materialize_min_value(unit),
 		eyes_per = eyes_percentage,
 	}
 	self._should_update = true
@@ -351,21 +350,19 @@ CutsceneCharacter.component_data = {
 			"npc",
 		},
 	},
-	breed_name = {
-		ui_name = "Breed Name",
+	body_size = {
+		ui_name = "Body Size",
 		ui_type = "combo_box",
 		value = "none",
 		options_keys = {
 			"None",
-			"Human",
-			"Ogryn",
-			"Companion Dog",
+			"Human Sized",
+			"Ogryn Sized",
 		},
 		options_values = {
 			"none",
-			"human",
-			"ogryn",
-			"companion_dog",
+			"human_sized",
+			"ogryn_sized",
 		},
 	},
 	companion_inclusion_setting = {

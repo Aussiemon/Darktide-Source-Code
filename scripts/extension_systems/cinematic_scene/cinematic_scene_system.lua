@@ -2,7 +2,6 @@
 
 require("scripts/extension_systems/cinematic_scene/cinematic_scene_extension")
 
-local Breeds = require("scripts/settings/breed/breeds")
 local CinematicSceneSettings = require("scripts/settings/cinematic_scene/cinematic_scene_settings")
 local CinematicSceneTemplates = require("scripts/settings/cinematic_scene/cinematic_scene_templates")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")

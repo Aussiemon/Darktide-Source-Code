@@ -349,10 +349,6 @@ MultiplayerSessionManager.update = function (self, dt)
 
 				connection_object:boot_complete()
 
-				if connection_object:has_reserved() then
-					connection_object:ready_to_join()
-				end
-
 				local host_channel_id = Managers.connection:host_channel()
 				local loaders = self:_get_loaders()
 				local loading_client = LoadingClient:new(Managers.connection:network_event_delegate(), host_channel_id, loaders)

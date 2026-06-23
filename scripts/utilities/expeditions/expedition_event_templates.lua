@@ -181,7 +181,7 @@ local function _create_lightning_explosion(world, physics_world, explosion_setti
 	local power_level = explosion_settings.power_level
 	local attack_type = AttackSettings.attack_types.explosion
 
-	Explosion.create_explosion(world, physics_world, hit_position, Vector3.up(), lightning_unit, explosion_template, power_level, charge_level, attack_type, nil, nil, nil, nil, nil, nil, nil, nil, true)
+	Explosion.create_explosion(world, physics_world, hit_position, Quaternion.identity(), lightning_unit, explosion_template, power_level, charge_level, attack_type, nil, nil, nil, nil, nil, nil, nil, nil, true)
 end
 
 local AMBIENT_LIGHTNINGS_DAMAGE_DISTANCE = 25
@@ -243,7 +243,7 @@ local function _add_lightning_strikes_close_to_position(context, data, settings,
 		if hit_position then
 			local random_rotation = Quaternion.axis_angle(Vector3.forward(), random_angle_multiplier * (math.pi * 2))
 
-			deal_damage = deal_damage or _should_ambient_lightning_deal_damage(hit_position)
+			deal_damage = (not Managers.state.cinematic:cinematic_active() or false) and (deal_damage or _should_ambient_lightning_deal_damage(hit_position))
 
 			local entry = {
 				boxed_position = Vector3Box(position),
@@ -476,105 +476,6 @@ expedition_event_templates.spawn_nurgle_flies = {
 			minion_spawn_manager:despawn_minion(minion_unit)
 
 			data.minion_unit = nil
-		end
-	end,
-}
-expedition_event_templates.lightning_strikes_backdrop = {
-	settings = ExpeditionEventSettings.lightning_strikes_backdrop,
-	init = function (data, template, context, time_into_event)
-		local settings = template.settings
-		local PI = math.pi
-		local world = context.world
-
-		data.dynamic_unit_spawning = {}
-		data.lightning_units = {}
-
-		local seed = data.seed
-
-		time_into_event = time_into_event or 0
-
-		local distance_from_level_origo = settings.distance_from_level_origo
-		local distance_from_level_origo_min = distance_from_level_origo.min
-		local distance_from_level_origo_max = distance_from_level_origo.max
-		local amount_of_strikes = settings.amount_of_strikes
-		local amount_of_strikes_min = amount_of_strikes.min
-		local amount_of_strikes_max = amount_of_strikes.max
-		local num_distance_strikes
-
-		seed, num_distance_strikes = math.next_random(seed, amount_of_strikes_min, amount_of_strikes_max)
-
-		_add_lightning_strikes_close_to_position(context, data, settings, time_into_event, Vector3.zero(), distance_from_level_origo_min, distance_from_level_origo_max, num_distance_strikes, false, seed)
-
-		data.seed = seed
-	end,
-	update = function (data, template, context, dt, t)
-		local settings = template.settings
-		local end_time = data.end_time
-
-		if end_time then
-			if end_time >= 0 then
-				data.end_time = end_time - dt
-			else
-				data.end_time = nil
-				data.done = true
-			end
-
-			return
-		end
-
-		local fx_system = Managers.state.extension:system("fx_system")
-		local dynamic_unit_spawning = data.dynamic_unit_spawning
-
-		if #dynamic_unit_spawning > 0 then
-			local lightning_units = data.lightning_units
-
-			for i = #dynamic_unit_spawning, 1, -1 do
-				local dynamic_unit_data = dynamic_unit_spawning[i]
-				local delayed_spawn_time = dynamic_unit_data.delayed_spawn_time
-
-				if delayed_spawn_time <= 0 then
-					local world = context.world
-					local hit_position = dynamic_unit_data.hit_position:unbox()
-					local lightning_unit_name = settings.lightning_unit_name
-					local lightning_unit = World.spawn_unit_ex(world, lightning_unit_name, nil, hit_position)
-
-					lightning_units[#lightning_units + 1] = lightning_unit
-
-					if context.is_server then
-						local strike_sound = settings.strike_sound
-
-						if strike_sound then
-							fx_system:trigger_wwise_event(strike_sound, hit_position)
-						end
-					end
-
-					table.remove(dynamic_unit_spawning, i)
-				else
-					dynamic_unit_data.delayed_spawn_time = delayed_spawn_time - dt
-
-					local position = dynamic_unit_data.boxed_position:unbox()
-					local hit_position = dynamic_unit_data.hit_position:unbox()
-				end
-			end
-		else
-			data.end_time = settings.end_time or 1
-		end
-	end,
-	done = function (data, template, context)
-		return data.done
-	end,
-	destroy = function (data, template, context)
-		local spawner_manager = Managers.state.unit_spawner
-		local lightning_units = data.lightning_units
-
-		if lightning_units then
-			for i = 1, #lightning_units do
-				local lightning_unit = lightning_units[i]
-
-				if Unit.alive(lightning_unit) then
-					spawner_manager:mark_for_deletion(lightning_unit)
-				end
-			end
 		end
 	end,
 }

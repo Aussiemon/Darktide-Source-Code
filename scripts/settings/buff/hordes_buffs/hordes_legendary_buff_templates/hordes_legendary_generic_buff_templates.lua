@@ -242,7 +242,7 @@ templates.hordes_buff_explode_enemies_on_ranged_kill = {
 		local explosion_position = dying_unit_position + Vector3.up()
 		local explosion_template = ExplosionTemplates.frag_grenade
 
-		Explosion.create_explosion(template_context.world, template_context.physics_world, explosion_position, Vector3.up(), template_context.unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
+		Explosion.create_explosion(template_context.world, template_context.physics_world, explosion_position, Quaternion.identity(), template_context.unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
 	end,
 }
 
@@ -743,7 +743,7 @@ templates.hordes_buff_explosion_on_toughness_broken = {
 		local explosion_position = player_position + Vector3(0, 0, 0.65)
 		local explosion_template = ExplosionTemplates.hordes_buff_explosion_on_toughness_broken
 
-		Explosion.create_explosion(template_context.world, template_context.physics_world, explosion_position, nil, template_context.unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
+		Explosion.create_explosion(template_context.world, template_context.physics_world, explosion_position, Quaternion.identity(), template_context.unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
 	end,
 }
 

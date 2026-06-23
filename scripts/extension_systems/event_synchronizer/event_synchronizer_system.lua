@@ -10,7 +10,7 @@ require("scripts/extension_systems/event_synchronizer/side_mission_pickup_synchr
 require("scripts/extension_systems/event_synchronizer/timed_synchronizer_extension")
 
 local EventSynchronizerSystem = class("EventSynchronizerSystem", "ExtensionSystemBase")
-local RPCS = {
+local CLIENT_RPCS = {
 	"rpc_event_synchronizer_set_mission_active",
 	"rpc_event_synchronizer_started",
 	"rpc_event_synchronizer_paused",
@@ -24,17 +24,30 @@ local RPCS = {
 	"rpc_event_synchronizer_demolition_target_override",
 	"rpc_event_synchronizer_set_servo_skull",
 }
+local SERVER_RPCS = {}
 
 EventSynchronizerSystem.init = function (self, context, system_init_data, ...)
 	EventSynchronizerSystem.super.init(self, context, system_init_data, ...)
 
-	self._network_event_delegate = context.network_event_delegate
-
-	self._network_event_delegate:register_session_events(self, unpack(RPCS))
+	if self._is_server then
+		self._network_event_delegate:register_session_events(self, unpack(SERVER_RPCS))
+	else
+		self._network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
+	end
 
 	self._mission_objective_zone_synchronizers = {}
 	self._loaded_view = false
 	self._scanner_display_view_requests = 0
+end
+
+EventSynchronizerSystem.destroy = function (self)
+	if self._is_server then
+		self._network_event_delegate:unregister_events(unpack(SERVER_RPCS))
+	else
+		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
+	end
+
+	EventSynchronizerSystem.super.destroy(self)
 end
 
 EventSynchronizerSystem.load_scanner_view = function (self)
@@ -63,11 +76,6 @@ end
 
 EventSynchronizerSystem.on_location_setup = function (self)
 	self:call_gameplay_post_init_on_extensions()
-end
-
-EventSynchronizerSystem.destroy = function (self)
-	self._network_event_delegate:unregister_events(unpack(RPCS))
-	EventSynchronizerSystem.super.destroy(self)
 end
 
 EventSynchronizerSystem.hot_join_sync = function (self, sender, channel)

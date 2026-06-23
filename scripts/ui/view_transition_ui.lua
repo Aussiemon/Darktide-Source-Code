@@ -3,13 +3,14 @@
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local ViewTransitionUI = class("ViewTransitionUI", "ConstantElementBase")
 
-ViewTransitionUI.init = function (self, render_settings)
+ViewTransitionUI.init = function (self, overlay_ui_world, render_settings)
 	render_settings = render_settings or {
 		timer_name = "ui",
 		viewport_layer = 1,
 		viewport_type = "overlay",
 		world_layer = 990,
 	}
+	self._external_world = overlay_ui_world
 	self._render_settings = render_settings
 	self._fade_color = {
 		x = 0,
@@ -23,14 +24,19 @@ ViewTransitionUI._setup_renderer = function (self)
 	local name_prefix = tostring(self) .. "_" .. class_name
 	local render_settings = self._render_settings
 	local ui_manager = Managers.ui
-	local timer_name = render_settings.timer_name
-	local world_layer = render_settings.world_layer
-	local world_name = name_prefix .. "_ui_world"
 
-	self._world = ui_manager:create_world(world_name, world_layer, timer_name)
-	self._world_name = world_name
-	self._world_draw_layer = world_layer
-	self._world_default_layer = world_layer
+	if self._external_world then
+		self._world = self._external_world
+	else
+		local timer_name = render_settings.timer_name
+		local world_layer = render_settings.world_layer
+		local world_name = name_prefix .. "_ui_world"
+
+		self._world = ui_manager:create_world(world_name, world_layer, timer_name)
+		self._world_name = world_name
+		self._world_draw_layer = world_layer
+		self._world_default_layer = world_layer
+	end
 
 	local viewport_name = name_prefix .. "_ui_world_viewport"
 	local viewport_type = render_settings.viewport_type
@@ -57,7 +63,10 @@ ViewTransitionUI._destroy_renderer = function (self)
 		local viewport_name = self._viewport_name
 
 		ScriptWorld.destroy_viewport(world, viewport_name)
-		Managers.ui:destroy_world(world)
+
+		if not self._external_world then
+			Managers.ui:destroy_world(world)
+		end
 
 		self._background_viewport = nil
 		self._viewport_name = nil
@@ -109,7 +118,7 @@ ViewTransitionUI.update = function (self, dt, t, should_transition, transition_p
 		local gui = ui_renderer.gui
 		local screen_width = RESOLUTION_LOOKUP.width
 		local screen_height = RESOLUTION_LOOKUP.height
-		local position = Vector3(0, 0, 999)
+		local position = Vector3(0, 0, 990)
 		local size = Vector2(screen_width, screen_height)
 		local color = Color(255 * anim_progress, self._fade_color.x, self._fade_color.y, self._fade_color.z)
 

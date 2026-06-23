@@ -604,12 +604,14 @@ local function _scale_value_by_type(value, display_type)
 		value = (1 - 1 / value) * 100
 	elseif display_type == "percentage" then
 		value = value * 100
+	elseif display_type == "angle" then
+		value = math.radians_to_degrees(value)
 	end
 
 	return value
 end
 
-function _value_to_text(value, is_signed)
+local function _value_to_text(value, is_signed)
 	if is_signed and value >= 0 then
 		return string.format("+%0.2f", value)
 	end
@@ -617,7 +619,7 @@ function _value_to_text(value, is_signed)
 	return string.format("%0.2f", value)
 end
 
-function _get_stats_text(stat)
+local function _get_stats_text(stat)
 	local override_data = stat.override_data or EMPTY_TABLE
 	local type_data = stat.type_data
 	local display_type = override_data.display_type or type_data.display_type

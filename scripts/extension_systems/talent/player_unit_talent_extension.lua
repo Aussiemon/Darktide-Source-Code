@@ -1,9 +1,9 @@
 ﻿-- chunkname: @scripts/extension_systems/talent/player_unit_talent_extension.lua
 
 local CharacterSheet = require("scripts/utilities/character_sheet")
-local WarpCharge = require("scripts/utilities/warp_charge")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+local WarpCharge = require("scripts/utilities/warp_charge")
 local ability_types = table.keys(PlayerCharacterConstants.ability_configuration)
 local PlayerUnitTalentExtension = class("PlayerUnitTalentExtension")
 
@@ -71,10 +71,6 @@ end
 
 PlayerUnitTalentExtension.buff_template_tier = function (self, buff_template_name)
 	return self._buff_template_tiers[buff_template_name]
-end
-
-PlayerUnitTalentExtension.update = function (self, unit, dt, t)
-	return
 end
 
 PlayerUnitTalentExtension.fixed_update = function (self, unit, dt, t, fixed_frame, context, ...)
@@ -195,13 +191,13 @@ PlayerUnitTalentExtension._apply_talents = function (self, archetype, talents, f
 	local unit_data_extension = owner_player and ScriptUnit.has_extension(owner_player.player_unit, "unit_data_system")
 	local character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
 	local is_hogtied = character_state_component and PlayerUnitStatus.is_hogtied(character_state_component)
-	local have_companions = companion_spawner_extension and companion_spawner_extension:have_companions()
+	local has_any_spawned_companions = companion_spawner_extension and companion_spawner_extension:has_any_spawned_companions()
 
 	if not is_hogtied and should_have_companion and not is_training_grounds then
-		companion_spawner_extension:despawn_units()
-		companion_spawner_extension:spawn_units()
-	elseif not should_have_companion and have_companions then
-		companion_spawner_extension:despawn_units()
+		companion_spawner_extension:despawn_companion_units()
+		companion_spawner_extension:spawn_companion_units()
+	elseif not should_have_companion and has_any_spawned_companions then
+		companion_spawner_extension:despawn_companion_units()
 	end
 end
 

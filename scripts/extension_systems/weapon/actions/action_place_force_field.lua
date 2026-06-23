@@ -44,7 +44,11 @@ ActionPlaceForceField._place_unit = function (self, action_settings, position, r
 	local use_ability_charge = action_settings.use_ability_charge
 
 	if use_ability_charge then
-		self:_use_ability_charge()
+		local ability_extension = self._ability_extension
+		local ability_type = action_settings.ability_type
+
+		self._remaining_ability_charges_before_use_at_start = ability_extension:remaining_ability_charges(ability_type)
+		self._ability_charges_used = self:_use_ability_charge()
 	end
 
 	local owner_unit = self._player_unit
@@ -75,6 +79,8 @@ ActionPlaceForceField.finish = function (self, reason, data, t, time_in_action)
 			param_table.position = Vector3Box(position)
 			param_table.rotation = QuaternionBox(rotation)
 			param_table.force_field_unit = self._force_field_unit
+			param_table.ability_charges_used = self._ability_charges_used or 1
+			param_table.remaining_ability_charges_before_use = self._remaining_ability_charges_before_use_at_start
 
 			buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
 		end

@@ -41,6 +41,7 @@ _extract_templates("scripts/settings/minion_visual_loadout/templates/cultist/cul
 _extract_templates("scripts/settings/minion_visual_loadout/templates/cultist/cultist_grenadier_visual_loadout_templates")
 _extract_templates("scripts/settings/minion_visual_loadout/templates/cultist/cultist_gunner_visual_loadout_templates")
 _extract_templates("scripts/settings/minion_visual_loadout/templates/cultist/cultist_melee_visual_loadout_templates")
+_extract_templates("scripts/settings/minion_visual_loadout/templates/cultist/cultist_vanguard_visual_loadout_templates")
 _extract_templates("scripts/settings/minion_visual_loadout/templates/cultist/cultist_mutant_mutator_visual_loadout_templates")
 _extract_templates("scripts/settings/minion_visual_loadout/templates/cultist/cultist_mutant_visual_loadout_templates")
 _extract_templates("scripts/settings/minion_visual_loadout/templates/cultist/cultist_ritualist_visual_loadout_templates")
@@ -61,5 +62,7 @@ _extract_templates("scripts/settings/minion_visual_loadout/templates/renegade/re
 _extract_templates("scripts/settings/minion_visual_loadout/templates/renegade/renegade_sniper_visual_loadout_templates")
 _extract_templates("scripts/settings/minion_visual_loadout/templates/renegade/renegade_twin_captain_two_visual_loadout_templates")
 _extract_templates("scripts/settings/minion_visual_loadout/templates/renegade/renegade_twin_captain_visual_loadout_templates")
+_extract_templates("scripts/settings/minion_visual_loadout/templates/renegade/renegade_vanguard_visual_loadout_templates")
+_extract_templates("scripts/settings/minion_visual_loadout/templates/companion/companion_servo_skull_visual_loadout_templates")
 
 return settings("MinionVisualLoadoutTemplates", minion_visual_loadout_templates)

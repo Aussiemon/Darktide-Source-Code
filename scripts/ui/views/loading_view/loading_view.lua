@@ -55,6 +55,7 @@ LoadingView.on_enter = function (self)
 end
 
 LoadingView.draw_while_loading = function (self, dt, t)
+	Managers.ui:render_loading_icon()
 	Managers.ui:render_black_background()
 end
 

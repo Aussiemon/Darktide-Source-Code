@@ -89,8 +89,10 @@ ability_template.equipped_ability_effect_scripts = {
 	"TargetedDashEffects",
 	"LungeEffects",
 }
-ability_template.targeting_fx = {
-	effect_name = "content/fx/particles/abilities/adamant/adamant_charge_aim",
+ability_template.equipped_ability_effect_scripts_tweak_data = {
+	targeting_fx = {
+		effect_name = "content/fx/particles/abilities/adamant/adamant_charge_aim",
+	},
 }
 
 return ability_template

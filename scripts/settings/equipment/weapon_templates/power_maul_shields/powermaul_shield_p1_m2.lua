@@ -1537,15 +1537,11 @@ weapon_template.actions = {
 		end,
 		damage_profile = DamageProfileTemplates.powermaul_shield_block_special,
 		damage_type = damage_types.shield_push,
-		stat_buff_keywords = {
-			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.melee_attack_speed,
-		},
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed,
 		},
-		action_condition_func = function (action_settings, condition_func_params, used_input)
+		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			local inventory_slot_component = condition_func_params.inventory_slot_component
 
 			if not inventory_slot_component then
@@ -1624,10 +1620,6 @@ weapon_template.actions = {
 		end,
 		damage_profile = DamageProfileTemplates.powermaul_shield_block_special,
 		damage_type = damage_types.shield_push,
-		stat_buff_keywords = {
-			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.melee_attack_speed,
-		},
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed,
@@ -1635,6 +1627,37 @@ weapon_template.actions = {
 		block_attack_types = {
 			[attack_types.melee] = true,
 			[attack_types.ranged] = true,
+		},
+	},
+	action_inspect_3p = {
+		action_prevents_jump = true,
+		block_first_person_rotation = true,
+		can_crouch = false,
+		can_jump = false,
+		force_look = true,
+		kind = "inspect_3p",
+		lock_view = false,
+		skip_3p_anims = false,
+		stop_input = "inspect_stop",
+		total_time = math.huge,
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
+		crosshair = {
+			crosshair_type = "inspect",
+		},
+		allowed_chain_actions = {
+			inspect_3p_stop = {
+				action_name = "action_inspect",
+				chain_time = 1.1,
+			},
+		},
+		action_movement_curve = {
+			{
+				modifier = 0,
+				t = 0,
+			},
+			start_modifier = 0,
 		},
 	},
 	action_inspect = {
@@ -1648,6 +1671,12 @@ weapon_template.actions = {
 		total_time = math.huge,
 		crosshair = {
 			crosshair_type = "inspect",
+		},
+		allowed_chain_actions = {
+			inspect_3p_start = {
+				action_name = "action_inspect_3p",
+				chain_time = 0.75,
+			},
 		},
 	},
 }
@@ -2000,5 +2029,13 @@ weapon_template.weapon_card_data = {
 		icon = "activate",
 	},
 }
+
+weapon_template.action_inspect_3p_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_inspect_3p"
+end
+
+weapon_template.action_inspect_3p_base_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_inspect"
+end
 
 return weapon_template

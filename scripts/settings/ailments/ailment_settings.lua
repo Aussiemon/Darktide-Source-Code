@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/settings/ailments/ailment_settings.lua
 
 local ailment_settings = {}
-local effects = table.enum("bleedfire", "burning_fast", "burning_slow", "burning", "chain_lightning_ability", "chem_burning_fast", "chem_burning_slow", "chem_burning", "electrocution", "freezing_fast", "freezing_slow", "freezing", "gas_fast", "gas_slow", "gas", "stun", "toxin_gas", "broker_brittleness", "warpfire")
+local effects = table.enum("bleedfire", "broker_brittleness", "burning_fast", "burning_slow", "burning", "chain_lightning_ability", "chem_burning_fast", "chem_burning_slow", "chem_burning", "electrocution", "freezing_fast", "freezing_slow", "freezing", "gas_fast", "gas_slow", "gas", "phosphor", "stun", "toxin_gas", "warpfire")
 
 ailment_settings.effects = effects
 ailment_settings.effect_templates = {
@@ -267,6 +267,20 @@ ailment_settings.effect_templates = {
 			},
 			{
 				resource = "content/fx/textures/ramps/metal_impact_ramp_01",
+				slot = "effect_gradient",
+			},
+		},
+	},
+	[effects.phosphor] = {
+		duration = 5.5,
+		offset_time = 0.5,
+		material_textures = {
+			{
+				resource = "content/textures/ailment_masks/toxin_mask_01",
+				slot = "effect_mask",
+			},
+			{
+				resource = "content/fx/textures/ramps/white_ramp_01",
 				slot = "effect_gradient",
 			},
 		},

@@ -279,7 +279,6 @@ ui_item_slot_title_text_style.text_horizontal_alignment = "center"
 ui_item_slot_title_text_style.text_vertical_alignment = "bottom"
 ui_item_slot_title_text_style.horizontal_alignment = "center"
 ui_item_slot_title_text_style.vertical_alignment = "top"
-ui_item_slot_title_text_style.vertical_alignment = "top"
 ui_item_slot_title_text_style.font_size = 18
 ui_item_slot_title_text_style.offset = {
 	0,

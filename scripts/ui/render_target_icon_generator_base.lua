@@ -1,7 +1,8 @@
 ﻿-- chunkname: @scripts/ui/render_target_icon_generator_base.lua
 
-local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local RenderTargetAtlasGenerator = require("scripts/ui/render_target_atlas_generator")
+local RenderTargetIconGeneratorInterface = require("scripts/ui/render_target_icon_generator_interface")
+local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local DEBUG = false
 local REQUEST_PREVIEWER_FRAME_DELAY = 5
 local RenderTargetIconGeneratorBase = class("RenderTargetIconGeneratorBase")
@@ -541,5 +542,7 @@ end
 RenderTargetIconGeneratorBase._camera_unit = function (self)
 	return
 end
+
+implements(RenderTargetIconGeneratorBase, RenderTargetIconGeneratorInterface)
 
 return RenderTargetIconGeneratorBase

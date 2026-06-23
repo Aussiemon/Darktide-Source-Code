@@ -38,7 +38,7 @@ local SaveDummy = {
 }
 
 Save.implementation = function (use_cloud)
-	if PLATFORM == "xbs" or PLATFORM == "linux" then
+	if IS_XBS or PLATFORM == "linux_server" then
 		return SaveDummy
 	elseif use_cloud and HAS_STEAM and Cloud.enabled() then
 		return Cloud

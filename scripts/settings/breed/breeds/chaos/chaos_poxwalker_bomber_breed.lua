@@ -36,6 +36,7 @@ local breed_data = {
 	game_object_type = "minion_special_melee",
 	heat = 0.2,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
+	lock_distance = 12,
 	navigation_propagation_box_extent = 200,
 	not_bot_target = true,
 	player_locomotion_constrain_radius = 0.35,

@@ -122,6 +122,7 @@ local sound_events = {
 	"wwise/events/player/play_pick_up_valuable",
 	"wwise/events/player/play_pickup_metal_object",
 	"wwise/events/player/play_pick_up_memory_relic",
+	"wwise/events/player/play_player_ability_discharge",
 	"wwise/events/player/play_player_vortex_grabbed_enter",
 	"wwise/events/player/play_player_vortex_grabbed_enter_husk",
 	"wwise/events/player/play_player_vortex_grabbed_exit",
@@ -141,6 +142,7 @@ local sound_events = {
 	"wwise/events/ui/play_hud_notifications_collectible_pickup_helped",
 	"wwise/events/ui/play_hud_notifications_collectible_pickup",
 	"wwise/events/ui/play_ui_item_result_ovelay_tier_3",
+	"wwise/events/weapon/play_bullet_hits_arc",
 	"wwise/events/weapon/play_bullet_hits_explosive_gen_husk",
 	"wwise/events/weapon/play_bullet_hits_explosive_gen",
 	"wwise/events/weapon/play_bullet_hits_explosive_big_gen",
@@ -247,6 +249,9 @@ local sound_events = {
 	"wwise/events/player/play_pick_up_full_ammo",
 	"wwise/events/world/play_expeditions_attack_valkyrie_ready_missiles",
 	"wwise/events/world/play_expeditions_attack_valkyrie_shoot",
+	"wwise/events/player/play_pick_up_event_artifact_small",
+	"wwise/events/player/play_pick_up_event_artifact_medium",
+	"wwise/events/player/play_pick_up_event_artifact_large",
 }
 
 return sound_events

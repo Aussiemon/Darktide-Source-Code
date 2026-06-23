@@ -683,13 +683,11 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 
 		if draw_expedition_currency then
 			local expedition_currency = self:_get_expedition_currency(player)
-			local expedition_loot = self:_get_expedition_loot(player)
 
-			if self._expedition_currency ~= expedition_currency or self._expedition_loot ~= expedition_loot then
-				self._expedition_loot = expedition_loot
+			if self._expedition_currency ~= expedition_currency then
 				self._expedition_currency = expedition_currency
 
-				self:_set_expedition_currency_display(expedition_currency or 1, expedition_loot or 0)
+				self:_set_expedition_currency_display(expedition_currency or 1)
 			end
 		end
 
@@ -907,8 +905,9 @@ HudElementPlayerPanelBase._get_grenade_ability_status = function (self, player, 
 		local ability = equipped_abilities.grenade_ability
 		local ability_template_name = ability and ability.ability_template
 		local ability_template = ability_template_name and AbilityTemplates[ability_template_name]
+		local hud_icon_small = ability and ability.hud_icon_small or ability_template and ability_template.hud_icon_small
 
-		hud_icon = ability_template and ability_template.hud_icon_small
+		hud_icon = hud_icon_small
 	end
 
 	local max_status = 3
@@ -1761,21 +1760,7 @@ HudElementPlayerPanelBase._get_expedition_currency = function (self, player)
 	return 0
 end
 
-HudElementPlayerPanelBase._get_expedition_loot = function (self, player)
-	local game_mode_manager = Managers.state.game_mode
-	local game_mode = game_mode_manager:game_mode()
-
-	if player:is_human_controlled() then
-		local peer_id = player:peer_id()
-		local expedition_loot_amount = game_mode:expedition_loot(peer_id)
-
-		return expedition_loot_amount or 0
-	end
-
-	return 0
-end
-
-HudElementPlayerPanelBase._set_expedition_currency_display = function (self, currency_amount, loot_amount)
+HudElementPlayerPanelBase._set_expedition_currency_display = function (self, currency_amount)
 	local text = currency_amount and tostring(currency_amount) .. " " .. Localize("loc_expeditions_currency_name_hud") .. "" or ""
 	local widget = self._widgets_by_name.expedition_currency
 

@@ -50,6 +50,9 @@ local settings = {
 	hotkeys = {
 		hotkey_system = "system_view",
 	},
+	hotkeys_disabled_on_gamepad = {
+		hotkey_inventory = true,
+	},
 	default_init_scripted_scenario = {
 		alias = "training_grounds",
 		name = "default",

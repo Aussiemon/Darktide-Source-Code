@@ -1445,7 +1445,7 @@ local function _forceful_explosion(template_data, template_context)
 	local position = Unit.local_position(unit, 1)
 	local attack_type = AttackSettings.attack_types.explosion
 
-	Explosion.create_explosion(world, physics_world, position + Vector3.up(), nil, unit, explosion_template, power_level, 1, attack_type)
+	Explosion.create_explosion(world, physics_world, position + Vector3.up(), Quaternion.identity(), unit, explosion_template, power_level, 1, attack_type)
 end
 
 templates.adamant_forceful_stagger = {
@@ -2142,7 +2142,7 @@ templates.adamant_disable_companion_buff = {
 			local companion_spawner_extension = ScriptUnit.has_extension(unit, "companion_spawner_system")
 
 			if companion_spawner_extension then
-				companion_spawner_extension:despawn_units()
+				companion_spawner_extension:despawn_companion_units()
 			end
 		end
 	end,

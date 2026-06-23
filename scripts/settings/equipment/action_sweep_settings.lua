@@ -43,7 +43,8 @@ local action_sweep_settings = {
 					return WORST_HIT_ZONE_PRIORITY
 				end
 
-				local blocking_angle = math.degrees_to_radians(70)
+				local template = shield_extension:template()
+				local blocking_angle = template.blocking_angle
 				local unit_rotation = Unit.local_rotation(unit, 1)
 				local unit_forward = Quaternion.forward(unit_rotation)
 				local unit_position = POSITION_LOOKUP[unit]
@@ -62,6 +63,7 @@ local action_sweep_settings = {
 		end,
 	},
 	multi_sweep_process_mode = table.enum("shared", "separate"),
+	hit_anim_types = table.enum("default", "special_active"),
 }
 
 return settings("ActionSweepSettings", action_sweep_settings)

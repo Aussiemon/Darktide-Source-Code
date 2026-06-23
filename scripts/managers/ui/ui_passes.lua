@@ -952,7 +952,7 @@ UIPasses.hotspot = {
 		local scale = ui_renderer.scale
 		local cursor_position
 
-		if PLATFORM == "xbs" and not gamepad_active then
+		if IS_XBS and not gamepad_active then
 			cursor_position = Vector3(cursor[1], cursor[2], cursor[3])
 		else
 			cursor_position = UIResolution.inverse_scale_vector(cursor, inverse_scale)

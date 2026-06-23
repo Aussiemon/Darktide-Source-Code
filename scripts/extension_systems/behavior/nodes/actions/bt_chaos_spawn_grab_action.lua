@@ -498,6 +498,7 @@ BtChaosSpawnGrabAction._update_smashing = function (self, unit, scratchpad, acti
 end
 
 local HUMANOID_BREEDS = {
+	cryptic = true,
 	human = true,
 }
 
@@ -703,14 +704,17 @@ local BELOW = 2
 local LATERAL = 2
 local MAX_STEPS, MAX_TIME = 20, 1.25
 local THROW_TELEPORT_UP_OFFSET = {
+	cryptic = 2.7,
 	human = 2.7,
 	ogryn = 2.15,
 }
 local THROW_LEFT_OFFSET = {
+	cryptic = 1.65,
 	human = 1.65,
 	ogryn = 2,
 }
 local THROW_FWD_OFFSET = {
+	cryptic = 2,
 	human = 2,
 	ogryn = 2,
 }

@@ -248,6 +248,7 @@ ChainLightningLinkEffects.init = function (self, context, slot, weapon_template,
 	self._owner_unit = owner_unit
 	self._weapon_actions = weapon_template.actions
 	self._buff_extension = ScriptUnit.extension(owner_unit, "buff_system")
+	self._weapon_extension = ScriptUnit.has_extension(owner_unit, "weapon_system")
 	self._fx_extension = context.fx_extension
 	self._visual_loadout_extension = context.visual_loadout_extension
 
@@ -372,6 +373,13 @@ ChainLightningLinkEffects._find_root_targets = function (self, t)
 		local chain_root_node = self._chain_root_node
 		local time_in_action = t - self._weapon_action_component.start_t
 		local chain_settings = action_settings.chain_settings
+
+		if action_settings.weapon_chain_lightning_template then
+			local weapon_extension = self._weapon_extension
+
+			chain_settings = weapon_extension and weapon_extension:weapon_chain_lightning_template() or action_settings.husk_chain_lightning_template
+		end
+
 		local depth = 0
 		local use_random = true
 		local max_targets = ChainLightning.max_targets(time_in_action, chain_settings, depth, use_random)
@@ -563,6 +571,13 @@ ChainLightningLinkEffects._find_new_targets = function (self, t)
 	local action_settings = Action.current_action_settings_from_component(weapon_action_component, self._weapon_actions)
 	local stat_buffs = self._buff_extension:stat_buffs()
 	local chain_settings = action_settings and action_settings.chain_settings
+
+	if action_settings and action_settings.weapon_chain_lightning_template then
+		local weapon_extension = self._weapon_extension
+
+		chain_settings = weapon_extension and weapon_extension:weapon_chain_lightning_template() or action_settings.husk_chain_lightning_template
+	end
+
 	local time_in_action = t - weapon_action_component.start_t
 	local max_angle, close_max_angle, vertical_max_angle, max_z_diff, max_jumps, radius, jump_time = ChainLightning.targeting_parameters(time_in_action, chain_settings, stat_buffs)
 

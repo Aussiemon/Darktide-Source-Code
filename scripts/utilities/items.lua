@@ -2,17 +2,25 @@
 
 local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local ItemSourceSettings = require("scripts/settings/item/item_source_settings")
+local ItemSourceSettings = require("scripts/settings/item/item_source_settings_new")
 local LiveEvents = require("scripts/settings/live_event/live_events")
 local MasterItems = require("scripts/backend/master_items")
+local Promise = require("scripts/foundation/utilities/promise")
 local RankSettings = require("scripts/settings/item/rank_settings")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local Promise = require("scripts/foundation/utilities/promise")
 local unit_alive = Unit.alive
 local expertise_multiplier = 10
 local max_weapon_preview = 0.8
+local WORKFLOW_STATE_ORDER = table.mirror_array_inplace({
+	"TEMPLATE",
+	"BLOCKOUT",
+	"PROTOTYPE",
+	"FUNCTIONAL",
+	"SHIPPABLE",
+	"RELEASABLE",
+})
 local Items = {}
 
 local function _character_save_data()
@@ -420,7 +428,7 @@ end
 
 Items.trait_textures = function (trait_item, rarity)
 	local icon = trait_item and trait_item.icon ~= "" and trait_item.icon
-	local texture_icon = icon or "content/ui/textures/icons/traits/weapon_trait_default"
+	local texture_icon = icon or "content/ui/textures/icons/traits/weapon_trait_unknown"
 	local texture_frame = RankSettings[rarity or 0].trait_frame_texture
 
 	return texture_icon, texture_frame
@@ -834,13 +842,25 @@ Items.keywords_text = function (item)
 	return text
 end
 
+local SHOW_ARCHETYPE_RESTRICTION_ITEM_TYPES = {
+	ARMS = true,
+	CRYPTIC_ARMS = true,
+	CRYPTIC_LEGS = true,
+	GEAR_EXTRA_COSMETIC = true,
+	GEAR_HEAD = true,
+	GEAR_LOWERBODY = true,
+	GEAR_UPPERBODY = true,
+	LEGS = true,
+	SET = true,
+}
+
 Items.restriction_text = function (item, prefer_iconography)
 	local item_type = item.item_type and Utf8.upper(item.item_type) or ""
 
 	if item_type == "WEAPON_SKIN" then
 		return Items.weapon_skin_requirement_text(item)
-	elseif item_type == "GEAR_UPPERBODY" or item_type == "GEAR_EXTRA_COSMETIC" or item_type == "GEAR_HEAD" or item_type == "GEAR_LOWERBODY" or item_type == "SET" then
-		return Items.class_requirement_text(item, prefer_iconography)
+	elseif SHOW_ARCHETYPE_RESTRICTION_ITEM_TYPES[item_type] then
+		return Items.archetype_requirement_text(item, prefer_iconography)
 	end
 
 	return "", false
@@ -889,7 +909,7 @@ end
 
 local _temp_archetype_restriction_list = {}
 
-Items.set_item_class_requirement_text = function (item)
+Items.set_item_archetype_requirement_text = function (item)
 	local Archetypes = require("scripts/settings/archetype/archetypes")
 
 	table.clear(_temp_archetype_restriction_list)
@@ -928,14 +948,14 @@ Items.set_item_class_requirement_text = function (item)
 	return text, true
 end
 
-local function _class_requirement_entries(item, available_archetypes)
+local function _archetype_requirement_entries(item, available_archetypes)
 	local item_type = item.item_type
 
 	if item_type == "SET" then
 		local items = item.items
 
 		for i = 1, #items do
-			_class_requirement_entries(items[i], available_archetypes)
+			_archetype_requirement_entries(items[i], available_archetypes)
 		end
 
 		return available_archetypes
@@ -959,9 +979,9 @@ local function _class_requirement_entries(item, available_archetypes)
 	return available_archetypes
 end
 
-Items.class_requirement_text = function (item, prefer_iconography)
+Items.archetype_requirement_text = function (item, prefer_iconography)
 	local Archetypes = require("scripts/settings/archetype/archetypes")
-	local entries = _class_requirement_entries(item, table.keys(Archetypes))
+	local entries = _archetype_requirement_entries(item, table.keys(Archetypes))
 
 	if #entries == 0 or #entries == table.size(Archetypes) then
 		return nil, false
@@ -1071,9 +1091,7 @@ Items.equip_weapon_skin = function (weapon_item, skin_item)
 	return Managers.data_service.gear:attach_item_as_override(weapon_gear_id, attach_point, skin_gear_id)
 end
 
-Items.equip_weapon_trinket = function (weapon_item, trinket_item, optional_path)
-	local weapon_gear_id = weapon_item.gear_id
-	local trinket_gear_id = trinket_item and trinket_item.gear_id
+Items.get_trinket_attach_point = function (weapon_item, trinket_item, optional_path)
 	local attach_point = optional_path
 
 	if not attach_point then
@@ -1119,6 +1137,14 @@ Items.equip_weapon_trinket = function (weapon_item, trinket_item, optional_path)
 		attach_point = attach_point or link_attachment_item_to_slot(master_item, "slot_trinket_2", trinket_item)
 	end
 
+	return attach_point
+end
+
+Items.equip_weapon_trinket = function (weapon_item, trinket_item, optional_path)
+	local weapon_gear_id = weapon_item.gear_id
+	local trinket_gear_id = trinket_item and trinket_item.gear_id
+	local attach_point = Items.get_trinket_attach_point(weapon_item, trinket_item, optional_path)
+
 	if attach_point then
 		return Managers.data_service.gear:attach_item_as_override(weapon_gear_id, attach_point .. ".item", trinket_gear_id)
 	else
@@ -1142,7 +1168,7 @@ Items.unequip_slots = function (unequip_sots)
 
 			profile_synchronizer_host:profile_changed(peer_id, local_player_id)
 		elseif Managers.connection:is_client() then
-			Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
+			Managers.connection:send_rpc_server("rpc_notify_profile_changed", local_player_id)
 		end
 
 		return true
@@ -1198,7 +1224,7 @@ Items.equip_slot_items = function (items)
 
 				profile_synchronizer_host:profile_changed(peer_id, local_player_id)
 			elseif Managers.connection:is_client() then
-				Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
+				Managers.connection:send_rpc_server("rpc_notify_profile_changed", local_player_id)
 			end
 
 			return true
@@ -1273,7 +1299,7 @@ Items.equip_slot_master_items = function (items)
 	local player = player_manager and player_manager:player(peer_id, local_player_id)
 
 	if not player then
-		return
+		return Promise.resolved()
 	end
 
 	local profile = player:profile()
@@ -1301,7 +1327,7 @@ Items.equip_slot_master_items = function (items)
 			ui_manager:update_client_loadout_waiting_state(true)
 		end
 
-		Managers.data_service.profiles:equip_master_items_in_slots(character_id, item_master_ids_by_slots):next(function (v)
+		return Managers.data_service.profiles:equip_master_items_in_slots(character_id, item_master_ids_by_slots):next(function (v)
 			Log.debug("Items", "Master items equipped in loadout slots")
 
 			if Managers.connection:is_host() then
@@ -1309,7 +1335,7 @@ Items.equip_slot_master_items = function (items)
 
 				profile_synchronizer_host:profile_changed(peer_id, local_player_id)
 			elseif Managers.connection:is_client() then
-				Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
+				Managers.connection:send_rpc_server("rpc_notify_profile_changed", local_player_id)
 			end
 
 			return true
@@ -1328,7 +1354,7 @@ Items.equip_item_in_slot = function (slot_name, item)
 	local player = player_manager and player_manager:player(peer_id, local_player_id)
 
 	if not player then
-		return
+		return Promise.resolved()
 	end
 
 	local profile = player:profile()
@@ -1338,7 +1364,7 @@ Items.equip_item_in_slot = function (slot_name, item)
 	local breed_valid = not breeds or table.contains(breeds, breed_name)
 
 	if not breed_valid then
-		return
+		return Promise.resolved()
 	end
 
 	local character_id = player:character_id()
@@ -1350,7 +1376,7 @@ Items.equip_item_in_slot = function (slot_name, item)
 			ui_manager:update_client_loadout_waiting_state(true)
 		end
 
-		Managers.backend.interfaces.characters:equip_item_slot(character_id, slot_name, item.gear_id or item.name):next(function (v)
+		return Managers.backend.interfaces.characters:equip_item_slot(character_id, slot_name, item.gear_id or item.name):next(function (v)
 			Log.debug("Items", "Equipped!")
 
 			if Managers.connection:is_host() then
@@ -1358,7 +1384,7 @@ Items.equip_item_in_slot = function (slot_name, item)
 
 				profile_synchronizer_host:profile_changed(peer_id, local_player_id)
 			elseif Managers.connection:is_client() then
-				Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
+				Managers.connection:send_rpc_server("rpc_notify_profile_changed", local_player_id)
 			end
 
 			return true
@@ -1379,7 +1405,7 @@ Items.refresh_equipped_items = function ()
 
 		profile_synchronizer_host:profile_changed(peer_id, local_player_id)
 	elseif Managers.connection:is_client() then
-		Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
+		Managers.connection:send_rpc_server("rpc_notify_profile_changed", local_player_id)
 	end
 end
 
@@ -1906,7 +1932,7 @@ Items.create_mannequin_profile_by_item = function (item, preferred_gender, prefe
 	end
 
 	local breed = item_breed or "human"
-	local archetype = item_archetype or breed == "ogryn" and Archetypes.ogryn or Archetypes.veteran
+	local archetype = item_archetype or breed == "cryptic" and Archetypes.cryptic or breed == "ogryn" and Archetypes.ogryn or Archetypes.veteran
 	local gender = item_gender or "male"
 	local loadout = {}
 	local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed]
@@ -1927,6 +1953,10 @@ Items.create_mannequin_profile_by_item = function (item, preferred_gender, prefe
 
 	if archetype.companion_breed == "companion_dog" and item.companion_state_machine then
 		loadout.slot_companion_gear_full = MasterItems.get_item("content/items/characters/companion/companion_dog/gear_full/companion_dog_set_02_var_01")
+	end
+
+	if archetype.companion_breed == "companion_servo_skull" and item.companion_state_machine then
+		loadout.slot_companion_gear_full = MasterItems.get_item("content/items/characters/companion/companion_servo_skull/gear_full/cryptic_servo_skull_scanning_var_01")
 	end
 
 	return {
@@ -2056,6 +2086,10 @@ Items.base_unit = function (item, optional_breed_name, optional_is_first_person)
 	end
 
 	return item.base_unit
+end
+
+Items.workflow_state_index = function (workflow_state)
+	return WORKFLOW_STATE_ORDER[workflow_state]
 end
 
 return Items

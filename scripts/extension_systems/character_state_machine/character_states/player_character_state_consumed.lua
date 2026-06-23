@@ -39,6 +39,7 @@ local DISABLING_UNIT_LINK_NODE = "j_tongue_attach"
 local CONSUMED_UNIT_LINK_NODE = "root_point"
 local DISABLED_UNIT_LINK_NODE = "j_hips"
 local SET_CONSUMED_TIMING = {
+	cryptic = 3.8,
 	human = 3.566666666666667,
 	ogryn = 3.8,
 }
@@ -121,10 +122,12 @@ PlayerCharacterStateConsumed.on_enter = function (self, unit, dt, t, previous_st
 end
 
 local THROW_TELEPORT_UP_OFFSET = {
+	cryptic = 1.5,
 	human = 1.5,
 	ogryn = 1.5,
 }
 local THROW_TELEPORT_FWD_OFFSET = {
+	cryptic = 3.2,
 	human = 3.2,
 	ogryn = 3.2,
 }
@@ -190,7 +193,7 @@ PlayerCharacterStateConsumed.on_exit = function (self, unit, t, next_state)
 		if self._consumed_effect_id then
 			local fx_system = Managers.state.extension:system("fx_system")
 
-			fx_system:stop_template_effect(self._consumed_effect_id)
+			fx_system:stop_player_template_effect(self._consumed_effect_id)
 
 			self._consumed_effect_id = nil
 		end
@@ -265,6 +268,7 @@ PlayerCharacterStateConsumed._remove_buffs = function (self)
 end
 
 local CONSUMED_ANIM_EVENTS = {
+	cryptic = "player_human_consumed",
 	human = "player_human_consumed",
 	ogryn = "player_ogryn_consumed",
 }
@@ -290,7 +294,7 @@ PlayerCharacterStateConsumed.fixed_update = function (self, unit, dt, t, next_st
 			local fx_system = Managers.state.extension:system("fx_system")
 			local disabling_breed = self._disabling_breed
 			local target_effect_template = disabling_breed.target_effect_template_name and EffectTemplates[disabling_breed.target_effect_template_name]
-			local effect_id = fx_system:start_template_effect(target_effect_template, unit)
+			local effect_id = fx_system:start_player_template_effect(target_effect_template, unit, unit)
 
 			self._consumed_effect_id = effect_id
 		end

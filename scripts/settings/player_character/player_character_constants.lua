@@ -72,7 +72,7 @@ local weapon_component_config = {
 	},
 	last_ammunition_usage = {
 		default_value = 0,
-		network_type = "fixed_frame_offset_start_t_6bit",
+		network_type = "fixed_frame_time",
 	},
 	reload_state = {
 		default_value = "none",
@@ -91,11 +91,11 @@ local weapon_component_config = {
 	},
 	overheat_last_charge_at_t = {
 		default_value = 0,
-		network_type = "fixed_frame_offset_start_t_6bit",
+		network_type = "fixed_frame_time",
 	},
 	overheat_remove_at_t = {
 		default_value = 0,
-		network_type = "fixed_frame_offset_end_t_6bit",
+		network_type = "fixed_frame_time",
 	},
 	overheat_current_percentage = {
 		default_value = 0,
@@ -119,11 +119,11 @@ local weapon_component_config = {
 	},
 	special_active_start_t = {
 		default_value = 0,
-		network_type = "fixed_frame_offset_start_t_6bit",
+		network_type = "fixed_frame_time",
 	},
 	special_charge_remove_at_t = {
 		default_value = 0,
-		network_type = "fixed_frame_offset_end_t_9bit",
+		network_type = "fixed_frame_time",
 	},
 	unequip_slot = {
 		default_value = false,
@@ -197,6 +197,7 @@ local constants = {
 	warp_grabbed_drag_speed = 3,
 	hub_movement = {
 		movement_settings = {
+			cryptic = HubMovementSettingsTemplates.human,
 			human = HubMovementSettingsTemplates.human,
 			ogryn = HubMovementSettingsTemplates.ogryn,
 		},
@@ -324,8 +325,11 @@ local constants = {
 				"slot_body_face_scar",
 				"slot_body_face_hair",
 				"slot_body_eye_color",
+				"slot_body_eye_color_secondary",
 				"slot_gear_head",
 				"slot_body_skin_color",
+				"slot_body_skin_color_secondary",
+				"slot_body_skin_discoloration",
 				"slot_body_hair_color",
 				"slot_body_hair",
 				"slot_body_face_makeup",
@@ -357,6 +361,8 @@ local constants = {
 			wieldable = false,
 			slot_dependencies = {
 				"slot_body_skin_color",
+				"slot_body_skin_color_secondary",
+				"slot_body_skin_discoloration",
 			},
 		},
 		slot_body_face_tattoo = {
@@ -376,6 +382,8 @@ local constants = {
 				"slot_body_tattoo",
 				"slot_body_face_tattoo",
 				"slot_body_skin_color",
+				"slot_body_skin_color_secondary",
+				"slot_body_skin_discoloration",
 			},
 		},
 		slot_body_hair = {
@@ -398,6 +406,8 @@ local constants = {
 				"slot_body_tattoo",
 				"slot_body_face_tattoo",
 				"slot_body_skin_color",
+				"slot_body_skin_color_secondary",
+				"slot_body_skin_discoloration",
 			},
 		},
 		slot_body_tattoo = {
@@ -420,9 +430,20 @@ local constants = {
 				"slot_body_tattoo",
 				"slot_body_face_tattoo",
 				"slot_body_skin_color",
+				"slot_body_skin_color_secondary",
+				"slot_body_skin_discoloration",
+				"slot_body_eye_color",
+				"slot_body_eye_color_secondary",
 			},
 		},
 		slot_body_eye_color = {
+			mispredict_packages = true,
+			priority = 50,
+			profile_field = true,
+			slot_type = "body",
+			wieldable = false,
+		},
+		slot_body_eye_color_secondary = {
 			mispredict_packages = true,
 			priority = 50,
 			profile_field = true,
@@ -453,6 +474,20 @@ local constants = {
 			slot_type = "body",
 			wieldable = false,
 		},
+		slot_body_skin_color_secondary = {
+			mispredict_packages = true,
+			priority = 50,
+			profile_field = true,
+			slot_type = "body",
+			wieldable = false,
+		},
+		slot_body_skin_discoloration = {
+			mispredict_packages = true,
+			priority = 50,
+			profile_field = true,
+			slot_type = "body",
+			wieldable = false,
+		},
 		slot_gear_extra_cosmetic = {
 			mispredict_packages = true,
 			priority = 30,
@@ -471,17 +506,9 @@ local constants = {
 			wieldable = false,
 			slot_dependencies = {
 				"slot_body_skin_color",
-				"slot_gear_material_override_decal",
-			},
-		},
-		slot_gear_lowerbody = {
-			mispredict_packages = true,
-			priority = 30,
-			profile_field = true,
-			slot_type = "gear",
-			wieldable = false,
-			slot_dependencies = {
-				"slot_body_skin_color",
+				"slot_body_skin_color_secondary",
+				"slot_body_eye_color",
+				"slot_body_eye_color_secondary",
 				"slot_gear_material_override_decal",
 			},
 		},
@@ -494,6 +521,21 @@ local constants = {
 			slot_dependencies = {
 				"slot_body_tattoo",
 				"slot_body_skin_color",
+				"slot_body_skin_color_secondary",
+				"slot_body_skin_discoloration",
+				"slot_gear_material_override_decal",
+			},
+		},
+		slot_gear_lowerbody = {
+			mispredict_packages = true,
+			priority = 30,
+			profile_field = true,
+			slot_type = "gear",
+			wieldable = false,
+			slot_dependencies = {
+				"slot_body_skin_color",
+				"slot_body_skin_color_secondary",
+				"slot_body_skin_discoloration",
 				"slot_gear_material_override_decal",
 			},
 		},
@@ -714,7 +756,7 @@ local constants = {
 	},
 	animation_rollback = {
 		num_layers_1p = 11,
-		num_layers_3p = 6,
+		num_layers_3p = 8,
 	},
 	animation_variables_to_cache = {
 		third_person = {

@@ -56,7 +56,7 @@ chain_speed_templates.chainsword = {
 		sawing = 0.1,
 	},
 	haptic_vibration_intensity = {
-		max = 40,
+		max = 80,
 		min = 0,
 	},
 }
@@ -85,7 +85,7 @@ chain_speed_templates.chainsword_2h = {
 		sawing = 0.1,
 	},
 	haptic_vibration_intensity = {
-		max = 30,
+		max = 80,
 		min = 0,
 	},
 }

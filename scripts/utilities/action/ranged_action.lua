@@ -78,7 +78,7 @@ RangedAction.armor_explosion = function (is_server, world, physics_world, attack
 	local estimated_unit_diameter = breed_or_nil.player_locomotion_constrain_radius or breed_or_nil.broadphase_radius or 1
 	local estimated_exit_position = hit_position + attack_direction * estimated_unit_diameter
 
-	Explosion.create_explosion(world, physics_world, estimated_exit_position, hit_normal, attacker_unit, armor_explosion_template, power_level, charge_level, attack_type, false, false, weapon_item_or_nil, origin_slot_or_nil)
+	Explosion.create_explosion(world, physics_world, estimated_exit_position, Quaternion.look(hit_normal), attacker_unit, armor_explosion_template, power_level, charge_level, attack_type, false, false, weapon_item_or_nil, origin_slot_or_nil)
 
 	return true
 end
@@ -125,9 +125,16 @@ RangedAction.hitmass_explosion = function (is_server, world, physics_world, hit_
 		return false
 	end
 
+	local explosion_position_offset_along_attack_direction = hitmass_explosion.explosion_position_offset_along_attack_direction
+
+	if explosion_position_offset_along_attack_direction then
+		explosion_position = explosion_position + Vector3.multiply(attack_direction, explosion_position_offset_along_attack_direction)
+	end
+
+	local explosion_rotation = explosion_template.vfx_rotation == "attack_direction" and Quaternion.look(attack_direction) or Quaternion.look(hit_normal)
 	local attack_type = AttackSettings.attack_types.explosion
 
-	Explosion.create_explosion(world, physics_world, explosion_position, hit_normal, attacker_unit, explosion_template, power_level, charge_level, attack_type, false, false, weapon_item_or_nil, origin_slot_or_nil)
+	Explosion.create_explosion(world, physics_world, explosion_position, explosion_rotation, attacker_unit, explosion_template, power_level, charge_level, attack_type, false, false, weapon_item_or_nil, origin_slot_or_nil)
 
 	return true
 end

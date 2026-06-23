@@ -69,7 +69,7 @@ BtChaosHoundTargetPouncedAction.enter = function (self, unit, breed, blackboard,
 		local spawn_component = blackboard.spawn
 		local world, physics_world = spawn_component.world, spawn_component.physics_world
 
-		Explosion.create_explosion(world, physics_world, explosion_position, up, unit, explosion_template, power_level, charge_level, explosion_attack_type)
+		Explosion.create_explosion(world, physics_world, explosion_position, Quaternion.look(up), unit, explosion_template, power_level, charge_level, explosion_attack_type)
 	end
 end
 

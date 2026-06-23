@@ -39,7 +39,9 @@ local DISABLE = {
 	{
 		"BtDisableAction",
 		condition = "is_minion_disabled",
+		exit_state = "base",
 		name = "disable",
+		state = "disabled",
 		action_data = action_data.disable,
 	},
 	name = "disable_actions",
@@ -47,9 +49,23 @@ local DISABLE = {
 local WEAPON_MALFUNCTION = {
 	"BtConditionalSequenceNode",
 	{
+		"BtMoveToPositionAction",
+		name = "weapon_malfunction_run_to_spawner",
+		action_data = action_data.weapon_malfunction_run_to_spawner,
+	},
+	{
 		"BtWeaponMalfunctionAction",
 		name = "weapon_malfunction_loop",
 		action_data = action_data.weapon_malfunction_loop,
+		enter_hook = {
+			hook = "weapon_malfunction_enter",
+		},
+		leave_hook = {
+			hook = "weapon_malfunction_leave",
+			args = {
+				reset_net_cooldown = false,
+			},
+		},
 	},
 	condition = "has_weapon_malfunction",
 	name = "weapon_malfunction",
@@ -68,14 +84,16 @@ local behavior_tree = {
 			name = "death",
 			action_data = action_data.death,
 		},
-		condition = "is_dead",
 		name = "death_sequence",
+		state = "dead",
 	},
 	DISABLE,
 	{
 		"BtExitSpawnerAction",
 		condition = "is_exiting_spawner",
+		exit_state = "base",
 		name = "exit_spawner",
+		state = "exiting_spawner",
 		action_data = action_data.exit_spawner,
 	},
 	{

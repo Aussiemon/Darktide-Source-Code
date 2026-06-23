@@ -2144,6 +2144,11 @@ local RENDER_TEMPLATES = {
 		default_value = DefaultGameParameters.default_max_ragdolls,
 	},
 	{
+		display_name = "loc_settings_menu_group_decals",
+		group_name = "decals",
+		widget_type = "group_header",
+	},
+	{
 		display_name = "loc_setting_max_impact_decals",
 		id = "max_impact_decals",
 		max = 100,
@@ -2176,6 +2181,23 @@ local RENDER_TEMPLATES = {
 			graphics_quality = "custom",
 		},
 		default_value = DefaultGameParameters.default_max_blood_decals,
+	},
+	{
+		display_name = "loc_setting_max_footstep_decals",
+		id = "max_footstep_decals",
+		max = 100,
+		min = 5,
+		num_decimals = 0,
+		require_apply = false,
+		require_restart = false,
+		save_location = "performance_settings",
+		step_size = 1,
+		tooltip_text = "loc_setting_max_footstep_decals_mouseover",
+		value_type = "number",
+		apply_values_on_edited = {
+			graphics_quality = "custom",
+		},
+		default_value = DefaultGameParameters.default_max_footstep_decals,
 	},
 	{
 		display_name = "loc_setting_decal_lifetime",
@@ -2931,36 +2953,34 @@ for i = 1, #RENDER_TEMPLATES do
 	end
 end
 
-if not DEDICATED_SERVER then
-	for i = 1, #render_settings do
-		local setting = render_settings[i]
+for i = 1, #render_settings do
+	local setting = render_settings[i]
 
-		if setting.id == "fsr_upscaling_version" then
-			local fsr_upscaling_versions = Application.fsr_upscaling_versions()
+	if setting.id == "fsr_upscaling_version" then
+		local fsr_upscaling_versions = Application.fsr_upscaling_versions()
 
-			for v = 1, #fsr_upscaling_versions do
-				setting.options[v] = {
-					ignore_localization = true,
-					require_apply = true,
-					require_restart = false,
-					id = v - 1,
-					display_name = fsr_upscaling_versions[v],
-				}
-			end
+		for v = 1, #fsr_upscaling_versions do
+			setting.options[v] = {
+				ignore_localization = true,
+				require_apply = true,
+				require_restart = false,
+				id = v - 1,
+				display_name = fsr_upscaling_versions[v],
+			}
 		end
+	end
 
-		if setting.id == "fsr_framegen_version" then
-			local fsr_framegen_versions = Application.fsr_framegen_versions()
+	if setting.id == "fsr_framegen_version" then
+		local fsr_framegen_versions = Application.fsr_framegen_versions()
 
-			for v = 1, #fsr_framegen_versions do
-				setting.options[v] = {
-					ignore_localization = true,
-					require_apply = true,
-					require_restart = false,
-					id = v - 1,
-					display_name = fsr_framegen_versions[v],
-				}
-			end
+		for v = 1, #fsr_framegen_versions do
+			setting.options[v] = {
+				ignore_localization = true,
+				require_apply = true,
+				require_restart = false,
+				id = v - 1,
+				display_name = fsr_framegen_versions[v],
+			}
 		end
 	end
 end

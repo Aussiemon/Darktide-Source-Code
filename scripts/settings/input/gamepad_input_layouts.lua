@@ -505,7 +505,7 @@ local layouts = {
 	v2 = {
 		display_name = "loc_setting_controller_layout_v2",
 		haptic_trigger_effects_allowed = true,
-		sort_order = 7,
+		sort_order = 9,
 		input_settings = {
 			Ingame = {
 				keyboard_move_backward = nil,
@@ -735,6 +735,252 @@ local layouts = {
 					"ps4_controller_l3",
 					"xbox_controller_left_thumb",
 				},
+				look_raw_controller = {
+					"ps4_controller_right",
+					"xbox_controller_right",
+				},
+				move_controller = {
+					"ps4_controller_left",
+					"xbox_controller_left",
+				},
+			},
+			View = table.add_missing({}, default_view_settings.aliases),
+		},
+	},
+	special_1 = {
+		display_name = "loc_setting_controller_layout_special_1",
+		haptic_trigger_effects_allowed = true,
+		sort_order = 7,
+		input_settings = {
+			Ingame = {
+				action_one = {
+					"ps4_controller_r2",
+					"xbox_controller_right_trigger",
+				},
+				action_two = {
+					"ps4_controller_l2",
+					"xbox_controller_left_trigger",
+				},
+				weapon_extra = {
+					"ps4_controller_r1",
+					"xbox_controller_right_shoulder",
+				},
+				interact = {
+					"ps4_controller_square",
+					"xbox_controller_x",
+				},
+				interact_inspect = {
+					"ps4_controller_triangle",
+					"xbox_controller_y",
+				},
+				wield_1 = StrictNil,
+				wield_2 = StrictNil,
+				wield_3 = {
+					"ps4_controller_d_left",
+					"xbox_controller_d_left",
+				},
+				wield_3_gamepad = {
+					hide_in_controller_layout = true,
+				},
+				wield_4 = {
+					"ps4_controller_d_down",
+					"xbox_controller_d_down",
+				},
+				wield_5 = {
+					"ps4_controller_d_right",
+					"xbox_controller_d_right",
+				},
+				quick_wield = {
+					"ps4_controller_triangle",
+					"xbox_controller_y",
+				},
+				wield_scroll_down = StrictNil,
+				wield_scroll_up = StrictNil,
+				weapon_reload = {
+					"ps4_controller_square",
+					"xbox_controller_x",
+				},
+				grenade_ability = {
+					"ps4_controller_l1",
+					"xbox_controller_left_shoulder",
+				},
+				combat_ability = {
+					"ps4_controller_r3",
+					"xbox_controller_right_thumb",
+				},
+				smart_tag = {
+					"ps4_controller_d_up",
+					"xbox_controller_d_up",
+				},
+				com_wheel = {
+					"ps4_controller_d_up",
+					"xbox_controller_d_up",
+				},
+				tactical_overlay = {
+					"ps4_controller_touch",
+					"xbox_controller_back",
+				},
+				menu = {
+					"ps4_controller_options",
+					"xbox_controller_start",
+				},
+				weapon_inspect = {
+					"ps4_controller_d_right",
+					"xbox_controller_d_right",
+				},
+				spectate_next = {
+					"ps4_controller_cross",
+					"xbox_controller_a",
+				},
+				voip_push_to_talk = StrictNil,
+				keyboard_move_forward = StrictNil,
+				keyboard_move_backward = StrictNil,
+				keyboard_move_left = StrictNil,
+				keyboard_move_right = StrictNil,
+				dodge = {
+					"ps4_controller_cross",
+					"xbox_controller_a",
+				},
+				jump = {
+					"ps4_controller_cross",
+					"xbox_controller_a",
+				},
+				crouch = {
+					"ps4_controller_circle",
+					"xbox_controller_b",
+				},
+				slide = {
+					"ps4_controller_circle",
+					"xbox_controller_b",
+				},
+				sprint = {
+					"ps4_controller_l3",
+					"xbox_controller_left_thumb",
+				},
+				look_raw = StrictNil,
+				look_raw_controller = {
+					"ps4_controller_right",
+					"xbox_controller_right",
+				},
+				move_controller = {
+					"ps4_controller_left",
+					"xbox_controller_left",
+				},
+			},
+			View = table.add_missing({}, default_view_settings.aliases),
+		},
+	},
+	special_2 = {
+		display_name = "loc_setting_controller_layout_special_2",
+		haptic_trigger_effects_allowed = true,
+		sort_order = 8,
+		input_settings = {
+			Ingame = {
+				action_one = {
+					"ps4_controller_r2",
+					"xbox_controller_right_trigger",
+				},
+				action_two = {
+					"ps4_controller_l2",
+					"xbox_controller_left_trigger",
+				},
+				weapon_extra = {
+					"ps4_controller_r1",
+					"xbox_controller_right_shoulder",
+				},
+				interact = {
+					"ps4_controller_square",
+					"xbox_controller_x",
+				},
+				interact_inspect = {
+					"ps4_controller_triangle",
+					"xbox_controller_y",
+				},
+				wield_1 = StrictNil,
+				wield_2 = StrictNil,
+				wield_3 = {
+					"ps4_controller_d_left",
+					"xbox_controller_d_left",
+				},
+				wield_3_gamepad = {
+					hide_in_controller_layout = true,
+				},
+				wield_4 = {
+					"ps4_controller_d_up",
+					"xbox_controller_d_up",
+				},
+				wield_5 = {
+					"ps4_controller_d_right",
+					"xbox_controller_d_right",
+				},
+				quick_wield = {
+					"ps4_controller_triangle",
+					"xbox_controller_y",
+				},
+				wield_scroll_down = StrictNil,
+				wield_scroll_up = StrictNil,
+				weapon_reload = {
+					"ps4_controller_square",
+					"xbox_controller_x",
+				},
+				grenade_ability = {
+					"ps4_controller_d_down",
+					"xbox_controller_d_down",
+				},
+				combat_ability = {
+					"ps4_controller_cross",
+					"xbox_controller_a",
+				},
+				smart_tag = {
+					"ps4_controller_r3",
+					"xbox_controller_right_thumb",
+				},
+				com_wheel = {
+					"ps4_controller_r3",
+					"xbox_controller_right_thumb",
+				},
+				tactical_overlay = {
+					"ps4_controller_touch",
+					"xbox_controller_back",
+				},
+				menu = {
+					"ps4_controller_options",
+					"xbox_controller_start",
+				},
+				weapon_inspect = {
+					"ps4_controller_d_right",
+					"xbox_controller_d_right",
+				},
+				spectate_next = {
+					"ps4_controller_cross",
+					"xbox_controller_a",
+				},
+				voip_push_to_talk = StrictNil,
+				keyboard_move_forward = StrictNil,
+				keyboard_move_backward = StrictNil,
+				keyboard_move_left = StrictNil,
+				keyboard_move_right = StrictNil,
+				dodge = {
+					"ps4_controller_l1",
+					"xbox_controller_left_shoulder",
+				},
+				jump = {
+					"ps4_controller_l1",
+					"xbox_controller_left_shoulder",
+				},
+				crouch = {
+					"ps4_controller_circle",
+					"xbox_controller_b",
+				},
+				slide = {
+					"ps4_controller_circle",
+					"xbox_controller_b",
+				},
+				sprint = {
+					"ps4_controller_l3",
+					"xbox_controller_left_thumb",
+				},
+				look_raw = StrictNil,
 				look_raw_controller = {
 					"ps4_controller_right",
 					"xbox_controller_right",

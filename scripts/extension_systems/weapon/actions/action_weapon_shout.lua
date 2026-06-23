@@ -61,6 +61,10 @@ ActionWeaponShout.start = function (self, action_settings, t, time_scale, action
 	table.clear(self._target_units)
 
 	self._has_collected_targest = false
+
+	if action_settings.block_during_shout then
+		self._block_component.is_blocking = true
+	end
 end
 
 ActionWeaponShout.fixed_update = function (self, dt, t, time_in_action)
@@ -93,9 +97,15 @@ end
 ActionWeaponShout.finish = function (self, reason, data, t, time_in_action, action_settings)
 	ActionWeaponShout.super.finish(self, reason, data, t, time_in_action)
 
-	local block_duration = action_settings.block_duration
+	local weapon_special_implementation = self._weapon.weapon_special_implementation
 
-	if block_duration and self._block_component.is_blocking then
+	if weapon_special_implementation then
+		weapon_special_implementation:on_weapon_shout_action_finish(t)
+	end
+
+	local should_disable_blocking_state = action_settings.block_duration or action_settings.block_during_shout
+
+	if should_disable_blocking_state and self._block_component.is_blocking then
 		self._block_component.is_blocking = false
 	end
 
@@ -126,14 +136,23 @@ ActionWeaponShout._start_shout = function (self, t)
 
 	self:_collect_targets(t, action_settings, side, attack_direction)
 
+	local inventory_slot_component = self._inventory_slot_component
 	local weapon_special_tweak_data = self._weapon_special_tweak_data
 	local num_charges_to_consume_on_activation = weapon_special_tweak_data and weapon_special_tweak_data.num_charges_to_consume_on_activation
 
 	if num_charges_to_consume_on_activation then
-		local inventory_slot_component = self._inventory_slot_component
 		local num_special_charges = inventory_slot_component.num_special_charges
 
 		inventory_slot_component.num_special_charges = math.max(num_special_charges - num_charges_to_consume_on_activation, 0)
+	end
+
+	local num_charges_to_consume_on_special_active_shout = weapon_special_tweak_data and weapon_special_tweak_data.num_charges_to_consume_on_special_active_shout
+	local is_weapon_special_active = inventory_slot_component.special_active
+
+	if num_charges_to_consume_on_special_active_shout and is_weapon_special_active then
+		local num_special_charges = inventory_slot_component.num_special_charges
+
+		inventory_slot_component.num_special_charges = math.max(num_special_charges - num_charges_to_consume_on_special_active_shout, 0)
 	end
 
 	self:_play_fx()
@@ -163,7 +182,7 @@ ActionWeaponShout._update_shout = function (self, dt)
 			local damage_profile_lerp_values = DamageProfile.lerp_values(damage_profile, player_unit, target_index)
 			local dropoff_scalar = DamageProfile.dropoff_scalar(actual_distance, damage_profile, damage_profile_lerp_values)
 
-			Attack.execute(target_unit, damage_profile, "attack_direction", attack_direction, "power_level", scaled_power_level, "hit_zone_name", "torso", "damage_type", damage_type, "attack_type", attack_type, "attacking_unit", player_unit, "dropoff_scalar", dropoff_scalar)
+			Attack.execute(target_unit, damage_profile, "attack_direction", attack_direction, "power_level", scaled_power_level, "hit_zone_name", "torso", "damage_type", damage_type, "attack_type", attack_type, "attacking_unit", player_unit, "item", self._weapon.item, "dropoff_scalar", dropoff_scalar)
 
 			local player_position = POSITION_LOOKUP[player_unit]
 
@@ -186,9 +205,12 @@ ActionWeaponShout._collect_targets = function (self, t, action_settings, side, a
 	local damage_type = action_settings.damage_type
 	local attack_type = action_settings.attack_type
 	local power_level = action_settings.power_level or DEFAULT_POWER_LEVEL
+	local weapon_action_component = self._weapon_action_component
+	local is_special_active = weapon_action_component.special_active_at_start
 	local damage_profile = action_settings.damage_profile
+	local damage_profile_special_active = action_settings.damage_profile_special_active or damage_profile
 
-	self._damage_profile = damage_profile
+	self._damage_profile = is_special_active and damage_profile_special_active or damage_profile
 	self._player_position = player_position
 	self._power_level = power_level
 	self._damage_type = damage_type

@@ -63,22 +63,31 @@ local action_data = {
 			charge_grab_miss = 2.1,
 		},
 		grab_anims = {
+			cryptic = "attack_grab_human",
 			human = "attack_grab_human",
 			ogryn = "attack_grab_ogryn",
 		},
 		grab_anim_duration = {
+			cryptic = 1.5,
 			human = 1.5,
 			ogryn = 0.8333333333333334,
 		},
 		smash_anims = {
+			cryptic = "attack_smash_human",
 			human = "attack_smash_human",
 			ogryn = "attack_smash_ogryn",
 		},
 		smash_anim_duration = {
+			cryptic = 1.8333333333333333,
 			human = 1.8333333333333333,
 			ogryn = 1.6666666666666667,
 		},
 		smash_damage_timings = {
+			cryptic = {
+				0.3,
+				0.7333333333333333,
+				1.4,
+			},
 			human = {
 				0.3,
 				0.7333333333333333,
@@ -151,6 +160,12 @@ local action_data = {
 			change_target_right = 0.4666666666666667,
 		},
 		throw_anims = {
+			cryptic = {
+				bwd = "attack_throw_human_bwd",
+				fwd = "attack_throw_human",
+				left = "attack_throw_human_left",
+				right = "attack_throw_human_right",
+			},
 			human = {
 				bwd = "attack_throw_human_bwd",
 				fwd = "attack_throw_human",
@@ -165,18 +180,22 @@ local action_data = {
 			},
 		},
 		throw_timing = {
+			cryptic = 0.7333333333333333,
 			human = 0.7333333333333333,
 			ogryn = 1.3,
 		},
 		throw_duration = {
+			cryptic = 1.5666666666666667,
 			human = 1.5666666666666667,
 			ogryn = 2.3333333333333335,
 		},
 		catapult_force = {
+			cryptic = 13,
 			human = 13,
 			ogryn = 10,
 		},
 		catapult_z_force = {
+			cryptic = 3,
 			human = 3,
 			ogryn = 4,
 		},
@@ -202,6 +221,7 @@ local action_data = {
 		},
 		damage_profile = DamageProfileTemplates.cultist_mutant_smash,
 		damage_type = {
+			cryptic = damage_types.minion_mutant_smash,
 			human = damage_types.minion_mutant_smash,
 			ogryn = damage_types.minion_mutant_smash_ogryn,
 		},

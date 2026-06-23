@@ -43,6 +43,18 @@ local weapon_ammo_templates = {
 			3,
 		},
 	},
+	arc_rifle_p1_m1 = {
+		ammunition_clips = {
+			{
+				lerp_basic = 33,
+				lerp_perfect = 42,
+			},
+		},
+		ammunition_reserve = {
+			lerp_basic = 140,
+			lerp_perfect = 180,
+		},
+	},
 	bolter_p1_m1 = {
 		ammunition_clips = {
 			{
@@ -244,6 +256,18 @@ local weapon_ammo_templates = {
 			lerp_perfect = 200,
 		},
 	},
+	galvanic_rifle_p1 = {
+		ammunition_clips = {
+			{
+				lerp_basic = 8,
+				lerp_perfect = 8,
+			},
+		},
+		ammunition_reserve = {
+			lerp_basic = 40,
+			lerp_perfect = 80,
+		},
+	},
 	ogryn_gauntlet_p1_m1 = {
 		ammunition_clips = {
 			{
@@ -398,6 +422,18 @@ local weapon_ammo_templates = {
 		ammunition_reserve = {
 			lerp_basic = 75,
 			lerp_perfect = 150,
+		},
+	},
+	phosphor_pistol_p1_m1 = {
+		ammunition_clips = {
+			{
+				lerp_basic = 6,
+				lerp_perfect = 6,
+			},
+		},
+		ammunition_reserve = {
+			lerp_basic = 48,
+			lerp_perfect = 78,
 		},
 	},
 	ogryn_rippergun_p1_m1 = {

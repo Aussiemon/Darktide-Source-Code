@@ -25,7 +25,7 @@ local pickup_data = {
 		local loot_tier = loot_data.tier
 		local show_notification = false
 
-		Managers.event:trigger("event_expedition_pocketable_collected", interactor_unit, loot_type, loot_tier, show_notification)
+		Managers.event:trigger("event_expedition_pocketable_collected", interactor_unit, pickup_unit, loot_type, loot_tier, show_notification)
 		Managers.state.pacing:add_heat_by_type("medium", pickup_unit, "pickups", interactor_unit)
 	end,
 	on_drop_func = function (pickup_unit, interactor_unit)
@@ -33,7 +33,7 @@ local pickup_data = {
 		local loot_tier = loot_data.tier
 		local show_notification = false
 
-		Managers.event:trigger("event_expedition_pocketable_dropped", interactor_unit, loot_type, loot_tier, show_notification)
+		Managers.event:trigger("event_expedition_pocketable_dropped", interactor_unit, pickup_unit, loot_type, loot_tier, show_notification)
 	end,
 }
 

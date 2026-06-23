@@ -33,6 +33,28 @@ local function _players_with_voice_profile(voice_profile)
 	return voice_players
 end
 
+local function _player_voices_present(needed_player_voices)
+	local existing_player_voices = _player_voices()
+
+	for _, needed_voice in ipairs(needed_player_voices) do
+		local voice_exists = false
+
+		for _, existing_voice in ipairs(existing_player_voices) do
+			if needed_voice == existing_voice then
+				voice_exists = true
+
+				break
+			end
+		end
+
+		if not voice_exists then
+			return false
+		end
+	end
+
+	return true
+end
+
 local function _has_talent(talent, optional_voice_profile)
 	local voice_players = optional_voice_profile and _players_with_voice_profile(optional_voice_profile) or Managers.player:players()
 
@@ -99,11 +121,36 @@ local function _archetype_present(archetype)
 	return false
 end
 
+local function multiple_archetypes_present()
+	local players = Managers.player:players()
+	local same_archetype
+
+	for _, player in pairs(players) do
+		local player_archetype_name = player:archetype_name()
+
+		if player_archetype_name ~= same_archetype then
+			if same_archetype then
+				return true
+			else
+				same_archetype = player_archetype_name
+			end
+		end
+	end
+
+	return false
+end
+
 local function _game_mode_is(game_mode_requirement)
 	local game_mode_manager = Managers.state.game_mode
 	local game_mode_name = game_mode_manager:game_mode_name()
 
 	return game_mode_requirement == game_mode_name
+end
+
+local function _circumstance_is(circumstance_name_requirement)
+	local circumstance_name = Managers.state.circumstance and Managers.state.circumstance:circumstance_name()
+
+	return circumstance_name == circumstance_name_requirement
 end
 
 RuleLoadingConditions.conversations_core = {
@@ -568,6 +615,55 @@ RuleLoadingConditions.broker_male_c = {
 		"broker_male_c_zealot_bonding_conversation_30",
 	},
 }
+RuleLoadingConditions.cryptic_a = {
+	exclude_conditions = {
+		not_has_dog = function ()
+			return _has_talent("adamant_disable_companion", "adamant_male_a")
+		end,
+	},
+	not_has_dog = {
+		"cryptic_a_adamant_bonding_conversation_02",
+	},
+}
+RuleLoadingConditions.cryptic_b = {
+	exclude_conditions = {
+		expeditions = function ()
+			return _game_mode_is("expedition")
+		end,
+		not_has_dog = function ()
+			return _has_talent("adamant_disable_companion", "adamant_male_b")
+		end,
+	},
+	expeditions = {
+		"broker_bonding_conversation_39",
+		"cryptic_b_adamant_bonding_conversation_20",
+		"cryptic_b_adamant_bonding_conversation_24",
+		"cryptic_b_ogryn_bonding_conversation_21",
+		"cryptic_b_broker_bonding_conversation_01",
+		"cryptic_b_broker_bonding_conversation_23",
+		"cryptic_b_broker_bonding_conversation_33",
+		"cryptic_b_adamant_bonding_conversation_16",
+	},
+	not_has_dog = {
+		"cryptic_b_adamant_bonding_conversation_17",
+	},
+}
+
+local needed_bonus_voices = {
+	"ogryn_b",
+	"psyker_male_a",
+}
+
+RuleLoadingConditions.cryptic_d = {
+	exclude_conditions = {
+		bonus = function ()
+			return not _player_voices_present(needed_bonus_voices)
+		end,
+	},
+	bonus = {
+		"cryptic_bonding_conversation_bonus",
+	},
+}
 RuleLoadingConditions.ogryn_a = {
 	exclude_conditions = {
 		expeditions = function ()
@@ -924,6 +1020,12 @@ local all_char_conditions = {
 		return _player_voices()
 	end,
 	exclude_conditions = {
+		first_mission = function ()
+			return _circumstance_is("player_journey_01")
+		end,
+		different_archetypes = function ()
+			return multiple_archetypes_present()
+		end,
 		pre_twins = function ()
 			return not _all_completed_journey_step("journey_km_enforcer_twins")
 		end,
@@ -939,6 +1041,12 @@ local all_char_conditions = {
 		pre_heresy = function ()
 			return not _all_completed_journey_step("journey_km_heresy")
 		end,
+	},
+	first_mission = {
+		"bonding",
+	},
+	different_archetypes = {
+		"gang",
 	},
 	pre_twins = {
 		"bonding_conversation_waterloo_twins",

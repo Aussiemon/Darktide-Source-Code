@@ -356,7 +356,7 @@ local StateGameplayTestify = {
 		local attack_type = AttackSettings.attack_types.explosion
 		local explosion_template = ExplosionTemplates.default_force_staff_demolition
 
-		Explosion.create_explosion(world, physics_world, hit_position, Vector3.up(), player_unit, explosion_template, DEFAULT_POWER_LEVEL, charge_level, attack_type)
+		Explosion.create_explosion(world, physics_world, hit_position, Quaternion.identity(), player_unit, explosion_template, DEFAULT_POWER_LEVEL, charge_level, attack_type)
 	end,
 	apply_select_traits = function (_, _, params)
 		local player = params.player

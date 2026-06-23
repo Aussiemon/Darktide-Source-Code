@@ -10,6 +10,12 @@ local MISSION_SKIP_TESTIFY = {
 	psykhanium = true,
 }
 
+MutatorSpawnerLocationSources.mission_provided_gizmo = function ()
+	return function ()
+		return {}
+	end
+end
+
 MutatorSpawnerLocationSources.prebaked_mission_locations = function (spawn_locations)
 	return function ()
 		spawn_locations = spawn_locations or "default_locations"

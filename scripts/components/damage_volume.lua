@@ -10,7 +10,6 @@ DamageVolume.init = function (self, unit, is_server, nav_world)
 		return run_update
 	end
 
-	self._buff_affected_units = {}
 	self._unit = unit
 
 	local extension_manager = Managers.state.extension
@@ -19,11 +18,10 @@ DamageVolume.init = function (self, unit, is_server, nav_world)
 	self._broadphase = broadphase_system.broadphase
 
 	local damage_type = self:get_data(unit, "damage_type")
+	local damage_type_settings = DamageVolumeSettings[damage_type]
 
-	self._damage_type = damage_type
-	self._damage_type_settings = DamageVolumeSettings[damage_type]
-	self._forbidden_keyword = self._damage_type_settings.forbidden_keyword
-	self._buff_template_name = self._damage_type_settings.buff_template_name
+	self._forbidden_keyword = damage_type_settings.forbidden_keyword
+	self._buff_template_name = damage_type_settings.buff_template_name
 
 	local side_system = extension_manager:system("side_system")
 	local affected_side_name = self:get_data(unit, "affected_side_name")
@@ -39,18 +37,12 @@ DamageVolume.init = function (self, unit, is_server, nav_world)
 
 	self:_calculate_broadphase_size()
 
-	local start_enabled = self:get_data(unit, "start_enabled")
+	self._ignore_bots = self:get_data(unit, "ignore_bots")
 
-	if start_enabled then
-		self._enabled = true
-	end
+	local refresh_time = self:get_data(unit, "refresh_time")
 
-	local ignore_bots = self:get_data(unit, "ignore_bots")
-
-	if ignore_bots then
-		self._ignore_bots = true
-	end
-
+	self._refresh_time = refresh_time
+	self._refresh_timer = 0
 	run_update = true
 
 	return run_update
@@ -61,41 +53,50 @@ DamageVolume.destroy = function (self)
 end
 
 DamageVolume.enable = function (self, unit)
-	return
+	self._refresh_timer = 0
 end
 
 DamageVolume.disable = function (self, unit)
 	return
 end
 
-local TEMP_ALREADY_CHECKED_UNITS = {}
 local BROADPHASE_RESULTS = {}
 
 DamageVolume.update = function (self, unit, dt, t)
-	local broadphase, side_names = self._broadphase, self._affected_side_names
-	local broadphase_center, broadphase_radius = self._broadphase_center:unbox(), self._broadphase_radius
+	if not self.is_server then
+		return false
+	end
 
-	if not self._enabled then
+	self._refresh_timer = self._refresh_timer - dt
+
+	if self._refresh_timer > 0 then
 		return true
 	end
 
+	self._refresh_timer = self._refresh_time
+
+	local broadphase, side_names = self._broadphase, self._affected_side_names
+	local broadphase_center, broadphase_radius = self._broadphase_center:unbox(), self._broadphase_radius
 	local num_results = broadphase.query(broadphase, broadphase_center, broadphase_radius, BROADPHASE_RESULTS, side_names)
 
 	if num_results == 0 and not self._inverse then
 		return true
 	end
 
-	table.clear(TEMP_ALREADY_CHECKED_UNITS)
 	self:_update(unit, dt, t, num_results)
 
 	return true
 end
 
+local TEMP_ALREADY_CHECKED_UNITS = {}
+
 DamageVolume._update = function (self, unit, dt, t, num_results)
-	local buff_affected_units = self._buff_affected_units
-	local ALIVE = ALIVE
+	table.clear(TEMP_ALREADY_CHECKED_UNITS)
+
 	local ignore_bots = self._ignore_bots
+	local forbidden_keyword = self._forbidden_keyword ~= "default" and self._forbidden_keyword
 	local player_manager = Managers.player
+	local ALIVE = ALIVE
 
 	for i = 1, num_results do
 		repeat
@@ -114,19 +115,13 @@ DamageVolume._update = function (self, unit, dt, t, num_results)
 			end
 
 			local affected_unit_position = (POSITION_LOOKUP[affected_unit] or Unit.world_position(affected_unit, 1)) + Vector3(0, 0, 0.1)
-			local unit_is_inside = Unit.is_point_inside_volume(unit, "volume", affected_unit_position)
+			local unit_is_inside = Unit.is_point_inside_volume(unit, "damage_volume", affected_unit_position)
 
 			if unit_is_inside then
 				local buff_extension = ScriptUnit.has_extension(affected_unit, "buff_system")
 
-				if buff_extension and not TEMP_ALREADY_CHECKED_UNITS[affected_unit] then
-					local forbidden_keyword = self._forbidden_keyword ~= "default" and self._forbidden_keyword
-
-					if not forbidden_keyword or not buff_extension:has_keyword(forbidden_keyword) then
-						self:_add_buff(affected_unit, t)
-
-						buff_affected_units[affected_unit] = true
-					end
+				if buff_extension and not TEMP_ALREADY_CHECKED_UNITS[affected_unit] and (not forbidden_keyword or not buff_extension:has_keyword(forbidden_keyword)) then
+					self:_add_buff(affected_unit, t)
 				end
 
 				TEMP_ALREADY_CHECKED_UNITS[affected_unit] = true
@@ -137,8 +132,6 @@ end
 
 DamageVolume._add_buff = function (self, unit, t)
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
-	local side_extension = ScriptUnit.extension(unit, "side_system")
-	local side_name = side_extension.side:name()
 	local buff_template_name = self._buff_template_name
 
 	buff_extension:add_internally_controlled_buff(buff_template_name, t, "owner_unit", self._unit)
@@ -151,7 +144,7 @@ DamageVolume._calculate_broadphase_size = function (self)
 	self._broadphase_center, self._broadphase_radius = Vector3Box()
 
 	local Vector3_max, Vector3_min = Vector3.max, Vector3.min
-	local volume_points = Unit.volume_points(self._unit, "volume")
+	local volume_points = Unit.volume_points(self._unit, "damage_volume")
 	local first_position = volume_points[1]
 	local max_position, min_position = first_position, first_position
 	local num_points = 0
@@ -181,14 +174,6 @@ DamageVolume._calculate_broadphase_size = function (self)
 	self._broadphase_center:store(center_position)
 
 	self._broadphase_radius = math.min(math.sqrt(max_distance_sq), MAX_BROADPHASE_RADIUS)
-end
-
-DamageVolume.enable_volume = function (self)
-	self._enabled = true
-end
-
-DamageVolume.disable_volume = function (self)
-	self._enabled = false
 end
 
 DamageVolume.editor_init = function (self, unit)
@@ -255,29 +240,27 @@ DamageVolume.editor_property_changed = function (self, unit)
 end
 
 DamageVolume.component_data = {
-	start_enabled = {
-		ui_name = "start_enabled",
+	starts_enabled = {
+		ui_name = "Start Enabled",
 		ui_type = "check_box",
-		value = true,
+		value = false,
 	},
 	ignore_bots = {
-		ui_name = "ignore_bots",
+		ui_name = "Ignore Bots",
 		ui_type = "check_box",
 		value = true,
 	},
 	damage_type = {
-		ui_name = "Damage_Type",
+		ui_name = "Damage Type",
 		ui_type = "combo_box",
 		value = "electrical",
 		options_keys = {
 			"electrical",
-			"radioactive",
 			"burning",
 			"instakill",
 		},
 		options_values = {
 			"electrical",
-			"radioactive",
 			"burning",
 			"instakill",
 		},
@@ -297,15 +280,10 @@ DamageVolume.component_data = {
 			"both",
 		},
 	},
-	inputs = {
-		enable_volume = {
-			accessibility = "public",
-			type = "event",
-		},
-		disable_volume = {
-			accessibility = "public",
-			type = "event",
-		},
+	refresh_time = {
+		ui_name = "Tick Time",
+		ui_type = "number",
+		value = 0,
 	},
 }
 

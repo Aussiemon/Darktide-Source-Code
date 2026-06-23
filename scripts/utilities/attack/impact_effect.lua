@@ -148,7 +148,7 @@ ImpactEffect.surface_impact_fx = function (physics_world, attacking_unit, hit_po
 	local hit, material, _, _, hit_unit, hit_actor = MaterialQuery.query_material(physics_world, start_pos, end_pos, "projectile_impact")
 	local surface_impact_fx = _find_surface_impact_fx(damage_type, material, hit_type)
 
-	return surface_impact_fx
+	return surface_impact_fx, hit_unit
 end
 
 local NUM_FX_MULTIPLIER = 0.4
@@ -286,6 +286,12 @@ function _impact_fx(damage_type, breed, did_damage, hit_weakspot, armor_type, at
 		impact_fx = impact_fxs.shove
 	elseif damage_efficiency == damage_efficiencies.negated then
 		impact_fx = impact_fxs.damage_negated
+	end
+
+	local shield_damaged = hit_zone_name == "shield" and attack_result == attack_results.shield_absorbed
+
+	if shield_damaged then
+		impact_fx = impact_fxs.shield_blocked or impact_fxs.damage_negated
 	end
 
 	if impact_fx then

@@ -555,7 +555,7 @@ local widget_definitions = {
 			style = table.add_missing({
 				offset = {
 					0,
-					50,
+					40,
 					1,
 				},
 			}, item_header_premium_text_style),

@@ -9,6 +9,9 @@ BtNode.init = function (self, identifier, parent, condition_name, enter_hook, le
 	self.tree_node = tree_node
 	self.parent = parent
 	self.identifier = identifier
+	self._profiler_evaluate = identifier .. ".evaluate"
+	self._profiler_run = identifier .. ".run"
+	self._children = {}
 
 	local condition = BtConditions[condition_name]
 
@@ -17,6 +20,14 @@ BtNode.init = function (self, identifier, parent, condition_name, enter_hook, le
 
 	self:_init_enter_function(enter_hook)
 	self:_init_leave_function(leave_hook)
+end
+
+BtNode.add_child = function (self, node)
+	self._children[#self._children + 1] = node
+end
+
+BtNode.children = function (self)
+	return self._children
 end
 
 local function _should_visit_node(node, old_running_child_nodes, new_running_child_nodes)
@@ -119,7 +130,15 @@ BtNode._init_leave_function = function (self, leave_hook)
 end
 
 BtNode.init_values = function (self, blackboard, action_data, node_data)
-	return
+	local children = self._children
+
+	for i = 1, #children do
+		local child_node = children[i]
+		local child_tree_node = child_node.tree_node
+		local child_action_data = child_tree_node.action_data
+
+		child_node:init_values(blackboard, child_action_data, node_data)
+	end
 end
 
 BtNode.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t, node_data, old_running_child_nodes, new_running_child_nodes)

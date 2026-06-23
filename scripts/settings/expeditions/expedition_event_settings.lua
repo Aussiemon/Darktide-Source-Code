@@ -1,68 +1,6 @@
 ﻿-- chunkname: @scripts/settings/expeditions/expedition_event_settings.lua
 
-local toxic_gas_level_grid_settings = {
-	cell_depth = 4,
-	height = 256,
-	num_columns = 2,
-	num_rows = 2,
-	track_players = false,
-	width = 256,
-}
-local gas_by_depth = {
-	{
-		broadphase_radius = 50,
-		level_name = "content/levels/expeditions/circumstances/toxic_gas/exp_circ_toxic_gas_fog_spawner_large",
-		respawn_delay = {
-			max = 45,
-			min = 30,
-		},
-		lifetime = {
-			max = 40,
-			min = 20,
-		},
-	},
-	{
-		broadphase_radius = 40,
-		level_name = "content/levels/expeditions/circumstances/toxic_gas/exp_circ_toxic_gas_fog_spawner_medium",
-		respawn_delay = {
-			max = 25,
-			min = 15,
-		},
-		lifetime = {
-			max = 20,
-			min = 10,
-		},
-	},
-	{
-		broadphase_radius = 25,
-		level_name = "content/levels/expeditions/circumstances/toxic_gas/exp_circ_toxic_gas_fog_spawner_small",
-		respawn_delay = {
-			max = 15,
-			min = 10,
-		},
-		lifetime = {
-			max = 15,
-			min = 10,
-		},
-	},
-}
-local gas_settings_by_depth = {}
-local index_counter = 0
-
-for i = toxic_gas_level_grid_settings.cell_depth, 1, -1 do
-	index_counter = index_counter + 1
-	gas_settings_by_depth[i] = gas_by_depth[#gas_by_depth - index_counter]
-end
-
 local expedition_event_settings = {
-	toxic_gas = {
-		broadphase_category = "toxic_gas",
-		broadphase_delay = 1.5,
-		player_broadphase_radius = 10,
-		wakeup_time = 3,
-		level_grid_settings = toxic_gas_level_grid_settings,
-		gas_settings_by_depth = gas_settings_by_depth,
-	},
 	spawn_sand_vortex = {
 		spawn_delay = 30,
 		spawn_distance_infront_of_selected_player_target = 30,
@@ -108,23 +46,6 @@ local expedition_event_settings = {
 			charge_level = 1,
 			power_level = 1000,
 			template_name = "lightning_strike_impact",
-		},
-	},
-	lightning_strikes_backdrop = {
-		end_time = 1,
-		lightning_unit_name = "content/fx/units/environment/expeditions/wastes/vfx_lightning_strike_ground_large_01",
-		strike_sound = "wwise/events/world/play_lightning_storm_strike",
-		amount_of_strikes = {
-			max = 15,
-			min = 8,
-		},
-		distance_from_level_origo = {
-			max = 256,
-			min = 0,
-		},
-		initial_life_time = {
-			max = 5,
-			min = 0.1,
 		},
 	},
 	lightning_strikes_targeted_random_player_looping = {

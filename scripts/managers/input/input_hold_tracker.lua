@@ -119,4 +119,12 @@ InputHoldTracker._lookup_actions_with_same_input_key = function (self, action_na
 	return temp_found_actions
 end
 
+InputHoldTracker.get_progress_by_id = function (self, id)
+	if not self._tracked_actions[id] then
+		return 0
+	end
+
+	return math.min(self._tracked_actions[id].time_held / self._tracked_actions[id].time_completed, 1)
+end
+
 return InputHoldTracker

@@ -50,7 +50,7 @@ damage_templates.default_laspistol_killshot = {
 		min = 15,
 	},
 	herding_template = HerdingTemplates.shot,
-	wounds_template = WoundsTemplates.laspistol,
+	wounds_template = WoundsTemplates.laser,
 	armor_damage_modifier_ranged = {
 		near = {
 			attack = {
@@ -156,7 +156,7 @@ damage_templates.default_laspistol_bfg = {
 		min = 15,
 	},
 	herding_template = HerdingTemplates.shot,
-	wounds_template = WoundsTemplates.laspistol,
+	wounds_template = WoundsTemplates.laser,
 	armor_damage_modifier_ranged = {
 		near = {
 			attack = {

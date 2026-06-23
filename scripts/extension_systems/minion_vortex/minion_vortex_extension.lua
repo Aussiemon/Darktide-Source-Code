@@ -3,12 +3,12 @@
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breed = require("scripts/utilities/breed")
 local Catapulted = require("scripts/extension_systems/character_state_machine/character_states/utilities/catapulted")
+local MutatorUtility = require("scripts/utilities/mutator/mutator_utility")
 local NavQueries = require("scripts/utilities/nav_queries")
 local Navigation = require("scripts/extension_systems/navigation/utilities/navigation")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local VortexLocomotion = require("scripts/extension_systems/locomotion/utilities/vortex_locomotion")
-local FixedFrame = require("scripts/utilities/fixed_frame")
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local MinionVortexExtension = class("MinionVortexExtension")
 local STARTUP_VFX_NAME = "content/fx/particles/environment/expeditions/wastes/sand_tornado_01_startup"
@@ -735,7 +735,9 @@ MinionVortexExtension._spawn_effects = function (self, unit)
 	self._vfx_pos = Vector3Box(vfx_pos)
 	self._vfx_velocity = Vector3Box(Vector3.forward())
 
-	World.create_particles(world, STARTUP_VFX_NAME, vfx_pos)
+	local startup_id = World.create_particles(world, STARTUP_VFX_NAME, vfx_pos)
+
+	MutatorUtility.apply_mutator_effects_to_particle(world, startup_id, "whirlwind_debris_render", "sand_clouds_cyl", "sand_clouds_ground")
 
 	self._sfx_source_id = WwiseWorld.make_manual_source(wwise_world, unit, 1)
 	self._sfx_id = WwiseWorld.trigger_resource_event(wwise_world, SFX_LOOP_NAME, self._sfx_source_id)
@@ -765,6 +767,8 @@ MinionVortexExtension._update_effect_positions = function (self, t, dt, vortex_t
 
 	if not self._vfx_id then
 		self._vfx_id = World.create_particles(world, VFX_NAME, vfx_pos)
+
+		MutatorUtility.apply_mutator_effects_to_particle(world, self._vfx_id, "whirlwind_debris_render", "sand_clouds_cyl", "sand_clouds_ground")
 	end
 
 	local effect_id = self._vfx_id

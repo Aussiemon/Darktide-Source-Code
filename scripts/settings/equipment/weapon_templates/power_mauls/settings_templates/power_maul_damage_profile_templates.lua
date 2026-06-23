@@ -102,7 +102,7 @@ damage_templates.powermaul_light_smiter = {
 	gibbing_power = gibbing_power.light,
 	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.power_maul,
+	wounds_template = WoundsTemplates.shock_blunt,
 	stagger_duration_modifier = {
 		0.1,
 		2.5,
@@ -162,7 +162,7 @@ damage_templates.powermaul_light_linesman = {
 	gibbing_power = gibbing_power.light,
 	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.power_maul,
+	wounds_template = WoundsTemplates.shock_blunt,
 	stagger_duration_modifier = {
 		0.1,
 		0.5,
@@ -246,7 +246,7 @@ damage_templates.powermaul_heavy_tank = {
 	gibbing_power = gibbing_power.medium,
 	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.power_maul,
+	wounds_template = WoundsTemplates.shock_blunt,
 	stagger_duration_modifier = {
 		0.1,
 		0.5,
@@ -396,7 +396,7 @@ damage_templates.powermaul_light_tank = {
 	gibbing_power = gibbing_power.light,
 	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.power_maul,
+	wounds_template = WoundsTemplates.shock_blunt,
 	stagger_duration_modifier = {
 		0.1,
 		0.5,
@@ -554,7 +554,7 @@ overrides.powermaul_weapon_special = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.power_maul,
+			WoundsTemplates.shock_blunt,
 		},
 		{
 			"melee_attack_strength",
@@ -664,7 +664,7 @@ damage_templates.powermaul_p2_light_smiter = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.power_maul,
+	wounds_template = WoundsTemplates.shock_blunt,
 	stagger_duration_modifier = {
 		0.1,
 		2.5,
@@ -798,7 +798,7 @@ damage_templates.powermaul_p2_light_linesman = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.power_maul,
+	wounds_template = WoundsTemplates.shock_blunt,
 	stagger_duration_modifier = {
 		0.1,
 		0.5,
@@ -1004,7 +1004,7 @@ damage_templates.powermaul_p2_light_tank = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.power_maul,
+	wounds_template = WoundsTemplates.shock_blunt,
 	stagger_duration_modifier = {
 		0.1,
 		0.5,
@@ -1240,7 +1240,7 @@ damage_templates.powermaul_p2_heavy_tank = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.power_maul,
+	wounds_template = WoundsTemplates.shock_blunt,
 	stagger_duration_modifier = {
 		0.1,
 		0.5,
@@ -1464,7 +1464,7 @@ damage_templates.powermaul_p2_heavy_smiter = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.power_maul,
+	wounds_template = WoundsTemplates.shock_blunt,
 	stagger_duration_modifier = {
 		0.1,
 		0.5,
@@ -1707,6 +1707,848 @@ damage_templates.powermaul_p2_stun_interval_basic = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default,
 		},
+	},
+}
+damage_templates.powermaul_p3_light_smiter = {
+	ragdoll_only = true,
+	ragdoll_push_force = 500,
+	stagger_category = "melee",
+	cleave_distribution = single_cleave,
+	damage_type = damage_types.spiked_blunt,
+	gibbing_power = gibbing_power.always,
+	gibbing_type = gibbing_types.crushing,
+	melee_attack_strength = melee_attack_strengths.light,
+	wounds_template = WoundsTemplates.shock_blunt,
+	stagger_duration_modifier = {
+		0.1,
+		2.5,
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_0_9,
+			[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+			[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1_33,
+		},
+		impact = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_1,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_6,
+			[armor_types.super_armor] = damage_lerp_values.lerp_1,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1,
+		},
+	},
+	targets = {
+		{
+			power_distribution = {
+				attack = {
+					120,
+					240,
+				},
+				impact = {
+					10,
+					20,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					55,
+					110,
+				},
+				impact = {
+					7,
+					10,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+		default_target = {
+			power_distribution = {
+				impact = 5,
+				attack = {
+					20,
+					40,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.3,
+				1,
+			},
+		},
+	},
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
+}
+damage_templates.powermaul_p3_light_smiter_pushfollow = {
+	ragdoll_only = true,
+	ragdoll_push_force = 500,
+	stagger_category = "melee",
+	cleave_distribution = light_cleave,
+	damage_type = damage_types.spiked_blunt,
+	gibbing_power = gibbing_power.always,
+	gibbing_type = gibbing_types.crushing,
+	melee_attack_strength = melee_attack_strengths.light,
+	wounds_template = WoundsTemplates.shock_blunt,
+	stagger_duration_modifier = {
+		0.1,
+		2.5,
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_0_9,
+			[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_9,
+			[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1_33,
+		},
+		impact = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_1,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_6,
+			[armor_types.super_armor] = damage_lerp_values.lerp_1,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1,
+		},
+	},
+	targets = {
+		{
+			power_distribution = {
+				attack = {
+					125,
+					255,
+				},
+				impact = {
+					10,
+					20,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					55,
+					110,
+				},
+				impact = {
+					8,
+					14,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					40,
+					80,
+				},
+				impact = {
+					7,
+					12,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.4,
+				1.2,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					30,
+					60,
+				},
+				impact = {
+					5,
+					9,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.3,
+				1,
+			},
+		},
+		default_target = {
+			power_distribution = {
+				attack = {
+					20,
+					40,
+				},
+				impact = {
+					4,
+					8,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.3,
+				1,
+			},
+		},
+	},
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
+}
+damage_templates.powermaul_p3_light_linesman = {
+	ragdoll_only = true,
+	ragdoll_push_force = 400,
+	stagger_category = "melee",
+	cleave_distribution = light_cleave,
+	damage_type = damage_types.spiked_blunt,
+	gibbing_power = gibbing_power.always,
+	gibbing_type = gibbing_types.crushing,
+	melee_attack_strength = melee_attack_strengths.light,
+	wounds_template = WoundsTemplates.shock_blunt,
+	stagger_duration_modifier = {
+		0.1,
+		0.5,
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_0_8,
+			[armor_types.resistant] = damage_lerp_values.lerp_0_7,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_75,
+			[armor_types.super_armor] = damage_lerp_values.lerp_0_3,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1_25,
+		},
+		impact = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_1,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+			[armor_types.super_armor] = damage_lerp_values.lerp_1,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1,
+		},
+	},
+	targets = {
+		{
+			power_distribution = {
+				attack = {
+					100,
+					200,
+				},
+				impact = {
+					6,
+					12,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					80,
+					150,
+				},
+				impact = {
+					4,
+					8,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.3,
+				1,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					55,
+					100,
+				},
+				impact = {
+					3,
+					6,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.3,
+				1,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					40,
+					75,
+				},
+				impact = {
+					3,
+					6,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.3,
+				1,
+			},
+		},
+		default_target = {
+			power_distribution = {
+				attack = {
+					20,
+					40,
+				},
+				impact = {
+					3,
+					6,
+				},
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
+}
+damage_templates.powermaul_p3_light_tank = {
+	ragdoll_only = true,
+	ragdoll_push_force = 200,
+	stagger_category = "melee",
+	cleave_distribution = big_cleave,
+	damage_type = damage_types.spiked_blunt,
+	gibbing_power = gibbing_power.always,
+	gibbing_type = gibbing_types.crushing,
+	melee_attack_strength = melee_attack_strengths.light,
+	wounds_template = WoundsTemplates.shock_blunt,
+	stagger_duration_modifier = {
+		0.1,
+		0.5,
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_0_8,
+			[armor_types.resistant] = damage_lerp_values.lerp_0_7,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+			[armor_types.super_armor] = damage_lerp_values.lerp_0_3,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1_33,
+		},
+		impact = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1_25,
+			[armor_types.armored] = damage_lerp_values.lerp_1_1,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+			[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1,
+		},
+	},
+	targets = {
+		{
+			power_distribution = {
+				attack = {
+					90,
+					175,
+				},
+				impact = {
+					7,
+					15,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					50,
+					105,
+				},
+				impact = {
+					6,
+					12,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.3,
+				1,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					40,
+					80,
+				},
+				impact = {
+					5,
+					11,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.3,
+				1,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					30,
+					55,
+				},
+				impact = {
+					3,
+					10,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.3,
+				1,
+			},
+		},
+		default_target = {
+			power_distribution = {
+				attack = {
+					10,
+					30,
+				},
+				impact = {
+					3,
+					10,
+				},
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default,
+			boost_curve_multiplier_finesse = {
+				0.3,
+				1,
+			},
+		},
+	},
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
+}
+damage_templates.powermaul_p3_heavy_tank = {
+	ignore_stagger_reduction = true,
+	ragdoll_only = true,
+	ragdoll_push_force = 300,
+	stagger_category = "melee",
+	cleave_distribution = big_cleave,
+	damage_type = damage_types.spiked_blunt,
+	gibbing_power = gibbing_power.always,
+	gibbing_type = gibbing_types.crushing,
+	melee_attack_strength = melee_attack_strengths.heavy,
+	wounds_template = WoundsTemplates.shock_blunt,
+	stagger_duration_modifier = {
+		0.1,
+		0.5,
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_0_9,
+			[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+			[armor_types.super_armor] = damage_lerp_values.lerp_0_6,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1_33,
+		},
+		impact = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1_25,
+			[armor_types.armored] = damage_lerp_values.lerp_1_1,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+			[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1,
+		},
+	},
+	targets = {
+		{
+			power_distribution = {
+				attack = {
+					135,
+					270,
+				},
+				impact = {
+					14,
+					28,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.4,
+				1.4,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					80,
+					160,
+				},
+				impact = {
+					10,
+					22,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.3,
+				1.3,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					55,
+					110,
+				},
+				impact = {
+					9,
+					18,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.2,
+				1.2,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					30,
+					60,
+				},
+				impact = {
+					7,
+					15,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.3,
+				1,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					25,
+					50,
+				},
+				impact = {
+					5,
+					12,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.3,
+				1,
+			},
+		},
+		default_target = {
+			power_distribution = {
+				attack = {
+					20,
+					40,
+				},
+				impact = {
+					3,
+					10,
+				},
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default,
+			boost_curve_multiplier_finesse = {
+				0.3,
+				1,
+			},
+		},
+	},
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
+}
+damage_templates.powermaul_p3_heavy_smiter = {
+	ragdoll_push_force = 300,
+	stagger_category = "melee",
+	cleave_distribution = light_cleave,
+	damage_type = damage_types.spiked_blunt,
+	gibbing_power = gibbing_power.always,
+	gibbing_type = gibbing_types.crushing,
+	melee_attack_strength = melee_attack_strengths.heavy,
+	wounds_template = WoundsTemplates.shock_blunt,
+	stagger_duration_modifier = {
+		0.1,
+		0.5,
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_0_9,
+			[armor_types.resistant] = damage_lerp_values.lerp_0_9,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_9,
+			[armor_types.super_armor] = damage_lerp_values.lerp_0_7,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1_33,
+		},
+		impact = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_1,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+			[armor_types.super_armor] = damage_lerp_values.lerp_1,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1,
+		},
+	},
+	targets = {
+		{
+			power_distribution = {
+				attack = {
+					190,
+					380,
+				},
+				impact = {
+					12,
+					26,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					80,
+					160,
+				},
+				impact = {
+					8,
+					20,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					40,
+					80,
+				},
+				impact = {
+					4,
+					15,
+				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+		default_target = {
+			power_distribution = {
+				attack = {
+					20,
+					40,
+				},
+				impact = {
+					3,
+					10,
+				},
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default,
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5,
+			},
+		},
+	},
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy,
+}
+damage_templates.powermaul_p3_pushfollow_special = {
+	ignore_stagger_reduction = true,
+	shield_override_stagger_strength = 30,
+	stagger_category = "uppercut",
+	weapon_special = true,
+	power_distribution = {
+		attack = {
+			70,
+			200,
+		},
+		impact = {
+			40,
+			60,
+		},
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 0.8,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 0.8,
+			[armor_types.player] = 0,
+			[armor_types.berserker] = 0.8,
+			[armor_types.super_armor] = 1,
+			[armor_types.disgustingly_resilient] = 0.7,
+			[armor_types.void_shield] = 0.5,
+		},
+		impact = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 0.8,
+			[armor_types.player] = 0,
+			[armor_types.berserker] = 0.8,
+			[armor_types.super_armor] = 0.8,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 0,
+		},
+	},
+	targets = {
+		default_target = {
+			power_distribution = {
+				attack = {
+					70,
+					200,
+				},
+				impact = {
+					30,
+					60,
+				},
+			},
+		},
+	},
+}
+damage_templates.powermaul_p3_arc_chain_lightning_link_damage = {
+	ignore_hitzone_multiplier = true,
+	ignore_stagger_reduction = true,
+	stagger_category = "sticky",
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
+			[armor_types.armored] = damage_lerp_values.lerp_1,
+			[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_9,
+			[armor_types.super_armor] = damage_lerp_values.lerp_1,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+		},
+		impact = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_0_75,
+			[armor_types.armored] = damage_lerp_values.lerp_1,
+			[armor_types.resistant] = damage_lerp_values.lerp_0_5,
+			[armor_types.player] = damage_lerp_values.lerp_0_5,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+			[armor_types.super_armor] = damage_lerp_values.lerp_1,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+		},
+	},
+	cleave_distribution = {
+		attack = 5,
+		impact = 5,
+	},
+	damage_type = damage_types.arc_chain,
+	gibbing_power = gibbing_power.light,
+	gibbing_type = gibbing_types.arc,
+	critical_strike = {
+		gibbing_power = gibbing_power.heavy,
+		gibbing_type = gibbing_types.arc,
+	},
+	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
+	targets = {
+		{
+			power_distribution = {
+				attack = {
+					130,
+					260,
+				},
+				impact = {
+					6,
+					12,
+				},
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					150,
+					300,
+				},
+				impact = {
+					7,
+					14,
+				},
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					165,
+					330,
+				},
+				impact = {
+					8,
+					18,
+				},
+			},
+		},
+		{
+			power_distribution = {
+				attack = {
+					180,
+					360,
+				},
+				impact = {
+					10,
+					20,
+				},
+			},
+		},
+		default_target = {
+			power_distribution = {
+				attack = {
+					180,
+					360,
+				},
+				impact = {
+					10,
+					20,
+				},
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+	stat_buffs = {
+		"arc_chain_damage",
 	},
 }
 

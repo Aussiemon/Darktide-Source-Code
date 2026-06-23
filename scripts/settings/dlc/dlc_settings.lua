@@ -21,10 +21,14 @@ local function _create_dlc_entry(script_path)
 end
 
 _create_dlc_entry("scripts/settings/dlc/archetypes/adamant_deluxe_dlc_settings")
+_create_dlc_entry("scripts/settings/dlc/archetypes/adamant_cosmetic_dlc_settings")
 _create_dlc_entry("scripts/settings/dlc/archetypes/adamant_dlc_settings")
 _create_dlc_entry("scripts/settings/dlc/archetypes/broker_cosmetic_dlc_settings")
 _create_dlc_entry("scripts/settings/dlc/archetypes/broker_deluxe_dlc_settings")
 _create_dlc_entry("scripts/settings/dlc/archetypes/broker_dlc_settings")
+_create_dlc_entry("scripts/settings/dlc/archetypes/cryptic_cosmetic_dlc_settings")
+_create_dlc_entry("scripts/settings/dlc/archetypes/cryptic_deluxe_dlc_settings")
+_create_dlc_entry("scripts/settings/dlc/archetypes/cryptic_dlc_settings")
 
 local also_grants = dlc_settings.also_grants
 
@@ -34,8 +38,8 @@ for dlc_id, dlc in pairs(dlc_settings.dlcs) do
 	local includes = dlc.includes
 
 	if includes then
-		for i = 1, #includes do
-			local included_dlc = includes[i]
+		for ii = 1, #includes do
+			local included_dlc = includes[ii]
 
 			also_grants[included_dlc] = also_grants[included_dlc] or {}
 

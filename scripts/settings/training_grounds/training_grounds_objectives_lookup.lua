@@ -86,10 +86,22 @@ local objectives_lookup = {
 		name = "loc_toughness_objective_2",
 		objective_id = "toughness_coherency",
 	},
+	cooldown_regen_cryptic = {
+		max_value = 1,
+		name = "loc_tutorial_cryptic_capacitance_kill_enemies",
+		objective_id = "cooldown_regen_cryptic",
+		play_sound = true,
+	},
 	combat_ability = {
 		max_value = 2,
 		name = "loc_combat_ability_objective",
 		objective_id = "combat_ability",
+		play_sound = true,
+	},
+	combat_ability_use = {
+		max_value = 1,
+		name = "loc_tutorial_cryptic_ability_use",
+		objective_id = "combat_ability_use",
 		play_sound = true,
 	},
 	combat_ability_ogryn_1 = {
@@ -152,6 +164,24 @@ local objectives_lookup = {
 		max_value = 30,
 		name = "loc_combat_ability_broker",
 		objective_id = "combat_ability_broker",
+		play_sound = true,
+	},
+	combat_ability_cryptic_1 = {
+		max_value = 3,
+		name = "loc_tutorial_cryptic_ability_use_one_charge",
+		objective_id = "combat_ability_cryptic_1",
+		play_sound = true,
+	},
+	combat_ability_cryptic_2 = {
+		max_value = 3,
+		name = "loc_tutorial_cryptic_ability_use_two_charges",
+		objective_id = "combat_ability_cryptic_2",
+		play_sound = true,
+	},
+	combat_ability_cryptic_3 = {
+		max_value = 3,
+		name = "loc_tutorial_cryptic_ability_use_three_charges",
+		objective_id = "combat_ability_cryptic_3",
 		play_sound = true,
 	},
 	adamant_companion_targeting = {
@@ -266,6 +296,24 @@ local objectives_lookup = {
 		max_value = 5,
 		name = "loc_grenade_objective_stagger",
 		objective_id = "broker_blitz",
+		play_sound = true,
+	},
+	cryptic_servo_skull_order_kill = {
+		max_value = 1,
+		name = "loc_tutorial_cryptic_companion_enemy",
+		objective_id = "cryptic_servo_skull_order_kill",
+		play_sound = true,
+	},
+	cryptic_servo_skull_hacking = {
+		max_value = 1,
+		name = "loc_tutorial_cryptic_companion_hacking",
+		objective_id = "cryptic_servo_skull_hacking",
+		play_sound = true,
+	},
+	cryptic_servo_skull_empower = {
+		max_value = 1,
+		name = "loc_tutorial_cryptic_companion_empower_use",
+		objective_id = "cryptic_servo_skull_empower",
 		play_sound = true,
 	},
 	grenade = {

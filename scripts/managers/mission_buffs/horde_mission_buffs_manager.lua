@@ -23,8 +23,16 @@ local EVENTS = {
 		"notify_buff_given_to_player",
 	},
 	{
+		"mission_buffs_event_notify_buff_removed_from_player",
+		"notify_buff_removed_from_player",
+	},
+	{
 		"mission_buffs_event_add_externally_controlled_to_player",
 		"_add_externally_controlled_buff_to_player",
+	},
+	{
+		"mission_buffs_event_remove_externally_controlled_from_player",
+		"_remove_externally_controlled_buff_from_player",
 	},
 	{
 		"mission_buffs_event_request_specific_buff",
@@ -213,6 +221,18 @@ end
 
 HordeMissionBuffsManager.give_player_silent_buff_not_saved_to_player_data = function (self, player, buff_name)
 	self._mission_buffs_handler:give_buff_to_player(player, buff_name, true, true)
+end
+
+HordeMissionBuffsManager.remove_buff_from_player = function (self, player, buff_name)
+	self._mission_buffs_handler:remove_buff_from_player(player, buff_name)
+end
+
+HordeMissionBuffsManager.remove_buff_from_all = function (self, buff_name)
+	self._mission_buffs_handler:remove_buff_from_all(buff_name)
+end
+
+HordeMissionBuffsManager.remove_buff_from_player_silently = function (self, player, buff_name)
+	self._mission_buffs_handler:remove_buff_from_player(player, buff_name, true, true)
 end
 
 HordeMissionBuffsManager.check_catchup_for_new_player = function (self, player, override_waves_completed_num)
@@ -438,7 +458,7 @@ HordeMissionBuffsManager._request_buff_for_self = function (self, buff_name)
 		self._mission_buffs_handler:give_buff_to_player(local_player, buff_name)
 	elseif self:_is_client() then
 		local buff_template_id = NetworkLookup.buff_templates[buff_name]
-		local peer_id, local_player_id = self._get_local_player_peer_and_local_id()
+		local _, local_player_id = self._get_local_player_peer_and_local_id()
 	end
 end
 
@@ -489,6 +509,26 @@ HordeMissionBuffsManager._add_externally_controlled_buff_to_player = function (s
 	self._mission_buffs_handler:give_buff_to_player(player, buff_name, true)
 end
 
+HordeMissionBuffsManager._remove_externally_controlled_buff_from_player = function (self, player, buff_name)
+	if not self:_is_server_or_host() then
+		return
+	end
+
+	self._mission_buffs_handler:remove_buff_from_player(player, buff_name, true)
+end
+
+HordeMissionBuffsManager.notify_buff_removed_from_player = function (self, player, buff_name)
+	local buff_template_id = NetworkLookup.buff_templates[buff_name]
+	local is_player_hosting_client = self._is_hosting_player(player)
+	local wave_num = self._game_mode._waves_completed
+
+	if DEDICATED_SERVER or not is_player_hosting_client then
+		Log.info("HordeMissionBuffsManager", "Buff removed (server-side notification) %s for peer_id %s, wave_num %d", buff_name, player:peer_id(), wave_num or -1)
+	elseif self:_is_hosting_client() and is_player_hosting_client then
+		self._mission_buffs_ui_manager:queue_buff_received_notification_ui(buff_name, nil, wave_num)
+	end
+end
+
 HordeMissionBuffsManager.send_choice_options_to_player = function (self, player, current_choice)
 	local is_player_hosting_client = self._is_hosting_player(player)
 	local is_buff_family_choice = current_choice.is_buff_family_choice
@@ -518,9 +558,9 @@ HordeMissionBuffsManager._notify_server_buff_choice = function (self, choice_ind
 		self._mission_buffs_selector:player_selected_buff_choice(local_player, choice_index)
 		self._mission_buffs_selector:try_start_new_buff_choice_for_player(local_player)
 	elseif self:_is_client() then
-		local peer_id, local_player_id = self._get_local_player_peer_and_local_id()
+		local _, local_player_id = self._get_local_player_peer_and_local_id()
 
-		Managers.state.game_session:send_rpc_server("rpc_server_mission_buffs_player_buff_choice", peer_id, local_player_id, choice_index)
+		Managers.state.game_session:send_rpc_server("rpc_server_mission_buffs_player_buff_choice", local_player_id, choice_index)
 	end
 end
 

@@ -95,6 +95,10 @@ WeaponSpecialActivateToggle.on_exit_damage_window = function (self, t, num_hit_e
 	return
 end
 
+WeaponSpecialActivateToggle.on_weapon_shout_action_finish = function (self, t, aborted)
+	return
+end
+
 WeaponSpecialActivateToggle._trigger_anim_event = function (self, anim_event, anim_event_3p, action_time_offset, ...)
 	local anim_ext = self._animation_extension
 	local time_scale = 1

@@ -98,7 +98,7 @@ damage_templates.default_rippergun_assault = {
 	},
 	herding_template = HerdingTemplates.shotgun,
 	damage_type = damage_types.rippergun_pellet,
-	wounds_template = WoundsTemplates.rippergun,
+	wounds_template = WoundsTemplates.shotgun_large,
 	gibbing_power = gibbing_power.medium,
 	gibbing_type = gibbing_types.ballistic,
 	suppression_value = {
@@ -207,7 +207,7 @@ damage_templates.rippergun_p1_m2_assault = {
 	},
 	herding_template = HerdingTemplates.shotgun,
 	damage_type = damage_types.rippergun_pellet,
-	wounds_template = WoundsTemplates.rippergun,
+	wounds_template = WoundsTemplates.shotgun_large,
 	gibbing_power = gibbing_power.medium,
 	gibbing_type = gibbing_types.ballistic,
 	suppression_value = {
@@ -316,7 +316,7 @@ damage_templates.rippergun_p1_m3_assault = {
 	},
 	herding_template = HerdingTemplates.shotgun,
 	damage_type = damage_types.rippergun_pellet,
-	wounds_template = WoundsTemplates.rippergun,
+	wounds_template = WoundsTemplates.shotgun_large,
 	gibbing_power = gibbing_power.medium,
 	gibbing_type = gibbing_types.ballistic,
 	suppression_value = {
@@ -422,7 +422,7 @@ damage_templates.default_rippergun_snp = {
 	},
 	herding_template = HerdingTemplates.shotgun,
 	damage_type = damage_types.rippergun_pellet,
-	wounds_template = WoundsTemplates.rippergun,
+	wounds_template = WoundsTemplates.shotgun_large,
 	gibbing_power = gibbing_power.medium,
 	gibbing_type = gibbing_types.ballistic,
 	suppression_value = {
@@ -464,7 +464,7 @@ damage_templates.rippergun_weapon_special = {
 	gibbing_power = gibbing_power.light,
 	gibbing_type = gibbing_types.sawing,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.combat_blade,
+	wounds_template = WoundsTemplates.slash_large,
 	armor_damage_modifier = {
 		attack = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,

@@ -10,33 +10,34 @@ local armor_types = ArmorSettings.types
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
 local stagger_results = AttackSettings.stagger_results
-local ogryn_size_variation_range = {
+local DEFAULT_HEIGHT = BreedSettings.base_player_body_size_heights.ogryn_sized
+local OGRYN_SIZE_VARIATION_RANGE = {
 	0.9,
 	0.925,
 }
-local average_ogryn_size = ogryn_size_variation_range[1] + (ogryn_size_variation_range[2] - ogryn_size_variation_range[1]) / 2
+local AVERAGE_OGRYN_SIZE = OGRYN_SIZE_VARIATION_RANGE[1] + (OGRYN_SIZE_VARIATION_RANGE[2] - OGRYN_SIZE_VARIATION_RANGE[1]) * 0.5
 local breed_data = {
 	base_unit = "content/characters/player/ogryn/third_person/base",
 	behavior_tree_name = "bot",
+	body_size = "ogryn_sized",
 	broadphase_radius = 1,
-	character_creation_state_machine = "content/characters/player/ogryn/third_person/animations/menu/character_creation",
 	debug_color_name = "sea_green",
 	display_name = "loc_breed_display_name_undefined",
-	end_of_round_state_machine = "content/characters/player/ogryn/third_person/animations/menu/end_of_round",
 	faction_name = "imperium",
 	first_person_unit = "content/characters/player/ogryn/first_person/base",
 	friendly_hit_mass = 0,
 	hit_mass = 2,
-	inventory_state_machine = "content/characters/player/ogryn/third_person/animations/menu/inventory",
 	ladder_max_distance_allow_climb = 1.3,
 	ladder_movement_anim_length = 4,
 	ladder_whole_movement_anim_distance = 1.4,
-	mission_intro_state_machine = "content/characters/player/ogryn/third_person/animations/menu/mission_briefing",
 	name = "ogryn",
-	portrait_state_machine = "content/characters/player/ogryn/third_person/animations/menu/portrait",
 	breed_type = breed_types.player,
 	genders = {
 		"male",
+	},
+	hologram_units = {
+		consumed = "content/characters/player/ogryn/attachments_base/shared/see_through_skeleton/see_through_skeleton_bon",
+		default = "content/characters/player/ogryn/attachments_base/shared/see_through_skeleton/see_through_skeleton",
 	},
 	testify_flags = {
 		spawn_all_enemies = false,
@@ -46,14 +47,14 @@ local breed_data = {
 	},
 	armor_type = armor_types.player,
 	heights = {
-		default = 2.2 / average_ogryn_size,
-		sprint = 1.75 / average_ogryn_size,
-		crouch = 1.7 / average_ogryn_size,
-		slide = 1.6 / average_ogryn_size,
-		vault = 1.8 / average_ogryn_size,
+		default = DEFAULT_HEIGHT / AVERAGE_OGRYN_SIZE,
+		sprint = 1.75 / AVERAGE_OGRYN_SIZE,
+		crouch = 1.7 / AVERAGE_OGRYN_SIZE,
+		slide = 1.6 / AVERAGE_OGRYN_SIZE,
+		vault = 1.8 / AVERAGE_OGRYN_SIZE,
 	},
-	size_variation_range = ogryn_size_variation_range,
-	first_person_pose_scale = average_ogryn_size * 0.8,
+	size_variation_range = OGRYN_SIZE_VARIATION_RANGE,
+	first_person_pose_scale = AVERAGE_OGRYN_SIZE * 0.8,
 	fade = {
 		max_distance = 1.2,
 		max_height_difference = 1.2,

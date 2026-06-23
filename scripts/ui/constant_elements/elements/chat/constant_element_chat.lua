@@ -38,6 +38,12 @@ ConstantElementChat.init = function (self, parent, draw_layer, start_scale, defi
 	Managers.event:register(self, "chat_manager_participant_update", "cb_chat_manager_participant_update")
 	Managers.event:register(self, "chat_manager_participant_removed", "cb_chat_manager_participant_removed")
 	Managers.event:register(self, "system_chat_message", "cb_system_message_recieved")
+	Managers.event:register(self, "event_update_chat_bubbles_hub_enabled", "event_update_chat_bubbles_hub_enabled")
+	Managers.event:register(self, "event_update_chat_bubbles_strike_team_enabled", "event_update_chat_bubbles_strike_team_enabled")
+	Managers.event:register(self, "event_update_chat_bubbles_background_opacity", "event_update_chat_bubbles_background_opacity")
+	Managers.event:register(self, "event_update_chat_bubbles_lifetime_multiplier", "event_update_chat_bubbles_lifetime_multiplier")
+	Managers.event:register(self, "event_update_chat_bubbles_text_size", "event_update_chat_bubbles_text_size")
+	Managers.event:register(self, "event_update_chat_bubbles_text_opacity", "event_update_chat_bubbles_text_opacity")
 
 	self._active_state = States.hidden
 	self._message_widget_blueprints = Definitions.message_widget_blueprints
@@ -58,6 +64,47 @@ ConstantElementChat.init = function (self, parent, draw_layer, start_scale, defi
 	self._input_field_widget = nil
 	self._reported_left_channel_handles = {}
 	self._chat_world_marker_id_by_peer_id = {}
+	self._chat_world_marker_channel_tag_by_peer_id = {}
+	self._chat_bubbles_hub_enabled = true
+	self._chat_bubbles_strike_team_enabled = true
+	self._chat_bubbles_background_opacity = 70
+	self._chat_bubbles_lifetime_multiplier = 100
+	self._chat_bubbles_text_size = 24
+	self._chat_bubbles_text_opacity = 100
+
+	local save_manager = Managers.save
+
+	if save_manager then
+		local account_data = save_manager:account_data()
+		local interface_settings = account_data and account_data.interface_settings
+
+		if interface_settings then
+			if interface_settings.chat_bubbles_hub_enabled ~= nil then
+				self._chat_bubbles_hub_enabled = interface_settings.chat_bubbles_hub_enabled == true
+			end
+
+			if interface_settings.chat_bubbles_strike_team_enabled ~= nil then
+				self._chat_bubbles_strike_team_enabled = interface_settings.chat_bubbles_strike_team_enabled == true
+			end
+
+			if interface_settings.chat_bubbles_background_opacity ~= nil then
+				self._chat_bubbles_background_opacity = interface_settings.chat_bubbles_background_opacity
+			end
+
+			if interface_settings.chat_bubbles_lifetime_multiplier ~= nil then
+				self._chat_bubbles_lifetime_multiplier = interface_settings.chat_bubbles_lifetime_multiplier
+			end
+
+			if interface_settings.chat_bubbles_text_size ~= nil then
+				self._chat_bubbles_text_size = interface_settings.chat_bubbles_text_size
+			end
+
+			if interface_settings.chat_bubbles_text_opacity ~= nil then
+				self._chat_bubbles_text_opacity = interface_settings.chat_bubbles_text_opacity
+			end
+		end
+	end
+
 	self._virtual_keyboard_promise = nil
 
 	self:_setup_input()
@@ -78,6 +125,12 @@ ConstantElementChat.destroy = function (self)
 	Managers.event:unregister(self, "chat_manager_participant_update")
 	Managers.event:unregister(self, "chat_manager_participant_removed")
 	Managers.event:unregister(self, "system_chat_message")
+	Managers.event:unregister(self, "event_update_chat_bubbles_hub_enabled")
+	Managers.event:unregister(self, "event_update_chat_bubbles_strike_team_enabled")
+	Managers.event:unregister(self, "event_update_chat_bubbles_background_opacity")
+	Managers.event:unregister(self, "event_update_chat_bubbles_lifetime_multiplier")
+	Managers.event:unregister(self, "event_update_chat_bubbles_text_size")
+	Managers.event:unregister(self, "event_update_chat_bubbles_text_opacity")
 
 	local virtual_keyboard_promise = self._virtual_keyboard_promise
 
@@ -249,9 +302,140 @@ ConstantElementChat.cb_chat_manager_message_recieved = function (self, channel_h
 		end
 
 		self:_add_message(message_text, sender, channel)
+
+		local game_mode_manager = Managers.state.game_mode
+
+		if game_mode_manager then
+			local game_mode = game_mode_manager:game_mode()
+			local game_mode_name = game_mode and game_mode:name()
+			local is_in_hub = game_mode_name and game_mode_name == "hub"
+
+			if is_in_hub then
+				local channel_tag = channel.tag
+				local show_chat_bubbles = channel_tag == ChatManagerConstants.ChannelTag.HUB and self._chat_bubbles_hub_enabled or channel_tag == ChatManagerConstants.ChannelTag.PARTY and self._chat_bubbles_strike_team_enabled
+
+				if not show_chat_bubbles then
+					return
+				end
+
+				local player_info = self:_find_participant_player_info(participant)
+				local participant_peer_id = player_info and player_info.peer_id and player_info:peer_id()
+
+				if participant_peer_id then
+					local player_manager = Managers.player
+
+					if player_manager then
+						local local_player_id = 1
+						local player = player_manager:player(participant_peer_id, local_player_id)
+						local local_player = player_manager:local_player(1)
+
+						if player ~= local_player then
+							local player_unit = player and player.player_unit
+
+							if player_unit then
+								self:_remove_chat_world_marker(participant_peer_id)
+								Managers.event:trigger("add_world_marker_unit", "chat_bubble", player_unit, callback(self, "_on_chat_world_marker_spawned", participant_peer_id, channel_tag), {
+									text = message_text,
+									channel = channel,
+									background_opacity = self._chat_bubbles_background_opacity,
+									lifetime_multiplier = self._chat_bubbles_lifetime_multiplier,
+									text_size = self._chat_bubbles_text_size,
+									text_opacity = self._chat_bubbles_text_opacity,
+								})
+							end
+						end
+					end
+				end
+			end
+		end
 	end):catch(function (error)
 		Log.warning("ConstantElementChat", "Could not verify string, error: %s, string: %s", tostring(error), tostring(message.message_body))
 	end)
+end
+
+ConstantElementChat._remove_chat_world_marker = function (self, peer_id)
+	local marker_id = self._chat_world_marker_id_by_peer_id[peer_id]
+
+	if marker_id then
+		Managers.event:trigger("remove_world_marker", marker_id)
+
+		self._chat_world_marker_id_by_peer_id[peer_id] = nil
+	end
+
+	self._chat_world_marker_channel_tag_by_peer_id[peer_id] = nil
+end
+
+ConstantElementChat._remove_chat_world_markers_by_channel = function (self, channel_tag)
+	local marker_channel_tag_by_peer_id = self._chat_world_marker_channel_tag_by_peer_id
+	local peer_ids_to_remove = {}
+
+	for peer_id, marker_channel_tag in pairs(marker_channel_tag_by_peer_id) do
+		if marker_channel_tag == channel_tag then
+			peer_ids_to_remove[#peer_ids_to_remove + 1] = peer_id
+		end
+	end
+
+	for i = 1, #peer_ids_to_remove do
+		self:_remove_chat_world_marker(peer_ids_to_remove[i])
+	end
+end
+
+ConstantElementChat._remove_all_chat_world_markers = function (self)
+	local marker_id_by_peer_id = self._chat_world_marker_id_by_peer_id
+	local peer_ids_to_remove = {}
+
+	for peer_id, _ in pairs(marker_id_by_peer_id) do
+		peer_ids_to_remove[#peer_ids_to_remove + 1] = peer_id
+	end
+
+	for i = 1, #peer_ids_to_remove do
+		self:_remove_chat_world_marker(peer_ids_to_remove[i])
+	end
+end
+
+ConstantElementChat.event_update_chat_bubbles_hub_enabled = function (self, enabled)
+	self._chat_bubbles_hub_enabled = enabled == true
+
+	if not self._chat_bubbles_hub_enabled then
+		self:_remove_chat_world_markers_by_channel(ChatManagerConstants.ChannelTag.HUB)
+	end
+end
+
+ConstantElementChat.event_update_chat_bubbles_strike_team_enabled = function (self, enabled)
+	self._chat_bubbles_strike_team_enabled = enabled == true
+
+	if not self._chat_bubbles_strike_team_enabled then
+		self:_remove_chat_world_markers_by_channel(ChatManagerConstants.ChannelTag.PARTY)
+	end
+end
+
+ConstantElementChat.event_update_chat_bubbles_background_opacity = function (self, value)
+	self._chat_bubbles_background_opacity = value
+
+	self:_remove_all_chat_world_markers()
+end
+
+ConstantElementChat.event_update_chat_bubbles_lifetime_multiplier = function (self, value)
+	self._chat_bubbles_lifetime_multiplier = value
+
+	self:_remove_all_chat_world_markers()
+end
+
+ConstantElementChat.event_update_chat_bubbles_text_size = function (self, value)
+	self._chat_bubbles_text_size = value
+
+	self:_remove_all_chat_world_markers()
+end
+
+ConstantElementChat.event_update_chat_bubbles_text_opacity = function (self, value)
+	self._chat_bubbles_text_opacity = value
+
+	self:_remove_all_chat_world_markers()
+end
+
+ConstantElementChat._on_chat_world_marker_spawned = function (self, peer_id, channel_tag, id)
+	self._chat_world_marker_id_by_peer_id[peer_id] = id
+	self._chat_world_marker_channel_tag_by_peer_id[peer_id] = channel_tag
 end
 
 ConstantElementChat.cb_chat_manager_participant_added = function (self, channel_handle, participant)

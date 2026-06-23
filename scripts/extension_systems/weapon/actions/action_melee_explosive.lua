@@ -70,7 +70,7 @@ ActionMeleeExplosive._explode = function (self, t)
 		local item = weapon and weapon.item
 		local origin_slot = self._inventory_component.wielded_slot
 
-		Explosion.create_explosion(self._world, self._physics_world, explode_position, explode_direction, self._player.player_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, AttackSettings.attack_types.explosion, is_critical_strike, ignore_cover, item, origin_slot)
+		Explosion.create_explosion(self._world, self._physics_world, explode_position, Quaternion.look(explode_direction), self._player.player_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, AttackSettings.attack_types.explosion, is_critical_strike, ignore_cover, item, origin_slot)
 	end
 
 	local ammunition_usage = action_settings.ammunition_usage

@@ -1,5 +1,8 @@
 ﻿-- chunkname: @scripts/extension_systems/health/health_system.lua
 
+require("scripts/extension_systems/health/health_extension_base")
+require("scripts/extension_systems/health/cryptic_personal_force_field_unit_health_extension")
+require("scripts/extension_systems/health/cryptic_personal_force_field_husk_health_extension")
 require("scripts/extension_systems/health/health_extension")
 require("scripts/extension_systems/health/husk_health_extension")
 require("scripts/extension_systems/health/player_hub_health_extension")

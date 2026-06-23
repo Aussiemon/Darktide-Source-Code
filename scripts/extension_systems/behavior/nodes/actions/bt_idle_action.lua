@@ -37,6 +37,8 @@ BtIdleAction.enter = function (self, unit, breed, blackboard, scratchpad, action
 			Vo.enemy_vo_event(unit, vo_event)
 		end
 	end
+
+	scratchpad.update_rate = action_data.update_rate or math.huge
 end
 
 BtIdleAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
@@ -44,7 +46,7 @@ BtIdleAction.run = function (self, unit, breed, blackboard, scratchpad, action_d
 		MinionMovement.rotate_towards_target_unit(unit, scratchpad)
 	end
 
-	return "running"
+	return "running", nil
 end
 
 BtIdleAction.init_values = function (self, blackboard)

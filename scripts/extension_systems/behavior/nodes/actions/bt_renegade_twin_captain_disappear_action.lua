@@ -44,7 +44,7 @@ BtRenegadeTwinCaptainDisappearAction.run = function (self, unit, breed, blackboa
 		local power_level = action_data.power_level
 		local explosion_template = action_data.explosion_template
 
-		Explosion.create_explosion(world, physics_world, position, impact_normal, unit, explosion_template, power_level, charge_level, attack_type)
+		Explosion.create_explosion(world, physics_world, position, Quaternion.look(impact_normal), unit, explosion_template, power_level, charge_level, attack_type)
 
 		local minion_spawn_manager = Managers.state.minion_spawn
 

@@ -106,7 +106,7 @@ damage_templates.damage_shotpistol_shield_p1 = {
 		0.6,
 		1.35,
 	},
-	wounds_template = WoundsTemplates.shotgun,
+	wounds_template = WoundsTemplates.shotgun_small,
 	on_kill_area_suppression = {
 		suppression_value = {
 			3.2,

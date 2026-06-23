@@ -669,38 +669,21 @@ blueprints.trait_new = {
 		content.element = element
 
 		local texture_icon = element.texture_icon
-		local icon_material_values = style.icon.material_values
-
-		if texture_icon then
-			local string_start = "weapon_trait_"
-			local weapon_trait_icon_position = string.find(texture_icon, string_start)
-
-			if weapon_trait_icon_position then
-				local weapon_trait_icon_name = string.sub(texture_icon, weapon_trait_icon_position)
-				local weapon_trait_icon_index = string.sub(weapon_trait_icon_name, string.len(string_start) + 1)
-				local index_to_number = tonumber(weapon_trait_icon_index)
-
-				if not index_to_number or index_to_number > 247 then
-					weapon_trait_icon_name = "weapon_trait_default"
-				end
-
-				icon_material_values.icon = "content/ui/textures/icons/traits/mastery_tree/" .. weapon_trait_icon_name
-			end
-		end
-
 		local valid_rarity = element.rarity and element.rarity > 0 and element.rarity <= 4
 		local rarity = valid_rarity and element.rarity or 0
+		local icon_material_values = style.icon.material_values
 
+		icon_material_values.icon = texture_icon
 		icon_material_values.frame_tier = "content/ui/textures/buttons/mastery_tree/trait_node_tier_" .. rarity
 
 		local traits = element.traits
 
-		for i = 1, #traits do
-			local trait = traits[i]
-			local rarity = trait.rarity
+		for ii = 1, #traits do
+			local trait = traits[ii]
+			local trait_rarity = trait.rarity
 
-			content["rarity_" .. rarity .. "_unlocked"] = trait.unlocked
-			content["rarity_" .. rarity .. "_available"] = trait.available
+			content["rarity_" .. trait_rarity .. "_unlocked"] = trait.unlocked
+			content["rarity_" .. trait_rarity .. "_available"] = trait.available
 		end
 
 		content.rarity = element.rarity

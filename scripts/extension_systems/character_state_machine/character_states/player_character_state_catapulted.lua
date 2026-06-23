@@ -82,6 +82,7 @@ PlayerCharacterStateCatapulted.on_enter = function (self, unit, dt, t, previous_
 		PlayerUnitVisualLoadout.wield_slot("slot_unarmed", unit, t)
 	end
 
+	Fall.set_fall_height(locomotion, inair_state)
 	self:_trigger_anim_event(catapulted_direction, "enter")
 
 	local is_server = self._is_server

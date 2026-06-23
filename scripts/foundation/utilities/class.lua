@@ -31,6 +31,30 @@ function assert_type(object, asserted_base_class)
 	return
 end
 
+function odin_class(class_name)
+	local class_table = rawget(_G, class_name)
+
+	class_table.new = function (self, ...)
+		local object = {}
+
+		setmetatable(object, class_table)
+
+		if object.init then
+			return object, object:init(...)
+		else
+			return object
+		end
+	end
+
+	class_table.delete = function (self, ...)
+		if self.destroy then
+			self:destroy(...)
+		end
+	end
+
+	CLASSES[class_name] = class_table
+end
+
 function class(class_name, super_name)
 	local class_table = CLASSES[class_name]
 	local super

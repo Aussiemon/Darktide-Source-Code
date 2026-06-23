@@ -177,7 +177,7 @@ local text_input_base = {
 		content_id = "hotspot",
 		pass_type = "hotspot",
 		change_function = function (hotspot_content, style)
-			if PLATFORM == "xbs" or PLATFORM == "ps5" then
+			if IS_XBS or IS_PLAYSTATION then
 				return
 			end
 
@@ -285,7 +285,7 @@ local text_input_base = {
 	{
 		pass_type = "logic",
 		value = function (pass, ui_renderer, ui_style, content, position, size)
-			if PLATFORM == "xbs" then
+			if IS_XBS then
 				local hotspot = content.hotspot
 
 				if hotspot.on_pressed then
@@ -340,7 +340,7 @@ local text_input_base = {
 
 					content.is_writing = is_writing
 				end
-			elseif PLATFORM == "ps5" then
+			elseif IS_PLAYSTATION then
 				local hotspot = content.hotspot
 
 				if PS5ImeDialog.is_finished() then
@@ -1087,6 +1087,13 @@ placeholder_text_style.text_color = ChatSettings.input_text_idle_color
 local placeholder_fade_time = ChatSettings.placeholder_fade_time
 
 TextInputPassTemplates.chat_input_field = table.clone(text_input_base)
+TextInputPassTemplates.chat_input_field[1] = {
+	content_id = "hotspot",
+	pass_type = "hotspot",
+	change_function = function (hotspot_content, style)
+		return
+	end,
+}
 
 table.append(TextInputPassTemplates.chat_input_field, {
 	{
@@ -1134,7 +1141,11 @@ table.append(TextInputPassTemplates.chat_input_field, {
 		pass_type = "rect",
 		style_id = "input_caret",
 		style = input_caret_style,
-		visibility_function = _input_active_visibility_function,
+		visibility_function = function (content, style)
+			local widget_content = content.parent or content
+
+			return _input_active_visibility_function(widget_content, style)
+		end,
 		change_function = function (pass_content, style_data, animations, dt)
 			local widget_content = pass_content.parent or pass_content
 			local blink_time = (widget_content._blink_time or 0) + dt

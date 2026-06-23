@@ -295,7 +295,7 @@ templates.weapon_trait_bespoke_powersword_p2_explosion_on_overheat_lockout = {
 		local unit = template_context.unit
 		local position = Unit.local_position(unit, 1) + Vector3.up()
 
-		Explosion.create_explosion(template_context.world, template_context.physics_world, position, Vector3.up(), template_context.unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
+		Explosion.create_explosion(template_context.world, template_context.physics_world, position, Quaternion.identity(), template_context.unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
 
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local inventory_slot_component = unit_data_extension:write_component(template_context.item_slot_name)

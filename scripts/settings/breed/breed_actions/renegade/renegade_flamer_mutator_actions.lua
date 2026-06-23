@@ -21,6 +21,7 @@ local action_data = {
 	},
 	weapon_malfunction_loop = {
 		rotate_towards_target = false,
+		weapon_malfunction_time = 12,
 		anim_events = {
 			"suppressed_loop_01",
 		},
@@ -28,6 +29,16 @@ local action_data = {
 			"stagger_finished",
 			"idle",
 		},
+	},
+	weapon_malfunction_run_to_spawner = {
+		count_as_done_on_fail = true,
+		despawn_once_reached = false,
+		enable_disable_locomotion_speed = true,
+		idle_anim_events = "idle",
+		move_anim_event = "move_fwd",
+		move_to_closest_minion_spawner = true,
+		remove_loot = false,
+		target_spawner_type = "default",
 	},
 	alerted = {
 		alerted_duration = 0.75,

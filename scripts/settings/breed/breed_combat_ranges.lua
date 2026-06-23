@@ -38,5 +38,6 @@ _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/cul
 _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/cultist/cultist_berzerker_combat_ranges")
 _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/cultist/cultist_flamer_combat_ranges")
 _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/cultist/cultist_shocktrooper_combat_ranges")
+_create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/companion/companion_servo_skull_combat_ranges")
 
 return settings("BreedCombatRanges", breed_combat_ranges)

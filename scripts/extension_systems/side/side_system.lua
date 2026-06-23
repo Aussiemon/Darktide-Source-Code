@@ -355,13 +355,16 @@ local function _is_valid_target(unit, side_extension)
 			return false
 		end
 	else
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local breed_name = unit_data_extension:breed_name()
-		local breed = Breeds[breed_name]
-		local is_untargetable = breed.is_untargetable
+		local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
 
-		if is_untargetable then
-			return false
+		if unit_data_extension then
+			local breed_name = unit_data_extension:breed_name()
+			local breed = Breeds[breed_name]
+			local is_untargetable = breed.is_untargetable
+
+			if is_untargetable then
+				return false
+			end
 		end
 	end
 

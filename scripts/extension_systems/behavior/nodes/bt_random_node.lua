@@ -9,7 +9,7 @@ local BtRandomNode = class("BtRandomNode", "BtNode")
 BtRandomNode.init = function (self, ...)
 	BtRandomNode.super.init(self, ...)
 
-	self._children = {}
+	self._random_children = {}
 end
 
 BtRandomNode.init_values = function (self, blackboard, action_data, node_data)
@@ -18,15 +18,13 @@ BtRandomNode.init_values = function (self, blackboard, action_data, node_data)
 	local node_identifier = self.identifier
 
 	node_data[node_identifier] = true
+end
 
-	local children = self._children
+BtRandomNode.add_child = function (self, node)
+	BtRandomNode.super.add_child(self, node)
 
-	for i = 1, #children do
-		local child = children[i]
-		local child_tree_node = child.tree_node
-		local child_action_data = child_tree_node.action_data
-
-		child:init_values(blackboard, child_action_data, node_data)
+	if not node.tree_node.state then
+		self._random_children[#self._random_children + 1] = node
 	end
 end
 
@@ -43,10 +41,6 @@ BtRandomNode.ready = function (self, lua_node)
 	end
 
 	self._probabilities, self._alias = LoadedDice.create(probabilities, false)
-end
-
-BtRandomNode.add_child = function (self, node)
-	self._children[#self._children + 1] = node
 end
 
 BtRandomNode.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy, node_data)
@@ -116,13 +110,13 @@ BtRandomNode.run = function (self, unit, breed, blackboard, scratchpad, action_d
 	local running_node = running_child_nodes[node_identifier]
 	local running_tree_node = running_node.tree_node
 	local running_action_data = running_tree_node.action_data
-	local result, evaluate_utility_next_frame = running_node:run(unit, blackboard, scratchpad, running_action_data, dt, t, node_data, running_child_nodes)
+	local result, evaluate_utility_next_frame, update_rate = running_node:run(unit, blackboard, scratchpad, running_action_data, dt, t, node_data, running_child_nodes)
 
 	if result ~= "running" then
 		node_data[node_identifier] = true
 	end
 
-	return result, evaluate_utility_next_frame
+	return result, evaluate_utility_next_frame, update_rate
 end
 
 return BtRandomNode

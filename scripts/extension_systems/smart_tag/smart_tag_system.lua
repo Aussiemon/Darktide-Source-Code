@@ -274,7 +274,10 @@ SmartTagSystem.reply_tag = function (self, tag_id, replier_unit, reply_name)
 	end
 end
 
-SmartTagSystem.unit_tagged_by_player_unit = function (self, player_unit, optional_tag_marker_type)
+SmartTagSystem.unit_tagged_by_player_unit = function (self, player_unit, optional_tag_marker_type, optional_name, out_table)
+	local found_optional_tag_marker_type = not optional_tag_marker_type or false
+	local found_optional_name = not optional_name or false
+
 	for _, tag in pairs(self._all_tags) do
 		local template = tag and tag:template()
 		local marker_type = template.marker_type
@@ -289,13 +292,40 @@ SmartTagSystem.unit_tagged_by_player_unit = function (self, player_unit, optiona
 				local target_breed = unit_data and unit_data:breed()
 
 				if target_breed and target_breed.tags.minion and buff_extension and not buff_extension:has_keyword("unperceivable") then
-					return target_unit, tag
+					local optional_tag_marker_type_table = out_table[optional_tag_marker_type]
+
+					optional_tag_marker_type_table.target_unit = target_unit
+					optional_tag_marker_type_table.tag = tag
+
+					if found_optional_name then
+						return
+					end
+
+					found_optional_tag_marker_type = true
 				end
 			end
 		end
-	end
 
-	return nil
+		local tag_name = template.name
+
+		if tag_name == optional_name then
+			local tagger_unit = tag:tagger_unit()
+			local target_unit = tag:target_unit()
+
+			if tagger_unit == player_unit and target_unit then
+				local optional_name_table = out_table[optional_name]
+
+				optional_name_table.target_unit = target_unit
+				optional_name_table.tag = tag
+
+				if found_optional_tag_marker_type then
+					return
+				end
+
+				found_optional_name = true
+			end
+		end
+	end
 end
 
 SmartTagSystem.unit_tag_id = function (self, unit)

@@ -31,6 +31,7 @@ local breed_data = {
 	base_unit = "content/characters/enemy/chaos_daemonhost_witch/third_person/base",
 	bone_lod_radius = 2.5,
 	boss_health_bar_disabled = true,
+	boss_health_bar_priority = 10,
 	broadphase_radius = 1,
 	challenge_rating = 20,
 	display_name = "loc_breed_display_name_chaos_daemonhost",

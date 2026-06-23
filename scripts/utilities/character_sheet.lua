@@ -76,7 +76,7 @@ local function _handle_buff_tier(buff_tiers, selected_talents, talent_name, buff
 	end
 end
 
-local function _by_furthest_from_start(previous_talent, talent_name, value, archetype, mute_log)
+local function _by_furthest_from_start(previous_talent, current_talent, talent_name, value, archetype, mute_log)
 	local previous_step_count = previous_talent and previous_talent.step_count or BASE_TALENT_STEP_COUNT
 	local found, step_count, is_unique
 
@@ -103,7 +103,7 @@ local function _by_furthest_from_start(previous_talent, talent_name, value, arch
 
 		return previous_talent
 	elseif previous_talent then
-		if step_count == previous_step_count and previous_talent.value ~= value then
+		if step_count == previous_step_count and previous_talent.value ~= value and (not current_talent or not current_talent.ignore_same_steps_conflict) then
 			local pick_previous = talent_name > previous_talent.talent_name
 
 			Log.error("CharacterSheet", "Found two selected talents using the same identifier with same distance from start (%s, %s). No way of deciding one over the other. Picked by name sorting: %s", talent_name, previous_talent.talent_name, pick_previous and previous_talent.talent_name or talent_name)
@@ -356,13 +356,13 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 								local sub_identifier = identifier[jj]
 								local prev_best_identifier = PASSIVE_IDENTIFIERS_FOUND[identifier]
 
-								PASSIVE_IDENTIFIERS_FOUND[sub_identifier] = _by_furthest_from_start(prev_best_identifier, talent_name, buff_template_name, archetype, mute_log)
+								PASSIVE_IDENTIFIERS_FOUND[sub_identifier] = _by_furthest_from_start(prev_best_identifier, talent, talent_name, buff_template_name, archetype, mute_log)
 							end
 						else
 							local buff_template_name = passive.buff_template_name
 							local prev_best_identifier = PASSIVE_IDENTIFIERS_FOUND[identifier]
 
-							PASSIVE_IDENTIFIERS_FOUND[identifier] = _by_furthest_from_start(prev_best_identifier, talent_name, buff_template_name, archetype, mute_log)
+							PASSIVE_IDENTIFIERS_FOUND[identifier] = _by_furthest_from_start(prev_best_identifier, talent, talent_name, buff_template_name, archetype, mute_log)
 						end
 					end
 				end
@@ -377,7 +377,7 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 							local identifier = coherency.identifier
 							local prev_best_identifier = COHERENCY_IDENTIFIERS_FOUND[identifier]
 
-							COHERENCY_IDENTIFIERS_FOUND[identifier] = _by_furthest_from_start(prev_best_identifier, talent_name, buff_template_name, archetype, mute_log)
+							COHERENCY_IDENTIFIERS_FOUND[identifier] = _by_furthest_from_start(prev_best_identifier, talent, talent_name, buff_template_name, archetype, mute_log)
 						end
 					end
 				end
@@ -395,12 +395,12 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 								local sub_identifier = identifier[jj]
 								local prev_best_identifier = SPECIAL_RULE_IDENTIFIERS_FOUND[sub_identifier]
 
-								SPECIAL_RULE_IDENTIFIERS_FOUND[sub_identifier] = _by_furthest_from_start(prev_best_identifier, talent_name, sub_special_rule_name, archetype, mute_log)
+								SPECIAL_RULE_IDENTIFIERS_FOUND[sub_identifier] = _by_furthest_from_start(prev_best_identifier, talent, talent_name, sub_special_rule_name, archetype, mute_log)
 							end
 						else
 							local prev_best_identifier = SPECIAL_RULE_IDENTIFIERS_FOUND[identifier]
 
-							SPECIAL_RULE_IDENTIFIERS_FOUND[identifier] = _by_furthest_from_start(prev_best_identifier, talent_name, special_rule_name, archetype, mute_log)
+							SPECIAL_RULE_IDENTIFIERS_FOUND[identifier] = _by_furthest_from_start(prev_best_identifier, talent, talent_name, special_rule_name, archetype, mute_log)
 						end
 					end
 				end
@@ -408,9 +408,11 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 				local player_ability = talent.player_ability
 
 				if player_ability then
+					local is_main_ability = talent.is_main_ability
+
 					if player_ability.ability_type == "combat_ability" then
 						local previous_ability = ABILITIES_FOUND.ability
-						local chosen_ability = _by_furthest_from_start(previous_ability, talent_name, talent, archetype, mute_log)
+						local chosen_ability = _by_furthest_from_start(previous_ability, talent, talent_name, talent, archetype, mute_log)
 
 						ABILITIES_FOUND.ability = chosen_ability
 						combat_ability = chosen_ability.value.player_ability.ability
@@ -418,15 +420,19 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 						_add_modifier(modifiers, "ability", chosen_ability.value)
 					elseif player_ability.ability_type == "grenade_ability" then
 						local previous_ability = ABILITIES_FOUND.blitz
-						local chosen_ability = _by_furthest_from_start(previous_ability, talent_name, talent, archetype, mute_log)
+						local chosen_ability = _by_furthest_from_start(previous_ability, talent, talent_name, talent, archetype, mute_log)
 
 						ABILITIES_FOUND.blitz = chosen_ability
 						grenade_ability = chosen_ability.value.player_ability.ability
 
-						_add_modifier(modifiers, "blitz", chosen_ability.value)
+						if grenade_ability ~= player_ability and is_main_ability == true then
+							_add_modifier(modifiers, "blitz", talent)
+						else
+							_add_modifier(modifiers, "blitz", chosen_ability.value)
+						end
 					elseif player_ability.ability_type == "pocketable_ability" then
 						local previous_ability = ABILITIES_FOUND.pocketable
-						local chosen_ability = _by_furthest_from_start(previous_ability, talent_name, talent, archetype, mute_log)
+						local chosen_ability = _by_furthest_from_start(previous_ability, talent, talent_name, talent, archetype, mute_log)
 
 						ABILITIES_FOUND.pocketable = chosen_ability
 						pocketable_ability = chosen_ability.value.player_ability.ability
@@ -436,7 +442,7 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 						Log.error("CharacterSheet", "ability_type(%q) can't handle it.", player_ability.ability_type)
 					end
 				elseif talent.coherency then
-					ABILITIES_FOUND.aura = _by_furthest_from_start(ABILITIES_FOUND.aura, talent_name, talent, archetype, mute_log)
+					ABILITIES_FOUND.aura = _by_furthest_from_start(ABILITIES_FOUND.aura, talent, talent_name, talent, archetype, mute_log)
 				end
 			end
 		end

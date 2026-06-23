@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/health/health_extension.lua
 
 local HealthExtensionInterface = require("scripts/extension_systems/health/health_extension_interface")
-local HealthExtension = class("HealthExtension")
+local HealthExtension = class("HealthExtension", "HealthExtensionBase")
 
 HealthExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
 	local health = extension_init_data.health or Unit.get_data(unit, "health")
@@ -144,6 +144,19 @@ HealthExtension.add_heal = function (self, heal_amount, heal_type)
 	return actual_heal_amount
 end
 
+HealthExtension.set_health_instant = function (self, wanted_health)
+	local health = self._health
+	local damage_caused = health - wanted_health
+	local game_session = self._game_session
+	local game_object_id = self._game_object_id
+
+	self._damage = damage_caused
+
+	local network_damage = math.min(damage_caused, health)
+
+	GameSession.set_game_object_field(game_session, game_object_id, "damage", network_damage)
+end
+
 HealthExtension.set_last_damaging_unit = function (self, last_damaging_unit, hit_zone_name, last_hit_was_critical, hit_world_position_or_nil)
 	self._last_damaging_unit = last_damaging_unit
 	self._last_hit_zone_name = hit_zone_name
@@ -202,6 +215,7 @@ HealthExtension.kill = function (self)
 		return
 	end
 
+	HealthExtension.super.kill(self)
 	Managers.event:trigger("unit_died", self._unit)
 
 	HEALTH_ALIVE[self._unit] = nil

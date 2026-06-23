@@ -529,6 +529,31 @@ math.ease_in_out_bounce = function (t)
 	end
 end
 
+math.ease_in_back = function (t)
+	local c1 = 1.70158
+	local c2 = c1 + 1
+
+	return c2 * t * t * t - c1 * t * t
+end
+
+math.ease_out_back = function (t)
+	local c1 = 1.70158
+	local c2 = c1 + 1
+
+	return 1 + c2 * (t - 1)^3 + c1 * (t - 1)^2
+end
+
+math.ease_in_out_back = function (t)
+	local c1 = 1.70158
+	local c2 = c1 * 1.525
+
+	if t < 0.5 then
+		return (2 * t)^2 * ((c2 + 1) * 2 * t - c2) / 2
+	else
+		return ((2 * t - 2)^2 * ((c2 + 1) * (t * 2 - 2) + c2) + 2) / 2
+	end
+end
+
 math.ease_out_elastic = function (t)
 	if t == 0 or t == 1 then
 		return t

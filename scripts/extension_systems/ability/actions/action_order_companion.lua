@@ -68,7 +68,7 @@ ActionOrderCompanion.fixed_update = function (self, dt, t, time_in_action)
 			local attack_type = AttackSettings.attack_types.explosion
 			local explosion_template = ExplosionTemplates.adamant_whistle_explosion
 
-			Explosion.create_explosion(self._world, self._physics_world, dog_position, Vector3.up(), player_unit, explosion_template, power_level, 1, attack_type)
+			Explosion.create_explosion(self._world, self._physics_world, dog_position, Quaternion.identity(), player_unit, explosion_template, power_level, 1, attack_type)
 		end
 
 		self._triggered = true

@@ -159,6 +159,7 @@ end
 local dlc_archetypes = {
 	"adamant",
 	"broker",
+	"cryptic",
 }
 
 local function _is_dlc_archetype()
@@ -1045,7 +1046,7 @@ local templates = {
 	{
 		name = "Expeditions Objective",
 		validation_func = function (self)
-			return _is_in_hub() and _has_hud() and Managers.narrative:can_complete_event("hli_expeditions_viewed")
+			return _is_in_hub() and _has_hud() and Managers.narrative:can_complete_event("hli_expeditions_viewed") and _journey_mission_completed("fm_armoury") and _highest_difficulty_num() >= 2
 		end,
 		on_activation = function (self)
 			if self.objective then

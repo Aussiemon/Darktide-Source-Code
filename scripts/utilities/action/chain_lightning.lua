@@ -4,6 +4,7 @@ local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
+local MinionState = require("scripts/utilities/minion_state")
 local ChainLightning = {}
 local math_abs = math.abs
 local Unit_node = Unit.node
@@ -15,6 +16,7 @@ local Vector3_length_squared = Vector3.length_squared
 local Vector3_normalize = Vector3.normalize
 local ATTACK_TYPES = AttackSettings.attack_types
 local BUFF_KEYWORDS = BuffSettings.keywords
+local BUFF_GROUP_KEYWORDS = BuffSettings.group_keywords
 local BROADPHASE_RESULTS = {}
 local EPSILON_SQUARED = 0.010000000000000002
 local CLOSE_EPSILON_SQUARED = 6.25
@@ -111,7 +113,7 @@ ChainLightning.depth_first_validation_functions = {
 		end
 
 		local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
-		local is_electrocuted = buff_extension and buff_extension:has_keyword(BUFF_KEYWORDS.electrocuted)
+		local is_electrocuted = MinionState.is_electrocuted(buff_extension, BUFF_GROUP_KEYWORDS.electrocuted)
 
 		if is_electrocuted then
 			return false
@@ -123,8 +125,43 @@ ChainLightning.depth_first_validation_functions = {
 ChainLightning.jump_validation_functions = {
 	target_alive_and_electrocuted = function (target_unit)
 		local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
-		local is_electrocuted = buff_extension and buff_extension:has_keyword(BUFF_KEYWORDS.electrocuted)
+		local is_electrocuted = MinionState.is_electrocuted(buff_extension, BUFF_GROUP_KEYWORDS.electrocuted)
 		local valid_target = buff_extension and is_electrocuted
+
+		return valid_target
+	end,
+	target_alive = function (target_unit)
+		local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
+		local valid_target = buff_extension and HEALTH_ALIVE[target_unit]
+
+		return valid_target
+	end,
+	target_alive_and_electrocuted_or_previous_electrocuted = function (target_unit, source_unit)
+		local target_buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
+		local source_buff_extension = ScriptUnit.has_extension(source_unit, "buff_system")
+		local is_electrocuted = MinionState.is_electrocuted(target_buff_extension, BUFF_GROUP_KEYWORDS.electrocuted) or MinionState.is_electrocuted(source_buff_extension, BUFF_GROUP_KEYWORDS.electrocuted)
+		local valid_target = target_buff_extension and is_electrocuted
+
+		return valid_target
+	end,
+	target_alive_and_arc_electrocuted = function (target_unit)
+		local target_buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
+		local is_electrocuted = MinionState.is_electrocuted(target_buff_extension, BUFF_GROUP_KEYWORDS.arc_lightning_targeting)
+		local valid_target = target_buff_extension and is_electrocuted
+
+		return valid_target
+	end,
+	target_alive_and_arc_grenade_electrocuted = function (target_unit)
+		local target_buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
+		local is_electrocuted = target_buff_extension and target_buff_extension:has_keyword(BUFF_KEYWORDS.electrocuted_arc_grenade)
+		local valid_target = target_buff_extension and is_electrocuted
+
+		return valid_target
+	end,
+	target_alive_and_ability_arc_electrocuted = function (target_unit)
+		local target_buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
+		local is_electrocuted = target_buff_extension and target_buff_extension:has_keyword(BUFF_KEYWORDS.electrocuted_arc_ability)
+		local valid_target = target_buff_extension and is_electrocuted
 
 		return valid_target
 	end,
@@ -173,7 +210,7 @@ ChainLightning.jump = function (t, physics_world, source_node, hit_units, broadp
 		local target_unit = BROADPHASE_RESULTS[i]
 
 		if not hit_units[target_unit] and HEALTH_ALIVE[target_unit] then
-			local valid_target, debug_reason = ChainLightning.is_valid_target(physics_world, source_unit, target_unit, query_position, travel_direction, max_angle, close_max_angle, vertical_max_angle, max_z_diff, jump_validation_func)
+			local valid_target, debug_reason = ChainLightning.is_valid_target(physics_world, source_unit, target_unit, query_position, travel_direction, max_angle, close_max_angle, vertical_max_angle, max_z_diff, jump_validation_func, nil, add_func_context)
 
 			if valid_target then
 				source_node:add_child(on_add_func, add_func_context, "unit", target_unit, "start_t", t)
@@ -190,7 +227,119 @@ ChainLightning.jump = function (t, physics_world, source_node, hit_units, broadp
 	return found_valid_jump
 end
 
-ChainLightning.is_valid_target = function (physics_world, source_unit, target_unit, query_position, travel_direction, max_angle, close_max_angle, max_vertical_angle, max_z_diff, jump_validation_func, min_distance)
+local _target_per_priority = Script.new_array(2)
+
+for priority = 1, #_target_per_priority do
+	_target_per_priority[priority] = Script.new_array(4)
+end
+
+ChainLightning.targeted_jump = function (t, physics_world, source_node, hit_units, broadphase, enemy_side_names, initial_travel_direction, radius, max_angle, close_max_angle, vertical_max_angle, max_z_diff, on_add_func, add_func_context, jump_validation_func, jump_target_priority_validation_functions)
+	local source_unit = source_node:value("unit")
+	local query_position = POSITION_LOOKUP[source_unit]
+	local depth = source_node:depth()
+	local travel_direction
+
+	if depth > 1 then
+		local current_node = source_node
+
+		repeat
+			local parent_node = current_node:parent()
+
+			if not parent_node then
+				break
+			end
+
+			local parent_unit = parent_node:value("unit")
+			local parent_position = POSITION_LOOKUP[parent_unit]
+			local x = parent_position.x - query_position.x
+			local y = parent_position.y - query_position.y
+			local too_close = x * x + y * y < EPSILON_SQUARED
+
+			if not too_close then
+				travel_direction = Vector3_normalize(Vector3_flat(parent_position - query_position))
+			else
+				current_node = parent_node
+			end
+		until travel_direction ~= nil or parent_node:depth() <= 1
+	end
+
+	travel_direction = travel_direction or initial_travel_direction
+
+	local max_num_children = source_node:max_num_children()
+	local num_targets_found = 0
+	local num_targeted_jump_priorities = #jump_target_priority_validation_functions
+
+	for priority = 1, num_targeted_jump_priorities - 1 do
+		if not _target_per_priority[priority] then
+			_target_per_priority[priority] = Script.new_array(4)
+		else
+			table.clear(_target_per_priority[priority])
+		end
+	end
+
+	table.clear(BROADPHASE_RESULTS)
+
+	local num_results = broadphase.query(broadphase, query_position, radius, BROADPHASE_RESULTS, enemy_side_names)
+	local found_valid_jump = false
+
+	for i = 1, num_results do
+		local target_unit = BROADPHASE_RESULTS[i]
+
+		if not hit_units[target_unit] and HEALTH_ALIVE[target_unit] then
+			local valid_target, debug_reason = ChainLightning.is_valid_target(physics_world, source_unit, target_unit, query_position, travel_direction, max_angle, close_max_angle, vertical_max_angle, max_z_diff, jump_validation_func, nil, add_func_context)
+
+			if valid_target then
+				local unit_data_extension = ScriptUnit.has_extension(target_unit, "unit_data_system")
+				local breed_or_nil = unit_data_extension and unit_data_extension:breed()
+
+				for priority = 1, num_targeted_jump_priorities do
+					if jump_target_priority_validation_functions[priority](target_unit, breed_or_nil) then
+						num_targets_found = num_targets_found + 1
+
+						if priority == 1 then
+							source_node:add_child(on_add_func, add_func_context, "unit", target_unit, "start_t", t)
+
+							found_valid_jump = true
+
+							break
+						end
+
+						if max_num_children > #_target_per_priority[priority - 1] then
+							table.insert(_target_per_priority[priority - 1], target_unit)
+						end
+
+						break
+					end
+				end
+
+				if source_node:is_full() then
+					return true
+				end
+			end
+		end
+	end
+
+	if not source_node:is_full() then
+		for priority = 1, #_target_per_priority do
+			for _, target_unit in ipairs(_target_per_priority[priority]) do
+				local unit_data_extension = ScriptUnit.has_extension(target_unit, "unit_data_system")
+				local breed_or_nil = unit_data_extension and unit_data_extension:breed()
+
+				source_node:add_child(on_add_func, add_func_context, "unit", target_unit, "start_t", t)
+
+				found_valid_jump = true
+
+				if source_node:is_full() then
+					return true
+				end
+			end
+		end
+	end
+
+	return found_valid_jump
+end
+
+ChainLightning.is_valid_target = function (physics_world, source_unit, target_unit, query_position, travel_direction, max_angle, close_max_angle, max_vertical_angle, max_z_diff, jump_validation_func, min_distance, func_context)
 	if not HEALTH_ALIVE[target_unit] then
 		return false, "health"
 	end

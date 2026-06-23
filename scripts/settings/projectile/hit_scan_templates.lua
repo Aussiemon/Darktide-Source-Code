@@ -21,6 +21,9 @@ WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/stub_pistols/settings_templates/stub_pistol_hitscan_templates", hit_scan_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/thumpers/settings_templates/thumper_hitscan_templates", hit_scan_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/needlepistols/settings_templates/needlepistol_hitscan_templates", hit_scan_templates, loaded_template_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/galvanic_rifle/settings_templates/galvanic_rifle_hitscan_templates", hit_scan_templates, loaded_template_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/arc_rifle/settings_templates/arc_rifle_hitscan_templates", hit_scan_templates, loaded_template_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/phosphor_pistol/settings_templates/phosphor_pistol_hitscan_templates", hit_scan_templates, loaded_template_files)
 
 hit_scan_templates.lasgun_assault = {
 	range = 50,
@@ -127,6 +130,22 @@ hit_scan_templates.renegade_rifleman_single_shot = {
 	damage = {
 		impact = {
 			damage_profile = DamageProfileTemplates.renegade_rifleman_single_shot,
+		},
+	},
+}
+hit_scan_templates.companion_servo_skull_single_shot = {
+	range = 300,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.default_companion_servo_skull_lasgun_killshot,
+		},
+	},
+}
+hit_scan_templates.companion_servo_skull_single_shot_improved = {
+	range = 300,
+	damage = {
+		impact = {
+			damage_profile = DamageProfileTemplates.improved_companion_servo_skull_lasgun_killshot,
 		},
 	},
 }

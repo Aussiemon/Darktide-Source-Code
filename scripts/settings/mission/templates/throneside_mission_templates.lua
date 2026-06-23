@@ -49,6 +49,10 @@ local mission_templates = {
 				"mission_archives_brief_c",
 			},
 		},
+		dialogue_settings = {
+			short_story_ticker_enabled = true,
+			story_ticker_enabled = true,
+		},
 		spawn_settings = {
 			next_mission = "recent_mission",
 		},
@@ -101,6 +105,10 @@ local mission_templates = {
 				"mission_resurgence_brief_c",
 			},
 		},
+		dialogue_settings = {
+			short_story_ticker_enabled = true,
+			story_ticker_enabled = true,
+		},
 		spawn_settings = {
 			next_mission = "recent_mission",
 		},
@@ -152,6 +160,10 @@ local mission_templates = {
 				"mission_complex_brief_b",
 				"mission_complex_brief_c",
 			},
+		},
+		dialogue_settings = {
+			short_story_ticker_enabled = true,
+			story_ticker_enabled = true,
 		},
 		spawn_settings = {
 			next_mission = "recent_mission",

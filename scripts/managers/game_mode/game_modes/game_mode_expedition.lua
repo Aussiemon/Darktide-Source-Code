@@ -144,10 +144,6 @@ GameModeExpedition.expedition_team_loot = function (self)
 	return self._game_mode_logic:expedition_team_loot()
 end
 
-GameModeExpedition.expedition_loot = function (self, optional_peer_id)
-	return self._game_mode_logic:expedition_loot(optional_peer_id)
-end
-
 GameModeExpedition.expedition_currency = function (self, optional_peer_id)
 	return self._game_mode_logic:expedition_currency(optional_peer_id)
 end
@@ -203,6 +199,10 @@ end
 
 GameModeExpedition.get_collectibles_handler = function (self)
 	return self._game_mode_logic:get_collectibles_handler()
+end
+
+GameModeExpedition.get_loot_handler = function (self)
+	return self._game_mode_logic:get_loot_handler()
 end
 
 GameModeExpedition.register_level_hazard = function (self, params)
@@ -357,10 +357,12 @@ GameModeExpedition._gamemode_complete = function (self, result, reason)
 		local mechanism_manager = Managers.mechanism
 		local mechanism = mechanism_manager:current_mechanism()
 		local mechanism_data = mechanism:mechanism_data()
+		local loot_handler = self:get_loot_handler()
 
 		Managers.mission_server:on_gamemode_completed(result, reason, {
 			settings_version = mechanism_data.settings_version,
 			expedition_template = mechanism_data.expedition_template_name,
+			highest_loot_held = loot_handler and loot_handler:highest_loot_held_this_run() or 0,
 		})
 	end
 end
@@ -807,6 +809,11 @@ end
 
 GameModeExpedition._on_client_left = function (self, removed_players_data, host_became_empty)
 	GameModeExpedition.super._on_client_left(self, removed_players_data, host_became_empty)
+	self._game_mode_logic:on_client_left(removed_players_data)
+end
+
+GameModeExpedition.get_real_current_level_name = function (self)
+	return self._real_current_level_name
 end
 
 implements(GameModeExpedition, GameModeBase.INTERFACE)

@@ -153,7 +153,7 @@ damage_templates.dual_stub_pistols_base = {
 	damage_type = damage_types.auto_bullet,
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.ballistic,
-	wounds_template = WoundsTemplates.autogun,
+	wounds_template = WoundsTemplates.ballistic,
 	suppression_value = {
 		0.5,
 		1.5,
@@ -275,7 +275,7 @@ damage_templates.dual_stub_pistols_special = {
 	damage_type = damage_types.auto_bullet,
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.ballistic,
-	wounds_template = WoundsTemplates.autogun,
+	wounds_template = WoundsTemplates.ballistic,
 	suppression_value = {
 		0.5,
 		1.5,

@@ -272,6 +272,7 @@ local interaction_templates = {
 		taggable = true,
 		ui_interaction_type = "critical",
 		breed_anim_events_3p = {
+			cryptic = "interaction_revive_human",
 			human = "interaction_revive_human",
 			ogryn = "interaction_revive_ogryn",
 		},
@@ -300,6 +301,7 @@ local interaction_templates = {
 		ui_interaction_type = "critical",
 		vo_event = "start_revive",
 		breed_anim_events_3p = {
+			cryptic = "interaction_revive_human",
 			human = "interaction_revive_human",
 			ogryn = "interaction_revive_ogryn",
 		},
@@ -328,6 +330,7 @@ local interaction_templates = {
 		ui_interaction_type = "critical",
 		vo_event = "start_revive",
 		breed_anim_events_3p = {
+			cryptic = "interaction_revive_human",
 			human = "interaction_revive_human",
 			ogryn = "interaction_revive_ogryn",
 		},
@@ -356,6 +359,7 @@ local interaction_templates = {
 		ui_interaction_type = "critical",
 		vo_event = "start_revive",
 		breed_anim_events_3p = {
+			cryptic = "interaction_revive_human",
 			human = "interaction_revive_human",
 			ogryn = "interaction_revive_ogryn",
 		},
@@ -564,6 +568,15 @@ local interaction_templates = {
 		ui_interaction_type = "pickup",
 	},
 	saints_pickup = {
+		action_text = "loc_action_interaction_pickup",
+		duration = 0,
+		interaction_class_name = "pickup",
+		interaction_icon = "content/ui/materials/hud/interactions/icons/default",
+		interaction_priority = 1,
+		taggable = false,
+		ui_interaction_type = "pickup",
+	},
+	leftover_pickup = {
 		action_text = "loc_action_interaction_pickup",
 		duration = 0,
 		interaction_class_name = "pickup",

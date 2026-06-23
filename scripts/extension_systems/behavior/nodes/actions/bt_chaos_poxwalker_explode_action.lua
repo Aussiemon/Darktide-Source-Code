@@ -13,7 +13,6 @@ BtChaosPoxwalkerExplodeAction.enter = function (self, unit, breed, blackboard, s
 	local world, physics_world = spawn_component.world, spawn_component.physics_world
 	local impact_normal, charge_level, attack_type = Vector3.up(), 1
 	local power_level = Managers.state.difficulty:get_minion_attack_power_level(breed)
-	local explosion_template = action_data.explosion_template
 	local optional_attacking_unit_owner_unit
 	local optional_apply_owner_buffs = false
 	local death_component = blackboard.death
@@ -34,7 +33,15 @@ BtChaosPoxwalkerExplodeAction.enter = function (self, unit, breed, blackboard, s
 		optional_attacking_unit_owner_unit = attacking_unit_owner_unit
 	end
 
-	Explosion.create_explosion(world, physics_world, position, impact_normal, unit, explosion_template, power_level, charge_level, attack_type, false, nil, nil, nil, nil, optional_attacking_unit_owner_unit, optional_apply_owner_buffs)
+	local explosion_template
+
+	if death_component.damage_profile_name == "default" then
+		explosion_template = action_data.explosion_template_mild
+	else
+		explosion_template = action_data.explosion_template
+	end
+
+	Explosion.create_explosion(world, physics_world, position, Quaternion.look(impact_normal), unit, explosion_template, power_level, charge_level, attack_type, false, nil, nil, nil, nil, optional_attacking_unit_owner_unit, optional_apply_owner_buffs)
 end
 
 BtChaosPoxwalkerExplodeAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)

@@ -33,4 +33,12 @@ CircumstanceManager.template = function (self)
 	return circumstance_template
 end
 
+CircumstanceManager.mission_overrides = function (self)
+	local circumstance_name = self._circumstance_name
+	local circumstance_template = circumstance_name and CircumstanceTemplates[circumstance_name]
+	local mission_overrides = circumstance_template and circumstance_template.mission_overrides
+
+	return mission_overrides or {}
+end
+
 return CircumstanceManager

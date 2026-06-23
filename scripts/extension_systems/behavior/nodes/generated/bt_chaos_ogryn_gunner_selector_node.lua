@@ -2,52 +2,31 @@
 
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
+local Profiler_start = Profiler.start
+local Profiler_stop = Profiler.stop
 local BtChaosOgrynGunnerSelectorNode = class("BtChaosOgrynGunnerSelectorNode", "BtNode")
 
 BtChaosOgrynGunnerSelectorNode.init = function (self, ...)
 	BtChaosOgrynGunnerSelectorNode.super.init(self, ...)
 
-	self._children = {}
-end
-
-BtChaosOgrynGunnerSelectorNode.init_values = function (self, blackboard, action_data, node_data)
-	BtChaosOgrynGunnerSelectorNode.super.init_values(self, blackboard, action_data, node_data)
-
-	local children = self._children
-
-	for i = 1, #children do
-		local child_node = children[i]
-		local child_tree_node = child_node.tree_node
-		local child_action_data = child_tree_node.action_data
-
-		child_node:init_values(blackboard, child_action_data, node_data)
-	end
+	self._selector_children = {}
 end
 
 BtChaosOgrynGunnerSelectorNode.add_child = function (self, node)
-	self._children[#self._children + 1] = node
+	BtChaosOgrynGunnerSelectorNode.super.add_child(self, node)
+
+	if not node.tree_node.state then
+		self._selector_children[#self._selector_children + 1] = node
+	end
 end
 
 BtChaosOgrynGunnerSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
 	local node_identifier = self.identifier
 	local last_running_node = old_running_child_nodes[node_identifier]
-	local children = self._children
+	local children = self._selector_children
 
 	do
-		local node_death = children[1]
-		local death_component = blackboard.death
-		local is_dead = death_component.is_dead
-		local condition_result = is_dead
-
-		if condition_result then
-			new_running_child_nodes[node_identifier] = node_death
-
-			return node_death
-		end
-	end
-
-	do
-		local node_disable_actions = children[2]
+		local node_disable_actions = children[1]
 		local leaf_node = node_disable_actions:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
 
 		if leaf_node then
@@ -58,19 +37,7 @@ BtChaosOgrynGunnerSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_exit_spawner = children[3]
-		local spawn_component = blackboard.spawn
-		local condition_result = spawn_component.is_exiting_spawner
-
-		if condition_result then
-			new_running_child_nodes[node_identifier] = node_exit_spawner
-
-			return node_exit_spawner
-		end
-	end
-
-	do
-		local node_smart_object = children[4]
+		local node_smart_object = children[2]
 		local condition_result
 
 		repeat
@@ -129,7 +96,7 @@ BtChaosOgrynGunnerSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_use_special_action = children[5]
+		local node_use_special_action = children[3]
 		local condition_result
 
 		repeat
@@ -164,7 +131,7 @@ BtChaosOgrynGunnerSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_stagger = children[6]
+		local node_stagger = children[4]
 		local stagger_component = blackboard.stagger
 		local is_staggered = stagger_component.num_triggered_staggers > 0
 		local condition_result = is_staggered
@@ -177,7 +144,7 @@ BtChaosOgrynGunnerSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_blocked = children[7]
+		local node_blocked = children[5]
 		local blocked_component = blackboard.blocked
 		local is_blocked = blocked_component.is_blocked
 		local condition_result = is_blocked
@@ -190,7 +157,7 @@ BtChaosOgrynGunnerSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_suppressed = children[8]
+		local node_suppressed = children[6]
 		local suppression_component = blackboard.suppression
 		local is_suppressed = suppression_component.is_suppressed
 		local condition_result = is_suppressed
@@ -203,9 +170,9 @@ BtChaosOgrynGunnerSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_weapon_malfunction = children[9]
-		local buff_extension = ScriptUnit.extension(unit, "buff_system")
-		local condition_result = buff_extension and buff_extension:has_keyword("weapon_malfunction")
+		local node_weapon_malfunction = children[7]
+		local weapon_malfunction_component = blackboard.weapon_malfunction
+		local condition_result = weapon_malfunction_component.is_malfunctioning
 
 		if condition_result then
 			local leaf_node = node_weapon_malfunction:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
@@ -219,7 +186,7 @@ BtChaosOgrynGunnerSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_combat = children[10]
+		local node_combat = children[8]
 		local is_running = last_leaf_node_running and last_running_node == node_combat
 		local condition_result
 
@@ -272,7 +239,7 @@ BtChaosOgrynGunnerSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_alerted = children[11]
+		local node_alerted = children[9]
 		local is_running = last_leaf_node_running and last_running_node == node_alerted
 		local condition_result
 
@@ -321,7 +288,7 @@ BtChaosOgrynGunnerSelectorNode.evaluate = function (self, unit, blackboard, scra
 	end
 
 	do
-		local node_patrol = children[12]
+		local node_patrol = children[10]
 		local is_running = last_leaf_node_running and last_running_node == node_patrol
 		local condition_result
 
@@ -372,7 +339,7 @@ BtChaosOgrynGunnerSelectorNode.evaluate = function (self, unit, blackboard, scra
 		end
 	end
 
-	local node_idle = children[13]
+	local node_idle = children[11]
 
 	new_running_child_nodes[node_identifier] = node_idle
 
@@ -384,9 +351,9 @@ BtChaosOgrynGunnerSelectorNode.run = function (self, unit, breed, blackboard, sc
 	local running_node = running_child_nodes[node_identifier]
 	local running_tree_node = running_node.tree_node
 	local running_action_data = running_tree_node.action_data
-	local result, evaluate_utility_next_frame = running_node:run(unit, breed, blackboard, scratchpad, running_action_data, dt, t, node_data, running_child_nodes)
+	local result, evaluate_utility_next_frame, update_rate = running_node:run(unit, breed, blackboard, scratchpad, running_action_data, dt, t, node_data, running_child_nodes)
 
-	return result, evaluate_utility_next_frame
+	return result, evaluate_utility_next_frame, update_rate
 end
 
 return BtChaosOgrynGunnerSelectorNode

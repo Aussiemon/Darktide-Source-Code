@@ -27,7 +27,7 @@ local effect_template = {
 
 		local world = template_context.world
 		local unit = template_data.unit
-		local unit_position = POSITION_LOOKUP[unit]
+		local unit_position = Unit.world_position(unit, 1)
 		local particle_id = World.create_particles(world, PARTICLE_NAME, unit_position, nil, nil, template_data.particle_group)
 
 		template_data.particle_id = particle_id

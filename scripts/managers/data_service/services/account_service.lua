@@ -51,7 +51,7 @@ local function update_user_setting(parameter_value, ...)
 end
 
 local function user_settings_apply_backend_game_settings()
-	if REAL_PLATFORM == "win32" then
+	if IS_WINDOWS then
 		update_user_setting(GameParameters.subresource_tlsf_allocator_win32, "render_settings", "subresource_tlsf_allocator")
 		update_user_setting(GameParameters.enable_direct_storage_debug_map, "direct_storage", "debug_map")
 	end

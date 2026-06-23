@@ -2,12 +2,6 @@
 
 local table = table
 local pairs, next, type = pairs, next, type
-local Profiler_start = _G.Profiler and Profiler.start or function ()
-	return
-end
-local Profiler_stop = _G.Profiler and Profiler.stop or function ()
-	return
-end
 
 table.ensure_not_nil = function (t)
 	local table_type = type(t)
@@ -16,6 +10,14 @@ table.ensure_not_nil = function (t)
 		return {}
 	elseif table_type == "table" then
 		return t
+	end
+end
+
+local has_table_new = pcall(require, "table.new")
+
+if not has_table_new then
+	table.new = function (narr, nrec)
+		return {}
 	end
 end
 
@@ -49,7 +51,11 @@ local function _table_clone(t)
 	return clone
 end
 
+table.clone = table.clone or _table_clone
+
 local function _table_clone_instance(t, lookup)
+	lookup = lookup or {}
+
 	if lookup[t] then
 		return lookup[t]
 	end
@@ -71,17 +77,7 @@ local function _table_clone_instance(t, lookup)
 	return clone
 end
 
-table.clone = function (t)
-	local clone = _table_clone(t)
-
-	return clone
-end
-
-table.clone_instance = function (t, lookup)
-	local clone = _table_clone_instance(t, lookup or {})
-
-	return clone
-end
+table.clone_instance = table.clone_instance or _table_clone_instance
 
 table.shallow_copy = function (t)
 	local copy = {}
@@ -96,7 +92,7 @@ end
 table.shallow_copy_array = function (arr, o)
 	local length = #arr
 
-	o = o or Script.new_array(length)
+	o = o or table.new(length, 0)
 
 	for i = 1, length do
 		o[i] = arr[i]
@@ -302,6 +298,23 @@ table.append = function (dest, source, optional_size)
 
 	for i = 1, source_size do
 		dest[dest_size + i] = source[i]
+	end
+
+	return dest
+end
+
+table.append_no_duplicates = function (dest, source, optional_size)
+	local dest_size = #dest
+	local source_size = optional_size or #source
+	local array_contains = table.array_contains
+
+	for i = 1, source_size do
+		local item = source[i]
+
+		if not array_contains(dest, item) then
+			dest_size = dest_size + 1
+			dest[dest_size] = source[i]
+		end
 	end
 
 	return dest
@@ -1088,7 +1101,7 @@ end
 
 table.make_strict_with_interface = function (t, name, interface, optional_context)
 	local num_fields = #interface
-	local valid_keys = Script.new_map(num_fields)
+	local valid_keys = table.new(0, num_fields)
 
 	for i = 1, num_fields do
 		local field_name = interface[i]
@@ -1549,10 +1562,10 @@ end
 if pcall(require, "table.fatshark") then
 	table.size = table.fatshark.count
 
-	local _t_fs_empty = table.fatshark.empty
+	local empty = table.fatshark.empty
 
 	table.is_empty = function (t)
-		return _t_fs_empty(t)
+		return empty(t)
 	end
 
 	local _t_fs_keys = table.fatshark.keys
@@ -1567,14 +1580,14 @@ if pcall(require, "table.fatshark") then
 		return _t_fs_dup(t, 999)
 	end
 
-	local _t_fs_merge = table.fatshark.merge
+	local merge = table.fatshark.merge
 
 	table.shallow_copy = function (t)
-		return _t_fs_merge(t, {})
+		return merge(t, {})
 	end
 
 	table.merge = function (dest, source)
-		return _t_fs_merge(source, dest)
+		return merge(source, dest)
 	end
 end
 
@@ -1584,16 +1597,4 @@ if not pcall(require, "table.clear") then
 			t[key] = nil
 		end
 	end
-end
-
-if pcall(require, "table.new") then
-	Script.new_array = function (narr)
-		return table.new(narr, 0)
-	end
-
-	Script.new_map = function (nrec)
-		return table.new(0, nrec)
-	end
-
-	Script.new_table = table.new
 end

@@ -16,8 +16,6 @@ dialogue_context_settings.construct = function (self, key)
 	end
 end
 
-local killstreak_query = {}
-
 dialogue_context_settings.number_of_kills_callback = function (dialogue_context_extension, timed_counter, t)
 	if not timed_counter.has_triggered then
 		timed_counter.has_triggered = true
@@ -42,7 +40,7 @@ dialogue_context_settings.number_of_kills_callback = function (dialogue_context_
 	killstreak_query.killer_class = dialogue_extension:vo_class_name()
 	killstreak_query.number_of_kills = timed_counter.count
 
-	dialogue_extension:trigger_faction_dialogue_query("seen_killstreak_" .. killstreak_query.killer_class, killstreak_query, nil, dialogue_extension._faction_breed_name, true)
+	dialogue_extension:trigger_faction_dialogue_query("seen_killstreak", killstreak_query, nil, dialogue_extension._faction_breed_name, true)
 	dialogue_extension:store_in_memory("user_memory", "last_killstreak", timeset)
 	Vo.kill_spree_self_event(current_unit)
 end

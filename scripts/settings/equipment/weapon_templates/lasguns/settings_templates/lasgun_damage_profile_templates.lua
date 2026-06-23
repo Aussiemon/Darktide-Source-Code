@@ -172,7 +172,7 @@ damage_templates.default_lasgun_killshot = {
 		min = 7,
 	},
 	herding_template = HerdingTemplates.shot,
-	wounds_template = WoundsTemplates.lasgun,
+	wounds_template = WoundsTemplates.laser,
 	armor_damage_modifier_ranged = lasgun_armor_mod_default,
 	critical_strike = {
 		gibbing_power = gibbing_power.always,
@@ -238,7 +238,7 @@ damage_templates.lasgun_p2_charge_killshot = {
 		min = 10,
 	},
 	herding_template = HerdingTemplates.shot_back,
-	wounds_template = WoundsTemplates.lasgun,
+	wounds_template = WoundsTemplates.laser,
 	armor_damage_modifier_ranged = lasgun_p2_armor_mod_low_charged,
 	armor_damage_modifier_ranged_charged = lasgun_p2_armor_mod_charged,
 	critical_strike = {
@@ -628,7 +628,7 @@ damage_templates.default_lasgun_assault = {
 		min = 8,
 	},
 	herding_template = HerdingTemplates.shot,
-	wounds_template = WoundsTemplates.lasgun,
+	wounds_template = WoundsTemplates.laser,
 	armor_damage_modifier_ranged = {
 		near = {
 			attack = {
@@ -751,7 +751,7 @@ damage_templates.default_lasgun_snp = {
 			},
 		},
 	},
-	wounds_template = WoundsTemplates.lasgun,
+	wounds_template = WoundsTemplates.laser,
 	critical_strike = {
 		gibbing_power = gibbing_power.always,
 		gibbing_type = gibbing_types.laser,
@@ -846,7 +846,7 @@ damage_templates.light_lasgun_snp = {
 			},
 		},
 	},
-	wounds_template = WoundsTemplates.lasgun,
+	wounds_template = WoundsTemplates.laser,
 	critical_strike = {
 		gibbing_power = gibbing_power.always,
 		gibbing_type = gibbing_types.laser,
@@ -941,7 +941,7 @@ damage_templates.heavy_lasgun_snp = {
 			},
 		},
 	},
-	wounds_template = WoundsTemplates.lasgun,
+	wounds_template = WoundsTemplates.laser,
 	critical_strike = {
 		gibbing_power = gibbing_power.always,
 		gibbing_type = gibbing_types.laser,
@@ -1088,7 +1088,7 @@ damage_templates.bayonette_weapon_special_stab = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.sawing,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.bayonet,
+	wounds_template = WoundsTemplates.slash,
 	armor_damage_modifier = {
 		attack = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -1187,7 +1187,7 @@ damage_templates.bayonette_weapon_special_slash = {
 	gibbing_power = gibbing_power.light,
 	gibbing_type = gibbing_types.sawing,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.bayonet,
+	wounds_template = WoundsTemplates.slash,
 	armor_damage_modifier = {
 		attack = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,

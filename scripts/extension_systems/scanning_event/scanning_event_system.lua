@@ -3,7 +3,7 @@
 require("scripts/extension_systems/scanning_event/scanning_device_extension")
 
 local ScanningEventSystem = class("ScanningEventSystem", "ExtensionSystemBase")
-local RPCS = {
+local CLIENT_RPCS = {
 	"rpc_scanning_device_hot_join",
 	"rpc_scanning_device_finished",
 }
@@ -12,9 +12,18 @@ ScanningEventSystem.init = function (self, context, system_init_data, ...)
 	ScanningEventSystem.super.init(self, context, system_init_data, ...)
 
 	self._level_name = context.level_name
-	self._network_event_delegate = context.network_event_delegate
 
-	self._network_event_delegate:register_session_events(self, unpack(RPCS))
+	if not self._is_server then
+		self._network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
+	end
+end
+
+ScanningEventSystem.destroy = function (self)
+	if not self._is_server then
+		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
+	end
+
+	ScanningEventSystem.super.destroy(self)
 end
 
 ScanningEventSystem.hot_join_sync = function (self, sender, channel)
@@ -42,11 +51,6 @@ end
 
 ScanningEventSystem.on_location_setup = function (self)
 	self:call_gameplay_post_init_on_extensions()
-end
-
-ScanningEventSystem.destroy = function (self)
-	self._network_event_delegate:unregister_events(unpack(RPCS))
-	ScanningEventSystem.super.destroy(self)
 end
 
 ScanningEventSystem.rpc_scanning_device_finished = function (self, channel_id, unit_id)

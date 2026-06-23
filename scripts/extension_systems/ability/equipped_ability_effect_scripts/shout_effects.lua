@@ -10,7 +10,10 @@ ShoutEffects.init = function (self, context, ability_template)
 	self._world = context.world
 	self._wwise_world = context.wwise_world
 	self._ability_template = ability_template
-	self._vfx = ability_template.vfx
+
+	local equipped_ability_effect_scripts_tweak_data = ability_template.equipped_ability_effect_scripts_tweak_data
+
+	self._vfx = equipped_ability_effect_scripts_tweak_data.vfx
 	self._delay_t = self._vfx.delay
 	self._is_local_unit = context.is_local_unit
 

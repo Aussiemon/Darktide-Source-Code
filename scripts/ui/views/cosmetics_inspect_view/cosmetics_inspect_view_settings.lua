@@ -20,6 +20,29 @@ local cosmetics_inspect_view_settings = {
 		"slot_combat_ability",
 		"slot_grenade_ability",
 	},
+	animations_per_archetype = {
+		adamant = {
+			initial_event = "character_cosmetics_idle",
+		},
+		cryptic = {
+			initial_event = "character_cosmetics_idle",
+		},
+		ogryn = {
+			initial_event = "character_cosmetics_idle",
+		},
+		psyker = {
+			initial_event = "character_cosmetics_idle",
+		},
+		veteran = {
+			initial_event = "character_cosmetics_idle",
+		},
+		zealot = {
+			initial_event = "character_cosmetics_idle",
+		},
+		broker = {
+			initial_event = "character_cosmetics_idle",
+		},
+	},
 }
 
 return settings("CosmeticsInspectViewSettings", cosmetics_inspect_view_settings)

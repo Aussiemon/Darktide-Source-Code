@@ -130,14 +130,16 @@ local behavior_tree = {
 	"BtSelectorNode",
 	{
 		"BtDieAction",
-		condition = "is_dead",
 		name = "death",
+		state = "dead",
 		action_data = action_data.death,
 	},
 	{
 		"BtExitSpawnerAction",
 		condition = "is_exiting_spawner",
+		exit_state = "base",
 		name = "exit_spawner",
+		state = "exiting_spawner",
 		action_data = action_data.exit_spawner,
 	},
 	{

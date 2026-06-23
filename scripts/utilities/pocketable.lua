@@ -4,7 +4,6 @@ local MasterItems = require("scripts/backend/master_items")
 local Pickups = require("scripts/settings/pickup/pickups")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local Ammo = require("scripts/utilities/ammo")
 
 local function _is_expedition_store_product(unit)
 	local mechanism_manager = Managers.mechanism

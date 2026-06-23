@@ -4,6 +4,7 @@ local GameplayStateInterface = require("scripts/game_states/game/gameplay_sub_st
 local MissionCleanupUtilies = require("scripts/game_states/game/gameplay_sub_states/utilities/mission_cleanup_utilities")
 local StateGameplayTestify = GameParameters.testify and require("scripts/game_states/game/state_gameplay_testify")
 local TaskbarFlash = require("scripts/utilities/taskbar_flash")
+local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UnitSpawnerManager = require("scripts/foundation/managers/unit_spawner/unit_spawner_manager")
 local RUN_CLIENT_RPCS = {
 	"rpc_sync_clock",
@@ -14,6 +15,7 @@ local GameplayStateRun = class("GameplayStateRun")
 GameplayStateRun.on_enter = function (self, parent, params)
 	local shared_state = params.shared_state
 	local is_server = shared_state.is_server
+	local world = shared_state.world
 
 	self._gameplay_state = parent
 	self._shared_state = shared_state
@@ -26,7 +28,7 @@ GameplayStateRun.on_enter = function (self, parent, params)
 
 	self:_register_run_network_events(is_server)
 	Managers.imgui:enable_view_group("GameplayStateRun", {
-		world = self._shared_state.world,
+		world = world,
 	})
 	Managers.event:trigger("event_loading_finished")
 
@@ -46,6 +48,7 @@ GameplayStateRun.on_enter = function (self, parent, params)
 	end
 
 	TaskbarFlash.flash_window()
+	ScriptWorld.physics_run_queries(world)
 end
 
 GameplayStateRun.on_exit = function (self, exit_params)
@@ -58,6 +61,12 @@ GameplayStateRun.on_exit = function (self, exit_params)
 	Managers.imgui:disable_view_group("GameplayStateRun")
 
 	local on_shutdown = exit_params and exit_params.on_shutdown
+	local world = shared_state.world
+	local is_physics_thread_locked = ScriptWorld.is_physics_thread_locked(world)
+
+	if is_physics_thread_locked then
+		ScriptWorld.physics_fetch_queries(world)
+	end
 
 	MissionCleanupUtilies.cleanup(shared_state, gameplay_state, nil, on_shutdown)
 	self:_unregister_run_network_events(is_server)
@@ -65,14 +74,15 @@ end
 
 GameplayStateRun.update = function (self, main_dt, main_t)
 	local shared_state = self._shared_state
+	local world = shared_state.world
 	local is_server, is_dedicated_server = shared_state.is_server, shared_state.is_dedicated_server
 
 	self._fixed_frame_parsed = false
 
-	if not Managers.state.game_mode:run_single_threaded_physics() then
-		local physics_world = shared_state.physics_world
+	local is_physics_thread_locked = ScriptWorld.is_physics_thread_locked(world)
 
-		PhysicsWorld.fetch_queries(physics_world)
+	if is_physics_thread_locked then
+		ScriptWorld.physics_fetch_queries(world)
 	end
 
 	shared_state.network_receive_function(main_dt)
@@ -117,7 +127,6 @@ GameplayStateRun.update = function (self, main_dt, main_t)
 	self:_handle_session_disconnects()
 
 	if gameplay_timer_registered then
-		Managers.state.level_props_broadphase:update(dt, t)
 		extension_manager:update()
 		Managers.state.minion_death:update(dt, t)
 
@@ -152,7 +161,7 @@ end
 
 GameplayStateRun.post_update = function (self, main_dt, main_t)
 	local shared_state = self._shared_state
-	local physics_world = shared_state.physics_world
+	local world = shared_state.world
 	local is_server = shared_state.is_server
 
 	if self._gameplay_timer_registered then
@@ -171,13 +180,10 @@ GameplayStateRun.post_update = function (self, main_dt, main_t)
 
 	local wants_single_threaded_physics = Managers.state.game_mode:wants_single_threaded_physics()
 
-	Managers.state.game_mode:_set_single_threaded_physics(wants_single_threaded_physics)
-
 	if wants_single_threaded_physics then
-		PhysicsWorld.run_queries(physics_world)
-		PhysicsWorld.fetch_queries(physics_world)
+		ScriptWorld.physics_run_and_fetch_queries(world)
 	else
-		PhysicsWorld.run_queries(physics_world)
+		ScriptWorld.physics_run_queries(world)
 	end
 
 	if not is_server then

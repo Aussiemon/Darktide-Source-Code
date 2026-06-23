@@ -1,7 +1,6 @@
 ﻿-- chunkname: @scripts/ui/views/mission_intro_view/mission_intro_view_settings.lua
 
 local mission_intro_view_settings = {
-	field_of_view = 40,
 	timer_name = "ui",
 	viewport_layer = 1,
 	viewport_name = "ui_mission_intro_world_viewport",
@@ -31,7 +30,7 @@ local mission_intro_view_settings = {
 		Application.ENABLE_VOLUMETRICS,
 		Application.ENABLE_RAY_TRACING,
 	},
-	prioritized_ogryn_slots = {
+	prioritized_ogryn_sized_slots = {
 		3,
 		5,
 		4,
@@ -63,6 +62,12 @@ local mission_intro_view_settings = {
 			"mission_briefing_pose_04",
 			"mission_briefing_pose_05",
 			"mission_briefing_pose_06",
+		},
+		cryptic = {
+			"mission_briefing_pose_01",
+			"mission_briefing_pose_02",
+			"mission_briefing_pose_03",
+			"mission_briefing_pose_04",
 		},
 		ogryn = {
 			"mission_briefing_pose_01",

@@ -1,6 +1,9 @@
 ﻿-- chunkname: @scripts/settings/mission_objective/templates/exp_wastes_objective_template.lua
 
-local mission_objective_templates = {
+local Text = require("scripts/utilities/ui/text")
+local mission_objective_templates
+
+mission_objective_templates = {
 	expedition_loading = {
 		objectives = {
 			expedition_location = {
@@ -23,6 +26,26 @@ local mission_objective_templates = {
 				persistent_between_locations = true,
 				popups_enabled = false,
 				progress_timer = false,
+			},
+			expedition_rescue_player = {
+				header = "loc_game_mode_expedition_objective_header_rescue_players",
+				mission_objective_type = "goal",
+				persistent_between_locations = true,
+				popups_enabled = false,
+				event_functions = {
+					event_expedition_rescue_objective_update = function (objective, available_rescue_loot)
+						local name = objective:name()
+						local template = mission_objective_templates.expedition_loading.objectives[name]
+						local default_header_string = template.header
+						local amount_color = Color.terminal_text_key_value(255, true)
+						local amount_text = Text.apply_color_to_text(tostring(available_rescue_loot), amount_color)
+						local new_localized_header = Localize(default_header_string, true, {
+							amount = amount_text,
+						})
+
+						objective:set_header(new_localized_header)
+					end,
+				},
 			},
 			objective_expedition_timer = {
 				duration = 900,
@@ -514,8 +537,7 @@ local mission_objective_templates = {
 			},
 			objective_op_16m_power_leak_001 = {
 				description = "disable power",
-				header = "Disable power",
-				localized_header = "Opportunity - Disable power",
+				header = "loc_objective_disable_power",
 				mission_objective_type = "goal",
 			},
 			objective_op_32m_vault_001 = {
@@ -915,21 +937,6 @@ local mission_objective_templates = {
 			objective_op_32m_scale_zone_001_01 = {
 				description = "start drain sequence",
 				header = "Start drain sequence",
-				mission_objective_type = "goal",
-			},
-			objective_expedition_disable_fire = {
-				description = "Disable the fire hazard",
-				header = "Disable the fire hazard",
-				mission_objective_type = "goal",
-			},
-			objective_expedition_lower_pistons = {
-				description = "Lower the pistons",
-				header = "Lower the pistons",
-				mission_objective_type = "goal",
-			},
-			objective_expedition_increase_pressure = {
-				description = "Increase oil pressure",
-				header = "Increase oil pressure",
 				mission_objective_type = "goal",
 			},
 		},

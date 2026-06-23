@@ -269,6 +269,18 @@ PlayerCharacterStateStunned._check_transition = function (self, unit, t, next_st
 
 		return ability_transition
 	end
+
+	local weapon_transition, weapon_transition_params = self:_poll_weapon_state_transitions(unit, t)
+
+	if weapon_transition then
+		table.merge(next_state_params, weapon_transition_params)
+
+		if not stunned_character_state_component.exit_event_played then
+			self:_play_end_animation()
+		end
+
+		return weapon_transition
+	end
 end
 
 return PlayerCharacterStateStunned

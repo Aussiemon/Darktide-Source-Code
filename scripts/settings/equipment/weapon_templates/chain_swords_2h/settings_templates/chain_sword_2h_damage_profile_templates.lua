@@ -192,7 +192,7 @@ damage_templates.default_light_chainsword_2h = {
 	gibbing_type = gibbing_types.sawing,
 	melee_attack_strength = melee_attack_strengths.light,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
-	wounds_template = WoundsTemplates.chainsword_2h,
+	wounds_template = WoundsTemplates.chain_heavy,
 	armor_damage_modifier = chain_sword_light_mod,
 	targets = {
 		{
@@ -372,6 +372,10 @@ overrides.light_chainsword_active_2h_push_follow = {
 			"weapon_special",
 			true,
 		},
+		{
+			"on_weapon_special_hit_proc",
+			true,
+		},
 	},
 }
 overrides.light_chainsword_active_2h = {
@@ -436,8 +440,12 @@ overrides.light_chainsword_active_2h = {
 			true,
 		},
 		{
+			"on_weapon_special_hit_proc",
+			true,
+		},
+		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing_2h,
+			WoundsTemplates.chain_heavy,
 		},
 	},
 }
@@ -597,8 +605,12 @@ overrides.light_chainsword_active_2h_cleave = {
 			true,
 		},
 		{
+			"on_weapon_special_hit_proc",
+			true,
+		},
+		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing_2h,
+			WoundsTemplates.chain_heavy,
 		},
 		{
 			"cleave_distribution",
@@ -651,7 +663,7 @@ overrides.light_chainsword_sticky_2h = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing_2h,
+			WoundsTemplates.chain_heavy,
 		},
 		{
 			"melee_attack_strength",
@@ -709,6 +721,10 @@ overrides.light_chainsword_sticky_2h = {
 			"skip_on_hit_proc",
 			true,
 		},
+		{
+			"on_weapon_special_hit_proc",
+			true,
+		},
 	},
 }
 overrides.light_chainsword_sticky_last_2h = {
@@ -748,7 +764,7 @@ overrides.light_chainsword_sticky_last_2h = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing_2h,
+			WoundsTemplates.chain_heavy,
 		},
 		{
 			"melee_attack_strength",
@@ -796,6 +812,14 @@ overrides.light_chainsword_sticky_last_2h = {
 			"skip_on_hit_proc",
 			true,
 		},
+		{
+			"on_weapon_special_hit_proc",
+			true,
+		},
+		{
+			"shield_breaker",
+			true,
+		},
 	},
 }
 overrides.light_chainsword_2h_sticky_last_quick = {
@@ -835,7 +859,7 @@ overrides.light_chainsword_2h_sticky_last_quick = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing_2h,
+			WoundsTemplates.chain_heavy,
 		},
 		{
 			"melee_attack_strength",
@@ -894,7 +918,7 @@ damage_templates.smiter_light_chainsword_2h = {
 	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
-	wounds_template = WoundsTemplates.chainsword_2h,
+	wounds_template = WoundsTemplates.chain_heavy,
 	armor_damage_modifier = chain_sword_light_smiter_mod,
 	targets = {
 		{
@@ -989,6 +1013,10 @@ overrides.light_chainsword_active_2h_smiter_push_follow = {
 			"weapon_special",
 			true,
 		},
+		{
+			"on_weapon_special_hit_proc",
+			true,
+		},
 	},
 }
 overrides.smiter_light_chainsword_2h_active = {
@@ -1044,8 +1072,12 @@ overrides.smiter_light_chainsword_2h_active = {
 			true,
 		},
 		{
+			"on_weapon_special_hit_proc",
+			true,
+		},
+		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing_2h,
+			WoundsTemplates.chain_heavy,
 		},
 	},
 }
@@ -1094,7 +1126,7 @@ overrides.smiter_light_chainsword_2h_sticky = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing_2h,
+			WoundsTemplates.chain_heavy,
 		},
 		{
 			"melee_attack_strength",
@@ -1143,6 +1175,10 @@ overrides.smiter_light_chainsword_2h_sticky = {
 			"skip_on_hit_proc",
 			true,
 		},
+		{
+			"on_weapon_special_hit_proc",
+			true,
+		},
 	},
 }
 overrides.smiter_light_chainsword_sticky_last_2h = {
@@ -1182,7 +1218,7 @@ overrides.smiter_light_chainsword_sticky_last_2h = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing_2h,
+			WoundsTemplates.chain_heavy,
 		},
 		{
 			"melee_attack_strength",
@@ -1230,6 +1266,14 @@ overrides.smiter_light_chainsword_sticky_last_2h = {
 			"skip_on_hit_proc",
 			true,
 		},
+		{
+			"on_weapon_special_hit_proc",
+			true,
+		},
+		{
+			"shield_breaker",
+			true,
+		},
 	},
 }
 damage_templates.heavy_chainsword_2h = {
@@ -1245,7 +1289,7 @@ damage_templates.heavy_chainsword_2h = {
 	gibbing_type = gibbing_types.sawing,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
-	wounds_template = WoundsTemplates.chainsword_2h,
+	wounds_template = WoundsTemplates.chain_heavy,
 	stagger_duration_modifier = {
 		0.1,
 		0.5,
@@ -1445,7 +1489,7 @@ damage_templates.heavy_chainsword_2h_smiter = {
 	gibbing_type = gibbing_types.sawing,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
-	wounds_template = WoundsTemplates.chainsword_2h,
+	wounds_template = WoundsTemplates.chain_heavy,
 	stagger_duration_modifier = {
 		0.1,
 		0.5,
@@ -1668,7 +1712,7 @@ overrides.heavy_chainsword_active_2h = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing_2h,
+			WoundsTemplates.chain_heavy,
 		},
 		{
 			"targets",
@@ -1678,6 +1722,10 @@ overrides.heavy_chainsword_active_2h = {
 		},
 		{
 			"weapon_special",
+			true,
+		},
+		{
+			"on_weapon_special_hit_proc",
 			true,
 		},
 		{
@@ -1788,7 +1836,7 @@ overrides.heavy_chainsword_active_2h_smiter = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing_2h,
+			WoundsTemplates.chain_heavy,
 		},
 		{
 			"targets",
@@ -1798,6 +1846,10 @@ overrides.heavy_chainsword_active_2h_smiter = {
 		},
 		{
 			"weapon_special",
+			true,
+		},
+		{
+			"on_weapon_special_hit_proc",
 			true,
 		},
 		{
@@ -2037,7 +2089,7 @@ overrides.heavy_chainsword_active_2h_cleave = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing_2h,
+			WoundsTemplates.chain_heavy,
 		},
 		{
 			"targets",
@@ -2047,6 +2099,10 @@ overrides.heavy_chainsword_active_2h_cleave = {
 		},
 		{
 			"weapon_special",
+			true,
+		},
+		{
+			"on_weapon_special_hit_proc",
 			true,
 		},
 		{
@@ -2140,7 +2196,7 @@ overrides.heavy_chainsword_active_abort_2h = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing_2h,
+			WoundsTemplates.chain_heavy,
 		},
 		{
 			"targets",
@@ -2150,6 +2206,10 @@ overrides.heavy_chainsword_active_abort_2h = {
 		},
 		{
 			"weapon_special",
+			true,
+		},
+		{
+			"on_weapon_special_hit_proc",
 			true,
 		},
 	},
@@ -2258,6 +2318,10 @@ overrides.heavy_chainsword_sticky_2h = {
 		},
 		{
 			"skip_on_hit_proc",
+			true,
+		},
+		{
+			"on_weapon_special_hit_proc",
 			true,
 		},
 	},
@@ -2403,7 +2467,7 @@ overrides.heavy_chainsword_sticky_quick_last_2h = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing_2h,
+			WoundsTemplates.chain_heavy,
 		},
 		{
 			"ignore_stagger_reduction",
@@ -2504,7 +2568,7 @@ overrides.heavy_chainsword_sticky_last_2h = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing_2h,
+			WoundsTemplates.chain_heavy,
 		},
 		{
 			"targets",
@@ -2566,6 +2630,14 @@ overrides.heavy_chainsword_sticky_last_2h = {
 			"skip_on_hit_proc",
 			true,
 		},
+		{
+			"on_weapon_special_hit_proc",
+			true,
+		},
+		{
+			"shield_breaker",
+			true,
+		},
 	},
 }
 overrides.heavy_chainsword_smiter_sticky_quick_last_2h = {
@@ -2605,7 +2677,7 @@ overrides.heavy_chainsword_smiter_sticky_quick_last_2h = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing_2h,
+			WoundsTemplates.chain_heavy,
 		},
 		{
 			"targets",
@@ -2729,7 +2801,7 @@ overrides.heavy_chainsword_smiter_active_abort_2h = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing_2h,
+			WoundsTemplates.chain_heavy,
 		},
 		{
 			"targets",
@@ -2739,6 +2811,10 @@ overrides.heavy_chainsword_smiter_active_abort_2h = {
 		},
 		{
 			"weapon_special",
+			true,
+		},
+		{
+			"on_weapon_special_hit_proc",
 			true,
 		},
 	},
@@ -2853,6 +2929,10 @@ overrides.heavy_chainsword_smiter_sticky_2h = {
 			"skip_on_hit_proc",
 			true,
 		},
+		{
+			"on_weapon_special_hit_proc",
+			true,
+		},
 	},
 }
 overrides.heavy_chainsword_smiter_sticky_last_2h = {
@@ -2896,7 +2976,7 @@ overrides.heavy_chainsword_smiter_sticky_last_2h = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.chainsword_sawing_2h,
+			WoundsTemplates.chain_heavy,
 		},
 		{
 			"targets",
@@ -2948,6 +3028,14 @@ overrides.heavy_chainsword_smiter_sticky_last_2h = {
 		},
 		{
 			"skip_on_hit_proc",
+			true,
+		},
+		{
+			"on_weapon_special_hit_proc",
+			true,
+		},
+		{
+			"shield_breaker",
 			true,
 		},
 	},

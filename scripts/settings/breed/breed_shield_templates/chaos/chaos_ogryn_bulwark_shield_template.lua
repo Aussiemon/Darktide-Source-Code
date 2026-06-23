@@ -4,6 +4,7 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local attack_types = AttackSettings.attack_types
 local shield_templates = {
 	chaos_ogryn_bulwark = {
+		is_invulnerable = true,
 		open_up_threshold = 170,
 		open_up_vfx = "content/fx/particles/enemies/chaos_ogryn/shield_open",
 		open_up_vfx_node = "shield_mid_node",

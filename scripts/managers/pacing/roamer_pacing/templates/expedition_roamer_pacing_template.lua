@@ -2,6 +2,7 @@
 
 local RoamerLimits = require("scripts/settings/roamer/roamer_limits")
 local RoamerPacks = require("scripts/settings/roamer/roamer_packs")
+local limits = RoamerLimits.default
 local default_packs = {
 	melee_high = {
 		renegade = RoamerPacks.expeditions_renegade_melee_high,
@@ -142,7 +143,7 @@ local roamer_pacing_template = {
 					default_packs.far_low,
 					default_packs.mixed_low,
 				},
-				limits = RoamerLimits.low,
+				limits = limits.low,
 			},
 			high = {
 				zone_range = {
@@ -177,7 +178,7 @@ local roamer_pacing_template = {
 					default_packs.far_high,
 					default_packs.mixed_high,
 				},
-				limits = RoamerLimits.high,
+				limits = limits.high,
 			},
 		},
 		{
@@ -216,7 +217,7 @@ local roamer_pacing_template = {
 					default_packs.far_low,
 					default_packs.mixed_low,
 				},
-				limits = RoamerLimits.low,
+				limits = limits.low,
 			},
 			high = {
 				zone_range = {
@@ -251,7 +252,7 @@ local roamer_pacing_template = {
 					default_packs.far_high,
 					default_packs.mixed_high,
 				},
-				limits = RoamerLimits.high,
+				limits = limits.high,
 			},
 		},
 		{
@@ -290,7 +291,7 @@ local roamer_pacing_template = {
 					default_packs.far_low,
 					default_packs.mixed_low,
 				},
-				limits = RoamerLimits.low,
+				limits = limits.low,
 			},
 			high = {
 				chance_to_skip_limits = 1,
@@ -326,7 +327,7 @@ local roamer_pacing_template = {
 					default_packs.far_high,
 					default_packs.mixed_high,
 				},
-				limits = RoamerLimits.high,
+				limits = limits.high,
 			},
 		},
 		{
@@ -365,7 +366,7 @@ local roamer_pacing_template = {
 					default_packs.far_low,
 					default_packs.mixed_low,
 				},
-				limits = RoamerLimits.low,
+				limits = limits.low,
 			},
 			high = {
 				chance_to_skip_limits = 1,
@@ -401,7 +402,7 @@ local roamer_pacing_template = {
 					default_packs.far_high,
 					default_packs.mixed_high,
 				},
-				limits = RoamerLimits.high,
+				limits = limits.high,
 			},
 		},
 		{
@@ -440,7 +441,7 @@ local roamer_pacing_template = {
 					default_packs.far_low,
 					default_packs.mixed_low,
 				},
-				limits = RoamerLimits.low,
+				limits = limits.low,
 			},
 			high = {
 				chance_to_skip_limits = 1,
@@ -476,7 +477,7 @@ local roamer_pacing_template = {
 					default_packs.far_high,
 					default_packs.mixed_high,
 				},
-				limits = RoamerLimits.high,
+				limits = limits.high,
 			},
 		},
 	},

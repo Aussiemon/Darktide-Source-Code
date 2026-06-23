@@ -137,6 +137,40 @@ local default_view_input_filters = {
 			0,
 		},
 	},
+	navigate_left_continuous_fast_right_stick = {
+		filter_type = "navigate_filter_continuous_fast",
+		hold = true,
+		threshold = 0.7,
+		input_mappings = {
+			"navigate_left_pressed",
+			"navigate_left_hold",
+		},
+		axis_mappings = {
+			"navigate_controller_right",
+		},
+		axis = {
+			-1,
+			0,
+			0,
+		},
+	},
+	navigate_right_continuous_fast_right_stick = {
+		filter_type = "navigate_filter_continuous_fast",
+		hold = true,
+		threshold = 0.7,
+		input_mappings = {
+			"navigate_right_pressed",
+			"navigate_right_hold",
+		},
+		axis_mappings = {
+			"navigate_controller_right",
+		},
+		axis = {
+			1,
+			0,
+			0,
+		},
+	},
 	scroll_up_continuous = {
 		filter_type = "navigate_filter_continuous",
 		hold = true,

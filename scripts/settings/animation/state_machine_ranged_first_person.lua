@@ -81,5 +81,14 @@ state_machine_settings["content/characters/player/human/first_person/animations/
 state_machine_settings["content/characters/player/human/first_person/animations/needle_pistol"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
+state_machine_settings["content/characters/player/human/first_person/animations/galvanic_rifle"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
+state_machine_settings["content/characters/player/human/first_person/animations/phosphor_pistol"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
+state_machine_settings["content/characters/player/human/first_person/animations/arc_rifle"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
 
 return state_machine_settings

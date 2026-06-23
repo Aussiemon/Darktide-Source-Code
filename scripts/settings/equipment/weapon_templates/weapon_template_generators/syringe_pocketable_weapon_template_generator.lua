@@ -352,6 +352,37 @@ local function generate_base_template(buff_name, validate_target_func, hud_icon_
 			use_ability_charge = use_ability_charge,
 			ability_type = use_ability_charge and "pocketable_ability" or nil,
 		},
+		action_inspect_3p = {
+			action_prevents_jump = true,
+			block_first_person_rotation = true,
+			can_crouch = false,
+			can_jump = false,
+			force_look = true,
+			kind = "inspect_3p",
+			lock_view = false,
+			skip_3p_anims = false,
+			stop_input = "inspect_stop",
+			total_time = math.huge,
+			anim_end_event_condition_func = function (unit, data, end_reason)
+				return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+			end,
+			crosshair = {
+				crosshair_type = "inspect",
+			},
+			allowed_chain_actions = {
+				inspect_3p_stop = {
+					action_name = "action_inspect",
+					chain_time = 1.1,
+				},
+			},
+			action_movement_curve = {
+				{
+					modifier = 0,
+					t = 0,
+				},
+				start_modifier = 0,
+			},
+		},
 		action_inspect = {
 			anim_end_event = "inspect_end",
 			anim_event = "inspect_start",
@@ -362,6 +393,12 @@ local function generate_base_template(buff_name, validate_target_func, hud_icon_
 			total_time = math.huge,
 			crosshair = {
 				crosshair_type = "inspect",
+			},
+			allowed_chain_actions = {
+				inspect_3p_start = {
+					action_name = "action_inspect_3p",
+					chain_time = 0.75,
+				},
 			},
 		},
 	}
@@ -428,10 +465,12 @@ local function generate_base_template(buff_name, validate_target_func, hud_icon_
 		uses_overheat = false,
 	}
 	base_template.breed_anim_state_machine_3p = {
+		cryptic = "content/characters/player/human/third_person/animations/pocketables",
 		human = "content/characters/player/human/third_person/animations/pocketables",
 		ogryn = "content/characters/player/ogryn/third_person/animations/pocketables",
 	}
 	base_template.breed_anim_state_machine_1p = {
+		cryptic = "content/characters/player/human/first_person/animations/syringe",
 		human = "content/characters/player/human/first_person/animations/syringe",
 		ogryn = "content/characters/player/ogryn/first_person/animations/syringe",
 	}
@@ -447,6 +486,7 @@ local function generate_base_template(buff_name, validate_target_func, hud_icon_
 	base_template.swap_pickup_name = pickup_name
 	base_template.give_pickup_name = pickup_name
 	base_template.breed_footstep_intervals = {
+		cryptic = FootstepIntervalsTemplates.default,
 		human = FootstepIntervalsTemplates.default,
 		ogryn = FootstepIntervalsTemplates.pocketable_ogryn,
 	}
@@ -457,6 +497,14 @@ local function generate_base_template(buff_name, validate_target_func, hud_icon_
 
 	base_template.action_is_aiming_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
 		return current_action_name == "action_aim"
+	end
+
+	base_template.action_inspect_3p_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+		return current_action_name == "action_inspect_3p"
+	end
+
+	base_template.action_inspect_3p_base_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+		return current_action_name == "action_inspect"
 	end
 
 	base_template.action_can_use_self_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player, condition_func_params)

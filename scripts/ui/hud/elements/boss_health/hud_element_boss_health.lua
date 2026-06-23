@@ -79,11 +79,11 @@ HudElementBossHealth.event_boss_encounter_start = function (self, unit, boss_ext
 		return
 	end
 
+	local breed = ScriptUnit.extension(unit, "unit_data_system"):breed()
 	local display_name = boss_extension:display_name()
 	local localized_display_name = display_name and Localize(display_name)
 	local health_extension = ScriptUnit.extension(unit, "health_system")
 	local max_health = math.floor(health_extension:max_health())
-	local breed = ScriptUnit.extension(unit, "unit_data_system"):breed()
 	local breed_name = breed.name
 
 	if not breed.ignore_weakened_boss_name then
@@ -256,10 +256,10 @@ end
 HudElementBossHealth._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
 	HudElementBossHealth.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
 
-	local widget_groups = self._widget_groups
 	local active_targets_array = self._active_targets_array
 	local num_active_targets = #active_targets_array
 	local num_health_bars_to_update = math.min(num_active_targets, self._max_health_bars)
+	local widget_groups = self._widget_groups
 
 	for i = 1, num_health_bars_to_update do
 		local widget_group_index = num_active_targets > 1 and i + 1 or i

@@ -2,7 +2,6 @@
 
 require("scripts/extension_systems/moveable_platform/moveable_platform_extension")
 
-local LevelPropsBroadphase = require("scripts/utilities/level_props/level_props_broadphase")
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
 local MoveablePlatformSystem = class("MoveablePlatformSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
@@ -17,13 +16,9 @@ MoveablePlatformSystem.init = function (self, context, ...)
 	if not self._is_server then
 		self._network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
 	end
-
-	Managers.state.level_props_broadphase:register_extension_system(self)
 end
 
 MoveablePlatformSystem.destroy = function (self)
-	Managers.state.level_props_broadphase:unregister_extension_system(self)
-
 	if not self._is_server then
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 	end
@@ -76,23 +71,6 @@ MoveablePlatformSystem.rpc_moveable_platform_set_story = function (self, channel
 	local extension = self._unit_to_extension_map[unit]
 
 	extension:set_story(story_name)
-end
-
-MoveablePlatformSystem.update_level_props_broadphase = function (self)
-	local unit_to_extension_map = self._unit_to_extension_map
-
-	for unit, extension in pairs(unit_to_extension_map) do
-		local units_nearby = LevelPropsBroadphase.check_units_nearby(Unit.world_position(unit, 1), nil, extension:player_side())
-		local in_update_list = self:has_update_function("MoveablePlatformExtension", "update", unit)
-
-		if units_nearby and not in_update_list then
-			self:enable_update_function("MoveablePlatformExtension", "update", unit, extension)
-			self:enable_update_function("MoveablePlatformExtension", "fixed_update", unit, extension)
-		elseif not units_nearby and in_update_list then
-			self:disable_update_function("MoveablePlatformExtension", "update", unit, extension)
-			self:disable_update_function("MoveablePlatformExtension", "fixed_update", unit, extension)
-		end
-	end
 end
 
 MoveablePlatformSystem.block_bot_movement = function (self)

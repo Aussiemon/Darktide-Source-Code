@@ -2,52 +2,31 @@
 
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
+local Profiler_start = Profiler.start
+local Profiler_stop = Profiler.stop
 local BtAttackValkyrieSelectorNode = class("BtAttackValkyrieSelectorNode", "BtNode")
 
 BtAttackValkyrieSelectorNode.init = function (self, ...)
 	BtAttackValkyrieSelectorNode.super.init(self, ...)
 
-	self._children = {}
-end
-
-BtAttackValkyrieSelectorNode.init_values = function (self, blackboard, action_data, node_data)
-	BtAttackValkyrieSelectorNode.super.init_values(self, blackboard, action_data, node_data)
-
-	local children = self._children
-
-	for i = 1, #children do
-		local child_node = children[i]
-		local child_tree_node = child_node.tree_node
-		local child_action_data = child_tree_node.action_data
-
-		child_node:init_values(blackboard, child_action_data, node_data)
-	end
+	self._selector_children = {}
 end
 
 BtAttackValkyrieSelectorNode.add_child = function (self, node)
-	self._children[#self._children + 1] = node
+	BtAttackValkyrieSelectorNode.super.add_child(self, node)
+
+	if not node.tree_node.state then
+		self._selector_children[#self._selector_children + 1] = node
+	end
 end
 
 BtAttackValkyrieSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
 	local node_identifier = self.identifier
 	local last_running_node = old_running_child_nodes[node_identifier]
-	local children = self._children
+	local children = self._selector_children
 
 	do
-		local node_death = children[1]
-		local death_component = blackboard.death
-		local is_dead = death_component.is_dead
-		local condition_result = is_dead
-
-		if condition_result then
-			new_running_child_nodes[node_identifier] = node_death
-
-			return node_death
-		end
-	end
-
-	do
-		local node_stagger = children[2]
+		local node_stagger = children[1]
 		local stagger_component = blackboard.stagger
 		local is_staggered = stagger_component.num_triggered_staggers > 0
 		local condition_result = is_staggered
@@ -60,7 +39,7 @@ BtAttackValkyrieSelectorNode.evaluate = function (self, unit, blackboard, scratc
 	end
 
 	do
-		local node_flee = children[3]
+		local node_flee = children[2]
 		local is_running = last_leaf_node_running and last_running_node == node_flee
 		local condition_result
 
@@ -84,7 +63,7 @@ BtAttackValkyrieSelectorNode.evaluate = function (self, unit, blackboard, scratc
 	end
 
 	do
-		local node_rendezvous = children[4]
+		local node_rendezvous = children[3]
 		local tree_node = node_rendezvous.tree_node
 		local action_data = tree_node.action_data
 		local is_running = last_leaf_node_running and last_running_node == node_rendezvous
@@ -121,7 +100,7 @@ BtAttackValkyrieSelectorNode.evaluate = function (self, unit, blackboard, scratc
 	end
 
 	do
-		local node_shoot = children[5]
+		local node_shoot = children[4]
 		local is_running = last_leaf_node_running and last_running_node == node_shoot
 		local condition_result
 
@@ -165,7 +144,7 @@ BtAttackValkyrieSelectorNode.evaluate = function (self, unit, blackboard, scratc
 	end
 
 	do
-		local node_fallback_rendezvous = children[6]
+		local node_fallback_rendezvous = children[5]
 		local tree_node = node_fallback_rendezvous.tree_node
 		local action_data = tree_node.action_data
 		local is_running = last_leaf_node_running and last_running_node == node_fallback_rendezvous
@@ -201,7 +180,7 @@ BtAttackValkyrieSelectorNode.evaluate = function (self, unit, blackboard, scratc
 		end
 	end
 
-	local node_idle = children[7]
+	local node_idle = children[6]
 
 	new_running_child_nodes[node_identifier] = node_idle
 
@@ -213,9 +192,9 @@ BtAttackValkyrieSelectorNode.run = function (self, unit, breed, blackboard, scra
 	local running_node = running_child_nodes[node_identifier]
 	local running_tree_node = running_node.tree_node
 	local running_action_data = running_tree_node.action_data
-	local result, evaluate_utility_next_frame = running_node:run(unit, breed, blackboard, scratchpad, running_action_data, dt, t, node_data, running_child_nodes)
+	local result, evaluate_utility_next_frame, update_rate = running_node:run(unit, breed, blackboard, scratchpad, running_action_data, dt, t, node_data, running_child_nodes)
 
-	return result, evaluate_utility_next_frame
+	return result, evaluate_utility_next_frame, update_rate
 end
 
 return BtAttackValkyrieSelectorNode

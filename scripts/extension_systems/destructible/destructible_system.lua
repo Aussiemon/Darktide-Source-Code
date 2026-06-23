@@ -18,8 +18,6 @@ DestructibleSystem.init = function (self, extension_system_creation_context, ...
 	else
 		self._removed_level_unit_ids = {}
 	end
-
-	Managers.state.level_props_broadphase:register_extension_system(self)
 end
 
 DestructibleSystem.on_remove_extension = function (self, unit, extension_name)
@@ -35,8 +33,6 @@ DestructibleSystem.on_remove_extension = function (self, unit, extension_name)
 end
 
 DestructibleSystem.destroy = function (self, ...)
-	Managers.state.level_props_broadphase:unregister_extension_system(self)
-
 	if not self._is_server then
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 	end

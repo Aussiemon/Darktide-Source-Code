@@ -1230,7 +1230,14 @@ local horde_compositions = {
 					},
 				},
 				{
-					name = "cultist_berzerker",
+					name = "cultist_vanguard",
+					amount = {
+						1,
+						2,
+					},
+				},
+				{
+					name = "renegade_vanguard",
 					amount = {
 						1,
 						2,
@@ -1261,6 +1268,13 @@ local horde_compositions = {
 						3,
 					},
 				},
+				{
+					name = "cultist_vanguard",
+					amount = {
+						1,
+						2,
+					},
+				},
 			},
 		},
 		{
@@ -1284,6 +1298,13 @@ local horde_compositions = {
 					amount = {
 						2,
 						4,
+					},
+				},
+				{
+					name = "cultist_vanguard",
+					amount = {
+						1,
+						3,
 					},
 				},
 			},
@@ -1747,7 +1768,14 @@ local horde_compositions = {
 					name = "chaos_ogryn_bulwark",
 					amount = {
 						1,
-						1,
+						2,
+					},
+				},
+				{
+					name = "cultist_vanguard",
+					amount = {
+						3,
+						6,
 					},
 				},
 			},
@@ -1764,8 +1792,15 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
+						1,
 						2,
-						2,
+					},
+				},
+				{
+					name = "cultist_vanguard",
+					amount = {
+						3,
+						6,
 					},
 				},
 			},
@@ -1782,8 +1817,15 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
+						1,
+						2,
+					},
+				},
+				{
+					name = "cultist_vanguard",
+					amount = {
 						3,
-						3,
+						6,
 					},
 				},
 			},
@@ -1800,8 +1842,15 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
-						4,
-						4,
+						1,
+						2,
+					},
+				},
+				{
+					name = "cultist_vanguard",
+					amount = {
+						3,
+						6,
 					},
 				},
 			},
@@ -1818,8 +1867,15 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
-						4,
-						4,
+						1,
+						2,
+					},
+				},
+				{
+					name = "cultist_vanguard",
+					amount = {
+						3,
+						6,
 					},
 				},
 			},
@@ -1890,6 +1946,13 @@ local horde_compositions = {
 					},
 				},
 				{
+					name = "cultist_vanguard",
+					amount = {
+						1,
+						2,
+					},
+				},
+				{
 					name = "chaos_ogryn_executor",
 					amount = {
 						1,
@@ -1908,6 +1971,13 @@ local horde_compositions = {
 					},
 				},
 				{
+					name = "cultist_vanguard",
+					amount = {
+						1,
+						2,
+					},
+				},
+				{
 					name = "chaos_ogryn_executor",
 					amount = {
 						2,
@@ -1923,6 +1993,13 @@ local horde_compositions = {
 					amount = {
 						6,
 						7,
+					},
+				},
+				{
+					name = "cultist_vanguard",
+					amount = {
+						2,
+						2,
 					},
 				},
 				{

@@ -207,6 +207,10 @@ MutatorBase._on_minion_unit_spawned = function (self, unit)
 		local breed_chances = random_spawn_buff_templates.breed_chances
 		local breed_chance = breed_chances[breed_name]
 
+		if type(breed_chance) == "table" then
+			breed_chance = Managers.state.difficulty:get_table_entry_by_resistance(breed_chance)
+		end
+
 		if breed_chance and breed_chance > math.random() then
 			self:_add_buffs_on_unit(buffs, unit, random_spawn_buff_templates.ignored_buff_keyword)
 		end

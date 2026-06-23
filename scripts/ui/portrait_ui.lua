@@ -2,6 +2,8 @@
 
 require("scripts/ui/render_target_icon_generator_base")
 
+local Breeds = require("scripts/settings/breed/breeds")
+local RenderTargetIconGeneratorInterface = require("scripts/ui/render_target_icon_generator_interface")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local PortraitUI = class("PortraitUI", "RenderTargetIconGeneratorBase")
@@ -9,8 +11,8 @@ local PortraitUI = class("PortraitUI", "RenderTargetIconGeneratorBase")
 PortraitUI.init = function (self, render_settings)
 	PortraitUI.super.init(self, render_settings)
 
-	self._default_camera_settings_key = "human"
-	self._breed_camera_settings = {}
+	self._default_camera_settings_key = "human_sized"
+	self._body_size_camera_settings = {}
 end
 
 PortraitUI.profile_updated = function (self, profile, prioritized)
@@ -139,6 +141,8 @@ PortraitUI._spawn_profile = function (self, profile, render_context)
 	local force_highest_mip = true
 	local disable_hair_state_machine = true
 	local companion_data = {
+		position = nil,
+		rotation = nil,
 		state_machine = optional_companion_state_machine,
 		animation_event = optional_companion_animation_event,
 		ignore = ignore_companion,
@@ -147,8 +151,10 @@ PortraitUI._spawn_profile = function (self, profile, render_context)
 	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, nil, optional_state_machine, optional_animation_event, nil, optional_face_animation_event, force_highest_mip, disable_hair_state_machine, nil, nil, companion_data)
 
 	local archetype = profile.archetype
-	local breed = archetype.breed
-	local camera_settings = self._breed_camera_settings[breed]
+	local breed_name = archetype.breed
+	local breed = Breeds[breed_name]
+	local body_size = breed.body_size or self._default_camera_settings_key
+	local camera_settings = self._body_size_camera_settings[body_size]
 	local camera_unit = camera_settings.camera_unit
 
 	if render_context then
@@ -251,47 +257,41 @@ PortraitUI._on_capture_complete = function (self, active_request)
 end
 
 PortraitUI._initialize_world = function (self)
-	Managers.event:register(self, "event_register_portrait_camera_human", "event_register_portrait_camera_human")
-	Managers.event:register(self, "event_register_portrait_camera_ogryn", "event_register_portrait_camera_ogryn")
-	Managers.event:register(self, "event_register_spawn_point_character_portrait", "event_register_spawn_point_character_portrait")
+	Managers.event:register(self, "event_register_character_portrait_spawn_point", "event_register_character_portrait_spawn_point")
+	Managers.event:register(self, "event_register_human_sized_character_portrait_camera", "event_register_human_sized_character_portrait_camera")
+	Managers.event:register(self, "event_register_ogryn_sized_character_portrait_camera", "event_register_ogryn_sized_character_portrait_camera")
 	PortraitUI.super._initialize_world(self)
 end
 
-PortraitUI.event_register_spawn_point_character_portrait = function (self, spawn_point_unit)
-	Managers.event:unregister(self, "event_register_spawn_point_character_portrait")
+PortraitUI.event_register_character_portrait_spawn_point = function (self, spawn_point_unit)
+	Managers.event:unregister(self, "event_register_character_portrait_spawn_point")
 
 	self._spawn_point_unit = spawn_point_unit
 end
 
-PortraitUI.event_register_portrait_camera_human = function (self, camera_unit)
-	Managers.event:unregister(self, "event_register_portrait_camera_human")
-
-	local breed = "human"
-
-	self:_store_camera_settings_by_breed(breed, camera_unit)
+PortraitUI.event_register_human_sized_character_portrait_camera = function (self, camera_unit)
+	Managers.event:unregister(self, "event_register_human_sized_character_portrait_camera")
+	self:_store_camera_settings_by_body_size("human_sized", camera_unit)
 end
 
-PortraitUI.event_register_portrait_camera_ogryn = function (self, camera_unit)
-	Managers.event:unregister(self, "event_register_portrait_camera_ogryn")
-
-	local breed = "ogryn"
-
-	self:_store_camera_settings_by_breed(breed, camera_unit)
+PortraitUI.event_register_ogryn_sized_character_portrait_camera = function (self, camera_unit)
+	Managers.event:unregister(self, "event_register_ogryn_sized_character_portrait_camera")
+	self:_store_camera_settings_by_body_size("ogryn_sized", camera_unit)
 end
 
-PortraitUI._store_camera_settings_by_breed = function (self, breed, camera_unit)
+PortraitUI._store_camera_settings_by_body_size = function (self, body_size, camera_unit)
 	local camera_settings_by_item_slot = {}
 
 	for slot_name, slot in pairs(ItemSlotSettings) do
-		local key = breed .. "_" .. slot_name
-		local slot_camera_unit = self:_get_camera_unit_by_key(key)
+		local key = string.format("%s_%s", body_size, slot_name)
+		local slot_camera_unit = self:_get_unit_by_value_key("camera_gear_slot_name", key)
 
 		if slot_camera_unit then
 			local slot_camera_position = Unit.world_position(slot_camera_unit, 1)
 			local slot_camera_rotation = Unit.world_rotation(slot_camera_unit, 1)
 
 			camera_settings_by_item_slot[slot_name] = {
-				breed = breed,
+				body_size = body_size,
 				slot_name = slot_name,
 				camera_unit = slot_camera_unit,
 				boxed_camera_start_position = Vector3.to_array(slot_camera_position),
@@ -303,17 +303,13 @@ PortraitUI._store_camera_settings_by_breed = function (self, breed, camera_unit)
 	local camera_position = Unit.world_position(camera_unit, 1)
 	local camera_rotation = Unit.world_rotation(camera_unit, 1)
 
-	self._breed_camera_settings[breed] = {
-		breed = breed,
+	self._body_size_camera_settings[body_size] = {
+		body_size = body_size,
 		camera_unit = camera_unit,
 		boxed_camera_start_position = Vector3.to_array(camera_position),
 		boxed_camera_start_rotation = QuaternionBox(camera_rotation),
 		camera_settings_by_item_slot = camera_settings_by_item_slot,
 	}
-end
-
-PortraitUI._get_camera_unit_by_key = function (self, key)
-	return self:_get_unit_by_value_key("camera_gear_slot_name", key)
 end
 
 PortraitUI._get_unit_by_value_key = function (self, key, value)
@@ -349,10 +345,12 @@ end
 
 PortraitUI._camera_unit = function (self)
 	local default_camera_settings_key = self._default_camera_settings_key
-	local camera_settings = self._breed_camera_settings[default_camera_settings_key]
+	local camera_settings = self._body_size_camera_settings[default_camera_settings_key]
 	local camera_unit = camera_settings.camera_unit
 
 	return camera_unit
 end
+
+implements(PortraitUI, RenderTargetIconGeneratorInterface)
 
 return PortraitUI

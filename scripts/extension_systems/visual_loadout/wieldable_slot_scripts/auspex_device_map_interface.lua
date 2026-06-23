@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/auspex_device_map_interface.lua
 
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
+local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local AuspexDeviceMapInterface = class("AuspexDeviceMapInterface")
 local HOLO_SCREEN_VISIBILITY_GROUP = "display_solid"
 
@@ -33,14 +34,17 @@ AuspexDeviceMapInterface.fixed_update = function (self, unit, dt, t, frame)
 	local owner_unit = self._owner_unit
 
 	if self._activate_display then
-		local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
-		local minigame_character_state_component = unit_data_extension:write_component("minigame_character_state")
+		local input_extension = ScriptUnit.extension(owner_unit, "input_system")
+		local wanted_move = input_extension:get("move")
 
-		minigame_character_state_component.pocketable_device_active = true
+		if not Sprint.sprint_input(input_extension, false) and Vector3.length_squared(wanted_move) == 0 then
+			local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+			local minigame_character_state_component = unit_data_extension:write_component("minigame_character_state")
 
-		self:_trigger_anim_event("auspex_start_focus")
+			minigame_character_state_component.pocketable_device_active = true
 
-		self._activate_display = false
+			self:_trigger_anim_event("auspex_start_focus")
+		end
 
 		if self._item_unit_1p and self._is_local_unit then
 			local scanner_display = ScriptUnit.has_extension(self._item_unit_1p, "scanner_display_system")
@@ -49,6 +53,8 @@ AuspexDeviceMapInterface.fixed_update = function (self, unit, dt, t, frame)
 				scanner_display:activate(owner_unit)
 			end
 		end
+
+		self._activate_display = false
 	end
 end
 

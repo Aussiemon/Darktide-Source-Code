@@ -224,8 +224,8 @@ local _button_base_passes = {
 				0,
 			},
 			size_addition = {
-				20,
-				20,
+				12,
+				12,
 			},
 		},
 		change_function = function (content, style, _, dt)
@@ -236,8 +236,8 @@ local _button_base_passes = {
 
 			local style_size_additon = style.size_addition
 
-			style_size_additon[1] = 20 + 20 * math.easeInCubic(1 - progress)
-			style_size_additon[2] = 20 + 20 * math.easeInCubic(1 - progress)
+			style_size_additon[1] = 12 + 20 * math.easeInCubic(1 - progress)
+			style_size_additon[2] = 12 + 20 * math.easeInCubic(1 - progress)
 		end,
 	},
 	{

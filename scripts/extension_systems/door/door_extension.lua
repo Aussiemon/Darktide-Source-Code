@@ -22,7 +22,7 @@ DoorExtension.init = function (self, extension_init_context, unit, extension_ini
 	self._current_state = STATES.none
 	self._anim_data = table.clone(DoorSettings.anim)
 	self._is_animating = false
-	self._previous_anim_time_normalized = 0
+	self._previous_anim_time_normalized = 1
 	self._entrance_nav_blocked = false
 	self._num_attackers = 0
 	self._animation_extension = nil
@@ -41,6 +41,9 @@ DoorExtension.init = function (self, extension_init_context, unit, extension_ini
 
 	local tm, half_size = Unit.box(unit)
 	local bottom_center_position = Matrix4x4.translation(tm) + Vector3.down() * half_size.z
+
+	half_size = Vector3.multiply_elements(half_size, Matrix4x4.scale(tm))
+
 	local radius = math.max(half_size.x, half_size.y)
 
 	self._broadphase_check_position = Vector3Box(bottom_center_position)
@@ -84,7 +87,7 @@ DoorExtension.setup_from_component = function (self, door_type, start_state, ope
 	self:_setup_nav_layer(unit, start_state)
 
 	self._interactee_extension = ScriptUnit.has_extension(unit, "interactee_system")
-	self._ignore_broadphase = ignore_broadphase
+	self._always_update = ignore_broadphase
 
 	if self._is_server then
 		self:_spawn_control_panels(control_panel_props, control_panels_active)
@@ -105,6 +108,12 @@ DoorExtension.setup_from_component = function (self, door_type, start_state, ope
 		if start_state == "open" then
 			self._start_state = "open_fwd"
 		end
+	end
+end
+
+DoorExtension.extensions_ready = function (self)
+	if self._is_server then
+		self:instantiate_state()
 	end
 end
 
@@ -197,34 +206,27 @@ DoorExtension.instantiate_state = function (self)
 	end
 end
 
-local SELF_CLOSE_CHECK_COOLDOWN = 0.25
+local SELF_CLOSE_CHECK_COOLDOWN = 1
 
-DoorExtension.update = function (self, unit, dt, t)
-	if self._is_animating and self:_normalized_anim_time() == 1 then
-		self._is_animating = false
-	end
+DoorExtension.staggered_update_closing = function (self, cumulative_dt)
+	local next_tick_dt
 
-	if self._is_server then
-		self:instantiate_state()
+	if self._self_closing_timer > 0 then
+		self._self_closing_timer = self._self_closing_timer - cumulative_dt
+		next_tick_dt = 0
 
-		if self._self_closing_timer > 0 then
-			self._self_closing_timer = self._self_closing_timer - dt
+		if self._self_closing_timer <= 0 then
+			local use_proximity_check = true
 
-			if self._self_closing_timer <= 0 then
-				local use_proximity_check = true
-
-				if self:can_close(use_proximity_check) then
-					self:close()
-				else
-					self._self_closing_timer = SELF_CLOSE_CHECK_COOLDOWN
-				end
+			if self:can_close(use_proximity_check) then
+				self:close()
+			else
+				self._self_closing_timer = SELF_CLOSE_CHECK_COOLDOWN
 			end
 		end
-
-		self:_update_nav_block(unit)
 	end
 
-	self:_update_external_dependencies()
+	return self._always_update and 0 or next_tick_dt
 end
 
 DoorExtension._should_nav_block = function (self)
@@ -250,18 +252,30 @@ DoorExtension._should_nav_block = function (self)
 	return should_nav_block
 end
 
-DoorExtension._update_nav_block = function (self, unit)
-	local nav_blocked = self:nav_blocked()
-	local should_nav_block = self:_should_nav_block()
+DoorExtension.staggered_update_nav_block = function (self)
+	if self._is_animating and self:_normalized_anim_time() == 1 then
+		self._is_animating = false
+	end
 
-	if should_nav_block ~= nav_blocked then
-		if should_nav_block then
-			self:_set_nav_block(true)
-			Unit.flow_event(self._unit, "lua_door_nav_blocked")
-		elseif not should_nav_block then
-			self:_set_nav_block(false)
-			Unit.flow_event(self._unit, "lua_door_nav_opened")
+	if self._is_server then
+		local nav_blocked = self:nav_blocked()
+		local should_nav_block = self:_should_nav_block()
+
+		if should_nav_block ~= nav_blocked then
+			if should_nav_block then
+				self:_set_nav_block(true)
+				Unit.flow_event(self._unit, "lua_door_nav_blocked")
+			elseif not should_nav_block then
+				self:_set_nav_block(false)
+				Unit.flow_event(self._unit, "lua_door_nav_opened")
+			end
 		end
+	end
+
+	self:_update_external_dependencies()
+
+	if self._always_update or self._is_animating then
+		return 0
 	end
 end
 
@@ -484,6 +498,8 @@ end
 
 DoorExtension.close = function (self)
 	if not self:can_close() then
+		self._self_closing_timer = math.max(self._self_closing_timer, 0.1)
+
 		return
 	end
 
@@ -542,7 +558,7 @@ DoorExtension._set_current_state = function (self, state, animate)
 	end
 
 	self._current_state = state
-	self._last_state_change = Managers.time:time("gameplay")
+	self._last_state_change = Managers.time:has_timer("gameplay") and Managers.time:time("gameplay") or 0
 
 	if self._interactee_extension then
 		local text = "loc_action_interaction_open"
@@ -617,10 +633,6 @@ end
 
 DoorExtension.num_attackers = function (self)
 	return self._num_attackers
-end
-
-DoorExtension.ignore_broadphase = function (self)
-	return self._ignore_broadphase
 end
 
 DoorExtension.rpc_sync_door_state = function (self, new_state, animate)

@@ -18,15 +18,17 @@ local TagQueryDatabase = require("scripts/extension_systems/dialogue/tag_query_d
 local TagQueryLoader = require("scripts/extension_systems/dialogue/tag_query_loader")
 local Vo = require("scripts/utilities/vo")
 local WwiseRouting = require("scripts/settings/dialogue/wwise_vo_routing_settings")
-local RPCS = {
+local CLIENT_RPCS = {
 	"rpc_interrupt_dialogue_event",
-	"rpc_trigger_dialogue_event",
 	"rpc_play_dialogue_event",
 	"rpc_dialogue_system_joined",
 	"rpc_set_dynamic_smart_tag",
 	"rpc_trigger_subtitle_event",
-	"rpc_server_sync_backend_vo",
 	"rpc_save_backend_vo",
+}
+local SERVER_RPCS = {
+	"rpc_trigger_dialogue_event",
+	"rpc_server_sync_backend_vo",
 }
 local DialogueSystem = class("DialogueSystem", "ExtensionSystemBase")
 
@@ -41,9 +43,9 @@ DialogueSystem.mission_dialogue_setting = function (self, setting_name)
 	end
 end
 
-DialogueSystem.set_mission_dialogue_setting = function (self, setting_name, enabled)
+DialogueSystem.set_mission_dialogue_setting = function (self, setting_name, value)
 	if self._mission_settings_override[setting_name] ~= nil then
-		self._mission_settings_override[setting_name] = enabled
+		self._mission_settings_override[setting_name] = value
 	end
 end
 
@@ -85,7 +87,11 @@ DialogueSystem.init = function (self, extension_system_creation_context, system_
 	local network_event_delegate = self._network_event_delegate
 
 	if network_event_delegate and is_rule_db_enabled then
-		network_event_delegate:register_session_events(self, unpack(RPCS))
+		if self._is_server then
+			network_event_delegate:register_session_events(self, unpack(SERVER_RPCS))
+		else
+			network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
+		end
 	end
 
 	local auto_load_files = DialogueSettings.auto_load_files
@@ -229,13 +235,18 @@ DialogueSystem.destroy = function (self)
 	end
 
 	if self._network_event_delegate then
-		self._network_event_delegate:unregister_events(unpack(RPCS))
+		if self._is_server then
+			self._network_event_delegate:unregister_events(unpack(SERVER_RPCS))
+		else
+			self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
+		end
 	end
 
 	if self._is_server then
 		Managers.event:unregister(self, "multiplayer_session_client_disconnected", "_on_client_left")
 	end
 
+	DialogueSystem.super.destroy(self)
 	table.clear(self)
 end
 
@@ -460,7 +471,7 @@ DialogueSystem._update_currently_playing_dialogues = function (self, dt, t)
 						end
 
 						local temp_event_data = {
-							dialogue_name = DialogueSettings.grouped_heard_speak_rules[result] or result,
+							dialogue_name = DialogueSettings.grouped_heard_speak_rules[result] or success_rule.overridden_rule_name or result,
 							speaker_class = extension:vo_class_name(),
 							sound_event = extension:get_last_query_sound_event(),
 							voice_profile = extension:get_voice_profile(),
@@ -1175,6 +1186,8 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 		if class_name == "tech_priest" then
 			wwise_route_key = 21
 		end
+	elseif is_a_player and class_name == "cryptic" and wwise_route_key == 0 then
+		wwise_route_key = 59
 	end
 
 	if not DEDICATED_SERVER then
@@ -1431,7 +1444,8 @@ DialogueSystem._process_query = function (self, query, t, is_a_delayed_query)
 		return
 	end
 
-	local dialogue_template = self._dialogue_templates[result]
+	local overridden_rule_name = query.validated_rule.overridden_rule_name
+	local dialogue_template = overridden_rule_name and self._dialogue_templates[overridden_rule_name] or self._dialogue_templates[result]
 	local on_pre_rule_execution = dialogue_template.on_pre_rule_execution
 	local delay_vo = on_pre_rule_execution and on_pre_rule_execution.delay_vo
 
@@ -1577,16 +1591,17 @@ DialogueSystem._execute_targeted_dialogue_event = function (self, target_unit, q
 end
 
 DialogueSystem._execute_dialogue_event = function (self, extension, query, dialogue_actor_unit)
-	local event_name, event_duration, dialogue_index = extension:get_dialogue_event_index(query)
+	local rule_name = query.result
+	local event_name, event_duration, dialogue_index = extension:get_dialogue_event_index(rule_name)
 
 	if not event_name or not event_duration then
 		return
 	end
 
-	local dialogue_id = NetworkLookup.dialogue_names[query.result]
+	local dialogue_id = NetworkLookup.dialogue_names[rule_name]
 	local is_level_unit, go_id, level_name_hash = Managers.state.unit_spawner:game_object_id_or_level_index(dialogue_actor_unit)
 
-	self:_register_telemetry_events(extension, query, event_name)
+	self:_register_telemetry_events(extension, rule_name, event_name)
 
 	local is_single_target, _, target_unit = self:_get_speaker_route_settings(query)
 
@@ -1617,9 +1632,9 @@ DialogueSystem._execute_accepted_query = function (self, t, query, dialogue_acto
 	self:_execute_dialogue_event(extension, query, dialogue_actor_unit)
 end
 
-DialogueSystem._register_telemetry_events = function (self, extension, query, event_name)
+DialogueSystem._register_telemetry_events = function (self, extension, rule_name, event_name)
 	if DEDICATED_SERVER then
-		Managers.telemetry_reporters:reporter("voice_over_event_triggered"):register_event(query.validated_rule.name)
+		Managers.telemetry_reporters:reporter("voice_over_event_triggered"):register_event(rule_name)
 	end
 end
 
@@ -1949,12 +1964,14 @@ DialogueSystem._sync_backend_vo_to_server = function (self, backend_group_id)
 		local peer_id = player:peer_id()
 
 		if not self._is_server then
-			Managers.state.game_session:send_rpc_server("rpc_server_sync_backend_vo", peer_id, backend_group_id_rpc, rules_array_rpc)
+			Managers.state.game_session:send_rpc_server("rpc_server_sync_backend_vo", backend_group_id_rpc, rules_array_rpc)
 		end
 	end)
 end
 
-DialogueSystem.rpc_server_sync_backend_vo = function (self, channel_id, peer_id, backend_group_id_rpc, rules_array_rpc)
+DialogueSystem.rpc_server_sync_backend_vo = function (self, channel_id, backend_group_id_rpc, rules_array_rpc)
+	local peer_id = Network.peer_id(channel_id)
+
 	self:_populate_backend_vo(peer_id, backend_group_id_rpc, rules_array_rpc)
 end
 

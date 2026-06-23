@@ -2388,25 +2388,25 @@ local color_definitions = {
 	player_slot_1_bright = {
 		255,
 		255,
-		240,
-		24,
+		227,
+		64,
 	},
 	player_slot_2_bright = {
 		255,
-		224,
-		54,
-		82,
+		255,
+		125,
+		230,
 	},
 	player_slot_3_bright = {
 		255,
-		79,
-		216,
-		132,
+		255,
+		147,
+		76,
 	},
 	player_slot_4_bright = {
 		255,
-		96,
-		138,
+		83,
+		128,
 		255,
 	},
 	text_default = {
@@ -2498,6 +2498,12 @@ local color_definitions = {
 		169,
 		191,
 		153,
+	},
+	terminal_corner_hover_bright = {
+		255,
+		230,
+		255,
+		212,
 	},
 	terminal_corner_selected = {
 		255,

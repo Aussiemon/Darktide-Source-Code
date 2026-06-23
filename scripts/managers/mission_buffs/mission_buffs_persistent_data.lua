@@ -189,6 +189,67 @@ MissionBuffsPersistentData._add_buff_index_to_player_data = function (self, play
 	end
 end
 
+MissionBuffsPersistentData._remove_buff_from_player_data = function (self, player, buff_name)
+	local target_player_data = self:_get_player_data(player)
+
+	if not target_player_data then
+		return false
+	end
+
+	local player_buffs = target_player_data.buffs_received
+	local existing_buff_data = player_buffs[buff_name]
+
+	if not existing_buff_data then
+		Log.warning("MissionBuffsPersistentData", "Tried to remove buff %s that is not registered for player", buff_name)
+
+		return false
+	end
+
+	local new_stacks = existing_buff_data.stacks - 1
+
+	if new_stacks > 0 then
+		existing_buff_data.stacks = new_stacks
+
+		return true
+	end
+
+	player_buffs[buff_name] = nil
+
+	local horde_data = HordesBuffsData[buff_name]
+
+	if not horde_data then
+		return true
+	end
+
+	local is_family_buff = horde_data.is_family_buff
+
+	if is_family_buff then
+		target_player_data.num_family_buffs_received = math.max(0, target_player_data.num_family_buffs_received - 1)
+	else
+		local archetype_based_data = self:_get_or_create_player_archetype_data(player)
+
+		archetype_based_data.num_legendary_buffs_received = math.max(0, archetype_based_data.num_legendary_buffs_received - 1)
+	end
+
+	return true
+end
+
+MissionBuffsPersistentData._pop_buff_index_from_player_data = function (self, player, buff_name)
+	local target_player_data = self:_get_player_data(player)
+
+	if not target_player_data then
+		return nil
+	end
+
+	local target_buff = target_player_data.buffs_received[buff_name]
+
+	if not target_buff or #target_buff.buff_indexes == 0 then
+		return nil
+	end
+
+	return table.remove(target_buff.buff_indexes)
+end
+
 MissionBuffsPersistentData.set_legendary_buffs_available_for_player = function (self, player, legendary_buffs, buffs_in_pool_already_given_to_player)
 	local archetype_based_data = self:_get_or_create_player_archetype_data(player)
 
@@ -278,6 +339,14 @@ end
 
 MissionBuffsPersistentData.save_buff_index_for_player = function (self, player, buff_name, buff_index)
 	self:_add_buff_index_to_player_data(player, buff_name, buff_index)
+end
+
+MissionBuffsPersistentData.remove_buff_for_player = function (self, player, buff_name)
+	return self:_remove_buff_from_player_data(player, buff_name)
+end
+
+MissionBuffsPersistentData.pop_buff_index_for_player = function (self, player, buff_name)
+	return self:_pop_buff_index_from_player_data(player, buff_name)
 end
 
 MissionBuffsPersistentData.save_player_buffs = function (self, player, buffs)

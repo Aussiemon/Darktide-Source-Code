@@ -244,7 +244,7 @@ BtAlertedAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 		end
 	end
 
-	return "running"
+	return "running", nil
 end
 
 BtAlertedAction._start_alerted_direction_anim = function (self, unit, scratchpad, action_data, t)

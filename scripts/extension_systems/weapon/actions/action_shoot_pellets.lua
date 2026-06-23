@@ -185,7 +185,7 @@ ActionShootPellets._shoot = function (self, position, rotation, power_level, cha
 	local process_hits = num_pellets_total <= num_pellets_fired
 
 	if process_hits then
-		local num_hit_units = self:_process_hits(power_level, t, fire_config)
+		local num_hit_units, hit_elite, hit_weakspot = self:_process_hits(power_level, t, fire_config)
 		local hit_all_pellets_on_same = false
 		local attacked_unit
 
@@ -223,6 +223,8 @@ ActionShootPellets._shoot = function (self, position, rotation, power_level, cha
 			param_table.num_shots_fired = action_component.num_shots_fired
 			param_table.combo_count = self._combo_count
 			param_table.num_hit_units = num_hit_units
+			param_table.hit_elite = hit_elite
+			param_table.hit_weakspot = hit_weakspot
 			param_table.hit_all_pellets = hit_all_pellets
 			param_table.hit_all_pellets_on_same = hit_all_pellets_on_same
 			param_table.is_critical_strike = self._critical_strike_component.is_active
@@ -364,6 +366,7 @@ ActionShootPellets._process_hits = function (self, power_level, t, fire_config)
 	local num_hits_per_unit = self._num_hits_per_unit
 	local saved_pellet_hits = self._saved_pellet_hits
 	local num_saved_pellets = self._num_saved_pellets
+	local hit_elite = false
 	local hit_weakspot = false
 	local killing_blow = false
 	local hit_minion = false
@@ -514,6 +517,7 @@ ActionShootPellets._process_hits = function (self, power_level, t, fire_config)
 								best_attack_result = attack_result
 								best_damage_efficiency = damage_efficiency
 								hit_weakspot = previous_hit_weakspot or hit_weakspot
+								hit_elite = hit_elite or target_breed_or_nil and target_breed_or_nil.tags and target_breed_or_nil.tags.elite or false
 								killing_blow = killing_blow or attack_result == AttackSettings.attack_results.died
 
 								local breed_is_minion = Breed.is_minion(target_breed_or_nil)
@@ -579,7 +583,7 @@ ActionShootPellets._process_hits = function (self, power_level, t, fire_config)
 						exit_distance = hit_distance + object_thickness
 
 						if penetration_config.exit_explosion_template and is_server then
-							Explosion.create_explosion(world, physics_world, exit_position, exit_normal, player_unit, penetration_config.exit_explosion_template, power_level, charge_level, attack_types.explosion, false, false, weapon_item, wielded_slot)
+							Explosion.create_explosion(world, physics_world, exit_position, exit_normal and Quaternion.look(exit_normal) or Quaternion.identity(), player_unit, penetration_config.exit_explosion_template, power_level, charge_level, attack_types.explosion, false, false, weapon_item, wielded_slot)
 
 							exploded = true
 						end
@@ -629,13 +633,13 @@ ActionShootPellets._process_hits = function (self, power_level, t, fire_config)
 					end
 
 					if not exit_position and penetration_config.stop_explosion_template and is_server then
-						Explosion.create_explosion(world, physics_world, hit_position, hit_normal, player_unit, penetration_config.stop_explosion_template, power_level, charge_level, attack_types.explosion, false, false, weapon_item, wielded_slot)
+						Explosion.create_explosion(world, physics_world, hit_position, Quaternion.look(hit_normal), player_unit, penetration_config.stop_explosion_template, power_level, charge_level, attack_types.explosion, false, false, weapon_item, wielded_slot)
 
 						exploded = true
 					end
 				else
 					if penetrated and penetration_config.stop_explosion_template and is_server then
-						Explosion.create_explosion(world, physics_world, hit_position, hit_normal, player_unit, penetration_config.stop_explosion_template, power_level, charge_level, attack_types.explosion, false, false, weapon_item, wielded_slot)
+						Explosion.create_explosion(world, physics_world, hit_position, Quaternion.look(hit_normal), player_unit, penetration_config.stop_explosion_template, power_level, charge_level, attack_types.explosion, false, false, weapon_item, wielded_slot)
 
 						exploded = true
 					end
@@ -658,7 +662,7 @@ ActionShootPellets._process_hits = function (self, power_level, t, fire_config)
 				end
 
 				if (stop or penetrated) and impact_config.explosion_template and is_server then
-					Explosion.create_explosion(world, physics_world, hit_position, hit_normal, player_unit, penetration_config.stop_explosion_template, power_level, charge_level, attack_types.explosion, false, false, weapon_item, wielded_slot)
+					Explosion.create_explosion(world, physics_world, hit_position, Quaternion.look(hit_normal), player_unit, penetration_config.stop_explosion_template, power_level, charge_level, attack_types.explosion, false, false, weapon_item, wielded_slot)
 
 					exploded = true
 				end
@@ -728,7 +732,7 @@ ActionShootPellets._process_hits = function (self, power_level, t, fire_config)
 	shot_result.hit_weakspot = hit_weakspot
 	shot_result.killing_blow = killing_blow
 
-	return num_hit_units
+	return num_hit_units, hit_elite, hit_weakspot
 end
 
 ActionShootPellets._add_shotshell_buff = function (self, t, buff_name, shotshell_template, hit_unit, player_unit, damage_config, weapon_item, number_of_hits)

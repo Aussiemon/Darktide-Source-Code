@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/ui/views/broker_stimm_builder_view/broker_stimm_builder_view.lua
 
 local NodeBuilderViewBase = require("scripts/ui/views/node_builder_view_base/node_builder_view_base")
-local Definitions = require("scripts/ui/views/broker_stimm_builder_view/broker_stimm_builder_view_definitions")
+local broker_stimm_builder_view_definitions = require("scripts/ui/views/broker_stimm_builder_view/broker_stimm_builder_view_definitions")
 local Archetypes = require("scripts/settings/archetype/archetypes")
 local Colors = require("scripts/utilities/ui/colors")
 local InputDevice = require("scripts/managers/input/input_device")
@@ -27,7 +27,7 @@ BrokerStimmBuilderView.init = function (self, settings, context)
 	self._local_player_id = self._preview_player:local_player_id()
 	self._is_own_player = self._preview_player == self:_player()
 
-	BrokerStimmBuilderView.super.init(self, Definitions, settings, context)
+	BrokerStimmBuilderView.super.init(self, broker_stimm_builder_view_definitions, settings, context)
 
 	self._save_talent_changes = false
 
@@ -54,7 +54,6 @@ BrokerStimmBuilderView.on_enter = function (self)
 
 	local player = self._preview_player
 	local profile = player:profile()
-	local active_talents_version = TalentLayoutParser.talents_version(profile)
 	local active_layout = self._active_layout
 	local nodes = active_layout.nodes
 	local profile_preset_id = ProfileUtils.get_active_profile_preset_id()
@@ -162,8 +161,6 @@ end
 BrokerStimmBuilderView.event_on_profile_preset_changed = function (self, profile_preset, on_preset_deleted)
 	local player = self._preview_player
 	local profile = player:profile()
-	local active_talents_version = TalentLayoutParser.talents_version(profile)
-	local talents_version = profile_preset and profile_preset.talents_version
 	local profile_preset_id = ProfileUtils.get_active_profile_preset_id()
 	local previously_active_profile_preset_id = self._active_profile_preset_id
 	local talents
@@ -333,6 +330,7 @@ BrokerStimmBuilderView._node_connection_widget_by_index = function (self, index)
 
 	if not connection_widgets[index] then
 		connection_widgets[index] = self:_create_widget("node_connection_" .. index, self._definitions.node_connection_broker_stimm_definition)
+		connection_widgets[index].content.player_mode = self._player_mode
 	end
 
 	connection_widgets[index].content.visible = true
@@ -703,10 +701,6 @@ BrokerStimmBuilderView.update = function (self, dt, t, input_service)
 			tooltip_offset[1] = math.clamp(tooltip_scenegraph_position_x + (node_scenegraph_position_x + node_offset_x * render_scale) * resolution_inverse_scale, 0, resolution_width * render_inverse_scale * current_zoom - tooltip_width)
 			tooltip_offset[2] = math.clamp(tooltip_scenegraph_position_y + (node_scenegraph_position_y + node_offset_y * render_scale) * resolution_inverse_scale, input_surface_offset[2] + 50, resolution_height * render_inverse_scale * current_zoom + (input_surface_offset[2] + input_surface_size_addition[2]) - tooltip_height)
 		end
-
-		math.point_is_inside_2d_box = function (pos, lower_left_corner, size)
-			return pos[1] > lower_left_corner[1] and pos[1] < lower_left_corner[1] + size[1] and pos[2] > lower_left_corner[2] and pos[2] < lower_left_corner[2] + size[2]
-		end
 	end
 
 	self:_update_node_widgets_blocked_symbol_state()
@@ -898,7 +892,6 @@ BrokerStimmBuilderView._update_gamepad_cursor = function (self, dt, t, input_ser
 	gamepad_cursor.visible = cursor_active
 
 	local screen_height = RESOLUTION_LOOKUP.height
-	local scale = RESOLUTION_LOOKUP.scale
 	local inverse_scale = RESOLUTION_LOOKUP.inverse_scale
 
 	if cursor_active then
@@ -961,7 +954,6 @@ BrokerStimmBuilderView._update_gamepad_cursor = function (self, dt, t, input_ser
 			local best_widget
 			local is_sticky = len_gamepad_cursor_average_vel < settings.stickiness_speed_threshold
 			local cursor_center = pos
-			local cursor_pos = cursor_center - 0.5 * cursor_size
 			local node_widgets = self._node_widgets
 
 			for i = 1, #node_widgets do
@@ -972,10 +964,9 @@ BrokerStimmBuilderView._update_gamepad_cursor = function (self, dt, t, input_ser
 				if type ~= "start" then
 					local is_selected = i == self._selected_node_index
 					local has_overlap, score, widget_size, widget_center = process_gamepad_cursor_widget_func(self, widget, cursor_size, is_sticky, is_selected, pos, normalized_gamepad_cursor_average_vel)
-					local delta_dir, delta_len = Vector3.direction_length(widget_center - cursor_center)
 
 					if has_overlap then
-						drag_coefficient = settings.widget_drag_coefficient
+						local _, delta_len = Vector3.direction_length(widget_center - cursor_center)
 
 						if delta_len < settings.stickiness_radius then
 							wanted_size = widget_size
@@ -1737,10 +1728,6 @@ BrokerStimmBuilderView.cb_on_help_pressed = function (self)
 			},
 		},
 	}
-
-	local syringe_ability = PlayerAbilities.broker_ability_syringe
-	local lerp_cooldown = syringe_ability.cooldown
-
 	tutorial_overlay_data[#tutorial_overlay_data + 1] = {
 		grow_from_center = true,
 		window_width = 800,

@@ -10,25 +10,15 @@ local BtSelectorNode = class("BtSelectorNode", "BtNode")
 BtSelectorNode.init = function (self, ...)
 	BtSelectorNode.super.init(self, ...)
 
-	self._children = {}
-end
-
-BtSelectorNode.init_values = function (self, blackboard, action_data, node_data)
-	BtSelectorNode.super.init_values(self, blackboard, action_data, node_data)
-
-	local children = self._children
-
-	for i = 1, #children do
-		local child_node = children[i]
-		local child_tree_node = child_node.tree_node
-		local child_action_data = child_tree_node.action_data
-
-		child_node:init_values(blackboard, child_action_data, node_data)
-	end
+	self._selector_children = {}
 end
 
 BtSelectorNode.add_child = function (self, node)
-	self._children[#self._children + 1] = node
+	BtSelectorNode.super.add_child(self, node)
+
+	if not node.tree_node.state then
+		self._selector_children[#self._selector_children + 1] = node
+	end
 end
 
 BtSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
@@ -36,7 +26,7 @@ BtSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t, e
 	local leaf_node
 	local node_identifier = self.identifier
 	local last_running_node = old_running_child_nodes[node_identifier]
-	local children = self._children
+	local children = self._selector_children
 
 	for i = 1, #children do
 		local child_node = children[i]
@@ -69,9 +59,9 @@ BtSelectorNode.run = function (self, unit, breed, blackboard, scratchpad, action
 	local running_node = running_child_nodes[node_identifier]
 	local running_tree_node = running_node.tree_node
 	local running_action_data = running_tree_node.action_data
-	local result, evaluate_utility_next_frame = running_node:run(unit, breed, blackboard, scratchpad, running_action_data, dt, t, node_data, running_child_nodes)
+	local result, evaluate_utility_next_frame, update_rate = running_node:run(unit, breed, blackboard, scratchpad, running_action_data, dt, t, node_data, running_child_nodes)
 
-	return result, evaluate_utility_next_frame
+	return result, evaluate_utility_next_frame, update_rate
 end
 
 return BtSelectorNode

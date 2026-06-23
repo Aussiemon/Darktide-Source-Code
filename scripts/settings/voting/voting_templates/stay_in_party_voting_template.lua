@@ -78,7 +78,7 @@ local stay_in_party_voting_template = {
 		Log.info("STAY_IN_PARTY_VOTING", "voting_completed: %s, result: %s", voting_id, result)
 		Managers.event:trigger("event_stay_in_party_voting_completed", result)
 	end,
-	on_aborted = function (voting_id, template, params, abort_reason)
+	on_aborted = function (voting_id, template, params, abort_reason, votes)
 		if DEDICATED_SERVER then
 			return
 		end

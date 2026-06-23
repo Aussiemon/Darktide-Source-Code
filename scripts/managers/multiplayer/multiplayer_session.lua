@@ -41,7 +41,7 @@ MultiplayerSession.became_host = function (self, host_type, lobby_id)
 
 		Log.info("MultiplayerSession", "Server Name %s", server_name)
 
-		if PLATFORM == "win32" then
+		if PLATFORM == "win32_server" then
 			CommandWindow.print(string.format("Server Name: %s", server_name))
 		end
 	end

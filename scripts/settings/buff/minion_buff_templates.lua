@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/settings/buff/minion_buff_templates.lua
 
 local Attack = require("scripts/utilities/attack/attack")
-local ActionData = require("scripts/settings/breed/breed_actions")
+local AilmentSettings = require("scripts/settings/ailments/ailment_settings")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BurningSettings = require("scripts/settings/burning/burning_settings")
@@ -10,7 +10,9 @@ local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_t
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
+local MinionState = require("scripts/utilities/minion_state")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+local ailment_effects = AilmentSettings.effects
 local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
@@ -111,51 +113,111 @@ templates.damage_volume_instakill = {
 }
 templates.damage_volume_electrical = {
 	class_name = "interval_buff",
-	duration = 1,
+	duration = 0.5,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_electric_buff_hud",
+	hud_priority = 1,
 	interval = 0.5,
+	interval_stack_removal = true,
+	is_negative = true,
 	max_stacks = 1,
+	max_stacks_cap = 1,
 	predicted = false,
 	refresh_duration_on_stack = true,
+	start_interval_on_apply = true,
+	stat_buffs = {
+		[buff_stat_buffs.movement_speed] = -0.15000000000000002,
+		[buff_stat_buffs.dodge_speed_multiplier] = 0.9,
+	},
+	power_level = {
+		default = {
+			2500,
+			3000,
+			3750,
+			4250,
+			5000,
+		},
+		player = {
+			1500,
+			1800,
+			2250,
+			2550,
+			3000,
+		},
+	},
 	keywords = {
+		buff_keywords.electrocuted_shock_mine,
 		buff_keywords.damage_volume_electrical,
 	},
-	interval_func = function (template_data, template_context)
+	start_func = function (template_data, template_context)
+		local is_server = template_context.is_server
+
+		if not is_server then
+			return
+		end
+
 		local unit = template_context.unit
+		local unit_data = ScriptUnit.has_extension(unit, "unit_data_system")
+		local breed = unit_data and unit_data:breed()
+		local is_poxwalker_bomber = breed and breed.tags and breed.name == "chaos_poxwalker_bomber"
 
-		if HEALTH_ALIVE[unit] then
-			local damage_template = DamageProfileTemplates.horde_flame_impact
-			local power_level_table = MinionDifficultySettings.power_level.chaos_engulfed_enemy_fire_attack
-			local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
-			local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
+		template_data.is_poxwalker_bomber = is_poxwalker_bomber
+		template_data.interval_index = 0
+		template_data.damage_refresh = true
+	end,
+	refresh_func = function (template_data, template_context, t)
+		template_data.damage_refresh = true
+	end,
+	interval_func = function (template_data, template_context, template)
+		local is_server = template_context.is_server
 
-			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
+		if not is_server or not template_data.damage_refresh then
+			return
+		end
+
+		template_data.damage_refresh = false
+
+		local interval_index = template_data.interval_index + 1
+
+		template_data.interval_index = interval_index
+
+		local unit = template_context.unit
+		local is_staggered_poxwalker_bomber = template_data.is_poxwalker_bomber and MinionState.is_staggered(unit)
+
+		if HEALTH_ALIVE[unit] and not is_staggered_poxwalker_bomber then
+			local damage_template = DamageProfileTemplates.shock_grenade_stun_interval
+			local breed = template_context.breed
+			local breed_type = breed.breed_type
+			local power_level_by_breed_type = template.power_level
+			local power_level_by_challenge = power_level_by_breed_type[breed_type] or power_level_by_breed_type.default
+			local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_by_challenge)
+			local random_radians = math.random_range(0, math.pi * 2)
+			local attack_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
+
+			attack_direction = Vector3.normalize(attack_direction)
+
+			if breed_type == PLAYER_BREED_TYPE or interval_index % 4 == 1 then
+				Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.electrocution, "attack_direction", attack_direction)
+			end
 		end
 	end,
-	minion_effects = minion_burning_buff_effects.chemfire,
-}
-templates.damage_volume_radioactive = {
-	class_name = "interval_buff",
-	duration = 1,
-	interval = 0.5,
-	max_stacks = 1,
-	predicted = false,
-	refresh_duration_on_stack = true,
-	keywords = {
-		buff_keywords.damage_volume_radioactive,
+	minion_effects = {
+		ailment_effect = ailment_effects.electrocution,
+		node_effects = {
+			{
+				node_name = "j_spine",
+				vfx = {
+					material_emission = true,
+					orphaned_policy = "destroy",
+					particle_effect = "content/fx/particles/enemies/buff_chainlightning",
+					stop_type = "stop",
+				},
+				sfx = {
+					looping_wwise_start_event = "wwise/events/weapon/play_minion_electricity_hit",
+					looping_wwise_stop_event = "wwise/events/weapon/stop_psyker_chain_lightning_hit",
+				},
+			},
+		},
 	},
-	interval_func = function (template_data, template_context)
-		local unit = template_context.unit
-
-		if HEALTH_ALIVE[unit] then
-			local damage_template = DamageProfileTemplates.horde_flame_impact
-			local power_level_table = MinionDifficultySettings.power_level.chaos_engulfed_enemy_fire_attack
-			local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
-			local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
-
-			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
-		end
-	end,
-	minion_effects = minion_burning_buff_effects.chemfire,
 }
 templates.hit_by_common_enemy_flame = {
 	class_name = "interval_buff",

@@ -168,7 +168,7 @@ local MILLISECONDS_TO_SECONDS = 0.001
 RemotePlayer.lag_compensation_rewind_s = function (self)
 	local ms = self:lag_compensation_rewind_ms()
 
-	return ms and ms * MILLISECONDS_TO_SECONDS or nil
+	return ms and ms * MILLISECONDS_TO_SECONDS
 end
 
 RemotePlayer.create_input_handler = function (self, fixed_time_step)
@@ -214,9 +214,9 @@ end
 
 RemotePlayer.companion_name = function (self)
 	local profile = self._profile
-	local companion_data = profile and profile.companion
+	local companion = profile and profile.companion
 
-	return companion_data and companion_data.name or nil
+	return companion and companion.name
 end
 
 RemotePlayer.is_player_blocked = function (self)

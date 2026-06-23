@@ -2,7 +2,7 @@
 
 local CacheWrapper = require("scripts/backend/cache_wrapper")
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
-local LocalLoader = require("scripts/settings/equipment/local_items_loader")
+local LocalItemsLoader = require("scripts/settings/equipment/local_items_loader")
 local Promise = require("scripts/foundation/utilities/promise")
 local Interface = {
 	"items_cache",
@@ -120,7 +120,7 @@ local function _include_items_definition(items)
 end
 
 MasterData._get_items_from_metadata_db = function (self)
-	return LocalLoader.get_items_from_metadata_db():next(function (items)
+	return LocalItemsLoader.get_items_from_metadata_db():next(function (items)
 		return _include_items_definition(items):next(function ()
 			create_network_lookup(items)
 			table.set_readonly(items, "Item Definitions")

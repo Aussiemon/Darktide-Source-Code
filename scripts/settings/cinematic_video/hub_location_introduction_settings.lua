@@ -6,6 +6,7 @@ local hub_location_introduction_settings = {
 		video_template = "hli_mission_board",
 		video_template_by_archetype = {
 			adamant = "hli_mission_board_adamant",
+			cryptic = "hli_mission_board_cryptic",
 		},
 	},
 	barber_vendor_background_view = {

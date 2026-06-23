@@ -69,6 +69,100 @@ explosion_templates.plasma_rifle_exit = {
 	},
 	scalable_vfx = {},
 }
+explosion_templates.light_plasma_p1_m2_explosion = {
+	close_radius = 2.75,
+	collision_filter = "filter_player_character_explosion",
+	damage_falloff = true,
+	min_close_radius = 2.25,
+	min_radius = 4,
+	radius = 5,
+	scalable_radius = true,
+	static_power_level = 500,
+	close_damage_profile = DamageProfileTemplates.close_light_plasma_demolition_p1_m2,
+	close_damage_type = damage_types.laser,
+	damage_profile = DamageProfileTemplates.far_light_plasma_demolition_p1_m2,
+	damage_type = damage_types.laser,
+	broadphase_explosion_filter = {
+		"heroes",
+		"villains",
+		"destructibles",
+	},
+	explosion_area_suppression = {
+		instant_aggro = true,
+		suppression_falloff = true,
+		distance = {
+			6,
+			14,
+		},
+		suppression_value = {
+			2,
+			7,
+		},
+	},
+	scalable_vfx = {
+		{
+			min_radius = 8.5,
+			radius_variable_name = "radius",
+			effects = {
+				"content/fx/particles/weapons/rifles/plasma_gun/plasma_charged_explosion_medium",
+			},
+		},
+	},
+}
+explosion_templates.charged_plasma_p1_m2_explosion = {
+	close_radius = 3.3,
+	collision_filter = "filter_player_character_explosion",
+	damage_falloff = true,
+	min_close_radius = 3,
+	min_radius = 4.25,
+	radius = 5.25,
+	scalable_radius = true,
+	static_power_level = 500,
+	close_damage_profile = DamageProfileTemplates.close_charged_plasma_demolition_p1_m2,
+	close_damage_type = damage_types.laser,
+	damage_profile = DamageProfileTemplates.far_charged_plasma_demolition_p1_m2,
+	damage_type = damage_types.laser,
+	broadphase_explosion_filter = {
+		"heroes",
+		"villains",
+		"destructibles",
+	},
+	explosion_area_suppression = {
+		instant_aggro = true,
+		suppression_falloff = true,
+		distance = {
+			6,
+			14,
+		},
+		suppression_value = {
+			2,
+			7,
+		},
+	},
+	vfx = {
+		"content/fx/particles/weapons/rifles/plasma_gun/plasma_charged_explosion_large",
+	},
+}
+explosion_templates.plasma_p1_m2_exit_explosion = {
+	close_radius = 1.5,
+	collision_filter = "filter_player_character_explosion",
+	damage_falloff = true,
+	min_close_radius = 1.1,
+	min_radius = 2.5,
+	radius = 4.5,
+	scalable_radius = true,
+	static_power_level = 500,
+	close_damage_profile = DamageProfileTemplates.close_light_plasma_demolition_p1_m2,
+	close_damage_type = damage_types.plasma,
+	damage_profile = DamageProfileTemplates.far_light_plasma_demolition_p1_m2,
+	damage_type = damage_types.plasma_heavy,
+	broadphase_explosion_filter = {
+		"heroes",
+		"villains",
+		"destructibles",
+	},
+	scalable_vfx = {},
+}
 
 return {
 	base_templates = explosion_templates,

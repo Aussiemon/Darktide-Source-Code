@@ -8,7 +8,7 @@ AdaptiveClockHandlerServer.init = function (self, player, fixed_time_step)
 
 	self._player = player
 	self._channel_id = channel_id
-	self._peer_id = Managers.state.game_session:channel_to_peer(channel_id)
+	self._peer_id = Network.peer_id(channel_id)
 	self._fixed_time_step = fixed_time_step
 
 	local ping = Network.ping(self._peer_id)

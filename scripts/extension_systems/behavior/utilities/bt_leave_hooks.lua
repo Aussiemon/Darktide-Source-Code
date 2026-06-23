@@ -104,7 +104,7 @@ local BtLeaveHooks = {
 			local stagger_component = blackboard.stagger
 			local attacker_unit = ALIVE[stagger_component.attacker_unit] and stagger_component.attacker_unit
 
-			Attack.execute(unit, DamageProfileTemplates.default, "attacking_unit", attacker_unit, "instakill", true)
+			Attack.execute(unit, DamageProfileTemplates.poxwalker_bomber_instakill, "attacking_unit", attacker_unit, "instakill", true)
 		end
 	end,
 	beast_of_nurgle_set_melee_cooldown = function (unit, breed, blackboard, scratchpad, action_data, t, args)
@@ -157,6 +157,34 @@ local BtLeaveHooks = {
 
 		behavior_component.net_is_ready = true
 		behavior_component.shoot_net_cooldown = 0
+	end,
+	weapon_malfunction_leave = function (unit, breed, blackboard, scratchpad, action_data, t, args)
+		local weapon_malfunction_component = Blackboard.write_component(blackboard, "weapon_malfunction")
+		local is_malfunctioning = weapon_malfunction_component.is_malfunctioning
+
+		if HEALTH_ALIVE[unit] and not is_malfunctioning then
+			weapon_malfunction_component.malfunctioning_time = 0
+			weapon_malfunction_component.refresh_malfunctioning_time = false
+
+			local weapon_malfunction_buff_id = weapon_malfunction_component.malfunction_buff_id
+
+			if weapon_malfunction_buff_id > 0 then
+				local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+				buff_extension:remove_externally_controlled_buff(weapon_malfunction_buff_id)
+
+				weapon_malfunction_component.malfunction_buff_id = -1
+			end
+
+			local reset_net_cooldown = args.reset_net_cooldown or false
+
+			if reset_net_cooldown then
+				local behavior_component = Blackboard.write_component(blackboard, "behavior")
+
+				behavior_component.net_is_ready = true
+				behavior_component.shoot_net_cooldown = 0
+			end
+		end
 	end,
 	companion_leaving_movement = function (unit, breed, blackboard, scratchpad, action_data, t, args)
 		local navigation_extension = ScriptUnit.extension(unit, "navigation_system")

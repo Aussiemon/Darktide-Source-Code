@@ -193,6 +193,19 @@ PlayerHuskAbilityExtension.is_cooldown_paused = function (self, ability_type)
 	return component.cooldown_paused
 end
 
+PlayerHuskAbilityExtension.is_cooldown_regen_over_time_disabled = function (self, ability_type)
+	local enabled = self:ability_enabled(ability_type)
+
+	if not enabled then
+		return false
+	end
+
+	local equipped_ability = self._equipped_abilities[ability_type]
+	local cooldown_regen_over_time_disabled = equipped_ability and equipped_ability.cooldown_regen_over_time_disabled or false
+
+	return cooldown_regen_over_time_disabled
+end
+
 PlayerHuskAbilityExtension.pause_cooldown = function (self, ability_type)
 	local ability_components = self._ability_components
 	local component = ability_components[ability_type]
@@ -258,7 +271,15 @@ PlayerHuskAbilityExtension.stop_action = function (self)
 	error("not allowed to call on husk")
 end
 
+PlayerHuskAbilityExtension.get_num_ability_charges_to_use = function (self)
+	error("not allowed to call on husk")
+end
+
 PlayerHuskAbilityExtension.use_ability_charge = function (self)
+	error("not allowed to call on husk")
+end
+
+PlayerHuskAbilityExtension.ability_charges_used_on_activation = function (self)
 	error("not allowed to call on husk")
 end
 
@@ -271,6 +292,14 @@ PlayerHuskAbilityExtension.reduce_ability_cooldown_percentage = function (self)
 end
 
 PlayerHuskAbilityExtension.reduce_ability_cooldown_time = function (self)
+	error("not allowed to call on husk")
+end
+
+PlayerHuskAbilityExtension.increase_ability_cooldown_percentage = function (self)
+	error("not allowed to call on husk")
+end
+
+PlayerHuskAbilityExtension.increase_ability_cooldown_time = function (self)
 	error("not allowed to call on husk")
 end
 

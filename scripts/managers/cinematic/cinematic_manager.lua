@@ -331,14 +331,14 @@ end
 
 CinematicManager._play_next_in_queue = function (self)
 	if not table.is_empty(self._queued_stories) then
-		local item = table.remove(self._queued_stories, 1)
+		local next_story = table.remove(self._queued_stories, 1)
 
-		self:play_story(item)
+		self:play_story(next_story)
 
 		if not self._is_server then
 			local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
 
-			cinematic_scene_system:client_set_scene(item.cinematic_scene_name)
+			cinematic_scene_system:client_set_scene(next_story.cinematic_scene_name)
 		end
 	end
 end
@@ -858,7 +858,7 @@ CinematicManager.rpc_cinematic_load_levels = function (self, channel_id, cinemat
 end
 
 CinematicManager.rpc_cinematic_loaded = function (self, channel_id)
-	local peer = Managers.connection:channel_to_peer(channel_id)
+	local peer = Network.peer_id(channel_id)
 	local preload_id = self._waiting_for_peers[peer]
 
 	self._waiting_for_peers[peer] = nil

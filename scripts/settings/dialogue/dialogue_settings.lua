@@ -8,6 +8,7 @@ DialogueSettings.default_lookup_path = "dialogues/generated/"
 DialogueSettings.auto_load_files = {
 	"adamant",
 	"broker",
+	"cryptic",
 	"asset_vo",
 	"class_rework",
 	"enemy_vo",
@@ -278,6 +279,18 @@ DialogueSettings.player_load_files = {
 	broker_male_c = {
 		"broker_c",
 		"broker_male_c",
+	},
+	cryptic_a = {
+		"cryptic_a",
+	},
+	cryptic_b = {
+		"cryptic_b",
+	},
+	cryptic_c = {
+		"cryptic_c",
+	},
+	cryptic_d = {
+		"cryptic_d",
 	},
 }
 DialogueSettings.blocked_auto_load_files = {

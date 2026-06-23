@@ -26,5 +26,17 @@ weapon_shout_templates.missile_launcher_knockback = {
 		lerp_perfect = 0.5,
 	},
 }
+weapon_shout_templates.powermaul_p3_pushfollow = {
+	close_radius = 4,
+	shape = "cone",
+	range = {
+		lerp_basic = 7,
+		lerp_perfect = 7,
+	},
+	dot = {
+		lerp_basic = 0.6,
+		lerp_perfect = 0.6,
+	},
+}
 
 return settings("WeaponShoutTemplates", weapon_shout_templates)

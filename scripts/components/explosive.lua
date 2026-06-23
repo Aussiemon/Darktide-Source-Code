@@ -73,7 +73,7 @@ Explosive.explosive_trigger = function (self)
 
 		self._exploded = true
 
-		Explosion.create_explosion(self._world, self._physics_world, explosion_position, Vector3.up(), unit, self._explosion_template, power_level, charge_level, attack_type)
+		Explosion.create_explosion(self._world, self._physics_world, explosion_position, Quaternion.identity(), unit, self._explosion_template, power_level, charge_level, attack_type)
 	end
 end
 

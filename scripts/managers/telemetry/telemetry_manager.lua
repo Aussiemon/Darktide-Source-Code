@@ -59,7 +59,7 @@ end
 local log_cache = {}
 
 TelemetryManager.rpc_failed_sending_telemetry = function (self, channel_id, message)
-	local peer_id = Managers.state.game_session:channel_to_peer(channel_id)
+	local peer_id = Network.peer_id(channel_id)
 	local account_id
 
 	if peer_id then

@@ -799,6 +799,41 @@ local function create_mission_objective_alert_info(scenegraph_id)
 	return UIWidget.create_definition(pass_definitions, scenegraph_id, nil, alert_size)
 end
 
+local live_event_sub_header = UIWidget.create_definition({
+	{
+		pass_type = "text",
+		style_id = "text",
+		value = "",
+		value_id = "text",
+		style = {
+			drop_shadow = true,
+			font_size = 14,
+			text_horizontal_alignment = "center",
+			text_vertical_alignment = "top",
+			offset = {
+				0,
+				0,
+				6,
+			},
+			font_type = UIFontSettings.hud_body.font_type,
+			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar,
+			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color,
+		},
+	},
+}, "live_event_text_area", nil, {
+	live_event_text_width,
+	18,
+}, nil, {
+	init = function (self, context, ui_renderer)
+		self.content.text = Localize(context.text)
+		self.content.size[2] = 4 + Text.text_height(ui_renderer, self.content.text, self.style.text, {
+			live_event_text_width,
+		})
+	end,
+	destroy = function (self)
+		return
+	end,
+})
 local live_event_title = UIWidget.create_definition({
 	{
 		pass_type = "text",
@@ -1107,31 +1142,6 @@ local live_event_counter = UIWidget.create_definition({
 		end
 	end,
 })
-
-local function live_event_widget_should_show(context, is_hub, circumstance_name)
-	if is_hub then
-		return true
-	end
-
-	local family = context and context.mission_circumstance_family
-
-	if not family then
-		return false
-	end
-
-	if not circumstance_name then
-		return false
-	end
-
-	if circumstance_name == family then
-		return true
-	end
-
-	local prefix = family .. "_"
-
-	return string.sub(circumstance_name, 1, #prefix) == prefix
-end
-
 local _global_reward_counter_currency_text_width = 140
 local _global_reward_counter_default_height = 50
 local _global_reward_counter_max_interpolation_time = 67
@@ -1585,9 +1595,6 @@ local live_event_global_reward_counter = UIWidget.create_definition({
 		content.show_claim_prompt = self._can_claim
 	end,
 })
-
-live_event_global_reward_counter.live_event_widget_should_show = live_event_widget_should_show
-
 local tug_o_war = UIWidget.create_definition({
 	{
 		pass_type = "texture",
@@ -1753,9 +1760,19 @@ local tug_o_war = UIWidget.create_definition({
 	nil,
 	58,
 }, nil, {
-	init = function (self, context)
-		self.content.left_team = Localize(context.left_name)
-		self.content.right_team = Localize(context.right_name)
+	init = function (self, context, ui_renderer)
+		local _MAX_TEAM_LABEL_CHARS = 18
+
+		local function _fit_team_label(text)
+			if #text > _MAX_TEAM_LABEL_CHARS then
+				text = string.sub(text, 1, _MAX_TEAM_LABEL_CHARS - 2) .. "..."
+			end
+
+			return text
+		end
+
+		self.content.left_team = _fit_team_label(Localize(context.left_name))
+		self.content.right_team = _fit_team_label(Localize(context.right_name))
 		self.content.left_stat = context.left_stat
 		self.content.right_stat = context.right_stat
 		self.content.left_value = Managers.data_service.global_stats:subscribe(self, "cb_on_stat_update", "lw-mb", context.left_stat)
@@ -1920,6 +1937,7 @@ return {
 		counter = live_event_counter,
 		dynamic_description = live_event_dynamic_description,
 		live_event_global_reward_counter = live_event_global_reward_counter,
+		sub_header = live_event_sub_header,
 		title = live_event_title,
 		tug_o_war = tug_o_war,
 	},

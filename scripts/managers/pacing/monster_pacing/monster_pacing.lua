@@ -163,6 +163,8 @@ MonsterPacing._generate_spawns = function (self, template)
 			num_to_spawn = self._num_monsters_override
 		elseif spawn_type == "witches" and self._num_witches_override then
 			num_to_spawn = self._num_witches_override
+		elseif spawn_type == "captains" and self._num_captains_override then
+			num_to_spawn = self._num_captains_override
 		end
 
 		num_to_spawn = math.max(num_to_spawn, #boss_injections)
@@ -843,6 +845,10 @@ end
 
 MonsterPacing.set_num_boss_patrol_override = function (self, override)
 	self._num_boss_patrol_override = override
+end
+
+MonsterPacing.set_num_captains_override = function (self, override)
+	self._num_captains_override = override
 end
 
 MonsterPacing._expedition_setup_monster_loot = function (self, pacing_type, spawned_unit)

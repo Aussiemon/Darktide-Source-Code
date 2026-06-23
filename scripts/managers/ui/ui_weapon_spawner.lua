@@ -2,10 +2,15 @@
 
 local InputDevice = require("scripts/managers/input/input_device")
 local MasterItems = require("scripts/backend/master_items")
+local Promise = require("scripts/foundation/utilities/promise")
 local UiCharacterProfilePackageLoader = require("scripts/managers/ui/ui_character_profile_package_loader")
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
-local Promise = require("scripts/foundation/utilities/promise")
 local UIWeaponSpawner = class("UIWeaponSpawner")
+local NilCursor = {
+	0,
+	0,
+	0,
+}
 local FORCE_STREAM_TIMEOUT = GameParameters.force_stream_mesh_timeout
 
 UIWeaponSpawner.init = function (self, reference_name, world, camera, unit_spawner)

@@ -174,7 +174,7 @@ AFKChecker._kick = function (self, player_id)
 end
 
 AFKChecker.rpc_report_menu_activity = function (self, channel_id)
-	local peer_id = Managers.state.game_session:channel_to_peer(channel_id)
+	local peer_id = Network.peer_id(channel_id)
 	local players_at_peer = Managers.player:players_at_peer(peer_id)
 	local t = Managers.time:time("gameplay")
 

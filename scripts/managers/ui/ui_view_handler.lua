@@ -10,11 +10,11 @@ UIViewHandler.DEBUG_TAG = "UI View Handler"
 UIViewHandler.MIN_LAYER = 1
 UIViewHandler.MAX_LAYER = 999
 UIViewHandler.LAYERS_PER_VIEW = 50
-UIViewHandler.TRANSITION_SPEED = 4
+UIViewHandler.TRANSITION_SPEED = 0.3
 
 local TEMP_DRAWN_VIEWS = {}
 
-UIViewHandler.init = function (self, view_list, timer_name)
+UIViewHandler.init = function (self, view_list, overlay_ui_world, timer_name)
 	self._view_list = view_list
 	self._active_views_array = {}
 	self._active_views_data = {}
@@ -27,7 +27,7 @@ UIViewHandler.init = function (self, view_list, timer_name)
 	self._game_world_fullscreen_blur_amount = 0
 	self._registered_view_worlds = {}
 	self._curent_frame_view_layers = {}
-	self._transition_ui = ViewTransitionUI:new()
+	self._transition_ui = ViewTransitionUI:new(overlay_ui_world)
 
 	Managers.event:register(self, "trigger_view_widget_pressed", "cb_trigger_view_widget_pressed")
 end
@@ -208,10 +208,18 @@ UIViewHandler._update_transition_progress = function (self, dt, transition_progr
 		local is_loading_view = self:is_view_loading(view_name)
 
 		if not is_loading_view then
+			if view_data.fade_initialized then
+				view_data.fade_initialized = nil
+
+				if not self._transition_ui:active() then
+					return true, 0, true, false
+				end
+			end
+
 			if view_data.fade_in then
 				views_want_to_fade_in = true
 
-				if transition_progress == 1 then
+				if transition_progress == 1 and instance:is_view_requirements_complete() then
 					view_data.fade_in = nil
 					view_data.fade_out = true
 
@@ -255,9 +263,9 @@ UIViewHandler._update_transition_progress = function (self, dt, transition_progr
 		local transition_speed = UIViewHandler.TRANSITION_SPEED
 
 		if views_want_to_fade_in then
-			transition_progress = math.min(transition_progress + dt * transition_speed, 1)
+			transition_progress = math.min(transition_progress + dt / transition_speed, 1)
 		else
-			transition_progress = math.max(transition_progress - dt * transition_speed, 0)
+			transition_progress = math.max(transition_progress - dt / transition_speed, 0)
 		end
 	else
 		transition_progress = 0
@@ -436,6 +444,7 @@ UIViewHandler._update_views = function (self, dt, t, allow_input)
 						if view_data.use_transition_ui_on_animation_on_exit_done then
 							view_data.use_transition_ui_on_animation_on_exit_done = nil
 							view_data.fade_in = true
+							view_data.fade_initialized = true
 							view_data.hide_while_fade_in = false
 
 							view_data.fade_in_callback = function ()

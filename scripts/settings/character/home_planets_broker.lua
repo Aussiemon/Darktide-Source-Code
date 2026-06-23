@@ -19,6 +19,7 @@ local home_planet_options = {
 			0,
 		},
 		on_pressed_sound = UISoundEvents.play_ui_character_create_select_cartel_water,
+		page_leave_sound = UISoundEvents.stop_ui_character_create_select_cartel_loops,
 		slot_items = {
 			slot_gear_head = "content/items/characters/player/human/gear_head/broker_headgear_15_var_04",
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/broker_lowerbody_progression_a_var_04",
@@ -47,6 +48,7 @@ local home_planet_options = {
 			90,
 		},
 		on_pressed_sound = UISoundEvents.play_ui_character_create_select_cartel_iron,
+		page_leave_sound = UISoundEvents.stop_ui_character_create_select_cartel_loops,
 		slot_items = {
 			slot_gear_head = "content/items/characters/player/human/gear_head/broker_headgear_15_var_03",
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/broker_lowerbody_progression_a_var_03",
@@ -75,6 +77,7 @@ local home_planet_options = {
 			180,
 		},
 		on_pressed_sound = UISoundEvents.play_ui_character_create_select_cartel_show,
+		page_leave_sound = UISoundEvents.stop_ui_character_create_select_cartel_loops,
 		slot_items = {
 			slot_gear_head = "content/items/characters/player/human/gear_head/broker_headgear_15_var_02",
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/broker_lowerbody_progression_a_var_02",
@@ -103,6 +106,7 @@ local home_planet_options = {
 			270,
 		},
 		on_pressed_sound = UISoundEvents.play_ui_character_create_select_cartel_threadlighties,
+		page_leave_sound = UISoundEvents.stop_ui_character_create_select_cartel_loops,
 		slot_items = {
 			slot_gear_head = "content/items/characters/player/human/gear_head/broker_headgear_15_var_01",
 			slot_gear_lowerbody = "content/items/characters/player/human/gear_lowerbody/broker_lowerbody_progression_a_var_01",

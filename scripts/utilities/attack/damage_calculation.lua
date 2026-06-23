@@ -8,6 +8,7 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CriticalStrike = require("scripts/utilities/attack/critical_strike")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local MinionState = require("scripts/utilities/minion_state")
 local PowerLevel = require("scripts/utilities/attack/power_level")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
@@ -18,6 +19,7 @@ local armor_types = ArmorSettings.types
 local attack_types = AttackSettings.attack_types
 local damage_efficiencies = AttackSettings.damage_efficiencies
 local melee_attack_strengths = AttackSettings.melee_attack_strength
+local group_keywords = BuffSettings.group_keywords
 local keywords = BuffSettings.keywords
 local close_range = DamageSettings.ranged_close
 local damage_types = DamageSettings.damage_types
@@ -345,7 +347,7 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 
 	damage_stat_buffs = damage_stat_buffs + companion_vs_special_damage_stat_buff
 
-	local is_target_electrocuted = target_buff_extension and target_buff_extension:has_keyword(keywords.electrocuted)
+	local is_target_electrocuted = target_buff_extension and MinionState.is_electrocuted(target_buff_extension, group_keywords.electrocuted)
 	local damage_vs_electrocuted_stat_buff = (is_target_electrocuted and attacker_stat_buffs.damage_vs_electrocuted or 1) - 1
 
 	damage_stat_buffs = damage_stat_buffs + damage_vs_electrocuted_stat_buff
@@ -382,8 +384,9 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 
 	local target_is_ogryn = attacked_breed_or_nil and attacked_breed_or_nil.tags and attacked_breed_or_nil.tags.ogryn
 	local damage_vs_ogryn_stat_buff = (target_is_ogryn and attacker_stat_buffs.damage_vs_ogryn or 1) - 1
+	local ranged_damage_vs_ogryn_stat_buff = (target_is_ogryn and is_ranged_attack and attacker_stat_buffs.ranged_damage_vs_ogryn or 1) - 1
 
-	damage_stat_buffs = damage_stat_buffs + damage_vs_ogryn_stat_buff
+	damage_stat_buffs = damage_stat_buffs + damage_vs_ogryn_stat_buff + ranged_damage_vs_ogryn_stat_buff
 
 	local target_is_ogryn_or_monster = attacked_breed_or_nil and attacked_breed_or_nil.tags and (attacked_breed_or_nil.tags.ogryn or attacked_breed_or_nil.tags.monster)
 	local damage_vs_ogryn_and_monsters_stat_buff = (target_is_ogryn_or_monster and attacker_stat_buffs.damage_vs_ogryn_and_monsters or 1) - 1
@@ -392,13 +395,15 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 
 	local target_is_captain = attacked_breed_or_nil and attacked_breed_or_nil.tags and (attacked_breed_or_nil.tags.captain or attacked_breed_or_nil.tags.cultist_captain)
 	local damage_vs_captain_stat_buff = (target_is_captain and attacker_stat_buffs.damage_vs_captains or 1) - 1
+	local ranged_damage_vs_captains_stat_buff = (target_is_captain and is_ranged_attack and attacker_stat_buffs.ranged_damage_vs_captains or 1) - 1
 
-	damage_stat_buffs = damage_stat_buffs + damage_vs_captain_stat_buff
+	damage_stat_buffs = damage_stat_buffs + damage_vs_captain_stat_buff + ranged_damage_vs_captains_stat_buff
 
 	local target_is_monster = attacked_breed_or_nil and attacked_breed_or_nil.tags and attacked_breed_or_nil.tags.monster
 	local damage_vs_monsters_stat_buff = (target_is_monster and attacker_stat_buffs.damage_vs_monsters or 1) - 1
+	local ranged_damage_vs_monsters_stat_buff = (target_is_monster and is_ranged_attack and attacker_stat_buffs.ranged_damage_vs_monsters or 1) - 1
 
-	damage_stat_buffs = damage_stat_buffs + damage_vs_monsters_stat_buff
+	damage_stat_buffs = damage_stat_buffs + damage_vs_monsters_stat_buff + ranged_damage_vs_monsters_stat_buff
 
 	local target_unaggroed
 
@@ -521,6 +526,11 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 	local explosion_damage_taken_stat_buff = (is_explosion_attack and target_stat_buffs.damage_taken_from_explosions or 1) - 1
 
 	damage_stat_buffs = damage_stat_buffs + explosion_damage_taken_stat_buff
+
+	local is_prop_explosion_attack = damage_profile.is_prop_explosion
+	local prop_explosion_damage_taken_stat_buff = (is_prop_explosion_attack and target_stat_buffs.damage_taken_from_prop_explosions or 1) - 1
+
+	damage_stat_buffs = damage_stat_buffs + prop_explosion_damage_taken_stat_buff
 
 	local is_burning_damage = damage_type == damage_types.burning
 	local burning_damage_taken_stat_buff = (is_burning_damage and target_stat_buffs.damage_taken_from_burning or 1) - 1

@@ -3,6 +3,10 @@
 local MinionPerception = {}
 
 MinionPerception.attempt_alert = function (perception_extension, enemy_unit)
+	if perception_extension:is_perception_disabled() then
+		return
+	end
+
 	local use_action_controlled_alert = perception_extension:use_action_controlled_alert()
 
 	if use_action_controlled_alert then
@@ -13,6 +17,10 @@ MinionPerception.attempt_alert = function (perception_extension, enemy_unit)
 end
 
 MinionPerception.attempt_aggro = function (perception_extension)
+	if perception_extension:is_perception_disabled() then
+		return
+	end
+
 	local use_action_controlled_alert = perception_extension:use_action_controlled_alert()
 
 	if use_action_controlled_alert then

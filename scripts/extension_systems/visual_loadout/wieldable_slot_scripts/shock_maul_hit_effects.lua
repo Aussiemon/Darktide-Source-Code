@@ -4,7 +4,7 @@ local ActionUtility = require("scripts/extension_systems/weapon/actions/utilitie
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
 local ShockMaulHitEffects = class("ShockMaulHitEffects")
 local external_properties = {}
-local BURST_PARTICLE_ALIAS = "vfx_weapon_special_start"
+local BURST_PARTICLE_ALIAS = "weapon_special_start"
 local BURST_SOUND_ALIAS = "sfx_special_activate"
 
 ShockMaulHitEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)

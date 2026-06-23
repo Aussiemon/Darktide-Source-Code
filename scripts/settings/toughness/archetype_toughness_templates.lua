@@ -107,6 +107,26 @@ archetype_toughness_templates.adamant = {
 		[replenish_types.gunslinger_crit_regen] = 0.15,
 	},
 }
+archetype_toughness_templates.cryptic = {
+	max = 100,
+	optional_on_hit_function = nil,
+	regeneration_delay = 3,
+	template_type = template_types.player,
+	regeneration_speed = {
+		moving = 5,
+		still = 5,
+	},
+	state_damage_modifiers = {
+		dodging = 0.5,
+		sliding = 0.5,
+		sprinting = 1,
+	},
+	on_depleted_function = ToughnessDepleted.spill_over,
+	recovery_percentages = {
+		[replenish_types.melee_kill] = 0.05,
+		[replenish_types.gunslinger_crit_regen] = 0.15,
+	},
+}
 archetype_toughness_templates.broker = {
 	max = 100,
 	optional_on_hit_function = nil,

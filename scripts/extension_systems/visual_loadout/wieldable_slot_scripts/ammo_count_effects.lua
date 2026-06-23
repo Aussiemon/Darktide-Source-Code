@@ -1,8 +1,8 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/wieldable_slot_scripts/ammo_count_effects.lua
 
 local Ammo = require("scripts/utilities/ammo")
-local AmmoCountEffects = class("AmmoCountEffects")
 local WieldableSlotScriptInterface = require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/wieldable_slot_script_interface")
+local AmmoCountEffects = class("AmmoCountEffects")
 local WWISE_PARAMETER_NAME = "weapon_ammo_count"
 
 AmmoCountEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)

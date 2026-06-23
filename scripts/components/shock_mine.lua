@@ -1,7 +1,9 @@
 ﻿-- chunkname: @scripts/components/shock_mine.lua
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local MinionState = require("scripts/utilities/minion_state")
 local buff_keywords = BuffSettings.keywords
+local group_keywords = BuffSettings.group_keywords
 local RESOURCES = {
 	vfx = {
 		idle = "content/fx/particles/weapons/grenades/shock_mine/shock_mine_idle_01",
@@ -133,7 +135,7 @@ ShockMine._update_target_effects = function (self, dt, t)
 			local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
 
 			if buff_extension then
-				local target_is_electrocuted = buff_extension:has_keyword(buff_keywords.electrocuted)
+				local target_is_electrocuted = MinionState.is_electrocuted(buff_extension, group_keywords.electrocuted)
 
 				if target_is_electrocuted then
 					self:_play_target_vfx(world, unit, target_unit)

@@ -413,6 +413,49 @@ local template_visual_definitions = {
 			arrow = StrictNil,
 		},
 	},
+	hacking_companion = {
+		template_settings_overrides = {
+			fade_settings = {
+				default_fade = 1,
+				distance_max = 5,
+				fade_from = 0,
+				fade_to = 1,
+				distance_min = 5 - template.evolve_distance,
+				easing_function = math.easeCubic,
+			},
+			position_offset = {
+				0,
+				0,
+				0,
+			},
+		},
+		colors = {
+			background = Color.terminal_background(200, true),
+			ring = {
+				255,
+				226,
+				199,
+				126,
+			},
+			line = Color.ui_interaction_default(255, true),
+			ping = {
+				255,
+				78,
+				110,
+				215,
+			},
+			arrow = Color.ui_interaction_default(255, true),
+			icon = Color.ui_hud_green_super_light(255, true),
+		},
+		textures = {
+			background = "content/ui/materials/hud/interactions/frames/mission_back",
+			icon = "content/ui/materials/hud/interactions/icons/default",
+			line = "content/ui/materials/hud/interactions/frames/line",
+			ping = "content/ui/materials/hud/interactions/frames/mission_tag",
+			ring = "content/ui/materials/hud/interactions/frames/mission_top",
+			arrow = StrictNil,
+		},
+	},
 }
 
 local function get_interactee_unit_breed(marker)
@@ -481,7 +524,7 @@ template.get_smart_tag_id = function (marker)
 	if smart_tag_system:is_unit_tagged(unit) then
 		local tag = smart_tag_system:unit_tag(unit)
 
-		return tag:id()
+		return tag:id(), tag
 	end
 end
 
@@ -640,12 +683,19 @@ template.update_function = function (parent, ui_renderer, widget, marker, self, 
 		content.icon = interaction_icon
 	end
 
-	local is_tagged = marker.template.get_smart_tag_id(marker) ~= nil
+	local tag_id, tag = marker.template.get_smart_tag_id(marker)
+	local is_tagged = tag_id ~= nil
 
 	content.tagged = is_tagged
 	marker.block_fade_settings = is_tagged
 	marker.block_max_distance = is_tagged
 	marker.block_screen_clamp = not is_tagged
+
+	if is_tagged then
+		local tag_template = tag:template()
+
+		ui_interaction_type = tag_template and tag_template.override_ui_interaction_type or ui_interaction_type
+	end
 
 	if ui_interaction_type ~= marker.ui_interaction_type then
 		setup_marker_by_interaction_type(widget, marker, ui_interaction_type)

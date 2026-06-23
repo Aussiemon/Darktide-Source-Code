@@ -11,7 +11,10 @@ ViewElementLoadingOverlay.init = function (self, parent, draw_layer, start_scale
 	ViewElementLoadingOverlay.super.init(self, parent, draw_layer, start_scale, Definitions)
 
 	self._settings = table.merge(settings, Settings)
-	self._unique_id = string.format("table:%s", table.tostring(self))
+
+	local class_name = self.__class_name
+
+	self._unique_id = class_name .. "_" .. string.gsub(tostring(self), "table: ", "")
 	self._loading = false
 	self._opacity = 0
 

@@ -123,7 +123,7 @@ templates.ogryn_toughness_regen_aura = {
 local toughness_aura_increase = talent_settings_shared.toughness_coherency_aura.toughness_replenish_modifier
 
 templates.ogryn_toughness_restored_aura_tracking_buff = {
-	class_name = "proc_buff",
+	class_name = "server_only_proc_buff",
 	predicted = false,
 	proc_events = {
 		[proc_events.on_toughness_replenished] = 1,
@@ -747,7 +747,7 @@ templates.ogryn_carapace_armor_explosion_on_zero_stacks_effect = {
 		local position = Unit.local_position(unit, 1)
 		local attack_type = AttackSettings.attack_types.explosion
 
-		Explosion.create_explosion(world, physics_world, position + Vector3.up(), nil, unit, explosion_template, power_level, 1, attack_type)
+		Explosion.create_explosion(world, physics_world, position + Vector3.up(), Quaternion.identity(), unit, explosion_template, power_level, 1, attack_type)
 	end,
 	related_talents = {
 		"ogryn_carapace_armor_trigger_on_zero_stacks",
@@ -1697,6 +1697,7 @@ local breed_name_size = {
 	cultist_mutant_mutator = 5,
 	cultist_ritualist = 1,
 	cultist_shocktrooper = 2,
+	cultist_vanguard = 1,
 	renegade_assault = 1,
 	renegade_berzerker = 3,
 	renegade_captain = 8,
@@ -1714,6 +1715,7 @@ local breed_name_size = {
 	renegade_sniper = 1,
 	renegade_twin_captain = 2,
 	renegade_twin_captain_two = 2,
+	renegade_vanguard = 1,
 }
 
 function _big_bull_add_stacks(template_context, stacks)

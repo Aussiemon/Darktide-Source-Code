@@ -329,7 +329,7 @@ local function draw_node(gui, node, text, running, x1, y1, node_width, extra_hei
 			end
 		end
 
-		if node._children then
+		if not table.is_empty(node._children) then
 			color = Color(200, 130, 170, green)
 		else
 			color = Color(200, 30, 170, green)
@@ -478,7 +478,7 @@ DrawAiBehavior.tree_width = function (gui, node)
 
 	local node_children = node._children
 
-	if node_children then
+	if not table.is_empty(node._children) then
 		local n, w = 0, 0
 
 		for _, child in pairs(node_children) do
@@ -539,7 +539,7 @@ DrawAiBehavior.draw_tree = function (bt, gui, node, blackboard, running_node, ro
 	local max_child_extra_height = 0
 	local node_children = node._children
 
-	if node_children then
+	if not table.is_empty(node._children) then
 		max_child_extra_width, max_child_extra_height = draw_node_children(bt, gui, node, node_children, blackboard, running_node, row, x1, y1, node_width, extra_height, total_width, extra_utility_height, t, dt, node_data)
 	end
 

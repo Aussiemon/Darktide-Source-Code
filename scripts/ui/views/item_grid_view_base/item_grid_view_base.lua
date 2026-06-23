@@ -63,7 +63,7 @@ ItemGridViewBase.on_enter = function (self)
 	self:_stop_previewing()
 
 	self._item_definitions = MasterItems.get_cached()
-	self._inventory_items = {}
+	self._inventory_items = self._inventory_items or {}
 
 	local context = self._context
 	local ui_renderer = context and context.ui_renderer
@@ -312,19 +312,17 @@ ItemGridViewBase._present_layout_by_slot_filter = function (self, slot_filter, i
 
 		self._grid_display_name = optional_display_name
 
-		self:present_grid_layout(layout, function ()
-			local sort_options = self._sort_options
+		local sort_options = self._sort_options
 
-			if sort_options then
-				local sort_index = self._selected_sort_option_index or 1
-				local selected_sort_option = sort_options[sort_index]
-				local selected_sort_function = selected_sort_option.sort_function
+		if sort_options then
+			local sort_index = self._selected_sort_option_index or 1
+			local selected_sort_option = sort_options[sort_index]
+			local selected_sort_function = selected_sort_option.sort_function
 
-				self:_sort_grid_layout(selected_sort_function, filtered_layout)
-			else
-				self:_sort_grid_layout(nil, filtered_layout)
-			end
-		end)
+			self:_sort_grid_layout(selected_sort_function, filtered_layout)
+		else
+			self:_sort_grid_layout(nil, filtered_layout)
+		end
 	end
 end
 
@@ -860,9 +858,7 @@ ItemGridViewBase.present_grid_layout = function (self, layout, on_present_callba
 	local grid_size = grid_settings.grid_size
 	local ContentBlueprints = generate_blueprints_function(grid_size)
 
-	if layout[1] and not layout[1].is_external then
-		self:_add_external_layout(layout)
-	end
+	self:_add_external_layout(layout)
 
 	local grow_direction = self._grow_direction or "down"
 
@@ -870,13 +866,24 @@ ItemGridViewBase.present_grid_layout = function (self, layout, on_present_callba
 end
 
 ItemGridViewBase._add_external_layout = function (self, layout)
+	if table.size(layout) == 0 then
+		return
+	end
+
 	local spacing_entry = {
 		is_external = true,
 		widget_type = "spacing_vertical",
 	}
 
-	table.insert(layout, 1, spacing_entry)
-	table.insert(layout, #layout + 1, spacing_entry)
+	if not layout[1].is_external then
+		table.insert(layout, 1, spacing_entry)
+	end
+
+	local layout_size = table.size(layout)
+
+	if not layout[layout_size].is_external then
+		layout[layout_size + 1] = spacing_entry
+	end
 end
 
 ItemGridViewBase.cb_on_grid_entry_right_pressed = function (self, widget, element)
@@ -1207,23 +1214,21 @@ ItemGridViewBase.cb_on_inspect_pressed = function (self)
 					is_item_supported_on_played_character = true
 				end
 
-				local preffered_gender = player_profile and player_profile.gender
-				local profile = is_item_supported_on_played_character and player_profile or ItemUtils.create_mannequin_profile_by_item(visual_item, preffered_gender)
+				local preferred_gender = player_profile and player_profile.gender
+				local profile = is_item_supported_on_played_character and player_profile or ItemUtils.create_mannequin_profile_by_item(visual_item, preferred_gender)
 				local slots = visual_item.slots
 				local slot_name = slots[1]
 
 				profile.loadout[slot_name] = visual_item
 
 				local archetype = profile.archetype
-				local breed_name = archetype.breed
-				local breed = Breeds[breed_name]
-				local state_machine = breed.inventory_state_machine
+				local inventory_state_machine = archetype.inventory_state_machine
 				local animation_event = visual_item.inventory_animation_event or "inventory_idle_default"
 
 				context = {
 					disable_zoom = true,
 					profile = profile,
-					state_machine = state_machine,
+					state_machine = inventory_state_machine,
 					animation_event = animation_event,
 					wield_slot = slot_name,
 					preview_with_gear = is_item_supported_on_played_character,
@@ -1233,7 +1238,9 @@ ItemGridViewBase.cb_on_inspect_pressed = function (self)
 				local profile = self._presentation_profile
 				local is_item_supported_on_played_character = false
 
-				if previewed_item.archetypes and not table.is_empty(previewed_item.archetypes) then
+				if previewed_item.item_type == "COMPANION_GEAR_FULL" then
+					is_item_supported_on_played_character = false
+				elseif previewed_item.archetypes and not table.is_empty(previewed_item.archetypes) then
 					for i = 1, #previewed_item.archetypes do
 						local archetype = previewed_item.archetypes[i]
 

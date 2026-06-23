@@ -40,10 +40,10 @@ ClassSelectionView.on_enter = function (self)
 	self:_setup_input_legend()
 	self:_register_button_callbacks()
 
+	local profile
+
 	self._archetype_options = self._character_create:archetype_options()
-
-	local profile = self._character_create:profile()
-
+	profile = self._character_create:profile()
 	self._archetype_details_visible = false
 
 	self:_create_archetype_option_widgets()
@@ -284,8 +284,8 @@ ClassSelectionView._cb_on_dlc_reconcile_success = function (self, data, show_pop
 		local delayed_gear_promise = show_popup_function and show_popup_function() or Promise.resolved()
 
 		delayed_gear_promise:next(function ()
-			self:_trigger_item_grant_notifications_for_dlcs(dlc_updates)
-			self:_inject_reconciled_gear_into_local_inventory(dlc_updates)
+			DLCUtils.show_reward_notifications(dlc_updates)
+			DLCUtils.update_local_gear_cache(dlc_updates)
 			Managers.data_service.gear:fetch_gear():next(function (gear)
 				self._character_create:refresh_gear(gear)
 
@@ -307,73 +307,6 @@ ClassSelectionView._cb_on_dlc_reconcile_success = function (self, data, show_pop
 	self._is_in_blocked_state = false
 
 	Managers.event:trigger("event_create_new_character_continue")
-end
-
-ClassSelectionView._trigger_item_grant_notifications_for_dlcs = function (self, dlc_updates)
-	for i = 1, #dlc_updates do
-		local dlc = dlc_updates[i]
-
-		for j = 1, #dlc.rewards do
-			local reward = dlc.rewards[j]
-			local gear_id = reward.gearId
-			local master_id = reward.masterId
-
-			if gear_id and master_id then
-				local item = MasterItems.get_item(master_id)
-
-				if item then
-					local item_type = item.item_type
-
-					if not table.array_contains(Managers.dlc.ITEM_TYPE_NOTIFICATION_BLACKLIST, item_type) then
-						self:_trigger_item_grant_notification(master_id)
-					end
-
-					ItemUtils.mark_item_id_as_new({
-						gear_id = gear_id,
-						item_type = item_type,
-					}, true)
-				end
-			end
-		end
-	end
-end
-
-ClassSelectionView._inject_reconciled_gear_into_local_inventory = function (self, dlc_updates)
-	for i = 1, #dlc_updates do
-		local dlc = dlc_updates[i]
-
-		for j = 1, #dlc.rewards do
-			local reward = dlc.rewards[j]
-			local gear_id = reward.gearId
-			local master_id = reward.masterId
-
-			if gear_id and master_id then
-				local rewarded_master_item = MasterItems.get_item(master_id)
-
-				rewarded_master_item.uuid = gear_id
-				rewarded_master_item.masterDataInstance = {
-					id = master_id,
-					overrides = {},
-					slots = rewarded_master_item.slots,
-				}
-
-				local _, gear = ItemUtils.track_reward_item_to_gear(rewarded_master_item)
-
-				Managers.data_service.gear:on_gear_created(gear_id, gear)
-			end
-		end
-	end
-end
-
-ClassSelectionView._trigger_currency_notification = function (self, currency_type, amount)
-	Managers.event:trigger("event_add_notification_message", "currency", {
-		currency = currency_type,
-		amount = amount,
-	})
-end
-
-ClassSelectionView._trigger_item_grant_notification = function (self, master_item_id)
-	Managers.event:trigger("event_add_notification_message", "item_granted", MasterItems.get_item(master_item_id))
 end
 
 ClassSelectionView._cb_on_dlc_popup_closed = function (self)
@@ -729,10 +662,14 @@ ClassSelectionView._on_archetype_pressed = function (self, selected_archetype)
 			if result.available then
 				self:_on_continue_pressed()
 			else
-				Managers.dlc:open_dlc_view(selected_archetype.requires_dlc, selected_archetype.deluxe_dlc, function (is_success)
+				Managers.dlc:open_dlc_view(selected_archetype.requires_dlc, selected_archetype.deluxe_dlc, function (is_success, refetched_gear)
 					if is_success then
 						self:_on_archetype_pressed(selected_archetype)
 						self._character_create:refresh_dlcs()
+
+						if refetched_gear then
+							self._character_create:refresh_gear(refetched_gear)
+						end
 					end
 				end)
 			end

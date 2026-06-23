@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/character/growing_up.lua
 
+local GROWING_UP_CRYPTIC = require("scripts/settings/character/growing_up_cryptic")
 local growing_up_options = {
 	{
 		description = "loc_character_growing_up_01_description",
@@ -404,6 +405,9 @@ local growing_up_options = {
 		},
 	},
 }
+
+table.append(growing_up_options, GROWING_UP_CRYPTIC)
+
 local growing_up = {}
 
 for ii = 1, #growing_up_options do

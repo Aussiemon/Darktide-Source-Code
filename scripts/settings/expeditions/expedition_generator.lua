@@ -87,7 +87,8 @@ ExpeditionGenerator.load_local_config_file = function (file_name)
 
 			file:close()
 
-			local expedition = assert(loadstring(content))()
+			local thunk, err = loadstring(content)
+			local expedition = thunk()
 
 			for _, segment in ipairs(expedition) do
 				local levels_data = segment.levels_data

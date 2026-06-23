@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/smart_targeting/player_unit_smart_targeting_extension.lua
 
 require("scripts/extension_systems/smart_targeting/precision_target_finder")
+require("scripts/extension_systems/smart_targeting/precision_target_finder_auto_aim")
 
 local Recoil = require("scripts/utilities/recoil")
 local SmartTargeting = require("scripts/utilities/smart_targeting")
@@ -26,6 +27,7 @@ PlayerUnitSmartTargetingExtension.init = function (self, extension_init_context,
 	self._smart_tag_targeting_data = {}
 	self._smart_tag_targeting_time = 0
 	self._precision_target_aim_assist = CLASSES.PrecisionTargetFinder:new(self._is_server, self._is_local_unit, self._player, self._physics_world, unit)
+	self._precision_target_auto_aim = CLASSES.PrecisionTargetFinderAutoAim:new(self._is_server, self._is_local_unit, self._player, self._physics_world, unit)
 
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 
@@ -57,6 +59,7 @@ PlayerUnitSmartTargetingExtension.extensions_ready = function (self)
 	self._weapon_extension = ScriptUnit.extension(unit, "weapon_system")
 	self._buff_extension = ScriptUnit.extension(unit, "buff_system")
 
+	self._precision_target_auto_aim:extensions_ready()
 	self._precision_target_aim_assist:extensions_ready()
 end
 
@@ -91,7 +94,14 @@ PlayerUnitSmartTargetingExtension.fixed_update = function (self, unit, dt, t, fi
 		end
 	end
 
-	self._precision_target_aim_assist:update_precision_target(unit, smart_targeting_template, ray_origin, forward, right, up, self._targeting_data, fixed_frame, self._visibility_cache, self._visibility_check_frame, line_of_sight_cache)
+	local use_auto_aim_precision_targeting = smart_targeting_template and smart_targeting_template.precision_target_auto_aim and (self._buff_extension and self._buff_extension:has_keyword("enable_auto_aim") or false)
+
+	if use_auto_aim_precision_targeting then
+		self._precision_target_auto_aim:update_precision_target(unit, smart_targeting_template, ray_origin, forward, right, up, self._targeting_data, fixed_frame, self._visibility_cache, self._visibility_check_frame, line_of_sight_cache)
+	else
+		self._precision_target_aim_assist:update_precision_target(unit, smart_targeting_template, ray_origin, forward, right, up, self._targeting_data, fixed_frame, self._visibility_cache, self._visibility_check_frame, line_of_sight_cache)
+	end
+
 	self:_update_proximity(unit, smart_targeting_template, ray_origin, forward, right, up)
 
 	if not DEDICATED_SERVER and self._is_local_unit and not self._is_social_hub then
@@ -170,8 +180,17 @@ PlayerUnitSmartTargetingExtension._update_proximity = function (self, unit, smar
 	targeting_data.targets_within_range = num_nearby_target_units > 0
 end
 
-PlayerUnitSmartTargetingExtension.assisted_hitscan_trajectory = function (self, smart_targeting_template, weapon_template, raw_aim_rotation)
+PlayerUnitSmartTargetingExtension.assisted_hitscan_trajectory = function (self, smart_targeting_template, weapon_template, raw_aim_rotation, optional_override_use_auto_aim)
 	local targeting_data = self._targeting_data
+	local auto_aim_enabled = self._buff_extension and self._buff_extension:has_keyword("enable_auto_aim") or false
+
+	if optional_override_use_auto_aim ~= nil then
+		auto_aim_enabled = optional_override_use_auto_aim
+	end
+
+	if auto_aim_enabled then
+		return self._precision_target_auto_aim:assisted_hitscan_trajectory(targeting_data, smart_targeting_template, weapon_template, raw_aim_rotation)
+	end
 
 	return self._precision_target_aim_assist:assisted_hitscan_trajectory(targeting_data, smart_targeting_template, weapon_template, raw_aim_rotation)
 end

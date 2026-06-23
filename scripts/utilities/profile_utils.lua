@@ -2,17 +2,19 @@
 
 local Archetypes = require("scripts/settings/archetype/archetypes")
 local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
-local BotCharacterProfiles = require("scripts/settings/bot_character_profiles")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local MasterItems = require("scripts/backend/master_items")
 local PlayerTalents = require("scripts/utilities/player_talents/player_talents")
-local PrologueCharacterProfileOverride = require("scripts/settings/prologue_character_profile_override")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
 local SaveData = require("scripts/managers/save/save_data")
+local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
 local TestifyCharacterProfiles = not EDITOR and DevParameters.use_testify_profiles and require("scripts/settings/testify_character_profiles")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local ViewElementProfilePresetsSettings = require("scripts/ui/view_elements/view_element_profile_presets/view_element_profile_presets_settings")
+local special_rules = SpecialRulesSettings.special_rules
+local BotCharacterProfiles = require("scripts/settings/bot_character_profiles")
+local PrologueCharacterProfileOverride = require("scripts/settings/prologue_character_profile_override")
 local ProfileUtils = {}
 
 ProfileUtils.character_names = {
@@ -153,10 +155,10 @@ local function _fill_talents_and_selected_nodes(profile, character, archetype_na
 	local archetype = Archetypes[archetype_name]
 	local talents = profile.talents
 	local selected_nodes = profile.selected_nodes
+	local talents_path = archetype.talent_layout_file_path
 
-	do
-		local talent_layout_file_path = archetype.talent_layout_file_path
-		local active_layout = require(talent_layout_file_path)
+	if talents_path then
+		local active_layout = require(talents_path)
 		local backend_talents = character.vocation and character.vocation.talents or ""
 
 		TalentLayoutParser.unpack_backend_data(active_layout, backend_talents, selected_nodes)
@@ -176,7 +178,7 @@ local function _fill_talents_and_selected_nodes(profile, character, archetype_na
 	PlayerTalents.add_archetype_base_talents(archetype, talents)
 end
 
-local function profile_from_backend_data(backend_profile_data)
+local function _profile_from_backend_data(backend_profile_data)
 	local profile_data = table.clone(backend_profile_data)
 	local character = profile_data.character
 	local archetype_name = character.archetype
@@ -190,6 +192,7 @@ local function profile_from_backend_data(backend_profile_data)
 		archetype = archetype_name,
 		gender = character.gender,
 		selected_voice = character.selected_voice,
+		voice_effects = character.voice_effects,
 		skin_color = character.skin_color,
 		hair_color = character.hair_color,
 		eye_color = character.eye_color,
@@ -238,64 +241,90 @@ local function profile_from_backend_data(backend_profile_data)
 	return backend_profile
 end
 
-ProfileUtils.pack_backend_profile_data = function (backend_profile_data)
-	local profile = profile_from_backend_data(backend_profile_data)
-	local profile_json = cjson.encode(profile)
+local _fetch_propagated_fields
 
-	return profile_json
+function _fetch_propagated_fields(item, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair_item, mask_hair_item, mask_hair_override, mask_face_item, mask_face_accessory_item)
+	if item.voice_fx_preset then
+		voice_fx_presets[#voice_fx_presets + 1] = item.voice_fx_preset
+	end
+
+	if item.hide_eyebrows then
+		hide_facial_hair.hide_eyebrows = hide_facial_hair.hide_eyebrows or item.hide_eyebrows
+	end
+
+	if item.hide_beard then
+		hide_facial_hair.hide_beard = hide_facial_hair.hide_beard or item.hide_beard
+	end
+
+	if item.stabilize_neck and item.stabilize_neck > (stabilize_neck[1] or -math.huge) then
+		stabilize_neck[1] = item.stabilize_neck
+	end
+
+	if item.mask_facial_hair_item then
+		mask_facial_hair_item[1] = mask_facial_hair_item[1] or item.mask_facial_hair_item
+	end
+
+	if item.mask_hair_item then
+		mask_hair_item[1] = mask_hair_item[1] or item.mask_hair_item
+	end
+
+	if item.mask_hair_override then
+		mask_hair_override[1] = mask_hair_override[1] or item.mask_hair_override
+	end
+
+	if item.mask_face_item then
+		mask_face_item[1] = mask_face_item[1] or item.mask_face_item
+	end
+
+	if item.mask_face_accessory_item then
+		mask_face_accessory_item[1] = mask_face_accessory_item[1] or item.mask_face_accessory_item
+	end
+
+	local attachments = item.attachments
+
+	if attachments then
+		for _, attachment in pairs(attachments) do
+			local attachment_item = MasterItems.get_cached()[attachment.item]
+
+			if attachment_item then
+				_fetch_propagated_fields(attachment_item, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair_item, mask_hair_item, mask_hair_override, mask_face_item, mask_face_accessory_item)
+			end
+		end
+	end
+
+	local children = item.children
+
+	if children then
+		for _, child in pairs(children) do
+			local child_item = MasterItems.get_cached()[child.item]
+
+			if child_item then
+				_fetch_propagated_fields(child_item, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair_item, mask_hair_item, mask_hair_override, mask_face_item, mask_face_accessory_item)
+			end
+		end
+	end
 end
 
 local _combine_item
 
 function _combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair_item, mask_hair_item, mask_hair_override, mask_face_item, mask_face_accessory_item)
+	local data = visual_items[slot_name]
+	local visual_item = data.item
+
+	_fetch_propagated_fields(visual_item, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair_item, mask_hair_item, mask_hair_override, mask_face_item, mask_face_accessory_item)
+
 	for child_slot_name, child_entry in pairs(entry) do
 		if child_slot_name ~= "parent_slot_names" then
 			local child_attachments = {}
 
-			_combine_item(child_slot_name, child_entry, child_attachments, visual_items, voice_fx_presets, hide_facial_hair)
+			_combine_item(child_slot_name, child_entry, child_attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair_item, mask_hair_item, mask_hair_override, mask_face_item, mask_face_accessory_item)
 
-			local data = visual_items[child_slot_name]
+			local child_data = visual_items[child_slot_name]
 
 			attachments[child_slot_name] = {
-				item = data.item,
+				item = child_data.item,
 				children = child_attachments,
 			}
-
-			if data.item.voice_fx_preset then
-				voice_fx_presets[#voice_fx_presets + 1] = data.item.voice_fx_preset
-			end
-
-			if data.item.hide_eyebrows then
-				hide_facial_hair.hide_eyebrows = hide_facial_hair.hide_eyebrows or data.item.hide_eyebrows
-			end
-
-			if data.item.hide_beard then
-				hide_facial_hair.hide_beard = hide_facial_hair.hide_beard or data.item.hide_beard
-			end
-
-			if data.item.stabilize_neck then
-				stabilize_neck[1] = stabilize_neck[1] or data.item.stabilize_neck
-			end
-
-			if data.item.mask_facial_hair_item then
-				mask_facial_hair_item[1] = mask_facial_hair_item[1] or data.item.mask_facial_hair_item
-			end
-
-			if data.item.mask_hair_item then
-				mask_hair_item[1] = mask_hair_item[1] or data.item.mask_hair_item
-			end
-
-			if data.item.mask_hair_override then
-				mask_hair_override[1] = mask_hair_override[1] or data.item.mask_hair_override
-			end
-
-			if data.item.mask_face_item then
-				mask_face_item[1] = mask_face_item[1] or data.item.mask_face_item
-			end
-
-			if data.item.mask_face_accessory_item then
-				mask_face_accessory_item[1] = mask_face_accessory_item[1] or data.item.mask_face_accessory_item
-			end
 		end
 	end
 end
@@ -375,7 +404,7 @@ local function _generate_visual_loadout(visual_items)
 				end
 			end
 
-			if #voice_fx_presets > 0 then
+			if voice_fx_presets[1] then
 				overrides = overrides or {}
 				overrides.voice_fx_preset = voice_fx_presets[1]
 			end
@@ -395,27 +424,27 @@ local function _generate_visual_loadout(visual_items)
 				overrides.stabilize_neck = stabilize_neck[1]
 			end
 
-			if mask_facial_hair_item then
+			if mask_facial_hair_item[1] then
 				overrides = overrides or {}
 				overrides.mask_facial_hair_item = mask_facial_hair_item[1]
 			end
 
-			if mask_hair_item then
+			if mask_hair_item[1] then
 				overrides = overrides or {}
 				overrides.mask_hair_item = mask_hair_item[1]
 			end
 
-			if mask_hair_override then
+			if mask_hair_override[1] then
 				overrides = overrides or {}
 				overrides.mask_hair_override = mask_hair_override[1]
 			end
 
-			if mask_face_item then
+			if mask_face_item[1] then
 				overrides = overrides or {}
 				overrides.mask_face_item = mask_face_item[1]
 			end
 
-			if mask_face_accessory_item then
+			if mask_face_accessory_item[1] then
 				overrides = overrides or {}
 				overrides.mask_face_accessory_item = mask_face_accessory_item[1]
 			end
@@ -546,6 +575,43 @@ local function _convert_profile_from_lookups_to_data(profile)
 	_validate_talent_items(talents, archetype_name)
 end
 
+local function _item_title_text(item, profile)
+	local gender = profile.gender
+	local archetype_name = profile and profile.archetype.name
+	local item_titles = item.titles
+	local archetype_title_data, default_title_data
+
+	if item_titles then
+		for ii = 1, #item_titles do
+			local title_data = item_titles[ii]
+
+			if title_data.archetype == "default" then
+				default_title_data = title_data
+			elseif title_data.archetype == archetype_name then
+				archetype_title_data = title_data
+			end
+		end
+	end
+
+	local title_text = ""
+
+	if archetype_title_data then
+		if gender == "male" then
+			title_text = archetype_title_data.title_male
+		elseif gender == "female" then
+			title_text = archetype_title_data.title_female
+		end
+	elseif default_title_data then
+		if gender == "male" then
+			title_text = default_title_data.title_male
+		elseif gender == "female" then
+			title_text = default_title_data.title_female
+		end
+	end
+
+	return title_text
+end
+
 ProfileUtils.process_backend_body = function (body)
 	local items_by_uuid
 
@@ -569,11 +635,18 @@ ProfileUtils.process_backend_body = function (body)
 end
 
 ProfileUtils.backend_profile_data_to_profile = function (backend_profile_data)
-	local profile = profile_from_backend_data(backend_profile_data)
+	local profile = _profile_from_backend_data(backend_profile_data)
 
 	_convert_profile_from_lookups_to_data(profile)
 
 	return profile
+end
+
+ProfileUtils.pack_backend_profile_data = function (backend_profile_data)
+	local profile = _profile_from_backend_data(backend_profile_data)
+	local profile_json = cjson.encode(profile)
+
+	return profile_json
 end
 
 ProfileUtils.pack_profile = function (profile)
@@ -695,6 +768,7 @@ ProfileUtils.character_to_profile = function (character, gear_list, progression)
 		expertise_points = expertise_points,
 		gender = character.gender,
 		selected_voice = character.selected_voice,
+		voice_effects = character.voice_effects,
 		skin_color = character.skin_color,
 		hair_color = character.hair_color,
 		eye_color = character.eye_color,
@@ -791,13 +865,7 @@ ProfileUtils.title_item_name_no_color = function (title_item, profile)
 	local title_text = ""
 
 	if profile then
-		local gender = profile.gender
-
-		if gender == "male" then
-			title_text = title_item.title_male
-		elseif gender == "female" then
-			title_text = title_item.title_female
-		end
+		title_text = _item_title_text(title_item, profile)
 	end
 
 	if not title_text or title_text == "" then
@@ -821,14 +889,7 @@ ProfileUtils.character_title_no_color = function (profile)
 		local title_item = loadout.slot_character_title
 
 		if title_item then
-			local gender = profile.gender
-			local title_text = ""
-
-			if gender == "male" then
-				title_text = title_item.title_male
-			elseif gender == "female" then
-				title_text = title_item.title_female
-			end
+			local title_text = _item_title_text(title_item, profile)
 
 			title_text = title_text or title_item.title_default or title_item.display_name
 
@@ -883,14 +944,7 @@ ProfileUtils.character_title = function (profile)
 				end
 			end
 
-			local gender = profile.gender
-			local title_text = ""
-
-			if gender == "male" then
-				title_text = title_item.title_male
-			elseif gender == "female" then
-				title_text = title_item.title_female
-			end
+			local title_text = _item_title_text(title_item, profile)
 
 			if not title_item then
 				title_text = title_item.title_default or title_item.display_name
@@ -1001,7 +1055,6 @@ ProfileUtils.save_item_id_for_profile_preset = function (profile_preset_id, slot
 		character_data.profile_presets = table.clone_instance(SaveData.default_character_data.profile_presets)
 	end
 
-	local profile_presets = character_data.profile_presets
 	local profile_preset = ProfileUtils.get_profile_preset(profile_preset_id)
 
 	if not profile_preset then
@@ -1032,7 +1085,6 @@ ProfileUtils.save_talent_id_for_profile_preset = function (profile_preset_id, ta
 		character_data.profile_presets = table.clone_instance(SaveData.default_character_data.profile_presets)
 	end
 
-	local profile_presets = character_data.profile_presets
 	local profile_preset = ProfileUtils.get_profile_preset(profile_preset_id)
 
 	if not profile_preset then
@@ -1148,8 +1200,8 @@ ProfileUtils.clear_layout_talent_nodes_for_profile_preset = function (profile_pr
 	else
 		local nodes = layout.nodes
 
-		for i = 1, #nodes do
-			local node_name = nodes[i].widget_name
+		for ii = 1, #nodes do
+			local node_name = nodes[ii].widget_name
 
 			preset_talents[node_name] = nil
 		end
@@ -1251,25 +1303,37 @@ ProfileUtils.generate_visual_item = function (item)
 end
 
 ProfileUtils.has_companion = function (profile)
-	local equiped_talents = profile.talents
+	local equipped_talents = profile.talents
 	local archetype = profile.archetype
 	local archetype_talents = archetype.talents
+	local companion_breed = archetype.companion_breed
 
-	if not archetype.companion_breed then
-		return false
+	if not companion_breed then
+		return false, nil
 	end
 
-	if equiped_talents then
-		for archetype_name, _ in pairs(equiped_talents) do
-			local talent_data = archetype_talents[archetype_name]
+	if equipped_talents then
+		for talent_name, _ in pairs(equipped_talents) do
+			local talent_data = archetype_talents[talent_name]
+			local special_rule = talent_data and talent_data.special_rule
 
-			if talent_data and talent_data.special_rule and talent_data.special_rule.special_rule_name == "disable_companion" then
-				return false
+			if special_rule then
+				local special_rule_name = special_rule.special_rule_name
+
+				if type(special_rule_name) == "table" then
+					for ii = 1, #special_rule_name do
+						if special_rule_name[ii] == special_rules.disable_companion then
+							return false, companion_breed
+						end
+					end
+				elseif special_rule_name == special_rules.disable_companion then
+					return false, companion_breed
+				end
 			end
 		end
 	end
 
-	return true, archetype.companion_breed
+	return true, companion_breed
 end
 
 return ProfileUtils

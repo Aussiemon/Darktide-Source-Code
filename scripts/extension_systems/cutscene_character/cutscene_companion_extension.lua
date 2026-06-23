@@ -2,12 +2,7 @@
 
 local Breeds = require("scripts/settings/breed/breeds")
 local CinematicSceneSettings = require("scripts/settings/cinematic_scene/cinematic_scene_settings")
-local CinematicSceneTemplates = require("scripts/settings/cinematic_scene/cinematic_scene_templates")
-local MasterItems = require("scripts/backend/master_items")
-local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
-local UIUnitSpawner = require("scripts/managers/ui/ui_unit_spawner")
-local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
+local CutsceneCharacterExtensionInterface = require("scripts/extension_systems/cutscene_character/cutscene_character_extension_interface")
 local CutsceneCompanionExtension = class("CutsceneCompanionExtension")
 
 CutsceneCompanionExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -20,7 +15,6 @@ CutsceneCompanionExtension.init = function (self, extension_init_context, unit, 
 end
 
 CutsceneCompanionExtension.destroy = function (self)
-	local breed_name = self._breed_name
 	local cutscene_character_system = self._extension_manager:system("cutscene_character_system")
 
 	cutscene_character_system:unregister_cutscene_companion(self)
@@ -30,7 +24,7 @@ CutsceneCompanionExtension.setup_from_component = function (self, cinematic_name
 	self._cinematic_name = cinematic_name
 	self._breed_name = breed_name
 	self._slot = slot
-	self._starting_animation_event = starting_animation_event ~= "" and starting_animation_event or nil
+	self._starting_animation_event = starting_animation_event ~= "" and starting_animation_event
 	self._walking_animation_event = walking_animation_event ~= "" and walking_animation_event or "to_walk"
 
 	local cutscene_character_system = self._extension_manager:system("cutscene_character_system")
@@ -97,5 +91,7 @@ CutsceneCompanionExtension.trigger_walk_animation_event = function (self)
 		Unit.animation_event(unit, event)
 	end
 end
+
+implements(CutsceneCompanionExtension, CutsceneCharacterExtensionInterface)
 
 return CutsceneCompanionExtension

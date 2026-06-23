@@ -159,4 +159,58 @@ Tracks.get_claimable_track_nodes = function (self, track_id)
 	end)
 end
 
+Tracks.get_track_data_by_type = function (self, account_id, track_id, data_type)
+	local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/account/tracks/"):path(track_id):path("/data/"):path(data_type)
+	local options = {
+		method = "GET",
+	}
+
+	return Managers.backend:title_request(builder:to_string(), options):next(function (data)
+		return data.body
+	end):catch(function (error)
+		return Promise.rejected(error)
+	end)
+end
+
+Tracks.set_track_data_by_type = function (self, account_id, track_id, data_type, data)
+	local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/account/tracks/"):path(track_id):path("/data/"):path(data_type)
+	local options = {
+		method = "PUT",
+		body = data,
+	}
+
+	return Managers.backend:title_request(builder:to_string(), options)
+end
+
+Tracks.get_track_statistics_by_type = function (self, account_id, track_id, statistics_type)
+	local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/account/tracks/"):path(track_id):path("/statistics/"):path(statistics_type)
+	local options = {
+		method = "GET",
+	}
+
+	return Managers.backend:title_request(builder:to_string(), options):next(function (data)
+		return data.body
+	end)
+end
+
+Tracks.set_track_statistics_by_type = function (self, account_id, track_id, statistics_type, data)
+	local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/account/tracks/"):path(track_id):path("/statistics/"):path(statistics_type)
+	local options = {
+		method = "PUT",
+		body = data,
+	}
+
+	return Managers.backend:title_request(builder:to_string(), options)
+end
+
+Tracks.set_event_track_data = function (self, account_id, track_id, data)
+	local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/events/"):path(track_id)
+	local options = {
+		method = "POST",
+		body = data,
+	}
+
+	return Managers.backend:title_request(builder:to_string(), options)
+end
+
 return Tracks

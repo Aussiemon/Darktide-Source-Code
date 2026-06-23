@@ -3317,7 +3317,7 @@ templates.broker_passive_knockback_on_taking_melee_damage = {
 		local explosion_position = player_position + Vector3(0, 0, 0.65)
 		local explosion_template = ExplosionTemplates.broker_passive_knockback_on_taking_melee_damage
 
-		Explosion.create_explosion(template_context.world, template_context.physics_world, explosion_position, nil, template_context.unit, explosion_template, PowerLevelSettings.default_power_level, 1, attack_types.explosion)
+		Explosion.create_explosion(template_context.world, template_context.physics_world, explosion_position, Quaternion.identity(), template_context.unit, explosion_template, PowerLevelSettings.default_power_level, 1, attack_types.explosion)
 		template_data.buff_extension:add_internally_controlled_buff("broker_passive_knockback_on_taking_melee_damage_proc", t)
 	end,
 }
@@ -3431,7 +3431,7 @@ templates.broker_keystone_vultures_mark_aoe_stagger = {
 		local explosion_position = player_position + Vector3(0, 0, 0.65)
 		local explosion_template = ExplosionTemplates.broker_vultures_mark_aoe_stagger
 
-		Explosion.create_explosion(template_context.world, template_context.physics_world, explosion_position, nil, template_context.unit, explosion_template, PowerLevelSettings.default_power_level, 1, attack_types.explosion)
+		Explosion.create_explosion(template_context.world, template_context.physics_world, explosion_position, Quaternion.identity(), template_context.unit, explosion_template, PowerLevelSettings.default_power_level, 1, attack_types.explosion)
 	end,
 }
 templates.broker_keystone_vultures_mark_dodge_on_ranged_crit = {

@@ -4,7 +4,7 @@ require("scripts/extension_systems/component/component_extension")
 
 local Component = require("scripts/utilities/component")
 local ComponentSystem = class("ComponentSystem", "ExtensionSystemBase")
-local RPCS = {
+local CLIENT_RPCS = {
 	Component.default_rpc_name,
 	"rpc_animation_play_client",
 	"rpc_networked_unique_randomize_roll",
@@ -18,14 +18,14 @@ ComponentSystem.init = function (self, context, system_init_data, ...)
 	self._component_name_to_units_map = {}
 	self._level_seed = system_init_data.level_seed
 
-	for _, rpc_name in pairs(RPCS) do
+	for _, rpc_name in pairs(CLIENT_RPCS) do
 		self[rpc_name] = Component.receive_client_event
 	end
 
 	local network_event_delegate = self._network_event_delegate
 
 	if not self._is_server and network_event_delegate then
-		network_event_delegate:register_session_events(self, unpack(RPCS))
+		network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
 	end
 end
 
@@ -33,7 +33,7 @@ ComponentSystem.destroy = function (self, ...)
 	local network_event_delegate = self._network_event_delegate
 
 	if not self._is_server and network_event_delegate then
-		network_event_delegate:unregister_events(unpack(RPCS))
+		network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 	end
 
 	ComponentSystem.super.destroy(self, ...)

@@ -1,13 +1,20 @@
 ﻿-- chunkname: @scripts/extension_systems/visual_loadout/companion_visual_loadout_extension.lua
 
 local CompanionVisualLoadoutExtension = class("CompanionVisualLoadoutExtension")
+local MasterItems = require("scripts/backend/master_items")
+local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 
 CompanionVisualLoadoutExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
+	local world = extension_init_context.world
 	local is_server = extension_init_context.is_server
+	local wwise_world = extension_init_context.wwise_world
 
+	self._world = world
+	self._wwise_world = wwise_world
 	self._is_server = is_server
 	self._unit = unit
+	self._breed = extension_init_data.breed
 	self._owner_player = extension_init_data.owner_player
 	self._blackboard = BLACKBOARDS[unit]
 
@@ -24,20 +31,34 @@ CompanionVisualLoadoutExtension.init = function (self, extension_init_context, u
 		self._game_session = game_object_data_or_game_session
 	end
 
-	local player_unit = self._owner_player.player_unit
+	self._item_definitions = MasterItems.get_cached()
+
+	local random_seed, inventory = extension_init_data.random_seed, extension_init_data.inventory
+
+	self._inventory = inventory
+
+	local owner_unit = self:_owner_unit()
+	local owner_visual_loadout_extension = ScriptUnit.has_extension(owner_unit, "visual_loadout_system")
+
+	if inventory then
+		local inventory_slots = inventory.slots
+
+		for slot_name, slot_data in pairs(inventory_slots) do
+			slots[slot_name] = MinionVisualLoadout.create_visual_loadout_slot_entry(unit, nil, nil, world, slot_data, random_seed, self._item_definitions)
+		end
+	end
+
 	local local_player = Managers.player:local_player(1)
 
 	if not is_server and self._owner_player ~= local_player then
 		return
 	end
 
-	local owner_visual_loadout_extension = ScriptUnit.has_extension(player_unit, "visual_loadout_system")
-
 	if owner_visual_loadout_extension and self:is_slot_unit_spawned("slot_companion_gear_full") then
 		local profile = self._owner_player:profile()
 		local visual_loadout = profile.visual_loadout
-		local unit_data = ScriptUnit.extension(self._owner_player.player_unit, "unit_data_system")
-		local inventory_component = unit_data and unit_data:read_component("inventory")
+		local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
+		local inventory_component = unit_data_extension and unit_data_extension:read_component("inventory")
 
 		if inventory_component then
 			if PlayerUnitVisualLoadout.slot_equipped(inventory_component, owner_visual_loadout_extension, "slot_companion_body_skin_color") then
@@ -61,6 +82,8 @@ CompanionVisualLoadoutExtension.init = function (self, extension_init_context, u
 			end
 		end
 	end
+
+	self._random_seed = random_seed
 end
 
 CompanionVisualLoadoutExtension.game_object_initialized = function (self, game_session, game_object_id)
@@ -69,7 +92,27 @@ CompanionVisualLoadoutExtension.game_object_initialized = function (self, game_s
 end
 
 CompanionVisualLoadoutExtension.destroy = function (self)
-	return
+	local unit_spawner_manager = Managers.state.unit_spawner
+
+	for slot_name, slot_data in pairs(self._slots) do
+		if slot_data.state ~= "unequipped" then
+			local attachments = slot_data.attachments
+
+			if attachments then
+				for ii = #attachments, 1, -1 do
+					local attach_unit = attachments[ii]
+
+					unit_spawner_manager:mark_for_deletion(attach_unit)
+				end
+			end
+
+			local item_unit = slot_data.unit
+
+			if item_unit then
+				unit_spawner_manager:mark_for_deletion(item_unit)
+			end
+		end
+	end
 end
 
 CompanionVisualLoadoutExtension.slots = function (self)
@@ -85,32 +128,43 @@ CompanionVisualLoadoutExtension.inventory = function (self)
 end
 
 CompanionVisualLoadoutExtension.inventory_slots = function (self)
-	local owner_unit = self:_unit_owner()
-	local visual_loadout_extension = ScriptUnit.extension(owner_unit, "visual_loadout_system")
-	local companion_slots = visual_loadout_extension:companion_slots()
+	local owner_unit = self:_owner_unit()
+	local owner_visual_loadout_extension = ScriptUnit.extension(owner_unit, "visual_loadout_system")
+	local companion_slots = owner_visual_loadout_extension:companion_slots()
 
 	return companion_slots
 end
 
 CompanionVisualLoadoutExtension.slot_unit = function (self, slot_name)
-	return nil
+	local slots = self._slots
+	local slot_data = slots[slot_name]
+
+	if not slot_data then
+		return nil
+	end
+
+	if DEDICATED_SERVER then
+		return slot_data.unit or self._unit
+	end
+
+	return slot_data.unit, slot_data.attachments
 end
 
 CompanionVisualLoadoutExtension.is_slot_unit_spawned = function (self, slot_name)
-	local owner_unit = self:_unit_owner()
-	local visual_loadout_extension = ScriptUnit.has_extension(owner_unit, "visual_loadout_system")
+	local owner_unit = self:_owner_unit()
+	local owner_visual_loadout_extension = ScriptUnit.has_extension(owner_unit, "visual_loadout_system")
 
-	return visual_loadout_extension and visual_loadout_extension:is_slot_unit_spawned(slot_name)
+	return owner_visual_loadout_extension and owner_visual_loadout_extension:is_slot_unit_spawned(slot_name)
 end
 
 CompanionVisualLoadoutExtension.is_slot_unit_valid = function (self, slot_name)
-	local owner_unit = self:_unit_owner()
-	local visual_loadout_extension = ScriptUnit.has_extension(owner_unit, "visual_loadout_system")
+	local owner_unit = self:_owner_unit()
+	local owner_visual_loadout_extension = ScriptUnit.has_extension(owner_unit, "visual_loadout_system")
 
-	return visual_loadout_extension and visual_loadout_extension:is_slot_unit_valid(slot_name)
+	return owner_visual_loadout_extension and owner_visual_loadout_extension:is_slot_unit_valid(slot_name)
 end
 
-CompanionVisualLoadoutExtension._unit_owner = function (self)
+CompanionVisualLoadoutExtension._owner_unit = function (self)
 	return self._owner_player.player_unit
 end
 

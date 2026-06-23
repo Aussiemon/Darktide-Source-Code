@@ -344,7 +344,9 @@ GRPCManager.start_stay_in_party_vote = function (self)
 	return self:allocate_party_id():next(function (response)
 		Log.info("Allocated new party_id %s", response.allocated_party_id)
 
-		return Managers.voting:start_voting("stay_in_party", {
+		local voting_template = "stay_in_party"
+
+		return Managers.voting:start_voting(voting_template, {
 			allocated_party_id = response.allocated_party_id,
 		})
 	end)

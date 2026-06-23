@@ -9,6 +9,7 @@ local Blackboard = require("scripts/extension_systems/blackboard/utilities/black
 local Block = require("scripts/utilities/attack/block")
 local Breed = require("scripts/utilities/breed")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
+local CompanionVisualLoadout = require("scripts/utilities/companion_visual_loadout")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local GroundImpact = require("scripts/utilities/attack/ground_impact")
@@ -56,8 +57,10 @@ MinionAttack.get_aim_position = function (unit, scratchpad, optional_line_of_sig
 	return target_position
 end
 
-MinionAttack.aim_at_target = function (unit, scratchpad, t, action_data)
-	local target_position = MinionAttack.get_aim_position(unit, scratchpad)
+MinionAttack.aim_at_target = function (unit, scratchpad, t, action_data, breed)
+	local breed_aim_config = breed and breed.aim_config
+	local optional_aim_node_name = breed_aim_config and breed_aim_config.target_node
+	local target_position = MinionAttack.get_aim_position(unit, scratchpad, nil, optional_aim_node_name)
 
 	if not target_position then
 		return false
@@ -86,9 +89,10 @@ MinionAttack.aim_at_position = function (unit, scratchpad, t, action_data, targe
 	local unit_rotation = Unit.local_rotation(unit, 1)
 	local unit_forward = Quaternion.forward(unit_rotation)
 	local dot = Vector3.dot(unit_forward, to_target_direction)
+	local aim_dot_threshold = action_data.aim_dot_threshold or AIM_DOT_THRESHOLD
 	local valid_angle = true
 
-	if scratchpad.start_rotation_timing == nil and dot < AIM_DOT_THRESHOLD then
+	if scratchpad.start_rotation_timing == nil and dot < aim_dot_threshold then
 		local wanted_rotation = Quaternion.look(to_target_direction)
 
 		scratchpad.locomotion_extension:set_wanted_rotation(wanted_rotation)
@@ -168,10 +172,22 @@ MinionAttack.trigger_shoot_sfx_and_vfx = function (unit, scratchpad, action_data
 		fx_extension:trigger_inventory_wwise_event(shoot_event_name, inventory_slot_name, fx_source_name, target_unit, is_ranged_attack)
 	end
 
+	local sfx_shooting_effect_template_name = shoot_template.sfx_shooting_effect_template_name
+
+	if sfx_shooting_effect_template_name then
+		local effect_template = EffectTemplates[sfx_shooting_effect_template_name]
+		local fx_system = scratchpad.fx_system
+		local sfx_effect_id = fx_system:start_template_effect(effect_template, unit)
+
+		scratchpad.sfx_effect_id = sfx_effect_id
+	end
+
 	local shoot_vfx_name = shoot_template.shoot_vfx_name
 
 	if shoot_vfx_name then
-		fx_extension:trigger_inventory_vfx(shoot_vfx_name, inventory_slot_name, fx_source_name)
+		local lookup_fx_sources = action_data.lookup_fx_sources
+
+		fx_extension:trigger_inventory_vfx(shoot_vfx_name, inventory_slot_name, fx_source_name, lookup_fx_sources)
 	end
 
 	local current_aim_anim_event = scratchpad.current_aim_anim_event
@@ -190,6 +206,14 @@ MinionAttack.trigger_shoot_sfx_and_vfx = function (unit, scratchpad, action_data
 
 	if trigger_shoot_sound_event_once then
 		scratchpad.sound_event_triggered = true
+	end
+
+	if scratchpad.sfx_effect_id then
+		local fx_system = scratchpad.fx_system
+
+		fx_system:stop_template_effect(scratchpad.sfx_effect_id)
+
+		scratchpad.sfx_effect_id = nil
 	end
 end
 
@@ -263,7 +287,8 @@ MinionAttack.shoot_hit_scan = function (world, physics_world, unit, target_unit,
 		should_hit = false
 	end
 
-	local attachment_unit, node = MinionVisualLoadout.attachment_unit_and_node_from_node_name(weapon_item, fx_source_name)
+	local lookup_fx_sources = action_data.lookup_fx_sources
+	local attachment_unit, node = MinionVisualLoadout.attachment_unit_and_node_from_node_name(weapon_item, fx_source_name, lookup_fx_sources)
 	local from_position = Unit.world_position(attachment_unit, node)
 	local shoot_direction = Vector3.normalize(shoot_position - from_position)
 	local spread = should_hit and shoot_template.spread or shoot_template.spread * toughness_broken_grace_spread_multiplier
@@ -309,13 +334,13 @@ MinionAttack.shoot_hit_scan = function (world, physics_world, unit, target_unit,
 	local attack_type = "ranged"
 
 	if should_hit then
-		end_position, _, _, _, _, hit_result, _result_per_unit = HitScan.process_hits(is_server, world, physics_world, unit, shoot_template, hits, from_position, spread_direction, power_level, charge_level, IMPACT_FX_DATA, range, nil, nil, nil, nil, nil, nil, nil, optional_get_results_per_unit)
+		end_position, _, _, _, _, _, hit_result, _result_per_unit = HitScan.process_hits(is_server, world, physics_world, unit, shoot_template, hits, from_position, spread_direction, power_level, charge_level, IMPACT_FX_DATA, range, nil, nil, nil, nil, nil, nil, nil, optional_get_results_per_unit)
 
 		_apply_debuff(action_data, hit_result, target_unit, _result_per_unit, attack_type)
 	elseif hits then
 		local diff_toughness_broken_grace_power_multiplier = Managers.state.difficulty:get_table_entry_by_challenge(AttackIntensitySettings.toughness_broken_grace_power_multiplier)
 
-		end_position, _, _, _, _, hit_result = HitScan.process_hits(is_server, world, physics_world, unit, shoot_template, hits, from_position, spread_direction, power_level * diff_toughness_broken_grace_power_multiplier, charge_level, IMPACT_FX_DATA, range, nil, nil, nil, nil, nil, nil)
+		end_position, _, _, _, _, _, hit_result = HitScan.process_hits(is_server, world, physics_world, unit, shoot_template, hits, from_position, spread_direction, power_level * diff_toughness_broken_grace_power_multiplier, charge_level, IMPACT_FX_DATA, range, nil, nil, nil, nil, nil, nil)
 	end
 
 	end_position = end_position or from_position + spread_direction * range
@@ -562,10 +587,18 @@ MinionAttack.update_shooting = function (unit, scratchpad, t, action_data)
 
 		time_per_shot = math.random_range(diff_time_per_shot[1], diff_time_per_shot[2])
 		time_per_shot = time_per_shot / scratchpad.shoot_attack_speed
+
+		local old_next_shoot_timing = scratchpad.next_shoot_timing
+
 		scratchpad.shots_fired = scratchpad.shots_fired + 1
 		scratchpad.next_shoot_timing = t + time_per_shot
 
-		MinionAttack.shoot(unit, scratchpad, action_data)
+		local restore_shoot_fired = MinionAttack.shoot(unit, scratchpad, action_data)
+
+		if restore_shoot_fired then
+			scratchpad.shots_fired = scratchpad.shots_fired - 1
+			scratchpad.next_shoot_timing = old_next_shoot_timing
+		end
 
 		local before_shoot_effect_id = scratchpad.before_shoot_effect_id
 
@@ -610,7 +643,9 @@ MinionAttack.shoot = function (unit, scratchpad, action_data)
 	local has_line_of_sight = perception_component.has_line_of_sight
 
 	if not has_line_of_sight and not use_suppressive_fire then
-		return
+		local restore_ammo_if_no_line_of_sight = action_data.restore_ammo_if_no_line_of_sight
+
+		return restore_ammo_if_no_line_of_sight
 	end
 
 	local extra_spread_multiplier = scratchpad.extra_spread_multiplier or 1
@@ -631,6 +666,16 @@ MinionAttack.shoot = function (unit, scratchpad, action_data)
 	local end_position = MinionAttack.shoot_hit_scan(world, physics_world, unit, target_unit, weapon_item, fx_source_name, shoot_position, shoot_template, spread_multiplier, perception_component, action_data)
 
 	MinionAttack.trigger_shoot_sfx_and_vfx(unit, scratchpad, action_data, end_position)
+
+	local on_shoot_animation = action_data.on_shoot_animation
+
+	if on_shoot_animation then
+		local animation_extension = scratchpad.animation_extension
+
+		if animation_extension then
+			animation_extension:anim_event(on_shoot_animation)
+		end
+	end
 
 	if action_data.reset_dodge_check_after_each_shot then
 		scratchpad.dodge_position = nil

@@ -114,6 +114,34 @@ local function _target_sfx_table(parent_table, sfx_entry)
 	end
 end
 
+local function _extract_surface_impact_fx_vfx(material_fx)
+	local vfx, vfx_1p, vfx_3p
+	local material_vfx = material_fx.vfx
+
+	for _, vfx_entry in ipairs(material_vfx) do
+		local only_1p, only_3p = vfx_entry.only_1p, vfx_entry.only_3p
+
+		if only_1p then
+			vfx_1p = vfx_1p or {}
+			vfx_1p[#vfx_1p + 1] = table.clone(vfx_entry)
+			vfx_1p[#vfx_1p].only_1p = nil
+			vfx_1p[#vfx_1p].only_3p = nil
+		elseif only_3p then
+			vfx_3p = vfx_3p or {}
+			vfx_3p[#vfx_3p + 1] = table.clone(vfx_entry)
+			vfx_3p[#vfx_3p].only_1p = nil
+			vfx_3p[#vfx_3p].only_3p = nil
+		else
+			vfx = vfx or {}
+			vfx[#vfx + 1] = table.clone(vfx_entry)
+			vfx[#vfx].only_1p = nil
+			vfx[#vfx].only_3p = nil
+		end
+	end
+
+	return vfx, vfx_1p, vfx_3p
+end
+
 local temp_table = {}
 
 local function _create_surface_impact_fx_entry(material_type, damage_fx, material_fx, decal)
@@ -123,7 +151,7 @@ local function _create_surface_impact_fx_entry(material_type, damage_fx, materia
 		return fx_table
 	end
 
-	local sfx, material_switch_sfx, sfx_husk, material_switch_sfx_husk
+	local sfx, sfx_1p, sfx_1p_direction_interface, sfx_3p, material_switch_sfx, sfx_husk, material_switch_sfx_husk
 
 	if damage_fx.sfx or material_fx.sfx then
 		table.clear(temp_table)
@@ -151,6 +179,21 @@ local function _create_surface_impact_fx_entry(material_type, damage_fx, materia
 					husk_table_to_use[#husk_table_to_use].append_husk_to_event_name = nil
 					husk_table_to_use[#husk_table_to_use].state = material_type
 				end
+			elseif sfx_entry.only_1p then
+				local event_name = sfx_entry.event
+
+				sfx_1p = sfx_1p or {}
+				sfx_1p[#sfx_1p + 1] = event_name
+			elseif sfx_entry.only_3p then
+				local event_name = sfx_entry.event
+
+				sfx_3p = sfx_3p or {}
+				sfx_3p[#sfx_3p + 1] = event_name
+			elseif sfx_entry.hit_direction_interface then
+				local event_name = sfx_entry.event
+
+				sfx_1p_direction_interface = sfx_1p_direction_interface or {}
+				sfx_1p_direction_interface[#sfx_1p_direction_interface + 1] = event_name
 			else
 				sfx = sfx or {}
 
@@ -172,9 +215,18 @@ local function _create_surface_impact_fx_entry(material_type, damage_fx, materia
 
 	if damage_fx.vfx or material_fx.vfx then
 		fx_table.vfx = {}
+		fx_table.vfx_1p = {}
+		fx_table.vfx_3p = {}
 
 		table.append(fx_table.vfx, table.clone(damage_fx.vfx or EMPTY_TABLE))
-		table.append(fx_table.vfx, table.clone(material_fx.vfx or EMPTY_TABLE))
+
+		if material_fx then
+			local material_vfx, material_vfx_1p, material_vfx_3p = _extract_surface_impact_fx_vfx(material_fx)
+
+			table.append(fx_table.vfx, table.clone(material_vfx or EMPTY_TABLE))
+			table.append(fx_table.vfx_1p, table.clone(material_vfx_1p or EMPTY_TABLE))
+			table.append(fx_table.vfx_3p, table.clone(material_vfx_3p or EMPTY_TABLE))
+		end
 	end
 
 	if damage_fx.unit or material_fx.unit then
@@ -185,8 +237,11 @@ local function _create_surface_impact_fx_entry(material_type, damage_fx, materia
 	end
 
 	fx_table.sfx = sfx
-	fx_table.material_switch_sfx = material_switch_sfx
 	fx_table.sfx_husk = sfx_husk
+	fx_table.sfx_1p = sfx_1p
+	fx_table.sfx_3p = sfx_3p
+	fx_table.sfx_1p_direction_interface = sfx_1p_direction_interface
+	fx_table.material_switch_sfx = material_switch_sfx
 	fx_table.material_switch_sfx_husk = material_switch_sfx_husk
 	fx_table.decal = decal
 

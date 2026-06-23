@@ -31,6 +31,16 @@ weapon_template.action_inputs = {
 			},
 		},
 	},
+	wield_previous = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				input = "wield_5",
+				value = true,
+			},
+		},
+	},
 	wield = {
 		buffer_time = 0,
 		clear_input_queue = true,
@@ -62,6 +72,10 @@ weapon_template.action_input_hierarchy = {
 				transition = "base",
 			},
 			{
+				input = "wield_previous",
+				transition = "base",
+			},
+			{
 				input = "wield",
 				transition = "base",
 			},
@@ -73,6 +87,10 @@ weapon_template.action_input_hierarchy = {
 	},
 	{
 		input = "push",
+		transition = "stay",
+	},
+	{
+		input = "wield_previous",
 		transition = "stay",
 	},
 	{
@@ -157,6 +175,37 @@ weapon_template.actions = {
 		start_input = "toggle_auspex_focus",
 		total_time = 0,
 	},
+	action_inspect_3p = {
+		action_prevents_jump = true,
+		block_first_person_rotation = true,
+		can_crouch = false,
+		can_jump = false,
+		force_look = true,
+		kind = "inspect_3p",
+		lock_view = false,
+		skip_3p_anims = false,
+		stop_input = "inspect_stop",
+		total_time = math.huge,
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
+		crosshair = {
+			crosshair_type = "inspect",
+		},
+		allowed_chain_actions = {
+			inspect_3p_stop = {
+				action_name = "action_inspect",
+				chain_time = 1.1,
+			},
+		},
+		action_movement_curve = {
+			{
+				modifier = 0,
+				t = 0,
+			},
+			start_modifier = 0,
+		},
+	},
 	action_inspect = {
 		anim_end_event = "inspect_end",
 		anim_event = "inspect_start",
@@ -169,9 +218,24 @@ weapon_template.actions = {
 		crosshair = {
 			crosshair_type = "inspect",
 		},
+		allowed_chain_actions = {
+			inspect_3p_start = {
+				action_name = "action_inspect_3p",
+				chain_time = 0.75,
+			},
+		},
 		action_condition_func = function (condition_func_params, action_params, remaining_time, t)
 			return not Auspex.in_focus(action_params.unit)
 		end,
+	},
+	action_unwield_to_previous = {
+		allowed_during_sprint = true,
+		kind = "unwield_to_previous",
+		start_input = "wield_previous",
+		total_time = 0,
+		uninterruptible = true,
+		unwield_to_weapon = true,
+		allowed_chain_actions = {},
 	},
 }
 
@@ -191,10 +255,12 @@ weapon_template.keywords = {
 }
 weapon_template.ammo_template = "no_ammo"
 weapon_template.breed_anim_state_machine_3p = {
+	cryptic = "content/characters/player/human/third_person/animations/pocketables_2h",
 	human = "content/characters/player/human/third_person/animations/pocketables_2h",
 	ogryn = "content/characters/player/ogryn/third_person/animations/pocketables_2h",
 }
 weapon_template.breed_anim_state_machine_1p = {
+	cryptic = "content/characters/player/human/first_person/animations/scanner_equip",
 	human = "content/characters/player/human/first_person/animations/scanner_equip",
 	ogryn = "content/characters/player/ogryn/first_person/animations/scanner_equip",
 }
@@ -214,6 +280,7 @@ weapon_template.hud_configuration = {
 	uses_overheat = false,
 }
 weapon_template.breed_footstep_intervals = {
+	cryptic = FootstepIntervalsTemplates.pocketable_human,
 	human = FootstepIntervalsTemplates.pocketable_human,
 	ogryn = FootstepIntervalsTemplates.luggable_ogryn,
 }
@@ -223,5 +290,13 @@ weapon_template.action_confirm_screen_ui_validation = Auspex.confirm_screen_ui_v
 weapon_template.action_move_gamepad_screen_ui_validation = Auspex.move_gamepad_screen_ui_validation
 weapon_template.action_move_keyboard_screen_ui_validation = Auspex.move_keyboard_screen_ui_validation
 weapon_template.action_cancel_ui_validation = Auspex.cancel_ui_validation
+
+weapon_template.action_inspect_3p_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_inspect_3p"
+end
+
+weapon_template.action_inspect_3p_base_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_inspect"
+end
 
 return weapon_template

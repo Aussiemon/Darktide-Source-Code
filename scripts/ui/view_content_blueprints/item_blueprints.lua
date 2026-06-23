@@ -12,7 +12,7 @@ local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local WalletSettings = require("scripts/settings/wallet_settings")
 
-local function is_item_equipped_in_slot(parent, item, slot_name)
+local function _is_item_equipped_in_slot(parent, item, slot_name)
 	if not parent or not item then
 		return false
 	end
@@ -49,7 +49,7 @@ local function is_item_equipped_in_slot(parent, item, slot_name)
 	return equipped
 end
 
-local function is_item_equipped_in_any_slot(parent, item, slots)
+local function _is_item_equipped_in_any_slot(parent, item, slots)
 	if not parent or not item then
 		return false
 	end
@@ -57,7 +57,7 @@ local function is_item_equipped_in_any_slot(parent, item, slots)
 	for i = 1, #slots do
 		local slot_name = slots[i]
 
-		if is_item_equipped_in_slot(parent, item, slot_name) then
+		if _is_item_equipped_in_slot(parent, item, slot_name) then
 			return true
 		end
 	end
@@ -65,11 +65,11 @@ local function is_item_equipped_in_any_slot(parent, item, slots)
 	return false
 end
 
-local function get_generic_profile(breed, gender, archetype)
+local function _get_generic_profile(breed, gender, archetype)
 	local dummy_profile = {
 		loadout = {},
 		archetype = archetype,
-		breed = archetype.name == "ogryn" and "ogryn" or breed,
+		breed = archetype.breed,
 		gender = gender,
 	}
 	local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed]
@@ -91,7 +91,7 @@ local function get_generic_profile(breed, gender, archetype)
 	return dummy_profile
 end
 
-local function generate_blueprints_function(grid_size)
+local function _generate_blueprints_function(grid_size)
 	local grid_width = grid_size[1]
 	local group_header_font_style = table.clone(UIFontSettings.header_3)
 
@@ -353,7 +353,7 @@ local function generate_blueprints_function(grid_size)
 					content.favorite = favorite_state
 				end
 
-				local is_equipped = is_item_equipped_in_slot(view_instance, item, slot_name)
+				local is_equipped = _is_item_equipped_in_slot(view_instance, item, slot_name)
 
 				content.equipped = is_equipped
 			end,
@@ -480,7 +480,7 @@ local function generate_blueprints_function(grid_size)
 					content.favorite = previous_state
 				end
 
-				local is_equipped = is_item_equipped_in_slot(view_instance, item, slot_name)
+				local is_equipped = _is_item_equipped_in_slot(view_instance, item, slot_name)
 
 				content.equipped = is_equipped
 			end,
@@ -614,7 +614,7 @@ local function generate_blueprints_function(grid_size)
 					content.favorite = previous_state
 				end
 
-				local is_equipped = is_item_equipped_in_slot(view_instance, item, slot_name)
+				local is_equipped = _is_item_equipped_in_slot(view_instance, item, slot_name)
 
 				content.equipped = not element.disable_equipped_status and is_equipped
 
@@ -795,7 +795,7 @@ local function generate_blueprints_function(grid_size)
 				if item then
 					local slots = item and item.slots
 					local slot_name = element.slot_name or slots and slots[1]
-					local is_equipped = slot_name and is_item_equipped_in_slot(view_instance, item, slot_name)
+					local is_equipped = slot_name and _is_item_equipped_in_slot(view_instance, item, slot_name)
 
 					content.equipped = is_equipped
 
@@ -955,9 +955,9 @@ local function generate_blueprints_function(grid_size)
 					if item_type == UISettings.ITEM_TYPES.GADGET then
 						local slots = item and item.slots
 
-						is_equipped = is_item_equipped_in_any_slot(view_instance, item, slots)
+						is_equipped = _is_item_equipped_in_any_slot(view_instance, item, slots)
 					else
-						is_equipped = is_item_equipped_in_slot(view_instance, item, slot_name)
+						is_equipped = _is_item_equipped_in_slot(view_instance, item, slot_name)
 					end
 
 					content.equipped = is_equipped
@@ -1331,7 +1331,7 @@ local function generate_blueprints_function(grid_size)
 						local breed = item.breeds and item.breeds[1] or "human"
 						local archetype = item.archetypes and item.archetypes[1] and Archetypes[item.archetypes[1]] or Archetypes.veteran
 
-						dummy_profile = get_generic_profile(breed, gender, archetype)
+						dummy_profile = _get_generic_profile(breed, gender, archetype)
 					end
 
 					if item_type == ui_item_types.GEAR_HEAD or item_type == ui_item_types.GEAR_LOWERBODY or item_type == ui_item_types.GEAR_UPPERBODY or item_type == ui_item_types.GEAR_EXTRA_COSMETIC or item_type == ui_item_types.END_OF_ROUND then
@@ -1724,4 +1724,4 @@ local function generate_blueprints_function(grid_size)
 	return blueprints, WIDGET_TYPE_BY_SLOT
 end
 
-return generate_blueprints_function
+return _generate_blueprints_function

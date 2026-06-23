@@ -1,6 +1,8 @@
 ﻿-- chunkname: @scripts/managers/party_immaterium/party_immaterium_invite_notification_handler.lua
 
 local InputUtils = require("scripts/managers/input/input_utils")
+local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
+local HOST_TYPES = MatchmakingConstants.HOST_TYPES
 local PartyImmateriumInviteNotificationHandler = class("PartyImmateriumInviteNotificationHandler")
 local INPUT_SERVICE_TYPE = "View"
 local ACCEPT_INPUT_ALIAS = "accept_invite_notification"
@@ -65,6 +67,12 @@ PartyImmateriumInviteNotificationHandler.update = function (self, dt, t)
 		return
 	end
 
+	if active_invite.input_id then
+		local progress = Managers.ui:get_input_tracker_progress_by_id(active_invite.input_id)
+
+		Managers.event:trigger("event_update_notification_progress", active_invite.notification_id, progress)
+	end
+
 	if t >= active_invite.auto_decline_at then
 		local answer_code
 
@@ -119,7 +127,37 @@ PartyImmateriumInviteNotificationHandler._activate_next_invite = function (self)
 	end)
 
 	invite.auto_decline_at = Managers.time:time("main") + AUTO_DECLINE_TIME
-	invite.input_id = Managers.ui:start_tracking_input_hold("accept_invite_notification", ACCEPT_INPUT_HOLD_TIME, callback(self, "_cb_invite_accepted"))
+	invite.input_id = Managers.ui:start_tracking_input_hold("accept_invite_notification", ACCEPT_INPUT_HOLD_TIME, callback(self, "_cb_confirm_mission_change"))
+end
+
+PartyImmateriumInviteNotificationHandler._cb_confirm_mission_change = function (self)
+	local host_type = Managers.multiplayer_session:host_type()
+
+	if host_type == HOST_TYPES.mission_server then
+		local invite = self._active_invite
+		local color_tint_text = true
+		local input_text = InputUtils.input_text_for_current_input_device(INPUT_SERVICE_TYPE, ACCEPT_INPUT_ALIAS, color_tint_text)
+		local texts = {
+			Localize("loc_expeditions_extraction_warning_header"),
+			Localize("loc_social_party_invite_received_abandon"),
+			(Localize("loc_social_party_invite_accept", true, {
+				input = input_text,
+			})),
+		}
+
+		Managers.event:trigger("event_remove_notification", invite.notification_id)
+		Managers.event:trigger("event_add_notification_message", "matchmaking", {
+			texts = texts,
+		}, function (notification_id)
+			invite.notification_id = notification_id
+		end)
+		Managers.ui:stop_tracking_input_hold(invite.input_id)
+
+		invite.auto_decline_at = Managers.time:time("main") + AUTO_DECLINE_TIME
+		invite.input_id = Managers.ui:start_tracking_input_hold("accept_invite_notification", ACCEPT_INPUT_HOLD_TIME, callback(self, "_cb_invite_accepted"))
+	else
+		self:_cb_invite_accepted()
+	end
 end
 
 PartyImmateriumInviteNotificationHandler._cb_invite_accepted = function (self)

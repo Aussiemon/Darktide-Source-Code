@@ -95,6 +95,7 @@ local action_data = {
 			speed = 6,
 			angle = math.pi / 6,
 			catapult_breed_names = {
+				cryptic = true,
 				human = true,
 			},
 			push_template = PushSettings.push_templates.chaos_spawn_leap,
@@ -450,14 +451,20 @@ local action_data = {
 		width = 2,
 		considerations = UtilityConsiderations.chaos_spawn_grab_attack,
 		grab_anims = {
+			cryptic = "attack_grab",
 			human = "attack_grab",
 			ogryn = "attack_grab",
 		},
 		drag_in_anims = {
+			cryptic = "attack_grab_player",
 			human = "attack_grab_player",
 			ogryn = "attack_grab_player_ogryn",
 		},
 		grab_timings = {
+			cryptic = {
+				0.7666666666666667,
+				0.9333333333333333,
+			},
 			human = {
 				0.7666666666666667,
 				0.9333333333333333,
@@ -468,14 +475,17 @@ local action_data = {
 			},
 		},
 		total_grab_durations = {
+			cryptic = 10.333333333333334,
 			human = 10.333333333333334,
 			ogryn = 10.566666666666666,
 		},
 		grab_durations = {
+			cryptic = 1.3333333333333333,
 			human = 1.3333333333333333,
 			ogryn = 1.9666666666666666,
 		},
 		grab_durations_missed = {
+			cryptic = 1.9,
 			human = 1.9,
 			ogryn = 1.9,
 		},
@@ -483,14 +493,21 @@ local action_data = {
 			attack_grab = 0.3333333333333333,
 		},
 		smash_anims = {
+			cryptic = "attack_grabbed_smash",
 			human = "attack_grabbed_smash",
 			ogryn = "attack_grabbed_smash",
 		},
 		smash_durations = {
+			cryptic = 3.2,
 			human = 3.2,
 			ogryn = 3.6666666666666665,
 		},
 		smash_timings = {
+			cryptic = {
+				0.5,
+				1,
+				1.4333333333333333,
+			},
 			human = {
 				0.5,
 				1,
@@ -503,6 +520,23 @@ local action_data = {
 			},
 		},
 		smash_sweep_start_timings = {
+			cryptic = {
+				{
+					0.6333333333333333,
+					0.8,
+					"j_leftfinger3_jnt",
+				},
+				{
+					1.4333333333333333,
+					1.5666666666666667,
+					"j_leftfinger3_jnt",
+				},
+				{
+					2.466666666666667,
+					2.533333333333333,
+					"j_leftfinger3_jnt",
+				},
+			},
 			human = {
 				{
 					0.6333333333333333,
@@ -540,6 +574,7 @@ local action_data = {
 		},
 		damage_profile = DamageProfileTemplates.chaos_spawn_grab_smash,
 		smash_damage_profile = {
+			cryptic = DamageProfileTemplates.chaos_spawn_grab_smash,
 			human = DamageProfileTemplates.chaos_spawn_grab_smash,
 			ogryn = DamageProfileTemplates.chaos_spawn_grab_smash,
 		},
@@ -552,10 +587,16 @@ local action_data = {
 			},
 		},
 		start_eat_timings = {
+			cryptic = 1.2,
 			human = 1.2,
 			ogryn = 1.5666666666666667,
 		},
 		damage_timings = {
+			cryptic = {
+				5.533333333333333,
+				8.033333333333333,
+				10.533333333333333,
+			},
 			human = {
 				5.533333333333333,
 				8.033333333333333,
@@ -604,6 +645,12 @@ local action_data = {
 			move_start_right = 1.2666666666666666,
 		},
 		throw_anims = {
+			cryptic = {
+				bwd = "attack_grabbed_throw",
+				fwd = "attack_grabbed_throw",
+				left = "attack_grabbed_throw",
+				right = "attack_grabbed_throw",
+			},
 			human = {
 				bwd = "attack_grabbed_throw",
 				fwd = "attack_grabbed_throw",
@@ -618,6 +665,7 @@ local action_data = {
 			},
 		},
 		throw_timing = {
+			cryptic = 0.7,
 			human = 0.7,
 			ogryn = {
 				from_eating = 0.9333333333333333,
@@ -626,16 +674,22 @@ local action_data = {
 		},
 		throw_duration = {
 			ogryn = 1.6666666666666667,
+			cryptic = {
+				from_eating = 1.6666666666666667,
+				from_smashing = 1.6666666666666667,
+			},
 			human = {
 				from_eating = 1.6666666666666667,
 				from_smashing = 1.6666666666666667,
 			},
 		},
 		catapult_force = {
+			cryptic = 14,
 			human = 14,
 			ogryn = 12,
 		},
 		catapult_z_force = {
+			cryptic = 3,
 			human = 3,
 			ogryn = 4,
 		},
@@ -655,6 +709,7 @@ local action_data = {
 		},
 		eat_damage_profile = DamageProfileTemplates.beast_of_nurgle_hit_by_vomit,
 		eat_damage_type = {
+			cryptic = damage_types.minion_monster_eat,
 			human = damage_types.minion_monster_eat,
 			ogryn = damage_types.minion_monster_eat,
 		},

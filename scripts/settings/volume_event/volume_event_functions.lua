@@ -7,16 +7,20 @@ local volume_event_functions = {}
 
 volume_event_functions.player_instakill = {
 	on_enter = function (entering_unit, dt, t, data)
-		Log.info("VolumeEventFunctions", "Player (%q) entered kill volume", tostring(entering_unit))
+		local health_extension = ScriptUnit.has_extension(entering_unit, "health_system")
 
-		local reason = "kill_volume"
+		if not health_extension or not health_extension:is_unkillable() then
+			Log.info("VolumeEventFunctions", "Player (%q) entered kill volume", tostring(entering_unit))
 
-		PlayerDeath.die(entering_unit, nil, nil, reason)
+			local reason = "kill_volume"
 
-		local attack_direction = Vector3.down()
-		local damage_profile = DamageProfileTemplates.kill_volume_and_off_navmesh
+			PlayerDeath.die(entering_unit, nil, nil, reason)
 
-		Attack.execute(entering_unit, damage_profile, "instakill", true, "attack_direction", attack_direction)
+			local attack_direction = Vector3.down()
+			local damage_profile = DamageProfileTemplates.kill_volume_and_off_navmesh
+
+			Attack.execute(entering_unit, damage_profile, "instakill", true, "attack_direction", attack_direction)
+		end
 	end,
 }
 volume_event_functions.minion_instakill = {

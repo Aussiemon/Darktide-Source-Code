@@ -88,8 +88,8 @@ ProfileSynchronizerClient.rpc_sync_player_profile_data = function (self, channel
 	peer_profiles_json[local_player_id] = profile_json .. profile_chunk
 end
 
-ProfileSynchronizerClient.rpc_profile_sync_complete = function (self, channel_id, peer_id, local_player_id)
-	RPC.rpc_player_profile_synced(channel_id, peer_id, local_player_id)
+ProfileSynchronizerClient.rpc_profile_sync_complete = function (self, channel_id, sync_hash, peer_id, local_player_id)
+	RPC.rpc_player_profile_synced(channel_id, sync_hash)
 end
 
 ProfileSynchronizerClient.rpc_profile_synced_by_all = function (self, channel_id, peer_id, local_player_id)

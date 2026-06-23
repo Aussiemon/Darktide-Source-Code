@@ -76,7 +76,69 @@ Settings.input_legend_entries = {
 			return active_view_instance and active_view_instance._show_reward_tooltip
 		end,
 	},
+	{
+		alignment = "right_alignment",
+		display_name = "loc_alias_view_next",
+		input_action = "navigate_primary_right_pressed",
+		on_pressed_callback = "_on_next_page_pressed",
+		visibility_function = function (parent)
+			local active_view_instance = parent._active_view_instance
+
+			if active_view_instance and active_view_instance.view_name == "live_events_view" then
+				local entries = active_view_instance._entry_data
+				local pages = entries and #entries
+
+				return pages and pages > 1
+			end
+		end,
+	},
+	{
+		alignment = "right_alignment",
+		display_name = "loc_previous",
+		input_action = "navigate_primary_left_pressed",
+		on_pressed_callback = "_on_previous_page_pressed",
+		visibility_function = function (parent)
+			local active_view_instance = parent._active_view_instance
+
+			if active_view_instance and active_view_instance.view_name == "live_events_view" then
+				local entries = active_view_instance._entry_data
+				local pages = entries and #entries
+
+				return pages and pages > 1
+			end
+		end,
+	},
 }
+Settings.faction_settings = {
+	leftover = {
+		pure = {
+			buff = "live_event_leftover_buff_faction_a",
+			display_name = "loc_leftover_faction_a_name",
+			id = "pure",
+			texture = "content/ui/textures/backgrounds/live_events/leftover_event_faction_a",
+			color = Color.citadel_jokaero_orange(255, true),
+		},
+		impure = {
+			buff = "live_event_leftover_buff_faction_b",
+			display_name = "loc_leftover_faction_b_name",
+			id = "impure",
+			texture = "content/ui/textures/backgrounds/live_events/leftover_event_faction_b",
+			color = Color.citadel_guilliman_blue(255, true),
+		},
+	},
+}
+Settings.global_stats_settings = {
+	leftover = {
+		category = "lw-mb",
+		stats = {
+			heretical_artifacts_impure = "impure",
+			heretical_artifacts_pure = "pure",
+			impure = "heretical_artifacts_impure",
+			pure = "heretical_artifacts_pure",
+		},
+	},
+}
+Settings.default_entry_width = 1420
 Settings.default_progress_bar_size = {
 	1200,
 	20,

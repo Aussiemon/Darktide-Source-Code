@@ -3,243 +3,153 @@
 Main = Main or {}
 
 require("scripts/boot_init")
+require("scripts/foundation/strict_environment")
+require("scripts/foundation/utilities/error")
 require("scripts/foundation/utilities/class")
 require("scripts/foundation/utilities/log")
-require("scripts/foundation/utilities/patches")
 require("scripts/foundation/utilities/settings")
 require("scripts/foundation/utilities/table")
 
-local GameStateDebug = require("scripts/utilities/game_state_debug")
-local GameStateMachine = require("scripts/foundation/utilities/game_state_machine")
-local LocalizationManager = require("scripts/managers/localization/localization_manager")
-local PackageManager = require("scripts/foundation/managers/package/package_manager")
-local PackageManagerEditor = require("scripts/foundation/managers/package/package_manager_editor")
-local ParameterResolver = require("scripts/foundation/utilities/parameters/parameter_resolver")
-local StateBoot = require("scripts/game_states/state_boot")
-local StateLoadAudioSettings = require("scripts/game_states/boot/state_load_audio_settings")
-local StateLoadBootAssets = require("scripts/game_states/boot/state_load_boot_assets")
-local StateLoadRenderSettings = require("scripts/game_states/boot/state_load_render_settings")
-local StateRequireScripts = require("scripts/game_states/boot/state_require_scripts")
-local StateStartupTests = require("scripts/game_states/boot/state_startup_tests")
-local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
-local GAME_RESUME_COUNT = 0
+GAME_RESUME_COUNT = GAME_RESUME_COUNT or 0
+FRAME_INDEX = FRAME_INDEX or -1
 
 Main.init = function (self)
-	Script.configure_garbage_collection(Script.ACCEPTABLE_GARBAGE, 0.1, Script.MAXIMUM_GARBAGE, 0.5, Script.FORCE_FULL_COLLECT_GARBAGE_LEVEL, 1, Script.MINIMUM_COLLECT_TIME_MS, 0.5, Script.MAXIMUM_COLLECT_TIME_MS, 1)
-	ParameterResolver.resolve_command_line()
-	ParameterResolver.resolve_game_parameters()
-	ParameterResolver.resolve_dev_parameters()
-	Log.load_config_from_parameters(GameParameters, DevParameters)
-
-	local fps = DEDICATED_SERVER and GameParameters.tick_rate or 30
-
-	Application.set_time_step_policy("throttle", fps)
-
-	if IS_WINDOWS and type(GameParameters.window_title) == "string" and GameParameters.window_title ~= "" then
-		Window.set_title(GameParameters.window_title)
-	end
-
-	local package_manager = LEVEL_EDITOR_TEST and PackageManagerEditor:new() or PackageManager:new()
-	local localization_manager = LocalizationManager:new()
-	local params = {
-		index_offset = 1,
-		next_state = "StateGame",
-		states = {
-			{
-				StateLoadBootAssets,
-				{
-					package_manager = package_manager,
-					localization_manager = localization_manager,
-				},
-			},
-			{
-				StateStartupTests,
-				{},
-			},
-			{
-				StateRequireScripts,
-				{
-					package_manager = package_manager,
-				},
-			},
-			{
-				StateLoadAudioSettings,
-				{},
-			},
+	local GameStateDebug = require("scripts/utilities/game_state_debug")
+	local GameStateMachine = require("scripts/foundation/utilities/game_state_machine")
+	local StateBoot = require("scripts/game_states/state_boot")
+	local start_params = {
+		next_state_class_name = "StateGame",
+		boot_state_paths = {
+			"scripts/game_states/boot/boot_state_set_globals",
+			"scripts/game_states/boot/boot_state_apply_patches",
+			"scripts/game_states/boot/boot_state_resolve_parameters",
+			"scripts/game_states/boot/boot_state_create_boot_ui",
+			"scripts/game_states/boot/boot_state_load_render_settings",
+			"scripts/game_states/boot/boot_state_init_managers",
+			"scripts/game_states/boot/boot_state_load_boot_assets",
+			"scripts/game_states/boot/boot_state_require_foundation_scripts",
+			"scripts/game_states/boot/boot_state_init_crashify",
+			"scripts/game_states/boot/boot_state_init_testify",
+			"scripts/game_states/boot/boot_state_require_game_scripts",
+			"scripts/game_states/boot/boot_state_load_audio_settings",
+			"scripts/game_states/boot/boot_state_activate_plugins",
+			"scripts/game_states/boot/boot_state_startup_tests",
+			"scripts/game_states/boot/boot_state_last",
 		},
-		package_manager = package_manager,
-		localization_manager = localization_manager,
 	}
-
-	if PLATFORM == "win32" and not LEVEL_EDITOR_TEST then
-		table.insert(params.states, 1, {
-			StateLoadRenderSettings,
-			{},
-		})
-	end
-
-	if LEVEL_EDITOR_TEST then
-		Wwise.load_bank("wwise/world_sound_fx")
-	end
 
 	rawset(_G, "GameStateDebugInfo", GameStateDebug:new())
 
-	self._package_manager = package_manager
-	self._sm = GameStateMachine:new(nil, StateBoot, params, nil, nil, "", "Main", true)
+	self._sm = GameStateMachine:new(nil, StateBoot, start_params, nil, nil, "", "Main", true)
 end
 
 Main.update = function (self, dt)
+	FRAME_INDEX = FRAME_INDEX + 1
+
+	if self._in_update then
+		Log.info("Main", "Detected crash during update. Executing on_recover.")
+		self._sm:on_recover()
+	end
+
+	self._in_update = true
+
 	self._sm:update(dt)
+
+	self._in_update = false
 end
 
 Main.render = function (self)
 	self._sm:render()
 end
 
-Main.on_reload = function (self, refreshed_resources)
-	self._sm:on_reload(refreshed_resources)
-end
-
-Main.on_close = function (self)
-	local should_close = self._sm:on_close()
-
-	return should_close
-end
-
 Main.shutdown = function (self)
-	local owns_package_manager = true
-
-	if rawget(_G, "Managers") and Managers.package then
-		Managers.package:shutdown_has_started()
-
-		owns_package_manager = false
-	end
-
 	local exit_param = {
 		on_shutdown = true,
 	}
 
 	self._sm:destroy(exit_param)
-
-	if owns_package_manager then
-		self._package_manager:delete()
-	end
 end
 
-function init()
-	Main:init()
+Main.on_reload = function (self, refreshed_resources)
+	self._sm:on_reload(refreshed_resources)
 end
 
-function update(dt)
-	Main:update(dt)
+Main.on_activate = function (self, is_active)
+	Log.info("Main", "LUA window => " .. (is_active and "ACTIVATED" or "DEACTIVATED"))
+	self._sm:on_activate(is_active)
 end
 
-function render()
-	Main:render()
-
-	local imgui_manager = rawget(_G, "Managers") and Managers.imgui
-
-	if imgui_manager then
-		imgui_manager:post_render()
-	end
-end
-
-function on_reload(refreshed_resources)
-	Main:on_reload(refreshed_resources)
-end
-
-function on_activate(active)
-	Log.info("Main", "LUA window => " .. (active and "ACTIVATED" or "DEACTIVATED"))
-
-	if active and rawget(_G, "Managers") then
-		if Managers.dlc then
-			Managers.dlc:evaluate_consumables()
-		end
-
-		if Managers.account then
-			Managers.account:refresh_communication_restrictions()
-		end
-	end
-end
-
-function on_close()
-	local should_close = Main:on_close()
+Main.on_close = function (self)
+	local should_close = self._sm:on_close()
 
 	if should_close then
 		Application.force_silent_exit_policy()
-
-		if rawget(_G, "Crashify") then
-			Crashify.print_property("shutdown", true)
-		end
 	end
 
 	return should_close
 end
 
-function on_constrained(is_constrained)
-	if rawget(_G, "Managers") and Managers.event then
-		Managers.event:trigger("on_constrained", is_constrained)
-	end
+Main.on_suspend = function (self)
+	self._sm:on_suspend()
 end
 
-function on_suspend()
-	if rawget(_G, "Managers") then
-		Managers.event:trigger("on_pre_suspend")
-		Managers.event:trigger("on_suspend")
-
-		local update_grpc = false
-
-		if Managers.party_immaterium then
-			Managers.party_immaterium:reset()
-
-			update_grpc = true
-		end
-
-		if Managers.presence then
-			Managers.presence:reset()
-
-			update_grpc = true
-		end
-
-		if update_grpc and Managers.grpc then
-			Managers.grpc:update(0)
-		end
-
-		if Managers.telemetry_events then
-			Managers.telemetry_events:game_suspended()
-		end
-	end
-end
-
-function on_resume()
+Main.on_resume = function (self)
 	GAME_RESUME_COUNT = GAME_RESUME_COUNT + 1
 
-	if rawget(_G, "Crashify") then
+	local Crashify = rawget(_G, "Crashify")
+
+	if Crashify then
 		Crashify.print_property("game_resume_count", GAME_RESUME_COUNT)
 		Crashify.print_breadcrumb(string.format("on_resume: %s", GAME_RESUME_COUNT))
 	end
 
-	if rawget(_G, "Managers") then
-		if Managers.backend then
-			Managers.backend:time_sync_restart()
-		end
+	self._sm:on_resume()
+end
 
-		if Managers.telemetry_events then
-			Managers.telemetry_events:game_resumed()
-		end
+Main.on_constrained = function (self, is_constrained)
+	return self._sm:on_constrained(is_constrained)
+end
 
-		if Managers.telemetry then
-			Managers.telemetry:post_batch()
-		end
-	end
+local Main = Main
 
-	if IS_XBS then
-		XboxLiveUtils.close_user_context()
-	end
+function init()
+	return Main:init()
+end
+
+function update(dt)
+	return Main:update(dt)
+end
+
+function render()
+	return Main:render()
 end
 
 function shutdown()
-	Main:shutdown()
+	return Main:shutdown()
+end
+
+function on_reload(refreshed_resources)
+	return Main:on_reload(refreshed_resources)
+end
+
+function on_activate(is_active)
+	return Main:on_activate(is_active)
+end
+
+function on_close()
+	return Main:on_close()
+end
+
+function on_suspend()
+	return Main:on_suspend()
+end
+
+function on_resume()
+	return Main:on_resume()
+end
+
+function on_constrained(is_constrained)
+	return Main:on_constrained(is_constrained)
 end
 
 function on_low_memory_state_dump(global_path, registry_path, total_allocated, total_used)

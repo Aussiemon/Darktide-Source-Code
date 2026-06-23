@@ -52,9 +52,30 @@ BtPoxwalkerBomberApproachAction.init_values = function (self, blackboard)
 end
 
 BtPoxwalkerBomberApproachAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
-	if scratchpad.stagger_component.num_triggered_staggers > 0 and scratchpad.lunge_duration then
+	local lunging = scratchpad.stagger_component.num_triggered_staggers > 0 and scratchpad.lunge_duration
+
+	if lunging then
 		local death_component = Blackboard.write_component(blackboard, "death")
 
+		death_component.staggered_during_lunge = true
+
+		local duration = scratchpad.stagger_component.duration
+
+		scratchpad.stagger_component.duration = duration * action_data.stagger_duration_modifier_during_lunge
+	elseif scratchpad.stagger_component.staggered_by_melee_push then
+		local lunge_anim_event = action_data.lunge_anim_event
+
+		scratchpad.animation_extension:anim_event(lunge_anim_event)
+
+		local stagger_component = Blackboard.write_component(blackboard, "stagger")
+
+		stagger_component.immune_time = 0
+		stagger_component.controlled_stagger = false
+		stagger_component.controlled_stagger_finished = true
+
+		local death_component = Blackboard.write_component(blackboard, "death")
+
+		death_component.fuse_timer = t + action_data.fuse_timer
 		death_component.staggered_during_lunge = true
 
 		local duration = scratchpad.stagger_component.duration
@@ -154,13 +175,9 @@ BtPoxwalkerBomberApproachAction.run = function (self, unit, breed, blackboard, s
 
 	if not is_anim_driven then
 		if state == "walking" or state == "running" then
-			local enter_lunge_distance = action_data.enter_lunge_distance
-			local path_distance = navigation_extension:remaining_distance_from_progress_to_end_of_path()
-			local nav_smart_object_component = blackboard.nav_smart_object
-			local smart_object_id = nav_smart_object_component.id
-			local smart_object_is_next = smart_object_id ~= -1
+			local can_start_lunge = self:_can_start_lunge(unit, navigation_extension, blackboard, action_data, target_unit, t)
 
-			if not smart_object_is_next and path_distance <= enter_lunge_distance then
+			if can_start_lunge then
 				if scratchpad.stagger_duration then
 					scratchpad.animation_extension:anim_event("stagger_finished")
 				end
@@ -189,6 +206,43 @@ BtPoxwalkerBomberApproachAction.run = function (self, unit, breed, blackboard, s
 	end
 
 	return "running"
+end
+
+BtPoxwalkerBomberApproachAction._can_start_lunge = function (self, unit, navigation_extension, blackboard, action_data, target_unit, t)
+	local enter_lunge_distance = action_data.enter_lunge_distance
+	local path_distance = navigation_extension:remaining_distance_from_progress_to_end_of_path()
+	local nav_smart_object_component = blackboard.nav_smart_object
+	local smart_object_id = nav_smart_object_component.id
+	local smart_object_is_next = smart_object_id ~= -1
+
+	if smart_object_is_next then
+		return false
+	end
+
+	local self_position = unit and POSITION_LOOKUP[unit]
+	local target_position = target_unit and POSITION_LOOKUP[target_unit]
+
+	if not self_position or not target_position then
+		return false
+	end
+
+	local distance = Vector3.distance(target_position, self_position)
+	local in_range = path_distance < enter_lunge_distance or distance < enter_lunge_distance * 0.5
+
+	if not in_range then
+		return false
+	end
+
+	local to_target = Vector3.normalize(target_position - self_position)
+	local current_rotation = Unit.local_rotation(unit, 1)
+	local direction = Quaternion.forward(current_rotation)
+	local dot = Vector3.dot(to_target, direction)
+
+	if dot < 0.97 and distance > 0.1 then
+		return false
+	end
+
+	return true
 end
 
 BtPoxwalkerBomberApproachAction._start_move_anim = function (self, unit, breed, t, scratchpad, action_data)
@@ -293,7 +347,19 @@ BtPoxwalkerBomberApproachAction._update_running = function (self, unit, breed, d
 	local should_leave_running = distance_to_destination < enter_walk_distance and distance_to_target < enter_walk_distance
 
 	if should_leave_running then
-		self:_change_state(unit, breed, scratchpad, action_data, "walking")
+		local self_position = unit and POSITION_LOOKUP[unit]
+		local target_position = target_unit and POSITION_LOOKUP[target_unit]
+
+		if self_position and target_position then
+			local to_target = Vector3.normalize(target_position - self_position)
+			local current_rotation = Unit.local_rotation(unit, 1)
+			local direction = Quaternion.forward(current_rotation)
+			local dot = Vector3.dot(to_target, direction)
+
+			if dot > 0.97 then
+				self:_change_state(unit, breed, scratchpad, action_data, "walking")
+			end
+		end
 	end
 end
 
@@ -449,7 +515,7 @@ BtPoxwalkerBomberApproachAction._update_lunge = function (self, unit, scratchpad
 
 	scratchpad.lunge_duration = nil
 
-	Attack.execute(unit, DamageProfileTemplates.default, "attacking_unit", unit, "instakill", true)
+	Attack.execute(unit, DamageProfileTemplates.poxwalker_bomber_instakill, "attacking_unit", unit, "instakill", true)
 end
 
 return BtPoxwalkerBomberApproachAction

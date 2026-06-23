@@ -108,6 +108,28 @@ ItemPreviewer.preview = function (self, resource, return_data)
 						},
 					}
 					item_data.base_unit = "content/characters/player/human/third_person/base_gear_rig"
+				elseif table.array_contains(item_data.breeds, "cryptic") then
+					item_data.attachments = {
+						{
+							item = "content/items/characters/player/human/cryptic_base_body/body_01",
+						},
+						{
+							item = "content/items/characters/player/human/cryptic_base_legs/base_legs_01",
+						},
+						{
+							item = "content/items/characters/player/human/cryptic_base_arms/base_arms_01",
+						},
+						{
+							item = "content/items/characters/player/human/faces/empty_face",
+						},
+						{
+							item = item_data.prop_item,
+						},
+						{
+							item = item_data.prop_item_2,
+						},
+					}
+					item_data.base_unit = "content/characters/player/human/third_person/base_gear_rig"
 				else
 					item_data.attachments = {
 						{
@@ -293,11 +315,13 @@ ItemPreviewer._select_root_unit_resource = function (self, item_data)
 			root_unit = "content/characters/player/ogryn/attachments_base/hair/hair_medium_mullet_a/hair_medium_mullet_a"
 		end
 
-		if table.array_contains(slots, "slot_body_face_tattoo") or table.array_contains(slots, "slot_body_eye_color") or table.array_contains(slots, "slot_body_skin_color") or table.array_contains(slots, "slot_body_face_scar") or table.array_contains(slots, "slot_body_hair") or table.array_contains(slots, "slot_body_face_hair") or table.array_contains(slots, "slot_body_face_makeup") then
+		if table.array_contains(slots, "slot_body_face_tattoo") or table.array_contains(slots, "slot_body_eye_color") or table.array_contains(slots, "slot_body_eye_color_secondary") or table.array_contains(slots, "slot_body_skin_color") or table.array_contains(slots, "slot_body_skin_color_secondary") or table.array_contains(slots, "slot_body_skin_discoloration") or table.array_contains(slots, "slot_body_face_scar") or table.array_contains(slots, "slot_body_hair") or table.array_contains(slots, "slot_body_face_hair") or table.array_contains(slots, "slot_body_face_makeup") then
 			if table.array_contains(breeds, "human") then
 				root_unit = "content/characters/player/human/attachments_base/male/face_caucasian_01/male_face_caucasian_01"
 			elseif table.array_contains(breeds, "ogryn") then
 				root_unit = "content/characters/player/ogryn/attachments_base/male/face_caucasian_01/male_face_caucasian_01"
+			elseif table.array_contains(breeds, "cryptic") then
+				root_unit = "content/characters/empty_item/empty_item"
 			end
 		end
 	end
@@ -313,7 +337,7 @@ ItemPreviewer._select_hardcoded_bounding_box = function (self, item_data)
 	local is_ogryn = breeds and table.array_contains(breeds, "ogryn")
 	local is_lowerbody = slots and table.array_contains(slots, "slot_gear_lowerbody")
 	local is_upperbody = slots and table.array_contains(slots, "slot_gear_upperbody")
-	local is_face = slots and (table.array_contains(slots, "slot_body_face") or table.array_contains(slots, "slot_body_face_tattoo") or table.array_contains(slots, "slot_body_eye_color") or table.array_contains(slots, "slot_body_skin_color") or table.array_contains(slots, "slot_body_face_scar") or table.array_contains(slots, "slot_body_hair") or table.array_contains(slots, "slot_body_face_hair") or table.array_contains(slots, "slot_body_face_makeup"))
+	local is_face = slots and (table.array_contains(slots, "slot_body_face") or table.array_contains(slots, "slot_body_face_tattoo") or table.array_contains(slots, "slot_body_eye_color") or table.array_contains(slots, "slot_body_eye_color_secondary") or table.array_contains(slots, "slot_body_skin_color") or table.array_contains(slots, "slot_body_skin_color_secondary") or table.array_contains(slots, "slot_body_skin_discoloration") or table.array_contains(slots, "slot_body_face_scar") or table.array_contains(slots, "slot_body_hair") or table.array_contains(slots, "slot_body_face_hair") or table.array_contains(slots, "slot_body_face_makeup"))
 
 	if item_type == "SET" then
 		if is_human then

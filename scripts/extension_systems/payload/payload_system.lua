@@ -3,7 +3,7 @@
 require("scripts/extension_systems/payload/payload_extension")
 
 local PayloadSystem = class("PayloadSystem", "ExtensionSystemBase")
-local RPCS = {
+local CLIENT_RPCS = {
 	"rpc_payload_add_target",
 	"rpc_payload_clear_targets_before",
 	"rpc_payload_clear_targets",
@@ -19,8 +19,16 @@ PayloadSystem.init = function (self, context, ...)
 	PayloadSystem.super.init(self, context, ...)
 
 	if not self._is_server then
-		self._network_event_delegate:register_session_events(self, unpack(RPCS))
+		self._network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
 	end
+end
+
+PayloadSystem.destroy = function (self)
+	if not self._is_server then
+		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
+	end
+
+	PayloadSystem.super.destroy(self)
 end
 
 PayloadSystem.on_gameplay_post_init = function (self, level)
@@ -29,14 +37,6 @@ end
 
 PayloadSystem.on_location_setup = function (self)
 	self:call_gameplay_post_init_on_extensions()
-end
-
-PayloadSystem.destroy = function (self)
-	if not self._is_server then
-		self._network_event_delegate:unregister_events(unpack(RPCS))
-	end
-
-	PayloadSystem.super.destroy(self)
 end
 
 PayloadSystem.rpc_payload_add_target = function (self, channel_id, level_unit_id, target_location, normal, has_node, node_unit_id)

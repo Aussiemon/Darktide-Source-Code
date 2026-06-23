@@ -2,6 +2,7 @@
 
 local Breeds = require("scripts/settings/breed/breeds")
 local EquipmentComponent = require("scripts/extension_systems/visual_loadout/equipment_component")
+local EquippedSlotScripts = require("scripts/extension_systems/visual_loadout/utilities/equipped_slot_scripts")
 local ImpactFxResourceDependencies = require("scripts/settings/damage/impact_fx_resource_dependencies")
 local Luggable = require("scripts/utilities/luggable")
 local MasterItems = require("scripts/backend/master_items")
@@ -136,6 +137,30 @@ PlayerUnitVisualLoadoutExtension.init = function (self, extension_init_context, 
 		player_particle_group_id = Managers.state.extension:system("fx_system").unit_to_particle_group_lookup[unit],
 	}
 
+	local equipped_slot_components = {}
+
+	self._equipped_slot_components = equipped_slot_components
+
+	local equipped_slot_scripts = {}
+
+	self._equipped_slot_scripts = equipped_slot_scripts
+	self._equipped_slot_scripts_context = {
+		is_husk = false,
+		owner_unit = unit,
+		is_local_unit = is_local_unit,
+		equipment_component = equipment_component,
+		is_server = is_server,
+		game_session = game_object_data_or_game_session,
+		first_person_unit = first_person_unit,
+		world = world,
+		physics_world = physics_world,
+		wwise_world = extension_init_context.wwise_world,
+		visual_loadout_extension = self,
+		unit_data_extension = unit_data_extension,
+		fx_extension = fx_extension,
+		player_particle_group_id = Managers.state.extension:system("fx_system").unit_to_particle_group_lookup[unit],
+	}
+
 	local inventory_slot_component_data = PlayerCharacterConstants.inventory_slot_component_data
 
 	self._companion_slots = {}
@@ -206,6 +231,7 @@ end
 
 PlayerUnitVisualLoadoutExtension.extensions_ready = function (self, world, unit)
 	WieldableSlotScripts.extensions_ready(self._wieldable_slot_scripts)
+	EquippedSlotScripts.extensions_ready(self._equipped_slot_scripts)
 
 	if not self._is_server then
 		PlayerUnitVisualLoadout.wield_slot(self._default_wielded_slot_name, unit, self._initialized_fixed_t)
@@ -217,6 +243,7 @@ PlayerUnitVisualLoadoutExtension.game_object_initialized = function (self, sessi
 	self._game_object_id = object_id
 	self._game_object_created = true
 	self._wieldable_slot_scripts_context.game_session = session
+	self._equipped_slot_scripts_context.game_session = session
 
 	local slot_equip_order = PlayerCharacterConstants.slot_equip_order
 
@@ -321,6 +348,7 @@ PlayerUnitVisualLoadoutExtension.update = function (self, unit, dt, t)
 	local first_person_extension = self._first_person_extension
 	local is_in_first_person_mode = first_person_extension:is_in_first_person_mode()
 	local wieldable_slot_scripts = self._wieldable_slot_scripts
+	local equipped_slot_scripts = self._equipped_slot_scripts
 
 	if spawned_attachments then
 		local fx_sources = self._fx_sources
@@ -336,6 +364,10 @@ PlayerUnitVisualLoadoutExtension.update = function (self, unit, dt, t)
 				if self._is_local_unit and wielded_slot_name == slot_name and slot_scripts then
 					WieldableSlotScripts.wield(slot_scripts)
 				end
+			else
+				local slot_fx_sources = fx_sources[slot_name]
+
+				EquippedSlotScripts.create(self._equipped_slot_scripts_context, equipped_slot_scripts, slot_fx_sources, slot)
 			end
 		end
 	end
@@ -365,6 +397,8 @@ PlayerUnitVisualLoadoutExtension.update = function (self, unit, dt, t)
 	if slot_scripts then
 		WieldableSlotScripts.update(slot_scripts, unit, dt, t)
 	end
+
+	EquippedSlotScripts.update(equipped_slot_scripts, unit, dt, t)
 end
 
 PlayerUnitVisualLoadoutExtension.post_update = function (self, unit, dt, t, context, ...)
@@ -380,6 +414,8 @@ PlayerUnitVisualLoadoutExtension.post_update = function (self, unit, dt, t, cont
 	if slot_scripts then
 		WieldableSlotScripts.post_update(slot_scripts, unit, dt, t)
 	end
+
+	EquippedSlotScripts.post_update(self._equipped_slot_scripts, unit, dt, t)
 end
 
 PlayerUnitVisualLoadoutExtension.fixed_update = function (self, unit, dt, t, frame)
@@ -390,6 +426,8 @@ PlayerUnitVisualLoadoutExtension.fixed_update = function (self, unit, dt, t, fra
 	if wielded_slot_scripts then
 		WieldableSlotScripts.fixed_update(wielded_slot_scripts, unit, dt, t, frame)
 	end
+
+	EquippedSlotScripts.fixed_update(self._equipped_slot_scripts, unit, dt, t)
 
 	local equipment = self._equipment
 	local luggable_slots = self._slot_configuration_by_type.luggable
@@ -454,6 +492,8 @@ PlayerUnitVisualLoadoutExtension.update_unit_position = function (self, unit, dt
 	if wielded_slot_scripts then
 		WieldableSlotScripts.update_unit_position(wielded_slot_scripts, unit, dt, t)
 	end
+
+	EquippedSlotScripts.update_unit_position(self._equipped_slot_scripts, unit, dt, t)
 end
 
 PlayerUnitVisualLoadoutExtension.is_unit_part_of_attachment = function (self, unit, slot_name, attachment_id, in_1p)
@@ -482,8 +522,6 @@ PlayerUnitVisualLoadoutExtension.server_correction_occurred = function (self, un
 	local rewield = false
 	local wieldable_slot_components = self._wieldable_slot_components
 	local inventory_component, equipment = self._inventory_component, self._equipment
-	local self_fx_sources = self._fx_sources
-	local fx_extension = self._fx_extension
 	local mispredicted_frame = from_frame - 1
 	local mispredicted_frame_t = mispredicted_frame * self._fixed_time_step
 	local from_server_correction_occurred = true
@@ -543,6 +581,7 @@ PlayerUnitVisualLoadoutExtension.server_correction_occurred = function (self, un
 	end
 
 	WieldableSlotScripts.server_correction_occurred(self._wieldable_slot_scripts, unit, from_frame)
+	EquippedSlotScripts.server_correction_occurred(self._equipped_slot_scripts, unit, from_frame)
 end
 
 PlayerUnitVisualLoadoutExtension.destroy = function (self)
@@ -698,6 +737,8 @@ PlayerUnitVisualLoadoutExtension._equip_item_to_slot = function (self, item, slo
 
 		Managers.state.decal:register_decal_unit_ids(decal_unit_ids)
 		self:_cache_node_names(weapon_template, slot_name)
+	elseif slot.attachment_spawn_status == "fully_spawned" then
+		EquippedSlotScripts.create(self._equipped_slot_scripts_context, self._equipped_slot_scripts, nil, slot)
 	end
 
 	self:_update_item_visibility(is_in_first_person_mode)
@@ -797,6 +838,9 @@ PlayerUnitVisualLoadoutExtension._unequip_item_from_slot = function (self, slot_
 		if slot_config.slot_type == "weapon" or GameParameters.destroy_unmanaged_particles and slot_config.slot_type == "ability" then
 			self._fx_extension:destroy_particle_group()
 		end
+	else
+		EquippedSlotScripts.destroy(self._equipped_slot_scripts_context)
+		table.clear(self._equipped_slot_scripts_context)
 	end
 
 	if not from_destroy then
@@ -992,6 +1036,8 @@ PlayerUnitVisualLoadoutExtension._update_item_visibility = function (self, first
 	if slot_scripts then
 		WieldableSlotScripts.update_first_person_mode(slot_scripts, first_person_mode)
 	end
+
+	EquippedSlotScripts.update_first_person_mode(self._equipped_slot_scripts, first_person_mode)
 end
 
 PlayerUnitVisualLoadoutExtension.resolve_gear_sound = function (self, sound_alias, optional_external_properties)

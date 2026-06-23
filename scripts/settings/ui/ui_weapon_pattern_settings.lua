@@ -441,6 +441,19 @@ local ui_weapon_patterns_settings = {
 			},
 		},
 	},
+	powermaul_p3 = {
+		display_name = "loc_weapon_family_powermaul_p3_m1",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/powermaul_p3",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/powermaul_p3_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/powermaul_p3_complete_mask",
+		marks = {
+			{
+				comparison_text = nil,
+				item = "content/items/weapons/player/melee/powermaul_p3_m1",
+				name = "powermaul_p3_m1",
+			},
+		},
+	},
 	powermaul_shield_p1 = {
 		display_name = "loc_weapon_family_powermaul_shield_p1_m1",
 		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/shield_powermaul_p1_m1",
@@ -513,6 +526,19 @@ local ui_weapon_patterns_settings = {
 			},
 		},
 	},
+	powersword_p3 = {
+		display_name = "loc_weapon_family_powersword_p3_m1",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/powersword_p3",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/powersword_p3_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/powersword_p3_complete_mask",
+		marks = {
+			{
+				comparison_text = nil,
+				item = "content/items/weapons/player/melee/powersword_p3_m1",
+				name = "powersword_p3_m1",
+			},
+		},
+	},
 	saw_p1 = {
 		display_name = "loc_weapon_family_saw_p1_m1",
 		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/saw_p1_m1",
@@ -541,6 +567,71 @@ local ui_weapon_patterns_settings = {
 				comparison_text = nil,
 				item = "content/items/weapons/player/melee/thunderhammer_2h_p1_m2",
 				name = "thunderhammer_2h_p1_m2",
+			},
+		},
+	},
+	transonic_claw_p1 = {
+		display_name = "loc_weapon_family_transonic_claw_p1_m1",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/transonic_claw_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/transonic_claw_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/transonic_claw_p1_complete_mask",
+		marks = {
+			{
+				comparison_text = nil,
+				item = "content/items/weapons/player/melee/transonic_claw_p1_m1",
+				name = "transonic_claw_p1_m1",
+			},
+		},
+	},
+	transonic_knife_p1 = {
+		display_name = "loc_weapon_family_transonic_knife_p1_m1",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/transonic_knife_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/transonic_knife_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/transonic_knife_p1_complete_mask",
+		marks = {
+			{
+				comparison_text = nil,
+				item = "content/items/weapons/player/melee/transonic_knife_p1_m1",
+				name = "transonic_knife_p1_m1",
+			},
+		},
+	},
+	transonic_sword_p1 = {
+		display_name = "loc_weapon_family_transonic_sword_p1_m1",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/transonic_sword_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/transonic_sword_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/transonic_sword_p1_complete_mask",
+		marks = {
+			{
+				comparison_text = nil,
+				item = "content/items/weapons/player/melee/transonic_sword_p1_m1",
+				name = "transonic_sword_p1_m1",
+			},
+		},
+	},
+	transonic_sword_transonic_knife_p1 = {
+		display_name = "loc_weapon_family_transonic_sword_transonic_knife_p1_m1",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/transonic_sword_transonic_knife_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/transonic_sword_transonic_knife_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/transonic_sword_transonic_knife_p1_complete_mask",
+		marks = {
+			{
+				comparison_text = nil,
+				item = "content/items/weapons/player/melee/transonic_sword_transonic_knife_p1_m1",
+				name = "transonic_sword_transonic_knife_p1_m1",
+			},
+		},
+	},
+	arc_rifle_p1 = {
+		display_name = "loc_weapon_family_arc_rifle_p1_m1",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/arc_rifle_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/arc_rifle_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/arc_rifle_p1_complete_mask",
+		marks = {
+			{
+				comparison_text = nil,
+				item = "content/items/weapons/player/ranged/arc_rifle_p1_m1",
+				name = "arc_rifle_p1_m1",
 			},
 		},
 	},
@@ -750,6 +841,19 @@ local ui_weapon_patterns_settings = {
 				comparison_text = nil,
 				item = "content/items/weapons/player/ranged/forcestaff_p4_m1",
 				name = "forcestaff_p4_m1",
+			},
+		},
+	},
+	galvanic_rifle_p1 = {
+		display_name = "loc_weapon_family_galvanic_rifle_p1_m1",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/galvanic_rifle_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/galvanic_rifle_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/galvanic_rifle_p1_complete_mask",
+		marks = {
+			{
+				comparison_text = nil,
+				item = "content/items/weapons/player/ranged/galvanic_rifle_p1_m1",
+				name = "galvanic_rifle_p1_m1",
 			},
 		},
 	},
@@ -970,6 +1074,19 @@ local ui_weapon_patterns_settings = {
 			},
 		},
 	},
+	phosphor_pistol_p1 = {
+		display_name = "loc_weapon_family_phosphor_pistol_p1_m1",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/phosphor_pistol_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/phosphor_pistol_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/phosphor_pistol_p1_complete_mask",
+		marks = {
+			{
+				comparison_text = nil,
+				item = "content/items/weapons/player/ranged/phosphor_pistol_p1_m1",
+				name = "phosphor_pistol_p1_m1",
+			},
+		},
+	},
 	plasmagun_p1 = {
 		display_name = "loc_weapon_family_plasmagun_p1_m1",
 		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/plasmagun_p1_m1",
@@ -980,6 +1097,11 @@ local ui_weapon_patterns_settings = {
 				comparison_text = nil,
 				item = "content/items/weapons/player/ranged/plasmagun_p1_m1",
 				name = "plasmagun_p1_m1",
+			},
+			{
+				comparison_text = nil,
+				item = "content/items/weapons/player/ranged/plasmagun_p1_m2",
+				name = "plasmagun_p1_m2",
 			},
 		},
 	},

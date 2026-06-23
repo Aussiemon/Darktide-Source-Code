@@ -143,7 +143,7 @@ damage_templates.ogryn_powermaul_light_smiter = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.ogryn_power_maul,
+	wounds_template = WoundsTemplates.blunt,
 	stagger_duration_modifier = {
 		0.1,
 		2.5,
@@ -282,7 +282,7 @@ overrides.ogryn_powermaul_light_smiter_active = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.ogryn_power_maul_activated,
+			WoundsTemplates.shock_blunt,
 		},
 		{
 			"cleave_distribution",
@@ -302,6 +302,10 @@ overrides.ogryn_powermaul_light_smiter_active = {
 			"weapon_special",
 			true,
 		},
+		{
+			"shield_breaker",
+			true,
+		},
 	},
 }
 damage_templates.ogryn_powermaul_light_linesman = {
@@ -313,7 +317,7 @@ damage_templates.ogryn_powermaul_light_linesman = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.ogryn_power_maul,
+	wounds_template = WoundsTemplates.blunt,
 	stagger_duration_modifier = {
 		0.1,
 		0.5,
@@ -483,7 +487,7 @@ overrides.ogryn_powermaul_light_linesman_active = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.ogryn_power_maul_activated,
+			WoundsTemplates.shock_blunt,
 		},
 		{
 			"cleave_distribution",
@@ -507,6 +511,10 @@ overrides.ogryn_powermaul_light_linesman_active = {
 			"weapon_special",
 			true,
 		},
+		{
+			"shield_breaker",
+			true,
+		},
 	},
 }
 damage_templates.ogryn_powermaul_heavy_tank = {
@@ -518,7 +526,7 @@ damage_templates.ogryn_powermaul_heavy_tank = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.ogryn_power_maul,
+	wounds_template = WoundsTemplates.blunt,
 	stagger_duration_modifier = {
 		0.1,
 		0.5,
@@ -646,7 +654,7 @@ overrides.ogryn_powermaul_heavy_tank_active = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.ogryn_power_maul_activated,
+			WoundsTemplates.shock_blunt,
 		},
 		{
 			"cleave_distribution",
@@ -668,6 +676,10 @@ overrides.ogryn_powermaul_heavy_tank_active = {
 		},
 		{
 			"weapon_special",
+			true,
+		},
+		{
+			"shield_breaker",
 			true,
 		},
 	},
@@ -806,6 +818,10 @@ overrides.ogryn_powermaul_heavy_smiter_active = {
 		},
 		{
 			"weapon_special",
+			true,
+		},
+		{
+			"shield_breaker",
 			true,
 		},
 	},
@@ -978,7 +994,7 @@ damage_templates.ogryn_powermaul_light_tank = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.default,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.ogryn_power_maul,
+	wounds_template = WoundsTemplates.blunt,
 	stagger_duration_modifier = {
 		0.1,
 		0.5,
@@ -1132,7 +1148,7 @@ damage_templates.powermaul_2h_light_tank = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.default,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.ogryn_power_maul,
+	wounds_template = WoundsTemplates.blunt,
 	stagger_duration_modifier = {
 		0.1,
 		0.5,
@@ -1273,7 +1289,7 @@ overrides.powermaul_2h_light_pushfollow_active = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.ogryn_power_maul_activated,
+			WoundsTemplates.shock_blunt,
 		},
 		{
 			"cleave_distribution",
@@ -1291,6 +1307,10 @@ overrides.powermaul_2h_light_pushfollow_active = {
 		},
 		{
 			"weapon_special",
+			true,
+		},
+		{
+			"shield_breaker",
 			true,
 		},
 	},
@@ -1339,7 +1359,7 @@ overrides.powermaul_2h_light_tank_active = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.ogryn_power_maul_activated,
+			WoundsTemplates.shock_blunt,
 		},
 		{
 			"cleave_distribution",
@@ -1359,6 +1379,10 @@ overrides.powermaul_2h_light_tank_active = {
 			"weapon_special",
 			true,
 		},
+		{
+			"shield_breaker",
+			true,
+		},
 	},
 }
 damage_templates.powermaul_2h_heavy_tank = {
@@ -1370,7 +1394,7 @@ damage_templates.powermaul_2h_heavy_tank = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.ogryn_power_maul,
+	wounds_template = WoundsTemplates.blunt,
 	stagger_duration_modifier = {
 		0.1,
 		0.5,
@@ -1497,7 +1521,7 @@ overrides.powermaul_2h_heavy_tank_active = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.ogryn_power_maul_activated,
+			WoundsTemplates.shock_blunt,
 		},
 		{
 			"cleave_distribution",
@@ -1517,6 +1541,10 @@ overrides.powermaul_2h_heavy_tank_active = {
 			"weapon_special",
 			true,
 		},
+		{
+			"shield_breaker",
+			true,
+		},
 	},
 }
 damage_templates.powermaul_2h_light_smiter = {
@@ -1528,7 +1556,7 @@ damage_templates.powermaul_2h_light_smiter = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.crushing,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.ogryn_power_maul,
+	wounds_template = WoundsTemplates.blunt,
 	stagger_duration_modifier = {
 		0.1,
 		0.5,
@@ -1639,6 +1667,10 @@ overrides.powermaul_2h_light_smiter_active = {
 			"weapon_special",
 			true,
 		},
+		{
+			"shield_breaker",
+			true,
+		},
 	},
 }
 overrides.powermaul_2h_heavy_smiter = {
@@ -1740,7 +1772,7 @@ overrides.powermaul_2h_heavy_smiter_active = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.ogryn_power_maul_activated,
+			WoundsTemplates.shock_blunt,
 		},
 		{
 			"shield_override_stagger_strength",
@@ -1754,6 +1786,10 @@ overrides.powermaul_2h_heavy_smiter_active = {
 		},
 		{
 			"weapon_special",
+			true,
+		},
+		{
+			"shield_breaker",
 			true,
 		},
 	},

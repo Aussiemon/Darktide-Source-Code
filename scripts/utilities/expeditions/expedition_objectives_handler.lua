@@ -104,14 +104,17 @@ ExpeditionObjectivesHandler.update = function (self, dt, t)
 
 				if tags then
 					local radius, margin = self:_get_first_available_radius_by_tags(tags)
-					local flattened_player_position = Vector3(player_position.x, player_position.y, 0)
-					local flattened_level_position = Vector3(position.x, position.y, 0)
-					local distance = Vector3.distance(flattened_level_position, flattened_player_position)
 
-					if not objective:use_hud() and distance < radius then
-						objective:set_use_ui(true)
-					elseif objective:use_hud() and distance > radius + margin then
-						objective:set_use_ui(false)
+					if radius and margin then
+						local flattened_player_position = Vector3(player_position.x, player_position.y, 0)
+						local flattened_level_position = Vector3(position.x, position.y, 0)
+						local distance = Vector3.distance(flattened_level_position, flattened_player_position)
+
+						if not objective:use_hud() and distance < radius then
+							objective:set_use_ui(true)
+						elseif objective:use_hud() and distance > radius + margin then
+							objective:set_use_ui(false)
+						end
 					end
 				end
 			end
@@ -134,7 +137,7 @@ end
 
 ExpeditionObjectivesHandler._get_first_available_radius_by_tags = function (self, tags)
 	for _, tag in ipairs(tags) do
-		local radius, margin = RADIUS_BY_LEVEL_TAG[tag], MARGIN_BY_LEVEL_TAG[tag]
+		local radius, margin = RADIUS_BY_LEVEL_TAG[tag], MARGIN_BY_LEVEL_TAG[tag] or 10
 
 		if radius then
 			return radius, margin

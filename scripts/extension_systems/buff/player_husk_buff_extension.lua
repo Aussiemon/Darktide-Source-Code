@@ -5,7 +5,7 @@ local PlayerHuskBuffExtension = class("PlayerHuskBuffExtension")
 local RPCS = {
 	"rpc_add_buff",
 	"rpc_remove_buff",
-	"rpc_buff_proc_set_active_time",
+	"rpc_remove_buff_stacks",
 	"rpc_buff_set_start_time",
 }
 local EMPTY_TABLE = {}
@@ -69,7 +69,11 @@ PlayerHuskBuffExtension.rpc_remove_buff = function (self, channel_id, game_objec
 	return
 end
 
-PlayerHuskBuffExtension.rpc_buff_proc_set_active_time = function (self, channel_id, game_object_id, server_index, activation_time)
+PlayerHuskBuffExtension.rpc_remove_buff_stacks = function (self, channel_id, game_object_id)
+	return
+end
+
+PlayerHuskBuffExtension.rpc_buff_batched_proc_set_active_time = function (self, channel_id, game_object_id, server_index_array, activation_frame)
 	return
 end
 
@@ -115,6 +119,10 @@ end
 
 PlayerHuskBuffExtension.remove_externally_controlled_buff = function (self)
 	ferror("[PlayerHuskBuffExtension] remove_externally_controlled_buff can only be called on server!")
+end
+
+PlayerHuskBuffExtension.remove_externally_controlled_buff_stacks = function (self)
+	ferror("[PlayerHuskBuffExtension] remove_externally_controlled_buff_stacks can only be called on server!")
 end
 
 PlayerHuskBuffExtension.request_proc_event_param_table = function (self)

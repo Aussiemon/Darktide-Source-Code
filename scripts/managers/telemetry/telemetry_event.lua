@@ -10,6 +10,7 @@ TelemetryEvent.init = function (self, source, subject, type, session)
 		subject = subject,
 		type = type,
 		session = session,
+		id = Application.guid(),
 	}
 end
 

@@ -120,9 +120,9 @@ minion_target_selection_weights.chaos_spawn = {
 }
 minion_target_selection_weights.chaos_poxwalker_bomber = {
 	disabled = -10,
-	distance_to_target = 2,
+	distance_to_target = 10,
 	max_distance = 50,
-	near_distance = 5,
+	near_distance = 15,
 	near_distance_bonus = 30,
 	occupied_slots = -0.1,
 }

@@ -51,6 +51,7 @@ table.merge(melee_base, base_template)
 local melee_shield = table.clone(melee_base)
 
 melee_shield.shield = {
+	is_alive = "boolean",
 	is_blocking = "boolean",
 }
 

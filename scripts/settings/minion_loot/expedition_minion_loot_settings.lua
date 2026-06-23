@@ -42,7 +42,7 @@ ExpeditionMinionLootSettings.chaos_poxwalker_bomber = {
 	method = "direct_drop",
 }
 ExpeditionMinionLootSettings.chaos_armored_hound = table.clone(ExpeditionMinionLootSettings.chaos_hound)
-ExpeditionMinionLootSettings.chaos_armored_mutator = table.clone(ExpeditionMinionLootSettings.chaos_hound)
+ExpeditionMinionLootSettings.chaos_hound_mutator = table.clone(ExpeditionMinionLootSettings.chaos_hound)
 ExpeditionMinionLootSettings.monster_inital_loot_amount_indexed_by_heat = {
 	0,
 	500,

@@ -11,8 +11,9 @@ HudElementSpectateFading.init = function (self, parent, draw_layer, start_scale)
 	self._player = parent:player()
 
 	local fade_render_settings = HudElementSpectateFadingSettings.render_settings
+	local no_world
 
-	self._view_transition_ui = ViewTransitionUI:new(fade_render_settings)
+	self._view_transition_ui = ViewTransitionUI:new(no_world, fade_render_settings)
 
 	self:_register_event("event_spectate_fade_in")
 	self:_register_event("event_spectate_fade_out")

@@ -58,9 +58,9 @@ LuggableSocketExtension._fetch_actor_size = function (self, unit, actor_name)
 	return mesh_id, box_half_extents
 end
 
-LuggableSocketExtension.update = function (self, unit, dt, t)
-	if self._is_server and self._is_temp_locked then
-		self:_check_temp_locked_socket(dt)
+LuggableSocketExtension.staggered_temp_locked_check = function (self, cumulative_dt)
+	if self._is_temp_locked then
+		self:_check_temp_locked_socket(cumulative_dt)
 	end
 end
 

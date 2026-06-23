@@ -33,6 +33,8 @@ PackageSynchronizerHost.init = function (self, network_delegate, hosted_synchron
 	self.NO_LOOKUP = 0
 	self._peer_id = Network.peer_id()
 	self._sync_states = {}
+	self._alias_version_generator = math.random(2147483647)
+	self._alias_version_counter = 1
 	self._syncs = {}
 	self._next_sync_change_id = 1
 	self._network_delegate = network_delegate
@@ -112,7 +114,7 @@ PackageSynchronizerHost._reevaluate_all_profile_packages = function (self)
 						alias_states[alias] = SYNC_STATES.not_synced
 					end
 
-					local alias_version = self:_increment_alias_version(peer_id, sync_peer_id, sync_local_player_id)
+					local alias_version = self:_update_alias_version(peer_id, sync_peer_id, sync_local_player_id)
 
 					RPC.rpc_set_alias_version(channel_id, sync_peer_id, sync_local_player_id, alias_version)
 				end
@@ -145,7 +147,7 @@ PackageSynchronizerHost._set_prioritization_template = function (self, template_
 				local player_sync_states = peer_data.player_states
 
 				for sync_local_player_id, _ in pairs(player_sync_states) do
-					local alias_version = self:_increment_alias_version(peer_id, sync_peer_id, sync_local_player_id)
+					local alias_version = self:_update_alias_version(peer_id, sync_peer_id, sync_local_player_id)
 
 					RPC.rpc_set_alias_version(channel_id, sync_peer_id, sync_local_player_id, alias_version)
 				end
@@ -261,7 +263,7 @@ PackageSynchronizerHost._player_profile_changed = function (self, sync_peer_id, 
 			alias_states[alias] = SYNC_STATES.not_synced
 		end
 
-		self:_increment_alias_version(peer_id, sync_peer_id, sync_local_player_id)
+		self:_update_alias_version(peer_id, sync_peer_id, sync_local_player_id)
 	end
 end
 
@@ -563,17 +565,21 @@ PackageSynchronizerHost._calculate_changed_talents = function (self, old_profile
 	end
 end
 
-PackageSynchronizerHost._increment_alias_version = function (self, peer_id, sync_peer_id, sync_local_player_id)
+PackageSynchronizerHost._update_alias_version = function (self, peer_id, sync_peer_id, sync_local_player_id)
 	local data = self._sync_states[peer_id]
 	local peer_data = data.peer_states[sync_peer_id]
 	local player_data = peer_data.player_states[sync_local_player_id]
-	local alias_version = player_data.alias_version
-	local new_alias_version = alias_version + 1
+	local old_alias_version = player_data.alias_version
 
-	if new_alias_version > 16 then
-		new_alias_version = 1
-	end
+	data.alias_versions[old_alias_version] = nil
 
+	local new_alias_version = Application.make_hash(self._alias_version_generator, self._alias_version_counter, peer_id, sync_peer_id, sync_local_player_id)
+
+	data.alias_versions[new_alias_version] = {
+		sync_peer_id = sync_peer_id,
+		sync_local_player_id = sync_local_player_id,
+	}
+	self._alias_version_counter = self._alias_version_counter + 1
 	player_data.alias_version = new_alias_version
 
 	return new_alias_version
@@ -1144,7 +1150,7 @@ PackageSynchronizerHost.add_peer = function (self, new_peer_id)
 
 		for local_player_id, _ in pairs(players) do
 			peer_states[new_peer_id].player_states[local_player_id] = {
-				alias_version = 1,
+				alias_version = "",
 				alias_states = table.clone(alias_states),
 			}
 		end
@@ -1157,7 +1163,7 @@ PackageSynchronizerHost.add_peer = function (self, new_peer_id)
 
 		for local_player_id, _ in pairs(player_states) do
 			new_peer_states[peer_id].player_states[local_player_id] = {
-				alias_version = 1,
+				alias_version = "",
 				alias_states = table.clone(alias_states),
 			}
 		end
@@ -1170,7 +1176,7 @@ PackageSynchronizerHost.add_peer = function (self, new_peer_id)
 	if players then
 		for local_player_id, _ in pairs(players) do
 			new_peer_states[new_peer_id].player_states[local_player_id] = {
-				alias_version = 1,
+				alias_version = "",
 				alias_states = table.clone(alias_states),
 			}
 		end
@@ -1181,6 +1187,7 @@ PackageSynchronizerHost.add_peer = function (self, new_peer_id)
 		enabled = false,
 		ready = false,
 		peer_states = new_peer_states,
+		alias_versions = {},
 	}
 
 	self._sync_states[new_peer_id] = data
@@ -1208,14 +1215,20 @@ PackageSynchronizerHost.add_bot = function (self, local_player_id)
 	local sync_states = self._sync_states
 	local peer_id = self._peer_id
 
-	for _, data in pairs(sync_states) do
+	for remote_peer_id, data in pairs(sync_states) do
 		local peer_data = data.peer_states[peer_id]
 		local player_states = peer_data.player_states
 
 		player_states[local_player_id] = {
-			alias_version = 1,
+			alias_version = "",
 			alias_states = table.clone(alias_states),
 		}
+
+		if data.ready and data.channel_id then
+			local alias_version = self:_update_alias_version(remote_peer_id, peer_id, local_player_id)
+
+			RPC.rpc_set_alias_version(data.channel_id, peer_id, local_player_id, alias_version)
+		end
 	end
 
 	self._hosted_synchronizer_client:add_bot(peer_id, local_player_id)
@@ -1277,12 +1290,18 @@ PackageSynchronizerHost.remove_peer = function (self, peer_id)
 	self._syncs[peer_id] = nil
 end
 
-PackageSynchronizerHost.alias_loading_complete = function (self, peer_id, loaded_peer_id, loaded_local_player_id, alias)
+PackageSynchronizerHost.alias_loading_complete = function (self, peer_id, loaded_peer_id, loaded_local_player_id)
 	local peer_states = self._sync_states[peer_id].peer_states
 	local player_states = peer_states[loaded_peer_id].player_states
 	local alias_states = player_states[loaded_local_player_id].alias_states
+	local prioritization_template = self._prioritization_template
+	local required_package_aliases = prioritization_template.required_package_aliases
 
-	alias_states[alias] = SYNC_STATES.synced
+	for i = 1, #required_package_aliases do
+		local alias = required_package_aliases[i]
+
+		alias_states[alias] = SYNC_STATES.synced
+	end
 end
 
 PackageSynchronizerHost.destroy = function (self)
@@ -1302,7 +1321,7 @@ PackageSynchronizerHost.destroy = function (self)
 end
 
 PackageSynchronizerHost.rpc_package_synchronizer_ready_peer = function (self, channel_id)
-	local peer_id = Managers.connection:channel_to_peer(channel_id)
+	local peer_id = Network.peer_id(channel_id)
 	local template_name = self._prioritization_template.name
 	local template_id = NetworkLookup.package_synchronization_template_names[template_name]
 
@@ -1310,24 +1329,41 @@ PackageSynchronizerHost.rpc_package_synchronizer_ready_peer = function (self, ch
 	self:ready_peer(peer_id)
 
 	local sync_states = self._sync_states
-	local data = sync_states[peer_id]
-	local peer_states = data.peer_states
 
-	for sync_peer_id, peer_data in pairs(peer_states) do
-		local player_sync_states = peer_data.player_states
+	for ready_peer_id, data in pairs(sync_states) do
+		if data.ready and ready_peer_id ~= self._peer_id then
+			local peer_states = data.peer_states
 
-		for sync_local_player_id, _ in pairs(player_sync_states) do
-			local alias_version = self:_increment_alias_version(peer_id, sync_peer_id, sync_local_player_id)
+			for sync_peer_id, peer_data in pairs(peer_states) do
+				local player_sync_states = peer_data.player_states
 
-			RPC.rpc_set_alias_version(channel_id, sync_peer_id, sync_local_player_id, alias_version)
+				for sync_local_player_id, _ in pairs(player_sync_states) do
+					if ready_peer_id == peer_id or sync_peer_id == peer_id then
+						local alias_version = self:_update_alias_version(ready_peer_id, sync_peer_id, sync_local_player_id)
+
+						RPC.rpc_set_alias_version(data.channel_id, sync_peer_id, sync_local_player_id, alias_version)
+					end
+				end
+			end
 		end
 	end
 end
 
-PackageSynchronizerHost.rpc_alias_loading_complete = function (self, channel_id, loaded_peer_id, loaded_local_player_id, alias_index, alias_version)
-	local peer_id = Managers.connection:channel_to_peer(channel_id)
+PackageSynchronizerHost.rpc_alias_loading_complete = function (self, channel_id, alias_version)
+	local peer_id = Network.peer_id(channel_id)
 	local sync_states = self._sync_states
 	local data = sync_states[peer_id]
+
+	if not data.alias_versions[alias_version] then
+		return
+	end
+
+	local alias_data = data.alias_versions[alias_version]
+	local loaded_peer_id = alias_data.sync_peer_id
+	local loaded_local_player_id = alias_data.sync_local_player_id
+
+	data.alias_versions[alias_version] = nil
+
 	local peer_states = data.peer_states
 	local other_peer_data = peer_states[loaded_peer_id]
 
@@ -1348,9 +1384,7 @@ PackageSynchronizerHost.rpc_alias_loading_complete = function (self, channel_id,
 		return
 	end
 
-	local alias = PlayerPackageAliases[alias_index]
-
-	self:alias_loading_complete(peer_id, loaded_peer_id, loaded_local_player_id, alias)
+	self:alias_loading_complete(peer_id, loaded_peer_id, loaded_local_player_id)
 end
 
 return PackageSynchronizerHost

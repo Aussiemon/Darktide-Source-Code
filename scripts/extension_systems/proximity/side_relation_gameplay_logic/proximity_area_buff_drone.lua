@@ -144,7 +144,7 @@ ProximityAreaBuffDrone._handle_end_of_lifetime_triggers = function (self)
 	local explosion_template = ExplosionTemplates.shock_mine_self_destruct
 	local explosion_position = shock_mine_position + Vector3.multiply(Vector3.up(), 0.05)
 
-	Explosion.create_explosion(self._world, self._physics_world, explosion_position, Vector3.up(), owner_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
+	Explosion.create_explosion(self._world, self._physics_world, explosion_position, Quaternion.identity(), owner_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
 end
 
 ProximityAreaBuffDrone.start_job = function (self, is_job)

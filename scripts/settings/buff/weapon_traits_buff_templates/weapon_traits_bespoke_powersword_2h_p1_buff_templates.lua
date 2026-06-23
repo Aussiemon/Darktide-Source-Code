@@ -228,7 +228,7 @@ templates.weapon_trait_bespoke_bespoke_powersword_2h_p1_block_activate_weapon_sp
 		local fx_extension = template_data.fx_extension
 		local external_properties = _external_properties
 		local include_client = true
-		local effect_alias = "vfx_weapon_special_start"
+		local effect_alias = "weapon_special_start"
 		local sound_alias = "sfx_special_activate"
 		local source_alias = "_special_active"
 		local item_slot_name = template_context.item_slot_name
@@ -410,7 +410,7 @@ templates.weapon_trait_bespoke_powersword_2h_p1_explosion_on_overheat_lockout = 
 		local unit = template_context.unit
 		local position = Unit.local_position(unit, 1) + Vector3.up()
 
-		Explosion.create_explosion(template_context.world, template_context.physics_world, position, Vector3.up(), template_context.unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
+		Explosion.create_explosion(template_context.world, template_context.physics_world, position, Quaternion.identity(), template_context.unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
 
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local inventory_slot_component = unit_data_extension:write_component(template_context.item_slot_name)

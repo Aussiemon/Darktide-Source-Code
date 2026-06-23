@@ -430,6 +430,10 @@ PenanceOverviewView._build_achievements_cache = function (self)
 		local category = achievement_config.category
 		local is_completed = Managers.achievements:achievement_completed(player, achievement_id)
 		local should_show = true
+		local flags = achievement_config.flags
+		local hide_missing = not is_completed and flags and flags.hide_missing
+
+		should_show = should_show and not hide_missing
 
 		if should_show then
 			local _achievements_by_category = achievements_by_category[category] or {}
@@ -1842,19 +1846,6 @@ PenanceOverviewView._remove_completed_favorites = function (self)
 	local account_data = Managers.save:account_data()
 	local favorite_achievements = table.shallow_copy_array(account_data.favorite_achievements or {})
 	local player = self:_player()
-
-	for i = 1, #favorite_achievements do
-		local achievement_id = favorite_achievements[i]
-		local achievement_definition = Managers.achievements:achievement_definition(achievement_id)
-		local hide_missing = achievement_definition.flags and achievement_definition.flags.hide_missing
-		local can_claim = self:_can_claim_achievement_by_id(achievement_id)
-		local is_complete = Managers.achievements:achievement_completed(player, achievement_id)
-		local should_remove = not achievement_definition or not can_claim and is_complete or hide_missing
-
-		if should_remove then
-			self:request_achievement_favorite_remove(achievement_id)
-		end
-	end
 end
 
 PenanceOverviewView._on_wintrack_claim_success = function (self, index, reward, data)
@@ -3255,14 +3246,13 @@ PenanceOverviewView.cb_on_inspect_pressed = function (self)
 
 		local archetype = player_profile.archetype
 		local breed_name = archetype.breed
-		local breed = Breeds[breed_name]
-		local state_machine = breed.inventory_state_machine
+		local inventory_state_machine = archetype.inventory_state_machine
 		local animation_event = visual_item.inventory_animation_event or "inventory_idle_default"
 
 		context = {
 			disable_zoom = true,
 			profile = player_profile,
-			state_machine = state_machine,
+			state_machine = inventory_state_machine,
 			animation_event = animation_event,
 			wield_slot = slot_name,
 			preview_with_gear = is_item_supported_on_played_character,

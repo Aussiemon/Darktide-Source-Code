@@ -20,6 +20,10 @@ return {
 			children = {
 				"node_d774a7a8-87a2-4b0e-973e-5f735b67109f",
 			},
+			connector_offset = {
+				0,
+				42,
+			},
 			parents = {
 				"node_960e594b-c6d9-4bac-aa73-31bfe2e2691f",
 			},
@@ -41,6 +45,10 @@ return {
 			children = {
 				"node_b2a0147e-0949-4501-8650-2b1ba64377a9",
 				"node_977720e3-b06a-4dc7-b27c-497af87a0812",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_960e594b-c6d9-4bac-aa73-31bfe2e2691f",
@@ -65,6 +73,10 @@ return {
 				"node_11c062d4-c4be-4e96-b5f2-991bbedf2de3",
 				"node_2c613026-5cb8-44d3-aff8-29114f2f10b6",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_960e594b-c6d9-4bac-aa73-31bfe2e2691f",
 				"node_2c613026-5cb8-44d3-aff8-29114f2f10b6",
@@ -87,6 +99,10 @@ return {
 			children = {
 				"node_977720e3-b06a-4dc7-b27c-497af87a0812",
 				"node_d774a7a8-87a2-4b0e-973e-5f735b67109f",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_960e594b-c6d9-4bac-aa73-31bfe2e2691f",
@@ -111,6 +127,10 @@ return {
 				"node_2c613026-5cb8-44d3-aff8-29114f2f10b6",
 				"node_d774a7a8-87a2-4b0e-973e-5f735b67109f",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_960e594b-c6d9-4bac-aa73-31bfe2e2691f",
 			},
@@ -132,6 +152,10 @@ return {
 			children = {
 				"node_8cfdec14-fd7f-49eb-94b4-40cb4a9016a1",
 				"node_1fffd79f-0e4f-4b88-b35a-8a37fe2939ed",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_546ca755-3d86-41f5-bfc3-01a388f9471a",
@@ -158,6 +182,10 @@ return {
 				"node_8cfdec14-fd7f-49eb-94b4-40cb4a9016a1",
 				"node_90db015f-623c-44a1-b981-fce3bee1abb5",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_61e47549-aaca-4298-977e-ece3e68e2372",
 				"node_2c613026-5cb8-44d3-aff8-29114f2f10b6",
@@ -182,6 +210,10 @@ return {
 				"node_8cfdec14-fd7f-49eb-94b4-40cb4a9016a1",
 				"node_2c613026-5cb8-44d3-aff8-29114f2f10b6",
 				"node_977720e3-b06a-4dc7-b27c-497af87a0812",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_a8bc4def-415e-4b1b-9b1d-6f2783c5323d",
@@ -213,6 +245,10 @@ return {
 				"node_b2a0147e-0949-4501-8650-2b1ba64377a9",
 				"node_1fffd79f-0e4f-4b88-b35a-8a37fe2939ed",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_8f48a9f7-b2ed-4aa2-b071-73ebf35d3528",
 				"node_d774a7a8-87a2-4b0e-973e-5f735b67109f",
@@ -240,6 +276,10 @@ return {
 				"node_3d4045a2-3883-4d78-9bf7-ac097351162e",
 				"node_763f2b5b-964d-42a3-b4d7-4fca89c0e311",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_8cfdec14-fd7f-49eb-94b4-40cb4a9016a1",
 				"node_11c062d4-c4be-4e96-b5f2-991bbedf2de3",
@@ -262,6 +302,10 @@ return {
 			y = 890.0000098453718,
 			children = {
 				"node_3d4045a2-3883-4d78-9bf7-ac097351162e",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_8cfdec14-fd7f-49eb-94b4-40cb4a9016a1",
@@ -287,6 +331,10 @@ return {
 				"node_3d4045a2-3883-4d78-9bf7-ac097351162e",
 				"node_5c6828fd-4ac1-427e-bd39-793677a16ccc",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_8f48a9f7-b2ed-4aa2-b071-73ebf35d3528",
 				"node_8cfdec14-fd7f-49eb-94b4-40cb4a9016a1",
@@ -310,6 +358,10 @@ return {
 			y = 1310,
 			children = {
 				"node_9e73b9a9-bd27-46c2-b75d-1972b411c6b8",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_a43d9e96-9651-4ff6-8627-49dbd87e668b",
@@ -335,6 +387,10 @@ return {
 				"node_9e73b9a9-bd27-46c2-b75d-1972b411c6b8",
 				"node_75d309a1-bc24-4856-bf61-814272a077e2",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_a43d9e96-9651-4ff6-8627-49dbd87e668b",
 			},
@@ -356,6 +412,10 @@ return {
 			y = 1310,
 			children = {
 				"node_75d309a1-bc24-4856-bf61-814272a077e2",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_c8272e59-a92d-4d10-b768-fc7539d3886f",
@@ -380,6 +440,10 @@ return {
 			children = {
 				"node_c8272e59-a92d-4d10-b768-fc7539d3886f",
 				"node_a43d9e96-9651-4ff6-8627-49dbd87e668b",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_3d4045a2-3883-4d78-9bf7-ac097351162e",
@@ -406,6 +470,10 @@ return {
 				"node_f6f53560-cd00-4602-9903-4961484ade18",
 				"node_1e885682-6bee-46c1-9d23-21332ffd3b51",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_3d4045a2-3883-4d78-9bf7-ac097351162e",
 				"node_90db015f-623c-44a1-b981-fce3bee1abb5",
@@ -429,6 +497,10 @@ return {
 				"node_c8272e59-a92d-4d10-b768-fc7539d3886f",
 				"node_3d4045a2-3883-4d78-9bf7-ac097351162e",
 				"node_81fd0da4-87be-4750-a5b7-c51bb4eb9fef",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_3d4045a2-3883-4d78-9bf7-ac097351162e",
@@ -456,6 +528,10 @@ return {
 				"node_5c6828fd-4ac1-427e-bd39-793677a16ccc",
 				"node_a43d9e96-9651-4ff6-8627-49dbd87e668b",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_763f2b5b-964d-42a3-b4d7-4fca89c0e311",
 				"node_5c6828fd-4ac1-427e-bd39-793677a16ccc",
@@ -482,6 +558,10 @@ return {
 				"node_52c9240d-6228-4b32-badf-76f17ef9b6da",
 				"node_fac6179f-a86a-489f-bb1a-b9382fd6630a",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_089c4280-425c-40cd-8ec6-0aa812fe11ff",
 				"node_52c9240d-6228-4b32-badf-76f17ef9b6da",
@@ -507,6 +587,10 @@ return {
 				"node_276ffd37-efb4-4ced-b119-38aa2714359b",
 				"node_28d7a3c1-58af-42f2-99c4-70b734175557",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_9e73b9a9-bd27-46c2-b75d-1972b411c6b8",
 			},
@@ -531,6 +615,10 @@ return {
 				"node_d20bf7ae-9dcb-4dfe-b765-2c8db80bf91f",
 				"node_52c9240d-6228-4b32-badf-76f17ef9b6da",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_089c4280-425c-40cd-8ec6-0aa812fe11ff",
 			},
@@ -552,6 +640,10 @@ return {
 			children = {
 				"node_8899507b-9a1c-41c4-8107-a3e559dc2172",
 				"node_a43d9e96-9651-4ff6-8627-49dbd87e668b",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_763f2b5b-964d-42a3-b4d7-4fca89c0e311",
@@ -575,6 +667,10 @@ return {
 			y = 2105,
 			children = {
 				"node_004740df-29af-45f1-af0d-12d2c815a541",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_004740df-29af-45f1-af0d-12d2c815a541",
@@ -602,6 +698,10 @@ return {
 				"node_084b7585-f08d-497a-939b-848ffcb58960",
 				"node_43d2abfa-c6f8-4ab7-8469-148b526040c2",
 				"node_4943dd3d-899a-44ad-a876-da513a6f3b01",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_ca3fd6b8-f002-4e51-875d-a234a153d071",
@@ -631,6 +731,10 @@ return {
 				"node_3d505fe8-4783-4d64-9bc8-df4a39546474",
 				"node_fac6179f-a86a-489f-bb1a-b9382fd6630a",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_3d505fe8-4783-4d64-9bc8-df4a39546474",
 				"node_21d23a99-f022-4bb4-831a-e2c1da111e98",
@@ -651,14 +755,18 @@ return {
 			max_points = 1,
 			type = "start",
 			widget_name = "node_960e594b-c6d9-4bac-aa73-31bfe2e2691f",
-			x = 1090,
-			y = 450,
+			x = 1035,
+			y = 353,
 			children = {
 				"node_a8bc4def-415e-4b1b-9b1d-6f2783c5323d",
 				"node_61e47549-aaca-4298-977e-ece3e68e2372",
 				"node_546ca755-3d86-41f5-bfc3-01a388f9471a",
 				"node_8d67a080-fc70-4749-9f1e-75b1d158f0f5",
 				"node_46a6b70d-17b4-4088-af93-c3af18887046",
+			},
+			connector_offset = {
+				0,
+				42,
 			},
 			parents = {},
 			requirements = {
@@ -683,6 +791,10 @@ return {
 				"node_9abd28ea-b786-4e90-a185-4afabef584ec",
 				"node_1eebfc9e-efbd-4df8-9562-3097cb46af1f",
 				"node_c7a8a5c5-60d1-4c71-bc38-79121befb0c8",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_75d309a1-bc24-4856-bf61-814272a077e2",
@@ -709,6 +821,10 @@ return {
 				"node_0625b695-b695-49f5-9050-551fbd7e9699",
 				"node_32f5f38d-828f-4993-8fcf-ebd1f1f30199",
 				"node_8efd6143-4d2d-4bd8-a40d-229263fccfd1",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_9e73b9a9-bd27-46c2-b75d-1972b411c6b8",
@@ -737,6 +853,10 @@ return {
 				"node_821e29e2-e6df-445f-817d-2f2d5c79c617",
 				"node_1e885682-6bee-46c1-9d23-21332ffd3b51",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_f6f53560-cd00-4602-9903-4961484ade18",
 				"node_81fd0da4-87be-4750-a5b7-c51bb4eb9fef",
@@ -762,6 +882,10 @@ return {
 			children = {
 				"node_821e29e2-e6df-445f-817d-2f2d5c79c617",
 				"node_a43d9e96-9651-4ff6-8627-49dbd87e668b",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_5c6828fd-4ac1-427e-bd39-793677a16ccc",
@@ -789,6 +913,10 @@ return {
 				"node_ba99146a-4a89-452f-8b02-7d6d871b30dd",
 				"node_ba662782-8e5c-4a86-8927-3127d7c3735c",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_4fa187c3-c910-4e93-b982-cc2e68d2515b",
 				"node_6f1aae37-5d5d-4aa5-9028-60ef0c7afa29",
@@ -815,6 +943,10 @@ return {
 				"node_596f2c9b-2980-4b96-8c2a-521611e83a65",
 				"node_9fd091a0-462c-42cb-917a-ba7755c9fc94",
 				"node_f8ac2c83-f6f8-40f2-958d-565a359f0607",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_a24b4ec0-aec0-45a1-b746-05dbd671e2e2",
@@ -844,6 +976,10 @@ return {
 				"node_82e26378-1ad7-41c9-bd62-db6fee2779f7",
 				"node_38569366-6b83-4815-a1e7-ca4f41f4a366",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_6f1aae37-5d5d-4aa5-9028-60ef0c7afa29",
 				"node_e341cdcf-7254-4ac0-9f37-cb056b00d14d",
@@ -868,6 +1004,10 @@ return {
 				"node_d774a7a8-87a2-4b0e-973e-5f735b67109f",
 				"node_546ca755-3d86-41f5-bfc3-01a388f9471a",
 				"node_8cfdec14-fd7f-49eb-94b4-40cb4a9016a1",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_d774a7a8-87a2-4b0e-973e-5f735b67109f",
@@ -895,6 +1035,10 @@ return {
 				"node_d774a7a8-87a2-4b0e-973e-5f735b67109f",
 				"node_61e47549-aaca-4298-977e-ece3e68e2372",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_d774a7a8-87a2-4b0e-973e-5f735b67109f",
 				"node_8d67a080-fc70-4749-9f1e-75b1d158f0f5",
@@ -920,6 +1064,10 @@ return {
 				"node_ca3fd6b8-f002-4e51-875d-a234a153d071",
 				"node_32ac314d-2d6e-421b-8ced-27ce00dc62e5",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_9fd091a0-462c-42cb-917a-ba7755c9fc94",
 				"node_f8ac2c83-f6f8-40f2-958d-565a359f0607",
@@ -944,6 +1092,10 @@ return {
 			children = {
 				"node_004740df-29af-45f1-af0d-12d2c815a541",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_52c9240d-6228-4b32-badf-76f17ef9b6da",
 				"node_ba99146a-4a89-452f-8b02-7d6d871b30dd",
@@ -967,6 +1119,10 @@ return {
 			children = {
 				"node_32ac314d-2d6e-421b-8ced-27ce00dc62e5",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_6f1aae37-5d5d-4aa5-9028-60ef0c7afa29",
 			},
@@ -988,6 +1144,10 @@ return {
 			children = {
 				"node_887dd932-ea4e-42cb-b294-64f30771d7e0",
 				"node_c194e0f2-7b23-4667-bca2-57f4bdfa03cc",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_596f2c9b-2980-4b96-8c2a-521611e83a65",
@@ -1011,6 +1171,10 @@ return {
 			y = 2104.9999954385075,
 			children = {
 				"node_3c497305-70ec-4d49-a1e8-2bc3fdc2504c",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_3c497305-70ec-4d49-a1e8-2bc3fdc2504c",
@@ -1036,6 +1200,10 @@ return {
 				"node_b2bbbec7-1551-42ea-9d9b-9771eda40654",
 				"node_088ae839-61d1-45c5-9656-582439b3b638",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_8e4d87c9-49d0-4bee-a732-7ddeb3949022",
 				"node_b2bbbec7-1551-42ea-9d9b-9771eda40654",
@@ -1059,6 +1227,10 @@ return {
 				"node_3c497305-70ec-4d49-a1e8-2bc3fdc2504c",
 				"node_b2bbbec7-1551-42ea-9d9b-9771eda40654",
 				"node_d45a4b7d-86c8-4c79-aa87-a8294787f0ad",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_82e26378-1ad7-41c9-bd62-db6fee2779f7",
@@ -1084,6 +1256,10 @@ return {
 				"node_735140ff-109a-4bc2-a2b9-761614c238cc",
 				"node_d45a4b7d-86c8-4c79-aa87-a8294787f0ad",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_8e4d87c9-49d0-4bee-a732-7ddeb3949022",
 				"node_d45a4b7d-86c8-4c79-aa87-a8294787f0ad",
@@ -1107,6 +1283,10 @@ return {
 				"node_d45a4b7d-86c8-4c79-aa87-a8294787f0ad",
 				"node_50641b61-dfb0-4865-87e7-30e4dd71acdc",
 				"node_b2bbbec7-1551-42ea-9d9b-9771eda40654",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_8e4d87c9-49d0-4bee-a732-7ddeb3949022",
@@ -1132,6 +1312,10 @@ return {
 				"node_38569366-6b83-4815-a1e7-ca4f41f4a366",
 				"node_735140ff-109a-4bc2-a2b9-761614c238cc",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_82e26378-1ad7-41c9-bd62-db6fee2779f7",
 				"node_38569366-6b83-4815-a1e7-ca4f41f4a366",
@@ -1155,6 +1339,10 @@ return {
 			children = {
 				"node_3b9ce6b2-13e7-42f3-a450-60c2d72cbe0e",
 				"node_3c497305-70ec-4d49-a1e8-2bc3fdc2504c",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_3c497305-70ec-4d49-a1e8-2bc3fdc2504c",
@@ -1183,6 +1371,10 @@ return {
 				"node_45324e02-771e-4f7d-8743-d306bcf106d2",
 				"node_50641b61-dfb0-4865-87e7-30e4dd71acdc",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_45324e02-771e-4f7d-8743-d306bcf106d2",
 				"node_82e26378-1ad7-41c9-bd62-db6fee2779f7",
@@ -1209,6 +1401,10 @@ return {
 				"node_2459c212-b00a-43ce-a3b6-ad55e67605ed",
 				"node_088ae839-61d1-45c5-9656-582439b3b638",
 				"node_735140ff-109a-4bc2-a2b9-761614c238cc",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_735140ff-109a-4bc2-a2b9-761614c238cc",
@@ -1237,6 +1433,10 @@ return {
 				"node_21d23a99-f022-4bb4-831a-e2c1da111e98",
 				"node_3d505fe8-4783-4d64-9bc8-df4a39546474",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_089c4280-425c-40cd-8ec6-0aa812fe11ff",
 				"node_21d23a99-f022-4bb4-831a-e2c1da111e98",
@@ -1259,6 +1459,10 @@ return {
 			children = {
 				"node_c194e0f2-7b23-4667-bca2-57f4bdfa03cc",
 				"node_32ac314d-2d6e-421b-8ced-27ce00dc62e5",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_6f1aae37-5d5d-4aa5-9028-60ef0c7afa29",
@@ -1283,6 +1487,10 @@ return {
 				"node_21d23a99-f022-4bb4-831a-e2c1da111e98",
 				"node_52c9240d-6228-4b32-badf-76f17ef9b6da",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_21d23a99-f022-4bb4-831a-e2c1da111e98",
 				"node_52c9240d-6228-4b32-badf-76f17ef9b6da",
@@ -1305,6 +1513,10 @@ return {
 			y = 1865,
 			children = {
 				"node_ca3fd6b8-f002-4e51-875d-a234a153d071",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_6f1aae37-5d5d-4aa5-9028-60ef0c7afa29",
@@ -1330,6 +1542,10 @@ return {
 				"node_ba99146a-4a89-452f-8b02-7d6d871b30dd",
 				"node_fac6179f-a86a-489f-bb1a-b9382fd6630a",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_d20bf7ae-9dcb-4dfe-b765-2c8db80bf91f",
 				"node_ba99146a-4a89-452f-8b02-7d6d871b30dd",
@@ -1351,6 +1567,10 @@ return {
 			x = 1355.0000000000002,
 			y = 2195,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_3c497305-70ec-4d49-a1e8-2bc3fdc2504c",
 			},
@@ -1370,6 +1590,10 @@ return {
 			x = 1445.0000000000002,
 			y = 2225,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_3c497305-70ec-4d49-a1e8-2bc3fdc2504c",
 			},
@@ -1389,6 +1613,10 @@ return {
 			x = 1535.0000000000002,
 			y = 2195,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_3c497305-70ec-4d49-a1e8-2bc3fdc2504c",
 			},
@@ -1408,6 +1636,10 @@ return {
 			x = 575.0000000000002,
 			y = 2195,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_004740df-29af-45f1-af0d-12d2c815a541",
 			},
@@ -1427,6 +1659,10 @@ return {
 			x = 755.0000000000002,
 			y = 2195,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_004740df-29af-45f1-af0d-12d2c815a541",
 			},
@@ -1446,6 +1682,10 @@ return {
 			x = 665.0000000000002,
 			y = 2225,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_004740df-29af-45f1-af0d-12d2c815a541",
 			},
@@ -1468,6 +1708,10 @@ return {
 				"node_4fa187c3-c910-4e93-b982-cc2e68d2515b",
 				"node_a24b4ec0-aec0-45a1-b746-05dbd671e2e2",
 				"node_75d309a1-bc24-4856-bf61-814272a077e2",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_8899507b-9a1c-41c4-8107-a3e559dc2172",
@@ -1494,6 +1738,10 @@ return {
 				"node_a24b4ec0-aec0-45a1-b746-05dbd671e2e2",
 				"node_9e73b9a9-bd27-46c2-b75d-1972b411c6b8",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_821e29e2-e6df-445f-817d-2f2d5c79c617",
 				"node_5717014d-0da6-4d49-b43b-3c9233e6fb37",
@@ -1518,6 +1766,10 @@ return {
 				"node_ca3fd6b8-f002-4e51-875d-a234a153d071",
 				"node_c194e0f2-7b23-4667-bca2-57f4bdfa03cc",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_6f1aae37-5d5d-4aa5-9028-60ef0c7afa29",
 			},
@@ -1537,6 +1789,10 @@ return {
 			x = 965.0000000000002,
 			y = 2105,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_887dd932-ea4e-42cb-b294-64f30771d7e0",
 			},
@@ -1556,6 +1812,10 @@ return {
 			x = 964.9999834048057,
 			y = 2194.9999954385075,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_887dd932-ea4e-42cb-b294-64f30771d7e0",
 			},
@@ -1575,6 +1835,10 @@ return {
 			x = 1054.9999834048058,
 			y = 2224.9999954385075,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_887dd932-ea4e-42cb-b294-64f30771d7e0",
 			},
@@ -1594,6 +1858,10 @@ return {
 			x = 1145.0000000000002,
 			y = 2195,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_887dd932-ea4e-42cb-b294-64f30771d7e0",
 			},
@@ -1613,6 +1881,10 @@ return {
 			x = 1145.0000000000002,
 			y = 2105,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_887dd932-ea4e-42cb-b294-64f30771d7e0",
 			},
@@ -1632,6 +1904,10 @@ return {
 			x = 1205.0000000000002,
 			y = 1595,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_a24b4ec0-aec0-45a1-b746-05dbd671e2e2",
 			},
@@ -1651,6 +1927,10 @@ return {
 			x = 905.0000000000002,
 			y = 1595,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_a24b4ec0-aec0-45a1-b746-05dbd671e2e2",
 			},
@@ -1670,6 +1950,10 @@ return {
 			x = 1145.0000000000002,
 			y = 1655,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_a24b4ec0-aec0-45a1-b746-05dbd671e2e2",
 			},
@@ -1689,6 +1973,10 @@ return {
 			x = 965.0000000000002,
 			y = 1655,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_a24b4ec0-aec0-45a1-b746-05dbd671e2e2",
 			},
@@ -1713,6 +2001,10 @@ return {
 				"node_d20bf7ae-9dcb-4dfe-b765-2c8db80bf91f",
 				"node_42f02425-b59e-44b5-8eac-c4ae72c9bc1a",
 			},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_42f02425-b59e-44b5-8eac-c4ae72c9bc1a",
 				"node_d20bf7ae-9dcb-4dfe-b765-2c8db80bf91f",
@@ -1734,6 +2026,10 @@ return {
 			x = 575.0000000000002,
 			y = 1655,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_4fa187c3-c910-4e93-b982-cc2e68d2515b",
 			},
@@ -1753,6 +2049,10 @@ return {
 			x = 515.0000000000002,
 			y = 1595,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_4fa187c3-c910-4e93-b982-cc2e68d2515b",
 			},
@@ -1772,6 +2072,10 @@ return {
 			x = 1535.0000000000002,
 			y = 1685,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_e341cdcf-7254-4ac0-9f37-cb056b00d14d",
 			},
@@ -1791,6 +2095,10 @@ return {
 			x = 1685.0000000000002,
 			y = 1595,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_e341cdcf-7254-4ac0-9f37-cb056b00d14d",
 			},
@@ -1810,6 +2118,10 @@ return {
 			x = 1625.0000000000002,
 			y = 1655,
 			children = {},
+			connector_offset = {
+				0,
+				0,
+			},
 			parents = {
 				"node_e341cdcf-7254-4ac0-9f37-cb056b00d14d",
 			},
@@ -1831,6 +2143,10 @@ return {
 			children = {
 				"node_a43d9e96-9651-4ff6-8627-49dbd87e668b",
 				"node_1e885682-6bee-46c1-9d23-21332ffd3b51",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_3d4045a2-3883-4d78-9bf7-ac097351162e",
@@ -1855,6 +2171,10 @@ return {
 			children = {
 				"node_887dd932-ea4e-42cb-b294-64f30771d7e0",
 				"node_c194e0f2-7b23-4667-bca2-57f4bdfa03cc",
+			},
+			connector_offset = {
+				0,
+				0,
 			},
 			parents = {
 				"node_43d46f72-28f5-4330-8a30-6fb2f1bc94db",

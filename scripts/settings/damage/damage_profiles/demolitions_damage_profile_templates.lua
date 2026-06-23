@@ -646,8 +646,11 @@ damage_templates.shock_grenade = {
 	gibbing_power = gibbing_power.heavy,
 }
 damage_templates.shock_grenade_stun_interval = {
+	disorientation_type = "electrocuting",
 	ignore_shield = true,
+	ogryn_disorientation_type = "electrocuting",
 	stagger_category = "sticky",
+	toughness_disorientation_type = "toughness_electrocuting",
 	armor_damage_modifier = {
 		attack = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_0_5,
@@ -1198,6 +1201,131 @@ damage_templates.primer_stun = {
 		},
 	},
 }
+damage_templates.cryptic_discharge_shock_damage = {
+	ignore_shield = true,
+	stagger_category = "sticky",
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_0_5,
+			[armor_types.armored] = damage_lerp_values.lerp_1,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_0_75,
+			[armor_types.berserker] = damage_lerp_values.lerp_1,
+			[armor_types.super_armor] = damage_lerp_values.lerp_1,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+		},
+		impact = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_2,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_1,
+			[armor_types.super_armor] = damage_lerp_values.lerp_1_5,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1,
+		},
+	},
+	cleave_distribution = {
+		attack = 5,
+		impact = 20,
+	},
+	power_distribution = {
+		attack = 25,
+		impact = 100,
+	},
+	damage_type = damage_types.electrocution,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+}
+damage_templates.cryptic_discharge_weapon_shock = {
+	ignore_shield = true,
+	stagger_category = "sticky",
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_0_5,
+			[armor_types.armored] = damage_lerp_values.lerp_1,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_0_75,
+			[armor_types.berserker] = damage_lerp_values.lerp_1,
+			[armor_types.super_armor] = damage_lerp_values.lerp_1,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+		},
+		impact = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_1,
+			[armor_types.armored] = damage_lerp_values.lerp_2,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_1,
+			[armor_types.super_armor] = damage_lerp_values.lerp_1_5,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+			[armor_types.void_shield] = damage_lerp_values.lerp_1,
+		},
+	},
+	cleave_distribution = {
+		attack = 5,
+		impact = 0,
+	},
+	power_distribution = {
+		attack = 50,
+		impact = 0,
+	},
+	damage_type = damage_types.electrocution,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+}
+damage_templates.force_field_explosion_damage = {
+	damage_type = "grenade",
+	ignore_stagger_reduction = true,
+	ragdoll_push_force = 250,
+	shield_override_stagger_strength = 0,
+	stagger_category = "explosion",
+	suppression_value = 10,
+	cleave_distribution = {
+		attack = 0.15,
+		impact = 0,
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 0,
+			[armor_types.armored] = 0,
+			[armor_types.resistant] = 0,
+			[armor_types.player] = 0,
+			[armor_types.berserker] = 0,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0,
+			[armor_types.void_shield] = 0,
+		},
+		impact = {
+			[armor_types.unarmored] = 0,
+			[armor_types.armored] = 0,
+			[armor_types.resistant] = 0,
+			[armor_types.player] = 0,
+			[armor_types.berserker] = 0,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0,
+			[armor_types.void_shield] = 0,
+		},
+	},
+	power_distribution = {
+		attack = 0,
+		impact = 0,
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+	gibbing_type = gibbing_types.explosion,
+	gibbing_power = gibbing_power.heavy,
+}
 damage_templates.force_staff_demolition_close = table.clone(damage_templates.close_grenade)
 damage_templates.force_staff_demolition_close.power_distribution.attack = 0.1
 damage_templates.force_staff_demolition_default = table.clone(damage_templates.default_grenade)
@@ -1586,6 +1714,106 @@ overrides.attack_valkyrie_missile_explosion = {
 		},
 	},
 }
+damage_templates.arc_grenade = {
+	damage_type = "grenade",
+	ignore_stagger_reduction = true,
+	ragdoll_push_force = 250,
+	shield_override_stagger_strength = 0,
+	stagger_category = "sticky",
+	suppression_value = 10,
+	cleave_distribution = {
+		attack = 0.15,
+		impact = 0.15,
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1.5,
+			[armor_types.resistant] = 1.5,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 1.5,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 1,
+		},
+		impact = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1.5,
+			[armor_types.resistant] = 1.5,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 1.5,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 1,
+		},
+	},
+	power_distribution = {
+		attack = 100,
+		impact = 50,
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+	gibbing_type = gibbing_types.arc,
+	gibbing_power = gibbing_power.heavy,
+}
+damage_templates.arc_grenade_chain_jump_damage = {
+	ignore_hitzone_multiplier = true,
+	ignore_stagger_reduction = true,
+	stagger_category = "melee",
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_0_75,
+			[armor_types.armored] = damage_lerp_values.lerp_1,
+			[armor_types.resistant] = damage_lerp_values.lerp_0_75,
+			[armor_types.player] = damage_lerp_values.lerp_1,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_75,
+			[armor_types.super_armor] = damage_lerp_values.lerp_1_25,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+		},
+		impact = {
+			[armor_types.unarmored] = damage_lerp_values.lerp_0_75,
+			[armor_types.armored] = damage_lerp_values.lerp_1,
+			[armor_types.resistant] = damage_lerp_values.lerp_0_5,
+			[armor_types.player] = damage_lerp_values.lerp_0_5,
+			[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+			[armor_types.super_armor] = damage_lerp_values.lerp_1,
+			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+			[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+		},
+	},
+	cleave_distribution = {
+		attack = 5,
+		impact = 5,
+	},
+	power_distribution = {
+		attack = 1000,
+		impact = 10,
+	},
+	damage_type = damage_types.arc_chain,
+	gibbing_power = gibbing_power.medium,
+	gibbing_type = gibbing_types.arc,
+	critical_strike = {
+		gibbing_power = gibbing_power.heavy,
+		gibbing_type = gibbing_types.arc,
+	},
+	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+	stat_buffs = {
+		"arc_chain_damage",
+	},
+}
+damage_templates.discharge_chain_jump_damage = table.clone(damage_templates.arc_grenade_chain_jump_damage)
+damage_templates.discharge_chain_jump_damage.power_distribution.attack = 200
+damage_templates.force_field_chain_jump_damage = table.clone(damage_templates.arc_grenade_chain_jump_damage)
+damage_templates.force_field_chain_jump_damage.power_distribution.attack = 200
 
 return {
 	base_templates = damage_templates,

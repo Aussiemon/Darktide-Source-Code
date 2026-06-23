@@ -120,6 +120,7 @@ local action_data = {
 		utility_weight = 1,
 		considerations = UtilityConsiderations.chaos_poxwalker_bomber_explode,
 		explosion_template = ExplosionTemplates.poxwalker_bomber,
+		explosion_template_mild = ExplosionTemplates.poxwalker_bomber_mild,
 	},
 	stagger = {
 		ignore_extra_stagger_duration = true,

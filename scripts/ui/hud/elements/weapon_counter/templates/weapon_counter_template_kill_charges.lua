@@ -5,27 +5,17 @@ local PlayerCharacterConstants = require("scripts/settings/player_character/play
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local slot_configuration = PlayerCharacterConstants.slot_configuration
-local MAX_BAR_MODIFIER = 0.5
-local MAX_NUM_BARS = 5
+local MAX_BAR_MODIFIER = 0.3
+local MAX_NUM_BARS = 2
 local UNFILLED_FILL_OPACITY = 0.95
 local FILLED_FILL_OPACITY = 1.3
-local UNFILLED_OUTLINE_COLOR = {
-	255,
-	166,
-	192,
-	147,
-}
-local FILLED_OUTLINE_COLOR = {
-	255,
-	241,
-	255,
-	230,
-}
+local UNFILLED_OUTLINE_COLOR = UIHudSettings.color_tint_main_2
+local FILLED_OUTLINE_COLOR = UIHudSettings.color_tint_main_2
 local weapon_counter_template_kill_charges = {
 	data = {},
 }
-local length = 240
-local thickness = 240
+local length = 400
+local thickness = 400
 local size = {
 	length,
 	thickness,
@@ -200,12 +190,14 @@ end
 
 local function _set_arc_sizes(widget, ui_hud, template, max_segments)
 	local style = widget.style
-	local total_min = 0
-	local gap_size = MAX_BAR_MODIFIER / max_segments * 0.15
+	local total_arc = MAX_BAR_MODIFIER
+	local start_offset = 0.5 - total_arc / 2
+	local total_min = start_offset
+	local gap_size = MAX_BAR_MODIFIER / max_segments * 0.1
 
 	for ii = 1, MAX_NUM_BARS do
-		local add_top_gap = ii < max_segments
-		local add_bottom_gap = ii > 1
+		local add_top_gap = true
+		local add_bottom_gap = true
 		local segment_style = style[string.format("charge_bar_%d", ii)]
 
 		if max_segments < ii then
@@ -223,8 +215,8 @@ end
 
 weapon_counter_template_kill_charges.create_widget_defintion = function (scenegraph_id)
 	local charge_bar_offset_right = {
-		60,
-		41,
+		10,
+		0,
 		1,
 	}
 

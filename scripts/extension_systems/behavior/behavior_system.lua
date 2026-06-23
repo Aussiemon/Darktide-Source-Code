@@ -3,6 +3,7 @@
 require("scripts/extension_systems/behavior/minion_behavior_extension")
 require("scripts/extension_systems/behavior/combat_range_user_behavior_extension")
 require("scripts/extension_systems/behavior/bot_behavior_extension")
+require("scripts/extension_systems/behavior/companion_behavior_extension")
 
 local BehaviorTree = require("scripts/extension_systems/behavior/trees/behavior_tree")
 local BehaviorTrees = require("scripts/extension_systems/behavior/trees/behavior_trees")

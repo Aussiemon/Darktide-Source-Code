@@ -490,7 +490,7 @@ AchievementsManager._save_player_diff = function (self, player_id)
 	local is_saving = player_data.save_promise ~= nil
 
 	if is_saving then
-		self:_save_succeded(player_id, true)
+		self:_save_succeded(player_data, true)
 	end
 
 	local backend_promise = Managers.backend.interfaces.commendations:bulk_update_commendations({
@@ -794,6 +794,11 @@ end
 
 AchievementsManager._advertise_unlocked_achievement = function (self, player_id, achievement_id)
 	local player_data = self._players[player_id]
+
+	if not player_data then
+		return
+	end
+
 	local peer_id = Network.peer_id(player_data.channel_id)
 	local local_player_id = player_data.local_player_id
 	local achievement = self._definitions[achievement_id]

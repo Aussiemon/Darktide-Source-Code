@@ -1,8 +1,10 @@
 ﻿-- chunkname: @scripts/extension_systems/ability/utilities/equipped_ability_effect_scripts.lua
 
+require("scripts/extension_systems/ability/equipped_ability_effect_scripts/hide_visibility_group_effects")
 require("scripts/extension_systems/ability/equipped_ability_effect_scripts/lunge_effects")
 require("scripts/extension_systems/ability/equipped_ability_effect_scripts/shout_effects")
 require("scripts/extension_systems/ability/equipped_ability_effect_scripts/stealth_effects")
+require("scripts/extension_systems/ability/equipped_ability_effect_scripts/targeted_ally_effects")
 require("scripts/extension_systems/ability/equipped_ability_effect_scripts/targeted_dash_effects")
 
 local EquippedAbilityEffectScripts = {}

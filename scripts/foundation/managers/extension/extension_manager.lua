@@ -387,7 +387,7 @@ ExtensionManager.init_time_slice_add_and_register_level_units = function (self, 
 	time_slice_unit_registration_data.parameters.optional_category = optional_category
 end
 
-ExtensionManager.update_time_slice_add_and_register_level_units = function (self)
+ExtensionManager.update_time_slice_add_and_register_level_units = function (self, optional_max_dt_in_msec)
 	local time_slice_unit_registration_data = self._time_slice_unit_registration_data
 	local last_index = time_slice_unit_registration_data.last_index
 	local world = time_slice_unit_registration_data.parameters.world
@@ -400,7 +400,7 @@ ExtensionManager.update_time_slice_add_and_register_level_units = function (self
 	local step_size = 128
 
 	for index = last_index + 1, num_units, step_size do
-		local start_timer = GameplayInitTimeSlice.pre_process(performance_counter_handle, duration_ms)
+		local start_timer = GameplayInitTimeSlice.pre_process(performance_counter_handle, duration_ms, optional_max_dt_in_msec)
 
 		if not start_timer then
 			break

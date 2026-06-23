@@ -1,6 +1,8 @@
 ﻿-- chunkname: @scripts/foundation/managers/extension/extension_system_base.lua
 
+local StaggeredIterator = require("scripts/utilities/staggered_iterator")
 local ExtensionSystemBase = class("ExtensionSystemBase")
+local Profiler_start, Profiler_stop = Profiler.start, Profiler.stop
 
 ExtensionSystemBase.init = function (self, extension_system_creation_context, system_init_data, system_name, extension_list, has_pre_update, has_fixed_update, has_post_update)
 	self._is_server = extension_system_creation_context.is_server
@@ -32,6 +34,7 @@ ExtensionSystemBase.init = function (self, extension_system_creation_context, sy
 		owner_system = self,
 	}
 	self._update_list = {}
+	self._staggered_update_iterators = {}
 	self._extensions = {}
 	self._profiler_names = {}
 
@@ -40,7 +43,9 @@ ExtensionSystemBase.init = function (self, extension_system_creation_context, sy
 	end
 
 	self._unit_to_extension_map = {}
+	self._extension_to_unit_map = {}
 	self._uninitiated_units = {}
+	self._total_num_extensions = 0
 	self._hot_join_sync_list = {}
 
 	for i = 1, #extension_list do
@@ -84,6 +89,7 @@ ExtensionSystemBase.on_add_extension = function (self, world, unit, extension_na
 	local extension = ScriptUnit.add_extension(self._extension_init_context, unit, extension_name, extension_alias, extension_init_data, ...)
 
 	self._extensions[extension_name] = (self._extensions[extension_name] or 0) + 1
+	self._total_num_extensions = self._total_num_extensions + 1
 
 	if extension.hot_join_sync then
 		self._hot_join_sync_list[unit] = extension
@@ -94,6 +100,7 @@ ExtensionSystemBase.on_add_extension = function (self, world, unit, extension_na
 	end
 
 	self._unit_to_extension_map[unit] = extension
+	self._extension_to_unit_map[extension] = unit
 	self._uninitiated_units[unit] = extension
 
 	return extension
@@ -125,6 +132,7 @@ ExtensionSystemBase.on_remove_extension = function (self, unit, extension_name)
 	local extension = ScriptUnit.has_extension(unit, self._name)
 
 	self._extensions[extension_name] = self._extensions[extension_name] - 1
+	self._total_num_extensions = self._total_num_extensions - 1
 
 	local extension_update_list = self._update_list[extension_name]
 
@@ -155,6 +163,7 @@ ExtensionSystemBase.on_remove_extension = function (self, unit, extension_name)
 	ScriptUnit.remove_extension(unit, self._name)
 
 	self._unit_to_extension_map[unit] = nil
+	self._extension_to_unit_map[extension] = nil
 	self._uninitiated_units[unit] = nil
 end
 
@@ -244,6 +253,10 @@ ExtensionSystemBase.update = function (self, context, dt, t, ...)
 			extension:update(unit, dt, t, context, ...)
 		end
 	end
+
+	for _, iterator in pairs(self._staggered_update_iterators) do
+		iterator:iterate(dt, t)
+	end
 end
 
 ExtensionSystemBase.post_update = function (self, context, dt, t, ...)
@@ -314,6 +327,30 @@ end
 
 ExtensionSystemBase.run_in_cinematic_level = function (self)
 	return self._run_in_cinematic_level
+end
+
+ExtensionSystemBase.name = function (self)
+	return self._name
+end
+
+ExtensionSystemBase._create_staggered_iterator = function (self, name, func)
+	self._staggered_update_iterators[name] = StaggeredIterator:new(func)
+end
+
+ExtensionSystemBase._register_staggered_item_update = function (self, name, item, default_update_rate)
+	self._staggered_update_iterators[name]:add_element(item, default_update_rate)
+end
+
+ExtensionSystemBase._unregister_staggered_item_update = function (self, name, item)
+	self._staggered_update_iterators[name]:remove_element(item)
+end
+
+ExtensionSystemBase._has_staggered_item_update = function (self, name, item)
+	return self._staggered_update_iterators[name]:has_element(item)
+end
+
+ExtensionSystemBase._prioritize_staggered_item_update = function (self, name, item)
+	self._staggered_update_iterators[name]:prioritize(item)
 end
 
 return ExtensionSystemBase

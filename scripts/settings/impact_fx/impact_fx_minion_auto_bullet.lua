@@ -557,6 +557,29 @@ local player = {
 	},
 }
 local surface_fx = {
+	cryptic_shield = {
+		[hit_types.stop] = {
+			sfx = {
+				{
+					append_husk_to_event_name = true,
+					event = "wwise/events/weapon/play_bullet_hits_gen",
+					group = "surface_material",
+					normal_rotation = true,
+				},
+			},
+		},
+		[hit_types.penetration_entry] = {
+			sfx = {
+				{
+					append_husk_to_event_name = true,
+					event = "wwise/events/weapon/play_bullet_hits_gen",
+					group = "surface_material",
+					normal_rotation = true,
+				},
+			},
+		},
+		[hit_types.penetration_exit] = nil,
+	},
 	psychic_shield = {
 		[hit_types.stop] = {
 			sfx = {

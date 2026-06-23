@@ -80,7 +80,11 @@ BotBehaviorExtension._init_brain = function (self, unit, breed, blackboard, beha
 	local behavior_system = Managers.state.extension:system("behavior_system")
 	local behavior_tree = behavior_system:behavior_tree(behavior_tree_name)
 
-	self._brain = AiBrain:new(unit, breed, blackboard, behavior_tree)
+	self._brain = AiBrain:new(unit, breed, blackboard, behavior_tree, self)
+end
+
+BotBehaviorExtension.behavior_state_event = function (self, state_name)
+	self._brain:state_event(state_name)
 end
 
 local NO_GESTALTS = {

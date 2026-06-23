@@ -242,7 +242,7 @@ MutatorToxicGasTwins._spawn_volume_and_liquid = function (self, cloud, optional_
 		local power_level = 5
 		local explosion_template = self._appear_explosion_template
 
-		Explosion.create_explosion(world, physics_world, position, impact_normal, attacking_unit, explosion_template, power_level, charge_level, attack_type)
+		Explosion.create_explosion(world, physics_world, position, Quaternion.look(impact_normal), attacking_unit, explosion_template, power_level, charge_level, attack_type)
 	end
 end
 
@@ -305,7 +305,7 @@ MutatorToxicGasTwins._spawn_twins = function (self, twin_spawn_data, section_id)
 			local power_level = 5
 			local explosion_template = self._appear_explosion_template
 
-			Explosion.create_explosion(world, physics_world, position, impact_normal, twin_unit, explosion_template, power_level, charge_level, attack_type)
+			Explosion.create_explosion(world, physics_world, position, Quaternion.look(impact_normal), twin_unit, explosion_template, power_level, charge_level, attack_type)
 
 			local optional_ambisonics = true
 

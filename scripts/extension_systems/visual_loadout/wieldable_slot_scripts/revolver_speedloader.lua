@@ -20,38 +20,6 @@ RevolverSpeedloader.init = function (self, context, slot, weapon_template, fx_so
 	self._inventory_slot_component = unit_data_extension:read_component(slot.name)
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._first_person_extension = ScriptUnit.extension(owner_unit, "first_person_system")
-	self._bullets = {
-		{
-			bullet_attachment_name = "bullet_01",
-			casing_attachment_name = "casing_01",
-			visible = true,
-			visible_at_reload_start = true,
-		},
-		{
-			bullet_attachment_name = "bullet_02",
-			casing_attachment_name = "casing_02",
-			visible = true,
-			visible_at_reload_start = true,
-		},
-		{
-			bullet_attachment_name = "bullet_03",
-			casing_attachment_name = "casing_03",
-			visible = true,
-			visible_at_reload_start = true,
-		},
-		{
-			bullet_attachment_name = "bullet_04",
-			casing_attachment_name = "casing_04",
-			visible = true,
-			visible_at_reload_start = true,
-		},
-		{
-			bullet_attachment_name = "bullet_05",
-			casing_attachment_name = "casing_05",
-			visible = true,
-			visible_at_reload_start = true,
-		},
-	}
 	self._components_1p = {}
 	self._components_3p = {}
 	self._components_lookup_1p = {}
@@ -59,6 +27,18 @@ RevolverSpeedloader.init = function (self, context, slot, weapon_template, fx_so
 
 	_components(self._components_1p, self._components_lookup_1p, slot.attachments_by_unit_1p[unit_1p], slot.attachment_map_by_unit_1p[unit_1p])
 	_components(self._components_3p, self._components_lookup_3p, slot.attachments_by_unit_3p[unit_3p], slot.attachment_map_by_unit_3p[unit_3p])
+
+	self._bullets = {}
+
+	local num_bullets = #self._components_1p * 0.5
+
+	for ii = 1, num_bullets do
+		self._bullets[ii] = {
+			visible = true,
+			bullet_attachment_name = string.format("bullet_%02d", ii),
+			casing_attachment_name = string.format("casing_%02d", ii),
+		}
+	end
 end
 
 RevolverSpeedloader.fixed_update = function (self, unit, dt, t)

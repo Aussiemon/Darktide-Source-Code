@@ -160,6 +160,8 @@ ActionAdamantShout.start = function (self, action_settings, t, time_scale, actio
 
 	if param_table then
 		param_table.unit = player_unit
+		param_table.ability_charges_used = self._ability_charges_used_at_start
+		param_table.remaining_ability_charges_before_use = self._remaining_ability_charges_before_use_at_start
 
 		buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
 	end

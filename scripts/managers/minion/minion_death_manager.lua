@@ -78,6 +78,10 @@ MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_dir
 			health_extension:kill()
 
 			death_component.is_dead = true
+
+			local behavior_extension = ScriptUnit.extension(unit, "behavior_system")
+
+			behavior_extension:behavior_state_event("dead")
 		end
 
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")

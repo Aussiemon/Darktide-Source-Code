@@ -101,6 +101,11 @@ local expedition_mission_flags = {
 			display_string = "loc_expeditions_modifier_simple_theme_darkness",
 		},
 	},
+	theme_02 = {
+		ui = {
+			display_string = "loc_expeditions_modifier_simple_theme_dawn",
+		},
+	},
 }
 
 return settings("ExpeditionMissionFlags", expedition_mission_flags)

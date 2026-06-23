@@ -29,12 +29,14 @@ PlayerUnitAimExtension.init = function (self, extension_init_context, unit, exte
 	end
 
 	self._first_person_extension = ScriptUnit.extension(unit, "first_person_system")
+	self._weapon_extension = ScriptUnit.extension(unit, "weapon_system")
 	self._aim_constraint_target_name = extension_init_data.aim_constraint_target_name
 	self._aim_constraint_variable = nil
 	self._aim_contraint_distance = extension_init_data.aim_constraint_distance
 
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 
+	self._action_sweep_component = unit_data_extension:read_component("action_sweep")
 	self._action_sweep_component = unit_data_extension:read_component("action_sweep")
 	self._aim_animation_control = ThirdPersonAimAnimationControl:new(unit)
 	self._idle_fullbody_animation_control = ThirdPersonIdleFullbodyAnimationControl:new(unit)
@@ -95,9 +97,14 @@ PlayerUnitAimExtension.update = function (self, unit, dt, t)
 
 	self._sticky_aim_blend = sticky_aim_blend
 
-	local new_aim_position = Vector3.lerp(aim_position, sticky_aim_position, sticky_aim_blend)
+	local running_action_settings = self._weapon_extension:running_action_settings()
+	local block_first_person_rotation = running_action_settings and running_action_settings.block_first_person_rotation
 
-	Unit.animation_set_constraint_target(unit, self._aim_constraint_variable, new_aim_position)
+	if not block_first_person_rotation then
+		local new_aim_position = Vector3.lerp(aim_position, sticky_aim_position, sticky_aim_blend)
+
+		Unit.animation_set_constraint_target(unit, self._aim_constraint_variable, new_aim_position)
+	end
 end
 
 return PlayerUnitAimExtension

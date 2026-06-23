@@ -627,4 +627,29 @@ ScriptWorld.destroy_level_instances = function (world)
 	World.set_data(world, "level_instances", {})
 end
 
+ScriptWorld.is_physics_thread_locked = function (world)
+	return World.get_data(world, "physics_thread_locked") == true
+end
+
+ScriptWorld.physics_run_queries = function (world)
+	local physics_world = World.get_data(world, "physics_world")
+
+	PhysicsWorld.run_queries(physics_world)
+	World.set_data(world, "physics_thread_locked", true)
+end
+
+ScriptWorld.physics_fetch_queries = function (world)
+	local physics_world = World.get_data(world, "physics_world")
+
+	PhysicsWorld.fetch_queries(physics_world)
+	World.set_data(world, "physics_thread_locked", false)
+end
+
+ScriptWorld.physics_run_and_fetch_queries = function (world)
+	local physics_world = World.get_data(world, "physics_world")
+
+	PhysicsWorld.run_queries(physics_world)
+	PhysicsWorld.fetch_queries(physics_world)
+end
+
 return ScriptWorld

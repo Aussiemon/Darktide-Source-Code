@@ -551,7 +551,31 @@ local player = {
 		weakspot_died = nil,
 	},
 }
-local surface_fx = {}
+local surface_fx = {
+	cryptic_shield = {
+		[hit_types.stop] = {
+			sfx = {
+				{
+					append_husk_to_event_name = true,
+					event = "wwise/events/weapon/play_bullet_hits_gen_minion_large",
+					group = "surface_material",
+					normal_rotation = true,
+				},
+			},
+		},
+		[hit_types.penetration_entry] = {
+			sfx = {
+				{
+					append_husk_to_event_name = true,
+					event = "wwise/events/weapon/play_bullet_hits_gen_minion_large",
+					group = "surface_material",
+					normal_rotation = true,
+				},
+			},
+		},
+		[hit_types.penetration_exit] = nil,
+	},
+}
 local default_surface_fx = {
 	[hit_types.stop] = {
 		sfx = {

@@ -1,8 +1,9 @@
 ﻿-- chunkname: @scripts/backend/gameplay_session.lua
 
-local Promise = require("scripts/foundation/utilities/promise")
 local BackendError = require("scripts/foundation/managers/backend/backend_error")
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
+local MatchmakerConfigurations = require("scripts/settings/backend/matchmaker_configurations")
+local Promise = require("scripts/foundation/utilities/promise")
 local Interface = {
 	"fetch",
 	"create",
@@ -114,6 +115,7 @@ GameplaySession.update = function (self, session_id, participants, kicked_partic
 			participants = participants,
 			kickedParticipants = kicked_participants_account_ids,
 			backfillWanted = backfill_wanted,
+			matchmakingConfigName = MatchmakerConfigurations[DevParameters.matchmaking_configuration_name] or DevParameters.matchmaking_configuration_name,
 		},
 	}
 
@@ -163,6 +165,7 @@ GameplaySession.complete = function (self, session_id, participants, mission_res
 		info = {
 			participants = participants,
 			missionResult = mission_result,
+			matchmakingConfigName = MatchmakerConfigurations[DevParameters.matchmaking_configuration_name] or DevParameters.matchmaking_configuration_name,
 		},
 	}
 

@@ -388,7 +388,9 @@ MechanismExpedition._check_state_change = function (self, state, data)
 				Managers.grpc:create_empty_party(Managers.connection.combined_hash):next(function (response)
 					Log.info("MechanismExpedition", "response:%s", table.tostring(response))
 
-					return Managers.voting:start_voting("stay_in_party", {
+					local voting_template = "stay_in_party"
+
+					return Managers.voting:start_voting(voting_template, {
 						new_party_id = response.party_id,
 						new_party_invite_token = response.invite_token,
 					}):next(function (voting_id)

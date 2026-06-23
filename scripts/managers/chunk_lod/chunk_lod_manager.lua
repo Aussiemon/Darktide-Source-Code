@@ -188,14 +188,14 @@ ChunkLodManager._get_raycast_parameters = function (self)
 	end
 end
 
-ChunkLodManager._get_neighbours = function (self, level, ...)
+ChunkLodManager._get_neighbours = function (self, level)
 	local i = 1
 	local neighbours = {}
 
-	while Level.has_data(level, ..., i) do
+	while Level.has_data(level, "neighbour_states", i) do
 		local neighbour_data = {}
-		local neighbour_level_name = Level.get_data(level, ..., i, "level")
-		local neighbour_lod_state = Level.get_data(level, ..., i, "state")
+		local neighbour_level_name = Level.get_data(level, "neighbour_states", i, "level")
+		local neighbour_lod_state = Level.get_data(level, "neighbour_states", i, "state")
 
 		neighbour_data.level_name = neighbour_level_name
 		neighbour_data.lod_state = neighbour_lod_state
@@ -216,7 +216,7 @@ end
 
 ChunkLodManager._update_level_lods = function (self, level, show_all)
 	local world = self._world
-	local neighbours = self:_get_neighbours(level, "neighbour_states")
+	local neighbours = self:_get_neighbours(level)
 	local level_set_lod_level_type = Level.set_lod_level_type
 
 	level_set_lod_level_type(level, LodLevelType.SHOW_LEVEL)

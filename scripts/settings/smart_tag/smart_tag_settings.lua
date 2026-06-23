@@ -1,11 +1,17 @@
 ﻿-- chunkname: @scripts/settings/smart_tag/smart_tag_settings.lua
 
+local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local CompanionServoSkullAbility = require("scripts/utilities/companion/companion_servo_skull_ability")
+local CompanionServoSkullSettings = require("scripts/settings/companion/companion_servo_skull_settings")
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local Vo = require("scripts/utilities/vo")
 local VoQueryConstants = require("scripts/settings/dialogue/vo_query_constants")
+local special_rules = SpecialRulesSettings.special_rules
+local servo_skull_states = CompanionServoSkullSettings.STATES
 local vo_concepts = VoQueryConstants.concepts
 local vo_trigger_ids = VoQueryConstants.trigger_ids
 local groups = {
@@ -19,6 +25,9 @@ local groups = {
 		limit = 4,
 	},
 	health_station = {
+		limit = 1,
+	},
+	hacking = {
 		limit = 1,
 	},
 	location_ping = {
@@ -473,6 +482,73 @@ local templates = {
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
 		voice_tag_id = vo_trigger_ids.smart_tag_vo_pickup_platinum,
 	},
+	hacking_over_here = {
+		group = "hacking",
+		is_cancelable = true,
+		lifetime = 10,
+		replies = {
+			replies.ok,
+		},
+		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
+	},
+	hacking_over_here_companion = {
+		can_override = true,
+		group = "hacking",
+		is_cancelable = false,
+		lifetime = 10,
+		override_ui_interaction_type = "hacking_companion",
+		replies = {
+			replies.ok,
+		},
+		voice_tag_concept = vo_concepts.on_demand_vo_tag_item,
+		start = function (tag, tagger_unit)
+			if not tag._is_server then
+				return
+			end
+
+			local companion_spawner_extension = ScriptUnit.extension(tagger_unit, "companion_spawner_system")
+			local ability_extension = ScriptUnit.extension(tagger_unit, "ability_system")
+			local target_unit = tag:target_unit()
+			local companion_unit = companion_spawner_extension:spawned_unit_lookup(special_rules.cryptic_servo_skull_hack)
+
+			if CompanionServoSkullAbility.validate_target_func_hacking_ability(target_unit, ability_extension, companion_unit) then
+				CompanionServoSkullAbility.start_hacking_ability(companion_unit, target_unit, ability_extension)
+
+				tag.started_hacking = true
+			else
+				tag.started_hacking = false
+			end
+		end,
+		update = function (tag)
+			if not tag._is_server then
+				return
+			end
+
+			if not tag.started_hacking then
+				local tagger_unit = tag:tagger_unit()
+				local companion_spawner_extension = ScriptUnit.has_extension(tagger_unit, "companion_spawner_system")
+				local companion_unit = companion_spawner_extension and companion_spawner_extension:spawned_unit_lookup(special_rules.cryptic_servo_skull_hack)
+
+				if not ALIVE[companion_unit] then
+					return
+				end
+
+				local ability_extension = ScriptUnit.extension(tagger_unit, "ability_system")
+				local target_unit = tag:target_unit()
+
+				if CompanionServoSkullAbility.validate_target_func_hacking_ability(target_unit, ability_extension, companion_unit) then
+					CompanionServoSkullAbility.start_hacking_ability(companion_unit, target_unit, ability_extension)
+
+					tag.started_hacking = true
+				end
+			end
+		end,
+		stop = function (tag)
+			if not tag._is_server then
+				return
+			end
+		end,
+	},
 	health_station_without_battery_over_here = {
 		group = "health_station",
 		is_cancelable = true,
@@ -635,7 +711,7 @@ local templates = {
 		display_name = "loc_smart_tag_type_threat",
 		group = "double_tag_enemy",
 		lifetime = 25,
-		marker_type = "unit_threat_adamant",
+		marker_type = "unit_threat_companion",
 		target_unit_outline = "adamant_smart_tag",
 		voice_tag_concept = vo_concepts.on_demand_vo_tag_enemy,
 		sound_enter_tagger = UISoundEvents.smart_tag_location_threat_enter,
@@ -686,12 +762,16 @@ local templates = {
 									break
 								end
 
-								local fx_system = Managers.state.extension:system("fx_system")
+								local companion_tag_manager_extension = ScriptUnit.has_extension(companion_unit, "companion_tag_manager_system")
 
-								if not fx_system:has_running_template_of_name(companion_unit, EffectTemplates.companion_dog_bark.name) then
-									local template_effect_id = fx_system:start_template_effect(EffectTemplates.companion_dog_bark, companion_unit)
+								if companion_tag_manager_extension then
+									local fx_system = Managers.state.extension:system("fx_system")
 
-									tag.template_effect_id = template_effect_id
+									if not fx_system:has_running_template_of_name(companion_unit, EffectTemplates.companion_dog_bark.name) then
+										local template_effect_id = fx_system:start_template_effect(EffectTemplates.companion_dog_bark, companion_unit)
+
+										tag.template_effect_id = template_effect_id
+									end
 								end
 							until true
 						end
@@ -716,15 +796,94 @@ local templates = {
 							break
 						end
 
-						local fx_system = Managers.state.extension:system("fx_system")
+						local companion_tag_manager_extension = ScriptUnit.has_extension(companion_unit, "companion_tag_manager_system")
 
-						if fx_system:has_running_template_of_name(companion_unit, EffectTemplates.companion_dog_bark.name) then
-							fx_system:stop_template_effect(tag.template_effect_id)
+						if companion_tag_manager_extension then
+							local fx_system = Managers.state.extension:system("fx_system")
 
-							tag.template_effect_id = nil
+							if fx_system:has_running_template_of_name(companion_unit, EffectTemplates.companion_dog_bark.name) then
+								fx_system:stop_template_effect(tag.template_effect_id)
+
+								tag.template_effect_id = nil
+							end
 						end
 					until true
 				end
+			end
+		end,
+	},
+	servo_skull_enemy_companion_target = {
+		can_override = true,
+		companion_order = true,
+		display_name = "loc_smart_tag_type_threat",
+		group = "double_tag_enemy",
+		lifetime = 25,
+		marker_type = "unit_threat_companion",
+		target_unit_outline = "adamant_smart_tag",
+		voice_tag_concept = vo_concepts.on_demand_vo_tag_enemy,
+		sound_enter_tagger = UISoundEvents.smart_tag_location_threat_enter,
+		sound_enter_others = UISoundEvents.smart_tag_location_threat_enter_others,
+		replies = {
+			replies.ok,
+		},
+		start = function (tag, tagger_unit)
+			if not tag._is_server then
+				return
+			end
+
+			local t = FixedFrame.get_latest_fixed_time()
+
+			tag.start_time = t
+
+			local vo_tag = "ability_targeting_a"
+			local currently_playing = Vo.is_currently_playing_dialogue(tagger_unit)
+
+			if currently_playing then
+				Vo.set_unit_vo_memory(tagger_unit, "user_memory", "command_triggered", "timeset")
+			else
+				Vo.play_combat_ability_event(tagger_unit, vo_tag)
+			end
+
+			local companion_spawner_extension = ScriptUnit.extension(tagger_unit, "companion_spawner_system")
+			local ability_extension = ScriptUnit.extension(tagger_unit, "ability_system")
+			local target_unit = tag:target_unit()
+			local companion_unit = companion_spawner_extension:spawned_unit_lookup(special_rules.cryptic_servo_skull_hack)
+
+			if CompanionServoSkullAbility.validate_target_func_shooting_ability(target_unit, ability_extension, companion_unit) then
+				CompanionServoSkullAbility.start_shooting_ability(companion_unit, target_unit, ability_extension)
+
+				tag.started_shooting = true
+			else
+				tag.started_shooting = false
+			end
+		end,
+		update = function (tag)
+			if not tag._is_server then
+				return
+			end
+
+			if not tag.started_shooting then
+				local tagger_unit = tag:tagger_unit()
+				local companion_spawner_extension = ScriptUnit.has_extension(tagger_unit, "companion_spawner_system")
+				local companion_unit = companion_spawner_extension and companion_spawner_extension:spawned_unit_lookup(special_rules.cryptic_servo_skull_hack)
+
+				if not ALIVE[companion_unit] then
+					return
+				end
+
+				local ability_extension = ScriptUnit.extension(tagger_unit, "ability_system")
+				local target_unit = tag:target_unit()
+
+				if CompanionServoSkullAbility.validate_target_func_shooting_ability(target_unit, ability_extension, companion_unit) then
+					CompanionServoSkullAbility.start_shooting_ability(companion_unit, target_unit, ability_extension)
+
+					tag.started_shooting = true
+				end
+			end
+		end,
+		stop = function (tag)
+			if not tag._is_server then
+				return
 			end
 		end,
 	},

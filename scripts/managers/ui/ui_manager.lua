@@ -62,21 +62,32 @@ UIManager.init = function (self)
 
 	self._viewport = self:create_viewport(self._world, viewport_name, viewport_type, viewport_layer, shading_environment)
 	self._viewport_name = viewport_name
+	self._default_renderer = self:create_renderer("ui_default_renderer", self._world)
 	self._single_icon_renderers = {}
 	self._single_icon_renderers_marked_for_destruction_array = {}
 	self._render_target_atlas_generator = RenderTargetAtlasGenerator:new()
 
 	self:_setup_icon_renderers()
 
-	self._ui_loading_icon_renderer = self:create_renderer("ui_loading_icon_renderer")
-
 	local input_service_name = "View"
 
 	self._input_service_name = input_service_name
-	self._view_handler = UIViewHandler:new(Views, timer_name)
+
+	local overlay_ui_world = self:create_world("ui_overlay", 990, "ui")
+
+	self._view_handler = UIViewHandler:new(Views, overlay_ui_world, timer_name)
 	self._close_view_input_action = "back"
+
+	local viewport_layer_loading_icon = 2
+
+	self._ui_loading_icon_viewport_name = "ui_loading_icon_viewport"
+
+	local ui_loading_icon_viewport = self:create_viewport(overlay_ui_world, self._ui_loading_icon_viewport_name, viewport_type, viewport_layer_loading_icon)
+
+	self._ui_loading_icon_renderer = self:create_renderer("ui_loading_icon_renderer", overlay_ui_world)
+	self._overlay_ui_world = overlay_ui_world
 	self._loading_state_data = LoadingStateData:new()
-	self._loading_reason = LoadingReason:new()
+	self._loading_reason = LoadingReason:new(overlay_ui_world, ui_loading_icon_viewport)
 
 	local constant_elements = require("scripts/ui/constant_elements/constant_elements")
 
@@ -107,6 +118,10 @@ UIManager.update_client_loadout_waiting_state = function (self, state)
 	else
 		self._client_waiting_loadout = self._client_waiting_loadout > 0 and self._client_waiting_loadout - 1 or 0
 	end
+end
+
+UIManager.get_input_tracker_progress_by_id = function (self, id)
+	return self._input_hold_tracker:get_progress_by_id(id)
 end
 
 UIManager.get_client_loadout_waiting_state = function (self)
@@ -526,6 +541,7 @@ UIManager._update_view_hotkeys = function (self)
 	local hotkey_settings = self._update_hotkeys
 	local hotkeys = hotkey_settings.hotkeys
 	local hotkey_lookup = hotkey_settings.lookup
+	local hotkeys_disabled_on_gamepad = hotkey_settings.hotkeys_disabled_on_gamepad
 	local gamepad_active = InputDevice.gamepad_active
 	local num_views = #views
 
@@ -560,7 +576,9 @@ UIManager._update_view_hotkeys = function (self)
 		end
 	else
 		for hotkey, view_name in pairs(hotkeys) do
-			if input_service:get(hotkey) then
+			local force_disabled = gamepad_active and hotkeys_disabled_on_gamepad and hotkeys_disabled_on_gamepad[hotkey]
+
+			if input_service:get(hotkey) and not force_disabled then
 				self:open_view(view_name)
 
 				return
@@ -739,8 +757,6 @@ UIManager.create_world = function (self, world_name, optional_layer, optional_ti
 	}
 	local flags = optional_flags or {
 		Application.DISABLE_PHYSICS,
-		Application.ENABLE_VOLUMETRICS,
-		Application.ENABLE_RAY_TRACING,
 	}
 	local world_manager = Managers.world
 
@@ -881,11 +897,12 @@ UIManager.destroy = function (self)
 
 	self._loading_state_data = nil
 
-	if self._ui_loading_icon_renderer then
-		self:destroy_renderer("ui_loading_icon_renderer")
+	self:destroy_renderer("ui_loading_icon_renderer")
 
-		self._ui_loading_icon_renderer = nil
-	end
+	self._ui_loading_icon_renderer = nil
+
+	ScriptWorld.destroy_viewport(self._overlay_ui_world, self._ui_loading_icon_viewport_name)
+	self:destroy_world(self._overlay_ui_world)
 
 	local world = self._world
 	local viewport_name = self._viewport_name
@@ -1026,6 +1043,7 @@ UIManager.update = function (self, dt, t)
 	end
 
 	self._loading_state_data:update()
+	self._loading_reason:update()
 end
 
 UIManager.render = function (self, dt, t)
@@ -1364,7 +1382,7 @@ UIManager.register_world_extension_manager_lookup = function (self, world, exten
 end
 
 UIManager.render_black_background = function (self)
-	local gui = self._ui_loading_icon_renderer.gui
+	local gui = self._default_renderer.gui
 
 	Gui.rect(gui, Vector3.zero(), Vector3(RESOLUTION_LOOKUP.width, RESOLUTION_LOOKUP.height, 0), Color(255, 0, 0, 0))
 end
@@ -1576,6 +1594,10 @@ UIManager.portrait_has_request = function (self, id)
 	return instance:has_request(id)
 end
 
+local function _should_load_profile_ui_item_icon(slots)
+	return table.find(slots, "slot_body_arms") or table.find(slots, "slot_body_legs") or table.find(slots, "slot_gear_head") or table.find(slots, "slot_gear_head") or table.find(slots, "slot_gear_upperbody") or table.find(slots, "slot_gear_lowerbody") or table.find(slots, "slot_gear_extra_cosmetic") or table.find(slots, "slot_animation_end_of_round")
+end
+
 UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_profile, prioritize, unload_cb)
 	local item_name = real_item.name
 	local gear_id = real_item.gear_id or item_name
@@ -1597,8 +1619,8 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 
 		return instance:load_weapon_icon(item, cb, render_context, prioritize, unload_cb)
 	elseif item_type == "WEAPON_SKIN" then
-		local visual_item = Items.weapon_skin_preview_item(item)
 		local instance = self._back_buffer_render_handlers.weapon_skin
+		local visual_item = Items.weapon_skin_preview_item(item)
 
 		return instance:load_weapon_icon(visual_item, cb, render_context, prioritize, unload_cb)
 	elseif item_type == "WEAPON_TRINKET" then
@@ -1610,7 +1632,7 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 		local instance = self._back_buffer_render_handlers.companion
 
 		return instance:load_weapon_icon(item, cb, render_context, prioritize, unload_cb)
-	elseif table.find(slots, "slot_gear_head") or table.find(slots, "slot_gear_upperbody") or table.find(slots, "slot_gear_lowerbody") or table.find(slots, "slot_gear_extra_cosmetic") or table.find(slots, "slot_animation_end_of_round") then
+	elseif _should_load_profile_ui_item_icon(slots) then
 		render_context = render_context or {}
 
 		local player = Managers.player:local_player(1)
@@ -1621,8 +1643,6 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 		local archetype_name = archetype and archetype.name
 
 		dummy_profile = Items.create_mannequin_profile_by_item(real_item, gender_name, archetype_name, breed_name)
-
-		local item_slot_name
 
 		if real_item.slots and not table.is_empty(item.slots) then
 			dummy_profile.loadout[item.slots[1]] = real_item

@@ -2,6 +2,8 @@
 
 require("scripts/foundation/utilities/error")
 
+SETTINGS = SETTINGS or {}
+
 function settings(reference_name, data_table, crash_on_nil_index)
 	return data_table
 end

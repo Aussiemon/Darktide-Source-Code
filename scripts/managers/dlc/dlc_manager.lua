@@ -8,15 +8,14 @@ local Promise = require("scripts/foundation/utilities/promise")
 local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live_utils")
 local DLCManager = class("DLCManager")
 local EVALUATE_CONSUMABLES_TIMER = 30
+local DLC_SUCCESS_CACHE_TIME_SECONDS = 60
 local DEBUG = true
 
 local function dprint(...)
 	if DEBUG then
-		print("[DLCManager]", string.format(...))
+		Log.info("[DLCManager]", string.format(...))
 	end
 end
-
-local DLC_SUCCESS_CACHE_TIME_SECONDS = 60
 
 DLCManager.ITEM_TYPE_NOTIFICATION_BLACKLIST = {
 	"BODY_TATTOO",
@@ -582,14 +581,16 @@ DLCStates.present_rewards = function (dlc_manager, dt, t)
 
 	local item_rewards = {}
 	local currency_rewarded = false
+	local dlc_revoked = false
 
-	for i = 1, #dlc_manager._reward_queue do
-		local reward_data = dlc_manager._reward_queue[i]
+	for ii = 1, #dlc_manager._reward_queue do
+		local reward_data = dlc_manager._reward_queue[ii]
 		local store_id = reward_data.platformId
 		local rewards = reward_data.rewards
+		local status = reward_data.status
 
-		for j = 1, #rewards do
-			local reward = rewards[j]
+		for jj = 1, #rewards do
+			local reward = rewards[jj]
 
 			if reward.rewardType == "currency" then
 				Managers.event:trigger("event_add_notification_message", "currency", {
@@ -617,17 +618,21 @@ DLCStates.present_rewards = function (dlc_manager, dt, t)
 			end
 		end
 
+		dlc_revoked = dlc_revoked or status == "revoked"
+
 		dlc_manager:_consume_pending_dlc(store_id)
 	end
 
-	if #item_rewards > 0 then
+	local num_item_rewards = #item_rewards
+
+	if dlc_revoked or num_item_rewards > 0 then
 		Managers.data_service.gear:invalidate_gear_cache()
+	end
 
-		for i = 1, #item_rewards do
-			local reward = item_rewards[i]
+	for ii = 1, num_item_rewards do
+		local reward = item_rewards[ii]
 
-			ItemUtils.mark_item_id_as_new(reward, table.array_contains(Managers.dlc.ITEM_TYPE_NOTIFICATION_BLACKLIST, reward.item_type))
-		end
+		ItemUtils.mark_item_id_as_new(reward, table.array_contains(Managers.dlc.ITEM_TYPE_NOTIFICATION_BLACKLIST, reward.item_type))
 	end
 
 	if currency_rewarded then

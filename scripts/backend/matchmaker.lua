@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/backend/matchmaker.lua
 
+local MatchmakerConfigurations = require("scripts/settings/backend/matchmaker_configurations")
 local PrivilegesManager = require("scripts/managers/privileges/privileges_manager")
-local PrivilegesManagerConstants = require("scripts/managers/privileges/privileges_manager_constants")
 local Promise = require("scripts/foundation/utilities/promise")
 local Interface = {
 	"fetch_queue_ticket_hub",
@@ -143,6 +143,7 @@ Matchmaker.fetch_queue_ticket_mission = function (self, mission_id, character_id
 	return data_promise:next(function (data)
 		data.missionId = mission_id
 		data.characterId = character_id
+		data.matchmakingConfigName = MatchmakerConfigurations[DevParameters.matchmaking_configuration_name] or DevParameters.matchmaking_configuration_name
 
 		return Managers.backend:title_request("/matchmaker/queueticket", {
 			method = "POST",

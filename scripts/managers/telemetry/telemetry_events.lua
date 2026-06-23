@@ -342,9 +342,11 @@ TelemetryEvents.system_settings = function (self, account_id)
 
 		xbox_data.is_streaming = XboxLive.is_streaming and XboxLive.is_streaming() or false
 
-		if Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_ANACONDA then
+		local xbox_console_type = Xbox.console_type()
+
+		if xbox_console_type == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_ANACONDA then
 			xbox_data.model = "anaconda"
-		elseif Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_LOCKHEART then
+		elseif xbox_console_type == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_LOCKHEART then
 			xbox_data.model = "lockheart"
 		end
 
@@ -575,14 +577,16 @@ TelemetryEvents.player_died = function (self, player, data)
 	self._manager:register_event(event)
 end
 
-TelemetryEvents.player_revived_ally = function (self, reviver_player, revivee_player, reviver_position, revivee_position, state_name)
+TelemetryEvents.player_revived_ally = function (self, reviver_player, revivee_player, reviver_position, revivee_position, state_name, revived_by_servo_skull)
 	local event = TelemetryEvent:new(SOURCE, reviver_player:telemetry_subject(), "player_revived_ally", self:_session_from_player(reviver_player))
+	local is_revived_by_servo_skull = revived_by_servo_skull or false
 
 	event:set_data({
 		revivee = revivee_player:telemetry_subject(),
 		reviver_position = reviver_position,
 		revivee_position = revivee_position,
 		type = state_name,
+		revived_by_servo_skull = is_revived_by_servo_skull,
 	})
 	self._manager:register_event(event)
 end
@@ -609,11 +613,12 @@ TelemetryEvents.player_ability_report = function (self, reports, report_name)
 	end
 end
 
-TelemetryEvents.player_hacked_terminal = function (self, player, mistakes)
+TelemetryEvents.player_hacked_terminal = function (self, player, mistakes, hacked_by_skull)
 	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "player_hacked_terminal", self:_session_from_player(player))
 
 	event:set_data({
 		mistakes = mistakes,
+		hacked_by_skull = hacked_by_skull,
 	})
 	self._manager:register_event(event)
 end

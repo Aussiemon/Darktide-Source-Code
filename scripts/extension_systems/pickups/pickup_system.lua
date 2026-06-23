@@ -50,7 +50,6 @@ PickupSystem.init = function (self, context, system_init_data, ...)
 	self._rubberband_free_spots = 0
 	self._unit_to_skip_group = {}
 	self._skip_group_count = {}
-	self._run_on_update = {}
 
 	if is_server then
 		self:_create_game_object(self._game_session)
@@ -66,8 +65,6 @@ PickupSystem.init = function (self, context, system_init_data, ...)
 end
 
 PickupSystem.destroy = function (self)
-	table.clear(self._run_on_update)
-
 	if not self._is_server then
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 	end
@@ -910,11 +907,7 @@ end
 
 PickupSystem.update = function (self, system_context, dt, t)
 	if self._is_server then
-		for i = #self._run_on_update, 1, -1 do
-			self._run_on_update[i](self)
-
-			self._run_on_update[i] = nil
-		end
+		-- Nothing
 	end
 end
 
@@ -948,7 +941,7 @@ PickupSystem._skip_group_blocks = function (self, skip_group)
 	return false
 end
 
-PickupSystem.spawn_pickup = function (self, pickup_name, position, rotation, optional_pickup_spawner, optional_placed_on_unit, optional_spawn_interaction_cooldown, optional_origin_player, skip_group)
+PickupSystem.spawn_pickup = function (self, pickup_name, position, rotation, optional_pickup_spawner, optional_placed_on_unit, optional_spawn_interaction_cooldown, optional_origin_player, skip_group, optional_auto_tag_on_spawn)
 	local pickup_settings = PICKUPS_BY_NAME[pickup_name]
 	local skip_spawning = self:_skip_group_blocks(skip_group)
 
@@ -982,6 +975,11 @@ PickupSystem.spawn_pickup = function (self, pickup_name, position, rotation, opt
 		local random_rotation = Quaternion.from_euler_angles_xyz(rx and math.random() * lim or 0, ry and math.random() * lim or 0, rz and math.random() * lim or 0)
 
 		rotation = Quaternion.multiply(random_rotation, rotation)
+	end
+
+	if optional_auto_tag_on_spawn ~= nil then
+		pickup_settings = table.clone_instance(pickup_settings)
+		pickup_settings.auto_tag_on_spawn = optional_auto_tag_on_spawn
 	end
 
 	local pickup_unit, pickup_unit_go_id = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template_name, position, rotation, nil, pickup_settings, optional_placed_on_unit, optional_spawn_interaction_cooldown, optional_origin_player)
@@ -1279,10 +1277,6 @@ PickupSystem.set_equipped_pickup_retained_charges = function (self, inventory_co
 
 		Ammo.set_current_ammo_in_clips(inventory_slot_component, charges)
 	end
-end
-
-PickupSystem.queue_on_update = function (self, func)
-	self._run_on_update[#self._run_on_update + 1] = func
 end
 
 return PickupSystem

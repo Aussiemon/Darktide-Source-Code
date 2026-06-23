@@ -36,9 +36,13 @@ LocalWaitForMissionBriefingDoneState.update = function (self, dt)
 	local mission_briefing_done = mission_intro_view.mission_briefing_done
 
 	if mission_briefing_done then
-		Log.info("LocalWaitForMissionBriefingDoneState", "mission_briefing_done")
+		local mission_intro_done_at = mission_intro_view.done_at
 
-		return "mission_briefing_done"
+		if mission_intro_done_at == nil or mission_intro_done_at < Managers.time:time("main") then
+			Log.info("LocalWaitForMissionBriefingDoneState", "mission_briefing_done")
+
+			return "mission_briefing_done"
+		end
 	end
 end
 

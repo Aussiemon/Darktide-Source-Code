@@ -39,6 +39,7 @@ MinionPerceptionExtension.init = function (self, extension_init_context, unit, e
 	self._initial_aggro_state = initial_aggro_state
 	self._is_priority_blackboard_update = false
 	self._delayed_alerts = {}
+	self._is_perception_disabled = not not extension_init_data.is_perception_disabled
 
 	local use_action_controlled_alert = breed.use_action_controlled_alert
 
@@ -107,7 +108,7 @@ MinionPerceptionExtension._init_blackboard_components = function (self, blackboa
 	perception_component.has_line_of_sight = false
 	perception_component.target_distance_z = 0
 	perception_component.target_changed = false
-	perception_component.target_changed_t = -math.huge
+	perception_component.target_changed_t = 0
 	perception_component.ignore_alerted_los = false
 	perception_component.has_last_los_position = false
 
@@ -349,6 +350,12 @@ MinionPerceptionExtension.aggro = function (self)
 end
 
 MinionPerceptionExtension.alert = function (self, enemy_unit, force_alert)
+	local is_perception_disabled = self:is_perception_disabled()
+
+	if is_perception_disabled then
+		return
+	end
+
 	local perception_component = self._perception_component
 	local aggro_state = perception_component.aggro_state
 
@@ -446,6 +453,10 @@ end
 
 MinionPerceptionExtension.set_threat_decay_enabled = function (self, enabled)
 	self._threat_decay_disabled = not enabled
+end
+
+MinionPerceptionExtension.is_perception_disabled = function (self)
+	return self._is_perception_disabled
 end
 
 MinionPerceptionExtension.force_new_target_attempt = function (self, optional_config)
@@ -723,6 +734,12 @@ MinionPerceptionExtension.update = function (self, unit, dt, t)
 
 	if force_new_target_attempt then
 		self._force_new_target_attempt, self._force_new_target_attempt_config = false
+	end
+
+	if self._is_perception_disabled and perception_component.target_unit then
+		perception_component.target_unit = nil
+
+		return
 	end
 
 	local delayed_alerts = self._delayed_alerts

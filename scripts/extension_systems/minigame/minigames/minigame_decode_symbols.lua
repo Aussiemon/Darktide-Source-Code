@@ -106,7 +106,7 @@ MinigameDecodeSymbols.stop = function (self)
 			local is_human_player = player and player:is_human_controlled()
 
 			if is_human_player then
-				Managers.telemetry_events:player_hacked_terminal(player, mistakes)
+				Managers.telemetry_events:player_hacked_terminal(player, mistakes, self._is_automatic)
 			end
 
 			table.clear(self._misses_per_player)

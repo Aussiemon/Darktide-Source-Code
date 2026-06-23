@@ -102,8 +102,9 @@ CraftingMechanicusBarterItemsView._setup_description = function (self)
 		g = rarity_color[3],
 		b = rarity_color[4],
 	})
+	local intro_widget = self._widgets_by_name.sacrifice_intro
 
-	self._widgets_by_name.sacrifice_intro.content.description = Localize("loc_mastery_crafting_sacrifice_weapon_select_description", true, {
+	intro_widget.content.description = Localize("loc_mastery_crafting_sacrifice_weapon_select_description", true, {
 		rarity = rarity_text,
 	})
 end
@@ -1381,18 +1382,21 @@ CraftingMechanicusBarterItemsView._change_state = function (self, state_name)
 		local sacrifice_title_style = self._widgets_by_name.sacrifice_intro.style.display_name
 		local sacrifice_description_text = self._widgets_by_name.sacrifice_intro.content.description
 		local sacrifice_description_style = self._widgets_by_name.sacrifice_intro.style.description
+		local mastery_info_details_width = self._ui_scenegraph.mastery_info_details.size[1]
+		local sacrifice_title_width = mastery_info_details_width + sacrifice_title_style.size_addition[1]
+		local sacrifice_description_width = mastery_info_details_width + sacrifice_description_style.size_addition[1]
 		local sacrifice_intro_title_height = Text.text_height(self._ui_renderer, sacrifice_title_text, sacrifice_title_style, {
-			650,
+			sacrifice_title_width,
 			2000,
 		})
 		local sacrifice_description_text_height = Text.text_height(self._ui_renderer, sacrifice_description_text, sacrifice_description_style, {
-			650,
+			sacrifice_description_width,
 			2000,
 		})
-		local text_margin = 60
+		local text_margin = 80
 		local mastery_info_height = sacrifice_intro_title_height + sacrifice_description_text_height + text_margin
 
-		self:_set_scenegraph_size("mastery_info_details", 650, mastery_info_height)
+		self:_set_scenegraph_size("mastery_info_details", nil, mastery_info_height)
 		self:_set_scenegraph_position("mastery_info_details", 760, nil)
 
 		self._ui_scenegraph.mastery_info.vertical_alignment = "bottom"

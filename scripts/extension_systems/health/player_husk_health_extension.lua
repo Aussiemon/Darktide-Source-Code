@@ -3,7 +3,7 @@
 local Health = require("scripts/utilities/health")
 local HealthExtensionInterface = require("scripts/extension_systems/health/health_extension_interface")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
-local PlayerHuskHealthExtension = class("PlayerHuskHealthExtension")
+local PlayerHuskHealthExtension = class("PlayerHuskHealthExtension", "HealthExtensionBase")
 
 PlayerHuskHealthExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, game_object_id, owner_id)
 	self._game_session = game_session
@@ -192,6 +192,7 @@ PlayerHuskHealthExtension.was_hit_by_critical_hit_this_render_frame = function (
 end
 
 PlayerHuskHealthExtension.kill = function (self)
+	PlayerHuskHealthExtension.super.kill(self)
 	Managers.event:trigger("unit_died", self._unit)
 
 	HEALTH_ALIVE[self._unit] = nil

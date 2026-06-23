@@ -91,9 +91,11 @@ ability_template.fx_sources = {}
 ability_template.equipped_ability_effect_scripts = {
 	"ShoutEffects",
 }
-ability_template.vfx = {
-	delay = 0.2,
-	name = "content/fx/particles/abilities/ogryn_ability_shout_activate",
+ability_template.equipped_ability_effect_scripts_tweak_data = {
+	vfx = {
+		delay = 0.2,
+		name = "content/fx/particles/abilities/ogryn_ability_shout_activate",
+	},
 }
 
 return ability_template

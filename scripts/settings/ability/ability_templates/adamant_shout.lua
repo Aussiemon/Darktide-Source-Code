@@ -99,9 +99,11 @@ ability_template.fx_sources = {}
 ability_template.equipped_ability_effect_scripts = {
 	"ShoutEffects",
 }
-ability_template.vfx = {
-	delay = 0.2,
-	name = "content/fx/particles/abilities/adamant/adamant_shout",
+ability_template.equipped_ability_effect_scripts_tweak_data = {
+	vfx = {
+		delay = 0.2,
+		name = "content/fx/particles/abilities/adamant/adamant_shout",
+	},
 }
 
 return ability_template

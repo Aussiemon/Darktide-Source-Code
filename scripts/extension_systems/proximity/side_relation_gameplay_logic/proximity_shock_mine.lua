@@ -6,11 +6,13 @@ local Component = require("scripts/utilities/component")
 local Explosion = require("scripts/utilities/attack/explosion")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local JobInterface = require("scripts/managers/unit_job/job_interface")
+local MinionState = require("scripts/utilities/minion_state")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local attack_types = AttackSettings.attack_types
 local buff_keywords = BuffSettings.keywords
+local group_keywords = BuffSettings.group_keywords
 local talent_settings = TalentSettings.adamant
 local ProximityShockMine = class("ProximityShockMine")
 local COMPONENT_STATES = table.enum("none", "arming", "deployed")
@@ -134,7 +136,7 @@ ProximityShockMine._apply_buffs = function (self, t)
 			started = true
 
 			if buff_extension then
-				local target_is_electrocuted = buff_extension:has_keyword(buff_keywords.electrocuted)
+				local target_is_electrocuted = MinionState.is_electrocuted(buff_extension, group_keywords.electrocuted)
 
 				if not target_is_electrocuted then
 					buff_extension:add_internally_controlled_buff(buff_to_add, t, "owner_unit", self._owner_unit_or_nil)
@@ -168,7 +170,7 @@ ProximityShockMine._handle_end_of_lifetime_triggers = function (self)
 	local explosion_template = has_bigger_explosion_buff and ExplosionTemplates.frag_grenade or ExplosionTemplates.shock_mine_self_destruct
 	local explosion_position = shock_mine_position + Vector3.multiply(Vector3.up(), 0.05)
 
-	Explosion.create_explosion(self._world, self._physics_world, explosion_position, Vector3.up(), owner_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
+	Explosion.create_explosion(self._world, self._physics_world, explosion_position, Quaternion.identity(), owner_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
 end
 
 ProximityShockMine.start_job = function (self)

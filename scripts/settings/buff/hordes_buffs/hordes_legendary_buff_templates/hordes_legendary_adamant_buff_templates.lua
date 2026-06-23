@@ -168,7 +168,7 @@ templates.hordes_buff_adamant_auto_detonate = {
 
 		local explosion_template = ExplosionTemplates.adamant_whistle_explosion
 
-		Explosion.create_explosion(template_context.world, template_context.physics_world, companion_position, Vector3.up(), player_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
+		Explosion.create_explosion(template_context.world, template_context.physics_world, companion_position, Quaternion.identity(), player_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
 	end,
 }
 

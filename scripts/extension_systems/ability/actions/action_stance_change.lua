@@ -51,7 +51,17 @@ ActionStanceChange.start = function (self, action_settings, t, time_scale, actio
 	local vent_warp_charge = has_vent_warp_charge_special_rule and action_settings.vent_warp_charge
 	local vo_tag = action_settings.vo_tag
 	local player_unit = self._player_unit
-	local buff_to_add = ability_template_tweak_data.buff_to_add
+	local buff_to_add
+	local charge_based_buffs_to_add = ability_template_tweak_data.charge_based_buffs_to_add
+
+	if charge_based_buffs_to_add then
+		local charges = self._ability_charges_used_at_start
+
+		buff_to_add = charge_based_buffs_to_add[charges]
+	else
+		buff_to_add = ability_template_tweak_data.buff_to_add
+	end
+
 	local slot_to_wield = ability_template_tweak_data.auto_wield_slot or action_settings.auto_wield_slot
 	local skip_wield_action = ability_template_tweak_data.skip_wield_action or action_settings.skip_wield_action
 	local inventory_component = self._inventory_component
@@ -166,6 +176,8 @@ ActionStanceChange.start = function (self, action_settings, t, time_scale, actio
 
 		if param_table then
 			param_table.unit = player_unit
+			param_table.ability_charges_used = self._ability_charges_used_at_start
+			param_table.remaining_ability_charges_before_use = self._remaining_ability_charges_before_use_at_start
 
 			buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
 		end

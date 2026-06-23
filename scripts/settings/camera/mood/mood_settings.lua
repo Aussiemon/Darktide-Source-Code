@@ -2,8 +2,17 @@
 
 local WarpCharge = require("scripts/utilities/warp_charge")
 local mood_settings = {}
-local types = table.enum("corruption_taken", "corruption", "corruptor_proximity", "critical_health", "damage_taken", "expeditions_death_imminent", "knocked_down", "last_wound", "no_toughness", "sprinting_overtime", "sprinting", "suppression_high", "suppression_low", "suppression_ongoing", "toughness_absorbed_melee", "toughness_absorbed", "toughness_broken", "warped_critical", "warped_high_to_critical", "warped_low_to_high", "warped", "adamant_combat_ability_charge", "broker_combat_ability_focus", "broker_combat_ability_punk_rage", "ogryn_combat_ability_charge", "ogryn_combat_ability_shout", "ogryn_combat_ability_stance", "psyker_combat_ability_shout", "psyker_force_field_sphere", "stealth", "veteran_combat_ability_stance", "veteran_stealth_and_stance", "veteran_stealth", "zealot_combat_ability_dash", "generic_stealth", "story_echo", "syringe_ability", "syringe_power", "syringe_speed", "syringe_broker")
+local types = table.enum("corruption_taken", "corruption", "corruptor_proximity", "critical_health", "damage_taken", "expeditions_death_imminent", "knocked_down", "last_wound", "no_toughness", "sprinting_overtime", "sprinting", "suppression_high", "suppression_low", "suppression_ongoing", "toughness_absorbed_melee", "toughness_absorbed", "toughness_broken", "warped_critical", "warped_high_to_critical", "warped_low_to_high", "warped", "adamant_combat_ability_charge", "broker_combat_ability_focus", "broker_combat_ability_punk_rage", "cryptic_grenade_ability_force_field", "ogryn_combat_ability_charge", "ogryn_combat_ability_shout", "ogryn_combat_ability_stance", "psyker_combat_ability_shout", "psyker_force_field_sphere", "stealth", "veteran_combat_ability_stance", "veteran_stealth_and_stance", "veteran_stealth", "zealot_combat_ability_dash", "generic_stealth", "story_echo", "syringe_ability", "syringe_power", "syringe_speed", "syringe_broker")
 local status = table.enum("active", "inactive", "removing")
+local PULSING = {
+	pulsing_animation_duration = 3,
+	variable_names = {
+		pulse = "pulse_on_off",
+		pulse_intensity = "pulse_intensity",
+		redness = "redness",
+	},
+}
+local SHIELD_SCREENSPACE_PARTICLE = "content/fx/particles/screenspace/screen_cryptic_force_field"
 
 mood_settings.mood_types = types
 mood_settings.status = status
@@ -39,6 +48,7 @@ mood_settings.priority = {
 	types.psyker_combat_ability_shout,
 	types.veteran_combat_ability_stance,
 	types.zealot_combat_ability_dash,
+	types.cryptic_grenade_ability_force_field,
 	types.expeditions_death_imminent,
 	types.corruptor_proximity,
 	types.syringe_ability,
@@ -298,6 +308,79 @@ mood_settings.moods = {
 			group = "player_ability",
 			off_state = "none",
 			on_state = "broker_punkrage",
+		},
+	},
+	[types.cryptic_grenade_ability_force_field] = {
+		blend_in_time = 0.1,
+		blend_out_time = 0.03,
+		shading_environment = "content/shading_environments/moods/cryptic_personal_force_field_mood",
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		particle_effects_looping = {
+			SHIELD_SCREENSPACE_PARTICLE,
+		},
+		wwise_state = {
+			group = "player_ability",
+			off_state = "none",
+			on_state = "cryptic_shield",
+		},
+		particle_material_scalar_funcs = {
+			function (world, particle_id, player, previous_values)
+				local game_session = Managers.state.game_session:game_session()
+				local force_field_unit = previous_values.force_shield_unit or nil
+				local force_field_object_id = previous_values.game_object_id or nil
+
+				if not force_field_unit then
+					local player_owned_units = player.owned_units
+
+					for _, owned_unit in pairs(player_owned_units) do
+						local force_field_extension = ScriptUnit.has_extension(owned_unit, "force_field_system")
+
+						if force_field_extension then
+							force_field_unit = owned_unit
+							force_field_object_id = Managers.state.unit_spawner:game_object_id(force_field_unit)
+							previous_values.force_shield_unit = owned_unit
+							previous_values.game_object_id = force_field_object_id
+							previous_values.pulsing_started = false
+
+							break
+						end
+					end
+
+					if not force_field_unit then
+						return
+					end
+				end
+
+				if not Unit.alive(force_field_unit) then
+					return
+				end
+
+				local expired = GameSession.game_object_field(game_session, force_field_object_id, "expired")
+				local remaining_duration = GameSession.game_object_field(game_session, force_field_object_id, "remaining_duration")
+
+				if expired then
+					return
+				end
+
+				local time_left = remaining_duration
+				local pulsing_animation_duration = PULSING.pulsing_animation_duration
+
+				if time_left <= pulsing_animation_duration and not previous_values.pulsing_started then
+					previous_values.pulsing_started = true
+
+					World.set_particles_material_scalar(world, particle_id, "force_field_frame", PULSING.variable_names.pulse, 1)
+					World.set_particles_material_scalar(world, particle_id, "middle_thinner_force_field", PULSING.variable_names.pulse, 1)
+				end
+
+				if previous_values.pulsing_started then
+					local pulsing_time_left_percentage = 1 - math.clamp01(time_left / pulsing_animation_duration)
+
+					World.set_particles_material_scalar(world, particle_id, "force_field_frame", PULSING.variable_names.redness, pulsing_time_left_percentage)
+					World.set_particles_material_scalar(world, particle_id, "force_field_frame", PULSING.variable_names.pulse_intensity, pulsing_time_left_percentage)
+					World.set_particles_material_scalar(world, particle_id, "middle_thinner_force_field", PULSING.variable_names.redness, pulsing_time_left_percentage)
+					World.set_particles_material_scalar(world, particle_id, "middle_thinner_force_field", PULSING.variable_names.pulse_intensity, pulsing_time_left_percentage)
+				end
+			end,
 		},
 	},
 	[types.ogryn_combat_ability_charge] = {

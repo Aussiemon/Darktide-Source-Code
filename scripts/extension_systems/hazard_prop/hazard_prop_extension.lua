@@ -277,7 +277,7 @@ HazardPropExtension._trigger_hazard = function (self)
 		local charge_level = explosion_settings.charge_level
 		local attack_type = explosion_settings.explosion
 
-		Explosion.create_explosion(self._world, physics_world, explosion_position, Vector3.up(), unit, explosion_template, power_level, charge_level, attack_type)
+		Explosion.create_explosion(self._world, physics_world, explosion_position, Quaternion.identity(), unit, explosion_template, power_level, charge_level, attack_type)
 	elseif content == hazard_content.fire then
 		local world = Managers.world:world("level_world")
 		local physics_world = World.physics_world(world)
@@ -289,7 +289,7 @@ HazardPropExtension._trigger_hazard = function (self)
 		local charge_level = fire_settings.charge_level
 		local attack_type = fire_settings.explosion
 
-		Explosion.create_explosion(self._world, physics_world, explosion_position, Vector3.up(), unit, explosion_template, power_level, charge_level, attack_type)
+		Explosion.create_explosion(self._world, physics_world, explosion_position, Quaternion.identity(), unit, explosion_template, power_level, charge_level, attack_type)
 
 		local attack_direction = self._trigger_direction:unbox()
 

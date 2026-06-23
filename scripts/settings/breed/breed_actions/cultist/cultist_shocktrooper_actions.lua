@@ -17,6 +17,7 @@ local action_data = {
 	},
 	weapon_malfunction_loop = {
 		rotate_towards_target = false,
+		weapon_malfunction_time = 12,
 		anim_events = {
 			"suppressed_loop_01",
 		},
@@ -24,6 +25,13 @@ local action_data = {
 			"stagger_finished",
 			"idle",
 		},
+	},
+	run_away_weapon_malfunction = {
+		is_assaulting = true,
+		leave_when_reached_destination = true,
+		move_anim_event = "move_fwd",
+		move_type = "combat_vector",
+		run_speed = 4.2,
 	},
 	patrol = {
 		anim_events = {

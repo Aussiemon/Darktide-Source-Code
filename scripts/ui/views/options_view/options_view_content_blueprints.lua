@@ -933,7 +933,7 @@ blueprints.keybind = {
 		local hotspot = content.hotspot
 
 		if hotspot.on_released then
-			parent:show_keybind_popup(widget, entry, content.entry.cancel_keys)
+			parent:show_keybind_popup(widget, entry)
 		end
 	end,
 }

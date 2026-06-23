@@ -71,13 +71,9 @@ BroadphaseSystem._event_unit_died = function (self, unit)
 end
 
 BroadphaseSystem.update = function (self, context, dt, t, ...)
-	local broadphase_move = Broadphase.move
 	local broadphase = self.broadphase
-	local POSITION_LOOKUP = POSITION_LOOKUP
 
-	for unit, broadphase_id in pairs(self._moving_units) do
-		broadphase_move(broadphase, broadphase_id, POSITION_LOOKUP[unit])
-	end
+	Broadphase.update_unit_positions(broadphase, self._moving_units)
 end
 
 return BroadphaseSystem

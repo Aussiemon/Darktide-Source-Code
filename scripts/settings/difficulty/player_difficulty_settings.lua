@@ -24,6 +24,13 @@ player_difficulty_settings.archetype_wounds = {
 		2,
 		2,
 	},
+	cryptic = {
+		4,
+		3,
+		3,
+		2,
+		2,
+	},
 	ogryn = {
 		5,
 		4,

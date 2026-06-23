@@ -4,6 +4,7 @@ require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
 
 local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
 local AchievementUiHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
+local Breeds = require("scripts/settings/breed/breeds")
 local CrimesCompabilityMapping = require("scripts/settings/character/crimes_compability_mapping")
 local Definitions = require("scripts/ui/views/inventory_cosmetics_view/inventory_cosmetics_view_definitions")
 local InventoryCosmeticsViewSettings = require("scripts/ui/views/inventory_cosmetics_view/inventory_cosmetics_view_settings")
@@ -75,7 +76,7 @@ InventoryCosmeticsView.init = function (self, settings, context)
 		self._companion_animation_event_variable_data = context.companion_animation_event_variable_data or context.animation_event_variable_data
 		self.item_type = context.item_type
 
-		local is_gear = not not string.find(self._selected_slot.name, "slot_gear")
+		local is_gear = self._selected_slot.slot_type == "gear"
 
 		self._camera_zoomed_in = true
 		self._initialize_zoom = is_gear
@@ -300,7 +301,7 @@ InventoryCosmeticsView._spawn_profile = function (self, profile, initial_rotatio
 	self._profile_spawner = UIProfileSpawner:new("InventoryCosmeticsView", world, camera, unit_spawner)
 
 	if disable_rotation_input then
-		self._profile_spawner:disable_rotation_input()
+		self._profile_spawner:disable_rotation_input(true)
 	end
 
 	local camera_position = ScriptCamera.position(camera)
@@ -315,7 +316,31 @@ InventoryCosmeticsView._spawn_profile = function (self, profile, initial_rotatio
 
 	camera_position.z = 0
 
-	self._profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation)
+	local archetype = profile.archetype
+	local character_appearance_state_machine = archetype.character_appearance_state_machine
+	local archetype_name = archetype.name
+	local animations_per_archetype = InventoryCosmeticsViewSettings.animations_per_archetype
+	local animations_settings = animations_per_archetype[archetype_name]
+	local animation_event = animations_settings.initial_event
+	local _, companion_breed_name = ProfileUtils.has_companion(profile)
+	local companion_state_machine, companion_animation_event
+
+	if companion_breed_name then
+		local companion_breed_settings = Breeds[companion_breed_name]
+
+		companion_state_machine = companion_breed_settings.inventory_state_machine
+		companion_animation_event = "idle_cosmetics"
+	end
+
+	local companion_data = {
+		ignore = false,
+		position = spawn_position,
+		rotation = spawn_rotation,
+		state_machine = companion_state_machine,
+		animation_event = companion_animation_event,
+	}
+
+	self._profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, nil, character_appearance_state_machine, animation_event, nil, nil, nil, nil, nil, nil, companion_data)
 
 	local selected_slot = self._selected_slot
 	local selected_slot_name = selected_slot and selected_slot.name
@@ -875,7 +900,12 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slot)
 	return self._promise_container:cancel_on_destroy(Promise.all(unpack(promises))):next(function (data)
 		self._cosmetic_layout = self:_prepare_cosmetic_layout_data(data)
 	end):catch(function (data)
-		self._refresh_in_seconds = 5
+		for i = 1, #data do
+			if data[i].code and Managers.backend:is_retryable_error_code(data[i].code) then
+				self._refresh_in_seconds = 5
+			end
+		end
+
 		self._cosmetic_layout = self:_prepare_cosmetic_layout_data(data)
 	end)
 end
@@ -988,7 +1018,7 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 	local has_locked_penance_track_item = next(locked_penance_track_items_by_name) ~= nil
 	local has_locked_store_item = next(locked_store_items_by_name) ~= nil
 
-	if has_locked_achievement_item or has_locked_store_item or has_locked_penance_track_item then
+	if (has_locked_achievement_item or has_locked_store_item or has_locked_penance_track_item) and layout_count > 0 then
 		layout_count = layout_count + 1
 		layout[layout_count] = {
 			sort_group = 4,
@@ -1425,8 +1455,10 @@ InventoryCosmeticsView._setup_background_world = function (self)
 	local player = self._preview_player
 	local player_profile = player:profile()
 	local archetype = player_profile.archetype
-	local breed_name = archetype.ui_breed or archetype.breed or "human"
-	local default_camera_event_id = "event_register_cosmetics_preview_default_camera_" .. breed_name
+	local breed_name = archetype.breed or "human"
+	local breed = Breeds[breed_name]
+	local body_size = breed.body_size
+	local default_camera_event_id = string.format("event_register_%s_cosmetics_preview_default_camera", body_size)
 
 	self[default_camera_event_id] = function (instance, camera_unit)
 		if instance._context then
@@ -1449,8 +1481,25 @@ InventoryCosmeticsView._setup_background_world = function (self)
 	self._item_camera_by_slot_id = {}
 
 	for slot_name, slot in pairs(ItemSlotSettings) do
-		if slot.slot_type == "gear" then
-			local item_camera_event_id = "event_register_cosmetics_preview_item_camera_" .. breed_name .. "_" .. slot_name
+		local is_gear = slot.slot_type == "gear"
+		local is_body = slot.slot_type == "body"
+		local is_companion_gear = slot_name == "slot_companion_gear_full"
+		local valid_player_slot = is_gear and not is_companion_gear
+
+		valid_player_slot = valid_player_slot or is_body
+
+		if valid_player_slot then
+			local item_camera_event_id = string.format("event_register_%s_%s_cosmetics_preview_item_camera", body_size, slot_name)
+
+			self[item_camera_event_id] = function (instance, camera_unit)
+				instance._item_camera_by_slot_id[slot_name] = camera_unit
+
+				instance:_unregister_event(item_camera_event_id)
+			end
+
+			self:_register_event(item_camera_event_id)
+		elseif archetype and archetype.companion_breed and is_companion_gear then
+			local item_camera_event_id = string.format("event_register_%s_%s_cosmetics_preview_item_camera", archetype.name, slot_name)
 
 			self[item_camera_event_id] = function (instance, camera_unit)
 				instance._item_camera_by_slot_id[slot_name] = camera_unit

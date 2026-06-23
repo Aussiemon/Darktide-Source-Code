@@ -1,17 +1,21 @@
 ﻿-- chunkname: @scripts/ui/views/main_menu_background_view/main_menu_background_view.lua
 
-local definition_path = "scripts/ui/views/main_menu_background_view/main_menu_background_view_definitions"
+require("scripts/ui/views/base_view")
+
+local Breeds = require("scripts/settings/breed/breeds")
 local MainMenuBackgroundViewSettings = require("scripts/ui/views/main_menu_background_view/main_menu_background_view_settings")
 local MasterItems = require("scripts/backend/master_items")
+local PlayerHeight = require("scripts/utilities/player_height")
+local ProfileUtils = require("scripts/utilities/profile_utils")
 local UICharacterProfilePackageLoader = require("scripts/managers/ui/ui_character_profile_package_loader")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local WorldRender = require("scripts/utilities/world_render")
-local ProfileUtils = require("scripts/utilities/profile_utils")
 local MainMenuBackgroundView = class("MainMenuBackgroundView", "BaseView")
+local DEFINITION_PATH = "scripts/ui/views/main_menu_background_view/main_menu_background_view_definitions"
 
 MainMenuBackgroundView.init = function (self, settings, context)
-	local definitions = require(definition_path)
+	local definitions = require(DEFINITION_PATH)
 
 	self._context = context or {}
 	self._loading_profile_queue = {}
@@ -153,43 +157,77 @@ MainMenuBackgroundView._spawn_profile = function (self, profile)
 
 	local ignored_slots = MainMenuBackgroundViewSettings.ignored_slots
 
-	for i = 1, #ignored_slots do
-		local slot_name = ignored_slots[i]
+	for ii = 1, #ignored_slots do
+		local slot_name = ignored_slots[ii]
 
 		self._profile_spawner:ignore_slot(slot_name)
 	end
 
-	local spawn_position = Unit.world_position(self._spawn_point_unit, 1)
-	local spawn_rotation = Unit.world_rotation(self._spawn_point_unit, 1)
-	local companion_spawn_position = Unit.world_position(self._companion_spawn_point_unit, 1)
-	local companion_spawn_rotation = Unit.world_rotation(self._companion_spawn_point_unit, 1)
+	local spawn_point_unit = self._spawn_point_unit
+	local spawn_position = Unit.world_position(spawn_point_unit, 1)
+	local spawn_rotation = Unit.world_rotation(spawn_point_unit, 1)
+	local has_companion, companion_breed_name = ProfileUtils.has_companion(profile)
+	local companion_state_machine
+
+	if has_companion then
+		local companion_breed_settings = Breeds[companion_breed_name]
+
+		companion_state_machine = companion_breed_settings.inventory_state_machine
+	end
+
 	local companion_data = {
-		position = companion_spawn_position,
-		rotation = companion_spawn_rotation,
+		animation_event = "idle_main_menu",
+		ignore = false,
+		position = spawn_position,
+		rotation = spawn_rotation,
+		state_machine = companion_state_machine,
 	}
+	local archetype = profile.archetype
+	local main_menu_state_machine = archetype.main_menu_state_machine
+	local archetype_name = archetype.name
+	local animations_per_archetype = MainMenuBackgroundViewSettings.animations_per_archetype
+	local animations_settings = animations_per_archetype[archetype_name]
+	local animation_event = animations_settings.initial_event
+	local profile_character_height = profile.personal and profile.personal.character_height or 1
+	local breed_name = archetype.breed
+	local breed = Breeds[breed_name]
+	local size_variation_range = breed.size_variation_range
+	local heights = breed.heights
+	local default_height = heights.default
+	local scaled_default_height = default_height * profile_character_height
+	local height_lerp_t = math.ilerp(default_height * size_variation_range[1], default_height * size_variation_range[2], scaled_default_height)
 
-	self._profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, nil, nil, nil, nil, nil, nil, nil, nil, nil, companion_data)
+	self:_move_camera(archetype, height_lerp_t)
 
-	local has_companion = ProfileUtils.has_companion(profile)
+	local scale = PlayerHeight.player_character_third_person_scale(breed, profile, nil)
+	local spawn_scale = Vector3(scale, scale, scale)
 
+	self._profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, spawn_scale, main_menu_state_machine, animation_event, nil, nil, nil, nil, nil, nil, companion_data)
 	self._profile_spawner:toggle_companion(has_companion)
-
-	local selected_archetype = profile.archetype
-	local archetype_name = selected_archetype.name
-	local is_ogryn = archetype_name == "ogryn"
-
-	self:_move_camera(is_ogryn)
 
 	self._spawned_profile = profile
 end
 
-MainMenuBackgroundView._move_camera = function (self, is_ogryn)
+local function _lerp_camera_offsets(offset, lerp_t)
+	if type(offset) == "table" then
+		return math.lerp(offset[1], offset[2], lerp_t or 0.5)
+	end
+
+	return offset
+end
+
+MainMenuBackgroundView._move_camera = function (self, archetype, lerp_t)
 	local world_spawner = self._world_spawner
 
-	if is_ogryn == true then
-		world_spawner:set_target_camera_offset(-0.15, -2.8, 0.4)
-	else
+	if not archetype then
 		world_spawner:set_target_camera_offset(0, 0, 0)
+	else
+		local offsets = archetype.main_menu_camera_offsets
+		local x = _lerp_camera_offsets(offsets.x, lerp_t)
+		local y = _lerp_camera_offsets(offsets.y, lerp_t)
+		local z = _lerp_camera_offsets(offsets.z, lerp_t)
+
+		world_spawner:set_target_camera_offset(x, y, z, 0.75, math.easeOutCubic)
 	end
 end
 
@@ -200,7 +238,7 @@ MainMenuBackgroundView._show_dummy_unit = function (self)
 		self._profile_spawner = nil
 	end
 
-	self:_move_camera()
+	self:_move_camera(nil, nil)
 	Unit.set_unit_visibility(self._dummy_unit, true, true)
 end
 

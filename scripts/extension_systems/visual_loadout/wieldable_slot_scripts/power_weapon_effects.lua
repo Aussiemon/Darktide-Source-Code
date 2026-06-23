@@ -9,6 +9,7 @@ local _sfx_external_properties = {}
 local _vfx_external_properties = {}
 local SPECIAL_ACTIVE_LOOPING_VFX_ALIAS = "weapon_special_loop"
 local SPECIAL_ACTIVE_LOOPING_SFX_ALIAS = "weapon_special_loop"
+local SPECIAL_ACTIVE_LOOPING_EXTRA_VFX_ALIAS = "weapon_special_extra_loop"
 local SPECIAL_OFF_VFX_ALIAS = "weapon_special_end"
 local SPECIAL_OFF_SFX_ALIAS = "weapon_special_end"
 local INVENTORY_EVENT_POWER_OFF = "special_disabled"
@@ -16,6 +17,7 @@ local INVENTORY_EVENT_POWER_ON = "special_enabled"
 local INVENTORY_EVENT_WIELD = "special_disabled"
 local SOUND_PARAMETER_NAME = "power_resource"
 local FX_SOURCE_NAME = "_special_active"
+local FX_SOURCE_EXTRA_NAME_FORMAT_STRING = "_power_node_%d"
 
 PowerWeaponEffects.init = function (self, context, slot, weapon_template, fx_sources, item, unit_1p, unit_3p)
 	local is_husk = context.is_husk
@@ -32,6 +34,24 @@ PowerWeaponEffects.init = function (self, context, slot, weapon_template, fx_sou
 	end
 
 	self._special_active_fx_source_name = fx_sources[FX_SOURCE_NAME]
+
+	local emit_fx_source_names = {}
+	local found_all_emit_sources
+	local index = 1
+
+	repeat
+		local fx_source_name = string.format(FX_SOURCE_EXTRA_NAME_FORMAT_STRING, index)
+		local fx_source = fx_sources[fx_source_name]
+
+		found_all_emit_sources = fx_source == nil
+
+		if fx_source then
+			emit_fx_source_names[index] = fx_source
+			index = index + 1
+		end
+	until found_all_emit_sources
+
+	self._emit_fx_source_names = #emit_fx_source_names > 0 and emit_fx_source_names or nil
 	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
 
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
@@ -45,6 +65,7 @@ PowerWeaponEffects.init = function (self, context, slot, weapon_template, fx_sou
 	self._looping_playing_id = nil
 	self._looping_stop_event_name = nil
 	self._looping_effect_id = nil
+	self._looping_emit_effect_ids = {}
 
 	_unit_components(self._weapon_material_variables_1p, slot.attachments_by_unit_1p[unit_1p])
 	_unit_components(self._weapon_material_variables_3p, slot.attachments_by_unit_3p[unit_3p])
@@ -53,7 +74,8 @@ end
 PowerWeaponEffects.destroy = function (self)
 	PlayerUnitVisualLoadout.slot_flow_event(self._first_person_extension, self._visual_loadout_extension, self._slot_name, INVENTORY_EVENT_POWER_OFF)
 	self:_stop_sfx_loop()
-	self:_stop_vfx_loop()
+	self:_stop_vfx_loop(true)
+	self:_stop_emit_vfx_loop(true)
 end
 
 PowerWeaponEffects.wield = function (self)
@@ -64,6 +86,7 @@ end
 PowerWeaponEffects.unwield = function (self)
 	self:_stop_sfx_loop()
 	self:_stop_vfx_loop()
+	self:_stop_emit_vfx_loop(true)
 	self:_set_stop_time()
 
 	self._is_active = false
@@ -80,6 +103,7 @@ end
 PowerWeaponEffects.update_first_person_mode = function (self, first_person_mode)
 	self:_stop_sfx_loop()
 	self:_stop_vfx_loop()
+	self:_stop_emit_vfx_loop()
 	self:_set_stop_time()
 
 	self._is_active = false
@@ -118,6 +142,10 @@ PowerWeaponEffects._update_active = function (self)
 	local current_playing_id = self._looping_playing_id
 	local should_start = not current_playing_id and not is_active and special_active
 	local should_stop = current_playing_id and is_active and not special_active
+
+	if not self._emit_fx_running then
+		self:_start_emit_vfx_loop()
+	end
 
 	if should_start then
 		self:_start_sfx_loop()
@@ -191,6 +219,32 @@ PowerWeaponEffects._start_vfx_loop = function (self)
 	end
 end
 
+PowerWeaponEffects._start_emit_vfx_loop = function (self)
+	local emit_fx_source_names = self._emit_fx_source_names
+
+	if not emit_fx_source_names then
+		return
+	end
+
+	local resolved, effect_name = self._visual_loadout_extension:resolve_gear_particle(SPECIAL_ACTIVE_LOOPING_EXTRA_VFX_ALIAS, _vfx_external_properties)
+
+	if resolved then
+		local world = self._world
+		local fx_extension = self._fx_extension
+
+		for ii = 1, #emit_fx_source_names do
+			local new_effect_id = fx_extension:spawn_particles_local(effect_name, Vector3.zero())
+			local vfx_link_unit, vfx_link_node = fx_extension:vfx_spawner_unit_and_node(emit_fx_source_names[ii])
+
+			World.link_particles(world, new_effect_id, vfx_link_unit, vfx_link_node, Matrix4x4.identity(), "stop")
+
+			self._looping_emit_effect_ids[ii] = new_effect_id
+		end
+
+		self._emit_fx_running = true
+	end
+end
+
 PowerWeaponEffects._stop_vfx_loop = function (self, destroy)
 	local current_effect_id = self._looping_effect_id
 
@@ -203,6 +257,24 @@ PowerWeaponEffects._stop_vfx_loop = function (self, destroy)
 	end
 
 	self._looping_effect_id = nil
+end
+
+PowerWeaponEffects._stop_emit_vfx_loop = function (self, destroy)
+	local looping_emit_effect_ids = self._looping_emit_effect_ids
+
+	for ii = 1, #looping_emit_effect_ids do
+		local current_effect_id = looping_emit_effect_ids[ii]
+
+		if destroy then
+			World.destroy_particles(self._world, current_effect_id)
+		else
+			World.stop_spawning_particles(self._world, current_effect_id)
+		end
+	end
+
+	self._emit_fx_running = nil
+
+	table.clear(looping_emit_effect_ids)
 end
 
 PowerWeaponEffects._set_start_time = function (self)

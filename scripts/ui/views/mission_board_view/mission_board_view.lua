@@ -326,7 +326,6 @@ MissionBoardView._open_current_page = function (self)
 	local mission_list_visible = view_element_campaign_mission_list and view_element_campaign_mission_list:visible()
 
 	widgets_by_name.gamepad_cursor.visible = InputDevice.gamepad_active and not mission_list_visible
-	widgets_by_name.play_button.content.hotspot.pressed_callback = callback(self, "_callback_start_selected_mission")
 
 	local quick_play_settings = page_settings.qp
 
@@ -350,6 +349,27 @@ MissionBoardView._open_current_page = function (self)
 
 	if self._selected_mission_id and self._selected_mission_id ~= "qp_mission_widget" and self._selected_mission_id ~= "campaign_playlist_upsell" then
 		self:set_selected_mission(self._selected_mission_id, true, true)
+	end
+
+	self:_update_play_button_state_text()
+end
+
+MissionBoardView._update_play_button_state_text = function (self, mission_id)
+	mission_id = mission_id or self._selected_mission_id
+
+	local widgets_by_name = self._widgets_by_name
+	local content, style = widgets_by_name.play_button.content, widgets_by_name.play_button.style
+
+	if self._selected_mission_id == "campaign_playlist_upsell" then
+		content.default_text_key = "loc_story_mission_menu_access_button_text"
+		content.hotspot.pressed_callback = callback(self, "_callback_open_replay_campaign_missions_view")
+		style.default_text.default_font_size = 22
+		style.default_text.font_highlight_multiplier = 2
+	else
+		content.default_text_key = "loc_story_mission_play_menu_button_start_mission"
+		content.hotspot.pressed_callback = callback(self, "_callback_start_selected_mission")
+		style.default_text.default_font_size = 28
+		style.default_text.font_highlight_multiplier = 4
 	end
 end
 
@@ -638,7 +658,7 @@ MissionBoardView._set_static_campaign_playlist_widget = function (self)
 		sub_header_text = Localize("loc_glossary_completed") .. " (" .. tostring(completed_campaign) .. "/" .. tostring(total_campaign) .. ")",
 		header_text = Localize("loc_story_mission_menu_access_button_text"),
 		has_new = completed_campaign ~= total_campaign,
-	}, callback(self, "_callback_open_replay_campaign_missions_view"))
+	}, callback(self, "_set_selected_campaign_playlist_upsell"))
 end
 
 MissionBoardView._add_mission_widget = function (self, mission)
@@ -1031,7 +1051,7 @@ MissionBoardView._update_info_state = function (self, t)
 	end
 
 	do
-		local is_private_game = self._mission_board_logic:is_private_match()
+		local is_private_game = self._mission_board_logic:is_private_match() and self._selected_mission_id ~= "campaign_playlist_upsell"
 		local is_alone = party_manager:num_other_members() < 1
 
 		self:_poll_issue_localized("private_error", 2, is_private_game and is_alone, "loc_mission_board_cannot_private_match")
@@ -1296,9 +1316,12 @@ MissionBoardView._set_selected = function (self, id, sidebar_function_name, move
 	local widgets_by_name = self._widgets_by_name
 
 	widgets_by_name.play_button.visible = show_play_button
+	widgets_by_name.play_button.content.current_selected_mission_id = id
 	widgets_by_name.play_button_legend.visible = show_play_button
 
-	local should_active_hologram = id ~= nil and id ~= "qp_mission_widget"
+	self:_update_play_button_state_text(id)
+
+	local should_active_hologram = id ~= nil and id ~= "qp_mission_widget" and id ~= "campaign_playlist_upsell"
 
 	self:_set_hologram_outline(should_active_hologram)
 
@@ -1317,6 +1340,10 @@ end
 
 MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor, force_reload)
 	return self:_set_selected("qp_mission_widget", "_set_quickplay_sidebar", move_gamepad_cursor, force_reload)
+end
+
+MissionBoardView._set_selected_campaign_playlist_upsell = function (self, move_gamepad_cursor, force_reload)
+	return self:_set_selected("campaign_playlist_upsell", "_set_quickplay_sidebar", move_gamepad_cursor, force_reload)
 end
 
 MissionBoardView._set_mission_sidebar = function (self, mission_id)
@@ -1747,7 +1774,7 @@ end
 MissionBoardView._callback_open_replay_campaign_missions_view = function (self)
 	local view_element_campaign_mission_list = self:_element("mission_list")
 
-	if view_element_campaign_mission_list and view_element_campaign_mission_list:is_playing_transition_animation() or self._is_loading or self._selected_mission_id == "campaign_playlist_upsell" then
+	if view_element_campaign_mission_list and view_element_campaign_mission_list:is_playing_transition_animation() or self._is_loading or not self._selected_mission_id == "campaign_playlist_upsell" then
 		return
 	end
 

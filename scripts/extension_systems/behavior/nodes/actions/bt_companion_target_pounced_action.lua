@@ -6,6 +6,7 @@ local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local Disable = require("scripts/utilities/attack/disable")
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local Explosion = require("scripts/utilities/attack/explosion")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
@@ -60,7 +61,7 @@ BtCompanionTargetPouncedAction.enter = function (self, unit, breed, blackboard, 
 		local spawn_component = blackboard.spawn
 		local world, physics_world = spawn_component.world, spawn_component.physics_world
 
-		Explosion.create_explosion(world, physics_world, explosion_position, up, unit, explosion_template, power_level, charge_level, explosion_attack_type)
+		Explosion.create_explosion(world, physics_world, explosion_position, Quaternion.look(up), unit, explosion_template, power_level, charge_level, explosion_attack_type)
 	end
 
 	local target_blackboard = BLACKBOARDS[pounce_target]
@@ -135,9 +136,9 @@ BtCompanionTargetPouncedAction.run = function (self, unit, breed, blackboard, sc
 
 	if scratchpad.attempting_pounce then
 		scratchpad.attempting_pounce = false
-		scratchpad.target_disable_component.type = "pounced"
-		scratchpad.target_disable_component.is_disabled = true
-		scratchpad.target_disable_component.attacker_unit = unit
+
+		Disable.disable_minion(pounce_target, "pounced", unit)
+
 		scratchpad.next_damage_t = t + action_data.damage_start_time
 	end
 

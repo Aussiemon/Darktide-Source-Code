@@ -157,6 +157,16 @@ CheckProcFunctions.on_elite_or_special_or_monster_hit = function (params, templa
 	return true
 end
 
+CheckProcFunctions.on_monster_or_captain_hit = function (params, template_data, template_context, t)
+	local breed_tags = params.tags
+
+	if not breed_tags or not breed_tags.monster and not breed_tags.captain and not breed_tags.cultist_captain then
+		return false
+	end
+
+	return true
+end
+
 CheckProcFunctions.on_ranged_enemy_killed = function (params, template_data, template_context, t)
 	if params.attack_result ~= attack_results.died then
 		return false
@@ -375,6 +385,10 @@ end
 
 CheckProcFunctions.on_shout_crit_hit = function (params, template_data, template_context, t)
 	return params.is_critical_strike and params.attack_type == attack_types.shout
+end
+
+CheckProcFunctions.on_warp_slice_crit_hit = function (params, template_data, template_context, t)
+	return params.is_critical_strike and params.damage_profile and params.damage_profile.warp_slice
 end
 
 CheckProcFunctions.on_first_target_melee_hit = function (params, template_data, template_context, t)

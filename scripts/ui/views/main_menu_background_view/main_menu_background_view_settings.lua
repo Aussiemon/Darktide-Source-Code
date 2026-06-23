@@ -4,7 +4,6 @@ local main_menu_background_view_settings = {
 	back_row_additional_spacing_depth = 1.2,
 	back_row_additional_spacing_width = 0.3,
 	character_spacing_width = 1.6,
-	debug_character_count = 4,
 	level_name = "content/levels/ui/main_menu/main_menu",
 	shading_environment = "content/shading_environments/ui/main_menu",
 	timer_name = "ui",
@@ -24,33 +23,26 @@ local main_menu_background_view_settings = {
 		"slot_grenade_ability",
 	},
 	animations_per_archetype = {
-		psyker = {
-			initial_event = "end_of_round_01",
-			events = {
-				"emote_psyker_01",
-				"endorse_psyker_01",
-			},
+		adamant = {
+			initial_event = "main_menu_idle",
 		},
-		veteran = {
-			initial_event = "end_of_round_02",
-			events = {
-				"emote_veteran_01",
-				"endorse_veteran_01",
-			},
-		},
-		zealot = {
-			initial_event = "end_of_round_03",
-			events = {
-				"emote_zealot_01",
-				"endorse_zealot_01",
-			},
+		cryptic = {
+			initial_event = "main_menu_idle",
 		},
 		ogryn = {
-			initial_event = "end_of_round_01",
-			events = {
-				"emote_ogryn_01",
-				"endorse_ogryn_01",
-			},
+			initial_event = "main_menu_idle",
+		},
+		psyker = {
+			initial_event = "main_menu_idle",
+		},
+		veteran = {
+			initial_event = "main_menu_idle",
+		},
+		zealot = {
+			initial_event = "main_menu_idle",
+		},
+		broker = {
+			initial_event = "main_menu_idle",
 		},
 	},
 }

@@ -91,6 +91,7 @@ MissionBoardViewStyles.play_button.disabled = {
 	},
 }
 MissionBoardViewStyles.play_button.default_text = {
+	default_font_size = 28,
 	font_size = 28,
 	font_type = "mono_tide_medium",
 	horizontal_alignment = "center",
@@ -109,6 +110,7 @@ MissionBoardViewStyles.play_button.default_text = {
 	text_color = Color.light_green(nil, true),
 }
 MissionBoardViewStyles.play_button.selected_text = {
+	default_font_size = 32,
 	font_size = 32,
 	font_type = "proxima_nova_bold",
 	horizontal_alignment = "center",
@@ -127,6 +129,7 @@ MissionBoardViewStyles.play_button.selected_text = {
 	text_color = Color.black(nil, true),
 }
 MissionBoardViewStyles.play_button.disabled_text = {
+	default_font_size = 18,
 	font_size = 18,
 	font_type = "proxima_nova_medium",
 	horizontal_alignment = "center",

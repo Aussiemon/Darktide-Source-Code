@@ -30,7 +30,8 @@ HudElementPlayerAbility.init = function (self, parent, draw_layer, start_scale, 
 	self._slot_id = data.slot_id
 
 	self:set_charges_amount(99)
-	self:set_icon(data.icon)
+	self:set_icon(data.icon, data.icon_ramp)
+	self:update_shape(data.icon_mask, data.frame, data.frame_glow, data.frame_glow_spin)
 	self:_update_input()
 	self:_register_events()
 end
@@ -67,6 +68,7 @@ HudElementPlayerAbility.update = function (self, dt, t, ui_renderer, render_sett
 		local remaining_ability_cooldown = ability_extension:remaining_ability_cooldown(ability_id)
 		local max_ability_cooldown = ability_extension:max_ability_cooldown(ability_id)
 		local is_paused = ability_extension:is_cooldown_paused(ability_id)
+		local is_cooldown_regen_over_time_disabled = ability_extension:is_cooldown_regen_over_time_disabled(ability_id)
 
 		remaining_ability_charges = ability_extension:remaining_ability_charges(ability_id)
 
@@ -76,6 +78,8 @@ HudElementPlayerAbility.update = function (self, dt, t, ui_renderer, render_sett
 		has_charges_left = remaining_ability_charges > 0
 
 		local should_show_empty_cooldown = is_paused
+
+		should_show_empty_cooldown = should_show_empty_cooldown and not is_cooldown_regen_over_time_disabled
 
 		if should_show_empty_cooldown then
 			cooldown_progress = 0
@@ -210,13 +214,41 @@ HudElementPlayerAbility.set_input_text = function (self, text)
 	widget.dirty = true
 end
 
-HudElementPlayerAbility.set_icon = function (self, icon)
+HudElementPlayerAbility.set_icon = function (self, icon, icon_ramp)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.ability
 	local style = widget.style
 
 	if icon then
 		style.icon.material_values.talent_icon = icon
+	end
+
+	if icon_ramp then
+		style.icon.material_values.ramp = icon_ramp
+	end
+
+	widget.dirty = true
+end
+
+HudElementPlayerAbility.update_shape = function (self, icon_mask, frame, frame_glow, frame_glow_spin)
+	local widgets_by_name = self._widgets_by_name
+	local widget = widgets_by_name.ability
+	local style = widget.style
+
+	if icon_mask then
+		style.icon.material_values.mask = icon_mask
+	end
+
+	if frame then
+		style.frame.material_values.texture_map = frame
+	end
+
+	if frame_glow then
+		style.frame_glow.material_values.glow_shape = frame_glow
+	end
+
+	if frame_glow_spin then
+		style.frame_glow.material_values.glow_spin = frame_glow_spin
 	end
 
 	widget.dirty = true

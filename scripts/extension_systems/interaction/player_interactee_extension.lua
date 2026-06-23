@@ -183,6 +183,10 @@ PlayerInteracteeExtension.interaction_input = function (self)
 	return override_config and override_config.interaction_input or interaction:interaction_input()
 end
 
+PlayerInteracteeExtension.is_electrified = function (self)
+	return false
+end
+
 PlayerInteracteeExtension.interaction_priority = function (self)
 	local unit_has_context = self._unit_has_context
 
@@ -257,6 +261,10 @@ PlayerInteracteeExtension.interaction_length = function (self)
 	local override_config = self._override_contexts_by_type[interaction_type]
 
 	return override_config and override_config.duration or interaction:duration()
+end
+
+PlayerInteracteeExtension.infinite_interaction = function (self)
+	return false
 end
 
 PlayerInteracteeExtension.action_text = function (self)
@@ -354,12 +362,13 @@ PlayerInteracteeExtension.started = function (self, interactor_unit)
 	end
 end
 
-PlayerInteracteeExtension.stopped = function (self, result)
+PlayerInteracteeExtension.stopped = function (self, result, interactor_unit)
 	if self._is_server then
 		local unit_id, is_level_unit = self._unit_id, false
 		local result_id = NetworkLookup.interaction_result[result]
+		local interactor_object_id = interactor_unit and Managers.state.unit_spawner:game_object_id(interactor_unit) or -1
 
-		Managers.state.game_session:send_rpc_clients("rpc_interaction_stopped", unit_id, is_level_unit, result_id)
+		Managers.state.game_session:send_rpc_clients("rpc_interaction_stopped", unit_id, is_level_unit, interactor_object_id, result_id)
 	end
 
 	if result == interaction_results.success then

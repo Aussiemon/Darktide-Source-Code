@@ -477,7 +477,7 @@ ViewElementWeaponStats.present_item = function (self, item, context, on_present_
 			widget_type = "divider_line",
 		}
 
-		if show_requirement and Items.class_requirement_text(item) ~= "" then
+		if show_requirement and Items.archetype_requirement_text(item) ~= "" then
 			layout[#layout + 1] = {
 				widget_type = "dynamic_spacing",
 				size = {

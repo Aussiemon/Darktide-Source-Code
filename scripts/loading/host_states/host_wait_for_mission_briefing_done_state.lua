@@ -11,27 +11,37 @@ HostWaitForMissionBriefingDoneState.destroy = function (self)
 end
 
 HostWaitForMissionBriefingDoneState.update = function (self, dt)
-	local mission_intro_view_active = Managers.ui:view_active("mission_intro_view")
+	local ui_manager = Managers.ui
 
-	if not mission_intro_view_active then
-		Log.info("HostWaitForMissionBriefingDoneState", "no mission_intro_view active")
+	if ui_manager then
+		local mission_intro_view_active = Managers.ui:view_active("mission_intro_view")
 
-		return "mission_briefing_done"
-	end
+		if not mission_intro_view_active then
+			Log.info("HostWaitForMissionBriefingDoneState", "no mission_intro_view active")
 
-	local mission_intro_view = Managers.ui:view_instance("mission_intro_view")
+			return "mission_briefing_done"
+		end
 
-	if not mission_intro_view then
-		Log.info("HostWaitForMissionBriefingDoneState", "no mission_intro_view active")
+		local mission_intro_view = Managers.ui:view_instance("mission_intro_view")
 
-		return "mission_briefing_done"
-	end
+		if not mission_intro_view then
+			Log.info("HostWaitForMissionBriefingDoneState", "no mission_intro_view active")
 
-	local mission_briefing_done = mission_intro_view.mission_briefing_done
+			return "mission_briefing_done"
+		end
 
-	if mission_briefing_done then
-		Log.info("HostWaitForMissionBriefingDoneState", "mission_briefing_done")
+		local mission_briefing_done = mission_intro_view.mission_briefing_done
 
+		if mission_briefing_done then
+			local mission_intro_done_at = mission_intro_view.done_at
+
+			if mission_intro_done_at == nil or mission_intro_done_at < Managers.time:time("main") then
+				Log.info("LocalWaitForMissionBriefingDoneState", "mission_briefing_done")
+
+				return "mission_briefing_done"
+			end
+		end
+	else
 		return "mission_briefing_done"
 	end
 end

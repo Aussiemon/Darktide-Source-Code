@@ -539,6 +539,32 @@ local explosion_templates = {
 			"wwise/events/weapon/play_explosion_refl_small",
 		},
 	},
+	trait_buff_phosphor_pistol_p1_minion_explosion = {
+		collision_filter = "filter_player_character_explosion",
+		damage_falloff = true,
+		min_radius = 0.5,
+		radius = 4,
+		static_power_level = 600,
+		damage_profile = DamageProfileTemplates.default_grenade,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
+		explosion_area_suppression = {
+			distance = 10,
+			instant_aggro = true,
+			suppression_falloff = true,
+			suppression_value = 12,
+		},
+		vfx = {
+			"content/fx/particles/weapon_traits/flame_staff_minion_explosion",
+		},
+		sfx = {
+			"wwise/events/weapon/play_explosion_buff_flame",
+			"wwise/events/weapon/play_explosion_refl_small",
+		},
+	},
 }
 
 local function _create_trait_buff_powersword_2h_lockout_proc_explosion_buff(radius, min_radius, close_radius, min_close_radius)

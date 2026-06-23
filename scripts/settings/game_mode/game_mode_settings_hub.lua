@@ -63,6 +63,9 @@ local settings = {
 		broker = {
 			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human",
 		},
+		cryptic = {
+			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_human",
+		},
 		ogryn = {
 			slot_unarmed = "content/items/weapons/player/melee/unarmed_hub_ogryn",
 		},

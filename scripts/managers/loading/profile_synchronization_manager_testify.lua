@@ -22,7 +22,7 @@ local ProfileSynchronizationManagerTestify = {
 
 				profile_synchronizer_host:profile_changed(peer_id, local_player_id)
 			else
-				connection_manager:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
+				connection_manager:send_rpc_server("rpc_notify_profile_changed", local_player_id)
 			end
 		end)
 	end,

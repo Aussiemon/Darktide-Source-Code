@@ -4,7 +4,7 @@ local dialogue_category_config = {}
 
 dialogue_category_config.default = {
 	mutually_exclusive = true,
-	query_score = 0,
+	query_score = 1,
 	interrupted_by = {},
 	playable_during_category = {},
 }
@@ -291,7 +291,7 @@ dialogue_category_config.enemy_vo_prio_1 = {
 dialogue_category_config.chorus_vo_prio_1 = {
 	multiple_allowed = true,
 	mutually_exclusive = false,
-	query_score = 0,
+	query_score = 1,
 	interrupted_by = {},
 	playable_during_category = {
 		chorus_vo_prio_1 = true,
@@ -303,7 +303,7 @@ dialogue_category_config.chorus_vo_prio_1 = {
 }
 dialogue_category_config.cutscene = {
 	mutually_exclusive = false,
-	query_score = 0,
+	query_score = 1,
 	interrupted_by = {
 		cutscene_prio_high = true,
 	},
@@ -324,7 +324,7 @@ dialogue_category_config.cutscene = {
 }
 dialogue_category_config.cutscene_prio_high = {
 	mutually_exclusive = true,
-	query_score = 0,
+	query_score = 1,
 	interrupted_by = {},
 	playable_during_category = {
 		conversations_prio_0 = true,
@@ -364,7 +364,7 @@ dialogue_category_config.npc_prio_0 = {
 }
 dialogue_category_config.npc_prio_1 = {
 	mutually_exclusive = true,
-	query_score = 0,
+	query_score = 1,
 	interrupted_by = {
 		enemy_alerts_prio_0 = true,
 		npc_prio_0 = true,

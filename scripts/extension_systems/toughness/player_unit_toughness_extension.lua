@@ -123,8 +123,9 @@ PlayerUnitToughnessExtension._update_toughness = function (self, dt, t)
 	local regen_rate = 0
 	local buffs = self._buff_extension:stat_buffs()
 	local is_out_of_combat = num_occupied_slots == 0
+	local coherency_rate_modifier = buffs.toughness_coherency_regen_rate_modifier
 	local min_toughness_coherency_regen_rate_modifier = math.max(buffs.min_toughness_coherency_regen_rate_modifier - 1, 0)
-	local can_regen_coherency_toughness_at_all_times = min_toughness_coherency_regen_rate_modifier > 0
+	local can_regen_coherency_toughness_at_all_times = coherency_rate_modifier > 0 and min_toughness_coherency_regen_rate_modifier > 0
 
 	if (is_out_of_combat or can_regen_coherency_toughness_at_all_times) and toughness_damage > 0 and toughness_regen_delay < t and not toughness_regen_disabled then
 		local weapon_toughness_template = self._weapon_extension:toughness_template()
@@ -135,7 +136,10 @@ PlayerUnitToughnessExtension._update_toughness = function (self, dt, t)
 		local base_rate = standing_still and toughness_template.regeneration_speed.moving or toughness_template.regeneration_speed.still
 		local weapon_rate_modifier = weapon_toughness_template and (standing_still and weapon_toughness_template.regeneration_speed_modifier.moving or weapon_toughness_template.regeneration_speed_modifier.still) or 1
 		local buff_rate_modifier = buffs.toughness_regen_rate_modifier * buffs.toughness_regen_rate_multiplier
-		local coherency_rate_modifier = math.max(buffs.toughness_coherency_regen_rate_modifier, min_toughness_coherency_regen_rate_modifier)
+
+		if not is_out_of_combat and can_regen_coherency_toughness_at_all_times then
+			coherency_rate_modifier = coherency_rate_modifier * min_toughness_coherency_regen_rate_modifier
+		end
 
 		coherency_rate_modifier = coherency_rate_modifier + (buffs.toughness_extra_regen_rate or 0)
 
@@ -410,6 +414,7 @@ local ABILITIES_ALLOW_RECOVERY_REASONS = {
 	adamant_buff_drone = true,
 	adamant_charge = true,
 	bull_rush_toughness_talent = true,
+	cryptic_precision_stance = true,
 	lunging = true,
 	ogryn_ranged_stance_reload = true,
 	ogryn_ranged_stance_shoot = true,
@@ -427,6 +432,7 @@ local COMBAT_ABILITIES_ALLOWED_RECOVERY_REASONS = {
 	adamant_buff_drone = true,
 	adamant_charge = true,
 	bull_rush_toughness_talent = true,
+	cryptic_precision_stance = true,
 	lunging = true,
 	ogryn_ranged_stance_reload = true,
 	ogryn_taunt_restore_toughness = true,

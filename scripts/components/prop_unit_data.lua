@@ -87,6 +87,7 @@ PropUnitData.component_data = {
 			"icicle",
 			"nurgle_totem",
 			"train_cogitator",
+			"electrical_fusebox_01",
 		},
 		options_values = {
 			"corruptor_body",
@@ -101,6 +102,7 @@ PropUnitData.component_data = {
 			"icicle",
 			"nurgle_totem",
 			"train_cogitator",
+			"electrical_fusebox_01",
 		},
 	},
 	extensions = {

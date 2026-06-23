@@ -167,7 +167,8 @@ CombatRangeUserBehaviorExtension.update_combat_range = function (self, unit, bla
 			end
 
 			local is_taunted = self._buff_extension:has_keyword(buff_keywords.taunted)
-			local force_switch_to_melee_range = is_taunted
+			local restricted_combat_range = behavior_component.restricted_combat_range
+			local force_switch_to_melee_range = is_taunted or restricted_combat_range == "range"
 			local should_switch_combat_range = _should_switch_combat_range(unit, blackboard, current_combat_range, target_distance, config, target_unit, self._target_velocity_dot_duration, force_switch_to_melee_range)
 
 			if should_switch_combat_range then

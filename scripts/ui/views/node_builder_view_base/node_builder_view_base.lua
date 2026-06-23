@@ -28,6 +28,9 @@ NodeBuilderViewBase.init = function (self, definitions, settings, context)
 		0,
 	}
 	self._nodes_render_order_list = {}
+	self._nodes_render_scale = 1
+	self._nodes_render_settings = {}
+	self._node_counter = 0
 	self._current_zoom = 1
 	self._layouts = {}
 	self._node_widgets = {}
@@ -51,6 +54,15 @@ NodeBuilderViewBase.on_enter = function (self)
 	self:_setup_node_connection_widget()
 	self:_setup_layouts()
 
+	local layout_node_widgets = {}
+	local layout_node_widget_definitions = self._definitions.layout_node_widget_definitions
+
+	for widget_name, definition in pairs(layout_node_widget_definitions) do
+		layout_node_widgets[#layout_node_widgets + 1] = self:_create_widget(widget_name, definition)
+	end
+
+	self._layout_node_widgets = layout_node_widgets
+
 	local layout_widgets = {}
 	local layout_widget_definitions = self._definitions.layout_widget_definitions
 
@@ -71,8 +83,11 @@ NodeBuilderViewBase.on_enter = function (self)
 end
 
 NodeBuilderViewBase._setup_node_connection_widget = function (self)
+	local widget = self:_create_widget("node_connection", self._definitions.default_node_connection_definition)
+
+	widget.content.player_mode = self._player_mode
 	self._node_connection_widgets = {
-		self:_create_widget("node_connection", self._definitions.default_node_connection_definition),
+		widget,
 	}
 end
 
@@ -85,7 +100,10 @@ NodeBuilderViewBase.on_exit = function (self)
 end
 
 NodeBuilderViewBase._init_node = function (self, node)
-	return
+	node.connector_offset = node.connector_offset or {
+		0,
+		0,
+	}
 end
 
 NodeBuilderViewBase._destroy_node_widgets = function (self)
@@ -144,6 +162,8 @@ NodeBuilderViewBase._create_node_widget = function (self, node)
 		widget.content.hotspot.released_callback = callback(self, "_on_node_widget_left_pressed", widget)
 		widget.content.hotspot.right_pressed_callback = callback(self, "_on_node_widget_right_pressed", widget)
 	end
+
+	widget.content.player_mode = self._player_mode
 
 	return widget
 end
@@ -294,7 +314,7 @@ NodeBuilderViewBase._can_node_traverse_to_start = function (self, node, ignore_l
 			local parent_node = self:_node_by_name(parent_name)
 
 			if parent_node then
-				if parent_node.type == "start" or parent_node.type == "start_center" then
+				if parent_node.type == "start" then
 					return true, step_count
 				elseif node_widget_tiers[parent_name] then
 					local could_traverse_parent, parent_step_count = self:_can_node_traverse_to_start(parent_node, ignore_list, step_count)
@@ -385,7 +405,7 @@ NodeBuilderViewBase._add_scenegraph_definition = function (self, name, definitio
 
 	scenegraph_definition[name] = definition
 
-	local scenegraph = UIScenegraph.init_scenegraph(scenegraph_definition, self._render_scale)
+	local scenegraph = UIScenegraph.init_scenegraph(scenegraph_definition, self._nodes_render_scale)
 
 	self._ui_scenegraph = scenegraph
 
@@ -511,7 +531,7 @@ NodeBuilderViewBase._add_node = function (self, x, y, optional_source_node_widge
 
 	local nodes = active_layout.nodes
 	local source_node_data_or_nil = optional_source_node_widget and optional_source_node_widget.content.node_data
-	local node = source_node_data_or_nil and source_node_data_or_nil.node_type ~= "start" and source_node_data_or_nil.node_type ~= "start_center" and table.clone(source_node_data_or_nil) or {
+	local node = source_node_data_or_nil and source_node_data_or_nil.node_type ~= "start" and table.clone(source_node_data_or_nil) or {
 		cost = 1,
 		group_name = nil,
 		horizontal_alignment = nil,
@@ -533,6 +553,10 @@ NodeBuilderViewBase._add_node = function (self, x, y, optional_source_node_widge
 	node.y = y or 0
 	node.parents = {}
 	node.children = {}
+	node.connector_offset = {
+		0,
+		0,
+	}
 
 	self:_init_node(node)
 
@@ -645,7 +669,7 @@ NodeBuilderViewBase.start_node = function (self)
 	local node_widgets = self._node_widgets
 
 	for i = 1, #node_widgets do
-		if node_widgets[i].content.node_data.type == "start" or node_widgets[i].content.node_data.type == "start_center" then
+		if node_widgets[i].content.node_data.type == "start" then
 			return node_widgets[i]
 		end
 	end
@@ -685,7 +709,7 @@ NodeBuilderViewBase.update = function (self, dt, t, input_service)
 
 	local render_scale = Managers.ui:view_render_scale()
 
-	self._render_scale = render_scale * self._current_zoom
+	self._nodes_render_scale = render_scale * self._current_zoom
 
 	self:_update_node_widgets()
 	self:_update_button_statuses(dt, t)
@@ -747,7 +771,7 @@ NodeBuilderViewBase._update_node_widgets = function (self)
 			if hotspot.is_hover then
 				local node_type = node_data.type
 
-				if not node_type or node_type ~= "start" and node_type ~= "start_center" then
+				if not node_type or node_type ~= "start" then
 					can_draw_tooltip = true
 				end
 
@@ -999,7 +1023,7 @@ NodeBuilderViewBase._node_availability_status = function (self, node, can_always
 						points_spent_on_all_parents = false
 					end
 
-					if (parent_tier and children_unlock_points <= parent_points_spent or parent_node.type == "start" or parent_node.type == "start_center") and can_afford then
+					if (parent_tier and children_unlock_points <= parent_points_spent or parent_node.type == "start") and can_afford then
 						return_result = NODE_STATUS.available
 					end
 				end
@@ -1182,7 +1206,7 @@ NodeBuilderViewBase._assign_link_between_nodes = function (self, selected_node, 
 	active_layout.dirty = true
 end
 
-NodeBuilderViewBase._remove_node_point_on_widget = function (self, widget)
+NodeBuilderViewBase._remove_node_point_on_widget = function (self, widget, skip_tooltip_update)
 	local node_data = widget.content.node_data
 	local name = node_data.widget_name
 	local current_tier = self._node_widget_tiers[name]
@@ -1194,9 +1218,11 @@ NodeBuilderViewBase._remove_node_point_on_widget = function (self, widget)
 		self._node_widget_tiers[name] = math.max(self._node_widget_tiers[name] - 1, 0)
 	end
 
-	local instant_tooltip = true
+	if not skip_tooltip_update then
+		local instant_tooltip = true
 
-	self:_setup_tooltip_info(widget.content.node_data, instant_tooltip)
+		self:_setup_tooltip_info(widget.content.node_data, instant_tooltip)
+	end
 end
 
 NodeBuilderViewBase._remove_node_points_on_child_nodes_of_node = function (self, node_data)
@@ -1221,7 +1247,9 @@ NodeBuilderViewBase._remove_node_points_on_child_nodes_of_node = function (self,
 				local child_widget = child_widget_name and widgets_by_name[child_widget_name]
 
 				if child_widget then
-					self:_remove_node_point_on_widget(child_widget)
+					local skip_tooltip_update = true
+
+					self:_remove_node_point_on_widget(child_widget, skip_tooltip_update)
 					self:_remove_node_points_on_child_nodes_of_node(child_node)
 				end
 			end
@@ -1443,8 +1471,8 @@ NodeBuilderViewBase._handle_scenegraph_coordinates = function (self, widget_name
 	end
 
 	local saved_scenegraph_settings = self._saved_scenegraph_settings
-	local render_scale = self._render_scale
-	local render_inverse_scale = 1 / self._render_scale
+	local render_scale = self._nodes_render_scale
+	local render_inverse_scale = 1 / self._nodes_render_scale
 	local safe_rect = self:safe_rect()
 	local screen_width = RESOLUTION_LOOKUP.width
 	local screen_height = RESOLUTION_LOOKUP.height
@@ -1644,16 +1672,14 @@ NodeBuilderViewBase.draw_layout = function (self, dt, t, input_service, layer)
 		input_service = input_service:null_service()
 	end
 
-	local render_settings = self._render_settings
-	local start_layer = render_settings.start_layer
-	local render_scale = self._render_scale
+	local ui_scenegraph = self._ui_scenegraph
 	local ui_renderer = self._ui_renderer
+	local render_settings = self._render_settings
+	local render_scale = self._render_scale
 
 	render_settings.start_layer = layer
 	render_settings.scale = render_scale
 	render_settings.inverse_scale = render_scale and 1 / render_scale
-
-	local ui_scenegraph = self._ui_scenegraph
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
 
@@ -1669,19 +1695,42 @@ NodeBuilderViewBase.draw_layout = function (self, dt, t, input_service, layer)
 		end
 	end
 
+	UIRenderer.end_pass(ui_renderer)
+
+	local nodes_render_scale = self._nodes_render_scale
+	local nodes_render_settings = self._nodes_render_settings
+
+	nodes_render_settings.start_layer = layer
+	nodes_render_settings.scale = nodes_render_scale
+	nodes_render_settings.inverse_scale = nodes_render_scale and 1 / nodes_render_scale
+
+	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, nodes_render_settings)
+
+	local layout_node_widgets = self._layout_node_widgets
+
+	if layout_node_widgets then
+		local num_widgets = #layout_node_widgets
+
+		for i = 1, num_widgets do
+			local widget = layout_node_widgets[i]
+
+			UIWidget.draw(widget, ui_renderer)
+		end
+	end
+
 	local active_layout = self:get_active_layout()
 
 	if active_layout then
-		render_settings.start_layer = render_settings.start_layer + 10
+		nodes_render_settings.start_layer = nodes_render_settings.start_layer + 10
 
-		local inverse_scale = render_settings.inverse_scale or 1
+		local inverse_scale = nodes_render_settings.inverse_scale or 1
 		local screen_height = RESOLUTION_LOOKUP.height
 
 		self:_draw_node_widgets(ui_renderer, screen_height, inverse_scale)
 
-		render_settings.start_layer = start_layer
+		nodes_render_settings.start_layer = layer + 1
 
-		self:_draw_layout_node_connections(dt, t, input_service, ui_renderer, render_settings, active_layout)
+		self:_draw_layout_node_connections(dt, t, input_service, ui_renderer, nodes_render_settings, active_layout)
 	end
 
 	UIRenderer.end_pass(ui_renderer)
@@ -1773,14 +1822,18 @@ NodeBuilderViewBase._draw_layout_node_connections = function (self, dt, t, input
 						local scenegraph_id = node_connection_widget.scenegraph_id
 						local node_connection_widget_world_position = self:_scenegraph_world_position(scenegraph_id)
 						local node_connection_widget_width, node_connection_widget_height = self:_scenegraph_size(scenegraph_id)
-						local offset_x = node_widget_world_position[1] - node_connection_widget_world_position[1] - (node_connection_widget_width - node_widget_width) * 0.5
-						local offset_y = node_widget_world_position[2] - node_connection_widget_world_position[2] - (node_connection_widget_height - node_widget_height) * 0.5
+						local connector_offset_x = node_widget.content.node_data.connector_offset[1]
+						local connector_offset_y = node_widget.content.node_data.connector_offset[2]
+						local child_connector_offset_x = child_widget.content.node_data.connector_offset[1]
+						local child_connector_offset_y = child_widget.content.node_data.connector_offset[2]
+						local offset_x = node_widget_world_position[1] - node_connection_widget_world_position[1] - (node_connection_widget_width - node_widget_width) * 0.5 + connector_offset_x
+						local offset_y = node_widget_world_position[2] - node_connection_widget_world_position[2] - (node_connection_widget_height - node_widget_height) * 0.5 + connector_offset_y
 
 						node_connection_widget.offset[1] = offset_x
 						node_connection_widget.offset[2] = offset_y
 
-						local distance = math.distance_2d(child_widget_world_position[1] + child_widget_width * 0.5, child_widget_world_position[2] + child_widget_height * 0.5, node_widget_world_position[1] + node_widget_width * 0.5, node_widget_world_position[2] + node_widget_height * 0.5)
-						local angle = math.angle(child_widget_world_position[1] + child_widget_width * 0.5, child_widget_world_position[2] + child_widget_height * 0.5, node_widget_world_position[1] + node_widget_width * 0.5, node_widget_world_position[2] + node_widget_height * 0.5)
+						local distance = math.distance_2d(child_widget_world_position[1] + child_widget_width * 0.5 + child_connector_offset_x, child_widget_world_position[2] + child_widget_height * 0.5 + child_connector_offset_y, node_widget_world_position[1] + node_widget_width * 0.5 + connector_offset_x, node_widget_world_position[2] + node_widget_height * 0.5 + connector_offset_y)
+						local angle = math.angle(child_widget_world_position[1] + child_widget_width * 0.5 + child_connector_offset_x, child_widget_world_position[2] + child_widget_height * 0.5 + child_connector_offset_y, node_widget_world_position[1] + node_widget_width * 0.5 + connector_offset_x, node_widget_world_position[2] + node_widget_height * 0.5 + connector_offset_y)
 						local inverse_scale = render_settings.inverse_scale or 1
 						local visible = math.min(child_widget_world_position[2], node_widget_world_position[2]) < screen_height * inverse_scale
 						local drawn = self:_draw_connection_between_widgets(ui_renderer, visible, dt, node, child_node, offset_x, offset_y, distance, angle, connection_index)
@@ -1810,7 +1863,7 @@ NodeBuilderViewBase._draw_connection_between_widgets = function (self, ui_render
 	local color_status
 
 	if is_parent_starting_node then
-		if parent_node.type ~= "start" and parent_node.type ~= "start_center" and not node_widget_tiers[parent_node_name] then
+		if parent_node.type ~= "start" and not node_widget_tiers[parent_node_name] then
 			color_status = "locked"
 		elseif unlocked_child then
 			color_status = "locked"

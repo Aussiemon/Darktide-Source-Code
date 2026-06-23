@@ -1,9 +1,7 @@
 ﻿-- chunkname: @scripts/settings/talent/talent_settings_broker.lua
 
-local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Text = require("scripts/utilities/ui/text")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local stat_buffs = BuffSettings.stat_buffs
 local STIMM_ICON_BY_GROUP = {}
 local STAT_NAME_ALIAS = {
 	power_level_modifier = "power_level",
@@ -497,81 +495,81 @@ local stimm_icons = {
 	durability_c = "icon here!",
 }
 
-_generate_stimm_talent("broker_stimm_celerity_1", "loc_talent_broker_stimm_celerity_a", 1, nil, stimm_icons.celerity_a).stat(stat_buffs.attack_speed, {
+_generate_stimm_talent("broker_stimm_celerity_1", "loc_talent_broker_stimm_celerity_a", 1, nil, stimm_icons.celerity_a).stat("attack_speed", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.04,
-}, stat_buffs.wield_speed, {
+}, "wield_speed", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.25,
 })
-_generate_stimm_talent("broker_stimm_celerity_2", "loc_talent_broker_stimm_celerity_a", 2, nil, stimm_icons.celerity_a).stat(stat_buffs.attack_speed, {
+_generate_stimm_talent("broker_stimm_celerity_2", "loc_talent_broker_stimm_celerity_a", 2, nil, stimm_icons.celerity_a).stat("attack_speed", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.04,
-}, stat_buffs.wield_speed, {
+}, "wield_speed", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.25,
-}, stat_buffs.stamina_cost_multiplier, {
+}, "stamina_cost_multiplier", {
 	format_type = "percentage",
 	value = 0.85,
 	value_manipulation = function (value)
 		return math.round((value - 1) * 100)
 	end,
 })
-_generate_stimm_talent("broker_stimm_celerity_3", "loc_talent_broker_stimm_celerity_a", 3, nil, stimm_icons.celerity_a).stat(stat_buffs.attack_speed, {
+_generate_stimm_talent("broker_stimm_celerity_3", "loc_talent_broker_stimm_celerity_a", 3, nil, stimm_icons.celerity_a).stat("attack_speed", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.04,
-}, stat_buffs.stamina_cost_multiplier, {
+}, "stamina_cost_multiplier", {
 	format_type = "percentage",
 	value = 0.85,
 	value_manipulation = function (value)
 		return math.round((value - 1) * 100)
 	end,
 })
-_generate_stimm_talent("broker_stimm_celerity_4", "loc_talent_broker_stimm_celerity_a", 4, nil, stimm_icons.celerity_a).stat(stat_buffs.attack_speed, {
+_generate_stimm_talent("broker_stimm_celerity_4", "loc_talent_broker_stimm_celerity_a", 4, nil, stimm_icons.celerity_a).stat("attack_speed", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.04,
-}, stat_buffs.stamina_cost_multiplier, {
+}, "stamina_cost_multiplier", {
 	format_type = "percentage",
 	value = 0.8,
 	value_manipulation = function (value)
 		return math.round((value - 1) * 100)
 	end,
 })
-_generate_stimm_talent("broker_stimm_celerity_5a", "loc_talent_broker_stimm_celerity_a", 5, nil, stimm_icons.celerity_a).stat(stat_buffs.attack_speed, {
+_generate_stimm_talent("broker_stimm_celerity_5a", "loc_talent_broker_stimm_celerity_a", 5, nil, stimm_icons.celerity_a).stat("attack_speed", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.04,
 }).keyword("loc_string", "+", "stun_immune", 1, nil, "loc_string", "+", "slowdown_immune", 1, nil)
-_generate_stimm_talent("broker_stimm_celerity_5b", "loc_talent_broker_stimm_celerity_b", nil, nil, stimm_icons.celerity_b).stat(stat_buffs.reload_speed, {
+_generate_stimm_talent("broker_stimm_celerity_5b", "loc_talent_broker_stimm_celerity_b", nil, nil, stimm_icons.celerity_b).stat("reload_speed", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.3,
-}, stat_buffs.recoil_modifier, {
+}, "recoil_modifier", {
 	format_type = "percentage",
 	value = -0.5,
 })
-_generate_stimm_talent("broker_stimm_celerity_5c", "loc_talent_broker_stimm_celerity_c", nil, nil, stimm_icons.celerity_c).stat(stat_buffs.movement_speed, {
+_generate_stimm_talent("broker_stimm_celerity_5c", "loc_talent_broker_stimm_celerity_c", nil, nil, stimm_icons.celerity_c).stat("movement_speed", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.1,
-}, stat_buffs.dodge_distance_modifier, {
+}, "dodge_distance_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.1,
-}, stat_buffs.dodge_speed_multiplier, {
+}, "dodge_speed_multiplier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 1.1,
 	value_manipulation = function (value)
 		return (value - 1) * 100
 	end,
-}, stat_buffs.dodge_cooldown_reset_modifier, {
+}, "dodge_cooldown_reset_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = -0.1,
@@ -579,71 +577,71 @@ _generate_stimm_talent("broker_stimm_celerity_5c", "loc_talent_broker_stimm_cele
 		return math.abs(value * 100)
 	end,
 })
-_generate_stimm_talent("broker_stimm_combat_1", "loc_talent_broker_stimm_combat_a", 1, nil, stimm_icons.combat_a).stat(stat_buffs.power_level_modifier, {
+_generate_stimm_talent("broker_stimm_combat_1", "loc_talent_broker_stimm_combat_a", 1, nil, stimm_icons.combat_a).stat("power_level_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.04,
 })
-_generate_stimm_talent("broker_stimm_combat_2", "loc_talent_broker_stimm_combat_a", 2, nil, stimm_icons.combat_a).stat(stat_buffs.power_level_modifier, {
+_generate_stimm_talent("broker_stimm_combat_2", "loc_talent_broker_stimm_combat_a", 2, nil, stimm_icons.combat_a).stat("power_level_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.04,
 })
-_generate_stimm_talent("broker_stimm_combat_3", "loc_talent_broker_stimm_combat_a", 3, nil, stimm_icons.combat_a).stat(stat_buffs.power_level_modifier, {
+_generate_stimm_talent("broker_stimm_combat_3", "loc_talent_broker_stimm_combat_a", 3, nil, stimm_icons.combat_a).stat("power_level_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.04,
 })
-_generate_stimm_talent("broker_stimm_combat_4a", "loc_talent_broker_stimm_combat_a", 4, nil, stimm_icons.combat_a).stat(stat_buffs.power_level_modifier, {
+_generate_stimm_talent("broker_stimm_combat_4a", "loc_talent_broker_stimm_combat_a", 4, nil, stimm_icons.combat_a).stat("power_level_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.04,
-}, stat_buffs.finesse_modifier_bonus, {
+}, "finesse_modifier_bonus", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.1,
 })
-_generate_stimm_talent("broker_stimm_combat_5a", "loc_talent_broker_stimm_combat_a", 5, nil, stimm_icons.combat_a).stat(stat_buffs.power_level_modifier, {
+_generate_stimm_talent("broker_stimm_combat_5a", "loc_talent_broker_stimm_combat_a", 5, nil, stimm_icons.combat_a).stat("power_level_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.04,
-}, stat_buffs.finesse_modifier_bonus, {
+}, "finesse_modifier_bonus", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.25,
 })
-_generate_stimm_talent("broker_stimm_combat_4b", "loc_talent_broker_stimm_combat_b", 1, nil, stimm_icons.combat_b).stat(stat_buffs.power_level_modifier, {
+_generate_stimm_talent("broker_stimm_combat_4b", "loc_talent_broker_stimm_combat_b", 1, nil, stimm_icons.combat_b).stat("power_level_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.04,
-}, stat_buffs.rending_multiplier, {
+}, "rending_multiplier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.05,
 })
-_generate_stimm_talent("broker_stimm_combat_5b", "loc_talent_broker_stimm_combat_b", 2, nil, stimm_icons.combat_b).stat(stat_buffs.power_level_modifier, {
+_generate_stimm_talent("broker_stimm_combat_5b", "loc_talent_broker_stimm_combat_b", 2, nil, stimm_icons.combat_b).stat("power_level_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.04,
-}, stat_buffs.rending_multiplier, {
+}, "rending_multiplier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.1,
 })
-_generate_stimm_talent("broker_stimm_combat_4c", "loc_talent_broker_stimm_combat_c", 1, nil, stimm_icons.combat_c).stat(stat_buffs.power_level_modifier, {
+_generate_stimm_talent("broker_stimm_combat_4c", "loc_talent_broker_stimm_combat_c", 1, nil, stimm_icons.combat_c).stat("power_level_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.04,
-}, stat_buffs.critical_strike_chance, {
+}, "critical_strike_chance", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.05,
 })
-_generate_stimm_talent("broker_stimm_combat_5c", "loc_talent_broker_stimm_combat_c", 2, nil, stimm_icons.combat_c).stat(stat_buffs.power_level_modifier, {
+_generate_stimm_talent("broker_stimm_combat_5c", "loc_talent_broker_stimm_combat_c", 2, nil, stimm_icons.combat_c).stat("power_level_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.04,
-}, stat_buffs.critical_strike_chance, {
+}, "critical_strike_chance", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.1,
@@ -653,11 +651,11 @@ _generate_stimm_talent("broker_stimm_durability_1", "loc_talent_broker_stimm_dur
 }, "loc_talent_buff_toughness_on_stimm", "toughness_amount", {
 	format_type = "percentage",
 	value = 0.0625,
-}).stat(stat_buffs.toughness_replenish_modifier, {
+}).stat("toughness_replenish_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.05,
-}).stat(stat_buffs.damage_taken_multiplier, {
+}).stat("damage_taken_multiplier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.96,
@@ -670,11 +668,11 @@ _generate_stimm_talent("broker_stimm_durability_2", "loc_talent_broker_stimm_dur
 }, "loc_talent_buff_toughness_on_stimm", "toughness_amount", {
 	format_type = "percentage",
 	value = 0.0625,
-}).stat(stat_buffs.toughness_replenish_modifier, {
+}).stat("toughness_replenish_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.05,
-}).stat(stat_buffs.damage_taken_multiplier, {
+}).stat("damage_taken_multiplier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.96,
@@ -687,11 +685,11 @@ _generate_stimm_talent("broker_stimm_durability_3", "loc_talent_broker_stimm_dur
 }, "loc_talent_buff_toughness_on_stimm", "toughness_amount", {
 	format_type = "percentage",
 	value = 0.0625,
-}).stat(stat_buffs.toughness_replenish_modifier, {
+}).stat("toughness_replenish_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.05,
-}).stat(stat_buffs.damage_taken_multiplier, {
+}).stat("damage_taken_multiplier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.96,
@@ -704,11 +702,11 @@ _generate_stimm_talent("broker_stimm_durability_4", "loc_talent_broker_stimm_dur
 }, "loc_talent_buff_toughness_on_stimm", "toughness_amount", {
 	format_type = "percentage",
 	value = 0.0625,
-}).stat(stat_buffs.toughness_replenish_modifier, {
+}).stat("toughness_replenish_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.05,
-}).stat(stat_buffs.damage_taken_multiplier, {
+}).stat("damage_taken_multiplier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.96,
@@ -716,7 +714,7 @@ _generate_stimm_talent("broker_stimm_durability_4", "loc_talent_broker_stimm_dur
 		return math.round(math.abs((value - 1) * 100))
 	end,
 })
-_generate_stimm_talent("broker_stimm_durability_5a", "loc_talent_broker_stimm_durability_b", nil, nil).stat(stat_buffs.toughness_replenish_modifier, {
+_generate_stimm_talent("broker_stimm_durability_5a", "loc_talent_broker_stimm_durability_b", nil, nil).stat("toughness_replenish_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.3,
@@ -731,27 +729,27 @@ _generate_stimm_talent("broker_stimm_durability_5b", "loc_talent_broker_stimm_du
 	format_type = "number",
 	value = 1,
 })
-_generate_stimm_talent("broker_stimm_concentration_1", "loc_talent_broker_stimm_concentration_a", 1, nil, stimm_icons.concentration_a).stat(stat_buffs.combat_ability_cooldown_regen_modifier, {
+_generate_stimm_talent("broker_stimm_concentration_1", "loc_talent_broker_stimm_concentration_a", 1, nil, stimm_icons.concentration_a).stat("combat_ability_cooldown_regen_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.0625,
 })
-_generate_stimm_talent("broker_stimm_concentration_2", "loc_talent_broker_stimm_concentration_a", 2, nil, stimm_icons.concentration_a).stat(stat_buffs.combat_ability_cooldown_regen_modifier, {
+_generate_stimm_talent("broker_stimm_concentration_2", "loc_talent_broker_stimm_concentration_a", 2, nil, stimm_icons.concentration_a).stat("combat_ability_cooldown_regen_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.0625,
 })
-_generate_stimm_talent("broker_stimm_concentration_3", "loc_talent_broker_stimm_concentration_a", 3, nil, stimm_icons.concentration_a).stat(stat_buffs.combat_ability_cooldown_regen_modifier, {
+_generate_stimm_talent("broker_stimm_concentration_3", "loc_talent_broker_stimm_concentration_a", 3, nil, stimm_icons.concentration_a).stat("combat_ability_cooldown_regen_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.0625,
 })
-_generate_stimm_talent("broker_stimm_concentration_4", "loc_talent_broker_stimm_concentration_a", 4, nil, stimm_icons.concentration_a).stat(stat_buffs.combat_ability_cooldown_regen_modifier, {
+_generate_stimm_talent("broker_stimm_concentration_4", "loc_talent_broker_stimm_concentration_a", 4, nil, stimm_icons.concentration_a).stat("combat_ability_cooldown_regen_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.0625,
 })
-_generate_stimm_talent("broker_stimm_concentration_5a", "loc_talent_broker_stimm_concentration_a", 5, nil, stimm_icons.concentration_a).stat(stat_buffs.combat_ability_cooldown_regen_modifier, {
+_generate_stimm_talent("broker_stimm_concentration_5a", "loc_talent_broker_stimm_concentration_a", 5, nil, stimm_icons.concentration_a).stat("combat_ability_cooldown_regen_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.25,

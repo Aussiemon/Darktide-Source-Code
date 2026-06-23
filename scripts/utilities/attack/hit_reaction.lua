@@ -27,9 +27,9 @@ local buff_keywords = BuffSettings.keywords
 local _minion_hit_reaction, _player_hit_reaction, _toughness_broken_disorient, _toughness_absorbed_disorient, _interrupt_alternate_fire, _interrupt_interaction, _push_or_catapult, _push, _catapult, _force_look, _drop_luggable
 local HitReaction = {}
 
-HitReaction.apply = function (damage_profile, damage_profile_lerp_values, target_weapon_template, attacked_breed_or_nil, target_buff_extension, attack_result, attacked_unit, attacking_unit, attack_direction, hit_position, target_settings, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_type, herding_template_or_nil, hit_shield)
+HitReaction.apply = function (damage_profile, damage_profile_lerp_values, target_weapon_template, attacked_breed_or_nil, target_buff_extension, attack_result, attacked_unit, attacking_unit, attack_direction, hit_position, target_settings, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_type, herding_template_or_nil, hit_shield, damage_type)
 	if Breed.is_minion(attacked_breed_or_nil) then
-		return _minion_hit_reaction(attack_result, attacked_unit, attacking_unit, damage_profile, damage_profile_lerp_values, target_settings, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_direction, attack_type, herding_template_or_nil, hit_shield)
+		return _minion_hit_reaction(attack_result, attacked_unit, attacking_unit, damage_profile, damage_profile_lerp_values, target_settings, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_direction, attack_type, herding_template_or_nil, hit_shield, damage_type)
 	elseif Breed.is_player(attacked_breed_or_nil) then
 		return _player_hit_reaction(attack_result, damage_profile, target_weapon_template, target_buff_extension, attacked_unit, attacking_unit, attack_direction, hit_position, attack_type)
 	end
@@ -111,9 +111,9 @@ HitReaction.disorient_player = function (attacked_unit, unit_data_extension, dis
 	end
 end
 
-function _minion_hit_reaction(attack_result, attacked_unit, attacking_unit, damage_profile, damage_profile_lerp_values, target_settings, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_direction, attack_type, herding_template_or_nil, hit_shield)
+function _minion_hit_reaction(attack_result, attacked_unit, attacking_unit, damage_profile, damage_profile_lerp_values, target_settings, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_direction, attack_type, herding_template_or_nil, hit_shield, damage_type)
 	if Stagger.can_stagger(attacked_unit) then
-		local applied_stagger, stagger_type = Stagger.apply_stagger(attacked_unit, damage_profile, damage_profile_lerp_values, target_settings, attacking_unit, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_direction, attack_type, attack_result, herding_template_or_nil, hit_shield)
+		local applied_stagger, stagger_type = Stagger.apply_stagger(attacked_unit, damage_profile, damage_profile_lerp_values, target_settings, attacking_unit, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_direction, attack_type, attack_result, herding_template_or_nil, hit_shield, damage_type)
 
 		return applied_stagger and stagger_results.stagger or stagger_results.no_stagger, stagger_type
 	end

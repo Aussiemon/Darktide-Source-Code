@@ -27,7 +27,7 @@ local mission_objectives = {
 	side = MissionObjectiveSide,
 }
 local MissionObjectiveSystem = class("MissionObjectiveSystem", "ExtensionSystemBase")
-local RPCS = {
+local CLIENT_RPCS = {
 	"rpc_start_mission_objective",
 	"rpc_start_mission_objective_stage",
 	"rpc_update_mission_objective_progression",
@@ -78,10 +78,8 @@ MissionObjectiveSystem.init = function (self, context, system_init_data, ...)
 
 	local network_event_delegate = context.network_event_delegate
 
-	if not DEDICATED_SERVER then
-		self._network_event_delegate = network_event_delegate
-
-		network_event_delegate:register_session_events(self, unpack(RPCS))
+	if not self._is_server then
+		network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
 	end
 
 	self._level_name = context.level_name
@@ -92,8 +90,8 @@ MissionObjectiveSystem.init = function (self, context, system_init_data, ...)
 end
 
 MissionObjectiveSystem.destroy = function (self, ...)
-	if not DEDICATED_SERVER then
-		self._network_event_delegate:unregister_events(unpack(RPCS))
+	if not self._is_server then
+		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 	end
 
 	MissionObjectiveSystem.super.destroy(self, ...)

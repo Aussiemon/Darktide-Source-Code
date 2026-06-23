@@ -246,6 +246,7 @@ ExpeditionTimerHandler.update = function (self, dt, t)
 	if self._is_running then
 		if not self._time_at_timer_runout then
 			self:_play_sound(time_out_sound)
+			Managers.event:trigger("expedition_block_player_respawn")
 
 			self._time_at_timer_runout = t
 		end

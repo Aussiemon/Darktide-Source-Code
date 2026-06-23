@@ -241,4 +241,27 @@ WeaponTraitParentProcBuff._hud_show_stack_count = function (self)
 	return true
 end
 
+WeaponTraitParentProcBuff.skip_send_active_time_rpc = function (self)
+	local template = self._template
+	local active_duration = self:_active_duration()
+
+	if not active_duration or active_duration <= 0 then
+		return true
+	end
+
+	local cooldown_duration = self:_cooldown_duration()
+
+	if not cooldown_duration or cooldown_duration <= 0 then
+		return true
+	end
+
+	local proc_effects = template.proc_effects
+
+	if not proc_effects then
+		return true
+	end
+
+	return false
+end
+
 return WeaponTraitParentProcBuff

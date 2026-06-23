@@ -21,7 +21,7 @@ local function _has_talent_special_rule(condition_func_params, special_rule)
 	return talent_extension:has_special_rule(special_rule)
 end
 
-local NIL_VALUE_OVERRIDE = "NIL_VALUE"
+local NIL_VALUE_OVERRIDE = "__NIL_VALUE__"
 local base_template_settings = {
 	NIL_VALUE_OVERRIDE = NIL_VALUE_OVERRIDE,
 }
@@ -93,6 +93,26 @@ base_template_settings.action_inputs = {
 			},
 		},
 	},
+	inspect_3p_start = {
+		buffer_time = 0,
+		input_sequence = {
+			{
+				hold_input = "weapon_inspect_hold",
+				input = "action_two_pressed",
+				value = true,
+			},
+		},
+	},
+	inspect_3p_stop = {
+		buffer_time = 0,
+		input_sequence = {
+			{
+				hold_input = "weapon_inspect_hold",
+				input = "action_two_pressed",
+				value = true,
+			},
+		},
+	},
 	wield = {
 		buffer_time = 0,
 		clear_input_queue = true,
@@ -127,7 +147,7 @@ base_template_settings.grenade_ability_actions = {
 		total_time = 0,
 		uninterruptible = true,
 		allowed_chain_actions = {},
-		action_condition_func = function (action_settings, condition_func_params, used_input)
+		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			return _can_wield_grenade_slot(action_settings, condition_func_params, used_input) and not _has_talent_special_rule(condition_func_params, special_rules.zealot_throwing_knives) and not _has_talent_special_rule(condition_func_params, special_rules.adamant_whistle) and (not _has_talent_special_rule(condition_func_params, special_rules.quick_flash_grenade) or _has_talent_special_rule(condition_func_params, special_rules.tox_grenade) or _has_talent_special_rule(condition_func_params, special_rules.broker_missile_launcher))
 		end,
 	},
@@ -163,7 +183,7 @@ base_template_settings.grenade_ability_actions = {
 			start_modifier = 0.8,
 		},
 		projectile_template = ProjectileTemplates.zealot_throwing_knives,
-		action_condition_func = function (action_settings, condition_func_params, used_input)
+		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			return _can_wield_grenade_slot(action_settings, condition_func_params, used_input) and _has_talent_special_rule(condition_func_params, special_rules.zealot_throwing_knives)
 		end,
 	},
@@ -200,7 +220,7 @@ base_template_settings.grenade_ability_actions = {
 			start_modifier = 0.8,
 		},
 		projectile_template = ProjectileTemplates.quick_flash_grenade,
-		action_condition_func = function (action_settings, condition_func_params, used_input)
+		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			return _can_wield_grenade_slot(action_settings, condition_func_params, used_input) and _has_talent_special_rule(condition_func_params, special_rules.quick_flash_grenade) and not _has_talent_special_rule(condition_func_params, special_rules.broker_missile_launcher) and not _has_talent_special_rule(condition_func_params, special_rules.tox_grenade)
 		end,
 	},
@@ -231,6 +251,19 @@ base_template_settings.action_input_hierarchy = {
 				transition = {
 					{
 						input = "inspect_alt_stop",
+						transition = "previous",
+					},
+					{
+						input = "inspect_stop",
+						transition = "base",
+					},
+				},
+			},
+			{
+				input = "inspect_3p_start",
+				transition = {
+					{
+						input = "inspect_3p_stop",
 						transition = "previous",
 					},
 					{

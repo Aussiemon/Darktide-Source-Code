@@ -7,6 +7,7 @@ local BuffExtensionInterface = require("scripts/extension_systems/buff/buff_exte
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local BuffExtensionBase = require("scripts/extension_systems/buff/buff_extension_base")
 local FixedFrame = require("scripts/utilities/fixed_frame")
+local MAX_BUFF_STACKS_ARRAY_SIZE = Network.type_info("buff_index_stacks_array").max_size
 local MinionBuffExtension = class("MinionBuffExtension", "BuffExtensionBase")
 
 MinionBuffExtension.UPDATE_DISABLED_BY_DEFAULT = true
@@ -273,6 +274,41 @@ MinionBuffExtension.remove_externally_controlled_buff = function (self, local_in
 	end
 end
 
+local _external_buff_stacks_to_remove = Script.new_array(MAX_BUFF_STACKS_ARRAY_SIZE)
+
+MinionBuffExtension.remove_externally_controlled_buff_stacks = function (self, buff_stacks_indexes)
+	for i = 1, #buff_stacks_indexes do
+		local local_index = buff_stacks_indexes[i]
+		local muted_external_buffs = self._muted_external_buffs
+
+		if muted_external_buffs[local_index] then
+			muted_external_buffs[local_index] = nil
+
+			return
+		end
+
+		local is_local_unit = self._buff_context.is_local_unit
+
+		if is_local_unit then
+			return
+		end
+
+		local buff_instance = self._buffs_by_index[local_index]
+
+		if is_local_unit then
+			self:_remove_buff(local_index)
+		elseif self._is_server then
+			_external_buff_stacks_to_remove[#_external_buff_stacks_to_remove + 1] = local_index
+		end
+	end
+
+	if self._is_server then
+		self:_remove_rpc_synced_buff_stacks(_external_buff_stacks_to_remove)
+	end
+
+	table.clear(_external_buff_stacks_to_remove)
+end
+
 MinionBuffExtension._remove_internally_controlled_buff = function (self, local_index)
 	local buff_instance = self._buffs_by_index[local_index]
 
@@ -323,17 +359,20 @@ MinionBuffExtension._remove_rpc_synced_buff = function (self, index)
 	Managers.state.game_session:send_rpc_clients("rpc_remove_buff", game_object_id, index)
 end
 
+MinionBuffExtension._remove_rpc_synced_buff_stacks = function (self, buff_stacks_indexes)
+	for i = 1, #buff_stacks_indexes do
+		local index = buff_stacks_indexes[i]
+
+		self:_remove_buff(index)
+	end
+
+	local game_object_id = self._game_object_id
+
+	Managers.state.game_session:send_rpc_clients("rpc_remove_buff_stacks", game_object_id, buff_stacks_indexes)
+end
+
 MinionBuffExtension._set_proc_active_start_time = function (self, index, activation_time, skip_send_active_time_rpc)
-	if self._is_server then
-		if skip_send_active_time_rpc then
-			return
-		end
-
-		local activation_frame = activation_time / self._fixed_time_step
-		local game_object_id = self._game_object_id
-
-		Managers.state.game_session:send_rpc_clients("rpc_buff_proc_set_active_time", game_object_id, index, activation_frame)
-	else
+	if not self._is_server then
 		local buffs_by_index = self._buffs_by_index
 		local buff_instance = buffs_by_index[index]
 

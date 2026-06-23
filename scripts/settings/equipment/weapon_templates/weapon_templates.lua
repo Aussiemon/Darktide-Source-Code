@@ -140,6 +140,7 @@ local template_groups = {
 		"powermaul_p1_m1",
 		"powermaul_p1_m2",
 		"powermaul_p2_m1",
+		"powermaul_p3_m1",
 	},
 	{
 		"power_maul_shields",
@@ -157,6 +158,7 @@ local template_groups = {
 		"powersword_p1_m2",
 		"powersword_p2_m1",
 		"powersword_p2_m2",
+		"powersword_p3_m1",
 	},
 	{
 		"saws",
@@ -169,6 +171,26 @@ local template_groups = {
 	},
 	{
 		"timed",
+	},
+	{
+		"transonic_claw",
+		"transonic_claw_p1_m1",
+	},
+	{
+		"transonic_knife",
+		"transonic_knife_p1_m1",
+	},
+	{
+		"transonic_sword",
+		"transonic_sword_p1_m1",
+	},
+	{
+		"transonic_sword_transonic_knife",
+		"transonic_sword_transonic_knife_p1_m1",
+	},
+	{
+		"arc_rifle",
+		"arc_rifle_p1_m1",
 	},
 	{
 		"autoguns",
@@ -225,6 +247,10 @@ local template_groups = {
 		"forcestaff_p4_m1",
 	},
 	{
+		"galvanic_rifle",
+		"galvanic_rifle_p1_m1",
+	},
+	{
 		"grenadier_gauntlets",
 		"ogryn_gauntlet_p1_m1",
 	},
@@ -255,8 +281,13 @@ local template_groups = {
 		"ogryn_heavystubber_p2_m3",
 	},
 	{
+		"phosphor_pistol",
+		"phosphor_pistol_p1_m1",
+	},
+	{
 		"plasma_rifles",
 		"plasmagun_p1_m1",
+		"plasmagun_p1_m2",
 	},
 	{
 		"ripperguns",
@@ -329,6 +360,8 @@ local template_groups = {
 		"shock_mine",
 		"quick_flash_grenade",
 		"tox_grenade",
+		"cryptic_servo_skull_order_point",
+		"arc_grenade",
 		"ogryn_grenade_box",
 		"ogryn_grenade_box_cluster",
 		"ogryn_grenade_frag",

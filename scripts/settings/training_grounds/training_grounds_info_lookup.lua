@@ -89,6 +89,30 @@ local step_info_lookup = {
 			TrainingGroundsObjectivesLookup.biomancer_blitz,
 		},
 	},
+	cryptic_servo_skull_order_kill = {
+		description = "loc_tutorial_cryptic_companion_enemy_desc",
+		title = "loc_talents_category_tactical",
+		input_descriptions = TrainingGroundsActionsLookup.activate_servo_skull_tag_order,
+		objectives = {
+			TrainingGroundsObjectivesLookup.cryptic_servo_skull_order_kill,
+		},
+	},
+	cryptic_servo_skull_empower = {
+		description = "loc_tutorial_cryptic_companion_empower_desc",
+		title = "loc_talents_category_tactical",
+		input_descriptions = TrainingGroundsActionsLookup.activate_servo_skull_blitz_ability,
+		objectives = {
+			TrainingGroundsObjectivesLookup.cryptic_servo_skull_empower,
+		},
+	},
+	cryptic_servo_skull_hacking = {
+		description = "loc_tutorial_cryptic_companion_hacking_desc",
+		title = "loc_talents_category_tactical",
+		input_descriptions = TrainingGroundsActionsLookup.activate_servo_skull_tag_order,
+		objectives = {
+			TrainingGroundsObjectivesLookup.cryptic_servo_skull_hacking,
+		},
+	},
 	ranged_grenade = {
 		description = "loc_ranged_grenade_desc",
 		title = "loc_talents_category_tactical",
@@ -206,6 +230,45 @@ local step_info_lookup = {
 			TrainingGroundsObjectivesLookup.combat_ability_broker,
 		},
 	},
+	cooldown_regen_cryptic = {
+		description = "loc_tutorial_cryptic_capacitance_desc",
+		title = "loc_talent_cryptic_power_keyword",
+		objectives = {
+			TrainingGroundsObjectivesLookup.cooldown_regen_cryptic,
+		},
+	},
+	combat_ability_use_cryptic = {
+		description = "loc_tutorial_cryptic_ability_desc",
+		title = "loc_combat_ability_tutorial",
+		input_descriptions = TrainingGroundsActionsLookup.activate_combat_ability,
+		objectives = {
+			TrainingGroundsObjectivesLookup.combat_ability_use,
+		},
+	},
+	combat_ability_cryptic_one_charge = {
+		description = "loc_tutorial_cryptic_ability_charges_desc",
+		title = "loc_combat_ability_tutorial",
+		input_descriptions = TrainingGroundsActionsLookup.activate_combat_ability,
+		objectives = {
+			TrainingGroundsObjectivesLookup.combat_ability_cryptic_1,
+		},
+	},
+	combat_ability_cryptic_two_charges = {
+		description = "loc_tutorial_cryptic_ability_charges_desc",
+		title = "loc_combat_ability_tutorial",
+		input_descriptions = TrainingGroundsActionsLookup.activate_combat_ability,
+		objectives = {
+			TrainingGroundsObjectivesLookup.combat_ability_cryptic_2,
+		},
+	},
+	combat_ability_cryptic_three_charges = {
+		description = "loc_tutorial_cryptic_ability_charges_desc",
+		title = "loc_combat_ability_tutorial",
+		input_descriptions = TrainingGroundsActionsLookup.activate_combat_ability,
+		objectives = {
+			TrainingGroundsObjectivesLookup.combat_ability_cryptic_3,
+		},
+	},
 	adamant_companion_targeting = {
 		description = "loc_companion_tutorial_adamant_desc",
 		title = "loc_companion_tutorial_adamant_name",
@@ -242,6 +305,14 @@ local step_info_lookup = {
 		description = "loc_weapon_special_desc",
 		title = "loc_weapon_special",
 		input_descriptions = TrainingGroundsActionsLookup.weapon_special_ogrynknife,
+		objectives = {
+			TrainingGroundsObjectivesLookup.weapon_special,
+		},
+	},
+	weapon_special_powermaul_p3 = {
+		description = "loc_weapon_special_desc",
+		title = "loc_weapon_special",
+		input_descriptions = TrainingGroundsActionsLookup.weapon_special_powermaul_p3,
 		objectives = {
 			TrainingGroundsObjectivesLookup.weapon_special,
 		},

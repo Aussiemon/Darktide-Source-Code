@@ -237,9 +237,9 @@ StateTitle._legal_verification = function (self)
 			options[#options + 1] = {
 				close_on_pressed = true,
 				hotkey = "back",
-				text = PLATFORM == "win32" and "loc_privacy_policy_decline_button_label" or "loc_privacy_policy_decline_button_console_label",
+				text = IS_WINDOWS and "loc_privacy_policy_decline_button_label" or "loc_privacy_policy_decline_button_console_label",
 				callback = function ()
-					if PLATFORM == "win32" then
+					if IS_WINDOWS then
 						Application.quit()
 					else
 						self:_reset_state()
@@ -293,9 +293,9 @@ StateTitle._legal_verification = function (self)
 			options[#options + 1] = {
 				close_on_pressed = true,
 				hotkey = "back",
-				text = PLATFORM == "win32" and "loc_privacy_policy_decline_button_label" or "loc_privacy_policy_decline_button_console_label",
+				text = IS_WINDOWS and "loc_privacy_policy_decline_button_label" or "loc_privacy_policy_decline_button_console_label",
 				callback = function ()
-					if PLATFORM == "win32" then
+					if IS_WINDOWS then
 						Application.quit()
 					else
 						self:_reset_state()
@@ -651,16 +651,21 @@ StateTitle._signin = function (self)
 
 		main_menu_loader:start_loading()
 
-		local next_state_params = self._next_state_params
+		local account_slots_promise = Managers.backend.interfaces.account:get()
 
-		next_state_params.main_menu_loader = main_menu_loader
-		next_state_params.profiles = profiles
-		next_state_params.gear = gear
-		next_state_params.selected_profile = selected_profile
-		next_state_params.has_created_first_character = has_created_first_character
-		next_state_params.migration_data = migration_data and migration_data.migrations
+		account_slots_promise:next(function (account_data)
+			local next_state_params = self._next_state_params
 
-		self:_set_state(STATES.loading_packages)
+			next_state_params.main_menu_loader = main_menu_loader
+			next_state_params.profiles = profiles
+			next_state_params.gear = gear
+			next_state_params.selected_profile = selected_profile
+			next_state_params.has_created_first_character = has_created_first_character
+			next_state_params.migration_data = migration_data and migration_data.migrations
+			next_state_params.max_character_slots = account_data.characterSlots
+
+			self:_set_state(STATES.loading_packages)
+		end)
 
 		if Managers.chat then
 			if not Managers.chat:is_initialized() then

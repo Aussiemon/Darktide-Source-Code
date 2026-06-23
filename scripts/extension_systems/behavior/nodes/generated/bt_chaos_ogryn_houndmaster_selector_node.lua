@@ -2,76 +2,31 @@
 
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
+local Profiler_start = Profiler.start
+local Profiler_stop = Profiler.stop
 local BtChaosOgrynHoundmasterSelectorNode = class("BtChaosOgrynHoundmasterSelectorNode", "BtNode")
 
 BtChaosOgrynHoundmasterSelectorNode.init = function (self, ...)
 	BtChaosOgrynHoundmasterSelectorNode.super.init(self, ...)
 
-	self._children = {}
-end
-
-BtChaosOgrynHoundmasterSelectorNode.init_values = function (self, blackboard, action_data, node_data)
-	BtChaosOgrynHoundmasterSelectorNode.super.init_values(self, blackboard, action_data, node_data)
-
-	local children = self._children
-
-	for i = 1, #children do
-		local child_node = children[i]
-		local child_tree_node = child_node.tree_node
-		local child_action_data = child_tree_node.action_data
-
-		child_node:init_values(blackboard, child_action_data, node_data)
-	end
+	self._selector_children = {}
 end
 
 BtChaosOgrynHoundmasterSelectorNode.add_child = function (self, node)
-	self._children[#self._children + 1] = node
+	BtChaosOgrynHoundmasterSelectorNode.super.add_child(self, node)
+
+	if not node.tree_node.state then
+		self._selector_children[#self._selector_children + 1] = node
+	end
 end
 
 BtChaosOgrynHoundmasterSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
 	local node_identifier = self.identifier
 	local last_running_node = old_running_child_nodes[node_identifier]
-	local children = self._children
+	local children = self._selector_children
 
 	do
-		local node_death = children[1]
-		local death_component = blackboard.death
-		local is_dead = death_component.is_dead
-		local condition_result = is_dead
-
-		if condition_result then
-			new_running_child_nodes[node_identifier] = node_death
-
-			return node_death
-		end
-	end
-
-	do
-		local node_disable = children[2]
-		local disable_component = blackboard.disable
-		local condition_result = disable_component.is_disabled
-
-		if condition_result then
-			new_running_child_nodes[node_identifier] = node_disable
-
-			return node_disable
-		end
-	end
-
-	do
-		local node_exit_spawner = children[3]
-		local spawn_component = blackboard.spawn
-		local condition_result = spawn_component.is_exiting_spawner
-
-		if condition_result then
-			new_running_child_nodes[node_identifier] = node_exit_spawner
-
-			return node_exit_spawner
-		end
-	end
-
-	do
-		local node_smart_object = children[4]
+		local node_smart_object = children[1]
 		local condition_result
 
 		repeat
@@ -130,7 +85,7 @@ BtChaosOgrynHoundmasterSelectorNode.evaluate = function (self, unit, blackboard,
 	end
 
 	do
-		local node_stagger = children[5]
+		local node_stagger = children[2]
 		local stagger_component = blackboard.stagger
 		local is_staggered = stagger_component.num_triggered_staggers > 0
 		local condition_result = is_staggered
@@ -143,7 +98,7 @@ BtChaosOgrynHoundmasterSelectorNode.evaluate = function (self, unit, blackboard,
 	end
 
 	do
-		local node_blocked = children[6]
+		local node_blocked = children[3]
 		local blocked_component = blackboard.blocked
 		local is_blocked = blocked_component.is_blocked
 		local condition_result = is_blocked
@@ -156,7 +111,7 @@ BtChaosOgrynHoundmasterSelectorNode.evaluate = function (self, unit, blackboard,
 	end
 
 	do
-		local node_summon = children[7]
+		local node_summon = children[4]
 		local tree_node = node_summon.tree_node
 		local action_data = tree_node.action_data
 		local is_running = last_leaf_node_running and last_running_node == node_summon
@@ -172,7 +127,7 @@ BtChaosOgrynHoundmasterSelectorNode.evaluate = function (self, unit, blackboard,
 	end
 
 	do
-		local node_follow = children[8]
+		local node_follow = children[5]
 		local tree_node = node_follow.tree_node
 		local condition_args = tree_node.condition_args
 		local is_running = last_leaf_node_running and last_running_node == node_follow
@@ -247,7 +202,7 @@ BtChaosOgrynHoundmasterSelectorNode.evaluate = function (self, unit, blackboard,
 	end
 
 	do
-		local node_melee_combat = children[9]
+		local node_melee_combat = children[6]
 		local is_running = last_leaf_node_running and last_running_node == node_melee_combat
 		local condition_result
 
@@ -300,7 +255,7 @@ BtChaosOgrynHoundmasterSelectorNode.evaluate = function (self, unit, blackboard,
 	end
 
 	do
-		local node_alerted = children[10]
+		local node_alerted = children[7]
 		local is_running = last_leaf_node_running and last_running_node == node_alerted
 		local condition_result
 
@@ -349,7 +304,7 @@ BtChaosOgrynHoundmasterSelectorNode.evaluate = function (self, unit, blackboard,
 	end
 
 	do
-		local node_patrol = children[11]
+		local node_patrol = children[8]
 		local is_running = last_leaf_node_running and last_running_node == node_patrol
 		local condition_result
 
@@ -400,7 +355,7 @@ BtChaosOgrynHoundmasterSelectorNode.evaluate = function (self, unit, blackboard,
 		end
 	end
 
-	local node_idle = children[12]
+	local node_idle = children[9]
 
 	new_running_child_nodes[node_identifier] = node_idle
 
@@ -412,9 +367,9 @@ BtChaosOgrynHoundmasterSelectorNode.run = function (self, unit, breed, blackboar
 	local running_node = running_child_nodes[node_identifier]
 	local running_tree_node = running_node.tree_node
 	local running_action_data = running_tree_node.action_data
-	local result, evaluate_utility_next_frame = running_node:run(unit, breed, blackboard, scratchpad, running_action_data, dt, t, node_data, running_child_nodes)
+	local result, evaluate_utility_next_frame, update_rate = running_node:run(unit, breed, blackboard, scratchpad, running_action_data, dt, t, node_data, running_child_nodes)
 
-	return result, evaluate_utility_next_frame
+	return result, evaluate_utility_next_frame, update_rate
 end
 
 return BtChaosOgrynHoundmasterSelectorNode

@@ -61,6 +61,7 @@ PlayerUnitAbilityExtension.init = function (self, extension_init_context, unit, 
 	self._abilities = {}
 	self._equipped_abilities = {}
 	self._charge_replenished = {}
+	self._last_num_charges_used = {}
 
 	local action_handler = ActionHandler:new(unit, AbilityActionHandlerData)
 
@@ -112,6 +113,11 @@ PlayerUnitAbilityExtension._init_action_components = function (self, unit_data_e
 		ability_components[ability_type] = ability_component
 	end
 
+	local action_module_ability_target_finder = unit_data_extension:write_component("action_module_ability_target_finder")
+
+	action_module_ability_target_finder.target_unit_1 = nil
+	action_module_ability_target_finder.target_unit_2 = nil
+	action_module_ability_target_finder.target_unit_3 = nil
 	self._equipped_abilities_component = equipped_abilities_component
 	self._ability_components = ability_components
 end
@@ -273,6 +279,9 @@ PlayerUnitAbilityExtension._equip_ability = function (self, ability_type, abilit
 
 		component.num_charges = self:max_ability_charges(ability_type)
 		component.cooldown_paused = false
+		component.cooldown_paused = not not ability.cooldown_regen_over_time_disabled
+		component.cooldown = 0
+		component.cooldown_regen_buffer = 0
 	end
 
 	if self._is_server then
@@ -435,6 +444,12 @@ end
 
 PlayerUnitAbilityExtension.stop_action = function (self, reason, data, t)
 	self._action_handler:stop_action("combat_ability_action", reason, data, t)
+
+	local grenade_ability_action_settings = self:running_action_settings("grenade_ability_action")
+
+	if grenade_ability_action_settings and not grenade_ability_action_settings.uninterruptible then
+		self._action_handler:stop_action("grenade_ability_action", reason, data, t)
+	end
 end
 
 local temp_table = {}
@@ -501,6 +516,9 @@ PlayerUnitAbilityExtension._update_ability_cooldowns = function (self, t, dt)
 			local cooldown_regen_buffer = component.cooldown_regen_buffer
 			local in_cooldown = cooldown ~= 0
 			local should_update_paused_state = component.cooldown_paused
+			local is_cooldown_regen_over_time_disabled = self:is_cooldown_regen_over_time_disabled(ability_type)
+
+			should_update_paused_state = should_update_paused_state and not is_cooldown_regen_over_time_disabled
 
 			if in_cooldown and should_update_paused_state then
 				local pause_cooldown_settings = ability.pause_cooldown_settings
@@ -528,11 +546,12 @@ PlayerUnitAbilityExtension._update_ability_cooldowns = function (self, t, dt)
 					cooldown_regen_buffer = cooldown_regen_buffer + ability_rate
 
 					local regen_frames = cooldown_regen_buffer / ability_rate_precision
-					local floored_regen_frames = math.floor(regen_frames)
+					local regen_frames_sign = math.sign(regen_frames)
+					local floored_regen_frames = math.floor(math.abs(regen_frames))
 
 					if floored_regen_frames > 0 then
-						cooldown = cooldown - floored_regen_frames * fixed_time_step
-						cooldown_regen_buffer = cooldown_regen_buffer - floored_regen_frames * ability_rate_precision
+						cooldown = cooldown - floored_regen_frames * fixed_time_step * regen_frames_sign
+						cooldown_regen_buffer = cooldown_regen_buffer - floored_regen_frames * ability_rate_precision * regen_frames_sign
 					end
 				end
 
@@ -543,6 +562,11 @@ PlayerUnitAbilityExtension._update_ability_cooldowns = function (self, t, dt)
 					cooldown = 0
 					cooldown_regen_buffer = 0
 					self._charge_replenished[ability_type] = true
+
+					self:_proc_ability_charge_replenished_event(ability_type, 1)
+					self:_record_ability_charge_gained_stat(ability_type, 1)
+				elseif in_cooldown and is_cooldown_regen_over_time_disabled then
+					cooldown = cooldown + dt
 				end
 			end
 
@@ -621,9 +645,19 @@ PlayerUnitAbilityExtension.can_use_ability = function (self, ability_type)
 		return true
 	end
 
-	local has_enough_charges = self:remaining_ability_charges(ability_type) > 0
+	local equipped_ability = self._equipped_abilities[ability_type]
+	local min_charges_usage_cost = equipped_ability and equipped_ability.min_charges_usage_cost or 1
+	local has_enough_charges = min_charges_usage_cost <= self:remaining_ability_charges(ability_type)
 
 	if not has_enough_charges then
+		return false
+	end
+
+	local ability_locked_while_active = equipped_ability.ability_locked_while_active
+	local ability_components = self._ability_components
+	local component = ability_components[ability_type]
+
+	if ability_locked_while_active and component.active then
 		return false
 	end
 
@@ -675,6 +709,19 @@ PlayerUnitAbilityExtension.is_cooldown_paused = function (self, ability_type)
 	return component.cooldown_paused
 end
 
+PlayerUnitAbilityExtension.is_cooldown_regen_over_time_disabled = function (self, ability_type)
+	local enabled = self:ability_enabled(ability_type)
+
+	if not enabled then
+		return false
+	end
+
+	local equipped_ability = self._equipped_abilities[ability_type]
+	local cooldown_regen_over_time_disabled = equipped_ability and equipped_ability.cooldown_regen_over_time_disabled or false
+
+	return cooldown_regen_over_time_disabled
+end
+
 PlayerUnitAbilityExtension.pause_cooldown = function (self, ability_type)
 	local ability_components = self._ability_components
 	local component = ability_components[ability_type]
@@ -692,6 +739,9 @@ PlayerUnitAbilityExtension.remaining_ability_cooldown = function (self, ability_
 	local ability_components = self._ability_components
 	local component = ability_components[ability_type]
 	local should_show_empty_cooldown = component.cooldown_paused
+	local is_cooldown_regen_over_time_disabled = self:is_cooldown_regen_over_time_disabled(ability_type)
+
+	should_show_empty_cooldown = should_show_empty_cooldown and not is_cooldown_regen_over_time_disabled
 
 	if should_show_empty_cooldown then
 		return 0
@@ -805,15 +855,28 @@ end
 PlayerUnitAbilityExtension.restore_ability_charge = function (self, ability_type, num_charges_restored)
 	local ability_component = self._ability_components[ability_type]
 	local max_charges = self:max_ability_charges(ability_type)
+	local new_num_charges = math.clamp(ability_component.num_charges + num_charges_restored, 0, max_charges)
 
-	ability_component.num_charges = math.clamp(ability_component.num_charges + num_charges_restored, 0, max_charges)
+	ability_component.num_charges = new_num_charges
+
+	self:_proc_ability_charge_replenished_event(ability_type, num_charges_restored)
+	self:_record_ability_charge_gained_stat(ability_type, num_charges_restored)
+
+	if new_num_charges == max_charges then
+		ability_component.cooldown = 0
+	end
 end
 
 PlayerUnitAbilityExtension.set_ability_charges = function (self, ability_type, num_charges)
 	local ability_component = self._ability_components[ability_type]
 	local max_charges = self:max_ability_charges(ability_type)
+	local new_num_charges = math.clamp(num_charges, 0, max_charges)
 
-	ability_component.num_charges = math.clamp(num_charges, 0, max_charges)
+	ability_component.num_charges = new_num_charges
+
+	if new_num_charges == max_charges then
+		ability_component.cooldown = 0
+	end
 end
 
 PlayerUnitAbilityExtension.reduce_ability_cooldown_percentage = function (self, ability_type, reduce_percetage)
@@ -833,19 +896,110 @@ PlayerUnitAbilityExtension.reduce_ability_cooldown_time = function (self, abilit
 	local ability_component = self._ability_components[ability_type]
 	local current_cooldown = ability_component.cooldown
 	local fixed_frame_t = FixedFrame.get_latest_fixed_time()
-	local in_cooldown = current_cooldown ~= 0
+	local stat_buffs = self._buff_extension:stat_buffs()
+	local combat_ability_cooldown_replenish_modifier = stat_buffs.combat_ability_cooldown_replenish_modifier or 1
 
-	if not in_cooldown then
+	reduce_time = reduce_time * combat_ability_cooldown_replenish_modifier
+
+	local max_ability_charges = self:max_ability_charges(ability_type)
+	local remaining_ability_charges = self:remaining_ability_charges(ability_type)
+	local max_cooldown = self:max_ability_cooldown(ability_type)
+	local remaining_cooldown = self:remaining_ability_cooldown(ability_type)
+
+	if max_ability_charges <= remaining_ability_charges then
 		return
 	end
 
-	local reduced_cooldown_time = current_cooldown - reduce_time
-	local new_cooldown = math.max(reduced_cooldown_time, fixed_frame_t)
+	if remaining_ability_charges < max_ability_charges and remaining_cooldown == 0 then
+		remaining_cooldown = max_cooldown
 
-	ability_component.cooldown = math.round_to_closest_multiple(new_cooldown, Managers.state.game_session.fixed_time_step)
+		if current_cooldown == fixed_frame_t then
+			remaining_ability_charges = remaining_ability_charges + 1
+		end
+	end
+
+	local current_total_cooldown_time = remaining_ability_charges * max_cooldown + (remaining_cooldown > 0 and max_cooldown - remaining_cooldown or 0)
+	local reduced_total_cooldown_time = math.min(current_total_cooldown_time + reduce_time, max_ability_charges * max_cooldown)
+	local new_num_ability_charges = math.clamp(math.floor(reduced_total_cooldown_time / max_cooldown), 0, max_ability_charges)
+
+	if new_num_ability_charges == max_ability_charges then
+		ability_component.cooldown = 0
+		ability_component.cooldown_regen_buffer = 0
+	else
+		local reminder_cooldown = max_cooldown - (reduced_total_cooldown_time - new_num_ability_charges * max_cooldown)
+		local new_cooldown = fixed_frame_t + reminder_cooldown
+
+		ability_component.cooldown = math.round_to_closest_multiple(new_cooldown, Managers.state.game_session.fixed_time_step)
+
+		if ability_component.cooldown == fixed_frame_t then
+			new_num_ability_charges = new_num_ability_charges + 1
+		end
+	end
+
+	local num_charges_gained = new_num_ability_charges - remaining_ability_charges
+
+	if num_charges_gained > 0 then
+		self:_proc_ability_charge_replenished_event(ability_type, num_charges_gained)
+	end
+
+	self:set_ability_charges(ability_type, new_num_ability_charges)
 end
 
-PlayerUnitAbilityExtension.use_ability_charge = function (self, ability_type, optional_num_charges)
+PlayerUnitAbilityExtension.increase_ability_cooldown_percentage = function (self, ability_type, increase_percetage)
+	local max_cooldown = self:max_ability_cooldown(ability_type)
+	local increase_time = increase_percetage * max_cooldown
+
+	return self:increase_ability_cooldown_time(ability_type, increase_time)
+end
+
+PlayerUnitAbilityExtension.increase_ability_cooldown_time = function (self, ability_type, increase_time)
+	local ability_component = self._ability_components[ability_type]
+	local current_cooldown = ability_component.cooldown
+	local fixed_frame_t = FixedFrame.get_latest_fixed_time()
+	local max_ability_charges = self:max_ability_charges(ability_type)
+	local max_cooldown = self:max_ability_cooldown(ability_type)
+	local remaining_cooldown = self:remaining_ability_cooldown(ability_type)
+	local remaining_ability_charges = self:remaining_ability_charges(ability_type)
+
+	if remaining_ability_charges < max_ability_charges and remaining_cooldown == 0 then
+		remaining_cooldown = max_cooldown
+
+		if current_cooldown == fixed_frame_t then
+			remaining_ability_charges = math.max(remaining_ability_charges - 1, 0)
+		end
+	end
+
+	local total_cooldown_value = remaining_ability_charges * max_cooldown + (remaining_cooldown > 0 and max_cooldown - remaining_cooldown or 0)
+	local new_total_cooldown = math.max(total_cooldown_value - increase_time, 0)
+	local new_num_charges = math.floor(new_total_cooldown / max_cooldown)
+	local reminder_cooldown = max_cooldown - (new_total_cooldown - new_num_charges * max_cooldown)
+	local new_cooldown = fixed_frame_t + reminder_cooldown
+	local num_charges_lost = remaining_ability_charges - new_num_charges
+
+	if num_charges_lost > 0 then
+		self:_proc_ability_charge_consumed_event(ability_type, num_charges_lost)
+	end
+
+	ability_component.cooldown = math.round_to_closest_multiple(new_cooldown, Managers.state.game_session.fixed_time_step)
+
+	self:set_ability_charges(ability_type, new_num_charges)
+
+	local new_percent_cooldown = reminder_cooldown / max_cooldown
+
+	return new_num_charges, new_percent_cooldown
+end
+
+PlayerUnitAbilityExtension.get_num_ability_charges_to_use = function (self, ability_type, optional_num_charges)
+	local equipped_ability = self._equipped_abilities[ability_type]
+	local min_charges_usage_cost = equipped_ability and equipped_ability.min_charges_usage_cost or 1
+	local max_charges_usage_cost = equipped_ability and equipped_ability.max_charges_usage_cost or 1
+	local current_charges = self:remaining_ability_charges(ability_type)
+	local num_charges_to_use = optional_num_charges or math.clamp(current_charges, min_charges_usage_cost, max_charges_usage_cost)
+
+	return num_charges_to_use
+end
+
+PlayerUnitAbilityExtension.use_ability_charge = function (self, ability_type, optional_num_charges, optional_telemetry_ability_name)
 	local ability_components = self._ability_components
 	local component = ability_components[ability_type]
 	local equipped_abilities_component = self._equipped_abilities_component
@@ -853,7 +1007,9 @@ PlayerUnitAbilityExtension.use_ability_charge = function (self, ability_type, op
 	local reporter = Managers.telemetry_reporters:reporter(ability_type)
 
 	if reporter then
-		reporter:register_event(self._player, ability_name)
+		local telemetry_ability_name = optional_telemetry_ability_name or ability_name
+
+		reporter:register_event(self._player, telemetry_ability_name)
 	end
 
 	if ability_type == "grenade_ability" then
@@ -866,13 +1022,23 @@ PlayerUnitAbilityExtension.use_ability_charge = function (self, ability_type, op
 		end
 	end
 
-	local num_charges_to_deduct = optional_num_charges or 1
+	local num_charges_to_deduct = self:get_num_ability_charges_to_use(ability_type, optional_num_charges)
 
 	component.num_charges = math.max(component.num_charges - num_charges_to_deduct, 0)
+
+	self:_proc_ability_charge_consumed_event(ability_type, num_charges_to_deduct)
+
+	self._last_num_charges_used[ability_type] = num_charges_to_deduct
+
+	return num_charges_to_deduct
 end
 
-PlayerUnitAbilityExtension.running_action_settings = function (self)
-	return self._action_handler:running_action_settings("combat_ability_action")
+PlayerUnitAbilityExtension.ability_charges_used_on_activation = function (self, ability_type)
+	return self._last_num_charges_used[ability_type] or 1
+end
+
+PlayerUnitAbilityExtension.running_action_settings = function (self, target_ability_type)
+	return self._action_handler:running_action_settings(target_ability_type or "combat_ability_action")
 end
 
 PlayerUnitAbilityExtension.wanted_character_state_transition = function (self)
@@ -910,6 +1076,38 @@ PlayerUnitAbilityExtension.ability_pause_cooldown_settings = function (self, abi
 	local ability = self._equipped_abilities[ability_type]
 
 	return ability.pause_cooldown_settings
+end
+
+PlayerUnitAbilityExtension._proc_ability_charge_replenished_event = function (self, ability_type, num_charges_gained)
+	local proc_event = string.format("on_%s_charge_replenished", ability_type)
+	local param_table = self._buff_extension:request_proc_event_param_table()
+
+	if param_table then
+		param_table.unit = self._unit
+		param_table.num_charges_gained = num_charges_gained
+
+		self._buff_extension:add_proc_event(proc_event, param_table)
+	end
+end
+
+PlayerUnitAbilityExtension._proc_ability_charge_consumed_event = function (self, ability_type, num_charges_used)
+	local proc_event = string.format("on_%s_charge_consumed", ability_type)
+	local param_table = self._buff_extension:request_proc_event_param_table()
+
+	if param_table then
+		param_table.unit = self._unit
+		param_table.num_charges_consumed = num_charges_used
+
+		self._buff_extension:add_proc_event(proc_event, param_table)
+	end
+end
+
+PlayerUnitAbilityExtension._record_ability_charge_gained_stat = function (self, ability_type, num_charges_gained)
+	if not self._is_server then
+		return
+	end
+
+	Managers.stats:record_private("hook_ability_charges_gained", self._player, ability_type, num_charges_gained)
 end
 
 return PlayerUnitAbilityExtension

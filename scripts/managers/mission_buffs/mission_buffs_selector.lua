@@ -168,12 +168,27 @@ MissionBuffsSelector._get_valid_legendary_buffs_for_player_setup = function (sel
 
 	local legendary_class_buffs = legendary_buffs[player_class_name]
 
+	if legendary_class_buffs and legendary_class_buffs.generic and #legendary_class_buffs.generic > 0 then
+		self:_filter_and_append_buffs(player, valid_buffs, legendary_class_buffs.generic, buffs_in_pool_already_given_to_player)
+	end
+
 	if legendary_class_buffs and legendary_class_buffs.grenade_ability[player_grenade_ability_name] then
 		self:_filter_and_append_buffs(player, valid_buffs, legendary_class_buffs.grenade_ability[player_grenade_ability_name], buffs_in_pool_already_given_to_player)
 	end
 
 	if legendary_class_buffs and legendary_class_buffs.combat_ability[player_combat_ability_name] then
 		self:_filter_and_append_buffs(player, valid_buffs, legendary_class_buffs.combat_ability[player_combat_ability_name], buffs_in_pool_already_given_to_player)
+	end
+
+	if legendary_class_buffs and legendary_class_buffs.talent_specific then
+		local profile = player:profile()
+		local talents = profile and profile.talents
+
+		for talent_name, talent_based_buffs in pairs(legendary_class_buffs.talent_specific) do
+			if talents[talent_name] then
+				self:_filter_and_append_buffs(player, valid_buffs, talent_based_buffs, buffs_in_pool_already_given_to_player)
+			end
+		end
 	end
 
 	return valid_buffs, buffs_in_pool_already_given_to_player
@@ -417,7 +432,8 @@ MissionBuffsSelector.try_start_new_buff_choice_for_player = function (self, play
 	end
 end
 
-MissionBuffsSelector.rpc_server_mission_buffs_player_buff_choice = function (self, channel_id, peer_id, local_player_id, choice_index)
+MissionBuffsSelector.rpc_server_mission_buffs_player_buff_choice = function (self, channel_id, local_player_id, choice_index)
+	local peer_id = Network.peer_id(channel_id)
 	local target_player = Managers.player:player(peer_id, local_player_id)
 
 	if target_player == nil then

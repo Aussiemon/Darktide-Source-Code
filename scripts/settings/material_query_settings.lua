@@ -5,6 +5,7 @@ local surface_materials = {
 	"brick",
 	"cloth",
 	"concrete",
+	"cryptic_shield",
 	"dirt_gravel",
 	"dirt_mud",
 	"dirt_sand",
@@ -51,6 +52,7 @@ local surface_material_groups = {
 		"ice_solid",
 		"psychic_shield",
 		"void_shell",
+		"cryptic_shield",
 	},
 	dirt = {
 		"dirt_sand",

@@ -282,14 +282,21 @@ ExpeditionNavigationHandler.expedition_mark_level_complete = function (self, lev
 	end
 end
 
-ExpeditionNavigationHandler.player_slot_by_level_marked = function (self, level_index)
+local _temp_player_slots = {}
+
+ExpeditionNavigationHandler.player_slots_by_level_marked = function (self, level_index)
+	table.clear(_temp_player_slots)
+
+	local num_player_slots = 0
+
 	for player_slot, level in pairs(self._player_slot_marked) do
 		if level == level_index then
-			return player_slot
+			num_player_slots = num_player_slots + 1
+			_temp_player_slots[player_slot] = num_player_slots
 		end
 	end
 
-	return nil
+	return _temp_player_slots, num_player_slots
 end
 
 ExpeditionNavigationHandler.mark_level_by_player = function (self, level_index, player)
@@ -299,9 +306,9 @@ ExpeditionNavigationHandler.mark_level_by_player = function (self, level_index, 
 		return false
 	end
 
-	local current_slot = self:player_slot_by_level_marked(level_index)
+	local player_slots, num_player_slots = self:player_slots_by_level_marked(level_index)
 
-	if current_slot == player_slot then
+	if player_slots[player_slot] then
 		self._player_slot_marked[player_slot] = nil
 
 		if self._is_server then
@@ -311,7 +318,7 @@ ExpeditionNavigationHandler.mark_level_by_player = function (self, level_index, 
 		end
 
 		return true, false
-	elseif current_slot == nil and not self._completed_levels[level_index] then
+	elseif not self._completed_levels[level_index] then
 		self._player_slot_marked[player_slot] = level_index
 
 		if self._is_server then

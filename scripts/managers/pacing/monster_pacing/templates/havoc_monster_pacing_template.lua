@@ -199,6 +199,7 @@ local monster_pacing_template = {
 					"chaos_plague_ogryn",
 					"chaos_beast_of_nurgle",
 					"chaos_spawn",
+					"chaos_ogryn_houndmaster",
 				},
 				witches = {
 					"chaos_daemonhost",
@@ -253,6 +254,7 @@ local monster_pacing_template = {
 					"chaos_plague_ogryn",
 					"chaos_beast_of_nurgle",
 					"chaos_spawn",
+					"chaos_ogryn_houndmaster",
 				},
 				witches = {
 					"chaos_daemonhost",

@@ -3,7 +3,7 @@
 require("scripts/extension_systems/decoder_device/decoder_device_extension")
 
 local DecoderDeviceSystem = class("DecoderDeviceSystem", "ExtensionSystemBase")
-local RPCS = {
+local CLIENT_RPCS = {
 	"rpc_decoder_device_hot_join",
 	"rpc_decoder_device_place_unit",
 	"rpc_decoder_device_enable_unit",
@@ -15,13 +15,16 @@ local RPCS = {
 DecoderDeviceSystem.init = function (self, context, system_init_data, ...)
 	DecoderDeviceSystem.super.init(self, context, system_init_data, ...)
 
-	self._network_event_delegate = context.network_event_delegate
-
-	self._network_event_delegate:register_session_events(self, unpack(RPCS))
+	if not self._is_server then
+		self._network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
+	end
 end
 
 DecoderDeviceSystem.destroy = function (self)
-	self._network_event_delegate:unregister_events(unpack(RPCS))
+	if not self._is_server then
+		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
+	end
+
 	DecoderDeviceSystem.super.destroy(self)
 end
 

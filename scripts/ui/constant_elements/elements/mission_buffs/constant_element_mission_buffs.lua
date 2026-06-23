@@ -486,7 +486,7 @@ MissionBuffs._update_texts_state = function (self, dt, ui_renderer)
 			self._states.text = "active"
 		end
 	elseif self._states.text == "active" then
-		if not self._texts_timer or self._context.is_buff_family and not self._context.is_catchup and self._context.buff_chosen then
+		if not self._texts_timer or self._context.buffs and #self._context.buffs > 1 and not self._context.are_waves_active and self._context.buff_chosen then
 			self._texts_timer = nil
 			self._previous_texts_timer = nil
 
@@ -883,37 +883,37 @@ MissionBuffs._update_presentation = function (self, context)
 
 	local timer = context and context.timer or DEFAULT_TIMER
 	local num_waves_per_island = HordesModeSettings.waves_per_island
+	local num_buffs = buffs_data and #buffs_data or 0
 	local queue_context = {}
 
-	if buffs_data and #buffs_data == 1 then
+	if num_buffs == 1 then
 		queue_context.buffs_timer = DEFAULT_TIMER
-	elseif buffs_data and #buffs_data > 1 then
+	elseif num_buffs > 1 then
 		queue_context.buffs_timer = timer
 	end
 
-	local is_before_first_wave_start = context.wave_num == nil
+	local is_before_first_wave_start = context.wave_num == nil or context.wave_num == 0
 	local is_after_last_wave_end = context.state == "completed" and num_waves_per_island <= context.wave_num
 	local is_choice = context.buffs and #context.buffs > 1
-	local is_catchup = context.state == "completed" and self._previous_context_revceived_state == context.state
+	local is_catchup = context.state == "completed" and self._previous_context_received_state == context.state
 	local is_wave_title
 	local pre_queue_context = {}
 
-	if context.wave_num and context.state == "completed" and buffs_data and #buffs_data > 1 then
-		pre_queue_context.title = Localize("loc_horde_wave_completed", true, {
-			wave = context.wave_num or 1,
-		})
-		is_wave_title = true
-
-		if context.is_buff_family then
-			queue_context.title = Localize("loc_horde_buff_family_pick")
-		else
-			queue_context.title = Localize("loc_horde_buff_big_pick")
+	if context.wave_num and context.state == "completed" then
+		if is_after_last_wave_end and num_buffs == 0 or not is_after_last_wave_end then
+			pre_queue_context.title = Localize("loc_horde_wave_completed", true, {
+				wave = context.wave_num or 1,
+			})
+			is_wave_title = true
 		end
-	elseif context.wave_num and context.state == "completed" then
-		pre_queue_context.title = Localize("loc_horde_wave_completed", true, {
-			wave = context.wave_num or 1,
-		})
-		is_wave_title = true
+
+		if num_buffs > 1 then
+			if context.is_buff_family then
+				queue_context.title = Localize("loc_horde_buff_family_pick")
+			else
+				queue_context.title = Localize("loc_horde_buff_big_pick")
+			end
+		end
 	elseif context.wave_num then
 		queue_context.title = Localize("loc_horde_wave_start", true, {
 			wave = context.wave_num,
@@ -923,7 +923,7 @@ MissionBuffs._update_presentation = function (self, context)
 		queue_context.title = Localize("loc_horde_buff_family_pick")
 	end
 
-	if context and buffs_data and #buffs_data > 1 and is_before_first_wave_start then
+	if context and num_buffs > 1 and (is_before_first_wave_start or is_after_last_wave_end) then
 		queue_context.sub_title = Localize("loc_horde_buff_family_time")
 		queue_context.use_timer = true
 	elseif not is_before_first_wave_start and not is_after_last_wave_end and timer > DEFAULT_TIMER or is_catchup then
@@ -950,9 +950,10 @@ MissionBuffs._update_presentation = function (self, context)
 	queue_context.state = context.state
 	queue_context.is_choice = is_choice
 	queue_context.is_catchup = is_catchup
+	queue_context.are_waves_active = not is_before_first_wave_start and not is_after_last_wave_end
 
 	local queues_to_add = {}
-	local add_pre_queue = not table.is_empty(pre_queue_context) and self._previous_context_revceived_state ~= context.state and context.state == "completed"
+	local add_pre_queue = not table.is_empty(pre_queue_context) and self._previous_context_received_state ~= context.state and context.state == "completed"
 	local add_queue = not table.is_empty(queue_context)
 
 	if is_catchup then
@@ -990,7 +991,7 @@ MissionBuffs._update_presentation = function (self, context)
 		Log.info("ConstantElementMissionBuffs", "Add context to queue. WaveNum[%d] | Buffs[%d] | IsFamilyChoice[%s]", queue_context.wave_num or 0, queue_context.buffs and #queue_context.buffs or 0, queue_context.is_buff_family and "Y" or "N")
 	end
 
-	self._previous_context_revceived_state = context.state
+	self._previous_context_received_state = context.state
 end
 
 MissionBuffs._force_choice_resolution = function (self)

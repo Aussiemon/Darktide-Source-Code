@@ -10,14 +10,15 @@ local REFRESH_TIMER_FAILURE = 60
 local STATE_FAIL_DELAY = 60
 local CLIENT_RPCS = {
 	"rpc_live_event_trigger_combat_feed",
+	"rpc_live_event_pledge_result",
 }
 
 LiveEventManager.init = function (self, is_host, event_delegate)
 	self._events = {}
 	self._backend_events = {}
 	self._events_by_name = {}
-	self._active_event_id = nil
 	self._listener_ids = {}
+	self._hub_mutators = {}
 	self._is_host = not not is_host
 	self._event_delegate = event_delegate
 
@@ -227,7 +228,6 @@ LiveEventManager._on_track_state_success = function (self, id, event_id, backend
 
 	if not backend_state.rewarded then
 		Log.warning("LiveEventManager", "on_track_state_success bad data")
-		table.dump(backend_data, "backend_data", 10)
 	end
 
 	progress_data.value = backend_state.xpTracked
@@ -369,17 +369,20 @@ LiveEventManager._stop_event = function (self, event_id)
 end
 
 LiveEventManager._stop_all_active_events = function (self)
-	if self._listener_ids and #self._listener_ids > 0 then
-		for i = 1, #self._listener_ids do
-			Managers.stats:remove_listener(self._listener_ids[i])
-		end
-
-		self._listener_ids = nil
+	if not self._listener_ids then
+		return
 	end
+
+	local event_ids = table.keys(self._listener_ids)
+
+	for i = 1, #event_ids do
+		self:_stop_event(event_ids[i])
+	end
+
+	self._listener_ids = nil
 end
 
 LiveEventManager._update_events = function (self, dt, t)
-	local active_event_id, lowest_time = nil, math.huge
 	local server_time = Managers.backend:get_server_time(t)
 
 	for event_id, event_data in pairs(self._events) do
@@ -387,16 +390,13 @@ LiveEventManager._update_events = function (self, dt, t)
 		local has_values = starts_at and ends_at
 		local is_active = has_values and starts_at <= server_time and server_time <= ends_at
 
-		if is_active and starts_at < lowest_time then
-			active_event_id = event_id
-			lowest_time = starts_at
-		end
-
 		if event_data.is_active ~= is_active then
 			if event_data.is_active and not is_active then
 				self:_stop_event(event_id)
+				Managers.event:trigger("event_live_event_deactivated", event_id)
 			elseif not event_data.is_active and is_active then
 				self:_start_event(event_id)
+				Managers.event:trigger("event_live_event_activated", event_id)
 			end
 		end
 
@@ -422,6 +422,76 @@ LiveEventManager.update = function (self, dt, t)
 	end
 
 	self:_update_events(dt, t)
+	self:_reconcile_hub_mutators()
+end
+
+local function _is_in_hub()
+	local game_mode = Managers.state and Managers.state.game_mode
+
+	return game_mode ~= nil and game_mode:game_mode_name() == "hub"
+end
+
+LiveEventManager._reconcile_hub_mutators = function (self)
+	local hub_mutators = self._hub_mutators
+	local mutator_manager = Managers.state and Managers.state.mutator
+
+	if not mutator_manager then
+		if next(hub_mutators) then
+			table.clear(hub_mutators)
+		end
+
+		return
+	end
+
+	local desired
+
+	if self._is_host and _is_in_hub() then
+		for _, event_template in pairs(LiveEvents) do
+			local event_hub_mutators = type(event_template) == "table" and event_template.hub_mutators
+
+			if event_hub_mutators then
+				for i = 1, #event_hub_mutators do
+					desired = desired or {}
+					desired[event_hub_mutators[i]] = true
+				end
+			end
+		end
+	end
+
+	for mutator_name, _ in pairs(hub_mutators) do
+		if not desired or not desired[mutator_name] then
+			mutator_manager:unload_mutator_from_name(mutator_name)
+
+			hub_mutators[mutator_name] = nil
+		end
+	end
+
+	if desired then
+		for mutator_name, _ in pairs(desired) do
+			if not hub_mutators[mutator_name] then
+				mutator_manager:load_mutator_from_name(mutator_name)
+
+				hub_mutators[mutator_name] = true
+			end
+		end
+	end
+end
+
+LiveEventManager.hub_mutator_for_event = function (self, event_id)
+	local mutator_manager = Managers.state and Managers.state.mutator
+
+	if not mutator_manager then
+		return nil
+	end
+
+	local event_template = LiveEvents[event_id]
+	local event_hub_mutators = event_template and event_template.hub_mutators
+
+	if not event_hub_mutators or #event_hub_mutators == 0 then
+		return nil
+	end
+
+	return mutator_manager:mutator(event_hub_mutators[1])
 end
 
 local function get_template_name_from_old_category(str)
@@ -696,6 +766,10 @@ LiveEventManager._show_combat_feed_message = function (self, amount, stat_id, op
 	end
 end
 
+LiveEventManager.rpc_live_event_pledge_result = function (self, channel_id, success, amount, faction_lookup)
+	Managers.event:trigger("event_leftover_pledge_result", success, amount, faction_lookup)
+end
+
 LiveEventManager.rpc_live_event_trigger_combat_feed = function (self, channel_id, amount, stat_id, optional_caused_by_peer_id)
 	self:_show_combat_feed_message(amount, stat_id, optional_caused_by_peer_id)
 end
@@ -813,6 +887,35 @@ end
 
 LiveEventManager.get_event_data_by_name = function (self, template_name)
 	return self._events_by_name[template_name]
+end
+
+LiveEventManager.sorted_active_event_ids = function (active_events)
+	if not active_events then
+		return {}
+	end
+
+	local ids = {}
+
+	for event_id, _ in pairs(active_events) do
+		ids[#ids + 1] = event_id
+	end
+
+	if #ids < 2 then
+		return ids
+	end
+
+	table.sort(ids, function (a, b)
+		local a_starts_at = active_events[a] and active_events[a].starts_at
+		local b_starts_at = active_events[b] and active_events[b].starts_at
+
+		if a_starts_at and b_starts_at and a_starts_at ~= b_starts_at then
+			return b_starts_at < a_starts_at
+		end
+
+		return tostring(a) < tostring(b)
+	end)
+
+	return ids
 end
 
 return LiveEventManager

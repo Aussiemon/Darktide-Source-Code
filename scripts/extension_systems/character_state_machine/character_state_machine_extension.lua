@@ -160,6 +160,7 @@ CharacterStateMachineExtension._create_init_context = function (self, unit, worl
 		dodge_character_state_component = unit_data:read_component("dodge_character_state"),
 		first_person_component = unit_data:read_component("first_person"),
 		first_person_mode_component = unit_data:write_component("first_person_mode"),
+		grenade_ability_action_component = unit_data:read_component("grenade_ability_action"),
 		inair_state_component = unit_data:write_component("inair_state"),
 		interactee_component = unit_data:read_component("interactee"),
 		interaction_component = unit_data:read_component("interaction"),

@@ -435,7 +435,7 @@ HumanGameplay.update = function (self, main_dt, main_t)
 		player.input_handler:update(dt, t, input)
 	end
 
-	if PLATFORM == "win32" then
+	if IS_WINDOWS then
 		if ui_manager and ui_manager:using_input() then
 			Application.set_in_menu(true)
 		else

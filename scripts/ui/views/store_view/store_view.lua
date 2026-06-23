@@ -30,52 +30,125 @@ local DIRECTION = {
 	UP = 1,
 }
 local TAB_ELEMENT_LAYER = 4
+local category_button = table.clone(ButtonPassTemplates.menu_panel_button)
+
+category_button[1].style = {
+	on_released_sound = nil,
+	on_hover_sound = UISoundEvents.tab_secondary_button_hovered,
+	on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
+}
+
+local CATEGORY_LAYOUT = {
+	{
+		display_name = "loc_premium_store_category_title_catalogue",
+		template = category_button,
+		sub_category_ids = {
+			"featured",
+			"veteran",
+			"zealot",
+			"psyker",
+			"ogryn",
+		},
+	},
+	{
+		display_name = "loc_premium_store_category_title_dlc",
+		template = category_button,
+		sub_category_ids = {
+			"cryptic",
+			"broker",
+			"adamant",
+		},
+	},
+}
 local STORE_LAYOUT = {
 	{
 		display_name = "loc_premium_store_category_title_featured",
+		id = "featured",
 		storefront = "premium_store_featured",
 		telemetry_name = "featured",
 		template = ButtonPassTemplates.terminal_tab_menu_with_divider_button,
+		end_template = ButtonPassTemplates.terminal_tab_menu_button,
 	},
 	{
 		display_name = "loc_premium_store_category_skins_title_veteran",
+		id = "veteran",
 		storefront = "premium_store_skins_veteran",
 		telemetry_name = "veteran",
 		template = ButtonPassTemplates.terminal_tab_menu_with_divider_button,
+		end_template = ButtonPassTemplates.terminal_tab_menu_button,
 	},
 	{
 		display_name = "loc_premium_store_category_skins_title_zealot",
+		id = "zealot",
 		storefront = "premium_store_skins_zealot",
 		telemetry_name = "zealot",
 		template = ButtonPassTemplates.terminal_tab_menu_with_divider_button,
+		end_template = ButtonPassTemplates.terminal_tab_menu_button,
 	},
 	{
 		display_name = "loc_premium_store_category_skins_title_psyker",
+		id = "psyker",
 		storefront = "premium_store_skins_psyker",
 		telemetry_name = "psyker",
 		template = ButtonPassTemplates.terminal_tab_menu_with_divider_button,
+		end_template = ButtonPassTemplates.terminal_tab_menu_button,
 	},
 	{
 		display_name = "loc_premium_store_category_skins_title_ogryn",
+		id = "ogryn",
 		storefront = "premium_store_skins_ogryn",
 		telemetry_name = "ogryn",
 		template = ButtonPassTemplates.terminal_tab_menu_with_divider_button,
+		end_template = ButtonPassTemplates.terminal_tab_menu_button,
 	},
 	{
 		display_name = "loc_premium_store_category_skins_title_adamant",
+		id = "adamant",
 		storefront = "premium_store_skins_adamant",
 		telemetry_name = "adamant",
 		template = ButtonPassTemplates.terminal_tab_menu_with_divider_button,
+		end_template = ButtonPassTemplates.terminal_tab_menu_button,
 		require_archetype_ownership = Archetypes.adamant,
 	},
 	{
 		display_name = "loc_premium_store_category_skins_title_broker",
+		id = "broker",
 		storefront = "premium_store_skins_broker",
 		telemetry_name = "broker",
-		template = ButtonPassTemplates.terminal_tab_menu_button,
+		template = ButtonPassTemplates.terminal_tab_menu_with_divider_button,
+		end_template = ButtonPassTemplates.terminal_tab_menu_button,
 		require_archetype_ownership = Archetypes.broker,
 	},
+	{
+		display_name = "loc_premium_store_category_skins_title_cryptic",
+		id = "cryptic",
+		storefront = "premium_store_skins_cryptic",
+		telemetry_name = "cryptic",
+		template = ButtonPassTemplates.terminal_tab_menu_with_divider_button,
+		end_template = ButtonPassTemplates.terminal_tab_menu_button,
+		require_archetype_ownership = Archetypes.cryptic,
+	},
 }
+local STORE_LAYOUT_BY_ID = {}
+
+for i = 1, #STORE_LAYOUT do
+	local store_layout = STORE_LAYOUT[i]
+
+	store_layout.index = i
+	STORE_LAYOUT_BY_ID[store_layout.id] = store_layout
+end
+
+for i = 1, #CATEGORY_LAYOUT do
+	local category_layout = CATEGORY_LAYOUT[i]
+
+	for ii = 1, #category_layout.sub_category_ids do
+		local sub_category_id = category_layout.sub_category_ids[ii]
+
+		STORE_LAYOUT_BY_ID[sub_category_id].category_index = i
+		STORE_LAYOUT_BY_ID[sub_category_id].index_in_category = ii
+	end
+end
+
 local DEBUG_GRID = false
 local StoreView = class("StoreView", "BaseView")
 
@@ -169,7 +242,7 @@ StoreView._update_store_page = function (self)
 
 		local path = {
 			page_index = self._selected_page_index or 1,
-			category_index = self._selected_category_index or 1,
+			sub_category_index = self._selected_sub_category_index or 1,
 		}
 
 		return self:_open_navigation_path(path):next(function ()
@@ -214,18 +287,53 @@ StoreView._on_navigation_input_changed = function (self)
 	end
 end
 
-StoreView._set_panels_store = function (self)
-	if self._category_panel then
-		self:_destroy_category_panel()
+local function category_entry_callback_function(self, category_index)
+	local sub_category_index = 1
+	local category_layout = CATEGORY_LAYOUT[category_index]
+	local first_sub_category_id = category_layout.sub_category_ids[1]
+
+	for i = 1, #STORE_LAYOUT do
+		local sub_category_layout = STORE_LAYOUT[i]
+		local id = sub_category_layout.id
+
+		if id == first_sub_category_id then
+			sub_category_index = i
+
+			break
+		end
 	end
+
+	local path = {
+		page_index = 1,
+		sub_category_index = sub_category_index,
+	}
+
+	if not self._using_cursor_navigation then
+		self:_play_sound(UISoundEvents.tab_secondary_button_pressed)
+	end
+
+	self:_open_navigation_path(path)
+end
+
+local function category_update_callback_function(content, style)
+	content.hotspot.anim_select_progress = 1
+end
+
+StoreView._set_panels_store = function (self)
+	self:_destroy_category_panel()
+	self:_destroy_sub_category_panel()
 
 	local tab_menu_settings = {
 		button_spacing = 20,
-		horizontal_alignment = "center",
+		horizontal_alignment = "left",
 		wrapped_selection = true,
 		button_size = {
 			200,
-			30,
+			65,
+		},
+		input_label_offset = {
+			0,
+			18,
 		},
 	}
 	local category_panel = self:_setup_element(ViewElementTabMenu, "category_panel", TAB_ELEMENT_LAYER, tab_menu_settings)
@@ -240,33 +348,13 @@ StoreView._set_panels_store = function (self)
 
 	local category_panel_tab_ids = {}
 
-	for i = 1, #STORE_LAYOUT do
-		local tab_content = STORE_LAYOUT[i]
+	for i = 1, #CATEGORY_LAYOUT do
+		local tab_content = CATEGORY_LAYOUT[i]
 		local display_name = Utf8.upper(Localize(tab_content.display_name))
-		local tab_button_template = table.clone(tab_content.template)
-
-		tab_button_template[1].style = {
-			on_released_sound = nil,
-			on_hover_sound = UISoundEvents.tab_secondary_button_hovered,
-			on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
-		}
-
-		local function entry_callback_function()
-			local path = {
-				page_index = 1,
-				category_index = i,
-			}
-
-			if not self._using_cursor_navigation then
-				self:_play_sound(UISoundEvents.tab_secondary_button_pressed)
-			end
-
-			self:_open_navigation_path(path)
-			category_panel:set_selected_index(i)
-		end
-
-		local cb = callback(entry_callback_function)
-		local tab_id = category_panel:add_entry(display_name, cb, tab_button_template, nil, nil, true)
+		local tab_button_template = tab_content.template
+		local cb = callback(category_entry_callback_function, self, i)
+		local udpate_cb = callback(category_update_callback_function)
+		local tab_id = category_panel:add_entry(display_name, cb, tab_button_template, nil, udpate_cb, true)
 
 		category_panel_tab_ids[i] = tab_id
 
@@ -275,8 +363,71 @@ StoreView._set_panels_store = function (self)
 
 	self._category_tab_ids = category_panel_tab_ids
 
-	if #category_panel_tab_ids > 0 then
-		self._widgets_by_name.category_panel_background.content.visible = true
+	self:_update_panel_positions()
+end
+
+local function sub_entry_callback_function(self, sub_category_index)
+	if self._selected_sub_category_index == sub_category_index then
+		return
+	end
+
+	local path = {
+		page_index = 1,
+		sub_category_index = sub_category_index,
+	}
+
+	self:_open_navigation_path(path)
+end
+
+StoreView._set_sub_panels_store = function (self, category_index)
+	self:_destroy_sub_category_panel()
+
+	local sub_tab_menu_settings = {
+		button_spacing = 20,
+		horizontal_alignment = "left",
+		wrapped_selection = true,
+		button_size = {
+			150,
+			30,
+		},
+		input_label_offset = {
+			0,
+			2,
+		},
+	}
+	local sub_category_panel = self:_setup_element(ViewElementTabMenu, "sub_category_panel", TAB_ELEMENT_LAYER, sub_tab_menu_settings)
+
+	self._sub_category_panel = sub_category_panel
+
+	local input_sub_action_left = "navigate_secondary_left_pressed"
+	local input_sub_action_right = "navigate_secondary_right_pressed"
+
+	sub_category_panel:set_input_actions(input_sub_action_left, input_sub_action_right)
+	sub_category_panel:set_is_handling_navigation_input(true)
+
+	local sub_category_ids = CATEGORY_LAYOUT[category_index].sub_category_ids
+	local sub_category_tab_ids = {}
+
+	for i = 1, #sub_category_ids do
+		local id = sub_category_ids[i]
+		local tab_content = STORE_LAYOUT_BY_ID[id]
+		local display_name = Utf8.upper(Localize(tab_content.display_name))
+		local tab_button_template = tab_content.template
+
+		if i == #sub_category_ids and tab_content.end_template then
+			tab_button_template = tab_content.end_template
+		end
+
+		local cb = callback(sub_entry_callback_function, self, tab_content.index)
+		local tab_id = self._sub_category_panel:add_entry(display_name, cb, tab_button_template, nil, nil, true)
+
+		sub_category_tab_ids[i] = tab_id
+	end
+
+	self._sub_category_tab_ids = sub_category_tab_ids
+
+	if #sub_category_tab_ids > 0 then
+		self._widgets_by_name.sub_category_panel_background.content.visible = true
 	end
 
 	self:_update_panel_positions()
@@ -290,14 +441,14 @@ end
 
 StoreView._initialize_opening_page = function (self)
 	local path = {
-		category_index = 1,
 		page_index = 1,
+		sub_category_index = 1,
 	}
 
 	if self._context.target_storefront then
 		for i = 1, #STORE_LAYOUT do
 			if STORE_LAYOUT[i].storefront == self._context.target_storefront then
-				path.category_index = i
+				path.sub_category_index = i
 			end
 		end
 	end
@@ -315,19 +466,13 @@ StoreView._register_button_callbacks = function (self)
 
 		self:_cb_on_grid_exit_done()
 
-		if self._page_panel then
-			self:_remove_element("page_panel")
-
-			self._page_panel = nil
-			self._widgets_by_name.navigation_arrow_left.content.visible = false
-			self._widgets_by_name.navigation_arrow_right.content.visible = false
-		end
-
 		self._widgets_by_name.aquila_button.content.visible = false
 		self._widgets_by_name.get_dlc_button.content.hotspot.disabled = true
 		self._widgets_by_name.get_dlc_button.content.visible = false
 
 		self:_destroy_category_panel()
+		self:_destroy_sub_category_panel()
+		self:_destroy_page_panel()
 
 		if self._store_promise then
 			self._store_promise:cancel()
@@ -375,7 +520,26 @@ StoreView._destroy_category_panel = function (self)
 		self:_remove_element("category_panel")
 
 		self._category_panel = nil
-		self._widgets_by_name.category_panel_background.content.visible = false
+	end
+end
+
+StoreView._destroy_sub_category_panel = function (self)
+	if self._sub_category_panel then
+		self:_remove_element("sub_category_panel")
+
+		self._sub_category_panel = nil
+	end
+
+	self._widgets_by_name.sub_category_panel_background.content.visible = false
+end
+
+StoreView._destroy_page_panel = function (self)
+	if self._page_panel then
+		self:_remove_element("page_panel")
+
+		self._page_panel = nil
+		self._widgets_by_name.navigation_arrow_left.content.visible = false
+		self._widgets_by_name.navigation_arrow_right.content.visible = false
 	end
 end
 
@@ -386,10 +550,10 @@ StoreView.cb_on_aquilas_closed = function (self, success)
 
 	local path = {
 		page_index = self._selected_page_index,
-		category_index = self._selected_category_index,
+		sub_category_index = self._selected_sub_category_index,
 	}
 
-	self._selected_category_index = nil
+	self._selected_sub_category_index = nil
 	self._selected_page_index = nil
 
 	if self.closing_view then
@@ -526,28 +690,62 @@ StoreView.is_item_owned = function (self, id)
 	return self._account_items[id]
 end
 
+StoreView._get_category_index_from_sub_category_index = function (self, sub_category_index)
+	local sub_category_layout = STORE_LAYOUT[sub_category_index]
+
+	return sub_category_layout.category_index or 1
+end
+
+StoreView._get_sub_category_index_from_category = function (self, sub_category_index)
+	local sub_category_layout = STORE_LAYOUT[sub_category_index]
+
+	return sub_category_layout.index_in_category
+end
+
 StoreView._open_navigation_path = function (self, path)
-	local category_index = path.category_index or 1
+	local sub_category_index = path.sub_category_index or 1
 	local page_index = path.page_index or 1
+	local category_index = self:_get_category_index_from_sub_category_index(sub_category_index)
 
 	if not self._category_panel then
 		self:_set_panels_store()
+	end
+
+	local changing_category = category_index ~= self._selected_category_index
+
+	if changing_category then
 		self._category_panel:set_selected_index(category_index)
+	end
+
+	if not self._sub_category_panel or changing_category then
+		self:_set_sub_panels_store(category_index)
+	end
+
+	local sub_category_index_for_selected_category = self:_get_sub_category_index_from_category(sub_category_index)
+
+	self._sub_category_panel:set_selected_index(sub_category_index_for_selected_category)
+
+	self._selected_category_index = category_index
+
+	local changing_sub_category = sub_category_index ~= self._selected_sub_category_index
+
+	if changing_sub_category then
+		self._selected_sub_category_index = sub_category_index
 	end
 
 	local function page_callback()
 		self:_on_page_index_selected(page_index)
 	end
 
-	return self:_on_category_index_selected(category_index, page_callback)
+	return self:_on_sub_category_index_selected(sub_category_index, page_callback)
 end
 
-StoreView._on_category_index_selected = function (self, index, on_complete_callback)
-	local category_layout = STORE_LAYOUT[index]
+StoreView._on_sub_category_index_selected = function (self, index, on_complete_callback)
+	local sub_category_layout = STORE_LAYOUT[index]
 
-	self._selected_category_layout = category_layout
+	self._selected_category_layout = sub_category_layout
 
-	local storefront = category_layout.storefront
+	local storefront = sub_category_layout.storefront
 	local widgets_by_name = self._widgets_by_name
 
 	widgets_by_name.get_dlc_button.content.hotspot.disabled = true
@@ -559,7 +757,7 @@ StoreView._on_category_index_selected = function (self, index, on_complete_callb
 		self._dlc_promise = nil
 	end
 
-	local archetype = category_layout.require_archetype_ownership
+	local archetype = sub_category_layout.require_archetype_ownership
 
 	if archetype then
 		self._dlc_promise = DLCUtils.is_archetype_available(archetype)
@@ -571,7 +769,8 @@ StoreView._on_category_index_selected = function (self, index, on_complete_callb
 			widgets_by_name.get_dlc_button.content.hotspot.pressed_callback = function ()
 				Managers.dlc:open_dlc_view(archetype.requires_dlc, archetype.deluxe_dlc, function (is_success)
 					if is_success then
-						self:_on_category_index_selected(index, on_complete_callback)
+						self:_on_sub_category_index_selected(index, on_complete_callback)
+						Managers.event:trigger("event_gear_refresh_requested")
 					end
 				end)
 			end
@@ -587,11 +786,6 @@ StoreView._on_category_index_selected = function (self, index, on_complete_callb
 	self._debounce_tab_switch = self._using_cursor_navigation and not is_item_detail_view_active and Promise.resolved() or Promise.delay(0.3)
 
 	local promise = self._debounce_tab_switch:next(function ()
-		if self._selected_category_index == index and not is_item_detail_view_active then
-			return
-		end
-
-		self._selected_category_index = index
 		self._debounce_tab_switch = nil
 
 		return self:_fetch_storefront(storefront, on_complete_callback)
@@ -623,7 +817,7 @@ StoreView._set_telemetry_name = function (self, category, page)
 end
 
 StoreView._on_page_index_selected = function (self, page_index)
-	local category_index = self._selected_category_index
+	local category_index = self._selected_sub_category_index
 	local category_layout = STORE_LAYOUT[category_index]
 	local category_name = category_layout.telemetry_name
 	local category_pages_layout_data = self._category_pages_layout_data
@@ -688,9 +882,7 @@ StoreView._on_page_index_selected = function (self, page_index)
 			promise = Promise.resolved()
 		end
 
-		promise:next(callback(self, "_show_grid_entries", page_index, previous_page_index), function ()
-			return
-		end)
+		promise:next(callback(self, "_show_grid_entries", page_index, previous_page_index))
 	end)
 end
 
@@ -911,13 +1103,7 @@ StoreView._fetch_storefront = function (self, storefront, on_complete_callback)
 		return Promise:resolved()
 	end
 
-	if self._page_panel then
-		self:_remove_element("page_panel")
-
-		self._page_panel = nil
-		self._widgets_by_name.navigation_arrow_left.content.visible = false
-		self._widgets_by_name.navigation_arrow_right.content.visible = false
-	end
+	self:_destroy_page_panel()
 
 	if not self._store_promise:is_fulfilled() then
 		self:_fade_out_grid(2)
@@ -1157,7 +1343,6 @@ StoreView._setup_panels = function (self, category_pages_layout_data)
 					return
 				end
 
-				self:_fade_out_grid(2)
 				self:_on_page_index_selected(i)
 			end
 
@@ -1171,9 +1356,7 @@ StoreView._setup_panels = function (self, category_pages_layout_data)
 
 		self:_update_panel_positions()
 	elseif self._page_panel then
-		self:_remove_element("page_panel")
-
-		self._page_panel = nil
+		self:_destroy_page_panel()
 	end
 
 	self:_setup_navigation_arrows(category_pages_layout_data)
@@ -1187,14 +1370,12 @@ StoreView._setup_navigation_arrows = function (self, layout_pages)
 	self._widgets_by_name.navigation_arrow_right.content.hotspot.pressed_callback = function ()
 		local page_index = self._selected_page_index + 1
 
-		self:_fade_out_grid(2)
 		self:_on_page_index_selected(page_index)
 	end
 
 	self._widgets_by_name.navigation_arrow_left.content.hotspot.pressed_callback = function ()
 		local page_index = self._selected_page_index - 1
 
-		self:_fade_out_grid(2)
 		self:_on_page_index_selected(page_index)
 	end
 end
@@ -1244,16 +1425,21 @@ StoreView._update_panel_positions = function (self)
 		local position = self:_scenegraph_world_position("page_panel_pivot")
 
 		self._page_panel:set_pivot_offset(position[1], position[2])
+		self._page_panel:_force_update_scenegraph()
 	end
 
 	if self._category_panel then
 		local position = self:_scenegraph_world_position("category_panel_pivot")
 
 		self._category_panel:set_pivot_offset(position[1], position[2])
+		self._category_panel:_force_update_scenegraph()
+	end
 
-		self._category_panel_width = self._category_panel:get_total_width()
+	if self._sub_category_panel then
+		local position = self:_scenegraph_world_position("sub_category_panel_pivot")
 
-		self:_set_scenegraph_size("category_panel_background", self._category_panel_width)
+		self._sub_category_panel:set_pivot_offset(position[1], position[2])
+		self._sub_category_panel:_force_update_scenegraph()
 	end
 end
 
@@ -1398,10 +1584,6 @@ StoreView.update = function (self, dt, t, input_service)
 	self:_update_timers()
 	self:_update_vo(dt, t)
 
-	if self._category_panel and self._category_panel:get_total_width() ~= self._category_panel_width then
-		self:_update_panel_positions()
-	end
-
 	local wallet_width = self._wallet_element:get_size()[1]
 
 	if wallet_width ~= self._wallet_width then
@@ -1442,7 +1624,7 @@ StoreView._update_timers = function (self)
 	if should_refresh_offers then
 		local path = {
 			page_index = self._selected_page_index or 1,
-			category_index = self._selected_category_index or 1,
+			sub_category_index = self._selected_sub_category_index or 1,
 			screen_index = self._selected_screen_index or 1,
 		}
 

@@ -3,7 +3,7 @@
 local HealthExtensionInterface = require("scripts/extension_systems/health/health_extension_interface")
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
-local PsykerForceFieldUnitHealthExtension = class("PsykerForceFieldUnitHealthExtension")
+local PsykerForceFieldUnitHealthExtension = class("PsykerForceFieldUnitHealthExtension", "HealthExtensionBase")
 local special_rules = SpecialRulesSettings.special_rules
 local talent_settings = TalentSettings.psyker_3.combat_ability
 
@@ -93,7 +93,7 @@ PsykerForceFieldUnitHealthExtension._add_damage = function (self, damage)
 	GameSession.set_game_object_field(game_session, game_object_id, "health", self._health)
 
 	if self._health <= 0 then
-		self:_set_dead()
+		self:kill()
 		self:send_stat_data()
 	end
 end
@@ -107,7 +107,9 @@ PsykerForceFieldUnitHealthExtension.send_stat_data = function (self)
 	end
 end
 
-PsykerForceFieldUnitHealthExtension._set_dead = function (self)
+PsykerForceFieldUnitHealthExtension.kill = function (self)
+	PsykerForceFieldUnitHealthExtension.super.kill(self)
+
 	self._is_dead = true
 end
 

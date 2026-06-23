@@ -457,7 +457,7 @@ weapon_template.actions = {
 			shotshell = ShotshellTemplates.shotpistol_shield,
 			damage_type = damage_types.pellet,
 		},
-		action_condition_func = function (action_settings, condition_func_params, used_input, t)
+		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			if not condition_func_params then
 				return true
 			end
@@ -573,7 +573,7 @@ weapon_template.actions = {
 			shotshell = ShotshellTemplates.shotpistol_shield,
 			damage_type = damage_types.pellet,
 		},
-		action_condition_func = function (action_settings, condition_func_params, used_input, t)
+		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			if not condition_func_params then
 				return true
 			end
@@ -654,7 +654,7 @@ weapon_template.actions = {
 
 			return "to_braced", "to_braced"
 		end,
-		anim_end_event_func = function (action_settings, condition_func_params)
+		anim_end_event_func = function (time_in_action, action_settings, end_reason, condition_func_params)
 			if not condition_func_params then
 				return "to_unaim_braced", "to_unaim_braced"
 			end
@@ -753,7 +753,7 @@ weapon_template.actions = {
 
 			return nil
 		end,
-		anim_end_event_func = function (action_settings, condition_func_params)
+		anim_end_event_func = function (time_in_action, action_settings, end_reason, condition_func_params)
 			if not condition_func_params then
 				return "to_unaim_braced"
 			end
@@ -856,7 +856,7 @@ weapon_template.actions = {
 
 			return "to_braced", "to_braced"
 		end,
-		anim_end_event_func = function (action_settings, condition_func_params)
+		anim_end_event_func = function (time_in_action, action_settings, end_reason, condition_func_params)
 			if not condition_func_params then
 				return "to_unaim_braced", "to_unaim_braced"
 			end
@@ -1208,7 +1208,7 @@ weapon_template.actions = {
 			[attack_types.melee] = true,
 			[attack_types.ranged] = true,
 		},
-		anim_end_event_func = function (action_settings, condition_func_params)
+		anim_end_event_func = function (time_in_action, action_settings, end_reason, condition_func_params)
 			if not condition_func_params then
 				return "to_unaim_braced", "to_unaim_braced"
 			end
@@ -1296,14 +1296,14 @@ weapon_template.actions = {
 				chain_time = 0.25,
 			},
 		},
-		action_condition_func = function (action_settings, condition_func_params, used_input)
+		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			return Ammo.current_ammo_in_clips(condition_func_params.inventory_slot_component) <= 0
 		end,
 		block_attack_types = {
 			[attack_types.melee] = true,
 			[attack_types.ranged] = true,
 		},
-		anim_end_event_func = function (action_settings, condition_func_params)
+		anim_end_event_func = function (time_in_action, action_settings, end_reason, condition_func_params)
 			local inventory_slot_component = condition_func_params.inventory_slot_component
 			local current_ammunition_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
 			local current_ammunition_reserve = inventory_slot_component.current_ammunition_reserve
@@ -1400,7 +1400,7 @@ weapon_template.actions = {
 				chain_time = 0.9,
 			},
 		},
-		action_condition_func = function (action_settings, condition_func_params, used_input)
+		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			return not condition_func_params.alternate_fire_component.is_active
 		end,
 		weapon_box = {
@@ -1426,6 +1426,38 @@ weapon_template.actions = {
 		},
 		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
+	action_inspect_3p = {
+		action_prevents_jump = true,
+		block_first_person_rotation = true,
+		can_crouch = false,
+		can_jump = false,
+		force_look = true,
+		kind = "inspect_3p",
+		lock_view = false,
+		skip_3p_anims = false,
+		stop_input = "inspect_stop",
+		total_time = math.huge,
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
+		crosshair = {
+			crosshair_type = "inspect",
+		},
+		allowed_chain_actions = {
+			inspect_3p_stop = {
+				action_name = "action_inspect",
+				chain_time = 1.1,
+			},
+		},
+		action_movement_curve = {
+			{
+				modifier = 0,
+				t = 0,
+			},
+			start_modifier = 0,
+		},
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
+	},
 	action_inspect = {
 		anim_end_event = "inspect_end",
 		anim_event = "inspect_start",
@@ -1437,6 +1469,12 @@ weapon_template.actions = {
 		total_time = math.huge,
 		crosshair = {
 			crosshair_type = "inspect",
+		},
+		allowed_chain_actions = {
+			inspect_3p_start = {
+				action_name = "action_inspect_3p",
+				chain_time = 0.75,
+			},
 		},
 		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
@@ -1728,5 +1766,13 @@ weapon_template.explicit_combo = {
 		"action_shoot_blocking",
 	},
 }
+
+weapon_template.action_inspect_3p_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_inspect_3p"
+end
+
+weapon_template.action_inspect_3p_base_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_inspect"
+end
 
 return weapon_template

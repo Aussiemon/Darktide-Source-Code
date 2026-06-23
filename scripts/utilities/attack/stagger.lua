@@ -17,7 +17,7 @@ local _apply_action_controlled_stagger, _get_breed, _get_action_data_overrides, 
 local EMPTY_STAT_BUFFS = {}
 local DEFAULT_ACCUMULATIVE_MULTIPLIER = 0.5
 
-Stagger.apply_stagger = function (unit, damage_profile, damage_profile_lerp_values, target_settings, attacking_unit, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_direction, attack_type, attack_result, herding_template_or_nil, hit_shield)
+Stagger.apply_stagger = function (unit, damage_profile, damage_profile_lerp_values, target_settings, attacking_unit, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_direction, attack_type, attack_result, herding_template_or_nil, hit_shield, damage_type)
 	local breed = _get_breed(unit)
 	local blackboard = BLACKBOARDS[unit]
 	local stagger_component = Blackboard.write_component(blackboard, "stagger")
@@ -75,7 +75,7 @@ Stagger.apply_stagger = function (unit, damage_profile, damage_profile_lerp_valu
 		accumulative_multiplier = accumulative_multiplier * breed.accumulative_stagger_multiplier
 	end
 
-	stagger_type, duration_scale, length_scale = _get_system_overrides(unit, damage_profile, stagger_type, duration_scale, length_scale, stagger_strength, attack_result, attack_type)
+	stagger_type, duration_scale, length_scale = _get_system_overrides(unit, damage_profile, stagger_type, duration_scale, length_scale, stagger_strength, attack_result, attack_type, damage_type)
 
 	if stagger_type then
 		stagger_component.stagger_strength_pool = 0
@@ -161,11 +161,11 @@ function _get_breed(unit)
 	return unit_data_ext:breed()
 end
 
-function _get_system_overrides(unit, damage_profile, stagger_type, duration_scale, length_scale, stagger_strength, attack_result, attack_type)
+function _get_system_overrides(unit, damage_profile, stagger_type, duration_scale, length_scale, stagger_strength, attack_result, attack_type, damage_type)
 	local shield_extension = ScriptUnit.has_extension(unit, "shield_system")
 
 	if shield_extension then
-		stagger_type, duration_scale, length_scale = shield_extension:apply_stagger(unit, damage_profile, stagger_strength, attack_result, stagger_type, duration_scale, length_scale, attack_type)
+		stagger_type, duration_scale, length_scale = shield_extension:apply_stagger(unit, damage_profile, stagger_strength, attack_result, stagger_type, duration_scale, length_scale, attack_type, damage_type)
 	end
 
 	return stagger_type, duration_scale, length_scale
@@ -335,6 +335,14 @@ function _apply_stagger(unit, attacker_unit, breed, stagger_type, attack_directi
 			immune_time = nil
 		end
 
+		local staggered_by_melee_push = false
+
+		if damage_profile and damage_profile.is_push then
+			local is_player_unit = attacker_unit and Managers.state.player_unit_spawn:is_player_unit(attacker_unit)
+
+			staggered_by_melee_push = is_player_unit and damage_profile.stagger_category == "melee"
+		end
+
 		stagger_component.immune_time = t + (immune_time or 0)
 		stagger_component.type = stagger_type
 
@@ -343,6 +351,7 @@ function _apply_stagger(unit, attacker_unit, breed, stagger_type, attack_directi
 		stagger_component.duration = duration * duration_scale
 		stagger_component.length = length_scale
 		stagger_component.num_triggered_staggers = stagger_component.num_triggered_staggers + 1
+		stagger_component.staggered_by_melee_push = staggered_by_melee_push
 		stagger_component.attacker_unit = attacker_unit
 	end
 

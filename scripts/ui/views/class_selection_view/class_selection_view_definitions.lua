@@ -637,7 +637,7 @@ local legend_inputs = {
 		input_action = "back",
 		on_pressed_callback = "_on_quit_pressed",
 		visibility_function = function (parent)
-			return parent._force_character_creation and PLATFORM == "win32"
+			return parent._force_character_creation and IS_WINDOWS
 		end,
 	},
 	{

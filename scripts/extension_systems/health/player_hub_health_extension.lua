@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/health/player_hub_health_extension.lua
 
 local HealthExtensionInterface = require("scripts/extension_systems/health/health_extension_interface")
-local PlayerHubHealthExtension = class("PlayerHubHealthExtension")
+local PlayerHubHealthExtension = class("PlayerHubHealthExtension", "HealthExtensionBase")
 
 PlayerHubHealthExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
 	self._health = extension_init_data.health

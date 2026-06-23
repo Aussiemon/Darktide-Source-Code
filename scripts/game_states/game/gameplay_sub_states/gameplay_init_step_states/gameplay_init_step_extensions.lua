@@ -3,7 +3,6 @@
 local ExtensionManager = require("scripts/foundation/managers/extension/extension_manager")
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local GameplayInitStepManagers = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_managers")
-local LevelPropsBroadphaseManager = require("scripts/managers/level_props_broadphase/level_props_broadphase_manager")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local GameplayInitStepExtensions = class("GameplayInitStepExtensions")
 
@@ -73,10 +72,10 @@ GameplayInitStepExtensions._init_extensions = function (self, world, physics_wor
 	local num_sides = #side_compositions
 	local side_names = Script.new_array(num_sides)
 
-	for i = 1, num_sides do
-		local side_data = side_compositions[i]
+	for ii = 1, num_sides do
+		local side_data = side_compositions[ii]
 
-		side_names[i] = side_data.name
+		side_names[ii] = side_data.name
 	end
 
 	local mission = MissionTemplates[mission_name]
@@ -143,9 +142,6 @@ GameplayInitStepExtensions._init_extensions = function (self, world, physics_wor
 			level_seed = level_seed,
 		},
 	}
-
-	Managers.state.level_props_broadphase = LevelPropsBroadphaseManager:new()
-
 	local unit_categories = {
 		"flow_spawned",
 		"level_spawned",

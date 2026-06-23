@@ -5,6 +5,7 @@ require("scripts/ui/views/vendor_view_base/vendor_view_base")
 local Definitions = require("scripts/ui/views/cosmetics_vendor_view/cosmetics_vendor_view_definitions")
 local Archetypes = require("scripts/settings/archetype/archetypes")
 local ArchetypeSettings = require("scripts/settings/archetype/archetype_settings")
+local BreedQueries = require("scripts/utilities/breed_queries")
 local Breeds = require("scripts/settings/breed/breeds")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local CosmeticsVendorViewSettings = require("scripts/ui/views/cosmetics_vendor_view/cosmetics_vendor_view_settings")
@@ -685,8 +686,10 @@ CosmeticsVendorView.present_items = function (self, optional_context)
 
 	local context = self._context
 	local optional_camera_breed_name = context and context.optional_camera_breed_name
-	local breed_name = active_archetype.breed
-	local default_camera_settings = self._breeds_default_camera_settings and self._breeds_default_camera_settings[optional_camera_breed_name or breed_name]
+	local breed_name = optional_camera_breed_name or active_archetype.breed or "human"
+	local breed = Breeds[breed_name]
+	local body_size = breed.body_size
+	local default_camera_settings = self._body_sizes_default_camera_settings and self._body_sizes_default_camera_settings[body_size]
 
 	if default_camera_settings then
 		self:_set_initial_viewport_camera_position(default_camera_settings)
@@ -933,7 +936,7 @@ CosmeticsVendorView._update_zoom_logic = function (self, dt, input_service)
 end
 
 CosmeticsVendorView.update = function (self, dt, t, input_service)
-	if self._spawn_player and self._spawn_point_unit and self._breeds_default_camera_settings then
+	if self._spawn_player and self._spawn_point_unit and self._body_sizes_default_camera_settings then
 		local profile = self._store_presentation_profile
 		local initial_rotation = self._initial_rotation
 		local disable_rotation_input = self._disable_rotation_input
@@ -1007,7 +1010,7 @@ CosmeticsVendorView._spawn_profile = function (self, profile, initial_rotation, 
 	end
 
 	if disable_rotation_input then
-		self._profile_spawner:disable_rotation_input()
+		self._profile_spawner:disable_rotation_input(true)
 	end
 
 	local spawn_position = Unit.world_position(self._spawn_point_unit, 1)
@@ -1202,15 +1205,18 @@ CosmeticsVendorView._setup_background_world = function (self)
 		return
 	end
 
-	self._breeds_item_camera_by_slot_id = {}
-	self._breeds_default_camera_settings = {}
+	self._body_sizes_item_camera_by_slot_id = {}
+	self._body_sizes_default_camera_settings = {}
 
 	local starting_camera_unit
+	local player_breeds = BreedQueries.player_breeds_array()
 
-	for breed_name, settings in pairs(Breeds) do
-		if settings.breed_type == "player" then
-			local default_camera_event_id = "event_register_cosmetics_preview_default_camera_" .. breed_name
+	for ii = 1, #player_breeds do
+		local breed = player_breeds[ii]
+		local body_size = breed.body_size
+		local default_camera_event_id = string.format("event_register_%s_cosmetics_preview_default_camera", body_size)
 
+		if not self[default_camera_event_id] then
 			self[default_camera_event_id] = function (instance, camera_unit)
 				if instance._context then
 					instance._context.camera_unit = camera_unit
@@ -1219,7 +1225,7 @@ CosmeticsVendorView._setup_background_world = function (self)
 				local camera_position = Unit.world_position(camera_unit, 1)
 				local camera_rotation = Unit.world_rotation(camera_unit, 1)
 
-				instance._breeds_default_camera_settings[breed_name] = {
+				instance._body_sizes_default_camera_settings[body_size] = {
 					camera_unit = camera_unit,
 					original_position_boxed = Vector3Box(camera_position),
 					original_rotation_boxed = QuaternionBox(camera_rotation),
@@ -1235,15 +1241,22 @@ CosmeticsVendorView._setup_background_world = function (self)
 			self:_register_event(default_camera_event_id)
 
 			for slot_name, slot in pairs(ItemSlotSettings) do
-				if slot.slot_type == "gear" then
-					local item_camera_event_id = "event_register_cosmetics_preview_item_camera_" .. breed_name .. "_" .. slot_name
+				local is_gear = slot.slot_type == "gear"
+				local is_body = slot.slot_type == "body"
+				local is_companion_gear = slot_name == "slot_companion_gear_full"
+				local valid_player_slot = is_gear and not is_companion_gear
+
+				valid_player_slot = valid_player_slot or is_body
+
+				if valid_player_slot then
+					local item_camera_event_id = string.format("event_register_%s_%s_cosmetics_preview_item_camera", body_size, slot_name)
 
 					self[item_camera_event_id] = function (instance, camera_unit)
-						if not instance._breeds_item_camera_by_slot_id[breed_name] then
-							instance._breeds_item_camera_by_slot_id[breed_name] = {}
+						if not instance._body_sizes_item_camera_by_slot_id[body_size] then
+							instance._body_sizes_item_camera_by_slot_id[body_size] = {}
 						end
 
-						instance._breeds_item_camera_by_slot_id[breed_name][slot_name] = camera_unit
+						instance._body_sizes_item_camera_by_slot_id[body_size][slot_name] = camera_unit
 
 						instance:_unregister_event(item_camera_event_id)
 					end
@@ -1286,11 +1299,11 @@ CosmeticsVendorView.event_register_cosmetics_preview_character_spawn_point = fun
 	end
 end
 
-CosmeticsVendorView._set_camera_item_slot_focus = function (self, breed_name, slot_name, time, func_ptr, zoom_level)
+CosmeticsVendorView._set_camera_item_slot_focus = function (self, body_size, slot_name, time, func_ptr, zoom_level)
 	local world_spawner = self._world_spawner
-	local breeds_item_camera_by_slot_id = self._breeds_item_camera_by_slot_id
-	local breed_item_camera_by_slot_id = breeds_item_camera_by_slot_id[breed_name]
-	local slot_camera = breed_item_camera_by_slot_id and breed_item_camera_by_slot_id[slot_name]
+	local body_sizes_item_camera_by_slot_id = self._body_sizes_item_camera_by_slot_id
+	local body_size_item_camera_by_slot_id = body_sizes_item_camera_by_slot_id[body_size]
+	local slot_camera = body_size_item_camera_by_slot_id and body_size_item_camera_by_slot_id[slot_name]
 
 	world_spawner:interpolate_to_camera(slot_camera, zoom_level, time, func_ptr)
 end
@@ -1316,13 +1329,15 @@ CosmeticsVendorView._trigger_zoom_logic = function (self, instant, optional_slot
 	local profile = self._store_presentation_profile
 	local archetype = profile and profile.archetype
 	local breed_name = archetype and archetype.breed or "human"
+	local breed = Breeds[breed_name]
+	local body_size = breed.body_size
 	local duration = instant and 0 or 0.4
 
 	self._zoom_delay = duration
 
 	local easing = math.easeCubic
 
-	self:_set_camera_item_slot_focus(breed_name, selected_slot_name, duration, easing, self._zoom_level)
+	self:_set_camera_item_slot_focus(body_size, selected_slot_name, duration, easing, self._zoom_level)
 end
 
 CosmeticsVendorView._update_wallets_presentation = function (self, wallets_data)

@@ -23,10 +23,9 @@ ViewLoader.start_loading = function (self, context)
 		local is_hub = mission_settings.is_hub
 		local loading_views = {}
 		local view_loading_count = 0
-		local platform = REAL_PLATFORM
 		local sub_platform = ""
 
-		if platform == "xbs" then
+		if IS_XBS then
 			if Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_ANACONDA then
 				sub_platform = "anaconda"
 			elseif Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_LOCKHEART then
@@ -38,8 +37,8 @@ ViewLoader.start_loading = function (self, context)
 		local preload_policies = {
 			always_even_with_debug = true,
 			always = not disable_preload,
-			not_ps5 = not disable_preload and platform ~= "ps5",
-			not_ps5_nor_lockhart = not disable_preload and platform ~= "ps5" and sub_platform ~= "lockhart",
+			not_ps5 = not disable_preload and not IS_PLAYSTATION,
+			not_ps5_nor_lockhart = not disable_preload and not IS_PLAYSTATION and sub_platform ~= "lockhart",
 		}
 
 		for view_name, view_settings in pairs(Views) do

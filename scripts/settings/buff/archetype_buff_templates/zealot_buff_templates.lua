@@ -1465,6 +1465,7 @@ templates.zealot_toughness_regen_in_melee = {
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	hud_priority = 4,
 	predicted = false,
+	max_num_extra_enemies = math.ceil((talent_settings.zealot_toughness_in_melee.max_percentage_toughness - talent_settings.zealot_toughness_in_melee.initial_percentage_toughness) / talent_settings.zealot_toughness_in_melee.percentage_toughness_per_enemy),
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
 		local broadphase = broadphase_system.broadphase
@@ -1486,9 +1487,13 @@ templates.zealot_toughness_regen_in_melee = {
 		template_data.dt_since_last_check = 0
 		template_data.check_enemy_proximity_t = 0
 		template_data.current_stacks = 0
+		template_data.enemies_in_range = 0
+	end,
+	check_active_func = function (template_data, template_context)
+		return template_data.toughness_percent > 0
 	end,
 	visual_stack_count = function (template_data, template_context)
-		return template_data.current_stacks
+		return template_data.enemies_in_range > 1 and template_data.current_stacks or template_data.enemies_in_range
 	end,
 	update_func = function (template_data, template_context, dt, t, template)
 		local is_disabled = PlayerUnitStatus.is_disabled(template_data.character_state_component)
@@ -1531,6 +1536,8 @@ templates.zealot_toughness_regen_in_melee = {
 
 		if num_hits == 0 then
 			template_data.toughness_percent = 0
+			template_data.current_stacks = 0
+			template_data.enemies_in_range = 0
 		else
 			local count = 0
 
@@ -1541,18 +1548,20 @@ templates.zealot_toughness_regen_in_melee = {
 
 				if breed then
 					local tags = breed.tags
-					local add = (tags.monster or tags.captain or tags.cultist_captain) and monster_count or 1
+					local add = (tags.monster or tags.captain or tags.cultist_captain) and 1 + monster_count or 1
 
 					count = count + add
 				end
 			end
 
+			template_data.enemies_in_range = math.min(count, template_context.template.max_num_extra_enemies + 1)
+			template_context.template.hud_always_show_stacks = template_data.enemies_in_range > 1
 			count = count - 1
 
 			local toughness_percent = math.min(initial_percentage_toughness + percentage_toughness_per_enemy * count, max_percentage_toughness)
 
 			template_data.toughness_percent = toughness_percent
-			template_data.current_stacks = math.min(count, 6)
+			template_data.current_stacks = math.min(count, template_context.template.max_num_extra_enemies)
 		end
 
 		template_data.dt_since_last_check = 0
@@ -4131,7 +4140,7 @@ templates.zealot_invisibility = {
 			return
 		end
 
-		if template_data.cooldown_on_kill and template_context.is_server then
+		if template_data.cooldown_on_kill and template_context.is_server and not template_data.got_cooldown then
 			local is_kill = result == attack_results.died
 
 			if is_kill then
@@ -4151,6 +4160,8 @@ templates.zealot_invisibility = {
 				local ability_extension = template_data.ability_extension
 
 				ability_extension:reduce_ability_cooldown_percentage("combat_ability", cooldown_percent)
+
+				template_data.got_cooldown = true
 			end
 		end
 
@@ -4165,6 +4176,8 @@ templates.zealot_invisibility = {
 		template_data.exit_grace = t + 0.5
 
 		_shroudfield_penance_start(template_data, template_context)
+
+		template_data.got_cooldown = false
 
 		local unit = template_context.unit
 		local ability_extension = ScriptUnit.extension(unit, "ability_system")

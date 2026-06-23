@@ -361,5 +361,18 @@ wwise_vo_routing_settings[58] = {
 	wwise_event_path = "wwise/events/vo/play_sfx_es_traitor_plasma_gunner_vo",
 	wwise_sound_source = "es_traitor_plasma_gunner_vo",
 }
+wwise_vo_routing_settings[59] = {
+	display_name = "Cryptic Player Voice",
+	is_default = false,
+	local_player_routing_key = 60,
+	wwise_event_path = "wwise/events/vo/play_sfx_es_cryptic_player_vo",
+	wwise_sound_source = "es_cryptic_vo_prio_1",
+}
+wwise_vo_routing_settings[60] = {
+	display_name = "Cryptic Local Player Voice",
+	is_default = false,
+	wwise_event_path = "wwise/events/vo/play_sfx_es_cryptic_player_vo_2d",
+	wwise_sound_source = "es_cryptic_player_vo_2d",
+}
 
 return settings("wwise_vo_routing_settings", wwise_vo_routing_settings)

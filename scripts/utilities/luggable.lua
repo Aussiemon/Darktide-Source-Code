@@ -6,6 +6,16 @@ local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadou
 local SLOT_LUGGABLE = "slot_luggable"
 local Luggable = {}
 
+Luggable.is_carrying_luggable = function (t, unit, inventory_component, visual_loadout_extension)
+	if not PlayerUnitVisualLoadout.slot_equipped(inventory_component, visual_loadout_extension, SLOT_LUGGABLE) then
+		return false
+	end
+
+	local wielded_slot = inventory_component.wielded_slot
+
+	return wielded_slot == SLOT_LUGGABLE
+end
+
 Luggable.drop_luggable = function (t, unit, inventory_component, visual_loadout_extension, enable_physics)
 	if not PlayerUnitVisualLoadout.slot_equipped(inventory_component, visual_loadout_extension, SLOT_LUGGABLE) then
 		return

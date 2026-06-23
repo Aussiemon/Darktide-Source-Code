@@ -6,39 +6,44 @@ local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ItemSlotUtils = require("scripts/utilities/item_slot_utils")
 local MasterItems = require("scripts/backend/master_items")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
-local UICharacterProfilePackageLoader = require("scripts/managers/ui/ui_character_profile_package_loader")
-local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local Promise = require("scripts/foundation/utilities/promise")
+local UiCharacterProfilePackageLoader = require("scripts/managers/ui/ui_character_profile_package_loader")
+local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local UIProfileSpawner = class("UIProfileSpawner")
-local available_companions = {
-	companion_dog = "slot_companion_gear_full",
+local NilCursor = {
+	0,
+	0,
+	0,
 }
-local COMPANION_SLOTS_BY_BREED = {}
-local COMPANION_BREED_BY_SLOT = {}
-local COMPANION_SLOTS = {}
+local PI = math.pi
+local PI_2 = PI * 2
+local SLOT_CONFIGURATION = PlayerCharacterConstants.slot_configuration
 local FORCE_STREAM_TIMEOUT = GameParameters.force_stream_mesh_timeout
+local COMPANION_COSMETIC_SLOTS = {
+	"slot_companion_gear_full",
+}
+local COMPANION_SLOT_DEPENDENCIES = {}
 
-for breed, main_slot in pairs(available_companions) do
-	local slot_depedencies = PlayerCharacterConstants.slot_configuration[main_slot].slot_dependencies
+for ii = 1, #COMPANION_COSMETIC_SLOTS do
+	local slot_name = COMPANION_COSMETIC_SLOTS[ii]
+	local slot_dependencies = SLOT_CONFIGURATION[slot_name].slot_dependencies
 
-	COMPANION_SLOTS_BY_BREED[breed] = {
-		[main_slot] = true,
-	}
-	COMPANION_BREED_BY_SLOT[main_slot] = breed
-	COMPANION_SLOTS[main_slot] = true
+	COMPANION_SLOT_DEPENDENCIES[slot_name] = true
 
-	if slot_depedencies then
-		for i = 1, #slot_depedencies do
-			local slot_depedency = slot_depedencies[i]
+	if slot_dependencies then
+		for jj = 1, #slot_dependencies do
+			local slot_dependency = slot_dependencies[jj]
 
-			COMPANION_SLOTS_BY_BREED[breed] = {
-				[slot_depedency] = true,
-			}
-			COMPANION_BREED_BY_SLOT[slot_depedency] = breed
-			COMPANION_SLOTS[slot_depedency] = true
+			COMPANION_SLOT_DEPENDENCIES[slot_dependency] = true
 		end
 	end
+end
+
+local function _companion_attach_node(unit_3p)
+	local companion_attach_node = unit_3p and Unit.has_node(unit_3p, "ap_companion") and Unit.node(unit_3p, "ap_companion")
+
+	return companion_attach_node
 end
 
 UIProfileSpawner.init = function (self, reference_name, world, camera, unit_spawner, force_highest_lod_step, optional_mission_template)
@@ -76,7 +81,7 @@ UIProfileSpawner.reset = function (self)
 
 	local single_item_loader_reference_name = self._reference_name .. "_single_item"
 
-	self._single_item_profile_loader = UICharacterProfilePackageLoader:new(single_item_loader_reference_name, self._item_definitions, self._mission_template)
+	self._single_item_profile_loader = UiCharacterProfilePackageLoader:new(single_item_loader_reference_name, self._item_definitions, self._mission_template)
 	self._ignored_slots = {}
 	self._default_rotation_angle = 0
 	self._rotation_angle = self._default_rotation_angle
@@ -117,9 +122,9 @@ UIProfileSpawner.toggle_companion = function (self, visible)
 		local profile = data.profile
 		local loadout = profile.loadout
 
-		for slot_id, item in pairs(loadout) do
-			if COMPANION_SLOTS[slot_id] then
-				local ignored = not visible or nil
+		for slot_id, _ in pairs(loadout) do
+			if COMPANION_SLOT_DEPENDENCIES[slot_id] then
+				local ignored = not visible
 
 				self._ignored_slots[slot_id] = ignored
 			end
@@ -142,9 +147,9 @@ UIProfileSpawner.toggle_character = function (self, visible)
 		local profile = data.profile
 		local loadout = profile.loadout
 
-		for slot_id, itme in pairs(loadout) do
-			if not COMPANION_SLOTS[slot_id] then
-				local ignored = not visible or nil
+		for slot_id, _ in pairs(loadout) do
+			if not COMPANION_SLOT_DEPENDENCIES[slot_id] then
+				local ignored = not visible
 
 				self._ignored_slots[slot_id] = ignored
 			end
@@ -156,7 +161,7 @@ UIProfileSpawner.is_character_showing = function (self)
 	return self._character_toggle_state
 end
 
-UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, scale, state_machine_or_nil, animation_event_or_nil, face_state_machine_key_or_nil, face_animation_event_or_nil, force_highest_mip_or_nil, disable_hair_state_machine_or_nil, optional_unit_3p, optional_ignore_state_machine, companion_data)
+UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, scale_or_nil, state_machine_or_nil, animation_event_or_nil, face_state_machine_key_or_nil, face_animation_event_or_nil, force_highest_mip_or_nil, disable_hair_state_machine_or_nil, optional_unit_3p, optional_ignore_state_machine, companion_data_or_nil)
 	if self._loading_profile_data then
 		self._loading_profile_data.profile_loader:destroy()
 
@@ -166,24 +171,23 @@ UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, sc
 	self._profile_loader_index = (self._profile_loader_index or 0) + 1
 
 	local reference_name = self._reference_name .. "_profile_loader_" .. tostring(self._profile_loader_index)
-	local character_profile_package_loader = UICharacterProfilePackageLoader:new(reference_name, self._item_definitions, self._mission_template)
+	local character_profile_package_loader = UiCharacterProfilePackageLoader:new(reference_name, self._item_definitions, self._mission_template)
 	local loading_items = character_profile_package_loader:load_profile(profile)
 	local state_machine = state_machine_or_nil
 
 	if not state_machine then
 		local archetype = profile.archetype
 		local breed_name = archetype.breed
-		local breed_settings = Breeds[breed_name]
 
-		state_machine = breed_settings.character_creation_state_machine
+		state_machine = archetype.portrait_state_machine
 	end
 
-	local companion_data = type(companion_data) == "table" and companion_data or {}
+	local companion_data = type(companion_data_or_nil) == "table" and companion_data_or_nil or {}
 
 	if not companion_data.position then
-		companion_data.position = position and Vector3.to_array(position)
+		companion_data.position = position and Vector3Box(position)
 	else
-		companion_data.position = Vector3.to_array(companion_data.position)
+		companion_data.position = Vector3Box(companion_data.position)
 	end
 
 	if not companion_data.rotation then
@@ -192,15 +196,15 @@ UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, sc
 		companion_data.rotation = QuaternionBox(companion_data.rotation)
 	end
 
-	companion_data.original_position = companion_data.position
+	companion_data.original_position = Vector3Box(companion_data.position:unbox())
 	companion_data.original_rotation = companion_data.rotation
 	self._loading_profile_data = {
 		profile = profile,
 		profile_loader = character_profile_package_loader,
 		reference_name = reference_name,
-		position = position and Vector3.to_array(position),
+		position = position and Vector3Box(position),
 		rotation = rotation and QuaternionBox(rotation),
-		scale = scale and Vector3.to_array(scale),
+		scale = scale_or_nil and Vector3Box(scale_or_nil),
 		loading_items = loading_items,
 		state_machine = state_machine,
 		animation_event = animation_event_or_nil,
@@ -607,8 +611,6 @@ UIProfileSpawner.destroy = function (self)
 	self:_update_and_remove_stream_promises(nil, true)
 end
 
-local changed_slot_keys_scratch = {}
-
 UIProfileSpawner._sync_profile_changes = function (self)
 	local loading_profile_data = self._loading_profile_data
 	local character_spawn_data = self._character_spawn_data
@@ -687,6 +689,7 @@ UIProfileSpawner.update = function (self, dt, t, input_service)
 		if input_service then
 			self:_handle_input(input_service, dt)
 			self:_update_input_rotation(dt)
+			self:_update_auto_rotation(dt, t)
 		end
 
 		if not self._character_spawn_data.is_ready then
@@ -708,9 +711,9 @@ UIProfileSpawner.update = function (self, dt, t, input_service)
 				self:_despawn_current_character_profile()
 			end
 
-			local position = loading_profile_data.position and Vector3.from_array(loading_profile_data.position)
+			local position = loading_profile_data.position and loading_profile_data.position:unbox()
 			local rotation = loading_profile_data.rotation and QuaternionBox.unbox(loading_profile_data.rotation)
-			local scale = loading_profile_data.scale and Vector3.from_array(loading_profile_data.scale)
+			local scale = loading_profile_data.scale and loading_profile_data.scale:unbox()
 			local state_machine = loading_profile_data.state_machine
 			local animation_event = loading_profile_data.animation_event
 			local face_state_machine_key = loading_profile_data.face_state_machine_key
@@ -722,7 +725,7 @@ UIProfileSpawner.update = function (self, dt, t, input_service)
 			local optional_ignore_state_machine = loading_profile_data.optional_ignore_state_machine
 			local companion_data = loading_profile_data.companion_data
 
-			companion_data.position = Vector3.from_array(companion_data.position)
+			companion_data.position = companion_data.position:unbox()
 
 			self:_spawn_character_profile(profile, profile_loader, position, rotation, scale, state_machine, animation_event, face_state_machine_key, face_animation_event, force_highest_mip, disable_hair_state_machine, optional_unit_3p, optional_ignore_state_machine, companion_data)
 
@@ -736,20 +739,20 @@ UIProfileSpawner.update = function (self, dt, t, input_service)
 		if only_companion ~= self._only_companion then
 			self._only_companion = only_companion
 
-			local offset
+			local position_offset
 
 			if loading_profile_data then
 				local position = only_companion and loading_profile_data.position or loading_profile_data.companion_position
 
-				offset = position and Vector3.from_array(position)
+				position_offset = position and position:unbox()
 			else
 				local unit_3p = self._character_spawn_data.unit_3p
 
-				offset = only_companion and Unit.local_position(unit_3p, 1) or self._character_spawn_data.companion_position
+				position_offset = only_companion and Unit.local_position(unit_3p, 1) or self._character_spawn_data.companion_position:unbox()
 			end
 
-			if offset then
-				self:set_companion_position(offset)
+			if position_offset then
+				self:_set_companion_position_offset(position_offset)
 			end
 		end
 	end
@@ -807,7 +810,7 @@ UIProfileSpawner.spawned_character_unit = function (self)
 	end
 end
 
-UIProfileSpawner.set_position = function (self, position)
+UIProfileSpawner.set_character_position = function (self, position)
 	local character_spawn_data = self._character_spawn_data
 
 	if character_spawn_data then
@@ -818,12 +821,12 @@ UIProfileSpawner.set_position = function (self, position)
 		local loading_profile_data = self._loading_profile_data
 
 		if loading_profile_data then
-			loading_profile_data.position = Vector3.to_array(position)
+			loading_profile_data.position = Vector3Box(position)
 		end
 	end
 end
 
-UIProfileSpawner.set_companion_position = function (self, companion_position)
+UIProfileSpawner._set_companion_position_offset = function (self, companion_position_offset)
 	local character_spawn_data = self._character_spawn_data
 
 	if character_spawn_data then
@@ -831,27 +834,27 @@ UIProfileSpawner.set_companion_position = function (self, companion_position)
 
 		if attach_to_character then
 			local unit_3p = character_spawn_data.unit_3p
-			local companion_attach_index = unit_3p and Unit.has_node(unit_3p, "ap_companion") and Unit.node(unit_3p, "ap_companion")
+			local companion_attach_node = _companion_attach_node(unit_3p)
 
-			if companion_attach_index then
-				local companion_local_position = Unit.local_position(unit_3p, 1) - companion_position
+			if companion_attach_node then
+				local companion_local_position = Unit.local_position(unit_3p, 1) - companion_position_offset
 
-				Unit.set_local_position(unit_3p, companion_attach_index, companion_local_position)
+				Unit.set_local_position(unit_3p, companion_attach_node, companion_local_position)
 			end
 		else
 			local companion_unit_3p = character_spawn_data.companion_unit_3p
 
-			Unit.set_local_position(companion_unit_3p, 1, companion_position)
+			Unit.set_local_position(companion_unit_3p, 1, companion_position_offset)
 		end
 
 		if not self._only_companion then
-			character_spawn_data.companion_position = companion_position
+			character_spawn_data.companion_position:store(companion_position_offset)
 		end
 	else
 		local loading_profile_data = self._loading_profile_data
 
 		if loading_profile_data then
-			loading_profile_data.companion_position = Vector3.to_array(companion_position)
+			loading_profile_data.companion_position = Vector3Box(companion_position_offset)
 		end
 	end
 end
@@ -927,9 +930,9 @@ UIProfileSpawner._spawn_companion = function (self, unit_3p, breed_name, positio
 	local companion_unit_3p = World.spawn_unit_ex(self._world, companion_base_unit)
 
 	if attach_to_character then
-		local companion_attach_index = Unit.has_node(unit_3p, "ap_companion") and Unit.node(unit_3p, "ap_companion")
+		local companion_attach_node = _companion_attach_node(unit_3p)
 
-		World.link_unit(self._world, companion_unit_3p, 1, unit_3p, companion_attach_index)
+		World.link_unit(self._world, companion_unit_3p, 1, unit_3p, companion_attach_node)
 	end
 
 	if self._companion_toggle_state == nil then
@@ -976,23 +979,26 @@ UIProfileSpawner._equip_item_for_spawned_character = function (self, slot_id, it
 	local display_item = visual_item
 
 	if slot and display_item then
-		if COMPANION_SLOTS[slot.name] and not companion_unit_3p then
+		local spawn_companion = COMPANION_SLOT_DEPENDENCIES[slot.name] and not companion_unit_3p
+
+		if spawn_companion then
 			local position = Unit.world_position(unit_3p, 1)
 			local rotation = Unit.local_rotation(unit_3p, 1)
-			local breed_name = COMPANION_BREED_BY_SLOT[slot.name]
+			local archetype = character_spawn_data.archetype
+			local companion_breed_name = archetype.companion_breed
 			local attach_to_character = character_spawn_data.attach_companion_to_character
 
-			companion_unit_3p = self:_spawn_companion(unit_3p, breed_name, position, rotation, attach_to_character)
+			companion_unit_3p = self:_spawn_companion(unit_3p, companion_breed_name, position, rotation, attach_to_character)
 
-			local companion_global_position = self._only_companion and Unit.local_position(unit_3p, 1) or self._character_spawn_data.companion_position
+			local companion_global_position = self._only_companion and Unit.local_position(unit_3p, 1) or self._character_spawn_data.companion_position:unbox()
 
 			if attach_to_character then
-				local companion_attach_index = unit_3p and Unit.has_node(unit_3p, "ap_companion") and Unit.node(unit_3p, "ap_companion")
+				local companion_attach_node = _companion_attach_node(unit_3p)
 
-				if companion_attach_index then
+				if companion_attach_node then
 					local companion_local_position = Unit.local_position(unit_3p, 1) - companion_global_position
 
-					Unit.set_local_position(unit_3p, companion_attach_index, companion_local_position)
+					Unit.set_local_position(unit_3p, companion_attach_node, companion_local_position)
 				end
 			else
 				Unit.set_local_position(companion_unit_3p, 1, companion_global_position)
@@ -1120,12 +1126,10 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 		end
 	end
 
-	local equipment_component = EquipmentComponent:new(self._world, self._item_definitions, self._unit_spawner, unit_3p, nil, nil, self._force_highest_lod_step, true)
-	local slot_configuration = PlayerCharacterConstants.slot_configuration
 	local gear_slots = {}
 	local ignored_slots = self._ignored_slots
 
-	for slot_id, config in pairs(slot_configuration) do
+	for slot_id, config in pairs(SLOT_CONFIGURATION) do
 		local settings = ItemSlotSettings[slot_id]
 
 		if not ignored_slots[slot_id] and not settings.ignore_character_spawning then
@@ -1141,6 +1145,7 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 			skip_link_children = true,
 		},
 	}
+	local equipment_component = EquipmentComponent:new(self._world, self._item_definitions, self._unit_spawner, unit_3p, nil, nil, self._force_highest_lod_step, true)
 	local slots = equipment_component.initialize_equipment(gear_slots, breed_settings, slot_options)
 	local slot_equip_order = PlayerCharacterConstants.slot_equip_order
 	local equipped_items = {}
@@ -1159,26 +1164,26 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 		local display_item = visual_item
 
 		if slot and display_item then
-			if COMPANION_SLOTS[slot.name] then
+			if COMPANION_SLOT_DEPENDENCIES[slot.name] then
 				if companion_ignore then
 					skip_slot = true
 				elseif not companion_unit_3p then
 					companion_position = companion_position or position
 
-					local breed_name = COMPANION_BREED_BY_SLOT[slot.name]
+					local companion_breed_name = archetype.companion_breed
 
-					companion_unit_3p = self:_spawn_companion(unit_3p, breed_name, companion_position, spawn_rotation, companion_attach_to_character)
+					companion_unit_3p = self:_spawn_companion(unit_3p, companion_breed_name, companion_position, spawn_rotation, companion_attach_to_character)
 
 					local companion_global_position = self._only_companion and Unit.local_position(unit_3p, 1) or companion_position
 
 					if companion_attach_to_character then
-						local companion_attach_index = unit_3p and Unit.has_node(unit_3p, "ap_companion") and Unit.node(unit_3p, "ap_companion")
+						local companion_attach_node = _companion_attach_node(unit_3p)
 
-						if companion_attach_index then
-							local companion_global_position = self._only_companion and Unit.local_position(unit_3p, 1) or companion_position
-							local companion_local_position = Unit.local_position(unit_3p, 1) - companion_global_position
+						if companion_attach_node then
+							local only_companion_global_position = self._only_companion and Unit.local_position(unit_3p, 1) or companion_position
+							local companion_local_position = Unit.local_position(unit_3p, 1) - only_companion_global_position
 
-							Unit.set_local_position(unit_3p, companion_attach_index, companion_local_position)
+							Unit.set_local_position(unit_3p, companion_attach_node, companion_local_position)
 						end
 					else
 						Unit.set_local_position(companion_unit_3p, 1, companion_global_position)
@@ -1198,9 +1203,9 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 				local parent_slot_names = ItemSlotSettings[slot_id].forced_parent_slot_names or display_item.parent_slot_names or {}
 
 				for _, parent_slot_name in pairs(parent_slot_names) do
-					local slot = slots[parent_slot_name]
-					local parent_slot_unit_3p = slot and slot.unit_3p
-					local parent_item = slot and slot.item
+					local parent_slot = slots[parent_slot_name]
+					local parent_slot_unit_3p = parent_slot and parent_slot.unit_3p
+					local parent_item = parent_slot and parent_slot.item
 					local parent_item_deform_override_items = parent_item and parent_item.deform_override_items or {}
 
 					for _, deform_override_item in pairs(parent_item_deform_override_items) do
@@ -1269,6 +1274,7 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 		is_ready = false,
 		streaming_complete = false,
 		slots = slots,
+		archetype = archetype,
 		archetype_name = archetype_name,
 		breed_name = breed_name,
 		equipment_component = equipment_component,
@@ -1283,7 +1289,7 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 		force_highest_mip = force_highest_mip,
 		companion_unit_3p = companion_unit_3p,
 		has_external_companion_unit_3p = companion_optional_unit_3p ~= nil,
-		companion_position = self._loading_profile_data.companion_data.original_position,
+		companion_position = Vector3Box(self._loading_profile_data.companion_data.original_position:unbox()),
 		companion_rotation = self._loading_profile_data.companion_data.original_rotation,
 		companion_ignore = companion_ignore,
 		companion_attach_to_character = companion_attach_to_character,
@@ -1369,6 +1375,10 @@ UIProfileSpawner.cb_on_unit_3p_streaming_complete = function (self, unit_3p, tim
 				Unit.disable_animation_state_machine(hair_unit)
 			end
 		end
+
+		if self._visible then
+			self:_update_items_visibility()
+		end
 	end
 end
 
@@ -1391,24 +1401,6 @@ UIProfileSpawner.wield_slot = function (self, slot_id)
 	equipment_component.wield_slot(wield_slot, first_person_mode)
 
 	character_spawn_data.wielded_slot = wield_slot
-
-	if self._visible then
-		self:_update_items_visibility()
-	end
-end
-
-UIProfileSpawner._update_ingore_slots = function (self)
-	local slot_configuration = PlayerCharacterConstants.slot_configuration
-	local gear_slots = {}
-	local ignored_slots = self._ignored_slots
-
-	for slot_id, config in pairs(slot_configuration) do
-		local settings = ItemSlotSettings[slot_id]
-
-		if not ignored_slots[slot_id] and not settings.ignore_character_spawning then
-			gear_slots[slot_id] = config
-		end
-	end
 
 	if self._visible then
 		self:_update_items_visibility()
@@ -1464,8 +1456,11 @@ UIProfileSpawner._update_input_rotation = function (self, dt)
 		return
 	end
 
+	if self._auto_rotation_return then
+		return
+	end
+
 	local unit_3p = character_spawn_data.unit_3p
-	local companion_unit_3p = character_spawn_data.companion_unit_3p
 	local rotation_angle
 
 	if self._rotate_instantly then
@@ -1486,16 +1481,40 @@ UIProfileSpawner._update_input_rotation = function (self, dt)
 	end
 
 	Unit.set_local_rotation(unit_3p, 1, character_rotation)
-
-	if self._auto_rotation_return and not self._is_rotating and self._rotation_angle ~= self._default_rotation_angle then
-		local new_rotation_angle = math.lerp(self._default_rotation_angle, self._rotation_angle, 0.1)
-
-		self:_set_character_rotation(new_rotation_angle)
-	end
 end
 
-UIProfileSpawner._set_auto_rotation_return = function (self, enabled)
-	self._auto_rotation_return = enabled
+UIProfileSpawner._update_auto_rotation = function (self, dt, t)
+	local character_spawn_data = self._character_spawn_data
+
+	if not character_spawn_data then
+		return
+	end
+
+	if not self._auto_rotation_return then
+		return
+	end
+
+	if self._rotation_angle ~= self._default_rotation_angle then
+		local lerp_t = math.clamp01(self._auto_rotation_lerp_t + dt * math.lerp(0.1, 1, math.abs(math.sin(t))) * math.lerp(self._auto_rotation_speed_modifier_start, self._auto_rotation_speed_modifier_end, math.ease_in_out_sine(self._auto_rotation_lerp_t + dt)))
+
+		self._auto_rotation_lerp_t = lerp_t
+
+		local new_rotation_angle = math.lerp(self._auto_rotation_start_angle, self._default_rotation_angle, math.ease_out_back(math.ease_out_bounce(lerp_t)))
+		local unit_3p = character_spawn_data.unit_3p
+		local character_rotation = Quaternion.axis_angle(Vector3(0, 0, 1), -new_rotation_angle)
+		local boxed_start_rotation = character_spawn_data.rotation
+
+		if boxed_start_rotation then
+			local start_rotation = QuaternionBox.unbox(boxed_start_rotation)
+
+			character_rotation = Quaternion.multiply(start_rotation, character_rotation)
+		end
+
+		Unit.set_local_rotation(unit_3p, 1, character_rotation)
+
+		self._rotation_angle = new_rotation_angle
+		self._previous_rotation_angle = new_rotation_angle
+	end
 end
 
 UIProfileSpawner._set_character_rotation = function (self, angle, instant)
@@ -1503,11 +1522,30 @@ UIProfileSpawner._set_character_rotation = function (self, angle, instant)
 	self._rotate_instantly = instant
 end
 
-UIProfileSpawner.disable_rotation_input = function (self)
-	self._rotation_input_disabled = true
+UIProfileSpawner.set_auto_rotation_return = function (self, enabled)
+	local auto_rotation_start_angle = self._rotation_angle % PI_2
+
+	if auto_rotation_start_angle > PI then
+		auto_rotation_start_angle = -(PI_2 - auto_rotation_start_angle)
+	end
+
+	self._auto_rotation_start_angle = auto_rotation_start_angle
+	self._auto_rotation_speed_modifier_start = math.lerp(0.15, 0.25, 1 - math.abs(auto_rotation_start_angle / PI))
+	self._auto_rotation_speed_modifier_end = math.lerp(0.05, 0.1, 1 - math.abs(auto_rotation_start_angle / PI))
+	self._auto_rotation_return = enabled
+	self._auto_rotation_lerp_t = 0
+
+	if not enabled then
+		self:_set_character_rotation(auto_rotation_start_angle, true)
+	end
 end
 
-local mouse_pos_temp = {}
+UIProfileSpawner.disable_rotation_input = function (self, disabled)
+	self._rotation_input_disabled = disabled
+end
+
+local MOUSE_ROTATION_SCALE = 0.3333333333333333
+local _mouse_pos_temp = {}
 
 UIProfileSpawner._mouse_rotation_input = function (self, input_service, dt)
 	local mouse = input_service and input_service:get("cursor")
@@ -1527,10 +1565,10 @@ UIProfileSpawner._mouse_rotation_input = function (self, input_service, dt)
 		end
 
 		if input_service:get("right_pressed") then
-			self._previous_rotation_angle = self._previous_rotation_angle % (math.pi * 2)
+			self._previous_rotation_angle = self._previous_rotation_angle % PI_2
 
-			if self._previous_rotation_angle > math.pi then
-				self._previous_rotation_angle = -(math.pi * 2 - self._previous_rotation_angle)
+			if self._previous_rotation_angle > PI then
+				self._previous_rotation_angle = -(PI_2 - self._previous_rotation_angle)
 			end
 
 			self:_set_character_rotation(self._default_rotation_angle)
@@ -1544,14 +1582,14 @@ UIProfileSpawner._mouse_rotation_input = function (self, input_service, dt)
 
 	if is_moving_camera and mouse_hold then
 		if self._last_mouse_position then
-			local angle = self._rotation_angle - (mouse.x - self._last_mouse_position[1]) * 0.005
+			local angle = self._rotation_angle - (mouse.x - self._last_mouse_position[1]) * dt * MOUSE_ROTATION_SCALE
 
 			self:_set_character_rotation(angle)
 		end
 
-		mouse_pos_temp[1] = mouse.x
-		mouse_pos_temp[2] = mouse.y
-		self._last_mouse_position = mouse_pos_temp
+		_mouse_pos_temp[1] = mouse.x
+		_mouse_pos_temp[2] = mouse.y
+		self._last_mouse_position = _mouse_pos_temp
 		handled = true
 	elseif is_moving_camera then
 		self._is_rotating = false
@@ -1561,6 +1599,9 @@ UIProfileSpawner._mouse_rotation_input = function (self, input_service, dt)
 	return handled
 end
 
+local GAMEPAD_ROTATION_EPSILON_SQUARED = 0.010000000000000002
+local GAMEPAD_ROTATION_SCALE = 5
+
 UIProfileSpawner._controller_rotation_input = function (self, input_service, dt)
 	local camera_move = input_service and input_service:get("navigate_controller_right")
 
@@ -1568,8 +1609,8 @@ UIProfileSpawner._controller_rotation_input = function (self, input_service, dt)
 		return
 	end
 
-	if camera_move and Vector3.length(camera_move) > 0.01 then
-		local angle = self._rotation_angle + -camera_move.x * dt * 5
+	if camera_move and Vector3.length_squared(camera_move) > GAMEPAD_ROTATION_EPSILON_SQUARED then
+		local angle = self._rotation_angle + -camera_move.x * dt * GAMEPAD_ROTATION_SCALE
 
 		self:_set_character_rotation(angle)
 
@@ -1613,7 +1654,6 @@ UIProfileSpawner._is_character_pressed = function (self, input_service)
 			end
 
 			if self._character_toggle_state then
-				local collision_filter = "filter_player_detection"
 				local hit_unit, _ = self:_get_raycast_hit(from, to, physics_world, "filter_player_detection")
 
 				if hit_unit then

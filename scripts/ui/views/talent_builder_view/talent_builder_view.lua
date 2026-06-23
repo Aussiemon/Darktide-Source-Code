@@ -1,22 +1,22 @@
 ﻿-- chunkname: @scripts/ui/views/talent_builder_view/talent_builder_view.lua
 
-local ArchetypeSettings = require("scripts/settings/archetype/archetype_settings")
+local NodeBuilderViewBase = require("scripts/ui/views/node_builder_view_base/node_builder_view_base")
+local talent_builder_view_definitions = require("scripts/ui/views/talent_builder_view/talent_builder_view_definitions")
 local Archetypes = require("scripts/settings/archetype/archetypes")
+local ArchetypeSettings = require("scripts/settings/archetype/archetype_settings")
 local CharacterSheet = require("scripts/utilities/character_sheet")
 local Colors = require("scripts/utilities/ui/colors")
-local Definitions = require("scripts/ui/views/talent_builder_view/talent_builder_view_definitions")
 local InputDevice = require("scripts/managers/input/input_device")
-local NodeBuilderViewBase = require("scripts/ui/views/node_builder_view_base/node_builder_view_base")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local TalentBuilderViewSettings = require("scripts/ui/views/talent_builder_view/talent_builder_view_settings")
 local TalentBuilderViewSummaryBlueprints = require("scripts/ui/views/talent_builder_view/talent_builder_view_summary_blueprints")
 local TalentBuilderViewTutorialBlueprints = require("scripts/ui/views/talent_builder_view/talent_builder_view_tutorial_blueprints")
 local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
 local Text = require("scripts/utilities/ui/text")
+local UiSettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
-local NodeLayout = require("scripts/ui/views/node_builder_view_base/utilities/node_layout")
 local loadout_ability_widget_name_list = {
 	"loadout_slot_ability",
 	"loadout_slot_tactical",
@@ -51,7 +51,7 @@ TalentBuilderView.init = function (self, settings, context)
 	self._local_player_id = self._preview_player:local_player_id()
 	self._is_own_player = self._preview_player == self:_player()
 
-	TalentBuilderView.super.init(self, Definitions, settings, context)
+	TalentBuilderView.super.init(self, talent_builder_view_definitions, settings, context)
 
 	self._save_talent_changes = false
 
@@ -152,6 +152,7 @@ TalentBuilderView.on_enter = function (self)
 		end
 	end
 
+	local start_centered
 	local all_nodes_cost_one = true
 	local widgets = self._node_widgets
 
@@ -166,7 +167,11 @@ TalentBuilderView.on_enter = function (self)
 
 		local node = content.node_data
 
-		if node.type ~= "start" and node.type ~= "start_center" then
+		if node.type == "start" then
+			start_centered = node.connector_offset[1] == 0 and node.connector_offset[2] == 0
+		end
+
+		if node.type ~= "start" then
 			all_nodes_cost_one = all_nodes_cost_one and node.cost == 1
 		end
 	end
@@ -187,6 +192,14 @@ TalentBuilderView.on_enter = function (self)
 	else
 		self:_close_tutorial_window()
 	end
+
+	if self._player_mode and active_layout and active_layout.base_offset_x then
+		self:_set_scenegraph_position("layout_background", active_layout.base_offset_x, nil, nil, nil, nil)
+	end
+
+	self._widgets_by_name.archetype_middle_coin.content.visible = start_centered
+	self._widgets_by_name.layout_background.content.visible = not start_centered
+	self._starts_centered = start_centered
 end
 
 TalentBuilderView._update_summery_button_text = function (self)
@@ -201,7 +214,6 @@ end
 TalentBuilderView.event_on_profile_preset_changed = function (self, profile_preset, on_preset_deleted)
 	local player = self._preview_player
 	local profile = player:profile()
-	local talents_version = profile_preset and profile_preset.talents_version
 	local profile_preset_id = ProfileUtils.get_active_profile_preset_id()
 	local talents
 
@@ -254,8 +266,8 @@ TalentBuilderView.event_on_profile_preset_changed = function (self, profile_pres
 	self:_update_base_talent_loadout_presentation()
 end
 
-TalentBuilderView._remove_node_point_on_widget = function (self, widget)
-	TalentBuilderView.super._remove_node_point_on_widget(self, widget)
+TalentBuilderView._remove_node_point_on_widget = function (self, widget, skip_tooltip_update)
+	TalentBuilderView.super._remove_node_point_on_widget(self, widget, skip_tooltip_update)
 	self:_update_base_talent_loadout_presentation()
 	Managers.event:trigger("event_player_talent_node_updated", self._node_widget_tiers)
 
@@ -410,18 +422,18 @@ TalentBuilderView.clear_node_points = function (self)
 end
 
 TalentBuilderView._setup_node_connection_widget = function (self)
+	local widget = self:_create_widget("node_connection", self._definitions.node_connection_definition)
+
+	widget.content.player_mode = self._player_mode
 	self._node_connection_widgets = {
-		self:_create_widget("node_connection", self._definitions.node_connection_definition),
+		widget,
 	}
 end
 
 TalentBuilderView.on_archetype_name_changed = function (self, archetype_name)
-	local glow_colors = TalentBuilderViewSettings.glow_colors_by_class[archetype_name]
+	local glow_colors = TalentBuilderViewSettings.archetype_glow_colors[archetype_name]
 
-	self._global_node_offset = TalentBuilderViewSettings.starting_talent_nodes_offset_by_name[archetype_name] or {
-		0,
-		0,
-	}
+	self._global_node_offset = TalentBuilderViewSettings.archetype_starting_talent_nodes_offset[archetype_name]
 
 	local node_connection_style = self._node_connection_widgets[1].style
 
@@ -443,7 +455,7 @@ TalentBuilderView.on_archetype_name_changed = function (self, archetype_name)
 
 	local widgets_by_name = self._widgets_by_name
 
-	widgets_by_name.info_banner.style.badge.material_values.badge = TalentBuilderViewSettings.archetype_badge_texture_by_name[archetype_name]
+	widgets_by_name.info_banner.style.badge.material_values.badge = UiSettings.archetype_badge_texture_by_name[archetype_name]
 	widgets_by_name.info_banner.content.play_badge_effect_anim = true
 
 	local talent_archetype_background = TalentBuilderViewSettings.archetype_backgrounds_by_name[archetype_name]
@@ -503,7 +515,7 @@ TalentBuilderView._scroll_to_height = function (self, height)
 	local scenegraph_id = layout_background_widget.scenegraph_id
 	local screen_height = RESOLUTION_LOOKUP.height
 	local saved_scenegraph_settings = self._saved_scenegraph_settings
-	local render_scale = self._render_scale
+	local render_scale = self._nodes_render_scale
 	local render_inverse_scale = 1 / render_scale
 	local scenegraph_settings = saved_scenegraph_settings[scenegraph_id]
 	local _, background_height = self:_background_size()
@@ -614,7 +626,7 @@ TalentBuilderView._draw_connection_between_widgets = function (self, ui_renderer
 	local color_status
 
 	if is_parent_starting_node then
-		if parent_node.type ~= "start" and parent_node.type ~= "start_center" and not node_widget_tiers[parent_node_name] then
+		if parent_node.type ~= "start" and not node_widget_tiers[parent_node_name] then
 			color_status = "locked"
 		elseif child_unlocked then
 			color_status = "chosen"
@@ -720,10 +732,6 @@ TalentBuilderView._apply_node_connection_line_colors = function (self, color_sta
 	elseif color_status == "chosen" then
 		alpha = 0
 	elseif color_status == "unlocked" then
-		local pulse_speed = 4
-		local time_since_launch = Application.time_since_launch()
-		local pulse_progress = 0.5 + math.sin(time_since_launch * pulse_speed) * 0.5
-
 		alpha = 200
 	end
 
@@ -765,8 +773,6 @@ TalentBuilderView._get_player_mode_layout = function (self)
 	end
 end
 
-local resolution_modified_key = "modified"
-
 TalentBuilderView.update = function (self, dt, t, input_service)
 	if self._player_mode and self._preview_player and not Managers.player:player(self._peer_id, self._local_player_id) then
 		self._preview_player = nil
@@ -794,7 +800,7 @@ TalentBuilderView.update = function (self, dt, t, input_service)
 	self._summary_window_hovered = self._widgets_by_name.summary_window.content.hotspot.is_hover
 	self._summary_button_hovered = self._widgets_by_name.summary_button.content.hotspot.is_hover
 
-	local resolution_modified = RESOLUTION_LOOKUP[resolution_modified_key]
+	local resolution_modified = RESOLUTION_LOOKUP.modified
 
 	if resolution_modified then
 		self:_on_input_scroll_axis_changed(0, {
@@ -815,7 +821,7 @@ TalentBuilderView.update = function (self, dt, t, input_service)
 	if tooltip_node_widget then
 		local current_zoom = self._current_zoom
 		local resolution_inverse_scale = RESOLUTION_LOOKUP.inverse_scale
-		local render_scale = self._render_scale
+		local render_scale = self._nodes_render_scale
 		local render_inverse_scale = 1 / render_scale
 		local ui_overlay_scenegraph = self._ui_overlay_scenegraph
 		local is_node_in_overlay_scenegraph = tooltip_node_widget == self._hovered_base_talent_widget and ui_overlay_scenegraph
@@ -823,7 +829,6 @@ TalentBuilderView.update = function (self, dt, t, input_service)
 		local node_scenegraph_position_x, node_scenegraph_position_y = node_scenegraph_position[1], node_scenegraph_position[2]
 		local node_width, node_height = self:_scenegraph_size(tooltip_node_widget.scenegraph_id, is_node_in_overlay_scenegraph and ui_overlay_scenegraph)
 		local node_offset_x, node_offset_y = node_width, node_height
-		local layout_background_widget = widgets_by_name.layout_background
 		local tooltip_widget = widgets_by_name.tooltip
 		local tooltip_offset = tooltip_widget.offset
 		local tooltip_scenegraph_position_x, tooltip_scenegraph_position_y, _ = self:_scenegraph_position(tooltip_widget.scenegraph_id, ui_overlay_scenegraph)
@@ -836,14 +841,10 @@ TalentBuilderView.update = function (self, dt, t, input_service)
 
 		if is_node_in_overlay_scenegraph then
 			tooltip_offset[1] = 440
-			tooltip_offset[2] = 638
+			tooltip_offset[2] = math.clamp(tooltip_scenegraph_position_y + (node_scenegraph_position_y + node_offset_y * render_scale) * resolution_inverse_scale, input_surface_offset[2] + 50, resolution_height * render_inverse_scale * current_zoom + (input_surface_offset[2] + input_surface_size_addition[2]) - tooltip_height)
 		else
 			tooltip_offset[1] = math.clamp(tooltip_scenegraph_position_x + (node_scenegraph_position_x + node_offset_x * render_scale) * resolution_inverse_scale, 0, resolution_width * render_inverse_scale * current_zoom - tooltip_width)
 			tooltip_offset[2] = math.clamp(tooltip_scenegraph_position_y + (node_scenegraph_position_y + node_offset_y * render_scale) * resolution_inverse_scale, input_surface_offset[2] + 50, resolution_height * render_inverse_scale * current_zoom + (input_surface_offset[2] + input_surface_size_addition[2]) - tooltip_height)
-		end
-
-		math.point_is_inside_2d_box = function (pos, lower_left_corner, size)
-			return pos[1] > lower_left_corner[1] and pos[1] < lower_left_corner[1] + size[1] and pos[2] > lower_left_corner[2] and pos[2] < lower_left_corner[2] + size[2]
 		end
 	end
 
@@ -1007,7 +1008,6 @@ TalentBuilderView._update_gamepad_cursor = function (self, dt, t, input_service)
 	gamepad_cursor.visible = cursor_active
 
 	local screen_height = RESOLUTION_LOOKUP.height
-	local scale = RESOLUTION_LOOKUP.scale
 	local inverse_scale = RESOLUTION_LOOKUP.inverse_scale
 
 	if cursor_active then
@@ -1063,9 +1063,9 @@ TalentBuilderView._update_gamepad_cursor = function (self, dt, t, input_service)
 		local inverse_zoom_scale = 1 / zoom_scale
 		local bounds_min_x = settings.bounds_min_x * inverse_zoom_scale
 		local bounds_max_x = settings.bounds_max_x * inverse_zoom_scale
-		local edge_margin_top = settings.edge_margin_top
-		local edge_margin_bottom = settings.edge_margin_bottom
-		local bounds_max_y = screen_height * inverse_scale - edge_margin_bottom
+		local edge_margin_top = self._starts_centered and settings.edge_margin_top_centered or settings.edge_margin_top
+		local edge_margin_bottom = self._starts_centered and settings.edge_margin_bottom_centered or settings.edge_margin_bottom
+		local bounds_max_y = screen_height * inverse_zoom_scale - edge_margin_bottom
 
 		pos[1] = math.clamp(pos[1], bounds_min_x, bounds_max_x)
 
@@ -1085,7 +1085,6 @@ TalentBuilderView._update_gamepad_cursor = function (self, dt, t, input_service)
 			local best_widget
 			local is_sticky = len_gamepad_cursor_average_vel < settings.stickiness_speed_threshold
 			local cursor_center = pos
-			local cursor_pos = cursor_center - 0.5 * cursor_size
 			local node_widgets = self._node_widgets
 
 			for i = 1, #node_widgets do
@@ -1093,18 +1092,14 @@ TalentBuilderView._update_gamepad_cursor = function (self, dt, t, input_service)
 				local node_data = widget.content.node_data
 				local type = node_data.type
 
-				if type ~= "start" and type ~= "start_center" then
+				if type ~= "start" then
 					local is_selected = i == self._selected_node_index
 					local has_overlap, score, widget_size, widget_center = process_gamepad_cursor_widget_func(self, widget, cursor_size, is_sticky, is_selected, pos, normalized_gamepad_cursor_average_vel)
-					local delta_dir, delta_len = Vector3.direction_length(widget_center - cursor_center)
+					local _, delta_len = Vector3.direction_length(widget_center - cursor_center)
 
-					if has_overlap then
-						drag_coefficient = settings.widget_drag_coefficient
-
-						if delta_len < settings.stickiness_radius then
-							wanted_size = widget_size
-							score = score + 1000
-						end
+					if has_overlap and delta_len < settings.stickiness_radius then
+						wanted_size = widget_size
+						score = score + 1000
 					end
 
 					if best_score < score then
@@ -1126,15 +1121,11 @@ TalentBuilderView._update_gamepad_cursor = function (self, dt, t, input_service)
 				if widget then
 					local is_selected = i == self._selected_node_index
 					local has_overlap, score, widget_size, widget_center = process_gamepad_cursor_widget_func(self, widget, cursor_size, is_sticky, is_selected, pos, normalized_gamepad_cursor_average_vel, ui_overlay_scenegraph)
-					local delta_dir, delta_len = Vector3.direction_length(widget_center - cursor_center)
+					local _, delta_len = Vector3.direction_length(widget_center - cursor_center)
 
-					if has_overlap then
-						drag_coefficient = settings.widget_drag_coefficient
-
-						if delta_len < settings.stickiness_radius then
-							wanted_size = widget_size
-							score = score + 1000
-						end
+					if has_overlap and delta_len < settings.stickiness_radius then
+						wanted_size = widget_size
+						score = score + 1000
 					end
 
 					if best_score < score then
@@ -1272,7 +1263,7 @@ TalentBuilderView._on_node_widget_left_pressed = function (self, widget)
 	local node_data = widget.content.node_data
 	local type = node_data.type
 
-	if type == "start" or type == "start_center" then
+	if type == "start" then
 		return
 	end
 
@@ -1291,7 +1282,7 @@ TalentBuilderView._on_node_widget_right_pressed = function (self, widget)
 	local node_data = widget.content.node_data
 	local type = node_data.type
 
-	if type == "start" or type == "start_center" then
+	if type == "start" then
 		return
 	end
 

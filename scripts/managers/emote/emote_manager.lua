@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/managers/emote/emote_manager.lua
 
 local EmoteManager = class("EmoteManager")
-local RPCs = {
+local CLIENT_RPCS = {
 	"rpc_trigger_emote",
 	"rpc_stop_emote",
 }
@@ -14,13 +14,13 @@ EmoteManager.init = function (self, is_host, network_event_delegate)
 	self._network_event_delegate = network_event_delegate
 
 	if not is_host then
-		network_event_delegate:register_session_events(self, unpack(RPCs))
+		network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
 	end
 end
 
 EmoteManager.destroy = function (self)
 	if not self._is_host then
-		self._network_event_delegate:unregister_events(unpack(RPCs))
+		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 	end
 end
 

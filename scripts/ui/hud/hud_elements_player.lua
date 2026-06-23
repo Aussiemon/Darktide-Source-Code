@@ -162,6 +162,16 @@ local elements = {
 		},
 	},
 	{
+		class_name = "HudElementMinionShieldHealth",
+		filename = "scripts/ui/hud/elements/minion_shield_health/hud_element_minion_shield_health",
+		package = "packages/ui/hud/minion_shield_health/minion_shield_health",
+		use_hud_scale = false,
+		visibility_groups = {
+			"alive",
+			"player_in_danger_zone",
+		},
+	},
+	{
 		class_name = "HudElementSmartTagging",
 		filename = "scripts/ui/hud/elements/smart_tagging/hud_element_smart_tagging",
 		package = "packages/ui/hud/smart_tagging/smart_tagging",

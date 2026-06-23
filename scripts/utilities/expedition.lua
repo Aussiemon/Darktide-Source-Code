@@ -923,6 +923,7 @@ local level_spawn_template = {
 			local store_info = custom_data.store_info
 			local pickups = store_info.pickups
 			local store_units = {}
+			local safe_zone_respawn_beacons = {}
 
 			for i = 1, #level_units do
 				local unit = level_units[i]
@@ -944,9 +945,16 @@ local level_spawn_template = {
 						end
 					end
 				end
+
+				local respawn_beacon_extension = unit and ScriptUnit.has_extension(unit, "respawn_beacon_system")
+
+				if respawn_beacon_extension then
+					safe_zone_respawn_beacons[unit] = respawn_beacon_extension
+				end
 			end
 
 			section.store_units = store_units
+			section.safe_zone_respawn_beacons = safe_zone_respawn_beacons
 		end,
 	},
 	airstrike_level = {

@@ -5,6 +5,7 @@ local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local Breed = require("scripts/utilities/breed")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local Explosion = require("scripts/utilities/attack/explosion")
 local HazardProp = require("scripts/utilities/level_props/hazard_prop")
@@ -327,7 +328,7 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 
 				table.clear(_explosion_hit_units_table)
 
-				explosion_queue_index = Explosion.create_explosion(world, physics_world, position, explosion_normal, projectile_unit, fuse_explosion_template, DEFAULT_POWER_LEVEL, charge_level, AttackSettings.attack_types.explosion, is_critical_strike, false, weapon_item_or_nil, origin_slot_or_nil, _explosion_hit_units_table)
+				explosion_queue_index = Explosion.create_explosion(world, physics_world, position, explosion_normal and Quaternion.look(explosion_normal) or Quaternion.identity(), projectile_unit, fuse_explosion_template, DEFAULT_POWER_LEVEL, charge_level, AttackSettings.attack_types.explosion, is_critical_strike, false, weapon_item_or_nil, origin_slot_or_nil, _explosion_hit_units_table)
 			end
 
 			local critical_strike_fuse_settings = is_critical_strike and damage_settings.critical_strike and damage_settings.critical_strike.fuse
@@ -597,7 +598,7 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 			if do_impact_explosion then
 				table.clear(_explosion_hit_units_table)
 
-				explosion_queue_index = Explosion.create_explosion(self._world, self._physics_world, hit_position, nil, projectile_unit, impact_explosion_template, DEFAULT_POWER_LEVEL, charge_level, AttackSettings.attack_types.explosion, is_critical_strike, false, weapon_item_or_nil, origin_slot_or_nil, _explosion_hit_units_table)
+				explosion_queue_index = Explosion.create_explosion(self._world, self._physics_world, hit_position, Quaternion.identity(), projectile_unit, impact_explosion_template, DEFAULT_POWER_LEVEL, charge_level, AttackSettings.attack_types.explosion, is_critical_strike, false, weapon_item_or_nil, origin_slot_or_nil, _explosion_hit_units_table)
 				mark_for_deletion = true
 
 				local player = Managers.state.player_unit_spawn:owner(owner_unit)
@@ -852,15 +853,19 @@ end
 ProjectileDamageExtension._handle_explosion_achivements = function (self, player, explosion_hit_units_table)
 	local archetype_name = player:archetype_name()
 
-	if archetype_name == "veteran" and not self._has_impacted then
-		local count = 0
+	if archetype_name == "veteran" then
+		local weapon_template = self._weapon_item_or_nil.weapon_template
 
-		for hit_unit, _ in pairs(explosion_hit_units_table) do
-			count = count + 1
-		end
+		if (weapon_template == "frag_grenade" or weapon_template == "krak_grenade") and not self._has_impacted then
+			local count = 0
 
-		if count >= 5 then
-			Managers.achievements:unlock_achievement(player, "veteran_2_unbounced_grenade_kills")
+			for hit_unit, _ in pairs(explosion_hit_units_table) do
+				count = count + 1
+			end
+
+			if count >= 5 then
+				Managers.achievements:unlock_achievement(player, "veteran_2_unbounced_grenade_kills")
+			end
 		end
 	end
 end

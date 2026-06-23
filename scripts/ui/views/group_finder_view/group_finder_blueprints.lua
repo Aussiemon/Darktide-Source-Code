@@ -2,7 +2,7 @@
 
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
-local ColorUtilities = require("scripts/utilities/ui/colors")
+local Colors = require("scripts/utilities/ui/colors")
 local Danger = require("scripts/utilities/danger")
 local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local Text = require("scripts/utilities/ui/text")
@@ -515,7 +515,7 @@ local function generate_blueprints_func(grid_size)
 					local progress = math.max(math.max(hotspot.anim_checked_progress or 0, math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress)), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
 					if color and default_color and hover_color then
-						ColorUtilities.color_lerp(default_color, hover_color, progress, color)
+						Colors.color_lerp(default_color, hover_color, progress, color)
 					end
 				end,
 			},
@@ -1078,7 +1078,7 @@ local function generate_blueprints_func(grid_size)
 						local progress = math.max(math.max(hotspot.anim_checked_progress or 0, math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress)), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
 						if color and default_color and hover_color then
-							ColorUtilities.color_lerp(default_color, hover_color, progress, color)
+							Colors.color_lerp(default_color, hover_color, progress, color)
 						end
 					end,
 				},
@@ -1533,7 +1533,7 @@ local function generate_blueprints_func(grid_size)
 						local progress = math.max(math.max(hotspot.anim_checked_progress or 0, math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress)), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
 						if color and default_color and hover_color then
-							ColorUtilities.color_lerp(default_color, hover_color, progress, color)
+							Colors.color_lerp(default_color, hover_color, progress, color)
 						end
 					end,
 				},
@@ -2043,7 +2043,7 @@ local function generate_blueprints_func(grid_size)
 						local progress = math.max(math.max(hotspot.anim_checked_progress or 0, math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress)), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
 						if color and default_color and hover_color then
-							ColorUtilities.color_lerp(default_color, hover_color, progress, color)
+							Colors.color_lerp(default_color, hover_color, progress, color)
 						end
 					end,
 				},
@@ -3217,7 +3217,7 @@ local function generate_blueprints_func(grid_size)
 						local progress = math.max(math.max(hotspot.anim_checked_progress or 0, math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress)), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
 						if color and default_color and hover_color then
-							ColorUtilities.color_lerp(default_color, hover_color, progress, color)
+							Colors.color_lerp(default_color, hover_color, progress, color)
 						end
 					end,
 				},
@@ -4281,7 +4281,7 @@ local function generate_blueprints_func(grid_size)
 
 					if member_presence_info and member_presence_info.synced then
 						local archetype = member_presence_info.archetype
-						local archetype_font_icon = archetype and UISettings.archetype_font_icon_simple[archetype]
+						local archetype_font_icon = archetype and UISettings.archetype_font_icon[archetype]
 
 						team_counter = team_counter + 1
 						content["team_member_icon_" .. i] = archetype_font_icon or ""
@@ -4503,7 +4503,7 @@ local function generate_blueprints_func(grid_size)
 				local optional_text_color = element.text_color
 
 				if optional_text_color then
-					ColorUtilities.color_copy(optional_text_color, style.text.text_color)
+					Colors.color_copy(optional_text_color, style.text.text_color)
 				end
 
 				content.element = element
@@ -4563,7 +4563,7 @@ local function generate_blueprints_func(grid_size)
 				local optional_text_color = element.text_color
 
 				if optional_text_color then
-					ColorUtilities.color_copy(optional_text_color, style.text.text_color)
+					Colors.color_copy(optional_text_color, style.text.text_color)
 				end
 
 				content.element = element

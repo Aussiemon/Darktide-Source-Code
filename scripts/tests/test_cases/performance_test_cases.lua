@@ -136,7 +136,7 @@ PerformanceTestCases.performance_milliseconds_per_frame = function (mission_key,
 
 		local cameras = Testify:make_request("all_cameras_of_type", "performance")
 
-		Testify.expect:is_false("performance_cameras_assert", table.is_empty(cameras), mission_key .. "'s performance flag is set to true, but there are no performance cameras. Please set the flag to false until cameras have been added.")
+		Testify.expect:is_false("performance_cameras_assert", table.is_empty(cameras), mission_key .. "'s performance flag is set to true, but there are no performance cameras. Please set the `performance` flag to false until cameras have been added.")
 
 		local performance_measurements = {}
 		local telemetry_event_name = "perf_camera"
@@ -175,7 +175,7 @@ PerformanceTestCases.performance_milliseconds_per_frame_mission_server = functio
 		local time_before_measuring = 5
 		local cameras = Testify:make_request("all_cameras_of_type", "performance")
 
-		Testify.expect:is_false("performance_cameras_assert", table.is_empty(cameras), mission_key .. "'s performance flag is set to true, but there are no performance cameras. Please set the flag to false until cameras have been added.")
+		Testify.expect:is_false("performance_cameras_assert", table.is_empty(cameras), mission_key .. "'s performance flag is set to true, but there are no performance cameras. Please set the `performance` flag to false until cameras have been added.")
 
 		local performance_measurements = {}
 		local telemetry_event_name = "perf_camera"

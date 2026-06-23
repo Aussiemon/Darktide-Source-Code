@@ -216,10 +216,12 @@ weapon_template.hud_configuration = {
 	uses_overheat = false,
 }
 weapon_template.breed_anim_state_machine_3p = {
+	cryptic = "content/characters/player/human/third_person/animations/pocketables",
 	human = "content/characters/player/human/third_person/animations/pocketables",
 	ogryn = "content/characters/player/ogryn/third_person/animations/pocketables",
 }
 weapon_template.breed_anim_state_machine_1p = {
+	cryptic = "content/characters/player/human/first_person/animations/grimoire",
 	human = "content/characters/player/human/first_person/animations/grimoire",
 	ogryn = "content/characters/player/ogryn/first_person/animations/grimoire",
 }

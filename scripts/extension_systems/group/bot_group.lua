@@ -98,6 +98,13 @@ BotGroup.add_bot_unit = function (self, unit)
 			expires = -math.huge,
 			escape_direction = Vector3Box(),
 		},
+		hover_target = {
+			rotation = nil,
+			tolerance = 1,
+			wanted_distance_from_target_pos = 1,
+			expires = -math.huge,
+			hover_target_pos = Vector3Box(),
+		},
 		pickup_orders = {},
 		behavior_component = Blackboard.write_component(blackboard, "behavior"),
 		perception_component = Blackboard.write_component(blackboard, "perception"),

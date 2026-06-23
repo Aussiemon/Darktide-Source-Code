@@ -309,7 +309,7 @@ templates.hordes_buff_explode_enemies_on_critical_kill = {
 		local explosion_position = dying_unit_position + Vector3.up()
 		local explosion_template = ExplosionTemplates.hordes_buff_critical_kill_explosion
 
-		Explosion.create_explosion(template_context.world, template_context.physics_world, explosion_position, Vector3.up(), template_context.unit, explosion_template, DEFAULT_POWER_LEVEL, 0.8, attack_types.explosion)
+		Explosion.create_explosion(template_context.world, template_context.physics_world, explosion_position, Quaternion.identity(), template_context.unit, explosion_template, DEFAULT_POWER_LEVEL, 0.8, attack_types.explosion)
 	end,
 }
 

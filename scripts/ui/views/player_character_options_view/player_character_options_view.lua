@@ -5,7 +5,7 @@ local Breeds = require("scripts/settings/breed/breeds")
 local PlayerCharacterOptionsViewSettings = require("scripts/ui/views/player_character_options_view/player_character_options_view_settings")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local UiSettings = require("scripts/settings/ui/ui_settings")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UiSoundEvents = require("scripts/settings/ui/ui_sound_events")
 local PlayerCharacterOptionsView = class("PlayerCharacterOptionsView", "BaseView")
 
 PlayerCharacterOptionsView.init = function (self, settings, context)
@@ -66,7 +66,7 @@ PlayerCharacterOptionsView.on_enter = function (self)
 	local profile_archetype = profile.archetype
 	local archetype_name = profile_archetype.name
 
-	self._widgets_by_name.class_badge.style.badge.material_values.badge = PlayerCharacterOptionsViewSettings.archetype_badge_texture_by_name[archetype_name]
+	self._widgets_by_name.class_badge.style.badge.material_values.badge = UiSettings.archetype_badge_texture_by_name[archetype_name]
 
 	local string_symbol = archetype_name and UiSettings.archetype_font_icon[archetype_name] or ""
 	local character_archetype_title = string_symbol .. " " .. ProfileUtils.character_archetype_title(profile, true)
@@ -109,24 +109,21 @@ PlayerCharacterOptionsView._set_class_name = function (self, name)
 	widget.content.text = text
 end
 
+local SLOT_NAME = "inspect_pose"
+local ANIMATION_EVENT = "inspect_pose"
+
 PlayerCharacterOptionsView._generate_player_icon = function (self)
-	local slot_name = "inspect_pose"
 	local load_cb = callback(self, "_cb_set_player_icon")
 	local player = self._inspected_player
 	local profile = player:profile()
 	local profile_archetype = profile.archetype
-	local archetype_name = profile_archetype.name
-	local breed_name = profile_archetype.breed
-	local breed_settings = Breeds[breed_name]
-	local portrait_state_machine = breed_settings.portrait_state_machine
-	local animation_event_by_archetype = PlayerCharacterOptionsViewSettings.animation_event_by_archetype
-	local animation_event = animation_event_by_archetype[archetype_name]
+	local portrait_state_machine = profile_archetype.portrait_state_machine
 	local image_size = PlayerCharacterOptionsViewSettings.image_size
 	local size_multiplier = 2
 	local render_context = {
-		camera_focus_slot_name = slot_name,
+		camera_focus_slot_name = SLOT_NAME,
 		state_machine = portrait_state_machine,
-		animation_event = animation_event,
+		animation_event = ANIMATION_EVENT,
 		size = {
 			image_size[1] * size_multiplier,
 			image_size[2] * size_multiplier,
@@ -176,8 +173,6 @@ PlayerCharacterOptionsView.destroy = function (self)
 end
 
 PlayerCharacterOptionsView.draw = function (self, dt, t, input_service, layer)
-	local content_alpha_multiplier = self._content_alpha_multiplier
-
 	return PlayerCharacterOptionsView.super.draw(self, dt, t, input_service, layer)
 end
 
@@ -230,7 +225,7 @@ PlayerCharacterOptionsView._update_invite_button_status = function (self)
 end
 
 PlayerCharacterOptionsView._on_invite_pressed = function (self)
-	self:_play_sound(UISoundEvents.social_menu_send_invite)
+	self:_play_sound(UiSoundEvents.social_menu_send_invite)
 
 	local player_info = self._player_info
 
@@ -258,7 +253,7 @@ PlayerCharacterOptionsView._on_inspect_pressed = function (self)
 end
 
 PlayerCharacterOptionsView._on_close_pressed = function (self)
-	self:_play_sound(UISoundEvents.system_popup_exit)
+	self:_play_sound(UiSoundEvents.system_popup_exit)
 	Managers.ui:close_view(self.view_name)
 end
 
@@ -320,7 +315,7 @@ PlayerCharacterOptionsView._handle_button_gamepad_navigation = function (self, i
 
 	if new_index and new_index ~= selected_gamepad_navigation_index then
 		self:_set_selected_gamepad_navigation_index(new_index)
-		self:_play_sound(UISoundEvents.default_mouse_hover)
+		self:_play_sound(UiSoundEvents.default_mouse_hover)
 	end
 end
 

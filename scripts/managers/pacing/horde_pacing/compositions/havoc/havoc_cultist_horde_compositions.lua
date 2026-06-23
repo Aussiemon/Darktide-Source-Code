@@ -12,6 +12,13 @@ local horde_compositions = {
 					},
 				},
 				{
+					name = "cultist_vanguard",
+					amount = {
+						1,
+						2,
+					},
+				},
+				{
 					name = "cultist_gunner",
 					amount = {
 						2,
@@ -26,22 +33,11 @@ local horde_compositions = {
 					name = "chaos_ogryn_bulwark",
 					amount = {
 						1,
-						2,
+						1,
 					},
 				},
 				{
-					name = "cultist_gunner",
-					amount = {
-						4,
-						6,
-					},
-				},
-			},
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_ogryn_bulwark",
+					name = "cultist_vanguard",
 					amount = {
 						1,
 						3,
@@ -62,7 +58,39 @@ local horde_compositions = {
 					name = "chaos_ogryn_bulwark",
 					amount = {
 						1,
+						1,
+					},
+				},
+				{
+					name = "cultist_vanguard",
+					amount = {
+						1,
+						3,
+					},
+				},
+				{
+					name = "cultist_gunner",
+					amount = {
 						4,
+						6,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						1,
+						2,
+					},
+				},
+				{
+					name = "cultist_vanguard",
+					amount = {
+						1,
+						5,
 					},
 				},
 				{
@@ -80,7 +108,14 @@ local horde_compositions = {
 					name = "chaos_ogryn_bulwark",
 					amount = {
 						1,
-						5,
+						3,
+					},
+				},
+				{
+					name = "cultist_vanguard",
+					amount = {
+						1,
+						6,
 					},
 				},
 				{
@@ -121,8 +156,15 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
-						2,
+						1,
+						1,
+					},
+				},
+				{
+					name = "cultist_vanguard",
+					amount = {
 						3,
+						5,
 					},
 				},
 				{
@@ -139,8 +181,15 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
+						1,
 						2,
+					},
+				},
+				{
+					name = "cultist_vanguard",
+					amount = {
 						4,
+						6,
 					},
 				},
 				{
@@ -164,8 +213,15 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
-						3,
-						5,
+						2,
+						2,
+					},
+				},
+				{
+					name = "cultist_vanguard",
+					amount = {
+						4,
+						6,
 					},
 				},
 				{
@@ -213,72 +269,93 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
-						2,
-						3,
+						1,
+						1,
 					},
 				},
 				{
-					name = "cultist_shocktrooper",
-					amount = {
-						2,
-						3,
-					},
-				},
-				{
-					name = "cultist_assault",
-					amount = {
-						6,
-						7,
-					},
-				},
-				{
-					name = "cultist_gunner",
+					name = "cultist_vanguard",
 					amount = {
 						3,
-						4,
-					},
-				},
-			},
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_ogryn_bulwark",
-					amount = {
-						3,
-						4,
-					},
-				},
-				{
-					name = "cultist_shocktrooper",
-					amount = {
-						2,
-						3,
-					},
-				},
-				{
-					name = "cultist_assault",
-					amount = {
-						6,
-						7,
-					},
-				},
-				{
-					name = "cultist_gunner",
-					amount = {
-						3,
-						4,
-					},
-				},
-			},
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_ogryn_bulwark",
-					amount = {
-						4,
 						5,
+					},
+				},
+				{
+					name = "cultist_shocktrooper",
+					amount = {
+						2,
+						3,
+					},
+				},
+				{
+					name = "cultist_assault",
+					amount = {
+						6,
+						7,
+					},
+				},
+				{
+					name = "cultist_gunner",
+					amount = {
+						3,
+						4,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						2,
+						2,
+					},
+				},
+				{
+					name = "cultist_vanguard",
+					amount = {
+						4,
+						6,
+					},
+				},
+				{
+					name = "cultist_shocktrooper",
+					amount = {
+						2,
+						3,
+					},
+				},
+				{
+					name = "cultist_assault",
+					amount = {
+						6,
+						7,
+					},
+				},
+				{
+					name = "cultist_gunner",
+					amount = {
+						3,
+						4,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						2,
+						2,
+					},
+				},
+				{
+					name = "cultist_vanguard",
+					amount = {
+						5,
+						6,
 					},
 				},
 				{

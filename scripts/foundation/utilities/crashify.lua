@@ -38,12 +38,16 @@ Crashify.remove_print_property = function (key, print_func)
 	print_func(output)
 end
 
-Crashify.get_print_properties = function (optional_key)
-	if optional_key == nil then
-		return Application.get_crash_properties()
-	end
+Crashify.get_print_properties = function ()
+	return Application.get_crash_properties()
+end
 
-	return Application.get_crash_properties(tostring(optional_key))
+Crashify.get_print_property = function (key)
+	key = tostring(key)
+
+	local filtered_props = Application.get_crash_properties(key)
+
+	return filtered_props[key]
 end
 
 Crashify.print_breadcrumb = function (crumb, print_func)

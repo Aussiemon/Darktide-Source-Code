@@ -3,8 +3,11 @@
 local ScannerDisplayViewExpeditionMapSettings = require("scripts/ui/views/scanner_display_view/scanner_display_view_expedition_map_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISettings = require("scripts/settings/ui/ui_settings")
+local Colors = require("scripts/utilities/ui/colors")
+local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local MinigameExpeditionMapView = class("MinigameExpeditionMapView")
 local PLAYER_SLOT_COLORS = UISettings.player_slot_colors
+local PLAYER_SLOT_COLORS_BRIGHT = UISettings.player_bright_slot_colors
 
 MinigameExpeditionMapView.init = function (self, context, ui_renderer)
 	self._owner_unit = context.device_owner_unit
@@ -12,6 +15,8 @@ MinigameExpeditionMapView.init = function (self, context, ui_renderer)
 	self._exit_widgets = {}
 	self._extraction_widgets = {}
 	self._opportunity_widgets = {}
+	self._heavy_loot_widgets = {}
+	self._pickup_units_loot_widgets = {}
 	self._player_widgets = {}
 	self._background_widgets = {}
 	self._navigation_handler = nil
@@ -23,17 +28,26 @@ MinigameExpeditionMapView.destroy = function (self)
 end
 
 MinigameExpeditionMapView.update = function (self, dt, t, widgets_by_name)
+	local game_mode_manager = Managers.state.game_mode
+	local game_mode = game_mode_manager:game_mode()
 	local navigation_handler = self._navigation_handler
 
 	if not navigation_handler then
-		local game_mode_manager = Managers.state.game_mode
-		local game_mode = game_mode_manager:game_mode()
-		local collectibles_handler = game_mode:get_collectibles_handler()
-
 		navigation_handler = game_mode:get_navigation_handler()
 		self._minigame = navigation_handler:minigame()
 		self._navigation_handler = navigation_handler
+	end
+
+	if not self._collectibles_handler then
+		local collectibles_handler = game_mode:get_collectibles_handler()
+
 		self._collectibles_handler = collectibles_handler
+	end
+
+	if not self._loot_handler then
+		local loot_handler = game_mode:get_loot_handler()
+
+		self._loot_handler = loot_handler
 	end
 
 	if not ALIVE[self._owner_unit] then
@@ -70,6 +84,14 @@ MinigameExpeditionMapView.draw_widgets = function (self, dt, t, input_service, u
 	end
 
 	for _, widget in pairs(self._opportunity_widgets) do
+		UIWidget.draw(widget, ui_renderer)
+	end
+
+	for _, widget in pairs(self._heavy_loot_widgets) do
+		UIWidget.draw(widget, ui_renderer)
+	end
+
+	for _, widget in pairs(self._pickup_units_loot_widgets) do
 		UIWidget.draw(widget, ui_renderer)
 	end
 
@@ -123,12 +145,12 @@ MinigameExpeditionMapView._rot_to_map_angle = function (self, rotation, camera_r
 	return angle + math.pi / 2
 end
 
-MinigameExpeditionMapView._create_icon_widget = function (self, widget_name, value)
+MinigameExpeditionMapView._create_icon_widget = function (self, widget_name, value, optional_size)
 	local definitions = ScannerDisplayViewExpeditionMapSettings.target_definitions
 
 	definitions[1].value = "content/ui/materials/backgrounds/scanner/" .. value
 
-	local widget_definition = UIWidget.create_definition(ScannerDisplayViewExpeditionMapSettings.target_definitions, "center_pivot", nil, ScannerDisplayViewExpeditionMapSettings.target_widget_size)
+	local widget_definition = UIWidget.create_definition(ScannerDisplayViewExpeditionMapSettings.target_definitions, "center_pivot", nil, optional_size or ScannerDisplayViewExpeditionMapSettings.target_widget_size)
 
 	return UIWidget.init(widget_name, widget_definition)
 end
@@ -159,18 +181,12 @@ local OPP_ID = {
 	"scanner_map_greek_23",
 	"scanner_map_greek_24",
 }
-local COLOR_HIDDEN = {
-	0,
-	0,
-	0,
-	0,
-}
 
 MinigameExpeditionMapView._update_target_widgets = function (self, widgets_by_name, navigation_handler)
 	local minigame = navigation_handler:minigame()
 	local cursor_widget = widgets_by_name.cursor
 
-	cursor_widget.style.frame.color = COLOR_HIDDEN
+	cursor_widget.visible = false
 
 	local function _copy_color(from, to)
 		for i = 1, #from do
@@ -178,17 +194,18 @@ MinigameExpeditionMapView._update_target_widgets = function (self, widgets_by_na
 		end
 	end
 
+	local function _copy_color_to_material_color(from, to)
+		to[4] = from[1] / 255
+		to[1] = from[2] / 255
+		to[2] = from[3] / 255
+		to[3] = from[4] / 255
+	end
+
 	local function _check_marked(level_index, widget)
 		local selected = minigame:selected_level()
 
 		if selected == level_index then
-			local player = minigame:local_player()
-			local player_slot = player and player.slot and player:slot()
-			local player_slot_color = player_slot and PLAYER_SLOT_COLORS[player_slot]
-
-			if player_slot_color then
-				cursor_widget.style.frame.color = player_slot_color
-			end
+			cursor_widget.visible = true
 
 			local target_offset = widget.offset
 			local offset = cursor_widget.offset
@@ -198,20 +215,48 @@ MinigameExpeditionMapView._update_target_widgets = function (self, widgets_by_na
 			offset[3] = target_offset[3] + 1
 		end
 
-		local color = widget.style.highlight.color
+		local highlight_color = widget.style.highlight.color
 
-		widget.style.title.color = color
+		widget.style.title.color = highlight_color
 
-		local player_slot_index = navigation_handler:player_slot_by_level_marked(level_index)
+		local marked_style = widget.style.marked
+		local marked_style_material_values = marked_style.material_values
+		local player_slots, num_player_slots = navigation_handler:player_slots_by_level_marked(level_index)
+		local is_marked = num_player_slots > 0
 
-		if player_slot_index then
-			_copy_color(PLAYER_SLOT_COLORS[player_slot_index], color)
+		marked_style.visible = is_marked
+
+		if is_marked then
+			local color_field_counter = 0
+
+			for player_slot, _ in pairs(player_slots) do
+				if color_field_counter >= 4 then
+					break
+				end
+
+				color_field_counter = color_field_counter + 1
+
+				local color_field_name = "part_" .. color_field_counter .. "_color"
+
+				_copy_color_to_material_color(PLAYER_SLOT_COLORS_BRIGHT[player_slot], marked_style_material_values[color_field_name])
+			end
+
+			marked_style_material_values.display_mode = color_field_counter
+
+			_copy_color(PLAYER_SLOT_COLORS_BRIGHT[1], highlight_color)
 		else
-			_copy_color(ScannerDisplayViewExpeditionMapSettings.target_base_color, color)
+			_copy_color(ScannerDisplayViewExpeditionMapSettings.target_base_color, highlight_color)
+
+			for j = 1, 3 do
+				local color_field_name = "part_" .. j .. "_color"
+				local color_value = marked_style_material_values[color_field_name]
+
+				color_value[4] = 0
+			end
 		end
 
 		if navigation_handler:is_level_completed(level_index) then
-			color[1] = 32
+			highlight_color[1] = 32
 		end
 	end
 
@@ -279,14 +324,58 @@ MinigameExpeditionMapView._update_target_widgets = function (self, widgets_by_na
 
 		_check_marked(level_index, widget)
 	end
+
+	local dropped_heavy_loot_units = self._loot_handler:dropped_heavy_loot_units()
+	local heavy_loot_widgets = self._heavy_loot_widgets
+
+	for index, unit in ipairs(dropped_heavy_loot_units) do
+		local widget = heavy_loot_widgets[index]
+
+		if not widget then
+			widget = self:_create_icon_widget(string.format("heavy_loot_%s", index), "scanner_map_luggable", ScannerDisplayViewExpeditionMapSettings.luggable_widget_size)
+			heavy_loot_widgets[index] = widget
+			widget.alpha_multiplier = ScannerDisplayViewExpeditionMapSettings.loot_alpha_multiplier or 1
+		end
+
+		local loot_world_position = Unit.world_position(unit, 1)
+		local offset = widget.offset
+
+		offset[1], offset[2] = self:_world_pos_to_map_pos(loot_world_position.x, loot_world_position.y, ScannerDisplayViewExpeditionMapSettings.luggable_widget_size)
+		offset[3] = 4
+	end
+
+	local dropped_loot_by_pickup_units = self._loot_handler:dropped_loot_by_pickup_units()
+	local pickup_units_loot_widgets = self._pickup_units_loot_widgets
+	local loot_pickup_unit_counter = 0
+
+	for unit, amount in pairs(dropped_loot_by_pickup_units) do
+		loot_pickup_unit_counter = loot_pickup_unit_counter + 1
+
+		local widget = pickup_units_loot_widgets[loot_pickup_unit_counter]
+
+		if not widget then
+			widget = self:_create_icon_widget(string.format("pickup_unit_loot_%s", loot_pickup_unit_counter), "scanner_map_loot_small")
+			pickup_units_loot_widgets[loot_pickup_unit_counter] = widget
+			widget.alpha_multiplier = ScannerDisplayViewExpeditionMapSettings.loot_alpha_multiplier or 1
+		end
+
+		local loot_world_position = Unit.world_position(unit, 1)
+		local offset = widget.offset
+
+		offset[1], offset[2] = self:_world_pos_to_map_pos(loot_world_position.x, loot_world_position.y, ScannerDisplayViewExpeditionMapSettings.target_widget_size)
+		offset[3] = 4
+	end
 end
 
-MinigameExpeditionMapView._create_player_widget = function (self, widget_name)
+MinigameExpeditionMapView._create_player_widget = function (self, widget_name, is_local_player)
+	local default_texture = is_local_player and "content/ui/materials/buttons/arrow_01" or "content/ui/materials/backgrounds/scanner/scanner_map_teammate"
+	local hogtied_texture = "content/ui/materials/backgrounds/scanner/scanner_map_teammate_respawn"
 	local definitions = {
 		{
 			pass_type = "rotated_texture",
 			style_id = "highlight",
-			value = "content/ui/materials/buttons/arrow_01",
+			value_id = "highlight",
+			value = default_texture,
 			style = {
 				angle = 0,
 				hdr = true,
@@ -299,6 +388,12 @@ MinigameExpeditionMapView._create_player_widget = function (self, widget_name)
 					0,
 				},
 			},
+			change_function = function (content, style, _, dt)
+				local is_hogtied = content.is_hogtied
+
+				content.highlight = is_hogtied and hogtied_texture or default_texture
+				style.angle = is_hogtied and 0 or style.angle
+			end,
 		},
 	}
 	local widget_definition = UIWidget.create_definition(definitions, "center_pivot", nil, ScannerDisplayViewExpeditionMapSettings.target_widget_size)
@@ -318,13 +413,15 @@ MinigameExpeditionMapView._update_player_widgets = function (self, camera_angle)
 	for unique_id, player in pairs(players) do
 		local player_unit = player.player_unit
 
-		if player_unit and ALIVE[player_unit] then
+		if player_unit and ALIVE[player_unit] and player:is_human_controlled() then
 			local widget = player_widgets[unique_id]
 
 			ACTIVE_PLAYERS[unique_id] = true
 
+			local is_local_player = player == local_player
+
 			if not widget then
-				widget = self:_create_player_widget(string.format("player_%s", unique_id))
+				widget = self:_create_player_widget(string.format("player_%s", unique_id), is_local_player)
 				player_widgets[unique_id] = widget
 			end
 
@@ -332,7 +429,7 @@ MinigameExpeditionMapView._update_player_widgets = function (self, camera_angle)
 			local offset = widget.offset
 			local angle
 
-			if player == local_player then
+			if is_local_player then
 				angle = math.pi / 2
 			else
 				angle = self:_rot_to_map_angle(Unit.world_rotation(player_unit, 1), camera_angle)
@@ -343,17 +440,22 @@ MinigameExpeditionMapView._update_player_widgets = function (self, camera_angle)
 			offset[3] = 5
 
 			local player_slot = player and player.slot and player:slot()
-			local player_slot_color = player_slot and PLAYER_SLOT_COLORS[player_slot]
+			local player_slot_color = player_slot and PLAYER_SLOT_COLORS_BRIGHT[player_slot]
+			local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+			local character_state_component = unit_data_extension:read_component("character_state")
+			local is_hogtied = PlayerUnitStatus.is_hogtied(character_state_component)
 
-			if player_slot_color then
-				widget.style.highlight.color = player_slot_color
-			elseif player_unit == self._owner_unit then
+			widget.content.is_hogtied = is_hogtied
+
+			if is_local_player then
 				widget.style.highlight.color = {
 					255,
 					255,
 					255,
 					150,
 				}
+			elseif player_slot_color then
+				widget.style.highlight.color = player_slot_color
 			else
 				widget.style.highlight.color = {
 					128,

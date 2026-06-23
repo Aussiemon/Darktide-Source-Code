@@ -2,6 +2,7 @@
 
 local CRIMES_ADAMANT = require("scripts/settings/character/crimes_adamant")
 local CRIMES_BROKER = require("scripts/settings/character/crimes_broker")
+local CRIMES_CRYPTIC = require("scripts/settings/character/crimes_cryptic")
 local CRIMES_OGRYN = require("scripts/settings/character/crimes_ogryn")
 local CRIMES_PSYKER = require("scripts/settings/character/crimes_psyker")
 local CRIMES_SHARED = require("scripts/settings/character/crimes_shared")
@@ -12,6 +13,7 @@ table.append(crime_options, CRIMES_PSYKER)
 table.append(crime_options, CRIMES_OGRYN)
 table.append(crime_options, CRIMES_ADAMANT)
 table.append(crime_options, CRIMES_BROKER)
+table.append(crime_options, CRIMES_CRYPTIC)
 
 local crimes = {}
 

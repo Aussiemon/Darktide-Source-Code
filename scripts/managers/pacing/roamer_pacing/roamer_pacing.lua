@@ -337,7 +337,7 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 					end
 				end
 
-				if density_type == "none" and #packs > 0 then
+				if density_type == "none" and #packs > 0 and pack_pick then
 					local num_none_packs = #packs
 					local random_add_step = pack_pick + self:_random(1, num_none_packs - 1)
 
@@ -1008,6 +1008,9 @@ local WEIGHTED_PROBABILITES = {}
 local MAX_ATTEMPTS = 100
 
 RoamerPacing._get_weighted_position_from_origin = function (self, zone, sub_zone, sub_zone_index, zone_index)
+	local roamer_group_origins = Managers.state.main_path:get_group_origins()
+	local current_group_origin = roamer_group_origins[zone.spawn_point_index]
+
 	if sub_zone_index ~= CURRENT_SUB_ZONE_INDEX or zone_index ~= CURRENT_ZONE_INDEX then
 		CURRENT_ZONE_INDEX = zone_index
 		CURRENT_SUB_ZONE_INDEX = sub_zone_index
@@ -1018,10 +1021,23 @@ RoamerPacing._get_weighted_position_from_origin = function (self, zone, sub_zone
 		table.clear(SORTED_WEIGHTS.weight_lookup)
 		table.clear(SORTED_WEIGHTS.weights)
 
-		local roamer_group_origins = Managers.state.main_path:get_group_origins()
-		local current_group_origin = roamer_group_origins[zone.spawn_point_index]
-		local current_origin_position = current_group_origin:unbox()
+		local current_origin_position
 		local num_sub_zone = #sub_zone
+
+		if current_group_origin then
+			current_origin_position = current_group_origin:unbox()
+		else
+			local middle_position = Vector3(0, 0, 0)
+
+			for i = 1, num_sub_zone do
+				local current_sub_zone = sub_zone[i]
+				local current_sub_zone_position = current_sub_zone.position:unbox()
+
+				middle_position = middle_position + current_sub_zone_position
+			end
+
+			current_origin_position = middle_position / num_sub_zone
+		end
 
 		for i = 1, num_sub_zone do
 			local current_sub_zone = sub_zone[i]

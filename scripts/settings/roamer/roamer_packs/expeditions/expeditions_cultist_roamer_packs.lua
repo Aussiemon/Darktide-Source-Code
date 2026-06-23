@@ -5,6 +5,7 @@ local roamer_rifleman = "cultist_assault"
 local elite_shocktrooper = "cultist_shocktrooper"
 local elite_berzerker = "cultist_berzerker"
 local elite_gunner = "cultist_gunner"
+local roamer_vanguard = "cultist_vanguard"
 local roamer_packs = {
 	expeditions_cultist_melee_high = {
 		{
@@ -31,7 +32,7 @@ local roamer_packs = {
 		{
 			weight = 2,
 			breeds = {
-				"chaos_ogryn_bulwark",
+				roamer_vanguard,
 				elite_berzerker,
 				roamer_melee,
 				roamer_melee,
@@ -53,7 +54,7 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
-				"chaos_ogryn_bulwark",
+				roamer_vanguard,
 				roamer_melee,
 				roamer_melee,
 			},
@@ -79,7 +80,7 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
-				"chaos_ogryn_bulwark",
+				roamer_vanguard,
 				roamer_melee,
 				roamer_melee,
 			},
@@ -94,7 +95,7 @@ local roamer_packs = {
 		{
 			weight = 0.5,
 			breeds = {
-				"chaos_ogryn_bulwark",
+				roamer_vanguard,
 				roamer_melee,
 				roamer_melee,
 			},
@@ -324,7 +325,7 @@ local roamer_packs = {
 		{
 			weight = 2,
 			breeds = {
-				"chaos_ogryn_bulwark",
+				roamer_vanguard,
 				roamer_melee,
 				roamer_melee,
 				elite_berzerker,
@@ -333,7 +334,7 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
-				"chaos_ogryn_bulwark",
+				roamer_vanguard,
 				roamer_melee,
 				roamer_melee,
 			},
@@ -349,7 +350,7 @@ local roamer_packs = {
 		{
 			weight = 0.5,
 			breeds = {
-				"chaos_ogryn_bulwark",
+				roamer_vanguard,
 				roamer_melee,
 				roamer_melee,
 			},

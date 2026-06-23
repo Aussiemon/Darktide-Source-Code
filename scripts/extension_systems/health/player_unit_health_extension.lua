@@ -9,7 +9,7 @@ local proc_events = BuffSettings.proc_events
 local buff_keywords = BuffSettings.keywords
 local NETWORK_CONSTANT_HEALTH_SMALL = NetworkConstants.health_small
 local REPORT_TIME = 1
-local PlayerUnitHealthExtension = class("PlayerUnitHealthExtension")
+local PlayerUnitHealthExtension = class("PlayerUnitHealthExtension", "HealthExtensionBase")
 
 PlayerUnitHealthExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
 	self._unit = unit
@@ -402,6 +402,7 @@ PlayerUnitHealthExtension.was_hit_by_critical_hit_this_render_frame = function (
 end
 
 PlayerUnitHealthExtension.kill = function (self)
+	PlayerUnitHealthExtension.super.kill(self)
 	Managers.event:trigger("unit_died", self._unit)
 
 	HEALTH_ALIVE[self._unit] = nil

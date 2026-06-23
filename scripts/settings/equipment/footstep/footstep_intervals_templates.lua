@@ -30,6 +30,14 @@ footstep_intervals_templates.pocketable_ogryn = {
 	sprinting = 0.5,
 	walking = 0.55,
 }
+footstep_intervals_templates.arc_rifle = {
+	crouch_walking = 0.5,
+	crouch_walking_alternate_fire = 0.5,
+	sprinting = 0.39,
+	sprinting_overtime = 0.42,
+	walking = 0.4,
+	walking_alternate_fire = 0.45,
+}
 footstep_intervals_templates.bolter = {
 	crouch_walking = 0.61,
 	crouch_walking_alternate_fire = 0.77,

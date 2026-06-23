@@ -8,9 +8,7 @@ local OptionsViewSettings = require("scripts/ui/views/options_view/options_view_
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
-local OptionsUtilities = require("scripts/utilities/ui/options")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local InputUtils = require("scripts/managers/input/input_utils")
 local CATEGORIES_GRID = 1
 local SETTINGS_GRID = 2
 local OptionsView = class("OptionsView", "BaseView")
@@ -270,7 +268,6 @@ OptionsView._setup_offscreen_gui = function (self)
 end
 
 OptionsView._setup_content_widgets = function (self, content, scenegraph_id, callback_name)
-	local definitions = self._definitions
 	local widget_definitions = {}
 	local widgets = {}
 	local alignment_list = {}
@@ -289,8 +286,6 @@ OptionsView._setup_content_widgets = function (self, content, scenegraph_id, cal
 			local pass_template = pass_template_function and pass_template_function(self, entry, size) or template.pass_template
 
 			if pass_template and not widget_definitions[widget_type] then
-				local scenegraph_definition = definitions.scenegraph_definition
-
 				widget_definitions[widget_type] = UIWidget.create_definition(pass_template, scenegraph_id, nil, size)
 			end
 
@@ -434,24 +429,10 @@ OptionsView.update = function (self, dt, t, input_service, view_data)
 
 	if self:_handling_keybinding() then
 		if not drawing_view or not using_cursor_navigation then
-			self:close_keybind_popup(true)
+			self:close_keybind_popup()
 		end
 
 		input_service = input_service:null_service()
-	end
-
-	self:_handle_keybind_rebind(dt, t, input_service)
-
-	local close_keybind_popup_duration = self._close_keybind_popup_duration
-
-	if close_keybind_popup_duration then
-		if close_keybind_popup_duration < 0 then
-			self._close_keybind_popup_duration = nil
-
-			self:close_keybind_popup(true)
-		else
-			self._close_keybind_popup_duration = close_keybind_popup_duration - dt
-		end
 	end
 
 	local grid_length = self._category_content_grid:length()
@@ -1033,90 +1014,62 @@ OptionsView._create_settings_widget_from_config = function (self, config, catego
 	end
 end
 
-OptionsView._handle_keybind_rebind = function (self, dt, t, input_service)
-	if self._handling_keybind then
-		local input_manager = Managers.input
-		local results = input_manager:key_watch_result()
-
-		if results then
-			local entry = self._active_keybind_entry
-			local widget = self._active_keybind_widget
-			local presentation_string = InputUtils.localized_string_from_key_info(results)
-			local service_type = entry.service_type
-			local alias_name = entry.alias_name
-			local value = entry.value
-			local can_close = entry.on_activated(results, value)
-
-			if can_close then
-				self:close_keybind_popup()
-			else
-				Managers.input:stop_key_watch()
-
-				local devices = entry.devices
-
-				Managers.input:start_key_watch(devices)
-			end
-		end
-	end
-end
-
 OptionsView._handling_keybinding = function (self)
-	return self._handling_keybind or self._close_keybind_popup_duration ~= nil
+	return self._keybind_popup
 end
 
 OptionsView.show_keybind_popup = function (self, widget, entry)
 	if not self:_handling_keybinding() then
-		self._active_keybind_entry = entry
-		self._active_keybind_widget = widget
-
 		local layer = 100
 		local reference_name = "keybind_popup"
 
 		self._keybind_popup = self:_add_element(ViewElementKeybindPopup, reference_name, layer)
 
-		local display_name = self:_localize(entry.display_name or "loc_settings_option_unavailable")
+		local keys_list = {}
+		local category = self._selected_category
+		local settings_data = self._settings_category_widgets[category]
+		local active_key_index
 
-		self._keybind_popup:set_action_text(display_name)
+		if settings_data then
+			for i = 1, #settings_data do
+				local setting = settings_data[i].widget.content.entry
 
-		if entry.cancel_keys then
-			local input_text = entry.cancel_keys[1]
-			local description_text = Localize("loc_setting_keybinding_press_new_button", true, {
-				cancel_input = InputUtils.key_axis_locale(input_text),
-			})
+				if setting then
+					local new_index = #keys_list + 1
 
-			self._keybind_popup:set_description_text(description_text)
+					keys_list[new_index] = {
+						alias = setting.alias,
+						alias_name = setting.alias_name,
+						service_type = setting.service_type,
+						display_name = setting.display_name,
+						devices = setting.devices,
+					}
+
+					if setting.alias_name == entry.alias_name then
+						active_key_index = new_index
+					end
+				end
+			end
 		end
 
-		local value = entry.get_function(entry)
-		local devices = entry.devices
-		local value_text = value and InputUtils.localized_string_from_key_info(value) or self:_localize("loc_keybind_unassigned")
+		self._keybind_popup:setup_popup(keys_list, active_key_index, function (new_key)
+			if new_key then
+				entry.on_activated(new_key)
+			end
 
-		self._keybind_popup:set_value_text(value_text)
-		Managers.input:start_key_watch(devices)
-
-		self._handling_keybind = true
-
+			self:close_keybind_popup()
+		end)
 		self:set_can_exit(false)
 	end
 end
 
-OptionsView.close_keybind_popup = function (self, force_close)
-	if force_close then
-		Managers.input:stop_key_watch()
+OptionsView.close_keybind_popup = function (self)
+	local reference_name = "keybind_popup"
 
-		local reference_name = "keybind_popup"
+	self._keybind_popup = nil
 
-		self._keybind_popup = nil
-
-		self:_remove_element(reference_name)
-		self:set_can_exit(true, true)
-	else
-		self._close_keybind_popup_duration = 0.2
-	end
-
-	self._handling_keybind = false
-	self._active_keybind_entry = nil
-	self._active_keybind_widget = nil
+	self:_remove_element(reference_name)
+	self:set_can_exit(true, true)
 end
 
 OptionsView._set_warning_text = function (self)

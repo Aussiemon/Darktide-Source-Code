@@ -4,6 +4,12 @@ local BreedActions = require("scripts/settings/breed/breed_actions")
 local action_data = BreedActions.renegade_plasma_gunner
 local COMBAT = {
 	"BtSelectorNode",
+	condition_args = {
+		combat_ranges = {
+			close = true,
+			far = true,
+		},
+	},
 	{
 		"BtRandomUtilityNode",
 		{
@@ -23,7 +29,7 @@ local COMBAT = {
 		},
 		name = "close_combat_utility",
 	},
-	condition = "is_aggroed",
+	condition = "is_aggroed_in_combat_range",
 	name = "close_combat",
 }
 local MELEE_COMBAT = {
@@ -86,7 +92,9 @@ local DISABLE = {
 	{
 		"BtDisableAction",
 		condition = "is_minion_disabled",
+		exit_state = "base",
 		name = "disable",
+		state = "disabled",
 		action_data = action_data.disable,
 	},
 	name = "disable_actions",
@@ -95,15 +103,17 @@ local behavior_tree = {
 	"BtSelectorNode",
 	{
 		"BtDieAction",
-		condition = "is_dead",
 		name = "death",
+		state = "dead",
 		action_data = action_data.death,
 	},
 	DISABLE,
 	{
 		"BtExitSpawnerAction",
 		condition = "is_exiting_spawner",
+		exit_state = "base",
 		name = "exit_spawner",
+		state = "exiting_spawner",
 		action_data = action_data.exit_spawner,
 	},
 	{

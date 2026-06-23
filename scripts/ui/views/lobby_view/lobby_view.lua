@@ -1,11 +1,11 @@
 ﻿-- chunkname: @scripts/ui/views/lobby_view/lobby_view.lua
 
-local definition_path = "scripts/ui/views/lobby_view/lobby_view_definitions"
+require("scripts/ui/views/base_view")
+
 local Breeds = require("scripts/settings/breed/breeds")
 local CharacterSheet = require("scripts/utilities/character_sheet")
 local Circumstances = require("scripts/settings/circumstance/circumstance_templates")
 local ContentBlueprints = require("scripts/ui/views/lobby_view/lobby_view_content_blueprints")
-local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
 local LobbyViewSettings = require("scripts/ui/views/lobby_view/lobby_view_settings")
 local LobbyViewTestify = GameParameters.testify and require("scripts/ui/views/lobby_view/lobby_view_testify")
 local MasterItems = require("scripts/backend/master_items")
@@ -15,18 +15,19 @@ local ProfileUtils = require("scripts/utilities/profile_utils")
 local TalentBuilderViewSettings = require("scripts/ui/views/talent_builder_view/talent_builder_view_settings")
 local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
 local TaskbarFlash = require("scripts/utilities/taskbar_flash")
-local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local UISettings = require("scripts/settings/ui/ui_settings")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
-local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
+local UiProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
+local UiRenderer = require("scripts/managers/ui/ui_renderer")
+local UiSettings = require("scripts/settings/ui/ui_settings")
+local UiSoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UiWidget = require("scripts/managers/ui/ui_widget")
+local UiWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
+local UiWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementWeaponStats = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats")
 local Zones = require("scripts/settings/zones/zones")
 local INVENTORY_VIEW_NAME = "inventory_background_view"
 local SOCIAL_VIEW_NAME = "social_menu_view"
+local DEFINITION_PATH = "scripts/ui/views/lobby_view/lobby_view_definitions"
 local loadout_presentation_order = {
 	"ability",
 	"blitz",
@@ -88,7 +89,7 @@ LobbyView.init = function (self, settings, context)
 	self._slot_changes = false
 	self._use_gamepad_tooltip_navigation = false
 
-	local definitions = require(definition_path)
+	local definitions = require(DEFINITION_PATH)
 	local level, dynamic_level_package = self:select_target_level()
 
 	self._level = level
@@ -257,13 +258,12 @@ LobbyView._initialize_background_world = function (self)
 
 	local max_spawn_slots = 4
 
-	for i = 1, max_spawn_slots do
-		local event_name_human = "event_register_lobby_spawn_point_human_" .. i
-		local event_name_ogryn = "event_register_lobby_spawn_point_ogryn_" .. i
-		local event_name_companion = "event_register_lobby_spawn_point_companion_" .. i
+	for ii = 1, max_spawn_slots do
+		local event_name_human = string.format("event_register_lobby_spawn_point_human_%d", ii)
+		local event_name_ogryn = string.format("event_register_lobby_spawn_point_ogryn_%d", ii)
 
 		self[event_name_human] = function (self, spawn_unit)
-			self._human_spawn_point_units[i] = spawn_unit
+			self._human_spawn_point_units[ii] = spawn_unit
 
 			self:_unregister_event(event_name_human)
 
@@ -274,7 +274,7 @@ LobbyView._initialize_background_world = function (self)
 			end
 		end
 		self[event_name_ogryn] = function (self, spawn_unit)
-			self._ogryn_spawn_point_units[i] = spawn_unit
+			self._ogryn_spawn_point_units[ii] = spawn_unit
 
 			self:_unregister_event(event_name_ogryn)
 
@@ -284,22 +284,16 @@ LobbyView._initialize_background_world = function (self)
 				self:_sync_votes()
 			end
 		end
-		self[event_name_companion] = function (self, spawn_unit)
-			self._companion_spawn_point_units[i] = spawn_unit
-
-			self:_unregister_event(event_name_companion)
-		end
 
 		self:_register_event(event_name_human)
 		self:_register_event(event_name_ogryn)
-		self:_register_event(event_name_companion)
 	end
 
 	local world_name = LobbyViewSettings.world_name
 	local world_layer = LobbyViewSettings.world_layer
 	local world_timer_name = LobbyViewSettings.timer_name
 
-	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
+	self._world_spawner = UiWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
 
 	local level_name = self._level.level_name
 
@@ -419,9 +413,9 @@ LobbyView._setup_menu_list = function (self)
 			local current_ready_status = parent:_own_player_ready_status()
 
 			if current_ready_status == false then
-				self:_play_sound(UISoundEvents.mission_lobby_ready_up)
+				self:_play_sound(UiSoundEvents.mission_lobby_ready_up)
 			else
-				self:_play_sound(UISoundEvents.mission_lobby_unready)
+				self:_play_sound(UiSoundEvents.mission_lobby_unready)
 			end
 
 			parent:_set_own_player_ready_status(not current_ready_status)
@@ -607,8 +601,8 @@ end
 
 LobbyView._setup_menu_list_entries = function (self, config)
 	if self._menu_list_widgets then
-		for i = 1, #self._menu_list_widgets do
-			local widget = self._menu_list_widgets[i]
+		for ii = 1, #self._menu_list_widgets do
+			local widget = self._menu_list_widgets[ii]
 
 			self:_unregister_widget_name(widget.name)
 		end
@@ -616,8 +610,8 @@ LobbyView._setup_menu_list_entries = function (self, config)
 
 	local entries = {}
 
-	for i = 1, #config do
-		local entry_config = config[i]
+	for ii = 1, #config do
+		local entry_config = config[ii]
 		local display_name = entry_config.display_name
 		local entry = {
 			display_name = display_name,
@@ -638,7 +632,7 @@ LobbyView._setup_menu_list_entries = function (self, config)
 	local grid_spacing = LobbyViewSettings.grid_spacing
 	local grid_direction = "up"
 
-	self._menu_list_grid = UIWidgetGrid:new(self._menu_list_widgets, self._menu_alignment_list, self._ui_scenegraph, grid_scenegraph_id, grid_direction, grid_spacing, nil, true)
+	self._menu_list_grid = UiWidgetGrid:new(self._menu_list_widgets, self._menu_alignment_list, self._ui_scenegraph, grid_scenegraph_id, grid_direction, grid_spacing, nil, true)
 end
 
 LobbyView._setup_list_content_widgets = function (self, content, scenegraph_id, callback_name)
@@ -648,8 +642,8 @@ LobbyView._setup_list_content_widgets = function (self, content, scenegraph_id, 
 	local alignment_list = {}
 	local amount = #content
 
-	for i = 1, amount do
-		local entry = content[i]
+	for ii = 1, amount do
+		local entry = content[ii]
 		local widget_type = entry.widget_type
 		local widget
 		local template = ContentBlueprints[widget_type]
@@ -657,15 +651,13 @@ LobbyView._setup_list_content_widgets = function (self, content, scenegraph_id, 
 		local pass_template = template.pass_template
 
 		if pass_template and not widget_definitions[widget_type] then
-			local scenegraph_definition = definitions.scenegraph_definition
-
-			widget_definitions[widget_type] = UIWidget.create_definition(pass_template, scenegraph_id, nil, size)
+			widget_definitions[widget_type] = UiWidget.create_definition(pass_template, scenegraph_id, nil, size)
 		end
 
 		local widget_definition = widget_definitions[widget_type]
 
 		if widget_definition then
-			local name = scenegraph_id .. "_widget_" .. i
+			local name = scenegraph_id .. "_widget_" .. ii
 
 			widget = self:_create_widget(name, widget_definition)
 
@@ -711,33 +703,32 @@ LobbyView._setup_spawn_slots = function (self)
 	local definitions = self._definitions
 	local panel_definition = definitions.panel_definition
 	local loading_definition = definitions.loading_definition
-	local player_index = 1
 	local spawn_slots = {}
 	local num_players = LobbyViewSettings.max_player_slots
 
-	for i = 1, num_players do
-		local profile_spawner = UIProfileSpawner:new("LobbyView_" .. i, world, camera, unit_spawner)
+	for ii = 1, num_players do
+		local profile_spawner = UiProfileSpawner:new("LobbyView_" .. ii, world, camera, unit_spawner)
 
-		profile_spawner:disable_rotation_input()
+		profile_spawner:disable_rotation_input(true)
 
-		for j = 1, #ignored_slots do
-			local slot_name = ignored_slots[j]
+		for jj = 1, #ignored_slots do
+			local slot_name = ignored_slots[jj]
 
 			profile_spawner:ignore_slot(slot_name)
 		end
 
-		local panel_widget_name = "panel_" .. i
-		local loading_widget_name = "loading_" .. i
-		local default_spawn_point_unit = self._human_spawn_point_units[i]
+		local panel_widget_name = "panel_" .. ii
+		local loading_widget_name = "loading_" .. ii
+		local default_spawn_point_unit = self._human_spawn_point_units[ii]
 		local initial_position = Unit.world_position(default_spawn_point_unit, 1)
 		local spawn_slot = {
 			occupied = false,
 			ready = false,
-			index = i,
+			index = ii,
 			profile_spawner = profile_spawner,
-			ogryn_spawn_point_unit = self._ogryn_spawn_point_units[i],
-			human_spawn_point_unit = self._human_spawn_point_units[i],
-			companion_spawn_point_unit = self._companion_spawn_point_units[i],
+			ogryn_spawn_point_unit = self._ogryn_spawn_point_units[ii],
+			human_spawn_point_unit = self._human_spawn_point_units[ii],
+			companion_spawn_point_unit = self._companion_spawn_point_units[ii],
 			boxed_initial_position = Vector3.to_array(initial_position),
 			panel_widget = self:_create_widget(panel_widget_name, panel_definition),
 			loading_widget = self:_create_widget(loading_widget_name, loading_definition),
@@ -745,9 +736,9 @@ LobbyView._setup_spawn_slots = function (self)
 			talent_widgets = {},
 		}
 
-		spawn_slots[i] = spawn_slot
+		spawn_slots[ii] = spawn_slot
 
-		local widget_offset_x = 300 + (i - 1) * 320
+		local widget_offset_x = 300 + (ii - 1) * 320
 
 		spawn_slot.panel_widget.offset[1] = widget_offset_x
 		spawn_slot.loading_widget.offset[1] = widget_offset_x
@@ -762,8 +753,8 @@ LobbyView._destroy_spawn_slots = function (self)
 	local spawn_slots = self._spawn_slots
 
 	if spawn_slots then
-		for i = 1, #spawn_slots do
-			local slot = spawn_slots[i]
+		for ii = 1, #spawn_slots do
+			local slot = spawn_slots[ii]
 			local profile_spawner = slot.profile_spawner
 
 			profile_spawner:destroy()
@@ -882,8 +873,8 @@ end
 LobbyView._update_player_slots = function (self, dt, t, input_service)
 	local spawn_slots = self._spawn_slots
 
-	for i = 1, #spawn_slots do
-		local slot = spawn_slots[i]
+	for ii = 1, #spawn_slots do
+		local slot = spawn_slots[ii]
 
 		if slot.occupied then
 			local profile_spawner = slot.profile_spawner
@@ -896,8 +887,8 @@ end
 LobbyView._update_menu_list = function (self, dt, t)
 	local menu_list_widgets = self._menu_list_widgets
 
-	for i = 1, #menu_list_widgets do
-		local widget = menu_list_widgets[i]
+	for ii = 1, #menu_list_widgets do
+		local widget = menu_list_widgets[ii]
 		local entry = widget.entry
 		local update_function = entry.update_function
 
@@ -911,11 +902,10 @@ LobbyView._on_navigation_input_changed = function (self)
 	LobbyView.super._on_navigation_input_changed(self)
 	self:_setup_menu_list()
 
-	local service_type = DefaultViewInputSettings.service_type
-	local is_mouse = self._using_cursor_navigation
+	local using_gamepad = not self._using_cursor_navigation
 
 	if self._loadout_widgets_for_navigation then
-		if not self._using_cursor_navigation then
+		if using_gamepad then
 			self._use_gamepad_tooltip_navigation = false
 			self._loadout_widget_navigation_index = nil
 		else
@@ -933,11 +923,11 @@ LobbyView._get_previous_occupied_slot_index = function (self, from_index)
 		return
 	end
 
-	for i = from_index - 1, 1, -1 do
-		local slot = spawn_slots[i]
+	for ii = from_index - 1, 1, -1 do
+		local slot = spawn_slots[ii]
 
 		if slot.occupied then
-			return i
+			return ii
 		end
 	end
 end
@@ -951,11 +941,11 @@ LobbyView._get_next_occupied_slot_index = function (self, from_index)
 		return
 	end
 
-	for i = from_index + 1, #spawn_slots do
-		local slot = spawn_slots[i]
+	for ii = from_index + 1, #spawn_slots do
+		local slot = spawn_slots[ii]
 
 		if slot.occupied then
-			return i
+			return ii
 		end
 	end
 end
@@ -1001,14 +991,14 @@ LobbyView._reset_spawn_slot = function (self, slot)
 	self:_unload_portrait_icon(slot)
 end
 
-LobbyView._get_free_slot_id = function (self)
+LobbyView._next_free_slot_id = function (self)
 	local spawn_slots = self._spawn_slots
 
-	for i = 1, #spawn_slots do
-		local slot = spawn_slots[i]
+	for ii = 1, #spawn_slots do
+		local slot = spawn_slots[ii]
 
 		if not slot.occupied then
-			return i
+			return ii
 		end
 	end
 end
@@ -1016,13 +1006,29 @@ end
 LobbyView._player_slot_id = function (self, unique_id)
 	local spawn_slots = self._spawn_slots
 
-	for i = 1, #spawn_slots do
-		local slot = spawn_slots[i]
+	for ii = 1, #spawn_slots do
+		local slot = spawn_slots[ii]
 
 		if slot.occupied and slot.unique_id == unique_id then
-			return i
+			return ii
 		end
 	end
+end
+
+local function _spawn_point_unit(profile, spawn_slot)
+	local archetype_settings = profile.archetype
+	local breed_name = archetype_settings.breed
+	local breed = Breeds[breed_name]
+	local body_size = breed.body_size
+	local spawn_point_unit
+
+	if body_size == "ogryn_sized" then
+		spawn_point_unit = spawn_slot.ogryn_spawn_point_unit
+	else
+		spawn_point_unit = spawn_slot.human_spawn_point_unit
+	end
+
+	return spawn_point_unit
 end
 
 LobbyView._assign_player_to_slot = function (self, player, slot)
@@ -1030,9 +1036,11 @@ LobbyView._assign_player_to_slot = function (self, player, slot)
 	local profile = player:profile()
 	local archetype_settings = profile.archetype
 	local breed_name = archetype_settings.breed
+	local breed = Breeds[breed_name]
+	local body_size = breed.body_size
 	local spawn_point_unit
 
-	if breed_name == "ogryn" then
+	if body_size == "ogryn_sized" then
 		spawn_point_unit = slot.ogryn_spawn_point_unit
 	else
 		spawn_point_unit = slot.human_spawn_point_unit
@@ -1040,31 +1048,29 @@ LobbyView._assign_player_to_slot = function (self, player, slot)
 
 	local spawn_position = Unit.world_position(spawn_point_unit, 1)
 	local spawn_rotation = Unit.world_rotation(spawn_point_unit, 1)
-	local companion_spawn_position = slot.companion_spawn_point_unit and Unit.world_position(slot.companion_spawn_point_unit, 1)
-	local companion_spawn_rotation = slot.companion_spawn_point_unit and Unit.world_rotation(slot.companion_spawn_point_unit, 1)
-	local profile_size = profile.personal and profile.personal.character_height
-	local spawn_scale = profile_size and Vector3(profile_size, profile_size, profile_size)
-	local profile_spawner = slot.profile_spawner
-	local breed_settings = Breeds[breed_name]
-	local inventory_state_machine = breed_settings.inventory_state_machine
+	local inventory_state_machine = archetype_settings.inventory_state_machine
 	local slot_name = slot.default_slot
 	local slot_item = profile.loadout[slot_name]
 	local item_inventory_animation_event = slot_item and slot_item.inventory_animation_event or "inventory_idle_default"
 	local has_companion, companion_breed_name = ProfileUtils.has_companion(profile)
 	local companion_state_machine
 
-	if companion_breed_name then
-		local breed_settings = Breeds[companion_breed_name]
+	if has_companion then
+		local companion_breed_settings = Breeds[companion_breed_name]
 
-		companion_state_machine = breed_settings.hub_state_machine
+		companion_state_machine = companion_breed_settings.inventory_state_machine
 	end
 
 	local companion_data = {
 		animation_event = "pregame_entry",
-		position = companion_spawn_position,
-		rotation = companion_spawn_rotation,
+		ignore = false,
+		position = spawn_position,
+		rotation = spawn_rotation,
 		state_machine = companion_state_machine,
 	}
+	local profile_size = profile.personal and profile.personal.character_height
+	local spawn_scale = profile_size and Vector3(profile_size, profile_size, profile_size)
+	local profile_spawner = slot.profile_spawner
 
 	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, spawn_scale, inventory_state_machine, item_inventory_animation_event, nil, nil, nil, nil, nil, nil, companion_data)
 	profile_spawner:toggle_companion(has_companion)
@@ -1122,7 +1128,7 @@ LobbyView._cb_set_player_frame = function (self, widget, item)
 
 		widget.content.character_portrait = item.icon_material
 	else
-		widget.content.character_portrait = UISettings.portrait_frame_default_material
+		widget.content.character_portrait = UiSettings.portrait_frame_default_material
 		material_values.portrait_frame_texture = item.icon
 	end
 end
@@ -1194,8 +1200,8 @@ end
 LobbyView._unload_all_portrait_icon = function (self)
 	local spawn_slots = self._spawn_slots
 
-	for i = 1, #spawn_slots do
-		local slot = spawn_slots[i]
+	for ii = 1, #spawn_slots do
+		local slot = spawn_slots[ii]
 
 		if slot.icon_load_id then
 			self:_unload_portrait_icon(slot)
@@ -1206,7 +1212,7 @@ end
 LobbyView._unload_portrait_icon = function (self, slot)
 	local ui_renderer = self._ui_renderer
 
-	UIWidget.set_visible(slot.panel_widget, ui_renderer, false)
+	UiWidget.set_visible(slot.panel_widget, ui_renderer, false)
 
 	local icon_load_id = slot.icon_load_id
 	local frame_load_id = slot.frame_load_id
@@ -1269,7 +1275,7 @@ LobbyView._cb_unset_player_icon = function (self, slot)
 end
 
 LobbyView._get_player_portrait_frame_material = function (self, profile)
-	local frame_material = UISettings.portrait_frame_default_material
+	local frame_material = UiSettings.portrait_frame_default_material
 
 	if profile and type(profile) == "table" then
 		local loadout = profile.loadout
@@ -1301,12 +1307,12 @@ LobbyView._sync_player = function (self, unique_id, player)
 	local slot = spawn_slots[slot_id]
 
 	if not slot_id then
-		slot_id = self:_get_free_slot_id()
+		slot_id = self:_next_free_slot_id()
 		slot = spawn_slots[slot_id]
 
 		if slot then
 			if self._first_player_added then
-				self:_play_sound(UISoundEvents.mission_lobby_matchmade_players_join)
+				self:_play_sound(UiSoundEvents.mission_lobby_matchmade_players_join)
 			else
 				self._first_player_added = true
 			end
@@ -1324,8 +1330,8 @@ LobbyView._update_synced_slots = function (self)
 	local spawn_slots = self._spawn_slots
 	local num_slots = #spawn_slots
 
-	for i = 1, num_slots do
-		local slot = spawn_slots[i]
+	for ii = 1, num_slots do
+		local slot = spawn_slots[ii]
 
 		if not slot.synced and slot.occupied then
 			self:_reset_spawn_slot(slot)
@@ -1344,15 +1350,12 @@ LobbyView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 	LobbyView.super._draw_widgets(self, dt, t, input_service, ui_renderer)
 
 	if self._world_initialized then
-		local camera = self._world_spawner:camera()
-		local inverse_scale = ui_renderer.inverse_scale
 		local spawn_slots = self._spawn_slots
 		local num_slots = #spawn_slots
 		local hovered_slot, hovered_item, hovered_talent
 
-		for i = 1, num_slots do
-			local is_even = i % 2 == 0
-			local slot = spawn_slots[i]
+		for ii = 1, num_slots do
+			local slot = spawn_slots[ii]
 			local occupied = slot.occupied
 			local still_alive = not not Managers.player:player_from_unique_id(slot.unique_id)
 			local boxed_initial_position = slot.boxed_initial_position
@@ -1362,14 +1365,14 @@ LobbyView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 			local loading_widget = slot.loading_widget
 			local widget_offset_x = slot.panel_widget.offset[1] - 30
 
-			for f = 1, #slot.weapon_widgets do
-				local weapon_widget = slot.weapon_widgets[f]
+			for jj = 1, #slot.weapon_widgets do
+				local weapon_widget = slot.weapon_widgets[jj]
 
 				weapon_widget.offset[1] = weapon_widget.original_offset[1] + widget_offset_x + 35
 			end
 
-			for f = 1, #slot.talent_widgets do
-				local talent_widget = slot.talent_widgets[f]
+			for jj = 1, #slot.talent_widgets do
+				local talent_widget = slot.talent_widgets[jj]
 
 				talent_widget.offset[1] = talent_widget.original_offset[1] + widget_offset_x + 35
 			end
@@ -1377,14 +1380,14 @@ LobbyView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 			local profile_spawner = slot.profile_spawner
 
 			if occupied and profile_spawner:spawned() then
-				profile_spawner:set_position(position)
-				UIWidget.draw(panel_widget, ui_renderer)
+				profile_spawner:set_character_position(position)
+				UiWidget.draw(panel_widget, ui_renderer)
 
 				if self._show_weapons then
-					for f = 1, #slot.weapon_widgets do
-						local weapon_widget = slot.weapon_widgets[f]
+					for jj = 1, #slot.weapon_widgets do
+						local weapon_widget = slot.weapon_widgets[jj]
 
-						UIWidget.draw(weapon_widget, ui_renderer)
+						UiWidget.draw(weapon_widget, ui_renderer)
 
 						local is_hover = not hovered_slot and weapon_widget.content.hotspot and (weapon_widget.content.hotspot.is_hover or weapon_widget.content.hotspot.is_selected)
 
@@ -1398,10 +1401,10 @@ LobbyView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 						end
 					end
 				else
-					for f = 1, #slot.talent_widgets do
-						local talent_widget = slot.talent_widgets[f]
+					for jj = 1, #slot.talent_widgets do
+						local talent_widget = slot.talent_widgets[jj]
 
-						UIWidget.draw(talent_widget, ui_renderer)
+						UiWidget.draw(talent_widget, ui_renderer)
 
 						local is_hover = not hovered_slot and talent_widget.content.hotspot and (talent_widget.content.hotspot.is_hover or talent_widget.content.hotspot.is_selected)
 
@@ -1418,14 +1421,14 @@ LobbyView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 							hovered_talent = {
 								talent = loadout.talent,
 								loadout_id = loadout_id,
-								slot = i,
+								slot = ii,
 							}
 							self._hovered_tooltip_panel_widget = panel_widget
 						end
 					end
 				end
 			else
-				UIWidget.draw(loading_widget, ui_renderer)
+				UiWidget.draw(loading_widget, ui_renderer)
 			end
 		end
 
@@ -1455,11 +1458,11 @@ LobbyView._draw_menu_list_grid = function (self, dt, t, input_service)
 	local ui_renderer = self._ui_renderer
 	local ui_scenegraph = self._ui_scenegraph
 
-	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
+	UiRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
 
 	if widgets then
-		for i = 1, #widgets do
-			local widget = widgets[i]
+		for ii = 1, #widgets do
+			local widget = widgets[ii]
 			local draw = widget ~= self._focused_settings_widget
 
 			if draw then
@@ -1468,13 +1471,13 @@ LobbyView._draw_menu_list_grid = function (self, dt, t, input_service)
 				end
 
 				if grid:is_widget_visible(widget) then
-					UIWidget.draw(widget, ui_renderer)
+					UiWidget.draw(widget, ui_renderer)
 				end
 			end
 		end
 	end
 
-	UIRenderer.end_pass(ui_renderer)
+	UiRenderer.end_pass(ui_renderer)
 end
 
 LobbyView._convert_world_to_screen_position = function (self, camera, world_position)
@@ -1488,9 +1491,9 @@ end
 LobbyView._set_slot_focused_by_index = function (self, index)
 	local spawn_slots = self._spawn_slots
 
-	for i = 1, #spawn_slots do
-		local slot = spawn_slots[i]
-		local is_hover = i == index
+	for ii = 1, #spawn_slots do
+		local slot = spawn_slots[ii]
+		local is_hover = ii == index
 
 		slot.is_hover = is_hover
 		slot.panel_widget.content.hotspot.is_focused = is_hover
@@ -1510,11 +1513,11 @@ end
 LobbyView._get_slot_index_by_player = function (self, player)
 	local spawn_slots = self._spawn_slots
 
-	for i = 1, #spawn_slots do
-		local slot = spawn_slots[i]
+	for ii = 1, #spawn_slots do
+		local slot = spawn_slots[ii]
 
 		if slot.player == player then
-			return i
+			return ii
 		end
 	end
 end
@@ -1522,9 +1525,9 @@ end
 LobbyView._slot_by_index = function (self, index)
 	local spawn_slots = self._spawn_slots
 
-	for i = 1, #spawn_slots do
-		if i == index then
-			return spawn_slots[i]
+	for ii = 1, #spawn_slots do
+		if ii == index then
+			return spawn_slots[ii]
 		end
 	end
 end
@@ -1545,8 +1548,8 @@ LobbyView._set_own_player_ready_status = function (self, is_ready)
 	if self._preview then
 		local spawn_slots = self._spawn_slots
 
-		for i = 1, #spawn_slots do
-			local slot = spawn_slots[i]
+		for ii = 1, #spawn_slots do
+			local slot = spawn_slots[ii]
 
 			self:_set_slot_ready_status(slot, is_ready)
 		end
@@ -1571,8 +1574,8 @@ LobbyView._sync_votes = function (self)
 	local votes = Managers.voting:votes(self._voting_id)
 	local spawn_slots = self._spawn_slots
 
-	for i = 1, #spawn_slots do
-		local slot = spawn_slots[i]
+	for ii = 1, #spawn_slots do
+		local slot = spawn_slots[ii]
 		local is_ready = false
 
 		if slot.occupied then
@@ -1607,7 +1610,7 @@ LobbyView._set_slot_ready_status = function (self, slot, is_ready)
 		local player = Managers.player:local_player(1)
 
 		if slot.player ~= player then
-			self:_play_sound(UISoundEvents.mission_lobby_player_ready)
+			self:_play_sound(UiSoundEvents.mission_lobby_player_ready)
 		end
 
 		self:_start_animation_ready(slot)
@@ -1640,22 +1643,28 @@ LobbyView.set_own_player_ready_status = function (self, is_ready)
 	self:_set_own_player_ready_status(is_ready)
 end
 
+local WEAPON_SLOTS = {
+	"slot_primary",
+	"slot_secondary",
+}
+local COSMETIC_SLOTS = {
+	"slot_insignia",
+	"slot_gear_head",
+	"slot_portrait_frame",
+}
+
 LobbyView._check_loadout_changes = function (self)
-	for i = 1, #self._spawn_slots do
-		local spawn_slot = self._spawn_slots[i]
+	for ii = 1, #self._spawn_slots do
+		local spawn_slot = self._spawn_slots[ii]
 
 		if spawn_slot.occupied then
 			local profile = spawn_slot.player:profile()
 			local changed_weapons = false
 			local changed_talents = false
 			local changed_cosmetics = false
-			local weapon_slots = {
-				"slot_primary",
-				"slot_secondary",
-			}
 
-			for f = 1, #weapon_slots do
-				local slot_name = weapon_slots[f]
+			for jj = 1, #WEAPON_SLOTS do
+				local slot_name = WEAPON_SLOTS[jj]
 
 				if profile.loadout[slot_name] and spawn_slot[slot_name] ~= profile.loadout[slot_name] then
 					changed_weapons = true
@@ -1664,14 +1673,8 @@ LobbyView._check_loadout_changes = function (self)
 				end
 			end
 
-			local cosmetic_slots = {
-				"slot_insignia",
-				"slot_gear_head",
-				"slot_portrait_frame",
-			}
-
-			for f = 1, #cosmetic_slots do
-				local slot_name = cosmetic_slots[f]
+			for jj = 1, #COSMETIC_SLOTS do
+				local slot_name = COSMETIC_SLOTS[jj]
 
 				if profile.loadout[slot_name] and spawn_slot.profile.loadout[slot_name] ~= profile.loadout[slot_name] then
 					changed_cosmetics = true
@@ -1683,8 +1686,8 @@ LobbyView._check_loadout_changes = function (self)
 			CharacterSheet.class_loadout(profile, class_loadout, nil, profile.talents, true)
 
 			if not table.is_empty(spawn_slot.talent_widgets) then
-				for f = 1, #spawn_slot.talent_widgets do
-					local talent_widget = spawn_slot.talent_widgets[f]
+				for jj = 1, #spawn_slot.talent_widgets do
+					local talent_widget = spawn_slot.talent_widgets[jj]
 					local loadout_id = talent_widget.content.loadout_id
 					local icon = talent_widget.content.icon
 
@@ -1742,21 +1745,19 @@ LobbyView._setup_talents_widgets = function (self, spawn_slot)
 			offset_width = start_margin + (ContentBlueprints.talent.size[1] + margin) * 2,
 		},
 	}
-	local ui_renderer = self._ui_renderer
 	local scenegraph_id = "loadout"
-	local profile = spawn_slot.player:profile()
 
-	for i = 1, #spawn_slot.talent_widgets do
-		local talent_widgets = spawn_slot.talent_widgets[i]
+	for ii = 1, #spawn_slot.talent_widgets do
+		local talent_widgets = spawn_slot.talent_widgets[ii]
 
 		self:_unregister_widget_name(talent_widgets.name)
 	end
 
 	local settings_by_node_type = TalentBuilderViewSettings.settings_by_node_type
 
-	for i = 1, #search_slot do
-		local data = search_slot[i]
-		local loadout_id = loadout_presentation_order[i]
+	for ii = 1, #search_slot do
+		local data = search_slot[ii]
+		local loadout_id = loadout_presentation_order[ii]
 		local loadout = class_loadout[loadout_id]
 		local node_type = loadout_to_type[loadout_id]
 		local template = ContentBlueprints.talent
@@ -1770,7 +1771,7 @@ LobbyView._setup_talents_widgets = function (self, spawn_slot)
 		local pass_template_function = template.pass_template_function
 		local pass_template = pass_template_function and pass_template_function(self, config) or template.pass_template
 		local optional_style = template.style or {}
-		local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size, optional_style)
+		local widget_definition = pass_template and UiWidget.create_definition(pass_template, scenegraph_id, nil, size, optional_style)
 
 		if widget_definition then
 			local name_talent = string.format("slot_%s_%s", spawn_slot.index, data.id)
@@ -1794,20 +1795,14 @@ LobbyView._setup_talents_widgets = function (self, spawn_slot)
 				offset_height,
 				0,
 			}
-			spawn_slot.talent_widgets[i] = talent_widget
+			spawn_slot.talent_widgets[ii] = talent_widget
 		end
 	end
 end
 
 LobbyView._setup_weapon_widgets = function (self, spawn_slot)
 	local profile = spawn_slot.player:profile()
-	local size = {
-		370,
-		0,
-	}
 	local margin = 10
-	local margin_large = (UISettings.weapon_icon_size[1] * 2 + margin - 450) * 0.5
-	local gadget_size = UISettings.weapon_icon_size[1] / 3 - margin * 2 / 3
 	local search_slot = {
 		{
 			id = "slot_primary",
@@ -1822,19 +1817,18 @@ LobbyView._setup_weapon_widgets = function (self, spawn_slot)
 			offset_width = ContentBlueprints.item_icon.size[1] + margin,
 		},
 	}
-	local ui_renderer = self._ui_renderer
 	local scenegraph_id = "loadout"
 
-	for i = 1, #spawn_slot.weapon_widgets do
-		local weapon_widget = spawn_slot.weapon_widgets[i]
+	for ii = 1, #spawn_slot.weapon_widgets do
+		local weapon_widget = spawn_slot.weapon_widgets[ii]
 
 		self:_unregister_widget_name(weapon_widget.name)
 	end
 
 	spawn_slot.weapon_widgets = {}
 
-	for i = 1, #search_slot do
-		local data = search_slot[i]
+	for ii = 1, #search_slot do
+		local data = search_slot[ii]
 		local slot = data.id
 		local loadout = profile.loadout[slot]
 		local template = ContentBlueprints.item_icon
@@ -1846,7 +1840,7 @@ LobbyView._setup_weapon_widgets = function (self, spawn_slot)
 		local pass_template_function = template.pass_template_function
 		local pass_template = pass_template_function and pass_template_function(self, config) or template.pass_template
 		local optional_style = template.style or {}
-		local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size, optional_style)
+		local widget_definition = pass_template and UiWidget.create_definition(pass_template, scenegraph_id, nil, size, optional_style)
 
 		if widget_definition then
 			local name_weapon = string.format("loadout_%s_%s", spawn_slot.index, slot)
@@ -1879,41 +1873,32 @@ LobbyView._setup_weapon_widgets = function (self, spawn_slot)
 
 	local archetype_settings = profile.archetype
 	local breed_name = archetype_settings.breed
-	local spawn_point_unit
-
-	if breed_name == "ogryn" then
-		spawn_point_unit = spawn_slot.ogryn_spawn_point_unit
-	else
-		spawn_point_unit = spawn_slot.human_spawn_point_unit
-	end
-
+	local spawn_point_unit = _spawn_point_unit(profile, spawn_slot)
 	local spawn_position = Unit.world_position(spawn_point_unit, 1)
 	local spawn_rotation = Unit.world_rotation(spawn_point_unit, 1)
-	local companion_spawn_position = spawn_slot.companion_spawn_point_unit and Unit.world_position(spawn_slot.companion_spawn_point_unit, 1)
-	local companion_spawn_rotation = spawn_slot.companion_spawn_point_unit and Unit.world_rotation(spawn_slot.companion_spawn_point_unit, 1)
-	local profile_size = profile.personal and profile.personal.character_height
-	local spawn_scale = profile_size and Vector3(profile_size, profile_size, profile_size)
-	local profile_spawner = spawn_slot.profile_spawner
-	local breed_settings = Breeds[breed_name]
-	local inventory_state_machine = breed_settings.inventory_state_machine
+	local inventory_state_machine = archetype_settings.inventory_state_machine
 	local slot_name = spawn_slot.default_slot
 	local slot_item = spawn_slot.profile.loadout[slot_name]
 	local item_inventory_animation_event = slot_item and slot_item.inventory_animation_event or "inventory_idle_default"
 	local has_companion, companion_breed_name = ProfileUtils.has_companion(profile)
 	local companion_state_machine
 
-	if companion_breed_name then
-		local breed_settings = Breeds[companion_breed_name]
+	if has_companion then
+		local companion_breed_settings = Breeds[companion_breed_name]
 
-		companion_state_machine = breed_settings.hub_state_machine
+		companion_state_machine = companion_breed_settings.inventory_state_machine
 	end
 
 	local companion_data = {
 		animation_event = "pregame_entry",
-		position = companion_spawn_position,
-		rotation = companion_spawn_rotation,
+		ignore = false,
+		position = spawn_position,
+		rotation = spawn_rotation,
 		state_machine = companion_state_machine,
 	}
+	local profile_size = profile.personal and profile.personal.character_height
+	local spawn_scale = profile_size and Vector3(profile_size, profile_size, profile_size)
+	local profile_spawner = spawn_slot.profile_spawner
 
 	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, spawn_scale, inventory_state_machine, item_inventory_animation_event, nil, nil, nil, nil, nil, nil, companion_data)
 	profile_spawner:toggle_companion(has_companion)
@@ -1923,8 +1908,6 @@ end
 
 LobbyView._set_weapons_visibility = function (self)
 	local is_active = self._show_weapons
-	local loadout_size = LobbyViewSettings.loadout_size
-	local panel_size = LobbyViewSettings.panel_size
 
 	for ii = 1, #self._spawn_slots do
 		local slot = self._spawn_slots[ii]
@@ -1967,15 +1950,15 @@ LobbyView.trigger_on_exit_animation = function (self)
 			Managers.ui:close_view(SOCIAL_VIEW_NAME)
 		end
 
-		for i = 1, #self._spawn_slots do
-			local slot = self._spawn_slots[i]
+		for ii = 1, #self._spawn_slots do
+			local slot = self._spawn_slots[ii]
 
 			slot.panel_widget.content.hotspot.disabled = true
 		end
 
 		if self._menu_list_widgets then
-			for i = 1, #self._menu_list_widgets do
-				local widget = self._menu_list_widgets[i]
+			for ii = 1, #self._menu_list_widgets do
+				local widget = self._menu_list_widgets[ii]
 
 				self:_unregister_widget_name(widget.name)
 			end
@@ -1984,7 +1967,7 @@ LobbyView.trigger_on_exit_animation = function (self)
 			self._menu_list_grid = nil
 		end
 
-		self:_play_sound(UISoundEvents.mission_lobby_all_players_ready)
+		self:_play_sound(UiSoundEvents.mission_lobby_all_players_ready)
 	end
 end
 

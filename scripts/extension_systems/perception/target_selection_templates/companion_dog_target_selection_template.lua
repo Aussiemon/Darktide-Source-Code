@@ -115,20 +115,10 @@ target_selection_template.companion_dog = function (unit, side, perception_compo
 	local target_unit = perception_component.target_unit
 	local companion_blackboard = BLACKBOARDS[unit]
 	local owner_unit = companion_blackboard.behavior.owner_unit
-	local smart_tag_system = Managers.state.extension:system("smart_tag_system")
 	local movable_platform_component = companion_blackboard and companion_blackboard.movable_platform
 	local is_in_platform = movable_platform_component and movable_platform_component.unit_reference ~= nil
 
 	if is_in_platform then
-		local _, tag = smart_tag_system:unit_tagged_by_player_unit(owner_unit, "unit_threat_adamant")
-		local tag_id = tag and tag:id()
-
-		if tag_id then
-			local exernal_removal = true
-
-			smart_tag_system:cancel_tag(tag_id, owner_unit, exernal_removal)
-		end
-
 		return nil
 	end
 
@@ -180,31 +170,7 @@ target_selection_template.companion_dog = function (unit, side, perception_compo
 	end
 
 	local companion_whistle_component = Blackboard.write_component(companion_blackboard, "whistle")
-	local tagged_unit, _ = smart_tag_system:unit_tagged_by_player_unit(owner_unit, "unit_threat_adamant")
-	local companion_whistle_target
-
-	if tagged_unit then
-		local invalid_target = false
-		local unit_data_extension = ScriptUnit.has_extension(tagged_unit, "unit_data_system")
-		local breed = unit_data_extension and unit_data_extension:breed()
-		local daemonhost = breed and breed.tags.witch
-
-		if daemonhost then
-			local daemonhost_blackboard = BLACKBOARDS[tagged_unit]
-			local daemonhost_perception_component = daemonhost_blackboard.perception
-			local is_aggroed = daemonhost_perception_component.aggro_state == "aggroed"
-
-			invalid_target = not is_aggroed
-		end
-
-		if not invalid_target then
-			companion_whistle_component.current_target = tagged_unit
-			companion_whistle_target = tagged_unit
-		end
-	elseif companion_whistle_component and companion_whistle_component.current_target then
-		companion_whistle_component.current_target = nil
-		target_unit = nil
-	end
+	local companion_whistle_target = companion_whistle_component.current_target
 
 	if companion_whistle_target then
 		local optional_assign_token = false
@@ -229,7 +195,7 @@ target_selection_template.companion_dog = function (unit, side, perception_compo
 
 	local pounce_target = companion_blackboard.pounce.pounce_target
 	local owner_attack_intensity_extension = ScriptUnit.has_extension(owner_unit, "attack_intensity_system")
-	local in_combat = pounce_target or not owner_attack_intensity_extension or owner_attack_intensity_extension:in_combat_for_companion()
+	local in_combat = pounce_target or not owner_attack_intensity_extension or owner_attack_intensity_extension:in_combat_for_companion(buff_extension)
 
 	if not in_combat then
 		_free_token(unit, target_unit)

@@ -87,5 +87,17 @@ state_machine_settings["content/characters/player/human/first_person/animations/
 state_machine_settings["content/characters/player/human/first_person/animations/crowbar"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
+state_machine_settings["content/characters/player/human/first_person/animations/arc_maul"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
+state_machine_settings["content/characters/player/human/first_person/animations/cryptic_power_sword"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
+state_machine_settings["content/characters/player/human/first_person/animations/dual_transonics"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
+state_machine_settings["content/characters/player/human/first_person/animations/transonic_claw"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
 
 return state_machine_settings

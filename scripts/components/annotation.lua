@@ -15,6 +15,8 @@ Annotation.destroy = function (self)
 	return
 end
 
+local _options_scratch = {}
+
 Annotation.update = function (self)
 	local color_boxed = self._color_boxed
 	local x, y, z, _ = Quaternion.to_elements(color_boxed:unbox())
@@ -23,11 +25,10 @@ Annotation.update = function (self)
 	local font_size = self._font_size
 	local unit = self._unit
 	local position = Unit.world_position(unit, 1)
-	local options = {
-		text_size = font_size,
-		color = text_color,
-		rotation = Unit.world_rotation(unit, 1),
-	}
+
+	_options_scratch.text_size = font_size
+	_options_scratch.color = text_color
+	_options_scratch.rotation = Unit.world_rotation(unit, 1)
 
 	return true
 end

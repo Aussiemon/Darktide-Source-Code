@@ -39,46 +39,25 @@ local inventory_background_view = {
 	ignored_validation_slots = {},
 	animations_per_archetype = {
 		adamant = {
-			initial_event = "character_customization_idle",
-			events = {
-				"character_customization_crime_select_idle",
-				"character_customization_idle",
-			},
+			initial_event = "character_apperance_idle",
 		},
 		broker = {
-			initial_event = "character_customization_idle",
-			events = {
-				"character_customization_crime_select_idle",
-				"character_customization_idle",
-			},
+			initial_event = "character_apperance_idle",
+		},
+		cryptic = {
+			initial_event = "character_apperance_idle",
 		},
 		psyker = {
-			initial_event = "character_customization_idle",
-			events = {
-				"character_customization_crime_select_idle",
-				"character_customization_idle",
-			},
+			initial_event = "character_apperance_idle",
 		},
 		veteran = {
-			initial_event = "character_customization_idle",
-			events = {
-				"character_customization_crime_select_idle",
-				"character_customization_idle",
-			},
+			initial_event = "character_apperance_idle",
 		},
 		zealot = {
-			initial_event = "character_customization_idle",
-			events = {
-				"character_customization_crime_select_idle",
-				"character_customization_idle",
-			},
+			initial_event = "character_apperance_idle",
 		},
 		ogryn = {
-			initial_event = "character_customization_idle",
-			events = {
-				"character_customization_crime_select_idle",
-				"character_customization_idle",
-			},
+			initial_event = "character_apperance_idle",
 		},
 	},
 }

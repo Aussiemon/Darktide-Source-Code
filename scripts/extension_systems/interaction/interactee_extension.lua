@@ -17,6 +17,8 @@ InteracteeExtension.init = function (self, extension_init_context, unit, extensi
 	self._unit = unit
 	self._used = false
 	self._is_being_used = false
+	self._interactor_unit = nil
+	self._is_electrified = false
 
 	local start_active = not extension_init_data.start_inactive
 
@@ -72,6 +74,12 @@ InteracteeExtension.hot_join_sync = function (self, unit, sender, channel)
 		end
 
 		RPC.rpc_interaction_hot_join(channel, unit_id, is_level_unit, is_active, is_used, active_type_id)
+	end
+
+	if self._is_electrified then
+		local unit_id, is_level_unit = self._unit_id, self._is_level_unit
+
+		RPC.rpc_interaction_set_electrified(channel, unit_id, is_level_unit, true)
 	end
 end
 
@@ -273,6 +281,18 @@ InteracteeExtension.interaction_length = function (self)
 	return override_context.duration or interaction:duration()
 end
 
+InteracteeExtension.infinite_interaction = function (self)
+	local active_interaction_type = self._active_interaction_type
+
+	if not active_interaction_type then
+		return false
+	end
+
+	local override_context = self._override_contexts[active_interaction_type]
+
+	return override_context.infinite_interaction
+end
+
 InteracteeExtension.set_missing_players = function (self, is_missing)
 	if is_missing then
 		local target_text = self:missing_players_text()
@@ -311,6 +331,20 @@ InteracteeExtension.disable_display_start_event = function (self)
 	local override_context = self._override_contexts[active_interaction_type]
 
 	override_context.display_start_event = false
+end
+
+InteracteeExtension.is_electrified = function (self)
+	return self._is_electrified
+end
+
+InteracteeExtension.set_electrified = function (self, active)
+	if active == self._is_electrified then
+		return
+	end
+
+	self._is_electrified = active
+
+	self:_trigger_flow_event(active and "lua_interaction_electrified_on" or "lua_interaction_electrified_off")
 end
 
 InteracteeExtension.interaction_priority = function (self)
@@ -586,24 +620,22 @@ InteracteeExtension.started = function (self, interactor_unit)
 	self._is_being_used = true
 	self._interactor_unit = interactor_unit
 
-	local player_unit_spawn_manager = Managers.state.player_unit_spawn
-
-	self._interactor_player = player_unit_spawn_manager:owner(self._interactor_unit)
-
 	Unit.set_flow_variable(self._unit, "lua_interactor_unit", interactor_unit)
 	self:_trigger_flow_event("lua_interaction_start")
 end
 
-InteracteeExtension.stopped = function (self, result)
+InteracteeExtension.stopped = function (self, result, interactor_unit)
 	if self._is_server then
 		local unit_id, is_level_unit = self._unit_id, self._is_level_unit
 		local result_id = NetworkLookup.interaction_result[result]
+		local interactor_object_id = interactor_unit and Managers.state.unit_spawner:game_object_id(interactor_unit) or -1
 
-		Managers.state.game_session:send_rpc_clients("rpc_interaction_stopped", unit_id, is_level_unit, result_id)
+		Managers.state.game_session:send_rpc_clients("rpc_interaction_stopped", unit_id, is_level_unit, interactor_object_id, result_id)
 	end
 
 	if result == interaction_results.success then
-		local player_or_nil = self._interactor_player
+		local player_unit_spawn_manager = Managers.state.player_unit_spawn
+		local player_or_nil = interactor_unit and player_unit_spawn_manager:owner(interactor_unit)
 
 		if self._is_server then
 			local mechanism_manager = Managers.mechanism
@@ -649,7 +681,6 @@ InteracteeExtension.stopped = function (self, result)
 	end
 
 	self._interactor_unit = nil
-	self._interactor_player = nil
 	self._is_being_used = false
 end
 

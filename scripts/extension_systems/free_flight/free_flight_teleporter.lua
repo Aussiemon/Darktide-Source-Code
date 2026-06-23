@@ -32,22 +32,23 @@ FreeFlightTeleporter.teleport_player_to_camera_position = function (self, positi
 
 		player:set_orientation(yaw, pitch, 0)
 
-		local player_id = player:local_player_id()
-		local peer_id = player:peer_id()
+		local local_player_id = player:local_player_id()
 		local channel = Managers.connection:host_channel()
 
-		RPC.rpc_debug_free_flight_teleport_client(channel, player_id, peer_id, position)
+		RPC.rpc_debug_free_flight_teleport_client(channel, local_player_id, position)
 	end
 end
 
 FreeFlightTeleporter._teleport_player = function (self, player, position, rotation)
+	local keep_velocity = false
 	local send_character_state_disruption_event = true
 
-	PlayerMovement.teleport(player, position, rotation, send_character_state_disruption_event)
+	PlayerMovement.teleport(player, position, rotation, keep_velocity, send_character_state_disruption_event)
 end
 
-FreeFlightTeleporter.rpc_debug_free_flight_teleport_client = function (self, channel_id, player_id, peer_id, position)
-	local player = Managers.player:player(peer_id, player_id)
+FreeFlightTeleporter.rpc_debug_free_flight_teleport_client = function (self, channel_id, local_player_id, position)
+	local peer_id = Network.peer_id(channel_id)
+	local player = Managers.player:player(peer_id, local_player_id)
 
 	self:_teleport_player(player, position, nil)
 end

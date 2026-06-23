@@ -426,9 +426,9 @@ ExpeditionLogicBase.event_on_hud_created = function (self)
 end
 
 ExpeditionLogicBase._set_server_level_state = function (self, new_state)
-	local previous_state = self._server_level_state and self._server_level_state or "-"
+	local previous_state = self._server_level_state or "n/a"
 
-	_log("[ExpeditionLogicBase] - CHANING STATE: " .. new_state .. " - OLD STATE:" .. previous_state)
+	_log("CHANGING STATE: %s - OLD STATE: %s", new_state, previous_state)
 
 	self._server_level_state = new_state
 end
@@ -529,14 +529,6 @@ end
 ExpeditionLogicBase.expedition_team_loot = function (self)
 	local loot_handler = self._loot_handler
 	local player_loot = loot_handler:collected_team_loot()
-
-	return player_loot
-end
-
-ExpeditionLogicBase.expedition_loot = function (self, optional_peer_id)
-	local loot_handler = self._loot_handler
-	local peer_id = optional_peer_id or Network.peer_id()
-	local player_loot = loot_handler:collected_player_loot(peer_id)
 
 	return player_loot
 end
@@ -1035,6 +1027,10 @@ end
 
 ExpeditionLogicBase.get_collectibles_handler = function (self)
 	return self._collectibles_handler
+end
+
+ExpeditionLogicBase.get_loot_handler = function (self)
+	return self._loot_handler
 end
 
 ExpeditionLogicBase.get_expedition_template = function (self)

@@ -40,6 +40,20 @@ local scenegraph_definition = {
 			1,
 		},
 	},
+	middle_background = {
+		horizontal_alignment = "center",
+		parent = "layout_background",
+		vertical_alignment = "center",
+		size = {
+			256,
+			256,
+		},
+		position = {
+			0,
+			0,
+			2,
+		},
+	},
 	talent = {
 		horizontal_alignment = "left",
 		parent = "layout_background",
@@ -1494,7 +1508,7 @@ local color_cursor = {
 	255,
 	255,
 }
-local layout_widget_definitions = {
+local layout_node_widget_definitions = {
 	layout_background = UIWidget.create_definition({
 		{
 			pass_type = "texture",
@@ -1521,6 +1535,32 @@ local layout_widget_definitions = {
 			},
 		},
 	}, "layout_background"),
+	archetype_middle_coin = UIWidget.create_definition({
+		{
+			pass_type = "texture",
+			value = "content/ui/materials/frames/talents/talent_center_bg_cryptic",
+			value_id = "image",
+			style = {
+				horizontal_alignment = "center",
+				vertical_alignment = "center",
+				size = {
+					1024,
+					1024,
+				},
+				color = {
+					255,
+					255,
+					255,
+					255,
+				},
+				offset = {
+					168,
+					35,
+					0,
+				},
+			},
+		},
+	}, "middle_background"),
 	gamepad_cursor = UIWidget.create_definition({
 		{
 			pass_type = "texture",
@@ -1542,6 +1582,8 @@ local layout_widget_definitions = {
 			},
 		},
 	}, "gamepad_cursor"),
+}
+local layout_widget_definitions = {
 	summary_window = UIWidget.create_definition({
 		{
 			content_id = "hotspot",
@@ -2189,6 +2231,7 @@ local definitions = {
 	animations = animations,
 	widget_definitions = widget_definitions,
 	layout_widget_definitions = layout_widget_definitions,
+	layout_node_widget_definitions = layout_node_widget_definitions,
 	scenegraph_definition = scenegraph_definition,
 	overlay_scenegraph_definition = overlay_scenegraph_definition,
 }

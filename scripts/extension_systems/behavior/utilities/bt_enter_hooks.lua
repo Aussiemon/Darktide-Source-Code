@@ -76,7 +76,9 @@ BtEnterHooks = {
 		local slot_name = args.slot_name
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 
-		visual_loadout_extension:unwield_slot(slot_name)
+		if visual_loadout_extension:can_unwield_slot(slot_name) then
+			visual_loadout_extension:unwield_slot(slot_name)
+		end
 	end,
 	unwield_slot = function (unit, breed, blackboard, scratchpad, action_data, t, args)
 		local slot_name = args.slot_name
@@ -105,6 +107,29 @@ BtEnterHooks = {
 			death_component.hit_zone_name = "center_mass"
 			death_component.damage_profile_name = "default"
 			death_component.herding_template_name = nil
+		end
+	end,
+	weapon_malfunction_enter = function (unit, breed, blackboard, scratchpad, action_data, t)
+		local weapon_malfunction_component = Blackboard.write_component(blackboard, "weapon_malfunction")
+		local malfunctioning_time = weapon_malfunction_component.malfunctioning_time
+		local is_ogryn = breed.tags and breed.tags.ogryn
+		local target_weapon_malfunction_buff = is_ogryn and "minion_weapon_malfunction_ogryn" or "minion_weapon_malfunction"
+		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+		local should_add_malfunction_buff = buff_extension and not buff_extension:has_buff_using_buff_template(target_weapon_malfunction_buff)
+
+		if should_add_malfunction_buff then
+			local _, buff_index = buff_extension:add_externally_controlled_buff(target_weapon_malfunction_buff, t)
+
+			weapon_malfunction_component.malfunction_buff_id = buff_index
+		end
+
+		local should_refresh_malfunctioning_time = weapon_malfunction_component.refresh_malfunctioning_time or malfunctioning_time == 0
+
+		if should_refresh_malfunctioning_time then
+			local breed_malfunctioning_time = action_data.weapon_malfunction_time or 12
+
+			weapon_malfunction_component.malfunctioning_time = t + breed_malfunctioning_time
+			weapon_malfunction_component.refresh_malfunctioning_time = false
 		end
 	end,
 	companion_prepare_for_movement = function (unit, breed, blackboard, scratchpad, action_data, t, args)

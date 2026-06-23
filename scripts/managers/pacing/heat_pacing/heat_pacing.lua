@@ -748,7 +748,8 @@ HeatPacing.heat_trickle_should_patrol = function (self)
 
 	local should_patrol
 	local trickle_horde_patrol_settings = self._trickle_horde_patrol_settings
-	local chance_to_patrol = trickle_horde_patrol_settings[self._current_stage_name]
+	local trickle_patrol_setting_indexed_by_resistance = Managers.state.difficulty:get_table_entry_by_resistance(trickle_horde_patrol_settings)
+	local chance_to_patrol = trickle_patrol_setting_indexed_by_resistance[self._current_stage_name]
 
 	should_patrol = chance_to_patrol < math.random() and true or false
 

@@ -897,6 +897,84 @@ local settings_definitions = {
 		end,
 	},
 	{
+		display_name = "loc_settings_menu_group_chat_bubbles_settings",
+		group_name = "chat_bubbles_settings",
+		widget_type = "group_header",
+	},
+	{
+		default_value = true,
+		display_name = "loc_interface_setting_chat_bubbles_hub_enabled",
+		id = "chat_bubbles_hub_enabled",
+		save_location = "interface_settings",
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_chat_bubbles_hub_enabled", value)
+		end,
+	},
+	{
+		default_value = true,
+		display_name = "loc_interface_setting_chat_bubbles_strike_team_enabled",
+		id = "chat_bubbles_strike_team_enabled",
+		save_location = "interface_settings",
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_chat_bubbles_strike_team_enabled", value)
+		end,
+	},
+	{
+		default_value = 70,
+		display_name = "loc_interface_setting_chat_bubbles_background_opacity",
+		id = "chat_bubbles_background_opacity",
+		max_value = 100,
+		min_value = 0,
+		save_location = "interface_settings",
+		step_size_value = 1,
+		widget_type = "percent_slider",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_chat_bubbles_background_opacity", value)
+		end,
+	},
+	{
+		default_value = 100,
+		display_name = "loc_interface_setting_chat_bubbles_text_opacity",
+		id = "chat_bubbles_text_opacity",
+		max_value = 100,
+		min_value = 10,
+		save_location = "interface_settings",
+		step_size_value = 1,
+		widget_type = "percent_slider",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_chat_bubbles_text_opacity", value)
+		end,
+	},
+	{
+		default_value = 100,
+		display_name = "loc_interface_setting_chat_bubbles_lifetime_multiplier",
+		id = "chat_bubbles_lifetime_multiplier",
+		max_value = 200,
+		min_value = 50,
+		save_location = "interface_settings",
+		step_size_value = 5,
+		widget_type = "percent_slider",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_chat_bubbles_lifetime_multiplier", value)
+		end,
+	},
+	{
+		default_value = 24,
+		display_name = "loc_interface_setting_chat_bubbles_text_size",
+		id = "chat_bubbles_text_size",
+		max_value = 72,
+		min_value = 12,
+		num_decimals = 0,
+		save_location = "interface_settings",
+		step_size_value = 1,
+		widget_type = "value_slider",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_chat_bubbles_text_size", value)
+		end,
+	},
+	{
 		display_name = "loc_settings_menu_group_other_settings",
 		group_name = "other_settings",
 		widget_type = "group_header",

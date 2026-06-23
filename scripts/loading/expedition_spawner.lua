@@ -7,8 +7,6 @@ local AsyncExpeditionLevelSpawner = require("scripts/loading/async_expedition_le
 local ThemePackage = require("scripts/foundation/managers/package/utilities/theme_package")
 local ScriptTheme = require("scripts/foundation/utilities/script_theme")
 local BakeNavmesh = require("scripts/utilities/bake_navmesh")
-local ASYNCHRONOUS_NAVMESH_GENERATION = DevParameters.expedition_async_nav_gen or true
-local TEST_UNIT_FLOW_SPAWN_DELAY = ASYNCHRONOUS_NAVMESH_GENERATION
 
 local function _log(...)
 	Log.info("ExpeditionSpawner", ...)
@@ -234,7 +232,7 @@ ExpeditionSpawner._complete_next_level_spawning = function (self, level_data, le
 		on_spawned_function(level_data, world, self._expedition_settings_template)
 	end
 
-	if TEST_UNIT_FLOW_SPAWN_DELAY then
+	if DevParameters.expedition_async_nav_gen then
 		local trigger_unit_spawned = false
 
 		Level.finish_spawn_time_sliced(level, trigger_unit_spawned)
@@ -258,7 +256,7 @@ ExpeditionSpawner._register_level = function (self, level_data, wanted_level_id)
 		unit_spawner_manager:register_dynamic_level_spawned_units_client(level, level_units, wanted_level_id)
 	end
 
-	if not TEST_UNIT_FLOW_SPAWN_DELAY then
+	if not DevParameters.expedition_async_nav_gen then
 		Level.finish_spawn_time_sliced(level)
 	else
 		Level.trigger_unit_spawned(level)
@@ -379,9 +377,9 @@ ExpeditionSpawner._handle_main_path_setup = function (self)
 end
 
 ExpeditionSpawner._state_changed = function (self, new_state)
-	local previous_state = self._server_level_state and self._server_level_state or "-"
+	local previous_state = self._state or "n/a"
 
-	_log("[ExpeditionSpawner] - CHANING STATE: " .. new_state .. " - OLD STATE:" .. previous_state)
+	_log("CHANGING STATE: %s - OLD STATE: %s", new_state, previous_state)
 
 	self._state = new_state
 end
@@ -407,7 +405,7 @@ ExpeditionSpawner.update = function (self, dt)
 		local done = self:is_post_levels_spawned_done()
 
 		if done then
-			self._navmesh_generation_job_id = nil
+			self._async_navmesh_generation_job_id = nil
 			self._done = true
 
 			self:_state_changed(STATES.done)
@@ -567,22 +565,18 @@ ExpeditionSpawner.register_spawned_level_by_expedition_level_id = function (self
 			end
 		end
 	end
+
+	Log.exception("ExpeditionSpawner", "Was not able to find level with expedition_level_id(%s) wanted_level_id(%s)", expedition_level_id, wanted_level_id)
 end
 
-ExpeditionSpawner._is_nav_generation_started = function (self)
-	if self._navmesh_generation_job_id then
-		return true
-	end
-end
-
-ExpeditionSpawner._is_nav_generation_complete = function (self)
-	if self._navmesh_generation_job_id then
+ExpeditionSpawner._is_async_nav_generation_complete = function (self)
+	if self._async_navmesh_generation_job_id then
 		local world = self._world
 		local nav_world = self._nav_world
-		local done, navmesh = BakeNavmesh.is_navmesh_done(world, nav_world, self._navmesh_generation_job_id)
+		local done, navmesh = BakeNavmesh.is_navmesh_done(world, nav_world, self._async_navmesh_generation_job_id)
 
 		if done then
-			Managers.state.nav_mesh:set_async_paused(false)
+			self:_reset_async_navmesh_generation()
 
 			self._nav_data_created = navmesh
 
@@ -615,7 +609,17 @@ ExpeditionSpawner._create_levels_context = function (self)
 	return levels
 end
 
+ExpeditionSpawner._reset_async_navmesh_generation = function (self)
+	if self._async_navmesh_generation_job_id then
+		self._async_navmesh_generation_job_id = nil
+
+		Managers.state.nav_mesh:set_async_paused(false)
+	end
+end
+
 ExpeditionSpawner._generate_navdata = function (self)
+	self:_reset_async_navmesh_generation()
+
 	local nav_world = self._nav_world
 
 	if nav_world then
@@ -624,16 +628,18 @@ ExpeditionSpawner._generate_navdata = function (self)
 			world = self._world,
 			levels = self:_create_levels_context(),
 		}
-		local asynchronous = ASYNCHRONOUS_NAVMESH_GENERATION
+		local asynchronous = DevParameters.expedition_async_nav_gen
 
-		self._navmesh_generation_job_id = nil
-
-		Managers.state.nav_mesh:set_async_paused(true)
+		if asynchronous then
+			Managers.state.nav_mesh:set_async_paused(true)
+		else
+			Managers.state.nav_mesh:join_async_update()
+		end
 
 		local nav_data, job_id = BakeNavmesh.run(navgen_settings, navtag_settings, bake_navmesh_context, asynchronous)
 
 		self._nav_data_created = nav_data
-		self._navmesh_generation_job_id = job_id
+		self._async_navmesh_generation_job_id = job_id
 	end
 end
 
@@ -756,11 +762,10 @@ end
 
 ExpeditionSpawner.is_post_levels_spawned_done = function (self)
 	local complete = true
-	local is_nav_generation_started = self:_is_nav_generation_started()
 	local is_nav_generation_complete
 
-	if is_nav_generation_started then
-		is_nav_generation_complete = self:_is_nav_generation_complete()
+	if self._async_navmesh_generation_job_id then
+		is_nav_generation_complete = self:_is_async_nav_generation_complete()
 
 		if not is_nav_generation_complete then
 			complete = false

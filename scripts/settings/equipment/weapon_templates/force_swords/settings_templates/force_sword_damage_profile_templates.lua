@@ -35,7 +35,7 @@ damage_templates.heavy_force_sword = {
 	gibbing_power = gibbing_power.light,
 	gibbing_type = gibbing_types.sawing,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.force_sword,
+	wounds_template = WoundsTemplates.slash,
 	gib_push_force = GibbingSettings.gib_push_force.force_sword,
 	shield_override_stagger_strength = DEFAULT_SHIELD_OVERRIDE_STAGGER_STRENGTH,
 	armor_damage_modifier = {
@@ -273,7 +273,7 @@ damage_templates.heavy_force_sword_active = {
 	cleave_distribution = medium_cleave,
 	gibbing_power = gibbing_power.medium,
 	gibbing_type = gibbing_types.warp,
-	wounds_template = WoundsTemplates.force_sword_active,
+	wounds_template = WoundsTemplates.slash_force,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	gib_push_force = GibbingSettings.gib_push_force.force_sword,
 	shield_override_stagger_strength = DEFAULT_SHIELD_OVERRIDE_STAGGER_STRENGTH,
@@ -394,7 +394,7 @@ overrides.heavy_force_sword_flat = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.force_sword_active,
+			WoundsTemplates.slash_force,
 		},
 		{
 			"targets",
@@ -467,7 +467,7 @@ overrides.heavy_force_sword_sticky = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.force_sword_active,
+			WoundsTemplates.slash_force,
 		},
 		{
 			"targets",
@@ -510,7 +510,7 @@ overrides.heavy_force_sword_sticky_last = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.force_sword_active,
+			WoundsTemplates.slash_force,
 		},
 		{
 			"targets",
@@ -538,7 +538,7 @@ damage_templates.light_force_sword = {
 	gibbing_type = gibbing_types.sawing,
 	melee_attack_strength = melee_attack_strengths.light,
 	gib_push_force = GibbingSettings.gib_push_force.force_sword,
-	wounds_template = WoundsTemplates.force_sword,
+	wounds_template = WoundsTemplates.slash,
 	shield_override_stagger_strength = DEFAULT_SHIELD_OVERRIDE_STAGGER_STRENGTH,
 	armor_damage_modifier = {
 		attack = {
@@ -647,7 +647,7 @@ damage_templates.light_force_sword_active = {
 	gibbing_type = gibbing_types.warp,
 	melee_attack_strength = melee_attack_strengths.light,
 	gib_push_force = GibbingSettings.gib_push_force.force_sword,
-	wounds_template = WoundsTemplates.force_sword_active,
+	wounds_template = WoundsTemplates.slash_force,
 	shield_override_stagger_strength = DEFAULT_SHIELD_OVERRIDE_STAGGER_STRENGTH,
 	armor_damage_modifier = {
 		attack = {
@@ -766,7 +766,7 @@ overrides.light_force_sword_sticky = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.force_sword_active,
+			WoundsTemplates.slash_force,
 		},
 		{
 			"melee_attack_strength",
@@ -817,7 +817,7 @@ overrides.light_force_sword_sticky_last = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.force_sword_active,
+			WoundsTemplates.slash_force,
 		},
 		{
 			"targets",
@@ -847,7 +847,7 @@ damage_templates.light_force_sword_linesman = {
 	cleave_distribution = double_cleave,
 	gibbing_power = gibbing_power.medium,
 	gibbing_type = gibbing_types.warp,
-	wounds_template = WoundsTemplates.force_sword,
+	wounds_template = WoundsTemplates.slash,
 	melee_attack_strength = melee_attack_strengths.light,
 	gib_push_force = GibbingSettings.gib_push_force.force_sword,
 	armor_damage_modifier = {
@@ -950,7 +950,7 @@ damage_templates.light_force_sword_stab = {
 	sticky_attack = false,
 	cleave_distribution = single_cleave,
 	gibbing_type = gibbing_types.sawing,
-	wounds_template = WoundsTemplates.force_sword,
+	wounds_template = WoundsTemplates.slash,
 	melee_attack_strength = melee_attack_strengths.light,
 	gib_push_force = GibbingSettings.gib_push_force.force_sword,
 	shield_override_stagger_strength = DEFAULT_SHIELD_OVERRIDE_STAGGER_STRENGTH,
@@ -1067,7 +1067,7 @@ overrides.light_force_sword_stab_sticky = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.force_sword,
+			WoundsTemplates.slash,
 		},
 		{
 			"targets",
@@ -1089,7 +1089,7 @@ damage_templates.light_force_sword_uppercut = {
 	sticky_attack = false,
 	cleave_distribution = light_cleave,
 	gibbing_type = gibbing_types.sawing,
-	wounds_template = WoundsTemplates.force_sword,
+	wounds_template = WoundsTemplates.slash,
 	melee_attack_strength = melee_attack_strengths.light,
 	gib_push_force = GibbingSettings.gib_push_force.force_sword,
 	shield_override_stagger_strength = DEFAULT_SHIELD_OVERRIDE_STAGGER_STRENGTH,
@@ -1206,7 +1206,7 @@ overrides.light_force_sword_uppercut_sticky = {
 		},
 		{
 			"wounds_template",
-			WoundsTemplates.force_sword,
+			WoundsTemplates.slash,
 		},
 		{
 			"targets",
@@ -1291,7 +1291,7 @@ damage_templates.forcesword_active_cleave_light = {
 	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.force_sword_active,
+	wounds_template = WoundsTemplates.slash_force,
 	armor_damage_modifier = power_am,
 	targets = {
 		{
@@ -1427,7 +1427,7 @@ damage_templates.forcesword_active_cleave_heavy = {
 	gibbing_type = gibbing_types.default,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
-	wounds_template = WoundsTemplates.force_sword_active,
+	wounds_template = WoundsTemplates.slash_force,
 	armor_damage_modifier = power_am,
 	targets = {
 		{

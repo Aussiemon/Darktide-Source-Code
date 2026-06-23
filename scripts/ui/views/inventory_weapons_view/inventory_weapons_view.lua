@@ -75,8 +75,6 @@ InventoryWeaponsView.event_switch_mark_complete = function (self, item)
 			layout.item = item
 		end
 
-		local slot_display_name = selected_slot and selected_slot.display_name
-
 		self:event_replace_list_item(item)
 	end
 end
@@ -282,17 +280,13 @@ InventoryWeaponsView.cb_on_discard_pressed = function (self)
 
 		self:_play_sound(UISoundEvents.weapons_discard_exit)
 	else
-		local selected_slot = self._selected_slot
-		local selected_slot_name = selected_slot.name
 		local new_layout = {}
 		local items = {}
-		local ITEM_TYPES = UISettings.ITEM_TYPES
 
 		for index, layout in ipairs(self._offer_items_layout) do
 			local item = layout.item
 
 			if item then
-				local item_type = item.item_type
 				local slots = item.slots
 				local item_equipped = self:is_item_equipped_in_any_slot(item, slots)
 
@@ -825,11 +819,7 @@ InventoryWeaponsView.cb_on_equip_pressed = function (self)
 end
 
 InventoryWeaponsView._setup_background_world = function (self)
-	local player = self._preview_player
-	local player_profile = player:profile()
-	local archetype = player_profile.archetype
-	local breed_name = archetype.ui_breed or archetype.breed or "human"
-	local default_camera_event_id = "event_register_cosmetics_preview_default_camera_" .. breed_name
+	local default_camera_event_id = "event_register_inventory_weapon_preview_camera"
 
 	self[default_camera_event_id] = function (instance, camera_unit)
 		if instance._context then
@@ -931,9 +921,8 @@ InventoryWeaponsView._fetch_inventory_items = function (self, selected_slot)
 		for gear_id, item in pairs(items) do
 			if self:_item_valid_by_current_profile(item) then
 				local slots = item.slots
-				local valid = true
-				local gear_id = item.gear_id
-				local is_new = self._context and self._context.new_items_gear_ids and self._context.new_items_gear_ids[gear_id]
+				local item_gear_id = item.gear_id
+				local is_new = self._context and self._context.new_items_gear_ids and self._context.new_items_gear_ids[item_gear_id]
 				local remove_new_marker_callback
 
 				if is_new then
@@ -941,10 +930,11 @@ InventoryWeaponsView._fetch_inventory_items = function (self, selected_slot)
 				end
 
 				local widget_type = "item"
+				local valid_item = not not slots
 
-				if valid and slots then
-					for j = 1, #slots do
-						if slots[j] == slot_name then
+				if valid_item then
+					for ii = 1, #slots do
+						if slots[ii] == slot_name then
 							layout[#layout + 1] = {
 								item = item,
 								slot = selected_slot,
@@ -1086,7 +1076,7 @@ InventoryWeaponsView.replace_item_instance = function (self, item)
 		inventory_items[gear_id] = item
 	end
 
-	local layout, index = self:_get_offer_item_layout_by_gear_id(item.gear_id)
+	local _, index = self:_get_offer_item_layout_by_gear_id(item.gear_id)
 
 	if index then
 		self._offer_items_layout[index].item = item
@@ -1262,14 +1252,14 @@ end
 InventoryWeaponsView.event_discard_items = function (self, gear_ids)
 	local inventory_items = self._inventory_items
 
-	for i = 1, #gear_ids do
-		local gear_id = gear_ids[i]
+	for ii = 1, #gear_ids do
+		local gear_id = gear_ids[ii]
 
 		if inventory_items[gear_id] then
 			inventory_items[gear_id] = nil
 		end
 
-		local layout, index = self:_get_offer_item_layout_by_gear_id(gear_id)
+		local _, index = self:_get_offer_item_layout_by_gear_id(gear_id)
 
 		if index then
 			table.remove(self._offer_items_layout, index)

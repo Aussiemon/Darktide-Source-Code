@@ -2,7 +2,6 @@
 
 require("scripts/extension_systems/luggable_socket/luggable_socket_extension")
 
-local LevelPropsBroadphase = require("scripts/utilities/level_props/level_props_broadphase")
 local LuggableSocketSystem = class("LuggableSocketSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
 	"rpc_luggable_socket_luggable",
@@ -19,7 +18,9 @@ LuggableSocketSystem.init = function (self, extension_system_creation_context, .
 		self._network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
 	end
 
-	Managers.state.level_props_broadphase:register_extension_system(self)
+	self:_create_staggered_iterator("unlock_socket_iterator", function (extension, cumulative_dt)
+		return extension:staggered_temp_locked_check(cumulative_dt)
+	end)
 end
 
 LuggableSocketSystem.on_add_extension = function (self, world, unit, extension_name, extension_init_data, ...)
@@ -27,12 +28,19 @@ LuggableSocketSystem.on_add_extension = function (self, world, unit, extension_n
 
 	self._socket_units[#self._socket_units + 1] = unit
 
+	self:_register_staggered_item_update("unlock_socket_iterator", extension, 0.5)
+
 	return extension
 end
 
-LuggableSocketSystem.destroy = function (self, ...)
-	Managers.state.level_props_broadphase:unregister_extension_system(self)
+LuggableSocketSystem.on_remove_extension = function (self, unit, extension_name)
+	table.remove(self._socket_units, table.find(self._socket_units, unit))
+	self:_unregister_staggered_item_update("unlock_socket_iterator", self._unit_to_extension_map[unit])
 
+	return LuggableSocketSystem.super.on_remove_extension(self, unit, extension_name)
+end
+
+LuggableSocketSystem.destroy = function (self, ...)
 	if not self._is_server then
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 	end
@@ -64,21 +72,6 @@ end
 
 LuggableSocketSystem.socket_units = function (self)
 	return self._socket_units
-end
-
-LuggableSocketSystem.update_level_props_broadphase = function (self)
-	local unit_to_extension_map = self._unit_to_extension_map
-
-	for unit, extension in pairs(unit_to_extension_map) do
-		local units_nearby = LevelPropsBroadphase.check_units_nearby(POSITION_LOOKUP[unit])
-		local in_update_list = self:has_update_function("LuggableSocketExtension", "update", unit)
-
-		if units_nearby and not in_update_list then
-			self:enable_update_function("LuggableSocketExtension", "update", unit, extension)
-		elseif not units_nearby and in_update_list then
-			self:disable_update_function("LuggableSocketExtension", "update", unit, extension)
-		end
-	end
 end
 
 LuggableSocketSystem.rpc_luggable_socket_luggable = function (self, channel_id, socket_id, socket_is_level_unit, socketed_id, socketed_is_level_unit)

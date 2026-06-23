@@ -181,6 +181,10 @@ DialogueExtension.init = function (self, extension_init_context, unit, extension
 				if not player:is_human_controlled() then
 					self._context.player_level = self._dialogue_system.global_context.team_lowest_player_level
 				end
+
+				if profile.archetype.name == "cryptic" then
+					self._cryptic_voice_effects = profile.voice_effects
+				end
 			end
 		end
 
@@ -303,6 +307,14 @@ DialogueExtension.extensions_ready = function (self, world, unit)
 
 	if self._wwise_source_id == nil then
 		self._wwise_source_id = WwiseWorld.make_manual_source(self._wwise_world, play_unit, voice_node)
+	end
+
+	local voice_effects = self._cryptic_voice_effects
+
+	if voice_effects then
+		for voice_fx_id, value in pairs(voice_effects) do
+			self:set_cryptic_voice_fx(value, voice_fx_id)
+		end
 	end
 end
 
@@ -608,13 +620,21 @@ DialogueExtension.set_voice_fx_preset = function (self, optional_voice_fx_preset
 	self._context.voice_fx_preset = voice_fx_preset
 end
 
+DialogueExtension.set_cryptic_voice_fx = function (self, value, voice_fx_id)
+	WwiseWorld.set_source_parameter(self._wwise_world, self._wwise_source_id, voice_fx_id, value)
+end
+
+DialogueExtension.cryptic_voice_fx = function (self)
+	return self._cryptic_voice_effects
+end
+
 DialogueExtension._set_source_parameter = function (self, parameter, value, wwise_source_id)
 	WwiseWorld.set_source_parameter(self._wwise_world, wwise_source_id, parameter, value)
 end
 
-DialogueExtension.get_dialogue_event_index = function (self, query)
+DialogueExtension.get_dialogue_event_index = function (self, rule_name)
 	local vo_choice = self._vo_choice
-	local dialogue = vo_choice[query.result]
+	local dialogue = vo_choice[rule_name]
 
 	if dialogue then
 		local dialogue_index = DialogueQueries.get_dialogue_event_index(dialogue)

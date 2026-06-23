@@ -26,7 +26,7 @@ local TITLE_REQUEST_RETRY_COUNT = 5
 local TIME_SYNC_STATES = table.enum("not_started", "running", "failed", "synced")
 local TIME_SYNC_PAUSE_BETWEEN_RETRY_SECONDS = 10
 local TIME_SYNC_ACCEPTABLE_LATENCY_SECONDS = 5
-local DEFAULT_AUTHENTICATION_SERIVCE_URL = "https://bsp-auth-dev.fatsharkgames.se"
+local DEFAULT_AUTHENTICATION_SERIVCE_URL = "https://login.shr-dev-identity.fatshark.services"
 local DEFAULT_TITLE_SERIVCE_URL = "https://bsp-td-dev.fatsharkgames.se"
 local DEFAULT_TELEMERTY_SERVICE_URL = "https://telemetry-utvxrq72na-ez.a.run.app/events"
 
@@ -350,11 +350,7 @@ BackendManager._set_backend_env = function (self, title_service_url)
 		rawset(_G, "BACKEND_ENV", match)
 	end
 
-	local PresenceEntryMyself = require("scripts/managers/presence/presence_entry_myself")
-
-	rawset(_G, "AUTH_PLATFORM", PresenceEntryMyself.get_platform())
 	Crashify.print_property("backend_env", BACKEND_ENV)
-	Crashify.print_property("auth_platform", AUTH_PLATFORM)
 	Managers.telemetry_events:refresh_settings()
 end
 
@@ -565,10 +561,14 @@ BackendManager.get_server_time = function (self, t)
 	end
 end
 
-BackendManager.time_sync_restart = function (self)
+BackendManager.on_resume = function (self)
 	self.server_time_game_start_epoch = nil
 	self.time_sync_started_t = nil
 	self.time_sync_state = TIME_SYNC_STATES.not_started
+
+	if IS_XBS then
+		XboxLiveUtils.close_user_context()
+	end
 end
 
 BackendManager.failed_request = function (self)

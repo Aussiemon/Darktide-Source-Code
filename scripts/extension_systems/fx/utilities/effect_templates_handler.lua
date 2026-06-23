@@ -170,10 +170,13 @@ EffectTemplatesHandler.stop_template_effect = function (self, template_context, 
 	table.swap_delete(running_template_effects, index_to_remove)
 end
 
+local _effects_to_stop = {}
+
 EffectTemplatesHandler.update = function (self, template_context, dt, t)
 	local allow_template_effects_life_time = self._allow_template_effects_life_time
 	local running_template_effects = self._running_template_effects
-	local effects_to_stop = {}
+
+	table.clear(_effects_to_stop)
 
 	for i = 1, #running_template_effects do
 		local template_effect = running_template_effects[i]
@@ -182,12 +185,12 @@ EffectTemplatesHandler.update = function (self, template_context, dt, t)
 		local stop_effect = template.update(template_data, template_context, dt, t)
 
 		if template_context.is_server and allow_template_effects_life_time and stop_effect then
-			table.insert(effects_to_stop, template_effect.global_effect_id)
+			table.insert(_effects_to_stop, template_effect.global_effect_id)
 		end
 	end
 
 	if template_context.is_server then
-		for _, effect_id_to_stop in ipairs(effects_to_stop) do
+		for _, effect_id_to_stop in ipairs(_effects_to_stop) do
 			self:remove_template_effect(template_context, effect_id_to_stop)
 		end
 	end

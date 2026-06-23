@@ -86,9 +86,9 @@ local LOCALIZATION_MANAGER_STATUS = table.enum("empty", "loading", "ready")
 local function _select_language()
 	local language
 
-	if PLATFORM == "win32" then
-		language = Application.user_setting("language_id") or HAS_STEAM and Steam:language() or DEFAULT_LANGUAGE
-	elseif PLATFORM == "ps5" then
+	if IS_WINDOWS then
+		language = Application.user_setting("language_id") or HAS_STEAM and Steam.language() or DEFAULT_LANGUAGE
+	elseif IS_PLAYSTATION then
 		local locale = PS5.locale() or "error"
 
 		language = ps5_format_locale(locale)
@@ -96,11 +96,11 @@ local function _select_language()
 		local locale = XboxLive.locale() or "error"
 
 		language = xbox_format_locale(locale)
-	elseif PLATFORM == "xbs" then
+	elseif IS_XBS then
 		local locale = XboxLive.locale() or "error"
 
 		language = xbox_format_locale(locale)
-	elseif PLATFORM == "linux" then
+	elseif DEDICATED_SERVER then
 		language = "en"
 	end
 

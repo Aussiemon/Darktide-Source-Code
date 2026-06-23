@@ -72,7 +72,7 @@ damage_templates.force_staff_ball = {
 	gibbing_power = gibbing_power.light,
 	gibbing_type = gibbing_types.warp,
 	gib_push_force = GibbingSettings.gib_push_force.force_assault,
-	wounds_template = WoundsTemplates.psyker_ball,
+	wounds_template = WoundsTemplates.force_projectile,
 	suppression_value = {
 		10,
 		15,

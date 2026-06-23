@@ -236,6 +236,14 @@ local expedition_settings = {
 		"content/levels/expeditions/safe_zones/wastes/sz_cave_tunnels_002/missions/mission_sz_cave_tunnels_002",
 		"content/levels/expeditions/safe_zones/wastes/sz_stronghold_ruin_002/missions/mission_sz_stronghold_ruin_002",
 	},
+	loot_deduction_settings = {
+		player_death_penalty_drop_amount_multiplier = 0.25,
+		player_death_penalty_multiplier = 0.25,
+		player_extraction_penalty_multiplier = 0.25,
+		player_hogtied_safe_zone_relocation_penalty_multiplier = 1,
+		player_penalty_increment = 5,
+		team_loot_player_death_penalty_threshold = 100,
+	},
 	loot_settings = {
 		pickup_name_format = "expedition_loot_%s_tier_%d",
 		reward_base_budget = 100,
@@ -381,18 +389,18 @@ local expedition_settings = {
 		settings_by_type = {
 			small = {
 				values_per_tier = {
-					25,
-					50,
+					5,
+					10,
 				},
 			},
 		},
 		ambient_budgets_per_difficulty = {
 			0,
-			600,
-			600,
-			600,
-			600,
-			600,
+			0,
+			200,
+			200,
+			200,
+			200,
 		},
 		ambient_location_multipliers = {
 			{
@@ -419,8 +427,8 @@ local expedition_settings = {
 		ambient_distribution_weights = {
 			by_tier = {
 				{
-					max = 3,
-					min = 3,
+					max = 1,
+					min = 1,
 				},
 				{
 					max = 1,
@@ -429,8 +437,8 @@ local expedition_settings = {
 			},
 			by_source = {
 				primary = {
-					max = 0,
-					min = 0,
+					max = 3,
+					min = 3,
 				},
 				secondary = {
 					max = 1,
@@ -443,57 +451,68 @@ local expedition_settings = {
 		pickups = {
 			health_station = {
 				player_purchases_per_store = 1,
-				price = 50,
+				price = 10,
 			},
 			large_ammunition_crate = {
-				price = 50,
+				price = 10,
 			},
 			small_grenade = {
-				price = 25,
+				price = 75,
+			},
+			expedition_explosive_luggable_01 = {
+				charges = 1,
+				price = 50,
+				random_spawn = true,
 			},
 			syringe_corruption_pocketable = {
+				charges = 1,
 				price = 75,
 				random_spawn = true,
 			},
 			motion_detection_mine_fire_pocketable = {
-				price = 0,
+				charges = 1,
+				price = 75,
 				random_spawn = true,
 			},
 			motion_detection_mine_shock_pocketable = {
-				price = 0,
+				charges = 1,
+				price = 75,
 				random_spawn = true,
 			},
 			motion_detection_mine_explosive_pocketable = {
-				price = 0,
-				random_spawn = true,
-			},
-			expedition_grenade_artillery_strike_pocketable = {
-				price = 0,
-				random_spawn = true,
-			},
-			expedition_grenade_valkyrie_hover_pocketable = {
-				player_purchases_per_store = 1,
-				price = 10,
-				random_spawn = true,
-			},
-			expedition_time_syringe_timed = {
-				price = 0,
-				random_spawn = true,
-			},
-			expedition_explosive_luggable_01 = {
-				price = 0,
-				random_spawn = true,
-			},
-			expedition_deployable_force_field_pocketable = {
-				price = 0,
-				random_spawn = true,
-			},
-			expedition_grenade_airstrike_pocketable = {
-				price = 0,
+				charges = 1,
+				price = 75,
 				random_spawn = true,
 			},
 			expedition_grenade_big_pocketable = {
-				price = 0,
+				charges = 1,
+				price = 75,
+				random_spawn = true,
+			},
+			expedition_grenade_artillery_strike_pocketable = {
+				charges = 1,
+				price = 100,
+				random_spawn = true,
+			},
+			expedition_time_syringe_timed = {
+				charges = 1,
+				price = 100,
+				random_spawn = true,
+			},
+			expedition_deployable_force_field_pocketable = {
+				charges = 1,
+				price = 100,
+				random_spawn = true,
+			},
+			expedition_grenade_airstrike_pocketable = {
+				charges = 1,
+				price = 100,
+				random_spawn = true,
+			},
+			expedition_grenade_valkyrie_hover_pocketable = {
+				charges = 1,
+				player_purchases_per_store = 1,
+				price = 150,
 				random_spawn = true,
 			},
 		},

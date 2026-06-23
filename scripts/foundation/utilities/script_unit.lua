@@ -43,7 +43,7 @@ end
 ScriptUnit.extension_input = function (unit, system_name)
 	local extension = _local_extension(unit, system_name)
 
-	return extension.input
+	return extension and extension.input
 end
 
 ScriptUnit.extension = function (unit, system_name)

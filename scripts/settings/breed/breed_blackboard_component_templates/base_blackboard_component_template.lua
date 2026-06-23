@@ -17,6 +17,12 @@ local base_template = {
 		group_target = "Unit",
 		owning_auto_event_id = "string",
 	},
+	weapon_malfunction = {
+		is_malfunctioning = "boolean",
+		malfunction_buff_id = "number",
+		malfunctioning_time = "number",
+		refresh_malfunctioning_time = "boolean",
+	},
 	death = {
 		attack_direction = "Vector3Box",
 		damage_profile_name = "string",
@@ -40,6 +46,7 @@ local base_template = {
 		stagger_pool_last_modified = "number",
 		stagger_strength_multiplier = "number",
 		stagger_strength_pool = "number",
+		staggered_by_melee_push = "boolean",
 		type = "string",
 	},
 	perception = {

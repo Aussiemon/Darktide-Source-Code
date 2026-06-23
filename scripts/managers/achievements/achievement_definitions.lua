@@ -408,6 +408,7 @@ do
 		local category_name = "veteran_2"
 		local category_progression = "veteran_progression"
 		local category_abilites = "veteran_abilites"
+		local category_challenges = "veteran_challenges"
 		local base_achievement_icons = {
 			class_group = "content/ui/textures/icons/achievements/class_achievements/veteran/class_veteran_achievement_12",
 			class_group_legacy = "content/ui/textures/icons/achievements/achievement_icon_0096",
@@ -445,7 +446,7 @@ do
 			target = 350,
 			title = "loc_achievement_veteran_2_easy_1_name",
 			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
+			category = category_challenges,
 			flags = {},
 		}
 		achievement_definitions.veteran_2_easy_2 = {
@@ -565,7 +566,7 @@ do
 			target = 100,
 			title = "loc_achievement_veteran_2_medium_2_name",
 			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
+			category = category_challenges,
 			flags = {},
 			loc_variables = {
 				distance = 30,
@@ -644,6 +645,7 @@ do
 		local category_name = "zealot_2"
 		local category_progression = "zealot_progression"
 		local category_abilites = "zealot_abilites"
+		local category_challenges = "zealot_challenges"
 		local base_achievement_icons = {
 			class_group = "content/ui/textures/icons/achievements/class_achievements/zealot/class_zealot_achievement_12",
 			class_group_legacy = "content/ui/textures/icons/achievements/achievement_icon_0096",
@@ -791,7 +793,7 @@ do
 			target = 75,
 			title = "loc_achievement_zealot_2_medium_1_name",
 			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
+			category = category_abilites,
 			flags = {},
 		}
 		achievement_definitions.zealot_2_medium_2 = {
@@ -814,7 +816,7 @@ do
 			target = 75,
 			title = "loc_achievement_zealot_2_hard_1_name",
 			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
+			category = category_challenges,
 			flags = {},
 		}
 		achievement_definitions.zealot_2_hard_2 = {
@@ -874,6 +876,7 @@ do
 		local category_name = "psyker_2"
 		local category_progression = "psyker_progression"
 		local category_abilites = "psyker_abilites"
+		local category_challenges = "psyker_challenges"
 		local base_achievement_icons = {
 			class_group = "content/ui/textures/icons/achievements/class_achievements/psyker/class_psyker_achievement_12",
 			class_group_legacy = "content/ui/textures/icons/achievements/achievement_icon_0096",
@@ -941,7 +944,7 @@ do
 			target = 2500,
 			title = "loc_achievement_psyker_2_medium_2_name",
 			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
+			category = category_challenges,
 			flags = {},
 		}
 		achievement_definitions.psyker_2_hard_1 = {
@@ -961,7 +964,7 @@ do
 			target = 3,
 			title = "loc_achievement_psyker_2_hard_2_name",
 			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
+			category = category_challenges,
 			flags = {},
 		}
 		achievement_definitions.psyker_elite_or_special_kills_with_assail = {
@@ -1101,6 +1104,7 @@ do
 		local category_name = "ogryn_2"
 		local category_progression = "ogryn_progression"
 		local category_abilites = "ogryn_abilites"
+		local category_challenges = "ogryn_challenges"
 		local base_achievement_icons = {
 			class_group = "content/ui/textures/icons/achievements/class_achievements/ogryn/class_ogryn_achievement_12",
 			class_group_legacy = "content/ui/textures/icons/achievements/achievement_icon_0096",
@@ -1138,7 +1142,7 @@ do
 			target = 40,
 			title = "loc_achievement_ogryn_2_easy_1_name",
 			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
+			category = category_challenges,
 			flags = {},
 		}
 		achievement_definitions.ogryn_2_easy_2 = {
@@ -1148,7 +1152,7 @@ do
 			target = 5000,
 			title = "loc_achievement_ogryn_2_easy_2_name",
 			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
+			category = category_challenges,
 			flags = {},
 		}
 		achievement_definitions.ogryn_2_medium_1 = {
@@ -1171,7 +1175,7 @@ do
 			target = 250,
 			title = "loc_achievement_ogryn_2_medium_2_name",
 			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
+			category = category_challenges,
 			flags = {},
 			loc_variables = {
 				amount = 2,
@@ -1184,7 +1188,7 @@ do
 			target = 3,
 			title = "loc_achievement_ogryn_2_hard_1_name",
 			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
+			category = category_challenges,
 			flags = {},
 			loc_variables = {
 				time = 10,
@@ -1359,6 +1363,7 @@ do
 		local category_name = "adamant"
 		local category_progression = "adamant_progression"
 		local category_abilites = "adamant_abilites"
+		local category_challenges = "adamant_challenges"
 		local base_achievement_icons = {
 			class_group = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0009",
 			class_group_legacy = "content/ui/textures/icons/achievements/achievement_icon_0096",
@@ -1538,7 +1543,7 @@ do
 			target = 50,
 			title = "loc_achievement_adamant_hunt_snipers",
 			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
+			category = category_challenges,
 			flags = {},
 			loc_variables = {
 				amount = 50,
@@ -1551,7 +1556,7 @@ do
 			target = 50,
 			title = "loc_achievement_adamant_knock_chargers",
 			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
+			category = category_challenges,
 			flags = {},
 			loc_variables = {
 				amount = 50,
@@ -1564,7 +1569,7 @@ do
 			target = 750,
 			title = "loc_achievement_adamant_kill_pounced_enemies",
 			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
+			category = category_challenges,
 			flags = {},
 			loc_variables = {
 				amount = 750,
@@ -1577,7 +1582,7 @@ do
 			target = 500,
 			title = "loc_achievement_adamant_kill_electrocuted",
 			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
+			category = category_challenges,
 			flags = {},
 			loc_variables = {
 				amount = 500,
@@ -1588,7 +1593,7 @@ do
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0024",
 			title = "loc_achievement_adamant_saved_from_dog",
 			type = AchievementTypesLookup.direct_unlock,
-			category = category_progression,
+			category = category_challenges,
 			flags = {},
 		}
 		achievement_definitions.adamant_pet_companion = {
@@ -1596,7 +1601,7 @@ do
 			icon = "content/ui/textures/icons/achievements/class_achievements/adamant/achievement_icon_adamant_0025",
 			title = "loc_achievement_adamant_pet_dog",
 			type = AchievementTypesLookup.direct_unlock,
-			category = category_progression,
+			category = category_challenges,
 			flags = {},
 		}
 		achievement_definitions.adamant_blocked_attack_from_unique_enemies = {
@@ -1606,7 +1611,7 @@ do
 			target = 250,
 			title = "loc_achievement_adamant_block_enemies",
 			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
+			category = category_challenges,
 			flags = {},
 			loc_variables = {
 				amount = 250,
@@ -1674,6 +1679,7 @@ do
 		local category_name = "broker"
 		local category_progression = "broker_progression"
 		local category_abilites = "broker_abilites"
+		local category_challenges = "broker_challenges"
 		local base_achievement_icons = {
 			class_group = "content/ui/textures/icons/achievements/class_achievements/broker/achievement_icon_broker_0009",
 			class_group_legacy = "content/ui/textures/icons/achievements/achievement_icon_0096",
@@ -2130,8 +2136,523 @@ do
 	end
 
 	do
+		local category_name = "cryptic"
+		local category_progression = "cryptic_progression"
+		local category_abilites = "cryptic_abilites"
+		local category_challenges = "cryptic_challenges"
+		local base_achievement_icons = {
+			class_group = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0009",
+			class_group_legacy = "content/ui/textures/icons/achievements/achievement_icon_0096",
+			group_rank_and_difficulty = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0007",
+			group_rank_and_difficulty_b = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0008",
+			mission_easy_difficulty = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0005",
+			mission_medium_difficulty = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0006",
+			missions = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0003",
+			missions_objective = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0004",
+			rank = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0002",
+		}
+		local legacy_group_class_targets = {
+			{
+				"cryptic_enemies_electrocuted",
+				"cryptic_use_three_ability_charges",
+			},
+			{
+				"group_class_cryptic_2_1",
+				"cryptic_use_one_ability_charge",
+				"cryptic_win_in_all_game_modes",
+			},
+			{
+				"group_class_cryptic_2_2",
+				"cryptic_arc_jumps",
+				"cryptic_weapon_malfunction_on_elite_ranged",
+			},
+		}
+		local rework_group_class_targets = {
+			{
+				"rank_cryptic_2_4",
+				"missions_cryptic_2_objective_1",
+				"missions_cryptic_2_1",
+				"cryptic_weapon_malfunction_on_elite_ranged",
+				"cryptic_complete_mission_with_all_main_talents",
+			},
+			{
+				"group_class_cryptic_2_1_rework",
+				"rank_cryptic_2_5",
+				"missions_cryptic_2_objective_2",
+				"missions_cryptic_2_2",
+				"cryptic_precision_stance_weakspot_kills",
+				"cryptic_chordclaw_kills_combo",
+			},
+			{
+				"group_class_cryptic_2_2_rework",
+				"rank_cryptic_2_6",
+				"missions_cryptic_2_objective_3",
+				"missions_cryptic_2_3",
+				"cryptic_melee_weapons_mastery",
+				"cryptic_ranged_weapons_mastery",
+			},
+		}
+
+		_generate_base_archetype_penances("cryptic", category_name, category_progression, category_abilites, base_achievement_icons, legacy_group_class_targets, rework_group_class_targets)
+
+		achievement_definitions.cryptic_medicae_saves = {
+			description = "loc_achievement_cryptic_medicae_saves_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0010",
+			target = 3,
+			title = "loc_achievement_cryptic_medicae_saves_name",
+			type = AchievementTypesLookup.multi_stat,
+			stats = {
+				cryptic_servo_skull_medicae_helps_hogtied_ally = {
+					increasing = true,
+					target = 1,
+				},
+				cryptic_servo_skull_medicae_helps_knocked_down_ally = {
+					increasing = true,
+					target = 1,
+				},
+				cryptic_servo_skull_medicae_helps_netted_ally = {
+					increasing = true,
+					target = 1,
+				},
+			},
+			category = category_abilites,
+			flags = {
+				AchievementFlags.use_checkboxes,
+			},
+			loc_variables = {},
+		}
+		achievement_definitions.cryptic_hacking_solves = {
+			description = "loc_achievement_cryptic_hacking_solves_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0011",
+			target = 5,
+			title = "loc_achievement_cryptic_hacking_solves_name",
+			type = AchievementTypesLookup.multi_stat,
+			stats = {
+				cryptic_servo_skull_hacking_on_expeditions = {
+					increasing = true,
+					target = 1,
+				},
+				cryptic_servo_skull_hacking_on_mission_cm_habs = {
+					increasing = true,
+					target = 1,
+				},
+				cryptic_servo_skull_hacking_on_mission_op_train = {
+					increasing = true,
+					target = 1,
+				},
+				cryptic_servo_skull_hacking_on_mission_lm_cooling = {
+					increasing = true,
+					target = 1,
+				},
+				cryptic_servo_skull_hacking_on_mission_cm_raid = {
+					increasing = true,
+					target = 1,
+				},
+			},
+			category = category_abilites,
+			flags = {
+				AchievementFlags.use_checkboxes,
+			},
+			loc_variables = {},
+		}
+		achievement_definitions.cryptic_flamethrower_kills = {
+			description = "loc_achievement_cryptic_flamethrower_kills_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0012",
+			stat_name = "cryptic_servo_skull_flamethrower_unique_kills_on_single_use",
+			target = 80,
+			title = "loc_achievement_cryptic_flamethrower_kills_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 80,
+			},
+			flags = {},
+		}
+		achievement_definitions.cryptic_overload_stacking = {
+			description = "loc_achievement_cryptic_overload_stacking_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0013",
+			stat_name = "cryptic_overload_keystone_triggers_in_session",
+			target = 50,
+			title = "loc_achievement_cryptic_overload_stacking_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 50,
+			},
+			flags = {},
+		}
+		achievement_definitions.cryptic_weapon_malfunction_on_elite_ranged = {
+			description = "loc_achievement_cryptic_weapon_malfunction_on_elite_ranged_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0014",
+			stat_name = "cryptic_weapon_malfunction_applied_on_elite_ranged",
+			target = 500,
+			title = "loc_achievement_cryptic_weapon_malfunction_on_elite_ranged_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 500,
+			},
+			flags = {},
+		}
+		achievement_definitions.cryptic_enemies_electrocuted = {
+			description = "loc_achievement_cryptic_enemies_electrocuted_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0015",
+			stat_name = "cryptic_enemies_electrocuted",
+			target = 5000,
+			title = "loc_achievement_cryptic_enemies_electrocuted_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 5000,
+			},
+			flags = {},
+		}
+		achievement_definitions.cryptic_arc_jumps = {
+			description = "loc_achievement_cryptic_arc_jumps_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0016",
+			stat_name = "cryptic_arc_jumps",
+			target = 5000,
+			title = "loc_achievement_cryptic_arc_jumps_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 5000,
+			},
+			flags = {},
+		}
+		achievement_definitions.cryptic_chordclaw_kills_combo = {
+			description = "loc_achievement_cryptic_chordclaw_kills_combo_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0017",
+			stat_name = "cryptic_chordclaw_kills_within_time",
+			target = 5,
+			title = "loc_achievement_cryptic_chordclaw_kills_combo_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 5,
+				time = 10,
+			},
+			flags = {},
+		}
+		achievement_definitions.cryptic_melee_weapons_mastery = {
+			description = "loc_achievement_cryptic_weapons_mastery_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0018",
+			target = 3,
+			title = "loc_achievement_cryptic_melee_weapons_mastery_name",
+			type = AchievementTypesLookup.multi_stat,
+			stats = {
+				mastery_track_reached_20_transonic_sword_transonic_knife_p1 = {
+					increasing = true,
+					target = 1,
+				},
+				mastery_track_reached_20_powersword_p3 = {
+					increasing = true,
+					target = 1,
+				},
+				mastery_track_reached_20_powermaul_p3 = {
+					increasing = true,
+					target = 1,
+				},
+			},
+			category = category_progression,
+			flags = {
+				AchievementFlags.use_checkboxes,
+			},
+			loc_variables = {},
+		}
+		achievement_definitions.cryptic_ranged_weapons_mastery = {
+			description = "loc_achievement_cryptic_weapons_mastery_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0019",
+			target = 3,
+			title = "loc_achievement_cryptic_ranged_weapons_mastery_name",
+			type = AchievementTypesLookup.multi_stat,
+			stats = {
+				mastery_track_reached_20_galvanic_rifle_p1 = {
+					increasing = true,
+					target = 1,
+				},
+				mastery_track_reached_20_arc_rifle_p1 = {
+					increasing = true,
+					target = 1,
+				},
+				mastery_track_reached_20_phosphor_pistol_p1 = {
+					increasing = true,
+					target = 1,
+				},
+			},
+			category = category_progression,
+			flags = {
+				AchievementFlags.use_checkboxes,
+			},
+			loc_variables = {},
+		}
+		achievement_definitions.cryptic_use_three_ability_charges = {
+			description = "loc_achievement_cryptic_use_min_num_ability_charges_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0020",
+			stat_name = "cryptic_combat_ability_used_at_three_charges",
+			target = 100,
+			title = "loc_achievement_cryptic_use_min_num_ability_charges_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				num_charges = 2,
+				target = 100,
+			},
+			flags = {},
+		}
+		achievement_definitions.cryptic_use_one_ability_charge = {
+			description = "loc_achievement_cryptic_use_one_ability_charge_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0021",
+			stat_name = "cryptic_combat_ability_used_at_one_charge",
+			target = 300,
+			title = "loc_achievement_cryptic_use_one_ability_charge_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 300,
+			},
+			flags = {},
+		}
+		achievement_definitions.cryptic_precision_stance_weakspot_kills = {
+			description = "loc_achievement_cryptic_precision_stance_weakspot_kills_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0022",
+			stat_name = "cryptic_precision_stance_weakspot_kills",
+			target = 500,
+			title = "loc_achievement_cryptic_precision_stance_weakspot_kills_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 500,
+			},
+			flags = {},
+		}
+
+		local _cryptic_all_main_talents = {
+			{
+				talent_id = "discharge",
+				talent_name = "cryptic_discharge",
+			},
+			{
+				talent_id = "precision_stance",
+				talent_name = "cryptic_precision_stance",
+			},
+			{
+				talent_id = "chordclaw",
+				talent_name = "cryptic_chordclaw",
+			},
+			{
+				talent_id = "servo_skull",
+				talent_name = "cryptic_servo_skull_improved",
+			},
+			{
+				talent_id = "force_field",
+				talent_name = "cryptic_grenade_ability_force_field",
+			},
+			{
+				talent_id = "arc_grenade",
+				talent_name = "cryptic_grenade_ability_arc_grenade",
+			},
+			{
+				talent_id = "power_generation_keystone",
+				talent_name = "cryptic_redline",
+			},
+			{
+				talent_id = "dissector_keystone",
+				talent_name = "cryptic_dissector",
+			},
+			{
+				talent_id = "overload_keystone",
+				talent_name = "cryptic_overload_keystone",
+			},
+			{
+				talent_id = "toughness_regen_aura",
+				talent_name = "cryptic_coherency_regen_aura_improved",
+			},
+			{
+				talent_id = "blitz_aura",
+				talent_name = "cryptic_ammo_aura",
+			},
+			{
+				talent_id = "weapon_improved_aura",
+				talent_name = "cryptic_aura_weapon_improved",
+			},
+		}
+		local _cryptic_complete_mission_with_all_main_talents_stats = {}
+		local _num_cryptic_complete_mission_with_all_main_talents_stats = 0
+
+		for _, target_talent in ipairs(_cryptic_all_main_talents) do
+			local stat_name = string.format("cryptic_completed_missions_using_%s", target_talent.talent_id)
+
+			_cryptic_complete_mission_with_all_main_talents_stats[stat_name] = {
+				increasing = true,
+				target = 1,
+			}
+			_num_cryptic_complete_mission_with_all_main_talents_stats = _num_cryptic_complete_mission_with_all_main_talents_stats + 1
+		end
+
+		achievement_definitions.cryptic_complete_mission_with_all_main_talents = {
+			description = "loc_achievement_cryptic_complete_mission_with_all_main_talents_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0023",
+			title = "loc_achievement_cryptic_complete_mission_with_all_main_talents_name",
+			type = AchievementTypesLookup.multi_stat,
+			target = _num_cryptic_complete_mission_with_all_main_talents_stats,
+			stats = _cryptic_complete_mission_with_all_main_talents_stats,
+			category = category_progression,
+			flags = {
+				AchievementFlags.use_checkboxes,
+			},
+			loc_variables = {},
+		}
+		achievement_definitions.cryptic_force_field_ranged_attacks_protection = {
+			description = "loc_achievement_cryptic_force_field_ranged_attacks_protection_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0024",
+			stat_name = "cryptic_force_field_ranged_attacks_blocked",
+			target = 1500,
+			title = "loc_achievement_cryptic_force_field_ranged_attacks_protection_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 1500,
+			},
+			flags = {},
+		}
+		achievement_definitions.cryptic_win_in_all_game_modes = {
+			description = "loc_achievement_cryptic_win_in_all_game_modes_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0025",
+			target = 3,
+			title = "loc_achievement_cryptic_win_in_all_game_modes_name",
+			type = AchievementTypesLookup.multi_stat,
+			stats = {
+				cryptic_win_in_game_mode_coop = {
+					increasing = true,
+					target = 1,
+				},
+				cryptic_win_in_game_mode_expeditions = {
+					increasing = true,
+					target = 1,
+				},
+				cryptic_win_in_game_mode_hordes = {
+					increasing = true,
+					target = 1,
+				},
+			},
+			category = category_progression,
+			flags = {
+				AchievementFlags.use_checkboxes,
+			},
+			loc_variables = {},
+		}
+		achievement_definitions.cryptic_win_using_overload_keystone_and_abilities_combo = {
+			description = "loc_achievement_cryptic_win_using_overload_keystone_and_abilities_combo_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0026",
+			target = 3,
+			title = "loc_achievement_cryptic_win_using_overload_keystone_and_abilities_combo_name",
+			type = AchievementTypesLookup.multi_stat,
+			stats = {
+				cryptic_completed_missions_using_overload_keystone_and_chordclaw = {
+					increasing = true,
+					target = 1,
+				},
+				cryptic_completed_missions_using_overload_keystone_and_discharge = {
+					increasing = true,
+					target = 1,
+				},
+				cryptic_completed_missions_using_overload_keystone_and_precision_stance = {
+					increasing = true,
+					target = 1,
+				},
+			},
+			category = category_progression,
+			flags = {
+				AchievementFlags.use_checkboxes,
+			},
+			loc_variables = {},
+		}
+		achievement_definitions.cryptic_win_using_power_generation_keystone_and_abilities_combo = {
+			description = "loc_achievement_cryptic_win_using_power_generation_keystone_and_abilities_combo_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0027",
+			target = 3,
+			title = "loc_achievement_cryptic_win_using_power_generation_keystone_and_abilities_combo_name",
+			type = AchievementTypesLookup.multi_stat,
+			stats = {
+				cryptic_completed_missions_using_power_generation_keystone_and_chordclaw = {
+					increasing = true,
+					target = 1,
+				},
+				cryptic_completed_missions_using_power_generation_keystone_and_discharge = {
+					increasing = true,
+					target = 1,
+				},
+				cryptic_completed_missions_using_power_generation_keystone_and_precision_stance = {
+					increasing = true,
+					target = 1,
+				},
+			},
+			category = category_progression,
+			flags = {
+				AchievementFlags.use_checkboxes,
+			},
+			loc_variables = {},
+		}
+		achievement_definitions.cryptic_win_using_dissector_keystone_and_abilities_combo = {
+			description = "loc_achievement_cryptic_win_using_dissector_keystone_and_abilities_combo_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0028",
+			target = 3,
+			title = "loc_achievement_cryptic_win_using_dissector_keystone_and_abilities_combo_name",
+			type = AchievementTypesLookup.multi_stat,
+			stats = {
+				cryptic_completed_missions_using_dissector_keystone_and_chordclaw = {
+					increasing = true,
+					target = 1,
+				},
+				cryptic_completed_missions_using_dissector_keystone_and_discharge = {
+					increasing = true,
+					target = 1,
+				},
+				cryptic_completed_missions_using_dissector_keystone_and_precision_stance = {
+					increasing = true,
+					target = 1,
+				},
+			},
+			category = category_progression,
+			flags = {
+				AchievementFlags.use_checkboxes,
+			},
+			loc_variables = {},
+		}
+		achievement_definitions.cryptic_restore_ability_charges_using_power_generation = {
+			description = "loc_achievement_cryptic_restore_ability_charges_using_power_generation_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0029",
+			stat_name = "cryptic_ability_charges_gained_using_power_generation",
+			target = 500,
+			title = "loc_achievement_cryptic_restore_ability_charges_using_power_generation_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				target = 500,
+			},
+			flags = {},
+		}
+		achievement_definitions.cryptic_percent_mission_won_with_dissector_stacks = {
+			description = "loc_achievement_cryptic_percent_mission_won_with_dissector_stacks_description",
+			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0030",
+			stat_name = "cryptic_percent_mission_won_at_max_dissector_stacks",
+			target = 1,
+			title = "loc_achievement_cryptic_percent_mission_won_with_dissector_stacks_name",
+			type = AchievementTypesLookup.increasing_stat,
+			category = category_abilites,
+			loc_variables = {
+				mission_percentage = 90,
+				num_stacks = 6,
+			},
+			flags = {},
+		}
+	end
+
+	do
 		local category_progression = "veteran_progression"
 		local category_abilites = "veteran_abilites"
+		local category_challenges = "veteran_challenges"
 
 		achievement_definitions.veteran_2_weakspot_hits_during_volley_fire_alternate_fire = {
 			description = "loc_achievement_veteran_2_weakspot_hits_during_volley_fire_alternate_fire_fix_description",
@@ -2163,7 +2684,7 @@ do
 			target = 8,
 			title = "loc_achievement_veteran_2_kills_with_last_round_in_mag_name",
 			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
+			category = category_challenges,
 			flags = {
 				AchievementFlags.hide_from_carousel,
 			},
@@ -2175,7 +2696,7 @@ do
 			target = 1,
 			title = "loc_achievement_veteran_2_no_melee_damage_taken_name",
 			type = AchievementTypesLookup.decreasing_stat,
-			category = category_progression,
+			category = category_challenges,
 			flags = {},
 		}
 		achievement_definitions.veteran_2_elite_weakspot_kills_during_volley_fire_alternate_fire = {
@@ -2197,7 +2718,7 @@ do
 			target = 90,
 			title = "loc_achievement_veteran_2_no_missed_shots_empty_ammo_name",
 			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
+			category = category_challenges,
 			flags = {
 				AchievementFlags.hide_progress,
 			},
@@ -2210,6 +2731,7 @@ do
 	do
 		local category_progression = "zealot_progression"
 		local category_abilites = "zealot_abilites"
+		local category_challenges = "zealot_challenges"
 
 		achievement_definitions.zealot_2_stagger_sniper_with_grenade_distance = {
 			description = "loc_achievement_zealot_2_stagger_sniper_with_grenade_distance_fix_description",
@@ -2257,7 +2779,7 @@ do
 			target = 1,
 			title = "loc_achievement_zealot_2_not_use_ranged_attacks_name",
 			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
+			category = category_challenges,
 			flags = {
 				AchievementFlags.hide_progress,
 			},
@@ -2279,7 +2801,7 @@ do
 			target = 1200,
 			title = "loc_achievement_zealot_2_health_on_last_segment_enough_during_mission_name",
 			type = AchievementTypesLookup.decreasing_stat,
-			category = category_progression,
+			category = category_challenges,
 			flags = {
 				AchievementFlags.private_only,
 			},
@@ -2293,6 +2815,7 @@ do
 	do
 		local category_progression = "psyker_progression"
 		local category_abilites = "psyker_abilites"
+		local category_challenges = "psyker_challenges"
 
 		achievement_definitions.psyker_2_smite_hound_mid_leap = {
 			description = "loc_achievement_psyker_2_smite_hound_mid_leap_fix_description",
@@ -2313,7 +2836,7 @@ do
 			target = 7,
 			title = "loc_achievement_psyker_2_edge_kills_last_2_sec_name",
 			type = AchievementTypesLookup.increasing_stat,
-			category = category_progression,
+			category = category_challenges,
 			flags = {
 				AchievementFlags.hide_from_carousel,
 			},
@@ -2375,6 +2898,7 @@ do
 
 	local category_progression = "ogryn_progression"
 	local category_abilites = "ogryn_abilites"
+	local category_challenges = "ogryn_challenges"
 
 	achievement_definitions.ogryn_2_bull_rushed_charging_ogryn = {
 		description = "loc_achievement_ogryn_2_bull_rushed_charging_ogryn_fix_description",
@@ -2403,7 +2927,7 @@ do
 		target = 90,
 		title = "loc_achievement_ogryn_2_win_with_coherency_all_alive_units_name",
 		type = AchievementTypesLookup.increasing_stat,
-		category = category_progression,
+		category = category_challenges,
 		flags = {
 			AchievementFlags.hide_progress,
 		},
@@ -2460,6 +2984,7 @@ do
 		local achievement_name = "mastery_complete_" .. weapon.pattern
 		local pattern_name_string = weapon.pattern_name_string or string.format("loc_weapon_family_%s_m1", weapon.pattern)
 		local localized_pattern_name = Localize(pattern_name_string)
+		local icon_name = string.format("content/ui/textures/icons/achievements/weapon_achievements/%s_mastery", weapon.pattern)
 
 		achievement_definitions[achievement_name] = {
 			description = "loc_achievement_max_mastery_description",
@@ -2473,7 +2998,7 @@ do
 				rank = 20,
 				weapon_name = localized_pattern_name,
 			},
-			icon = "content/ui/textures/icons/achievements/weapon_achievements/" .. weapon.pattern .. "_mastery",
+			icon = icon_name,
 			category = category_name,
 			flags = {},
 		}
@@ -4362,6 +4887,7 @@ do
 		category = category_name,
 		flags = {
 			AchievementFlags.hide_progress,
+			AchievementFlags.hide_missing,
 		},
 		loc_variables = {
 			target = 5,
@@ -4377,6 +4903,7 @@ do
 		category = category_name,
 		flags = {
 			AchievementFlags.hide_progress,
+			AchievementFlags.hide_missing,
 		},
 		loc_variables = {
 			amount = 3,
@@ -4445,6 +4972,7 @@ do
 			"rank_ogryn_2_6",
 			"rank_adamant_2_6",
 			"rank_broker_2_6",
+			"rank_cryptic_2_6",
 		}),
 		category = category_name,
 		flags = {},
@@ -4755,12 +5283,12 @@ do
 
 	for _, breed in ipairs(AchievementBreedGroups.special_and_elite_breed_lookup) do
 		tiered_target_family("amount_of_" .. breed.name .. "_killed_{index:%d}", {
+			category = "bestiary",
 			description = "loc_achievement_amount_of_x_description",
 			title = "loc_achievement_amount_of_x_name",
 			type = AchievementTypesLookup.increasing_stat,
 			icon = breed.icon,
 			stat_name = string.format("x_amount_of_%s_killed", breed.name),
-			category = category_name,
 			flags = {},
 			loc_variables = {
 				breed = Localize(breed.local_variable),

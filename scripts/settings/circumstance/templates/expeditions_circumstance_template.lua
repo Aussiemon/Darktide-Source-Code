@@ -158,6 +158,10 @@ local circumstance_templates = {
 			"mutator_darkness_los",
 		},
 	},
+	exps_dawn = {
+		theme_tag = "dawn",
+		wwise_state = "dawn_01",
+	},
 	exps_tornado = {
 		dialogue_id = "circumstance_vo_exp_vortex",
 		mutators = {
@@ -253,6 +257,18 @@ local circumstance_templates = {
 		dialogue_id = "circumstance_vo_darkness",
 		theme_tag = "darkness",
 		wwise_state = "darkness_01",
+		mutators = {
+			"mutator_darkness_los",
+			"mutator_waves_of_specials",
+			"mutator_add_resistance",
+			"mutator_increase_terror_event_points",
+			"mutator_reduced_ramp_duration_low",
+			"mutator_auric_tension_modifier",
+		},
+	},
+	exps_dawn_au = {
+		theme_tag = "dawn",
+		wwise_state = "dawn_01",
 		mutators = {
 			"mutator_darkness_los",
 			"mutator_waves_of_specials",

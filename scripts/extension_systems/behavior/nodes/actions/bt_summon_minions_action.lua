@@ -216,6 +216,12 @@ BtSummonMinionsAction._summon_minions = function (self, unit, breed, blackboard,
 	end
 
 	local breeds = action_data.breed_data
+	local scale_breeds_by_resistance = action_data.scale_breeds_by_resistance
+
+	if scale_breeds_by_resistance then
+		breeds = Managers.state.difficulty:get_table_entry_by_resistance(breeds)
+	end
+
 	local min_amount = 0
 
 	for i = 1, #breeds do
@@ -387,10 +393,6 @@ BtSummonMinionsAction._circle_placement = function (self, unit, spawn_position_b
 
 	for i = 1, #spawned_slots do
 		local current_spawn_slot = spawned_slots[i]
-		local fx_system = Managers.state.extension:system("fx_system")
-		local vfx_name = "content/fx/particles/enemies/renegade_psyker/renegade_psyker_summoning_circle"
-
-		fx_system:trigger_vfx(vfx_name, current_spawn_slot.position:unbox(), Unit.local_rotation(unit, 1))
 
 		for ii = 1, spawns_per_location do
 			local random_x = math.random(1, 10)
@@ -413,6 +415,10 @@ BtSummonMinionsAction._circle_placement = function (self, unit, spawn_position_b
 			spawn_component.is_exiting_spawner = true
 
 			scratchpad.summoned_minions_extension:add_new_summoned_unit(spawned_unit)
+
+			local behavior_extension = ScriptUnit.extension(spawned_unit, "behavior_system")
+
+			behavior_extension:behavior_state_event("exiting_spawner")
 		end
 	end
 

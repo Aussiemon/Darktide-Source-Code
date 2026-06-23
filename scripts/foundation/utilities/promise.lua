@@ -192,10 +192,12 @@ function resolve(promise, x)
 			fulfill(promise, x)
 		end
 	end, function (err)
-		if not type(err) ~= "table" then
+		if type(err) ~= "table" then
+			local inner_message = type(err) == "string" and string.match(err, "<<Promise Error>>%s*(.-)%s*<</Promise Error>>")
+
 			err = {
 				fatal = true,
-				message = err,
+				message = inner_message or err,
 			}
 		end
 
@@ -243,9 +245,11 @@ function run(promise)
 				return callback(promise.value)
 			end, function (err)
 				if type(err) ~= "table" then
+					local inner_message = type(err) == "string" and string.match(err, "<<Promise Error>>%s*(.-)%s*<</Promise Error>>")
+
 					err = {
 						fatal = true,
-						message = err,
+						message = inner_message or err,
 					}
 				end
 

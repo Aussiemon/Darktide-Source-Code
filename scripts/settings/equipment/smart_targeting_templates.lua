@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/settings/equipment/smart_targeting_templates.lua
 
 local Range = require("scripts/utilities/range")
+local CompanionServoSkullSettings = require("scripts/settings/companion/companion_servo_skull_settings")
 
 local function _degrees_to_radians(degrees)
 	return degrees * 0.0174532925
@@ -8,10 +9,32 @@ end
 
 local HEAD = "enemy_aim_target_03"
 local TORSO = "enemy_aim_target_02"
+local DEFAULT_AUTO_AIM_SETTINGS = {
+	ignore_direct_hit = false,
+	max_angle_rad_broadphase = 0.01,
+	max_range = 45,
+	max_range_broadphase = 30,
+	max_range_raycast = 100,
+	min_range = 1,
+	num_insignificant_targets_limit = nil,
+	only_direct_hit = false,
+	max_angle_rad_raycast = math.degrees_to_radians(5),
+	targeting_weighs = {
+		angle_weight = 1.5,
+		breed_weights = nil,
+		distance_weight = 0.5,
+		tag_weights = {
+			elite = 3,
+			special = 3,
+		},
+	},
+	target_node_for_visibility = HEAD,
+}
 local smart_targeting_templates = {}
 
 smart_targeting_templates.killshot = {
 	proximity = nil,
+	precision_target_auto_aim = DEFAULT_AUTO_AIM_SETTINGS,
 	precision_target = {
 		max_range = 100,
 		min_range = 1.5,
@@ -34,6 +57,7 @@ smart_targeting_templates.killshot = {
 }
 smart_targeting_templates.alternate_fire_killshot = {
 	proximity = nil,
+	precision_target_auto_aim = DEFAULT_AUTO_AIM_SETTINGS,
 	precision_target = {
 		max_range = 100,
 		min_range = 1.5,
@@ -56,6 +80,7 @@ smart_targeting_templates.alternate_fire_killshot = {
 }
 smart_targeting_templates.assault = {
 	proximity = nil,
+	precision_target_auto_aim = DEFAULT_AUTO_AIM_SETTINGS,
 	precision_target = {
 		max_range = 100,
 		min_range = 1.5,
@@ -78,6 +103,7 @@ smart_targeting_templates.assault = {
 }
 smart_targeting_templates.alternate_fire_assault = {
 	proximity = nil,
+	precision_target_auto_aim = DEFAULT_AUTO_AIM_SETTINGS,
 	precision_target = {
 		max_range = 100,
 		min_range = 1.5,
@@ -100,6 +126,7 @@ smart_targeting_templates.alternate_fire_assault = {
 }
 smart_targeting_templates.spray_n_pray = {
 	proximity = nil,
+	precision_target_auto_aim = DEFAULT_AUTO_AIM_SETTINGS,
 	precision_target = {
 		max_range = 100,
 		min_range = 1.5,
@@ -115,6 +142,7 @@ smart_targeting_templates.spray_n_pray = {
 }
 smart_targeting_templates.alternate_fire_snp = {
 	proximity = nil,
+	precision_target_auto_aim = DEFAULT_AUTO_AIM_SETTINGS,
 	precision_target = {
 		max_range = 100,
 		min_range = 1.5,
@@ -131,6 +159,7 @@ smart_targeting_templates.alternate_fire_snp = {
 smart_targeting_templates.alternate_fire_bfg = {
 	proximity = nil,
 	trajectory_assist = nil,
+	precision_target_auto_aim = DEFAULT_AUTO_AIM_SETTINGS,
 	precision_target = {
 		max_range = 100,
 		min_range = 1.5,
@@ -146,6 +175,7 @@ smart_targeting_templates.alternate_fire_bfg = {
 }
 smart_targeting_templates.alternate_fire_slow_brace = {
 	proximity = nil,
+	precision_target_auto_aim = DEFAULT_AUTO_AIM_SETTINGS,
 	precision_target = {
 		max_range = 100,
 		min_range = 1.5,
@@ -161,6 +191,7 @@ smart_targeting_templates.alternate_fire_slow_brace = {
 }
 smart_targeting_templates.ogryn_heavystubber_p2_hipfire = {
 	proximity = nil,
+	precision_target_auto_aim = DEFAULT_AUTO_AIM_SETTINGS,
 	precision_target = {
 		max_range = 100,
 		min_range = 1.5,
@@ -183,6 +214,7 @@ smart_targeting_templates.ogryn_heavystubber_p2_hipfire = {
 }
 smart_targeting_templates.ogryn_heavystubber_p2_braced = {
 	proximity = nil,
+	precision_target_auto_aim = DEFAULT_AUTO_AIM_SETTINGS,
 	precision_target = {
 		max_range = 100,
 		min_range = 1.5,
@@ -251,6 +283,7 @@ smart_targeting_templates.tank = {
 }
 smart_targeting_templates.force_staff_single_target = {
 	proximity = nil,
+	precision_target_auto_aim = DEFAULT_AUTO_AIM_SETTINGS,
 	precision_target = {
 		max_range = 100,
 		min_range = 1,
@@ -273,6 +306,7 @@ smart_targeting_templates.force_staff_single_target = {
 }
 smart_targeting_templates.force_staff_p1_single_target = {
 	proximity = nil,
+	precision_target_auto_aim = DEFAULT_AUTO_AIM_SETTINGS,
 	precision_target = {
 		max_range = 25,
 		min_range = 1,
@@ -356,6 +390,7 @@ smart_targeting_templates.smite = {
 			cultist_mutant_mutator = 20,
 			cultist_ritualist = 1,
 			cultist_shocktrooper = 10,
+			cultist_vanguard = 1,
 			renegade_assault = 1,
 			renegade_berzerker = 10,
 			renegade_captain = 5,
@@ -373,6 +408,7 @@ smart_targeting_templates.smite = {
 			renegade_sniper = 20,
 			renegade_twin_captain = 10,
 			renegade_twin_captain_two = 10,
+			renegade_vanguard = 1,
 		},
 		min_angle = _degrees_to_radians(0.05),
 		max_angle = _degrees_to_radians(0.1),
@@ -432,6 +468,7 @@ smart_targeting_templates.chain_lightning_single_target = {
 			cultist_mutant_mutator = 20,
 			cultist_ritualist = 1,
 			cultist_shocktrooper = 10,
+			cultist_vanguard = 1,
 			renegade_assault = 1,
 			renegade_berzerker = 10,
 			renegade_captain = 5,
@@ -449,6 +486,7 @@ smart_targeting_templates.chain_lightning_single_target = {
 			renegade_sniper = 20,
 			renegade_twin_captain = 10,
 			renegade_twin_captain_two = 10,
+			renegade_vanguard = 1,
 		},
 		min_angle = _degrees_to_radians(0.05),
 		max_angle = _degrees_to_radians(0.1),
@@ -474,6 +512,35 @@ smart_targeting_templates.target_ally = {
 		collision_filter = "filter_player_unit",
 		max_range = 100,
 		min_range = 1,
+		min_angle = _degrees_to_radians(0.05),
+		max_angle = _degrees_to_radians(0.1),
+		wanted_target = TORSO,
+		wanted_target_fallback = HEAD,
+	},
+	aim_assist = {
+		always_auto_aim = true,
+		base_multiplier = 0.07,
+		no_aim_input_multiplier = 0,
+	},
+	trajectory_assist = {
+		assist_multiplier = 1,
+		range = 35,
+		falloff_func = Range.power_4,
+		min_angle = _degrees_to_radians(3),
+		max_angle = _degrees_to_radians(15),
+	},
+}
+smart_targeting_templates.target_servo_skull_target = {
+	proximity = nil,
+	precision_target = {
+		check_all_possible_validations = true,
+		collision_filter = "filter_player_unit",
+		ignore_caster = true,
+		ignore_visibility_target_check = true,
+		min_range = 1,
+		within_distance_to_box_x = 2,
+		within_distance_to_box_y = 2,
+		max_range = CompanionServoSkullSettings.max_target_distance_range,
 		min_angle = _degrees_to_radians(0.05),
 		max_angle = _degrees_to_radians(0.1),
 		wanted_target = TORSO,
@@ -582,6 +649,7 @@ smart_targeting_templates.smart_tag_target = {
 			cultist_mutant_mutator = 20,
 			cultist_ritualist = 1,
 			cultist_shocktrooper = 10,
+			cultist_vanguard = 1,
 			renegade_assault = 1,
 			renegade_berzerker = 10,
 			renegade_captain = 30,
@@ -599,6 +667,7 @@ smart_targeting_templates.smart_tag_target = {
 			renegade_sniper = 20,
 			renegade_twin_captain = 10,
 			renegade_twin_captain_two = 10,
+			renegade_vanguard = 1,
 		},
 		min_angle = _degrees_to_radians(0.05),
 		max_angle = _degrees_to_radians(0.1),

@@ -38,6 +38,7 @@ local PI = math.pi
 local PI_2 = PI * 2
 local buff_categories = BuffSettings.buff_categories
 local buff_keywords = BuffSettings.keywords
+local group_keywords = BuffSettings.group_keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
 local armor_types = ArmorSettings.types
@@ -187,7 +188,7 @@ templates.hordes_buff_extra_toughness_near_burning_shocked_enemies = {
 				local buff_extension = ScriptUnit.has_extension(enemy_unit, "buff_system")
 
 				if buff_extension then
-					local target_is_burning_or_electrocuted = buff_extension:has_keyword(buff_keywords.burning) or buff_extension:has_keyword(buff_keywords.electrocuted)
+					local target_is_burning_or_electrocuted = buff_extension:has_keyword(buff_keywords.burning) or MinionState.is_electrocuted(buff_extension, group_keywords.electrocuted)
 
 					if target_is_burning_or_electrocuted then
 						num_stacks = num_stacks + 1

@@ -48,10 +48,12 @@ weapon_template.keywords = {
 	"devices",
 }
 weapon_template.breed_anim_state_machine_3p = {
+	cryptic = "content/characters/player/human/third_person/animations/unarmed",
 	human = "content/characters/player/human/third_person/animations/unarmed",
 	ogryn = "content/characters/player/ogryn/third_person/animations/unarmed",
 }
 weapon_template.breed_anim_state_machine_1p = {
+	cryptic = "content/characters/player/human/first_person/animations/scanner",
 	human = "content/characters/player/human/first_person/animations/scanner",
 	ogryn = "content/characters/player/ogryn/first_person/animations/scanner",
 }

@@ -116,7 +116,7 @@ ViewElementNewsSlide._initialize_slides = function (self, backend_data)
 			end
 		end
 
-		if title and image_url and not should_skip then
+		if image_url and not should_skip then
 			slides[#slides + 1] = {
 				id = raw_data.id,
 				title = title or "",

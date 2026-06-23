@@ -563,6 +563,7 @@ MiscTestCases.spawn_all_units = function (case_settings)
 			"content/fx/meshes/vfx_plane",
 			"content/fx/units/weapons/small_caliber_plastic_large_01",
 			"core/editor_slave/preview/preview_terrain",
+			"content/environment/artsets/imperial/expeditions/gameplay/electricity/electrical_button_01",
 		}
 
 		Deadlock.pause()

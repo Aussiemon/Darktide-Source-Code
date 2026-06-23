@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/character/childhood.lua
 
+local CHILDHOOD_CRYPTIC = require("scripts/settings/character/childhood_cryptic")
 local childhood_options = {
 	{
 		description = "loc_character_childhood_01_description",
@@ -479,6 +480,9 @@ local childhood_options = {
 		},
 	},
 }
+
+table.append(childhood_options, CHILDHOOD_CRYPTIC)
+
 local childhood_option_by_id = {}
 
 for i = 1, #childhood_options do

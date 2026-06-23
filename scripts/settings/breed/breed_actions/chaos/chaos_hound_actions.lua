@@ -271,6 +271,7 @@ local action_data = {
 		lerp_position_time = 0.06666666666666667,
 		tension_to_add = 20,
 		pounce_anim_event = {
+			cryptic = "leap_attack",
 			human = "leap_attack",
 			ogryn = "leap_attack_ogryn",
 		},

@@ -23,7 +23,7 @@ SingleplayerSessionBoot.update = function (self, dt)
 end
 
 SingleplayerSessionBoot.result = function (self)
-	self:_set_window_title("singleplayer %s", Network.peer_id())
+	self:_update_crashify_properties("singleplayer")
 
 	local connection_singleplayer = self._connection_singleplayer
 

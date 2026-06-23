@@ -29,6 +29,8 @@ SweepTrail.init = function (self, context, slot, weapon_template, fx_sources, it
 	self._sweep_trail_components_1p = _slot_components(slot.attachments_by_unit_1p[unit_1p])
 	self._sweep_trail_components_3p = _slot_components(slot.attachments_by_unit_3p[unit_3p])
 	self._unit_1p = unit_1p
+	self._unit_3p = unit_3p
+	self._slot_name = slot.name
 	self._slot_name = slot.name
 	self._trail_visible = true
 end
@@ -151,8 +153,8 @@ SweepTrail._get_attachment_id = function (self, action_settings)
 		return
 	end
 
-	for i = 1, #sweeps do
-		local attachment_id = sweeps[i].reference_attachment_id
+	for ii = 1, #sweeps do
+		local attachment_id = sweeps[ii].reference_attachment_id
 
 		if attachment_id and self._visual_loadout_extension:is_unit_part_of_attachment(self._unit_1p, self._slot_name, attachment_id) then
 			return attachment_id

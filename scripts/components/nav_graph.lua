@@ -43,7 +43,7 @@ NavGraph._fetch_smart_objects = function (self, unit)
 end
 
 NavGraph._fetch_smart_object = function (self, unit, index)
-	local layer_type = self:get_data(unit, "smart_objects", index, "layer_type")
+	local layer_type = self:get_data_raw(unit, "smart_objects", index, "layer_type")
 
 	if layer_type == nil then
 		return nil
@@ -52,33 +52,33 @@ NavGraph._fetch_smart_object = function (self, unit, index)
 	local smart_object = {
 		layer_type = layer_type,
 		entrance_position = {
-			self:get_data(unit, "smart_objects", index, "entrance_position", 1),
-			self:get_data(unit, "smart_objects", index, "entrance_position", 2),
-			(self:get_data(unit, "smart_objects", index, "entrance_position", 3)),
+			self:get_data_raw(unit, "smart_objects", index, "entrance_position", 1),
+			self:get_data_raw(unit, "smart_objects", index, "entrance_position", 2),
+			(self:get_data_raw(unit, "smart_objects", index, "entrance_position", 3)),
 		},
 		exit_position = {
-			self:get_data(unit, "smart_objects", index, "exit_position", 1),
-			self:get_data(unit, "smart_objects", index, "exit_position", 2),
-			(self:get_data(unit, "smart_objects", index, "exit_position", 3)),
+			self:get_data_raw(unit, "smart_objects", index, "exit_position", 1),
+			self:get_data_raw(unit, "smart_objects", index, "exit_position", 2),
+			(self:get_data_raw(unit, "smart_objects", index, "exit_position", 3)),
 		},
 		data = {
-			is_bidirectional = self:get_data(unit, "smart_objects", index, "data", "is_bidirectional"),
-			jump_flat_distance = self:get_data(unit, "smart_objects", index, "data", "jump_flat_distance"),
-			ledge_type = self:get_data(unit, "smart_objects", index, "data", "ledge_type"),
+			is_bidirectional = self:get_data_raw(unit, "smart_objects", index, "data", "is_bidirectional"),
+			jump_flat_distance = self:get_data_raw(unit, "smart_objects", index, "data", "jump_flat_distance"),
+			ledge_type = self:get_data_raw(unit, "smart_objects", index, "data", "ledge_type"),
 			ledge_position = {
-				self:get_data(unit, "smart_objects", index, "data", "ledge_position", 1),
-				self:get_data(unit, "smart_objects", index, "data", "ledge_position", 2),
-				(self:get_data(unit, "smart_objects", index, "data", "ledge_position", 3)),
+				self:get_data_raw(unit, "smart_objects", index, "data", "ledge_position", 1),
+				self:get_data_raw(unit, "smart_objects", index, "data", "ledge_position", 2),
+				(self:get_data_raw(unit, "smart_objects", index, "data", "ledge_position", 3)),
 			},
 			ledge_position1 = {
-				self:get_data(unit, "smart_objects", index, "data", "ledge_position1", 1),
-				self:get_data(unit, "smart_objects", index, "data", "ledge_position1", 2),
-				(self:get_data(unit, "smart_objects", index, "data", "ledge_position1", 3)),
+				self:get_data_raw(unit, "smart_objects", index, "data", "ledge_position1", 1),
+				self:get_data_raw(unit, "smart_objects", index, "data", "ledge_position1", 2),
+				(self:get_data_raw(unit, "smart_objects", index, "data", "ledge_position1", 3)),
 			},
 			ledge_position2 = {
-				self:get_data(unit, "smart_objects", index, "data", "ledge_position2", 1),
-				self:get_data(unit, "smart_objects", index, "data", "ledge_position2", 2),
-				(self:get_data(unit, "smart_objects", index, "data", "ledge_position2", 3)),
+				self:get_data_raw(unit, "smart_objects", index, "data", "ledge_position2", 1),
+				self:get_data_raw(unit, "smart_objects", index, "data", "ledge_position2", 2),
+				(self:get_data_raw(unit, "smart_objects", index, "data", "ledge_position2", 3)),
 			},
 		},
 	}

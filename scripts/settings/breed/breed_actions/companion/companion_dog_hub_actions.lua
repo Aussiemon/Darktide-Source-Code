@@ -72,6 +72,7 @@ local move_to_position_default = {
 local action_data = {
 	name = "companion_dog_hub",
 	idle = {
+		update_rate = 0.5,
 		anim_events = {
 			"idle_to_sit",
 			"idle",

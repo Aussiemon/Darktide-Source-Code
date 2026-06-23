@@ -26,12 +26,6 @@ MissionCleanupUtilies.cleanup = function (shared_state, gameplay_state, initiali
 
 	REPORTIFY_NETWORK_READY = false
 
-	local physics_world = shared_state.physics_world
-
-	if physics_world then
-		PhysicsWorld.fetch_queries(physics_world)
-	end
-
 	local is_server = shared_state.is_server
 	local is_dedicated_server = shared_state.is_dedicated_server
 	local world = rawget(shared_state, "world")

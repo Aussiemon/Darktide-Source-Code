@@ -13,6 +13,7 @@ local action_data = {
 	},
 	weapon_malfunction_loop = {
 		rotate_towards_target = false,
+		weapon_malfunction_time = 12,
 		anim_events = {
 			"reload",
 		},

@@ -25,22 +25,25 @@ CompanionInteractionsManager.destroy = function (self)
 	table.clear(self._active_interactions)
 end
 
+local _finished_interactions = {}
+
 CompanionInteractionsManager.fixed_update = function (self, dt, fixed_t, frame)
 	if self._is_host then
 		local active_interactions = self._active_interactions
-		local finished_interactions = {}
+
+		table.clear(_finished_interactions)
 
 		for player_unit, interaction in pairs(active_interactions) do
 			if interaction.has_animation_started then
 				interaction.time_remaining = interaction.time_remaining - dt
 
 				if interaction.time_remaining <= 0 then
-					table.insert(finished_interactions, player_unit)
+					table.insert(_finished_interactions, player_unit)
 				end
 			end
 		end
 
-		for _, player_unit in pairs(finished_interactions) do
+		for _, player_unit in pairs(_finished_interactions) do
 			local owning_player = Managers.state.player_unit_spawn:owner(player_unit)
 
 			self._interaction_fully_completed(owning_player, active_interactions[player_unit].settings)

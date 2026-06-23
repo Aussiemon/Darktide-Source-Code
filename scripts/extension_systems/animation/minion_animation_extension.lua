@@ -97,10 +97,12 @@ MinionAnimationExtension.anim_event = function (self, event_name, optional_excep
 	local game_object_id = self._game_object_id
 	local event_index = Unit.animation_event(unit, event_name)
 
-	if optional_except_channel_id then
-		Managers.state.game_session:send_rpc_clients_except("rpc_minion_anim_event", optional_except_channel_id, game_object_id, event_index)
-	else
-		Managers.state.game_session:send_rpc_clients("rpc_minion_anim_event", game_object_id, event_index)
+	if self._is_server then
+		if optional_except_channel_id then
+			Managers.state.game_session:send_rpc_clients_except("rpc_minion_anim_event", optional_except_channel_id, game_object_id, event_index)
+		else
+			Managers.state.game_session:send_rpc_clients("rpc_minion_anim_event", game_object_id, event_index)
+		end
 	end
 end
 
@@ -135,7 +137,10 @@ MinionAnimationExtension.set_variable = function (self, name, value)
 	end
 
 	Unit_animation_set_variable(unit, index, value)
-	GameSession.set_game_object_field(game_session, game_object_id, name, value)
+
+	if self._is_server then
+		GameSession.set_game_object_field(game_session, game_object_id, name, value)
+	end
 end
 
 MinionAnimationExtension.update = function (self, unit, ...)

@@ -18,7 +18,7 @@ action_input_formatter_settings.weapon = {
 }
 action_input_formatter_settings.ability = {
 	max_action_input_queue = 8,
-	max_action_inputs = 4,
+	max_action_inputs = 6,
 	network_constants = {
 		input_sequence_is_running = NetworkConstants.ability_input_sequence_is_running,
 		input_sequence_current_element_index = NetworkConstants.ability_input_sequence_current_element_index,

@@ -143,7 +143,7 @@ damage_templates.ogryn_shovel_light_tank = {
 	gibbing_power = gibbing_power.light,
 	gibbing_type = gibbing_types.sawing,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.ogryn_shovel,
+	wounds_template = WoundsTemplates.blunt,
 	armor_damage_modifier = tank_light_am_default,
 	stagger_duration_modifier = {
 		0.1,
@@ -247,7 +247,7 @@ damage_templates.ogryn_shovel_light_tank_followup = {
 	gibbing_power = gibbing_power.light,
 	gibbing_type = gibbing_types.sawing,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.ogryn_shovel,
+	wounds_template = WoundsTemplates.blunt,
 	armor_damage_modifier = tank_light_am_default,
 	stagger_duration_modifier = {
 		0.1,
@@ -325,7 +325,7 @@ damage_templates.ogryn_shovel_heavy_tank = {
 	gibbing_power = gibbing_power.medium,
 	gibbing_type = gibbing_types.sawing,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.ogryn_shovel,
+	wounds_template = WoundsTemplates.blunt,
 	armor_damage_modifier = tank_heavy_am_default,
 	stagger_duration_modifier = {
 		0.1,
@@ -487,7 +487,7 @@ damage_templates.ogryn_shovel_light_smiter = {
 	gibbing_power = gibbing_power.light,
 	gibbing_type = gibbing_types.sawing,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.ogryn_shovel,
+	wounds_template = WoundsTemplates.blunt,
 	armor_damage_modifier = tank_light_am_default,
 	stagger_duration_modifier = {
 		0.1,
@@ -757,7 +757,7 @@ damage_templates.ogryn_shovel_heavy_smiter = {
 	gibbing_power = gibbing_power.medium,
 	gibbing_type = gibbing_types.sawing,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.ogryn_shovel,
+	wounds_template = WoundsTemplates.blunt,
 	armor_damage_modifier = tank_heavy_am_default,
 	stagger_duration_modifier = {
 		0.1,
@@ -884,7 +884,7 @@ damage_templates.ogryn_shovel_uppercut = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.default,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.ogryn_shovel,
+	wounds_template = WoundsTemplates.blunt,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
 	armor_damage_modifier = tank_light_am_default,
 	stagger_duration_modifier = {
@@ -974,7 +974,7 @@ damage_templates.ogryn_shovel_uppercut_plus = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.default,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.ogryn_shovel,
+	wounds_template = WoundsTemplates.blunt,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
 	armor_damage_modifier = tank_light_am_default,
 	stagger_duration_modifier = {
@@ -1114,7 +1114,7 @@ damage_templates.ogryn_shovel_heavy_linesman = {
 	gibbing_power = gibbing_power.medium,
 	gibbing_type = gibbing_types.sawing,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.ogryn_shovel,
+	wounds_template = WoundsTemplates.blunt,
 	stagger_duration_modifier = {
 		0.1,
 		0.5,
@@ -1190,7 +1190,7 @@ damage_templates.ogryn_shovel_light_linesman = {
 	gibbing_power = gibbing_power.medium,
 	gibbing_type = gibbing_types.sawing,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.ogryn_shovel,
+	wounds_template = WoundsTemplates.blunt,
 	stagger_duration_modifier = {
 		0.1,
 		0.5,

@@ -104,6 +104,10 @@ ProjectileUnitBuffExtension.remove_externally_controlled_buff = function (self, 
 	ferror("Can't remove buffs to ProjectileUnitBuffExtension but tried to remove buff with local index %d", local_index)
 end
 
+ProjectileUnitBuffExtension.remove_externally_controlled_buff_stacks = function (self, buff_stacks_indexes)
+	ferror("Can't remove buffs to ProjectileUnitBuffExtension but tried to remove buff with local indexes [%s]", table.tostring(buff_stacks_indexes))
+end
+
 ProjectileUnitBuffExtension._remove_internally_controlled_buff = function (self, local_index)
 	ferror("Can't remove buffs to ProjectileUnitBuffExtension but tried to remove buff with local index %d", local_index)
 end
@@ -113,14 +117,18 @@ ProjectileUnitBuffExtension._remove_buff = function (self, index)
 end
 
 ProjectileUnitBuffExtension.rpc_add_buff = function (self, ...)
-	ferror("Can't add buffs to ProjectileUnitBuffExtension, but tried to add buffs troguh rpc")
+	ferror("Can't add buffs to ProjectileUnitBuffExtension, but tried to add buffs through rpc")
 end
 
 ProjectileUnitBuffExtension.rpc_remove_buff = function (self, ...)
-	ferror("Can't remove buffs to ProjectileUnitBuffExtension, but tried to remove buffs troguh rpc")
+	ferror("Can't remove buffs to ProjectileUnitBuffExtension, but tried to remove buffs through rpc")
 end
 
-ProjectileUnitBuffExtension.rpc_buff_proc_set_active_time = function (self, ...)
+ProjectileUnitBuffExtension.rpc_remove_buff_stacks = function (self, ...)
+	ferror("Can't remove buffs to ProjectileUnitBuffExtension, but tried to remove buff stacks through rpc")
+end
+
+ProjectileUnitBuffExtension.rpc_buff_batched_proc_set_active_time = function (self, channel_id, game_object_id, server_index_array, activation_frame)
 	ferror("ProjectileUnitBuffExtension can't activate a buff")
 end
 

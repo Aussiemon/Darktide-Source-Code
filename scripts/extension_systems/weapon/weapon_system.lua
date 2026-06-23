@@ -7,6 +7,7 @@ local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Block = require("scripts/utilities/attack/block")
 local Breed = require("scripts/utilities/breed")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local Explosion = require("scripts/utilities/attack/explosion")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local Health = require("scripts/utilities/health")
@@ -15,10 +16,10 @@ local MinionDeath = require("scripts/utilities/minion_death")
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
 local attack_results = AttackSettings.attack_results
 local WeaponSystem = class("WeaponSystem", "ExtensionSystemBase")
-local RPCS = {
-	"rpc_player_blocked_attack",
-}
+local _trigger_training_grounds_events
+local TRAINING_GROUNDS_GAME_MODE_NAME = "training_grounds"
 local CLIENT_RPCS = {
+	"rpc_player_blocked_attack",
 	"rpc_trigger_husk_explosion",
 }
 
@@ -27,9 +28,6 @@ WeaponSystem.init = function (self, ...)
 
 	self._actor_proximity_shape_updates = {}
 	self._units_to_destroy = {}
-
-	self._network_event_delegate:register_session_events(self, unpack(RPCS))
-
 	self.player = nil
 	self._give_ammo_carryover_percentages = {}
 
@@ -59,8 +57,6 @@ WeaponSystem.delete_units = function (self)
 end
 
 WeaponSystem.destroy = function (self, ...)
-	self._network_event_delegate:unregister_events(unpack(RPCS))
-
 	if not self._is_server then
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 	end
@@ -230,6 +226,18 @@ WeaponSystem._update_queued_explosions = function (self, dt, t)
 		local optional_apply_owner_buffs = data.optional_apply_owner_buffs
 		local target_number = 1
 		local num_hit_units = data.num_hit_units
+		local is_new_explosion = data[0] == 1
+		local targeted_template_effect = explosion_template.targeted_template_effect
+
+		if num_hit_units > 0 and is_new_explosion and targeted_template_effect then
+			targeted_template_effect.explosion_start_function(attacking_unit_owner_unit)
+		end
+
+		local game_mode_name = Managers.state.game_mode:game_mode_name()
+
+		if is_new_explosion and game_mode_name == TRAINING_GROUNDS_GAME_MODE_NAME then
+			_trigger_training_grounds_events(explosion_template, num_hit_units)
+		end
 
 		for hit_units_i = data[0], num_hit_units do
 			local strided_i = (hit_units_i - 1) * 2
@@ -304,21 +312,7 @@ WeaponSystem._update_queued_explosions = function (self, dt, t)
 
 							target_number = target_number + 1
 
-							local on_hit_buff_template_name = explosion_template.on_hit_buff_template_name
-
-							if on_hit_buff_template_name and HEALTH_ALIVE[hit_unit] and ALIVE[attacking_unit_owner_unit] then
-								local enemy_buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
-
-								if enemy_buff_extension then
-									if type(on_hit_buff_template_name) == "table" then
-										for i = 1, #on_hit_buff_template_name do
-											enemy_buff_extension:add_internally_controlled_buff(on_hit_buff_template_name[i], t, "owner_unit", attacking_unit_owner_unit, "source_item", item_or_nil)
-										end
-									else
-										enemy_buff_extension:add_internally_controlled_buff(on_hit_buff_template_name, t, "owner_unit", attacking_unit_owner_unit, "source_item", item_or_nil)
-									end
-								end
-							end
+							self:_handle_explosion_on_hit_buffs(explosion_template, attacking_unit_owner_unit, hit_unit, item_or_nil, t)
 
 							if attack_result == attack_results.died then
 								num_unit_deaths_processed_this_frame = num_unit_deaths_processed_this_frame + 1
@@ -328,6 +322,12 @@ WeaponSystem._update_queued_explosions = function (self, dt, t)
 
 							result[result_stride_i + 1] = attack_result
 							result[result_stride_i + 2] = breed_or_nil
+
+							local check_targeted_template_effect = targeted_template_effect and not targeted_template_effect.can_stop_sorting()
+
+							if check_targeted_template_effect and attack_result ~= attack_results.died and HEALTH_ALIVE[hit_unit] and breed_or_nil then
+								targeted_template_effect.on_target_hit_function(hit_unit, breed_or_nil)
+							end
 						end
 					end
 				end
@@ -339,6 +339,17 @@ WeaponSystem._update_queued_explosions = function (self, dt, t)
 					data[0] = hit_units_i + 1
 
 					return
+				end
+
+				if targeted_template_effect and num_hit_units <= hit_units_i then
+					local fx_system = Managers.state.extension:system("fx_system")
+					local template_effect_name = targeted_template_effect.template_effect_name
+					local template_effect = EffectTemplates[template_effect_name]
+					local template_effect_targets = targeted_template_effect.get_template_effect_targets()
+
+					for _, target_unit in ipairs(template_effect_targets) do
+						fx_system:start_player_template_effect(template_effect, attacking_unit_owner_unit, target_unit, nil, source_position)
+					end
 				end
 			end
 		end
@@ -356,6 +367,17 @@ WeaponSystem._update_queued_explosions = function (self, dt, t)
 	end
 
 	queued_explosions[0] = queued_explosion_request_index
+end
+
+local tg_on_attack_execute_data = {}
+
+function _trigger_training_grounds_events(explosion_template, num_hit_units)
+	table.clear(tg_on_attack_execute_data)
+
+	tg_on_attack_execute_data.explosion_template = explosion_template
+	tg_on_attack_execute_data.num_hit_units = num_hit_units
+
+	Managers.event:trigger("tg_on_explosion_triggered", tg_on_attack_execute_data)
 end
 
 WeaponSystem._update_perils_of_the_warp_elite_kills_achievement = function (self)
@@ -388,6 +410,22 @@ WeaponSystem._update_perils_of_the_warp_elite_kills_achievement = function (self
 			end
 
 			perils_of_the_warp_elite_kills_achievement[account_id] = nil
+		end
+	end
+end
+
+WeaponSystem._handle_explosion_on_hit_buffs = function (self, explosion_template, attacking_unit_owner_unit, hit_unit, item_or_nil, t, optional_attacking_unit_owner_unit)
+	local on_hit_buff_template_name = explosion_template.on_hit_buff_template_name
+	local enemy_buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
+	local can_add_on_hit_buffs = HEALTH_ALIVE[hit_unit] and ALIVE[attacking_unit_owner_unit] and enemy_buff_extension
+
+	if can_add_on_hit_buffs and on_hit_buff_template_name then
+		if type(on_hit_buff_template_name) == "table" then
+			for i = 1, #on_hit_buff_template_name do
+				enemy_buff_extension:add_internally_controlled_buff(on_hit_buff_template_name[i], t, "owner_unit", attacking_unit_owner_unit, "source_item", item_or_nil)
+			end
+		else
+			enemy_buff_extension:add_internally_controlled_buff(on_hit_buff_template_name, t, "owner_unit", attacking_unit_owner_unit, "source_item", item_or_nil)
 		end
 	end
 end

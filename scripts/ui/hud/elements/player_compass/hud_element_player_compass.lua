@@ -11,6 +11,7 @@ local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local Auspex = require("scripts/utilities/weapon/auspex")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local PLAYER_SLOT_COLORS = UISettings.player_slot_colors
 
 local function get_alpha_progress(position_x, area_width)
 	local progress = math.ilerp(0, area_width, position_x)
@@ -34,6 +35,7 @@ HudElementPlayerCompass.init = function (self, parent, draw_layer, start_scale)
 
 	self._player_composition_name = hud_settings.player_composition
 	self._default_compass_icon_widget = self:_create_widget("default_compass_icon", Definitions.default_widget_icon_definition)
+	self._default_compass_coordinate_widget = self:_create_widget("default_compass_coordinate", Definitions.default_compass_coordinate_definition)
 	self._mission_objective_system = Managers.state.extension:system("mission_objective_system")
 	self._hud_objectives = {}
 	self._hud_objectives_by_id = {}
@@ -86,8 +88,7 @@ HudElementPlayerCompass._get_party_icons = function (self, dt, t, ui_renderer)
 				local widget_content = widget.content
 				local widget_style = widget.style
 				local player_slot = player and player.slot and player:slot()
-				local player_slot_colors = UISettings.player_slot_colors
-				local player_slot_color = player_slot and player_slot_colors[player_slot]
+				local player_slot_color = player_slot and PLAYER_SLOT_COLORS[player_slot]
 				local angle = self:_get_marker_direction_angle(marker)
 
 				temp_team_player_render_data[#temp_team_player_render_data + 1] = {
@@ -108,35 +109,13 @@ HudElementPlayerCompass._get_party_icons = function (self, dt, t, ui_renderer)
 	return temp_team_player_render_data
 end
 
-local temp_marker_render_data = {}
+local function _copy_color_to_material_color(from, to)
+	to[4] = from[1] / 255
+	to[1] = from[2] / 255
+	to[2] = from[3] / 255
+	to[3] = from[4] / 255
 
-HudElementPlayerCompass._get_world_icons_render_buffer = function (self, dt, t, ui_renderer)
-	table.clear(temp_marker_render_data)
-
-	local world_markers_list = self._world_markers_list
-
-	for i = 1, #world_markers_list do
-		local marker = world_markers_list[i]
-		local distance = marker.distance
-
-		if distance and distance < 10 then
-			local widget = marker.widget
-			local widget_content = widget.content
-			local widget_style = widget.style
-			local angle = self:_get_marker_direction_angle(marker)
-
-			temp_marker_render_data[#temp_marker_render_data + 1] = {
-				angle = math.radians_to_degrees(angle),
-				widget = self._default_compass_icon_widget,
-				icon = widget_content.icon,
-				text = widget_content.icon_text,
-				text_color = widget_style.icon_text and widget_style.icon_text.text_color,
-				icon_color = widget_style.icon and widget_style.icon.color,
-			}
-		end
-	end
-
-	return temp_marker_render_data
+	return to
 end
 
 local temp_expedition_oppertunity_marker_render_data = {}
@@ -155,6 +134,7 @@ HudElementPlayerCompass._get_expedition_navigation_icons = function (self, dt, t
 				level_indices[#level_indices + 1] = {
 					icon_type = "opportunity",
 					text = "",
+					level_id = id,
 					position = position_box:unbox(),
 					icon = string.format("content/ui/materials/backgrounds/scanner/scanner_map_greek_%02d", 1 + id % 24),
 					title_icon = string.format("content/ui/materials/backgrounds/scanner/scanner_map_%d", location_id % 9),
@@ -162,7 +142,6 @@ HudElementPlayerCompass._get_expedition_navigation_icons = function (self, dt, t
 						20,
 						20,
 					},
-					marked_by_player_slot = self._navigation_handler:player_slot_by_level_marked(id),
 					opportunity_id = id,
 				}
 			end
@@ -180,12 +159,12 @@ HudElementPlayerCompass._get_expedition_navigation_icons = function (self, dt, t
 					icon = "content/ui/materials/backgrounds/scanner/scanner_map_exit",
 					icon_type = "exit",
 					text = "",
+					level_id = id,
 					position = position_box:unbox(),
 					size = {
 						20,
 						20,
 					},
-					marked_by_player_slot = self._navigation_handler:player_slot_by_level_marked(id),
 				}
 			end
 		end
@@ -200,12 +179,12 @@ HudElementPlayerCompass._get_expedition_navigation_icons = function (self, dt, t
 					icon = "content/ui/materials/backgrounds/scanner/scanner_map_extract",
 					icon_type = "extraction",
 					text = "",
+					level_id = id,
 					position = position_box:unbox(),
 					size = {
 						20,
 						20,
 					},
-					marked_by_player_slot = self._navigation_handler:player_slot_by_level_marked(id),
 				}
 			end
 		end
@@ -224,6 +203,8 @@ HudElementPlayerCompass._get_expedition_navigation_icons = function (self, dt, t
 		119,
 	}
 	local visible_marked_animation = {}
+	local local_player = Managers.player:local_player(1)
+	local local_player_slot = local_player and local_player.slot and local_player:slot()
 
 	for index, icon_data in ipairs(level_indices) do
 		local position = icon_data.position
@@ -234,9 +215,11 @@ HudElementPlayerCompass._get_expedition_navigation_icons = function (self, dt, t
 		local opportunity_id = icon_data.opportunity_id
 		local icon_type = icon_data.icon_type
 		local angle = self:_get_position_direction_angle(position)
-		local marked_by_player_slot = icon_data.marked_by_player_slot
 		local at_opportunity = opportunity_id and self._hud_objectives_by_id[opportunity_id]
-		local is_marked = not not marked_by_player_slot
+		local level_id = icon_data.level_id
+		local marked_by_player_slots, marked_by_player_slots_counter = self._navigation_handler:player_slots_by_level_marked(level_id)
+		local is_marked = marked_by_player_slots_counter > 0
+		local is_marked_by_local_player = is_marked and marked_by_player_slots and local_player_slot and marked_by_player_slots[local_player_slot]
 		local distance = self:_get_distance_to_objective(position)
 
 		if distance <= 100 then
@@ -254,17 +237,45 @@ HudElementPlayerCompass._get_expedition_navigation_icons = function (self, dt, t
 		end
 
 		if is_icon_shown then
+			local marked_colors
+
+			if is_marked then
+				marked_colors = {}
+
+				local color_field_counter = 0
+
+				for player_slot, _ in pairs(marked_by_player_slots) do
+					color_field_counter = color_field_counter + 1
+
+					local color_field_name = "part_" .. color_field_counter .. "_color"
+					local player_slot_color = PLAYER_SLOT_COLORS[player_slot]
+
+					if player_slot_color then
+						marked_colors[color_field_name] = _copy_color_to_material_color(PLAYER_SLOT_COLORS[player_slot], {})
+					end
+				end
+			end
+
+			local color
+
+			if is_marked_by_local_player then
+				color = Color.terminal_text_key_value(255, true)
+			else
+				color = icon_color
+			end
+
 			temp_expedition_oppertunity_marker_render_data[#temp_expedition_oppertunity_marker_render_data + 1] = {
 				angle = math.radians_to_degrees(angle),
 				widget = self._default_compass_icon_widget,
 				text = text,
-				text_color = marked_by_player_slot and Color["player_slot_" .. marked_by_player_slot](255, true) or icon_color,
-				icon_color = marked_by_player_slot and Color["player_slot_" .. marked_by_player_slot](255, true) or icon_color,
+				text_color = color,
+				icon_color = color,
 				icon = icon,
 				title_icon = title_icon,
 				size = size,
 				at_opportunity = at_opportunity,
 				marked = is_marked,
+				marked_by_local_player = is_marked_by_local_player,
 				level_index = index,
 			}
 		end
@@ -533,65 +544,80 @@ HudElementPlayerCompass._draw_widgets = function (self, dt, t, input_service, ui
 
 			local icon_data = {
 				angle = current_degree,
-				widget = self._default_compass_icon_widget,
+				widget = self._default_compass_coordinate_widget,
 				text = text,
 				font_size = font_size,
 				text_color = step_color_table,
 				size = size,
 			}
 
-			draw_layer = self:_draw_compass_icon(dt, t, ui_renderer, icon_data, position[1], position[2], alpha, draw_layer)
+			draw_layer = self:_draw_compass_coordinate(dt, t, ui_renderer, icon_data, position[1], position[2], alpha, draw_layer)
 		end
 	end
 
+	local show_arrow_left = false
+	local show_arrow_right = false
 	local player_at_opportunity = false
+	local expedition_navigation_icons = self:_get_expedition_navigation_icons(dt, t, ui_renderer)
 
-	local function prepare_and_draw_icons(icons)
-		for i = 1, #icons do
-			local icon_data = icons[i]
-			local angle = icon_data.angle
-			local size = icon_data.size
-			local at_opportunity = icon_data.at_opportunity
-			local marked = icon_data.marked
-			local icon_x, icon_y, alpha
-			local raw_diff = angle - effective_rot
-			local angle_diff = (raw_diff + 540) % 360 - 180
-			local local_x = center_x + angle_diff * px_per_degree
-			local icon_visible = false
+	for i = 1, #expedition_navigation_icons do
+		local icon_data = expedition_navigation_icons[i]
+		local angle = icon_data.angle
+		local size = icon_data.size
+		local at_opportunity = icon_data.at_opportunity
+		local marked = icon_data.marked
+		local icon_x, icon_y, alpha
+		local raw_diff = angle - effective_rot
+		local angle_diff = (raw_diff + 540) % 360 - 180
+		local local_x = center_x + angle_diff * px_per_degree
+		local icon_visible = false
 
-			if marked then
+		if marked then
+			local clamp_left = local_x < 0
+			local clamp_right = local_x > area_size[1]
+
+			if clamp_left or clamp_right then
 				local_x = math.clamp(local_x, 0, area_size[1])
 			end
 
+			icon_data.clamp_left = clamp_left
+			icon_data.clamp_right = clamp_right
+
 			if not at_opportunity then
-				if local_x >= 0 and local_x <= visible_size then
-					icon_x = area_position[1] + local_x
-					icon_y = area_position[2] + area_size[2] * 0.5
-					alpha = marked and 255 or get_alpha_progress(local_x, area_size[1])
-					icon_visible = true
-				end
-			else
-				if not player_at_opportunity then
-					player_at_opportunity = true
+				if clamp_left then
+					show_arrow_left = true
 				end
 
-				icon_x = area_position[1] + 0.5 * area_size[1]
-				icon_y = area_position[2]
-				alpha = 255
-				icon_visible = true
-			end
-
-			if icon_visible then
-				position[1] = icon_x - size[1] * 0.5
-				position[2] = icon_y - size[2] * 0.5
-				draw_layer = self:_draw_compass_icon(dt, t, ui_renderer, icon_data, position[1], position[2], alpha, draw_layer)
+				if clamp_right then
+					show_arrow_right = true
+				end
 			end
 		end
+
+		if not at_opportunity then
+			if local_x >= 0 and local_x <= visible_size then
+				icon_x = area_position[1] + local_x
+				icon_y = area_position[2] + area_size[2] * 0.5
+				alpha = marked and 255 or get_alpha_progress(local_x, area_size[1])
+				icon_visible = true
+			end
+		else
+			player_at_opportunity = player_at_opportunity or true
+			icon_x = area_position[1] + 0.5 * area_size[1]
+			icon_y = area_position[2]
+			alpha = 255
+			icon_visible = true
+		end
+
+		if icon_visible then
+			position[1] = icon_x - size[1] * 0.5
+			position[2] = icon_y - size[2] * 0.5
+			draw_layer = self:_draw_compass_icon(dt, t, ui_renderer, icon_data, position[1], position[2], alpha, draw_layer)
+		end
+
+		self._widgets_by_name.background.content.show_arrow_left = show_arrow_left
+		self._widgets_by_name.background.content.show_arrow_right = show_arrow_right
 	end
-
-	local expedition_navigation_icons = self:_get_expedition_navigation_icons(dt, t, ui_renderer)
-
-	prepare_and_draw_icons(expedition_navigation_icons)
 
 	local zoom_multiplier = steps / visible_steps
 	local background_progress = 1 - player_direction_degree / degrees * zoom_multiplier
@@ -599,299 +625,290 @@ HudElementPlayerCompass._draw_widgets = function (self, dt, t, input_service, ui
 
 	self._widgets_by_name.navigation_lines.style.lines.material_values.uv_offset = background_progress
 	self._widgets_by_name.navigation_lines.style.lines.material_values.uv_tiling = uv_tiling
-	self._widgets_by_name.background.style.compass_background.material_values.state = self:is_auspex_in_focus() and 1 or 0
-	self._widgets_by_name.background.style.compass_aquila.material_values.state = self:is_auspex_in_focus() and not player_at_opportunity and 1 or 0
+	self._widgets_by_name.background.style.compass_background.material_values.state = self:is_auspex_in_focus() and 1 or 0.5
+	self._widgets_by_name.background.style.compass_aquila.material_values.state = self:is_auspex_in_focus() and not player_at_opportunity and 1 or 0.5
 end
 
-local temp_icon_color = Color.ui_hud_green_light(255, true)
-local temp_size = {
-	0,
-	0,
-}
+local _icon_default_color = Color.ui_hud_green_light(255, true)
 local temp_text_options = {}
-local temp_position = {}
+local temp_anim_progresses = {}
+
+HudElementPlayerCompass._draw_compass_coordinate = function (self, dt, t, ui_renderer, coordinate_data, x, y, alpha, draw_layer)
+	local widget = coordinate_data.widget
+	local widget_content = widget.content
+	local widget_style = widget.style
+	local size = coordinate_data.size
+
+	size = Vector2(size and size[1] or 25, size and size[2] or 25)
+
+	local widget_size = widget_content.size
+
+	widget_size[1] = size[1]
+	widget_size[2] = size[2]
+
+	local position = Vector3(x, y, draw_layer)
+	local widget_offset = widget.offset
+
+	widget_offset[1] = position[1]
+	widget_offset[2] = position[2]
+	widget_content.text = coordinate_data.text
+
+	local text_style = widget_style.text
+
+	text_style.font_size = coordinate_data.font_size
+
+	UIWidget.draw(widget, ui_renderer)
+
+	return draw_layer + 1
+end
+
+local function _animate_frame_pass(icon_data, alpha, anim_progress)
+	local widget = icon_data.widget
+	local widget_content = widget.content
+	local widget_style = widget.style
+	local size = widget_content.size
+	local marked = widget_content.marked
+
+	if marked then
+		local pass_style = widget_style.frame
+
+		if pass_style then
+			local style_color = pass_style.color
+			local icon_color = icon_data.icon_color
+
+			if icon_color then
+				style_color[1] = alpha * anim_progress
+				style_color[2] = icon_color[2]
+				style_color[3] = icon_color[3]
+				style_color[4] = icon_color[4]
+			end
+
+			local size_addition = pass_style.size_addition
+
+			size_addition[1] = size[1] - size[1] * anim_progress
+			size_addition[2] = size[2] - size[2] * anim_progress
+
+			local default_size_addition = pass_style.default_size_addition
+
+			if default_size_addition then
+				size_addition[1] = size_addition[1] + default_size_addition[1]
+				size_addition[2] = size_addition[2] + default_size_addition[2]
+			end
+
+			local style_offset = pass_style.offset
+
+			style_offset[3] = 2
+
+			local arrow_left_style = widget_style.arrow_left
+
+			if arrow_left_style then
+				local arrow_color = arrow_left_style.color
+
+				arrow_color[1] = style_color[1]
+				arrow_color[2] = icon_color[2]
+				arrow_color[3] = icon_color[3]
+				arrow_color[4] = icon_color[4]
+			end
+
+			local arrow_right_style = widget_style.arrow_right
+
+			if arrow_right_style then
+				local arrow_color = arrow_right_style.color
+
+				arrow_color[1] = style_color[1]
+				arrow_color[2] = icon_color[2]
+				arrow_color[3] = icon_color[3]
+				arrow_color[4] = icon_color[4]
+			end
+		end
+	end
+end
 
 HudElementPlayerCompass._draw_compass_icon = function (self, dt, t, ui_renderer, icon_data, x, y, alpha, draw_layer)
+	local widget = icon_data.widget
+	local widget_content = widget.content
+	local widget_style = widget.style
 	local size = icon_data.size
 
 	size = Vector2(size and size[1] or 25, size and size[2] or 25)
 
+	local widget_size = widget_content.size
+
+	widget_size[1] = size[1]
+	widget_size[2] = size[2]
+
 	local position = Vector3(x, y, draw_layer)
+	local widget_offset = widget.offset
 
-	if icon_data.draw_background then
-		local background_alpha_fraction = alpha / 255
+	widget_offset[1] = position[1]
+	widget_offset[2] = position[2]
 
-		UIRenderer.draw_texture(ui_renderer, "content/ui/materials/masks/gradient_radial_invert", position, size, {
-			150 * background_alpha_fraction,
-			0,
-			0,
-			0,
-		})
-
-		position[3] = position[3] + 1
-	end
-
-	local widget = icon_data.widget
-	local widget_content = widget.content
-	local widget_style = widget.style
-	local scale = ui_renderer.scale
 	local animation_timer = self._marked_animations[icon_data.level_index] and self._marked_animations[icon_data.level_index].timer
 	local animation_duration = 1
-	local marked = icon_data.marked
-	local marked_texture = widget_content.frame
-	local at_opportunity = icon_data.at_opportunity
 	local should_trigger_sound = false
+	local should_animate = animation_timer ~= nil and animation_timer < animation_duration
+	local icon = icon_data.icon
+	local title_icon = icon_data.title_icon
+	local marked = icon_data.marked
+	local marked_by_local_player = icon_data.marked_by_local_player
+	local at_opportunity = icon_data.at_opportunity
 
-	if animation_timer and animation_timer < animation_duration then
-		if animation_timer == 0 then
+	widget_content.animating = should_animate
+	widget_content.icon = icon
+	widget_content.title_icon = title_icon
+	widget_content.marked = marked
+	widget_content.marked_by_local_player = marked_by_local_player
+	widget_content.at_opportunity = at_opportunity
+	widget_offset[3] = position[3] + (marked_by_local_player and 15 or 0)
+
+	local draw_background = icon_data.draw_background or at_opportunity or marked
+
+	widget_content.draw_background = draw_background
+
+	if draw_background then
+		local background_alpha_fraction = alpha / 255
+
+		widget_style.background.color[1] = 255 * background_alpha_fraction
+	end
+
+	if should_animate then
+		if animation_timer and animation_timer == 0 then
 			should_trigger_sound = true
 		end
 
-		local animation_current_time = math.min(animation_timer + dt, animation_duration)
+		local progress = 0
 
-		self._marked_animations[icon_data.level_index].timer = animation_current_time
+		if animation_timer then
+			local animation_current_time = math.min(animation_timer + dt, animation_duration)
 
-		local progress = math.min(animation_current_time / animation_duration, 1)
+			progress = math.min(animation_current_time / animation_duration, 1)
+
+			if progress == 1 then
+				self._marked_animations[icon_data.level_index].timer = nil
+			else
+				self._marked_animations[icon_data.level_index].timer = animation_current_time
+			end
+		end
+
 		local anim_out_progress = math.ease_out_quad(progress)
 		local anim_in_progress = math.ease_out_exp(progress)
 		local anim_ease_in_progress = math.easeOutCubic(progress)
-		local text = icon_data.text
 
-		if text then
-			table.clear(temp_text_options)
+		table.clear(temp_anim_progresses)
 
-			local text_style = widget_style.icon_text or widget_style.text
-			local font_type = text_style.font_type
-			local font_size = icon_data.font_size or text_style.font_size
+		temp_anim_progresses[1] = anim_out_progress
+		temp_anim_progresses[2] = anim_in_progress
+		temp_anim_progresses[3] = anim_ease_in_progress
 
-			font_size = math.ceil(font_size * scale)
+		local function animate_pass(pass_prefix)
+			local scale = ui_renderer.scale
 
-			UIFonts.get_font_options_by_style(text_style, temp_text_options)
+			for i = 1, #temp_anim_progresses do
+				local pass_anim_progress = temp_anim_progresses[i]
+				local style_id = i > 1 and pass_prefix .. "_" .. i or pass_prefix
+				local pass_style = widget_style[style_id]
 
-			temp_text_options.shadow = nil
+				if pass_style then
+					local font_size
+					local font_type = pass_style.font_type
 
-			local icon_color = icon_data.text_color
+					if font_type then
+						font_size = icon_data.font_size or pass_style.default_font_size
+						font_size = math.ceil(font_size * scale)
 
-			if icon_color then
-				temp_icon_color[1] = alpha - alpha * anim_out_progress
-				temp_icon_color[2] = icon_color[2]
-				temp_icon_color[3] = icon_color[3]
-				temp_icon_color[4] = icon_color[4]
+						UIFonts.get_font_options_by_style(pass_style, temp_text_options)
+					end
+
+					local size_addition = pass_style.size_addition
+					local pass_offset = pass_style.offset
+					local pass_color = pass_style.text_color or pass_style.color
+
+					if pass_offset then
+						local z_depth_addition = i - 1
+
+						pass_offset[3] = z_depth_addition
+					end
+
+					local icon_color = icon_data.icon_color
+
+					if icon_color then
+						pass_color[2] = icon_color[2]
+						pass_color[3] = icon_color[3]
+						pass_color[4] = icon_color[4]
+					end
+
+					if i == 1 then
+						local decrease_multiplier = 0.3
+
+						if size_addition then
+							size_addition[1] = -(size[1] * decrease_multiplier) + size[1] * decrease_multiplier * pass_anim_progress
+							size_addition[2] = -(size[2] * decrease_multiplier) + size[2] * decrease_multiplier * pass_anim_progress
+						end
+
+						if font_size then
+							pass_style.font_size = -(font_size * decrease_multiplier) + font_size * decrease_multiplier * pass_anim_progress
+						end
+
+						pass_color[1] = alpha * (1 - decrease_multiplier) + alpha * decrease_multiplier * pass_anim_progress
+					else
+						if font_size then
+							pass_style.font_size = font_size + font_size * anim_out_progress
+						end
+
+						pass_color[1] = alpha - alpha * pass_anim_progress
+
+						if size_addition then
+							size_addition[1] = size[1] * pass_anim_progress
+							size_addition[2] = size[2] * pass_anim_progress
+						end
+					end
+				end
 			end
-
-			local temp_font_size = font_size + font_size * anim_out_progress
-
-			UIRenderer.draw_text(ui_renderer, text, temp_font_size, font_type, position, size, temp_icon_color, temp_text_options)
-
-			if icon_color then
-				temp_icon_color[1] = alpha - alpha * anim_in_progress
-			end
-
-			temp_font_size = font_size + font_size * anim_in_progress
-
-			UIRenderer.draw_text(ui_renderer, text, temp_font_size, font_type, position, size, temp_icon_color, temp_text_options)
-
-			if icon_color then
-				temp_icon_color[1] = alpha * 0.7 + alpha * 0.3 * anim_ease_in_progress
-			end
-
-			temp_font_size = font_size * 0.7 + font_size * 0.3 * anim_ease_in_progress
-
-			UIRenderer.draw_text(ui_renderer, text, temp_font_size, font_type, position, size, temp_icon_color, temp_text_options)
 		end
 
-		local icon = icon_data.icon
-
-		if icon then
-			local icon_color = icon_data.icon_color
-
-			if icon_color then
-				temp_icon_color[1] = alpha - alpha * anim_out_progress
-				temp_icon_color[2] = icon_color[2]
-				temp_icon_color[3] = icon_color[3]
-				temp_icon_color[4] = icon_color[4]
-			end
-
-			temp_size[1] = size[1] + size[1] * anim_out_progress
-			temp_size[2] = size[2] + size[2] * anim_out_progress
-			temp_position[1] = position[1] - (temp_size[1] - size[1]) * 0.5
-			temp_position[2] = position[2] - (temp_size[2] - size[2]) * 0.5
-			temp_position[3] = position[3]
-
-			UIRenderer.draw_texture(ui_renderer, icon, temp_position, temp_size, temp_icon_color)
-
-			if icon_color then
-				temp_icon_color[1] = alpha - alpha * anim_in_progress
-			end
-
-			temp_size[1] = size[1] + size[1] * anim_in_progress
-			temp_size[2] = size[2] + size[2] * anim_in_progress
-			temp_position[1] = position[1] - (temp_size[1] - size[1]) * 0.5
-			temp_position[2] = position[2] - (temp_size[2] - size[2]) * 0.5
-			temp_position[3] = position[3] + 1
-
-			UIRenderer.draw_texture(ui_renderer, icon, temp_position, temp_size, temp_icon_color)
-
-			if icon_color then
-				temp_icon_color[1] = alpha * 0.7 + alpha * 0.3 * anim_ease_in_progress
-			end
-
-			temp_size[1] = size[1] * 0.7 + size[1] * 0.3 * anim_ease_in_progress
-			temp_size[2] = size[2] * 0.7 + size[2] * 0.3 * anim_ease_in_progress
-			temp_position[1] = position[1] - (temp_size[1] - size[1]) * 0.5
-			temp_position[2] = position[2] - (temp_size[2] - size[2]) * 0.5
-			temp_position[3] = position[3] + 2
-
-			UIRenderer.draw_texture(ui_renderer, icon, temp_position, temp_size, temp_icon_color)
-		end
-
-		local title_icon = icon_data.title_icon
-
-		if title_icon then
-			local icon_color = icon_data.icon_color
-
-			if icon_color then
-				temp_icon_color[1] = alpha - alpha * anim_out_progress
-				temp_icon_color[2] = icon_color[2]
-				temp_icon_color[3] = icon_color[3]
-				temp_icon_color[4] = icon_color[4]
-			end
-
-			temp_size[1] = size[1] + size[1] * anim_out_progress
-			temp_size[2] = size[2] + size[2] * anim_out_progress
-			temp_position[1] = position[1] - (temp_size[1] - size[1]) * 0.5
-			temp_position[2] = position[2] - (temp_size[2] - size[2]) * 0.5
-			temp_position[3] = position[3]
-
-			UIRenderer.draw_texture(ui_renderer, title_icon, temp_position, temp_size, temp_icon_color)
-
-			if icon_color then
-				temp_icon_color[1] = alpha - alpha * anim_in_progress
-			end
-
-			temp_size[1] = size[1] + size[1] * anim_in_progress
-			temp_size[2] = size[2] + size[2] * anim_in_progress
-			temp_position[1] = position[1] - (temp_size[1] - size[1]) * 0.5
-			temp_position[2] = position[2] - (temp_size[2] - size[2]) * 0.5
-			temp_position[3] = position[3] + 1
-
-			UIRenderer.draw_texture(ui_renderer, title_icon, temp_position, temp_size, temp_icon_color)
-
-			if icon_color then
-				temp_icon_color[1] = alpha * 0.7 + alpha * 0.3 * anim_ease_in_progress
-			end
-
-			temp_size[1] = size[1] * 0.7 + size[1] * 0.3 * anim_ease_in_progress
-			temp_size[2] = size[2] * 0.7 + size[2] * 0.3 * anim_ease_in_progress
-			temp_position[1] = position[1] - (temp_size[1] - size[1]) * 0.5
-			temp_position[2] = position[2] - (temp_size[2] - size[2]) * 0.5
-			temp_position[3] = position[3] + 2
-
-			UIRenderer.draw_texture(ui_renderer, title_icon, temp_position, temp_size, temp_icon_color)
-		end
-
-		if marked and marked_texture and not at_opportunity then
-			local icon_color = icon_data.icon_color
-
-			if icon_color then
-				temp_icon_color[1] = alpha * anim_ease_in_progress
-				temp_icon_color[2] = icon_color[2]
-				temp_icon_color[3] = icon_color[3]
-				temp_icon_color[4] = icon_color[4]
-			end
-
-			temp_size[1] = size[1] * 2 - size[1] * anim_ease_in_progress + 10
-			temp_size[2] = size[2] * 2 - size[2] * anim_ease_in_progress + 10
-			temp_position[1] = position[1] - (temp_size[1] - size[1]) * 0.5
-			temp_position[2] = position[2] - (temp_size[2] - size[2]) * 0.5
-			temp_position[3] = position[3] + 2
-
-			UIRenderer.draw_texture(ui_renderer, marked_texture, temp_position, temp_size, temp_icon_color)
-		end
+		animate_pass("icon")
+		animate_pass("title_icon")
+		animate_pass("icon_text")
+		_animate_frame_pass(icon_data, alpha, anim_ease_in_progress)
 	else
-		local text = icon_data.text
+		_animate_frame_pass(icon_data, alpha, 1)
 
-		if text then
-			table.clear(temp_text_options)
+		for style_id, pass_style in pairs(widget_style) do
+			if not pass_style.static then
+				local pass_color = pass_style.text_color or pass_style.color
 
-			local text_style = widget_style.icon_text or widget_style.text
-			local font_type = text_style.font_type
-			local font_size = icon_data.font_size or text_style.font_size
+				pass_color[1] = alpha
 
-			font_size = math.ceil(font_size * scale)
+				local icon_color = icon_data.icon_color
 
-			UIFonts.get_font_options_by_style(text_style, temp_text_options)
+				if marked and icon_color then
+					pass_color[2] = icon_color[2]
+					pass_color[3] = icon_color[3]
+					pass_color[4] = icon_color[4]
+				else
+					pass_color[2] = _icon_default_color[2]
+					pass_color[3] = _icon_default_color[3]
+					pass_color[4] = _icon_default_color[4]
+				end
 
-			temp_text_options.shadow = nil
-			temp_icon_color[1] = alpha
+				local size_addition = pass_style.size_addition
 
-			local text_color = icon_data.text_color
+				if size_addition then
+					size_addition[1] = 0
+					size_addition[2] = 0
+				end
 
-			if text_color then
-				temp_icon_color[2] = text_color[2]
-				temp_icon_color[3] = text_color[3]
-				temp_icon_color[4] = text_color[4]
+				local default_size_addition = pass_style.default_size_addition
+
+				if default_size_addition then
+					size_addition[1] = size_addition[1] + default_size_addition[1]
+					size_addition[2] = size_addition[2] + default_size_addition[2]
+				end
 			end
-
-			UIRenderer.draw_text(ui_renderer, text, font_size, font_type, position, size, temp_icon_color, temp_text_options)
-		end
-
-		local icon = icon_data.icon
-
-		if icon then
-			temp_icon_color[1] = alpha
-
-			local icon_color = icon_data.icon_color
-
-			if icon_color then
-				temp_icon_color[2] = icon_color[2]
-				temp_icon_color[3] = icon_color[3]
-				temp_icon_color[4] = icon_color[4]
-			end
-
-			UIRenderer.draw_texture(ui_renderer, icon, position, size, temp_icon_color)
-		end
-
-		local title_icon = icon_data.title_icon
-
-		if title_icon then
-			temp_icon_color[1] = alpha
-
-			local icon_color = icon_data.icon_color
-
-			if icon_color then
-				temp_icon_color[2] = icon_color[2]
-				temp_icon_color[3] = icon_color[3]
-				temp_icon_color[4] = icon_color[4]
-			end
-
-			UIRenderer.draw_texture(ui_renderer, title_icon, position, size, temp_icon_color)
-		end
-
-		if marked and marked_texture and not at_opportunity then
-			temp_icon_color[1] = alpha
-
-			local icon_color = icon_data.icon_color
-
-			if icon_color then
-				temp_icon_color[2] = icon_color[2]
-				temp_icon_color[3] = icon_color[3]
-				temp_icon_color[4] = icon_color[4]
-			end
-
-			local marked_position = {
-				position[1] - 5,
-				position[2] - 5,
-				position[3],
-			}
-			local marked_size = {
-				size[1] + 10,
-				size[2] + 10,
-			}
-
-			UIRenderer.draw_texture(ui_renderer, marked_texture, marked_position, marked_size, temp_icon_color)
 		end
 	end
+
+	UIWidget.draw(widget, ui_renderer)
 
 	if should_trigger_sound then
 		self:_play_sound(UISoundEvents.expedition_compass_marker)

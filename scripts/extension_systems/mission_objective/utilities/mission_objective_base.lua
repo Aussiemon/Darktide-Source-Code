@@ -63,7 +63,13 @@ MissionObjectiveBase.init = function (self)
 end
 
 MissionObjectiveBase.destroy = function (self)
-	return
+	local event_manager = Managers.event
+
+	for event_name, event_cb in pairs(self._event_functions) do
+		event_manager:unregister(self, event_name)
+
+		self[event_name] = nil
+	end
 end
 
 MissionObjectiveBase.start_objective = function (self, mission_objective_data, group_id, registered_units, synchronizer_unit)
@@ -104,6 +110,19 @@ MissionObjectiveBase.start_objective = function (self, mission_objective_data, g
 	self._vo_mission_giver = mission_objective_data.vo_mission_giver or false
 	self._alert_text = mission_objective_data.alert_text and Localize(mission_objective_data.alert_text) or ""
 	self._title_text = mission_objective_data.title_text and Localize(mission_objective_data.title_text) or ""
+
+	local event_manager = Managers.event
+
+	self._event_functions = mission_objective_data.event_functions or {}
+
+	for event_name, event_cb in pairs(self._event_functions) do
+		self[event_name] = function (...)
+			event_cb(...)
+		end
+
+		event_manager:register(self, event_name, event_name)
+	end
+
 	self._turn_off_backfill = mission_objective_data.turn_off_backfill == true
 	self._locally_added = mission_objective_data.locally_added or false
 	self._stage = 1

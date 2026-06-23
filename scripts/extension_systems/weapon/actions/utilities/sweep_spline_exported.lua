@@ -12,7 +12,7 @@ SweepSplineExported.init = function (self, action_settings, matrices_data_locati
 end
 
 SweepSplineExported.position_and_rotation = function (self, t, reference_position, reference_rotation)
-	local frame = t == 0 and 1 or math.ceil(self._num_frames * t)
+	local frame = math.round(1 + (self._num_frames - 1) * t)
 	local local_matrix = Matrix4x4Box.unbox(self._matrices[frame])
 	local local_point = Matrix4x4.translation(local_matrix)
 	local local_rotation = Matrix4x4.rotation(local_matrix)
@@ -40,11 +40,11 @@ SweepSplineExported._build = function (self, action_settings)
 
 		local frame_index = num_frames + 1
 
-		for i = 1, num_frames do
-			local time = full_frame_to_time_map[i]
+		for ii = 1, num_frames do
+			local time = full_frame_to_time_map[ii]
 
 			if t < time then
-				frame_index = i
+				frame_index = ii
 
 				break
 			end
@@ -82,17 +82,17 @@ end
 function _find_frame(time, frame_to_time_map, num_frames)
 	local prev_frame_time = 0
 
-	for i = 1, num_frames do
-		local frame_time = frame_to_time_map[i]
+	for ii = 1, num_frames do
+		local frame_time = frame_to_time_map[ii]
 
 		if time < frame_time then
 			local this_frame_time_diff = math.abs(frame_time - time)
 			local prev_frame_time_diff = math.abs(frame_time - prev_frame_time)
 
 			if this_frame_time_diff < prev_frame_time_diff then
-				return i
+				return ii
 			else
-				return i - 1
+				return ii - 1
 			end
 		end
 
@@ -122,6 +122,8 @@ function _damage_window_frames(action_settings, frame_to_time_map, num_frames)
 	local damage_window_end = action_settings.damage_window_end
 	local start_frame = _find_frame(damage_window_start, frame_to_time_map, num_frames)
 	local end_frame = _find_frame(damage_window_end, frame_to_time_map, num_frames)
+
+	end_frame = end_frame or num_frames
 
 	return start_frame, end_frame
 end

@@ -114,9 +114,11 @@ ability_template.equipped_ability_effect_scripts = {
 	"ShoutEffects",
 	"StealthEffects",
 }
-ability_template.vfx = {
-	delay = 0.2,
-	name = "content/fx/particles/abilities/squad_leader_ability_shout_activate",
+ability_template.equipped_ability_effect_scripts_tweak_data = {
+	vfx = {
+		delay = 0.2,
+		name = "content/fx/particles/abilities/squad_leader_ability_shout_activate",
+	},
 }
 ability_template.ability_meta_data = {
 	activation = {

@@ -2,12 +2,23 @@
 
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local Crossroad = {}
+local _sorted_crossroads = Script.new_array(2)
 
 Crossroad.generate_road_choices = function (crossroads, seed)
 	local chosen_road_id
 	local chosen_crossroads = {}
 
+	table.clear(_sorted_crossroads)
+
 	for crossroads_id, crossroad in pairs(crossroads) do
+		table.insert(_sorted_crossroads, crossroads_id)
+	end
+
+	table.sort(_sorted_crossroads)
+
+	for _, crossroads_id in ipairs(_sorted_crossroads) do
+		local crossroad = crossroads[crossroads_id]
+
 		seed, chosen_road_id = math.next_random(seed, 1, #crossroad.roads)
 		chosen_crossroads[crossroads_id] = chosen_road_id
 	end

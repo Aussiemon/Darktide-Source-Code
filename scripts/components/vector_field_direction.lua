@@ -86,15 +86,60 @@ VectorFieldDirection.destroy = function (self, unit)
 	self:remove(unit)
 end
 
-VectorFieldDirection.changed = function (self, unit)
-	local vector_field_id = Unit.get_data(unit, "vector_field_id")
+VectorFieldDirection.changed = function (self, unit, optional_params)
+	if optional_params then
+		local speed = optional_params.speed
 
-	if vector_field_id then
-		local parameters = self:create_paramaters(unit)
+		if speed then
+			self._speed = math.clamp(speed, -1000, 1000)
 
-		VectorField.change(self._vector_field, vector_field_id, self._effect, parameters, self._settings)
-	else
-		Log.info("VectorFieldDirection", "No Vectorfield ID in Unit")
+			self:update_direction(unit)
+		end
+
+		local duration = optional_params.duration
+
+		if duration then
+			self._duration = duration
+			self._settings = {
+				duration = self._duration,
+			}
+		end
+
+		local bounding_type = optional_params.bounding_type
+
+		if bounding_type then
+			self._bounding_volume = bounding_type
+
+			self:update_bounding_volume(unit)
+
+			local effect_resource = "effect_global"
+
+			if self._bounding_volume == "box" then
+				effect_resource = "effect_box"
+			elseif self._bounding_volume == "sphere" then
+				effect_resource = "effect_sphere"
+			elseif self._bounding_volume == "cylinder" then
+				effect_resource = "effect_cylinder"
+			end
+
+			local requested_effect = self:get_data(unit, effect_resource)
+
+			if not requested_effect or requested_effect == "" then
+				Log.warning("VectorFieldDirection", "Missing resource for '%s'. Falling back to 'effect_global'.", effect_resource)
+
+				self._effect = self:get_data(unit, "effect_global")
+			else
+				self._effect = requested_effect
+			end
+		end
+
+		local scale = optional_params.scale
+
+		if scale then
+			Unit.set_local_scale(unit, 1, Vector3(1, 1, 1) * scale)
+		end
+
+		self:start_effect()
 	end
 end
 

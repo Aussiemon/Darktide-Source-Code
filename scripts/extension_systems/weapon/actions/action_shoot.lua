@@ -8,6 +8,7 @@ local AimAssist = require("scripts/utilities/aim_assist")
 local Ammo = require("scripts/utilities/ammo")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Component = require("scripts/utilities/component")
+local FixedFrame = require("scripts/utilities/fixed_frame")
 local LagCompensation = require("scripts/utilities/lag_compensation")
 local MultiFireModes = require("scripts/settings/equipment/weapon_templates/multi_fire_modes")
 local Overheat = require("scripts/utilities/overheat")
@@ -110,7 +111,10 @@ ActionShoot.start = function (self, action_settings, t, time_scale, params)
 	local fire_time = fire_rate_settings.fire_time or 0
 	local auto_fire_time = fire_rate_settings.auto_fire_time
 
-	auto_fire_time = auto_fire_time and self:_scale_auto_fire_time_with_buffs(auto_fire_time)
+	if auto_fire_time then
+		auto_fire_time = self:_scale_auto_fire_time_with_buffs(auto_fire_time)
+		auto_fire_time = FixedFrame.clamp_to_fixed_time(auto_fire_time)
+	end
 
 	local max_shots = fire_rate_settings.max_shots
 
@@ -277,6 +281,7 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action, frame)
 
 		if auto_fire_time then
 			auto_fire_time = self:_scale_auto_fire_time_with_buffs(auto_fire_time)
+			auto_fire_time = FixedFrame.clamp_to_fixed_time(auto_fire_time)
 			action_component.fire_at_time = t + auto_fire_time
 		end
 	end
@@ -308,7 +313,7 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action, frame)
 
 			if IS_PLAYSTATION and self._is_local_unit and self._is_human_controlled then
 				local fire_rate_settings = self:_fire_rate_settings()
-				local auto_fire_time = fire_rate_settings.auto_fire_time
+				local auto_fire_time = fire_rate_settings.auto_fire_time_haptics or fire_rate_settings.auto_fire_time
 
 				auto_fire_time = auto_fire_time and self:_scale_auto_fire_time_with_buffs(auto_fire_time)
 
@@ -432,6 +437,8 @@ ActionShoot._prepare_shooting = function (self, dt, t)
 
 		local gamepad_active = Managers.input:is_using_gamepad()
 		local enable_aim_assist = gamepad_active
+
+		enable_aim_assist = enable_aim_assist or self._buff_extension and self._buff_extension:has_keyword("enable_auto_aim")
 
 		if enable_aim_assist and not DevParameters.disable_aim_assist then
 			rotation = self._smart_targeting_extension:assisted_hitscan_trajectory(smart_targeting_template, weapon_template, rotation)
@@ -682,6 +689,7 @@ ActionShoot.finish = function (self, reason, data, t, time_in_action)
 		local auto_fire_time = fire_rate_settings.auto_fire_time
 
 		auto_fire_time = self:_scale_auto_fire_time_with_buffs(auto_fire_time)
+		auto_fire_time = FixedFrame.clamp_to_fixed_time(auto_fire_time)
 		action_component.fire_at_time = action_component.fire_at_time + auto_fire_time * semi_fire_factor
 	end
 
@@ -838,6 +846,7 @@ ActionShoot._update_looping_shoot_sound = function (self, fire_config)
 
 		if auto_fire_time and parameter_name then
 			auto_fire_time = self:_scale_auto_fire_time_with_buffs(auto_fire_time)
+			auto_fire_time = FixedFrame.clamp_to_fixed_time(auto_fire_time)
 
 			fx_extension:set_source_parameter(parameter_name, auto_fire_time, muzzle_fx_source_name, reference_attachment_id)
 		end

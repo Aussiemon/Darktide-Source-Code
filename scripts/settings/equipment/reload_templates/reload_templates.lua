@@ -9,6 +9,7 @@ local function _create_reload_template_entry(path)
 	reload_templates[reload_template_name] = reload_template_data
 end
 
+_create_reload_template_entry("scripts/settings/equipment/reload_templates/arc_rifle_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/autogun_ak_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/autogun_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/autopistol_reload_template")
@@ -19,6 +20,7 @@ _create_reload_template_entry("scripts/settings/equipment/reload_templates/doubl
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/dual_autopistols_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/dual_stubpistols_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/flamer_reload_template")
+_create_reload_template_entry("scripts/settings/equipment/reload_templates/galvanic_rifle_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/heavy_stubber_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/heavy_stubber_twin_linked_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/lasgun_elysian_reload_template")
@@ -27,6 +29,7 @@ _create_reload_template_entry("scripts/settings/equipment/reload_templates/laspi
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/needlepistol_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/ogryn_gauntlet_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/ogryn_thumper_reload_template")
+_create_reload_template_entry("scripts/settings/equipment/reload_templates/phosphor_pistol_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/plasma_rifle_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/rippergun_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/shotpistol_shield_reload_template")

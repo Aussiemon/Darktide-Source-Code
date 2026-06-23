@@ -236,4 +236,46 @@ MinigameBalance.progression = function (self)
 	return (self._objective:progression() - self._start_progression) / (1 - self._start_progression)
 end
 
+MinigameBalance.automatic_minigame_set_up = function (self, automatic_duration)
+	MinigameBalance.super.automatic_minigame_set_up(self, automatic_duration)
+
+	local current_duration = self:set_up_networked_timer(automatic_duration)
+
+	self._manual_duration = current_duration
+end
+
+MinigameBalance.automatic_minigame_on_stop = function (self, duration)
+	MinigameBalance.super.automatic_minigame_on_stop(self, duration)
+
+	if not self:is_completed() then
+		self:set_up_networked_timer(self._manual_duration)
+
+		self._manual_duration = nil
+	end
+end
+
+MinigameBalance.set_up_networked_timer = function (self, duration)
+	local mission_objective_target_extension = ScriptUnit.extension(self._minigame_unit, "mission_objective_target_system")
+	local objective_name = mission_objective_target_extension:objective_name()
+	local group_id = mission_objective_target_extension:objective_group_id()
+	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+
+	if mission_objective_system:is_current_active_objective(objective_name) then
+		local synchronizer_unit = mission_objective_system:objective_synchronizer_unit(objective_name, group_id)
+		local networked_timer_extension = ScriptUnit.extension(synchronizer_unit, "networked_timer_system")
+		local current_duration = networked_timer_extension:duration()
+		local current_progression = networked_timer_extension:progression()
+		local new_total_timer = duration * current_progression
+
+		networked_timer_extension:set_duration(duration)
+		networked_timer_extension:set_timer(new_total_timer)
+
+		return current_duration
+	end
+end
+
+MinigameBalance.automatic_minigame_complete_manually = function (self)
+	return false
+end
+
 return MinigameBalance

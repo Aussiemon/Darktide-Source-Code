@@ -471,6 +471,21 @@ local audio_voice_fx_setting = {
 		end
 	end,
 }
+local audio_cryptic_fx_setting = {
+	default_value = true,
+	display_name = "loc_settings_audio_cryptic_voice_effect",
+	id = "cryptic_fx_setting",
+	save_location = "sound_settings",
+	commit = function (value)
+		local options_audio_parameter_name = "options_cryptic_fx"
+
+		if value then
+			Wwise.set_state(options_audio_parameter_name, "on")
+		else
+			Wwise.set_state(options_audio_parameter_name, "off")
+		end
+	end,
+}
 
 settings[#settings + 1] = {
 	display_name = "loc_settings_menu_group_audio_settings",
@@ -494,6 +509,7 @@ settings[#settings + 1] = construct_audio_settings_boolean(game_interface_settin
 settings[#settings + 1] = construct_audio_settings_boolean(audio_backstab_sound_setting)
 settings[#settings + 1] = construct_audio_settings_boolean(audio_teammate_ping_setting)
 settings[#settings + 1] = construct_audio_settings_boolean(audio_voice_fx_setting)
+settings[#settings + 1] = construct_audio_settings_boolean(audio_cryptic_fx_setting)
 settings[#settings + 1] = {
 	display_name = "loc_settings_menu_group_voice_chat_settings",
 	group_name = "voice_chat_settings",

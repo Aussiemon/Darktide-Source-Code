@@ -1,12 +1,12 @@
 ﻿-- chunkname: @scripts/ui/constant_elements/elements/notification_feed/constant_element_notification_feed_definitions.lua
 
 local ConstantElementNotificationFeedSettings = require("scripts/ui/constant_elements/elements/notification_feed/constant_element_notification_feed_settings")
-local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local UISettings = require("scripts/settings/ui/ui_settings")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local Text = require("scripts/utilities/ui/text")
+local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local UISettings = require("scripts/settings/ui/ui_settings")
+local UIWidget = require("scripts/managers/ui/ui_widget")
+local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local header_size = ConstantElementNotificationFeedSettings.header_size
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
@@ -171,6 +171,51 @@ local create_notification_message = {
 					return content.text_3
 				end,
 			},
+			{
+				pass_type = "rect",
+				style_id = "progress_background",
+				value_id = "progress_background",
+				style = {
+					horizontal_alignment = "right",
+					vertical_alignment = "bottom",
+					color = Color.terminal_frame(255, true),
+					offset = {
+						0,
+						0,
+						1,
+					},
+					size = {
+						header_size[1],
+						7,
+					},
+				},
+				visibility_function = function (content)
+					return content.progress
+				end,
+			},
+			{
+				pass_type = "rect",
+				style_id = "progress",
+				value_id = "progress",
+				style = {
+					horizontal_alignment = "right",
+					vertical_alignment = "bottom",
+					color = Color.terminal_corner_hover(255, true),
+					full_width = header_size[1],
+					size = {
+						header_size[1],
+						7,
+					},
+					offset = {
+						0,
+						0,
+						2,
+					},
+				},
+				visibility_function = function (content)
+					return content.progress
+				end,
+			},
 		}
 	end,
 	init = function (parent, widget, element)
@@ -314,6 +359,8 @@ local create_notification_message = {
 			widget.style.icon.offset[2] + widget_height * 0.5,
 			widget.style.icon.offset[3],
 		}
+		widget.style.progress_background.offset[2] = widget.style.progress_background.offset[2] + offset_content_compensation + background_compensation_top + widget_height
+		widget.style.progress.offset[2] = widget.style.progress_background.offset[2]
 
 		for i = 1, #element.texts do
 			local pass_name = string.format("text_%d", i)

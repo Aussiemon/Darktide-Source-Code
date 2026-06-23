@@ -225,6 +225,10 @@ local HUMAN_WWISE_VOICES = {
 	"broker_male_a",
 	"broker_male_b",
 	"broker_male_c",
+	"cryptic_a",
+	"cryptic_b",
+	"cryptic_c",
+	"cryptic_d",
 	"ogryn_a",
 	"ogryn_b",
 	"ogryn_c",
@@ -249,6 +253,12 @@ local HUMAN_WWISE_VOICES = {
 	"zealot_male_c",
 }
 
+dialogue_breed_settings.cryptic = _generate_player_settings({
+	"cryptic_a",
+	"cryptic_b",
+	"cryptic_c",
+	"cryptic_d",
+}, "veteran")
 dialogue_breed_settings.human = _generate_player_settings(HUMAN_WWISE_VOICES, "veteran")
 dialogue_breed_settings.ogryn = _generate_player_settings({
 	"ogryn_a",
@@ -404,6 +414,10 @@ dialogue_breed_settings.purser = {
 		broker_male_a = "likes_character",
 		broker_male_b = "likes_character",
 		broker_male_c = "likes_character",
+		cryptic_a = "dislikes_character",
+		cryptic_b = "dislikes_character",
+		cryptic_c = "dislikes_character",
+		cryptic_d = "dislikes_character",
 		ogryn_a = "likes_character",
 		ogryn_b = "likes_character",
 		ogryn_c = "likes_character",
@@ -482,6 +496,10 @@ dialogue_breed_settings.boon_vendor = {
 		broker_male_a = "dislikes_character",
 		broker_male_b = "dislikes_character",
 		broker_male_c = "dislikes_character",
+		cryptic_a = "dislikes_character",
+		cryptic_b = "dislikes_character",
+		cryptic_c = "dislikes_character",
+		cryptic_d = "dislikes_character",
 		ogryn_a = "likes_character",
 		ogryn_b = "dislikes_character",
 		ogryn_c = "likes_character",
@@ -741,6 +759,7 @@ dialogue_breed_settings.renegade_melee = {
 		"enemy_traitor_trenchfighter_b",
 	},
 }
+dialogue_breed_settings.renegade_vanguard = table.clone(dialogue_breed_settings.renegade_melee)
 dialogue_breed_settings.chaos_ogryn_executor = {
 	dialogue_memory_faction_name = "enemy",
 	has_dialogue_extension = true,
@@ -1016,6 +1035,7 @@ dialogue_breed_settings.cultist_melee = {
 		"enemy_cultist_melee_fighter_c",
 	},
 }
+dialogue_breed_settings.cultist_vanguard = table.clone(dialogue_breed_settings.cultist_melee)
 dialogue_breed_settings.cultist_ritualist = table.clone(dialogue_breed_settings.cultist_melee)
 dialogue_breed_settings.chaos_mutator_ritualist = table.clone(dialogue_breed_settings.cultist_ritualist)
 dialogue_breed_settings.cultist_assault = {
@@ -1141,6 +1161,10 @@ dialogue_breed_settings.contract_vendor = {
 		broker_male_a = "dislikes_character",
 		broker_male_b = "dislikes_character",
 		broker_male_c = "dislikes_character",
+		cryptic_a = "dislikes_character",
+		cryptic_b = "dislikes_character",
+		cryptic_c = "dislikes_character",
+		cryptic_d = "dislikes_character",
 		ogryn_a = "dislikes_character",
 		ogryn_b = "dislikes_character",
 		ogryn_c = "likes_character",
@@ -1222,6 +1246,10 @@ dialogue_breed_settings.training_ground_psyker = {
 		broker_male_a = "likes_character",
 		broker_male_b = "likes_character",
 		broker_male_c = "likes_character",
+		cryptic_a = "dislikes_character",
+		cryptic_b = "dislikes_character",
+		cryptic_c = "dislikes_character",
+		cryptic_d = "dislikes_character",
 		ogryn_a = "likes_character",
 		ogryn_b = "dislikes_character",
 		ogryn_c = "dislikes_character",
@@ -1481,6 +1509,10 @@ dialogue_breed_settings.adamant_officer = {
 		broker_male_a = "dislikes_character",
 		broker_male_b = "dislikes_character",
 		broker_male_c = "dislikes_character",
+		cryptic_a = "dislikes_character",
+		cryptic_b = "dislikes_character",
+		cryptic_c = "dislikes_character",
+		cryptic_d = "dislikes_character",
 		ogryn_a = "dislikes_character",
 		ogryn_b = "dislikes_character",
 		ogryn_c = "dislikes_character",

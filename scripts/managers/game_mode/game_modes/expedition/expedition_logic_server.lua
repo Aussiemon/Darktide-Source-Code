@@ -67,6 +67,7 @@ ExpeditionLogicServer.init = function (self, network_event_delegate)
 	event_manager:register(self, "event_airstrike_finished", "event_airstrike_finished")
 	event_manager:register(self, "event_register_danger_zone", "event_register_danger_zone")
 	event_manager:register(self, "event_unregister_danger_zone", "event_unregister_danger_zone")
+	event_manager:register(self, "expedition_block_player_respawn", "expedition_block_player_respawn")
 end
 
 ExpeditionLogicServer.event_start_location_safe_zone_door_defence_sequence = function (self, level, location_unit)
@@ -88,6 +89,8 @@ ExpeditionLogicServer.event_start_location_safe_zone_door_defence_sequence = fun
 	if self._current_section_index == #self._expedition - 1 then
 		Managers.event:trigger("event_disable_backfill")
 	end
+
+	self:expedition_block_player_respawn()
 end
 
 local function _get_location_level(levels_data)
@@ -221,9 +224,9 @@ ExpeditionLogicServer.get_expedition_template = function (self)
 end
 
 ExpeditionLogicServer._set_server_level_state = function (self, new_state)
-	local previous_state = self._server_level_state and self._server_level_state or "-"
+	local previous_state = self._server_level_state or "n/a"
 
-	_log("CHANING STATE: " .. new_state .. " - OLD STATE:" .. previous_state)
+	_log("CHANGING STATE: %s - OLD STATE: %s", new_state, previous_state)
 
 	self._server_level_state = new_state
 end
@@ -831,6 +834,7 @@ ExpeditionLogicServer.update = function (self, dt, t)
 			local volume_name = Level.has_volume(transition_level, "transition_area") and "transition_area" or nil
 
 			self:_retain_last_environment(connector_exit_unit)
+			self:set_use_safe_zone_respawn_beacons(true)
 			self:_server_teleport_players_and_objects_to_target(safe_zone_entrance_slot_unit, connector_exit_unit, transition_level, volume_name)
 			Level.trigger_event(safe_zone_level, "event_players_arrived_to_safe_zone")
 		end
@@ -858,9 +862,8 @@ ExpeditionLogicServer.update = function (self, dt, t)
 		local exit_safe_zone_location_unit = self._exit_safe_zone_location_unit
 		local transition_level = last_section.safe_zone_connector_exit_level
 		local volume_name = Level.has_volume(transition_level, "transition_area") and "transition_area" or nil
-		local respawn_beacon_system = Managers.state.extension:system("respawn_beacon_system")
 
-		respawn_beacon_system:set_use_safe_zone(false)
+		self:set_use_safe_zone_respawn_beacons(false)
 		self:_server_teleport_players_and_objects_to_target(connector_entrance_unit, exit_safe_zone_location_unit, transition_level, volume_name)
 		self:_set_pacing_time()
 
@@ -1007,6 +1010,41 @@ ExpeditionLogicServer._disable_enemies_outside = function (self, unit)
 	end
 end
 
+ExpeditionLogicServer.expedition_block_player_respawn = function (self)
+	local respawn_beacon_system = Managers.state.extension:system("respawn_beacon_system")
+	local section = self._expedition[self._current_section_index]
+	local safe_zone_respawn_beacons = section.safe_zone_respawn_beacons
+
+	if not safe_zone_respawn_beacons then
+		return
+	end
+
+	respawn_beacon_system:set_block_spawning(true)
+end
+
+ExpeditionLogicServer.set_use_safe_zone_respawn_beacons = function (self, active)
+	local respawn_beacon_system = Managers.state.extension:system("respawn_beacon_system")
+	local beacon_unit
+
+	if active then
+		local section = self._expedition[self._current_section_index]
+		local safe_zone_respawn_beacons = section.safe_zone_respawn_beacons
+
+		if not safe_zone_respawn_beacons then
+			return
+		end
+
+		for unit, extension in pairs(safe_zone_respawn_beacons) do
+			beacon_unit = unit
+		end
+
+		self._loot_handler:server_clear_rescue()
+	end
+
+	respawn_beacon_system:set_block_spawning(false)
+	respawn_beacon_system:set_use_safe_zone(active, beacon_unit)
+end
+
 ExpeditionLogicServer.event_expedition_airlock_sealed = function (self, hostile_area_unit)
 	local current_section = self._expedition[self._current_section_index]
 	local transition_level = current_section.connector_exit_level
@@ -1032,23 +1070,6 @@ ExpeditionLogicServer.event_expedition_airlock_sealed = function (self, hostile_
 	self._navigation_handler:set_active(false)
 	self:clean_up_current_level_hazards()
 	self:_set_pacing(false)
-
-	local respawn_beacon_system = Managers.state.extension:system("respawn_beacon_system")
-	local safe_zone_level = self._expedition[self._current_section_index].safe_zone_level
-	local level_units = Level.units(safe_zone_level)
-	local beacon_unit
-
-	for i = 1, #level_units do
-		local unit = level_units[i]
-
-		if ScriptUnit.has_extension(unit, "respawn_beacon_system") then
-			beacon_unit = unit
-
-			break
-		end
-	end
-
-	respawn_beacon_system:set_use_safe_zone(true, beacon_unit)
 
 	if not hostile_area_unit then
 		return
@@ -1082,7 +1103,7 @@ ExpeditionLogicServer.event_expedition_airlock_sealed = function (self, hostile_
 			local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 			local character_state_component = unit_data_extension:read_component("character_state")
 
-			if not PlayerUnitStatus.is_hogtied(character_state_component) and not player_position or not Level.is_point_inside_volume(transition_level, volume_name, player_position) then
+			if not PlayerUnitStatus.is_hogtied(character_state_component) and (not player_position or not Level.is_point_inside_volume(transition_level, volume_name, player_position)) then
 				PlayerDeath.die(player_unit, optional_despawn_time, optional_attacking_unit, death_reason)
 			end
 		end
@@ -1157,7 +1178,7 @@ ExpeditionLogicServer.send_gamemode_finished_telemetry = function (self, result,
 	for _, player in pairs(players) do
 		local player_health = _player_health_percentage(player)
 
-		Managers.telemetry_events:expedition_finished(player, end_reason, location_index, gameplay_time, time_remaining, end_game_result.extracted_loot_amount, end_game_result.lost_loot_amount, end_game_result.extracted_players[player] ~= nil, loot_handler:collected_player_loot(player:peer_id()), player_health)
+		Managers.telemetry_events:expedition_finished(player, end_reason, location_index, gameplay_time, time_remaining, end_game_result.extracted_loot_amount, end_game_result.lost_loot_amount, end_game_result.extracted_players[player] ~= nil, loot_handler:collected_player_loot_telemetry_only(player:peer_id()), player_health)
 	end
 end
 
@@ -1177,7 +1198,7 @@ ExpeditionLogicServer.event_expedition_teleport_players_from_store = function (s
 		local player_health = _player_health_percentage(player)
 		local peer_id = player:peer_id()
 
-		Managers.telemetry_events:expedition_reached_location_index(player, location_index, gameplay_time, time_remaining, total_loot, loot_handler:collected_player_loot(peer_id), currency_handler:collected_player_currency(peer_id), player_health)
+		Managers.telemetry_events:expedition_reached_location_index(player, location_index, gameplay_time, time_remaining, total_loot, loot_handler:collected_player_loot_telemetry_only(peer_id), currency_handler:collected_player_currency(peer_id), player_health)
 	end
 end
 
@@ -1221,7 +1242,7 @@ ExpeditionLogicServer.event_expedition_teleport_players_to_store = function (sel
 		local player_health = _player_health_percentage(player)
 		local peer_id = player:peer_id()
 
-		Managers.telemetry_events:expedition_exited_location_index(player, location_index, gameplay_time, time_remaining, total_loot, loot_handler:collected_player_loot(peer_id), currency_handler:collected_player_currency(peer_id), player_health)
+		Managers.telemetry_events:expedition_exited_location_index(player, location_index, gameplay_time, time_remaining, total_loot, loot_handler:collected_player_loot_telemetry_only(peer_id), currency_handler:collected_player_currency(peer_id), player_health)
 	end
 end
 
@@ -1308,12 +1329,13 @@ ExpeditionLogicServer._server_teleport_players_and_objects_to_target = function 
 			if not PlayerUnitStatus.is_hogtied(character_state_component) then
 				local teleport_companions = true
 				local is_human_controlled = player:is_human_controlled()
-				local is_disabled, requires_help = PlayerUnitStatus.is_disabled(character_state_component)
+				local is_dead = PlayerUnitStatus.is_dead(character_state_component)
+				local keep_velocity = true
 
-				if player_position and Level.is_point_inside_volume(transition_level, volume_name, player_position) and not is_disabled then
-					PlayerMovement.teleport(player, absolute_position, absolute_rotation)
-				elseif not is_human_controlled or is_disabled then
-					PlayerMovement.teleport(player, POSITION_LOOKUP[target_unit], player_rotation)
+				if player_position and Level.is_point_inside_volume(transition_level, volume_name, player_position) then
+					PlayerMovement.teleport(player, absolute_position, absolute_rotation, keep_velocity)
+				elseif not is_human_controlled or is_dead then
+					PlayerMovement.teleport(player, POSITION_LOOKUP[target_unit], player_rotation, keep_velocity)
 				else
 					teleport_companions = false
 
@@ -1401,6 +1423,7 @@ ExpeditionLogicServer.destroy = function (self)
 	event_manager:unregister(self, "event_airstrike_finished")
 	event_manager:unregister(self, "event_register_danger_zone")
 	event_manager:unregister(self, "event_unregister_danger_zone")
+	event_manager:unregister(self, "expedition_block_player_respawn")
 	event_manager:unregister(self, "expedition_register_transition_activator")
 	event_manager:unregister(self, "expedition_unregister_transition_activator")
 	event_manager:unregister(self, "expedition_transition_activator_started")
@@ -1489,9 +1512,7 @@ ExpeditionLogicServer._calculate_progress = function (self, rates)
 end
 
 ExpeditionLogicServer.on_player_unit_despawn = function (self, player)
-	if self._is_server then
-		self._loot_handler:server_drop_player_loot(player)
-	end
+	return
 end
 
 ExpeditionLogicServer.get_navigation_handler = function (self)
@@ -1785,6 +1806,10 @@ ExpeditionLogicServer._loot_in_extraction_zone = function (self, volume_unit)
 						local amount = type_settings.values_per_tier[loot_tier]
 
 						total_dropped_loot = total_dropped_loot + amount
+
+						if loot_type == "heavy" then
+							Managers.stats:record_team("hook_loot_team_luggable_delivered")
+						end
 					end
 				end
 			end
@@ -1862,21 +1887,26 @@ ExpeditionLogicServer._players_in_extraction_zone = function (self, volume_unit)
 	return any_player_in_extraction_zone, players_in_extraction_zone
 end
 
+ExpeditionLogicServer.player_extraction_loot_penalty_values = function (self)
+	local expedition_template = self._expedition_template
+	local loot_deduction_settings = expedition_template and expedition_template.loot_deduction_settings
+	local player_extraction_penalty_multiplier = loot_deduction_settings and loot_deduction_settings.player_extraction_penalty_multiplier or 0.25
+	local player_penalty_increment = loot_deduction_settings and loot_deduction_settings.player_extraction_penalty_multiplier or 0.5
+
+	return player_extraction_penalty_multiplier, player_penalty_increment
+end
+
 ExpeditionLogicServer.event_expedition_validate_game_mode_completion = function (self, volume_unit)
 	local any_player_in_extraction_zone, extracted_players = self:_players_in_extraction_zone(volume_unit)
 
 	if any_player_in_extraction_zone then
 		local loot_handler = self._loot_handler
-		local extracted_loot_amount = 0
 		local player_extracted_count = 0
 
 		for player, _ in pairs(extracted_players) do
 			local peer_id = player:peer_id()
-			local player_loot = loot_handler:collected_player_loot(peer_id)
 
-			extracted_loot_amount = extracted_loot_amount + player_loot
-
-			if loot_handler:collected_player_loot_by_type(player:peer_id(), "heavy") > 0 then
+			if loot_handler:collected_player_loot_by_type_telemetry_only(peer_id, "heavy") > 0 then
 				Managers.stats:record_team("hook_loot_team_luggable_delivered")
 				Managers.achievements:unlock_achievement(player, "expeditions_extract_with_luggable_loot")
 			end
@@ -1884,14 +1914,22 @@ ExpeditionLogicServer.event_expedition_validate_game_mode_completion = function 
 			player_extracted_count = player_extracted_count + 1
 		end
 
-		local loot_in_extraction_zone = self:_loot_in_extraction_zone(volume_unit)
 		local collected_team_loot = loot_handler:collected_team_loot()
-		local total_extracted_loot = extracted_loot_amount + loot_in_extraction_zone
+		local player_extraction_loot_penalty_multiplier, player_penalty_increment = self:player_extraction_loot_penalty_values()
+		local loot_deduction_per_player = collected_team_loot * player_extraction_loot_penalty_multiplier
+		local loot_deduction_per_player_rounded = math.round_to_closest_multiple_toward_zero(loot_deduction_per_player, player_penalty_increment)
+		local human_players = Managers.player:human_players()
+		local num_human_players = table.size(human_players)
+		local num_players_not_extracting = num_human_players - player_extracted_count
+		local lost_loot_amount = math.round_down_with_precision(num_players_not_extracting * loot_deduction_per_player_rounded)
+		local team_loot_amount_left = collected_team_loot - lost_loot_amount
+		local loot_in_extraction_zone = self:_loot_in_extraction_zone(volume_unit)
+		local total_extracted_loot = math.round_down_with_precision(team_loot_amount_left + loot_in_extraction_zone)
 
 		self._telemetry_end_game_result = {
 			extracted_players = extracted_players,
 			extracted_loot_amount = total_extracted_loot,
-			lost_loot_amount = collected_team_loot - extracted_loot_amount,
+			lost_loot_amount = lost_loot_amount,
 		}
 
 		Managers.stats:record_team("hook_expedition_loot_collected_by_team", total_extracted_loot)

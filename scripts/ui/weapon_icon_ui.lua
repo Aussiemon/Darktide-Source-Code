@@ -2,6 +2,7 @@
 
 require("scripts/ui/render_target_icon_generator_base")
 
+local RenderTargetIconGeneratorInterface = require("scripts/ui/render_target_icon_generator_interface")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWeaponSpawner = require("scripts/managers/ui/ui_weapon_spawner")
 local WeaponIconUI = class("WeaponIconUI", "RenderTargetIconGeneratorBase")
@@ -22,8 +23,7 @@ WeaponIconUI.init = function (self, render_settings)
 
 	WeaponIconUI.super.init(self, new_render_settings)
 
-	self._default_camera_settings_key = "human"
-	self._breed_camera_settings = {}
+	self._camera_settings = {}
 end
 
 WeaponIconUI._check_weapon_icon_enabled_status = function (self)
@@ -137,38 +137,24 @@ WeaponIconUI._on_capture_complete = function (self, active_request)
 end
 
 WeaponIconUI._initialize_world = function (self)
-	Managers.event:register(self, "event_register_portrait_camera_human", "event_register_portrait_camera_human")
-	Managers.event:register(self, "event_register_portrait_camera_ogryn", "event_register_portrait_camera_ogryn")
-	Managers.event:register(self, "event_register_spawn_point_character_portrait", "event_register_spawn_point_character_portrait")
+	Managers.event:register(self, "event_register_spawn_point_weapon", "_event_register_spawn_point_weapon")
+	Managers.event:register(self, "event_register_weapon_camera", "_event_register_weapon_camera")
 	WeaponIconUI.super._initialize_world(self)
 end
 
-WeaponIconUI.event_register_spawn_point_character_portrait = function (self, spawn_point_unit)
-	Managers.event:unregister(self, "event_register_spawn_point_character_portrait")
+WeaponIconUI._event_register_spawn_point_weapon = function (self, spawn_point_unit)
+	Managers.event:unregister(self, "event_register_spawn_point_weapon")
 
 	self._spawn_point_unit = spawn_point_unit
 end
 
-WeaponIconUI.event_register_portrait_camera_human = function (self, camera_unit)
-	Managers.event:unregister(self, "event_register_portrait_camera_human")
+WeaponIconUI._event_register_weapon_camera = function (self, camera_unit)
+	Managers.event:unregister(self, "event_register_weapon_camera")
 
 	local camera_position = Unit.world_position(camera_unit, 1)
 	local camera_rotation = Unit.world_rotation(camera_unit, 1)
 
-	self._breed_camera_settings.human = {
-		camera_unit = camera_unit,
-		boxed_camera_start_position = Vector3.to_array(camera_position),
-		boxed_camera_start_rotation = QuaternionBox(camera_rotation),
-	}
-end
-
-WeaponIconUI.event_register_portrait_camera_ogryn = function (self, camera_unit)
-	Managers.event:unregister(self, "event_register_portrait_camera_ogryn")
-
-	local camera_position = Unit.world_position(camera_unit, 1)
-	local camera_rotation = Unit.world_rotation(camera_unit, 1)
-
-	self._breed_camera_settings.ogryn = {
+	self._camera_settings = {
 		camera_unit = camera_unit,
 		boxed_camera_start_position = Vector3.to_array(camera_position),
 		boxed_camera_start_rotation = QuaternionBox(camera_rotation),
@@ -200,8 +186,7 @@ WeaponIconUI._reset_active_spawning = function (self)
 end
 
 WeaponIconUI._camera_unit = function (self)
-	local default_camera_settings_key = self._default_camera_settings_key
-	local camera_settings = self._breed_camera_settings[default_camera_settings_key]
+	local camera_settings = self._camera_settings
 	local camera_unit = camera_settings.camera_unit
 
 	return camera_unit
@@ -277,8 +262,7 @@ WeaponIconUI._spawn_weapon = function (self, item, render_context)
 
 	ui_weapon_spawner:start_presentation(item, spawn_position, spawn_rotation, spawn_scale, spawn_point_unit, false, nil, force_highest_mip)
 
-	local breed = "human"
-	local camera_settings = self._breed_camera_settings[breed]
+	local camera_settings = self._camera_settings
 
 	if camera_settings then
 		local camera_position = Vector3.from_array(camera_settings.boxed_camera_start_position)
@@ -334,5 +318,7 @@ WeaponIconUI.change_render_weapon_icon_status = function (self, value, force_cha
 		end
 	end
 end
+
+implements(WeaponIconUI, RenderTargetIconGeneratorInterface)
 
 return WeaponIconUI

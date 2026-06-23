@@ -187,9 +187,9 @@ haptic_trigger_templates.melee.chainsword = {
 			},
 		},
 		vibration = {
-			amplitude = 2,
-			frequency = 0,
-			position = 5,
+			amplitude = 7,
+			frequency = 100,
+			position = 4,
 		},
 	},
 	left = {
@@ -226,9 +226,9 @@ haptic_trigger_templates.melee.chainsword_2h = {
 			},
 		},
 		vibration = {
-			amplitude = 4,
-			frequency = 0,
-			position = 5,
+			amplitude = 7,
+			frequency = 100,
+			position = 4,
 		},
 	},
 	left = {
@@ -290,6 +290,37 @@ haptic_trigger_templates.ranged.none = {
 		off = {},
 	},
 }
+haptic_trigger_templates.ranged.arc_rifle = {
+	right = {
+		scale_vibration_with_ammo = true,
+		weapon = {
+			end_position = 4,
+			start_position = 2,
+			strength = 5,
+		},
+		vibration = {
+			amplitude = 7,
+			frequency = 0,
+			position = 4,
+		},
+	},
+	left = {
+		multi_position_feedback = {
+			strength = {
+				0,
+				1,
+				1,
+				1,
+				2,
+				0,
+				0,
+				2,
+				3,
+				0,
+			},
+		},
+	},
+}
 haptic_trigger_templates.ranged.spray_n_pray = {
 	right = {
 		scale_vibration_with_ammo = true,
@@ -333,7 +364,7 @@ haptic_trigger_templates.ranged.heavy_stubber = {
 		vibration = {
 			amplitude = 7,
 			frequency = 5,
-			position = 2,
+			position = 4,
 		},
 	},
 	left = {
@@ -362,9 +393,9 @@ haptic_trigger_templates.ranged.heavy_stubber_braced = {
 			strength = 1,
 		},
 		vibration = {
-			amplitude = 2,
+			amplitude = 7,
 			frequency = 0,
-			position = 2,
+			position = 4,
 		},
 	},
 	left = {
@@ -1041,9 +1072,9 @@ haptic_trigger_templates.ranged.dual_auto = {
 			strength = 3,
 		},
 		vibration = {
-			amplitude = 5,
+			amplitude = 7,
 			frequency = 0,
-			position = 2,
+			position = 4,
 		},
 	},
 	left = {
@@ -1054,9 +1085,9 @@ haptic_trigger_templates.ranged.dual_auto = {
 			strength = 1,
 		},
 		vibration = {
-			amplitude = 5,
+			amplitude = 7,
 			frequency = 0,
-			position = 3,
+			position = 4,
 		},
 	},
 }

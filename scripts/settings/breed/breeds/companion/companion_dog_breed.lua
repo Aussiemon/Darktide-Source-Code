@@ -9,7 +9,7 @@ local TargetSelectionTemplates = require("scripts/extension_systems/perception/t
 local TargetSelectionWeights = require("scripts/settings/minion_target_selection/minion_target_selection_weights")
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
-local breed_name = "companion_dog"
+local BREED_NAME = "companion_dog"
 
 local function _is_in_hub()
 	return Managers.state and Managers.state.game_mode and Managers.state.game_mode:is_social_hub() or false
@@ -22,21 +22,18 @@ local breed_data = {
 	broadphase_radius = 1,
 	can_tag_order = true,
 	challenge_rating = 0,
-	character_creation_state_machine = "content/characters/player/companion_dog/third_person/animations/unarmed",
+	companion_double_tag_template_name = "enemy_companion_target",
 	display_name = "loc_breed_display_name_undefined",
-	end_of_round_state_machine = "content/characters/player/companion_dog/third_person/animations/unarmed",
 	faction_name = "imperium",
 	force_aggro = true,
 	fx_proximity_culling_weight = 6,
 	game_object_type = "minion_companion_dog",
 	hub_state_machine = "content/characters/player/companion_dog/third_person/animations/hub",
-	inventory_state_machine = "content/characters/player/companion_dog/third_person/animations/unarmed",
+	inventory_state_machine = "content/characters/player/companion_dog/third_person/animations/inventory",
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	look_at_distance = 20,
-	mission_intro_state_machine = "content/characters/player/companion_dog/third_person/animations/unarmed",
 	navigation_propagation_box_extent = 200,
 	player_locomotion_constrain_radius = 0.7,
-	portrait_state_machine = "content/characters/player/companion_dog/third_person/animations/unarmed",
 	run_speed = 5,
 	select_target_cooldown = 1,
 	target_stickiness_distance = 10,
@@ -46,7 +43,7 @@ local breed_data = {
 	use_nameplate = true,
 	use_navigation_path_splines = true,
 	walk_speed = 2,
-	name = breed_name,
+	name = BREED_NAME,
 	breed_type = breed_types.companion,
 	tags = {
 		companion = true,
@@ -54,9 +51,9 @@ local breed_data = {
 	},
 	sounds = require("scripts/settings/breed/breeds/companion/companion_dog_sounds"),
 	vfx = require("scripts/settings/breed/breeds/companion/companion_dog_vfx"),
-	look_at_tag = breed_name,
-	behavior_tree_name = breed_name,
-	behavior_tree_name_hub = breed_name .. "_hub",
+	look_at_tag = BREED_NAME,
+	behavior_tree_name = BREED_NAME,
+	behavior_tree_name_hub = BREED_NAME .. "_hub",
 	outline_config = {},
 	animation_variables = {
 		"walk_speed",

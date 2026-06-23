@@ -1,8 +1,14 @@
 ﻿-- chunkname: @scripts/ui/views/dlc_purchase_view/dlc_purchase_view.lua
 
 local DLCPurchaseViewDefinitions = require("scripts/ui/views/dlc_purchase_view/dlc_purchase_view_definitions")
+local ItemUtils = require("scripts/utilities/items")
+local LoadingStateData = require("scripts/ui/loading_state_data")
+local MasterItems = require("scripts/backend/master_items")
+local Promise = require("scripts/foundation/utilities/promise")
+local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
+local DLCUtils = require("scripts/utilities/dlc_utils")
 local DLCPurchaseView = class("DLCPurchaseView", "BaseView")
 
 DLCPurchaseView.init = function (self, settings, context)
@@ -10,6 +16,7 @@ DLCPurchaseView.init = function (self, settings, context)
 	self._outside_cb_on_store_view_finished = context.on_flow_finished_callback
 	self._dlc_settings = self._context.dlc_settings
 	self._dlc_settings_deluxe = self._context.dlc_settings_deluxe
+	self._promise_container = PromiseContainer:new()
 
 	DLCPurchaseView.super.init(self, DLCPurchaseViewDefinitions, settings, context)
 
@@ -19,6 +26,7 @@ end
 
 DLCPurchaseView.on_enter = function (self)
 	self._telemetry_id = self._dlc_settings.dlc_id
+	self._last_purchase_was_successful = false
 
 	DLCPurchaseView.super.on_enter(self)
 
@@ -43,6 +51,11 @@ DLCPurchaseView.on_enter = function (self)
 	self:_on_input_direction(0)
 end
 
+DLCPurchaseView.destroy = function (self)
+	self._promise_container:delete()
+	DLCPurchaseView.super.destroy(self)
+end
+
 DLCPurchaseView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 20)
 
@@ -64,6 +77,10 @@ DLCPurchaseView._register_button_callbacks = function (self)
 end
 
 DLCPurchaseView._on_store_button_pressed = function (self, dlc_settings, button_key)
+	if self._widgets_by_name.loading.content.visible then
+		return
+	end
+
 	self._widgets_by_name.loading.content.visible = true
 
 	Managers.telemetry_events:dlc_purchase_button_clicked(self._telemetry_id, button_key)
@@ -71,20 +88,99 @@ DLCPurchaseView._on_store_button_pressed = function (self, dlc_settings, button_
 	local backend_auth_method = Backend:get_auth_method()
 	local product_id = dlc_settings.ids[backend_auth_method].id
 
-	Managers.dlc:open_to_store(product_id, callback(self, "_cb_on_flow_finished"))
+	Managers.dlc:open_to_store(product_id, callback(self, "_cb_on_flow_finished", dlc_settings, product_id))
 end
 
-DLCPurchaseView._cb_on_flow_finished = function (self, is_success)
-	self._widgets_by_name.loading.content.visible = false
-
+DLCPurchaseView._cb_on_flow_finished = function (self, dlc_settings, product_id, is_success)
 	if not is_success then
+		self._widgets_by_name.loading.content.visible = false
+
 		return
 	end
+
+	self._last_purchase_was_successful = is_success
+
+	local product_ids = {
+		product_id,
+	}
+
+	if dlc_settings.includes then
+		for i = 1, #dlc_settings.includes do
+			local included_ids = DLCUtils.get_ids_for_auth_method(dlc_settings.includes[i], Backend:get_auth_method())
+
+			product_ids = table.append(product_ids, included_ids or {})
+		end
+	end
+
+	local product_id_promise = (IS_XBS or IS_GDK) and Managers.dlc:xbs_get_and_inform_entitlements(product_ids) or Promise.resolved({
+		show_popup_function = nil,
+		product_ids = product_ids,
+	})
+
+	self._promise_container:cancel_on_destroy(product_id_promise)
+	product_id_promise:next(callback(self, "_cb_on_product_ids_fetched"), function (error)
+		Log.error("DLCPurchaseView", "error fetching dlc ids '%s'", error)
+		self:_leave_view()
+
+		return Promise.resolved()
+	end)
+end
+
+DLCPurchaseView._cb_on_product_ids_fetched = function (self, promise_data)
+	local promise
+
+	if promise_data.product_ids == nil then
+		promise = Promise.resolved({
+			dlcUpdates = {},
+		})
+	else
+		promise = Managers.backend.interfaces.external_payment:reconcile_dlc(promise_data.product_ids)
+	end
+
+	promise = self._promise_container:cancel_on_destroy(promise)
+
+	Managers.event:trigger("event_start_waiting", promise, LoadingStateData.WAIT_REASON.backend)
+	promise:next(function (dlc_data)
+		self:_cb_on_dlc_reconcile_success(dlc_data, promise_data.show_popup_function)
+	end, function (error)
+		Log.error("DLCPurchaseView", "error reconciling dlc '%s'", error)
+		self:_leave_view()
+
+		return Promise.resolved()
+	end)
+end
+
+DLCPurchaseView._cb_on_dlc_reconcile_success = function (self, data, show_popup_function)
+	if data.dlcUpdates and #data.dlcUpdates > 0 then
+		local dlc_updates = data.dlcUpdates
+		local delayed_gear_promise = show_popup_function and show_popup_function() or Promise.resolved()
+
+		delayed_gear_promise:next(function ()
+			DLCUtils.show_reward_notifications(dlc_updates)
+			DLCUtils.update_local_gear_cache(dlc_updates)
+			Managers.data_service.gear:fetch_gear():next(function (gear)
+				self.__refetched_gear = gear
+
+				self:_leave_view()
+			end, function (error)
+				Log.error("DLCPurchaseView", "error fetching gear '%s'", error)
+				self:_leave_view()
+			end)
+		end)
+
+		return
+	end
+
+	self:_leave_view()
+end
+
+DLCPurchaseView._leave_view = function (self)
+	self._widgets_by_name.loading.content.visible = false
 
 	self:_cb_on_back_pressed()
 
 	if self._outside_cb_on_store_view_finished then
-		self._outside_cb_on_store_view_finished(is_success)
+		self._outside_cb_on_store_view_finished(self._last_purchase_was_successful, self.__refetched_gear)
 	end
 end
 
@@ -101,6 +197,10 @@ DLCPurchaseView.update = function (self, dt, t, input_service)
 end
 
 DLCPurchaseView._cb_on_back_pressed = function (self)
+	if self._widgets_by_name.loading.content.visible then
+		return
+	end
+
 	local view_name = self.view_name
 
 	Managers.ui:close_view(view_name)
@@ -149,6 +249,10 @@ end
 
 DLCPurchaseView._handle_input = function (self, input_service, dt, t)
 	DLCPurchaseView.super._handle_input(self, input_service, dt, t)
+
+	if self._widgets_by_name.loading.content.visible then
+		return
+	end
 
 	if self._using_cursor_navigation then
 		self:_set_selected_button_index(-1)

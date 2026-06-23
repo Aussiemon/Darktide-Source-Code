@@ -366,8 +366,8 @@ end
 
 Mastery.get_milestones_ui_data = function (mastery_data)
 	local milestones_data = {}
-	local milestones = mastery_data.milestones
-	local claimed_level = mastery_data.claimed_level or -1
+	local milestones = mastery_data and mastery_data.milestones or {}
+	local claimed_level = mastery_data and mastery_data.claimed_level or -1
 
 	for i = 1, #milestones do
 		local milestone = milestones[i]
@@ -631,22 +631,24 @@ end
 Mastery.get_mark_data = function (mark_reward)
 	local mark_data = {}
 
-	for pattern, data in pairs(UISettings.weapon_patterns) do
-		local found = false
+	if mark_reward and mark_reward.id then
+		for pattern, data in pairs(UISettings.weapon_patterns) do
+			local found = false
 
-		for i = 1, #data.marks do
-			local mark = data.marks[i]
+			for i = 1, #data.marks do
+				local mark = data.marks[i]
 
-			if mark.name == mark_reward.id then
-				mark_data = mark
-				found = true
+				if mark.name == mark_reward.id then
+					mark_data = mark
+					found = true
 
+					break
+				end
+			end
+
+			if found then
 				break
 			end
-		end
-
-		if found then
-			break
 		end
 	end
 
@@ -680,22 +682,28 @@ local mark_higher_text = "+ Higher"
 local mark_lower_text = "- Lower"
 
 local function generate_mark_text(mark_item)
-	local slot = mark_item.slots[1]
+	local slot = mark_item and mark_item.slots[1]
 	local options = table.clone(mark_diff_texts.common)
+	local positive_text = ""
+	local negative_text = ""
 
-	if slot == "slot_primary" then
-		table.merge(options, mark_diff_texts.melee)
-	else
-		table.merge(options, mark_diff_texts.ranged)
+	if slot and slot ~= "" then
+		if slot == "slot_primary" then
+			table.merge(options, mark_diff_texts.melee)
+		else
+			table.merge(options, mark_diff_texts.ranged)
+		end
+
+		local random_positive_index = math.random(1, #options)
+
+		positive_text = string.format("%s %s", mark_higher_text, options[random_positive_index])
+
+		table.remove(options, random_positive_index)
+
+		local random_negative_index = math.random(1, #options)
+
+		negative_text = string.format("%s %s", mark_lower_text, options[random_negative_index])
 	end
-
-	local random_positive_index = math.random(1, #options)
-	local positive_text = string.format("%s %s", mark_higher_text, options[random_positive_index])
-
-	table.remove(options, random_positive_index)
-
-	local random_negative_index = math.random(1, #options)
-	local negative_text = string.format("%s %s", mark_lower_text, options[random_negative_index])
 
 	return positive_text, negative_text
 end
@@ -801,21 +809,24 @@ end
 
 Mastery.get_spent_points = function (traits)
 	local points_spent = 0
-	local costs = Mastery.get_trait_costs()
 
-	for i = 1, #traits do
-		local trait = traits[i]
-		local trait_status = trait.trait_status
-		local rarity = 1
-		local unlocked = false
+	if traits then
+		local costs = Mastery.get_trait_costs()
 
-		for i = 1, RankSettings.max_trait_rank do
-			local current_trait_status = trait_status[i]
+		for i = 1, #traits do
+			local trait = traits[i]
+			local trait_status = trait.trait_status
+			local rarity = 1
+			local unlocked = false
 
-			if current_trait_status == "seen" then
-				local cost = costs.trait_costs[tostring(i)] or 0
+			for i = 1, RankSettings.max_trait_rank do
+				local current_trait_status = trait_status[i]
 
-				points_spent = points_spent + cost
+				if current_trait_status == "seen" then
+					local cost = costs.trait_costs[tostring(i)] or 0
+
+					points_spent = points_spent + cost
+				end
 			end
 		end
 	end
@@ -825,19 +836,22 @@ end
 
 Mastery.get_max_trait_points = function (traits)
 	local points = 0
-	local costs = Mastery.get_trait_costs()
 
-	for i = 1, #traits do
-		local trait = traits[i]
-		local trait_status = trait.trait_status
-		local rarity = 1
-		local unlocked = false
+	if traits then
+		local costs = Mastery.get_trait_costs()
 
-		for i = 1, RankSettings.max_trait_rank do
-			local current_trait_status = trait_status[i]
-			local cost = costs.trait_costs[tostring(i)] or 0
+		for i = 1, #traits do
+			local trait = traits[i]
+			local trait_status = trait.trait_status
+			local rarity = 1
+			local unlocked = false
 
-			points = points + cost
+			for i = 1, RankSettings.max_trait_rank do
+				local current_trait_status = trait_status[i]
+				local cost = costs.trait_costs[tostring(i)] or 0
+
+				points = points + cost
+			end
 		end
 	end
 
@@ -890,14 +904,16 @@ Mastery.has_available_points = function (masteries_data, masteries_traits)
 	local available_points = 0
 	local filtered_masteries_data = Mastery.get_masteries_by_archetype(masteries_data)
 
-	for id, mastery_data in pairs(filtered_masteries_data) do
-		local is_unlocked = Mastery.is_mastery_unlocked(mastery_data)
+	if filtered_masteries_data then
+		for id, mastery_data in pairs(filtered_masteries_data) do
+			local is_unlocked = Mastery.is_mastery_unlocked(mastery_data)
 
-		if is_unlocked then
-			available_points = available_points + (Mastery.get_available_points(mastery_data, masteries_traits[id]) or 0)
+			if is_unlocked then
+				available_points = available_points + (Mastery.get_available_points(mastery_data, masteries_traits[id]) or 0)
 
-			if available_points > 0 then
-				return true
+				if available_points > 0 then
+					return true
+				end
 			end
 		end
 	end
@@ -908,9 +924,11 @@ end
 Mastery.can_claim_any_reward = function (masteries_data)
 	local filtered_masteries_data = Mastery.get_masteries_by_archetype(masteries_data)
 
-	for pattern_id, mastery_data in pairs(filtered_masteries_data) do
-		if Mastery.can_claim_reward(mastery_data) then
-			return true
+	if filtered_masteries_data then
+		for pattern_id, mastery_data in pairs(filtered_masteries_data) do
+			if Mastery.can_claim_reward(mastery_data) then
+				return true
+			end
 		end
 	end
 
@@ -925,6 +943,10 @@ Mastery.can_claim_reward = function (mastery_data)
 end
 
 Mastery.get_masteries_by_archetype = function (masteries_data)
+	if not masteries_data then
+		return {}
+	end
+
 	local player_manager = Managers.player
 	local player = player_manager:local_player(1)
 	local profile = player:profile()
@@ -951,6 +973,10 @@ Mastery.get_masteries_by_archetype = function (masteries_data)
 end
 
 Mastery.is_mastery_unlocked = function (mastery_data)
+	if not mastery_data then
+		return false
+	end
+
 	local player_manager = Managers.player
 	local player = player_manager:local_player(1)
 	local profile = player:profile()
@@ -1042,6 +1068,10 @@ Mastery.get_pattern_id_to_category_id = function (id)
 end
 
 Mastery.get_default_mark_for_mastery = function (mastery_data)
+	if not mastery_data then
+		return
+	end
+
 	local player_manager = Managers.player
 	local player = player_manager:local_player(1)
 	local profile = player:profile()

@@ -37,6 +37,7 @@ local function _add_game_mode_settings(file_name)
 	local hotkeys = settings.hotkeys
 
 	if hotkeys then
+		local hotkeys_disabled_on_gamepad = settings.hotkeys_disabled_on_gamepad
 		local hotkey_lookup = {}
 
 		for hotkey, view_name in pairs(hotkeys) do
@@ -46,6 +47,7 @@ local function _add_game_mode_settings(file_name)
 		local hotkey_settings = {
 			hotkeys = hotkeys,
 			lookup = hotkey_lookup,
+			hotkeys_disabled_on_gamepad = hotkeys_disabled_on_gamepad,
 		}
 
 		settings.hotkeys = hotkey_settings

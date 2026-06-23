@@ -2,6 +2,8 @@
 
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
+local overload_keystone_talent_settings = TalentSettings.cryptic.overload
 local damage_types = DamageSettings.damage_types
 local explosion_templates = {
 	warp_charge_overload = {
@@ -230,6 +232,91 @@ local explosion_templates = {
 			"villains",
 		},
 	},
+	cryptic_discharge_aoe_electrocution_base = {
+		collision_filter = "filter_player_character_explosion",
+		min_radius = 6,
+		on_hit_buff_template_name = "cryptic_discharge_shock",
+		radius = 6,
+		skip_ragdoll_interaction = true,
+		damage_profile = DamageProfileTemplates.cryptic_discharge_explosion,
+		damage_type = damage_types.electrocution,
+		broadphase_explosion_filter = {
+			"villains",
+		},
+		vfx = {
+			"content/fx/particles/abilities/cryptic/voltaic_emitter_size_01",
+		},
+	},
+	cryptic_discharge_weapon_malfunction = {
+		collision_filter = "filter_player_character_explosion",
+		min_radius = 30,
+		radius = 30,
+		skip_ragdoll_interaction = true,
+		damage_profile = DamageProfileTemplates.cryptic_discharge_weapon_malfunction_explosion,
+		damage_type = damage_types.electrocution,
+		broadphase_explosion_filter = {
+			"villains",
+		},
+	},
+	cryptic_force_field_explosion = {
+		collision_filter = "filter_player_character_explosion",
+		on_hit_buff_template_name = "cryptic_discharge_shock",
+		skip_ragdoll_interaction = false,
+		radius = TalentSettings.cryptic.force_field.range,
+		min_radius = TalentSettings.cryptic.force_field.range,
+		damage_profile = DamageProfileTemplates.force_field_explosion_damage,
+		damage_type = damage_types.electrocution,
+		broadphase_explosion_filter = {
+			"villains",
+		},
+		vfx = {
+			"content/fx/particles/abilities/cryptic/cryptic_force_field_electric_explosion",
+		},
+		sfx = {
+			{
+				event_name = "wwise/events/player/play_player_ability_discharge_light",
+				has_husk_events = true,
+			},
+		},
+	},
+	cryptic_overload_keystone_debuff_explosion = {
+		collision_filter = "filter_player_character_explosion",
+		on_hit_buff_template_name = "cryptic_overload_keystone_increase_damage_taken_debuff",
+		skip_ragdoll_interaction = true,
+		radius = overload_keystone_talent_settings.aoe_radius,
+		min_radius = overload_keystone_talent_settings.aoe_radius,
+		damage_profile = DamageProfileTemplates.cryptic_overload_keystone_debuff_explosion,
+		damage_type = damage_types.buff,
+		broadphase_explosion_filter = {
+			"villains",
+		},
+		vfx = {
+			"content/fx/particles/abilities/cryptic/cryptic_force_field_electric_explosion",
+		},
+		sfx = {
+			{
+				event_name = "wwise/events/player/play_player_ability_discharge_light",
+				has_husk_events = true,
+			},
+		},
+	},
+}
+
+explosion_templates.cryptic_discharge_aoe_electrocution_base_two = table.clone(explosion_templates.cryptic_discharge_aoe_electrocution_base)
+explosion_templates.cryptic_discharge_aoe_electrocution_base_two.radius = 9
+explosion_templates.cryptic_discharge_aoe_electrocution_base_two.min_radius = 9
+explosion_templates.cryptic_discharge_aoe_electrocution_base_two.vfx = {
+	"content/fx/particles/abilities/cryptic/voltaic_emitter_size_02",
+}
+explosion_templates.cryptic_discharge_aoe_electrocution_base_three = table.clone(explosion_templates.cryptic_discharge_aoe_electrocution_base)
+explosion_templates.cryptic_discharge_aoe_electrocution_base_three.radius = 12
+explosion_templates.cryptic_discharge_aoe_electrocution_base_three.min_radius = 12
+explosion_templates.cryptic_discharge_aoe_electrocution_base_three.vfx = {
+	"content/fx/particles/abilities/cryptic/voltaic_emitter_01",
+}
+explosion_templates.cryptic_discharge_aoe_electrocution = table.clone(explosion_templates.cryptic_discharge_aoe_electrocution_base_three)
+explosion_templates.cryptic_discharge_aoe_electrocution.vfx = {
+	"content/fx/particles/abilities/cryptic/voltaic_emitter_01",
 }
 
 return explosion_templates

@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/character/personalities.lua
 
+local PERSONALITIES_CRYPTIC = require("scripts/settings/character/personalities_cryptic")
 local personality_options = {
 	{
 		character_voice = "veteran_male_a",
@@ -714,6 +715,9 @@ local personality_options = {
 		},
 	},
 }
+
+table.append(personality_options, PERSONALITIES_CRYPTIC)
+
 local personalities = {}
 
 for ii = 1, #personality_options do

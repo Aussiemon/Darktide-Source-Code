@@ -63,6 +63,10 @@ WeaponSpecialFakeSeparateAmmoPool.on_exit_damage_window = function (self, t, num
 	return
 end
 
+WeaponSpecialFakeSeparateAmmoPool.on_weapon_shout_action_finish = function (self, t, aborted)
+	return
+end
+
 implements(WeaponSpecialFakeSeparateAmmoPool, WeaponSpecialInterface)
 
 return WeaponSpecialFakeSeparateAmmoPool

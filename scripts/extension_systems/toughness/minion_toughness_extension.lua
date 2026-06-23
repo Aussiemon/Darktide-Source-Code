@@ -382,7 +382,7 @@ MinionToughnessExtension._explode = function (self, unit, explosion_template, po
 	local up = Quaternion.up(Unit.local_rotation(unit, 1))
 	local explosion_position = POSITION_LOOKUP[unit] + up * 0.1
 
-	Explosion.create_explosion(self._world, self._physics_world, explosion_position, up, unit, explosion_template, power_level, charge_level, explosion_attack_type)
+	Explosion.create_explosion(self._world, self._physics_world, explosion_position, Quaternion.look(up), unit, explosion_template, power_level, charge_level, explosion_attack_type)
 end
 
 MinionToughnessExtension._store_toughness_attack_absorbed = function (self, damage_amount, impact_world_position)

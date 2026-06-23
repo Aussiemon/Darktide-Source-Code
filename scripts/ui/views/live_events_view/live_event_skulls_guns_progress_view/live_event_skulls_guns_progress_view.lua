@@ -83,7 +83,7 @@ LiveEventSkullsGunsProgressView._fetch_backend_track = function (self)
 		end
 	end
 
-	return nil
+	return {}
 end
 
 LiveEventSkullsGunsProgressView.destroy = function (self)

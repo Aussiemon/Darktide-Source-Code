@@ -8,35 +8,36 @@ local TargetSelectionTemplates = require("scripts/extension_systems/perception/t
 local armor_types = ArmorSettings.types
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
-local human_size_variation_range = {
+local DEFAULT_HEIGHT = BreedSettings.base_player_body_size_heights.human_sized
+local HUMAN_SIZE_VARIATION_RANGE = {
 	0.95,
 	1.08,
 }
-local average_human_size = human_size_variation_range[1] + (human_size_variation_range[2] - human_size_variation_range[1]) / 2
+local AVERAGE_HUMAN_SIZE = HUMAN_SIZE_VARIATION_RANGE[1] + (HUMAN_SIZE_VARIATION_RANGE[2] - HUMAN_SIZE_VARIATION_RANGE[1]) * 0.5
 local breed_data = {
 	base_unit = "content/characters/player/human/third_person/base",
 	behavior_tree_name = "bot",
+	body_size = "human_sized",
 	broadphase_radius = 1,
-	character_creation_state_machine = "content/characters/player/human/third_person/animations/menu/character_creation",
 	debug_color_name = "cyan",
 	display_name = "loc_breed_display_name_undefined",
-	end_of_round_state_machine = "content/characters/player/human/third_person/animations/menu/end_of_round",
 	faction_name = "imperium",
 	first_person_pose_scale = 1,
 	first_person_unit = "content/characters/player/human/first_person/base",
 	friendly_hit_mass = 0,
 	hit_mass = 2,
-	inventory_state_machine = "content/characters/player/human/third_person/animations/menu/inventory",
 	ladder_max_distance_allow_climb = 0.5,
 	ladder_movement_anim_length = 4,
 	ladder_whole_movement_anim_distance = 1.4,
-	mission_intro_state_machine = "content/characters/player/human/third_person/animations/menu/mission_briefing",
 	name = "human",
-	portrait_state_machine = "content/characters/player/human/third_person/animations/menu/portrait",
 	breed_type = breed_types.player,
 	genders = {
 		"male",
 		"female",
+	},
+	hologram_units = {
+		consumed = "content/characters/player/human/attachments_base/shared/see_through_skeleton/see_through_skeleton_bon",
+		default = "content/characters/player/human/attachments_base/shared/see_through_skeleton/see_through_skeleton",
 	},
 	testify_flags = {
 		spawn_all_enemies = false,
@@ -46,13 +47,13 @@ local breed_data = {
 	},
 	armor_type = armor_types.player,
 	heights = {
-		default = 1.65 / average_human_size,
-		sprint = 1.4 / average_human_size,
-		crouch = 1 / average_human_size,
-		slide = 0.85 / average_human_size,
-		vault = 0.9 / average_human_size,
+		default = DEFAULT_HEIGHT / AVERAGE_HUMAN_SIZE,
+		sprint = 1.4 / AVERAGE_HUMAN_SIZE,
+		crouch = 1 / AVERAGE_HUMAN_SIZE,
+		slide = 0.85 / AVERAGE_HUMAN_SIZE,
+		vault = 0.9 / AVERAGE_HUMAN_SIZE,
 	},
-	size_variation_range = human_size_variation_range,
+	size_variation_range = HUMAN_SIZE_VARIATION_RANGE,
 	fade = {
 		max_distance = 0.9,
 		max_height_difference = 1,

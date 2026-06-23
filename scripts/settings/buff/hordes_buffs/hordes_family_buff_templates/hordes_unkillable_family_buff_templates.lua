@@ -148,7 +148,7 @@ templates.hordes_buff_reduce_damage_taken_on_disabled_allies = {
 		[proc_events.on_damage_taken] = 1,
 	},
 	check_proc_func = function (params, template_data, template_context, t)
-		return template_data.lerp_t > 0
+		return template_data.lerp_t > 0 and params.attacked_unit == template_context.unit
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		template_data.player_fx_extension:trigger_wwise_events_local_only(SFX_NAMES.reduced_damage_hit, false, template_context.unit)

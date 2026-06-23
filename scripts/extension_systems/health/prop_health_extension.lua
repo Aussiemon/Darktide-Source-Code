@@ -3,7 +3,7 @@
 local Component = require("scripts/utilities/component")
 local HealthExtensionInterface = require("scripts/extension_systems/health/health_extension_interface")
 local PropDifficultySettings = require("scripts/settings/difficulty/prop_difficulty_settings")
-local PropHealthExtension = class("PropHealthExtension")
+local PropHealthExtension = class("PropHealthExtension", "HealthExtensionBase")
 
 PropHealthExtension.UPDATE_DISABLED_BY_DEFAULT = true
 
@@ -188,6 +188,8 @@ PropHealthExtension.kill = function (self)
 
 		return
 	end
+
+	PropHealthExtension.super.kill(self)
 
 	self._is_dead = true
 

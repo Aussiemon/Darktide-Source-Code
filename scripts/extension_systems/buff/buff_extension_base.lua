@@ -11,6 +11,7 @@ local BUFF_TARGETS = BuffSettings.targets
 local MIN_PROC_EVENTS_SIZE = BuffSettings.min_proc_events_size
 local MAX_PROC_EVENTS = BuffSettings.max_proc_events
 local PROC_EVENTS_STRIDE = BuffSettings.proc_events_stride
+local MAX_BUFF_INDEX_ARRAY_SIZE = Network.type_info("buff_index_array").max_size
 local BuffExtensionBase = class("BuffExtensionBase")
 local Unit_world_position = Unit.world_position
 local Unit_node = Unit.node
@@ -19,7 +20,8 @@ local WwiseWorld_set_source_position = WwiseWorld.set_source_position
 local RPCS = {
 	"rpc_add_buff",
 	"rpc_remove_buff",
-	"rpc_buff_proc_set_active_time",
+	"rpc_remove_buff_stacks",
+	"rpc_buff_batched_proc_set_active_time",
 	"rpc_buff_set_start_time",
 	"rpc_buff_set_extra_duration",
 	"rpc_add_buff_with_stacks",
@@ -82,6 +84,11 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 	self._vfx_node_effects = {}
 	self._proc_event_param_tables = {}
 	self._num_proc_events = 0
+
+	if self._is_server then
+		self._proc_buffs_triggered_this_frame = Script.new_map(32)
+	end
+
 	self._param_tables_start_index_reference = 1
 	self._num_params_table_in_use = 0
 	self._unique_frame_proc = {}
@@ -274,6 +281,33 @@ BuffExtensionBase._update_proc_events = function (self, t)
 	end
 
 	table.clear(self._unique_frame_proc)
+end
+
+local _proc_active_buff_index_array = Script.new_array(MAX_BUFF_INDEX_ARRAY_SIZE)
+
+BuffExtensionBase._send_batched_proc_active_start_time = function (self, channel_id, t)
+	local game_object_id = self._game_object_id
+	local activation_frame = t / self._fixed_time_step
+
+	table.clear(_proc_active_buff_index_array)
+
+	local proc_buffs_triggered_this_frame = self._proc_buffs_triggered_this_frame
+
+	for buff_index, _ in pairs(proc_buffs_triggered_this_frame) do
+		_proc_active_buff_index_array[#_proc_active_buff_index_array + 1] = buff_index
+
+		if #_proc_active_buff_index_array == MAX_BUFF_INDEX_ARRAY_SIZE then
+			RPC.rpc_buff_batched_proc_set_active_time(channel_id, game_object_id, _proc_active_buff_index_array, activation_frame)
+			table.clear(_proc_active_buff_index_array)
+		end
+	end
+
+	if #_proc_active_buff_index_array > 0 then
+		RPC.rpc_buff_batched_proc_set_active_time(channel_id, game_object_id, _proc_active_buff_index_array, activation_frame)
+	end
+
+	table.clear(_proc_active_buff_index_array)
+	table.clear(self._proc_buffs_triggered_this_frame)
 end
 
 BuffExtensionBase._reset_stat_buffs = function (self)
@@ -584,6 +618,10 @@ BuffExtensionBase.remove_externally_controlled_buff = function (self, local_inde
 	ferror("Buff extension is using base implementation of remove_externally_controlled_buff, it shouldn't")
 end
 
+BuffExtensionBase.remove_externally_controlled_buff_stacks = function (self, local_index_array, component_index)
+	ferror("Buff extension is using base implementation of remove_externally_controlled_buff_stacks, it shouldn't")
+end
+
 BuffExtensionBase._remove_internally_controlled_buff = function (self, local_index)
 	ferror("Buff extension is using base implementation of _remove_internally_controlled_buff, it shouldn't")
 end
@@ -705,6 +743,16 @@ BuffExtensionBase._on_add_buff_stack = function (self, buff_instance, previous_s
 
 		on_stack_added_func(buff_data, buff_context, current_stack_count)
 	end
+end
+
+BuffExtensionBase.has_running_buff_with_index = function (self, local_index, component_index)
+	local buff_instance = self._buffs_by_index[local_index]
+
+	if not buff_instance and component_index then
+		buff_instance = self._component_buffs[component_index]
+	end
+
+	return buff_instance ~= nil
 end
 
 BuffExtensionBase.has_buff_using_buff_template = function (self, buff_template_name)
@@ -1378,11 +1426,31 @@ BuffExtensionBase.rpc_remove_buff = function (self, channel_id, game_object_id, 
 	self._buff_index_map[server_index] = nil
 end
 
-BuffExtensionBase.rpc_buff_proc_set_active_time = function (self, channel_id, game_object_id, server_index, activation_frame)
-	local index = self._buff_index_map[server_index]
-	local activation_time = activation_frame * self._fixed_time_step
+BuffExtensionBase.rpc_remove_buff_stacks = function (self, channel_id, game_object_id, server_index_array)
+	for i = 1, #server_index_array do
+		local server_index = server_index_array[i]
+		local index = self._buff_index_map[server_index]
 
-	self:_set_proc_active_start_time(index, activation_time)
+		if not index then
+			Log.exception("BuffExtensionBase", "Got rpc_remove_buff_stacks for buff that doesn't exist or already deleted, index == nil")
+
+			return
+		end
+
+		self:_remove_buff(index)
+
+		self._buff_index_map[server_index] = nil
+	end
+end
+
+BuffExtensionBase.rpc_buff_batched_proc_set_active_time = function (self, channel_id, game_object_id, server_index_array, activation_frame)
+	for i = 1, #server_index_array do
+		local server_index = server_index_array[i]
+		local index = self._buff_index_map[server_index]
+		local activation_time = activation_frame * self._fixed_time_step
+
+		self:_set_proc_active_start_time(index, activation_time)
+	end
 end
 
 BuffExtensionBase._set_proc_active_start_time = function (self, index, activation_time, skip_send_active_time_rpc)

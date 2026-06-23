@@ -16,6 +16,7 @@ local action_data = {
 	},
 	weapon_malfunction_loop = {
 		rotate_towards_target = false,
+		weapon_malfunction_time = 12,
 		anim_events = {
 			"to_combat",
 			"out_of_aim",
@@ -23,6 +24,13 @@ local action_data = {
 		end_anim_events = {
 			"idle",
 		},
+	},
+	run_away_weapon_malfunction = {
+		is_assaulting = true,
+		leave_when_reached_destination = true,
+		move_anim_event = "move_fwd",
+		move_type = "combat_vector",
+		run_speed = 4.2,
 	},
 	patrol = {
 		anim_events = {

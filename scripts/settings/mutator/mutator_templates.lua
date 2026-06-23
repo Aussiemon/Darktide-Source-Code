@@ -25,9 +25,18 @@ _extract_mutator_templates("scripts/settings/mutator/templates/live_event_mutato
 _extract_mutator_templates("scripts/settings/mutator/templates/live_event_mutator_templates/mutator_live_event_abhuman_explosions_templates")
 _extract_mutator_templates("scripts/settings/mutator/templates/live_event_mutator_templates/mutator_live_event_elite_army_templates")
 _extract_mutator_templates("scripts/settings/mutator/templates/live_event_mutator_templates/mutator_live_event_skulls_guns_templates")
+_extract_mutator_templates("scripts/settings/mutator/templates/live_event_mutator_templates/mutator_live_event_barren_templates")
+_extract_mutator_templates("scripts/settings/mutator/templates/live_event_mutator_templates/mutator_live_event_leftover_templates")
+_extract_mutator_templates("scripts/settings/mutator/templates/live_event_mutator_templates/mutator_live_event_endless_hordes_templates")
 
 for name, mutator_data in pairs(mutator_templates) do
 	mutator_data.name = name
+end
+
+local odin_mutators = Odin.get_mutator_templates()
+
+for i = 1, #odin_mutators do
+	mutator_templates[odin_mutators[i].name] = odin_mutators[i]
 end
 
 return settings("MutatorTemplates", mutator_templates)

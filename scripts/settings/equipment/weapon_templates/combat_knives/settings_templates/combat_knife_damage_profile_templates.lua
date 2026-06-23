@@ -77,7 +77,7 @@ damage_templates.light_combat_knife_ninja_fencer = {
 	gibbing_type = gibbing_types.sawing,
 	gibbing_power = gibbing_power.always,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.combat_knife,
+	wounds_template = WoundsTemplates.slash,
 	crit_mod = ninja_fencer_crit_mod,
 	shield_override_stagger_strength = DEFAULT_SHIELD_OVERRIDE_STAGGER_STRENGTH,
 	targets = {
@@ -239,7 +239,7 @@ damage_templates.medium_combat_knife_ninja_fencer = {
 	gibbing_type = gibbing_types.sawing,
 	gibbing_power = gibbing_power.always,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.combat_knife,
+	wounds_template = WoundsTemplates.slash,
 	shield_override_stagger_strength = DEFAULT_SHIELD_OVERRIDE_STAGGER_STRENGTH,
 	targets = {
 		{
@@ -370,7 +370,7 @@ damage_templates.medium_combat_knife_linesman = {
 	gibbing_type = gibbing_types.sawing,
 	gibbing_power = gibbing_power.always,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.combat_knife,
+	wounds_template = WoundsTemplates.slash,
 	shield_override_stagger_strength = DEFAULT_SHIELD_OVERRIDE_STAGGER_STRENGTH,
 	targets = {
 		{

@@ -314,17 +314,17 @@ local non_aggressive_level_names = {
 	tg_shooting_range = true,
 }
 
-PlayerUnitAttackIntensityExtension.in_combat_for_companion = function (self)
+PlayerUnitAttackIntensityExtension.in_combat_for_companion = function (self, companion_buff_extension)
 	local mission_name = Managers.state.mission:mission_name()
 
 	if non_aggressive_level_names[mission_name] then
-		return false
+		return companion_buff_extension and companion_buff_extension:has_keyword("training_ground_force_companion_in_combat_state") or false
 	end
 
 	local t = Managers.time:time("gameplay")
 	local in_combat_time = t < self._in_combat_timer
 	local monster_chasing = self:monster_attacker()
-	local in_combat = in_combat_time or monster_chasing
+	local in_combat = in_combat_time or HEALTH_ALIVE[monster_chasing]
 
 	return in_combat
 end

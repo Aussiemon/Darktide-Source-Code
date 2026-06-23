@@ -1,6 +1,5 @@
 ﻿-- chunkname: @scripts/settings/options/keybind_settings.lua
 
-local SaveData = require("scripts/managers/save/save_data")
 local group_name_display_names = {
 	input_group_combat = "loc_keybind_category_combat",
 	input_group_hotkeys = "loc_keybind_category_hotkeys",
@@ -15,10 +14,6 @@ local devices = {
 	"keyboard",
 	"mouse",
 }
-local reserved_keys = {}
-local cancel_keys = {
-	"keyboard_esc",
-}
 local settings = {}
 
 if IS_XBS or IS_WINDOWS then
@@ -30,12 +25,11 @@ if IS_XBS or IS_WINDOWS then
 		if alias then
 			local alias_table = alias:alias_table()
 
-			for alias_name, _ in pairs(alias_table) do
+			for alias_name in pairs(alias_table) do
 				local is_bindable = alias:bindable(alias_name)
 				local hide_in_keybindings_menu = alias:hide_in_keybindings_menu(alias_name)
 
 				if is_bindable and not hide_in_keybindings_menu then
-					local key_info = alias:get_keys_for_alias(alias_name, devices)
 					local display_name = alias:description(alias_name)
 					local group_name = alias:group(alias_name)
 					local sort_order = alias:sort_order(alias_name)
@@ -47,26 +41,9 @@ if IS_XBS or IS_WINDOWS then
 						service_type = service_type,
 						display_name = display_name,
 						group_name = group_name,
-						devices = devices,
 						sort_order = sort_order,
-						cancel_keys = cancel_keys,
-						on_activated = function (new_value, old_value)
-							for i = 1, #cancel_keys do
-								local cancel_key = cancel_keys[i]
-
-								if cancel_key == new_value.main then
-									return true
-								end
-							end
-
-							for i = 1, #reserved_keys do
-								local reserved_key = reserved_keys[i]
-
-								if reserved_key == new_value.main then
-									return false
-								end
-							end
-
+						devices = devices,
+						on_activated = function (new_value)
 							alias:set_keys_for_alias(alias_name, devices, new_value)
 							input_manager:apply_alias_changes(service_type)
 							input_manager:save_key_mappings(service_type)
@@ -104,8 +81,6 @@ local function group_name_sort_function(a, b)
 
 		return a_display_name < b_display_name
 	end
-
-	return false
 end
 
 local groups_added = {}

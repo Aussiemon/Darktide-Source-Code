@@ -100,6 +100,7 @@ local breed_data = {
 	inventory = MinionVisualLoadoutTemplates.renegade_netgunner,
 	target_breed_items = {
 		netted = {
+			cryptic = "content/items/generic/human_netgunner_net",
 			human = "content/items/generic/human_netgunner_net",
 			ogryn = "content/items/generic/ogryn_netgunner_net",
 		},

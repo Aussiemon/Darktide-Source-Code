@@ -110,7 +110,7 @@ local function _dequeue_error(queue, queue_empty_promise)
 	local options = error_object:options() or {}
 
 	if level == ERROR_LEVEL.fatal then
-		if PLATFORM == "win32" then
+		if IS_WINDOWS then
 			options[#options + 1] = {
 				text = "loc_popup_button_quit_game",
 				callback = function ()

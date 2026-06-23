@@ -13,7 +13,7 @@ OutlineSystem.system_extensions = {
 	"PlayerUnitOutlineExtension",
 }
 
-local RPCS = {
+local CLIENT_RPCS = {
 	"rpc_add_outline_to_unit",
 	"rpc_remove_outline_from_unit",
 	"rpc_remove_all_outlines_from_unit",
@@ -29,13 +29,19 @@ OutlineSystem.init = function (self, context, system_init_data, system_name, _, 
 	self._visible = true
 	self._color_blind_mode = "off"
 
-	self._network_event_delegate:register_session_events(self, unpack(RPCS))
+	if not self._is_server then
+		self._network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
+	end
+
 	Managers.event:register(self, "event_smart_tag_created", "_event_smart_tag_created")
 	Managers.event:register(self, "event_smart_tag_removed", "_event_smart_tag_removed")
 end
 
 OutlineSystem.destroy = function (self)
-	self._network_event_delegate:unregister_events(unpack(RPCS))
+	if not self._is_server then
+		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
+	end
+
 	Managers.event:unregister(self, "event_smart_tag_created")
 	Managers.event:unregister(self, "event_smart_tag_removed")
 	OutlineSystem.super.destroy(self)

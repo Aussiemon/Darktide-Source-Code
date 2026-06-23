@@ -4,10 +4,13 @@ local AchievementBreedGroups = require("scripts/settings/achievements/achievemen
 local AchievementTweakData = require("scripts/managers/achievements/achievement_tweak_data")
 local AchievementWeaponGroups = require("scripts/settings/achievements/achievement_weapon_groups")
 local ArchetypeSettings = require("scripts/settings/archetype/archetype_settings")
+local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local StatConfigMacros = require("scripts/managers/stats/utility/stat_config_macros")
 local Breeds = require("scripts/settings/breed/breeds")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
+local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local MechanicusEventWeapons = require("scripts/settings/live_event/mechanicus_event_weapons")
@@ -18,6 +21,7 @@ local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local StatFlags = require("scripts/managers/stats/stat_flags")
 local StatMacros = require("scripts/managers/stats/stat_macros")
 local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
+local UiWeaponPatternSettings = require("scripts/settings/ui/ui_weapon_pattern_settings")
 local Weakspot = require("scripts/utilities/attack/weakspot")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
@@ -351,6 +355,16 @@ stat_definitions.shot_missed_weakspot = {
 				end
 			end,
 		},
+	},
+}
+stat_definitions.hook_ability_charges_gained = {
+	flags = {
+		StatFlags.hook,
+	},
+}
+stat_definitions.hook_ability_charges_used_from_action = {
+	flags = {
+		StatFlags.hook,
 	},
 }
 stat_definitions.hook_projectile_hit = {
@@ -5218,9 +5232,11 @@ do
 					trigger = function (self, stat_data, attack_data)
 						local breed = attack_data.target_breed_name
 						local weapon = attack_data.weapon_template_name
+						local damage_profile_name = attack_data.damage_profile_name
+						local is_smite_on_hit = damage_profile_name == "psyker_smite_kill"
 						local data = self.data
 
-						if data.breed_lookup[breed] and weapon == "psyker_smite" then
+						if data.breed_lookup[breed] and (weapon == "psyker_smite" or is_smite_on_hit) then
 							return self.id, attack_data
 						end
 					end,
@@ -6615,424 +6631,639 @@ do
 		}
 	end
 
-	local archetype_condition = archetype_include_condition("broker")
+	do
+		local archetype_condition = archetype_include_condition("broker")
 
-	stat_definitions.hook_broker_cluster_staggered_by_flash_grenade = {
-		flags = {
-			StatFlags.hook,
-		},
-	}
-	stat_definitions.hook_broker_exited_punk_rage = {
-		flags = {
-			StatFlags.hook,
-		},
-	}
-	stat_definitions.hook_broker_deployed_stimm_field = {
-		flags = {
-			StatFlags.hook,
-		},
-	}
-	stat_definitions.hook_broker_time_ally_buffed_by_stimm_field = {
-		flags = {
-			StatFlags.hook,
-		},
-	}
-	stat_definitions.hook_broker_shared_ammo_through_aura = {
-		flags = {
-			StatFlags.hook,
-		},
-	}
-	stat_definitions.hook_broker_enemy_killed_ruffian_aura = {
-		flags = {
-			StatFlags.hook,
-		},
-	}
-	stat_definitions.hook_broker_critical_hit_with_anarchist_aura = {
-		flags = {
-			StatFlags.hook,
-		},
-	}
-	stat_definitions.hook_broker_stack_of_vulture_keystone = {
-		flags = {
-			StatFlags.hook,
-		},
-	}
-	stat_definitions.hook_broker_proc_max_stacks_adrenaline_keystone = {
-		flags = {
-			StatFlags.hook,
-		},
-	}
-	stat_definitions.hook_broker_exited_max_stacks_of_chemical_dependency = {
-		flags = {
-			StatFlags.hook,
-		},
-	}
-	stat_definitions.hook_broker_stimm_used = {
-		flags = {
-			StatFlags.hook,
-		},
-	}
-	stat_definitions.hook_broker_stimm_restored_tougness = {
-		flags = {
-			StatFlags.hook,
-		},
-	}
-	stat_definitions.broker_ammo_shared_through_aura = {
-		flags = {
-			StatFlags.backend,
-		},
-		data = {},
-		triggers = {
-			{
-				id = "hook_broker_shared_ammo_through_aura",
-				trigger = function (self, stat_data, ammo_restored)
-					return increment_by(self, stat_data, ammo_restored)
-				end,
+		stat_definitions.hook_broker_cluster_staggered_by_flash_grenade = {
+			flags = {
+				StatFlags.hook,
 			},
-		},
-		include_condition = archetype_condition,
-	}
-	stat_definitions.broker_enemies_killed_ruffian_aura = {
-		flags = {
-			StatFlags.backend,
-		},
-		data = {},
-		triggers = {
-			{
-				id = "hook_broker_enemy_killed_ruffian_aura",
-				trigger = StatMacros.increment,
+		}
+		stat_definitions.hook_broker_exited_punk_rage = {
+			flags = {
+				StatFlags.hook,
 			},
-		},
-		include_condition = archetype_condition,
-	}
-	stat_definitions.broker_critical_hits_with_anarchist_aura = {
-		flags = {
-			StatFlags.backend,
-		},
-		data = {},
-		triggers = {
-			{
-				id = "hook_broker_critical_hit_with_anarchist_aura",
-				trigger = StatMacros.increment,
+		}
+		stat_definitions.hook_broker_deployed_stimm_field = {
+			flags = {
+				StatFlags.hook,
 			},
-		},
-		include_condition = archetype_condition,
-	}
-	stat_definitions.broker_enemies_staggered_by_flash_grenade = {
-		flags = {
-			StatFlags.backend,
-		},
-		data = {},
-		triggers = {
-			{
-				id = "hook_broker_cluster_staggered_by_flash_grenade",
-				trigger = StatMacros.increment,
+		}
+		stat_definitions.hook_broker_time_ally_buffed_by_stimm_field = {
+			flags = {
+				StatFlags.hook,
 			},
-		},
-		include_condition = archetype_condition,
-	}
-	stat_definitions.broker_enemies_killed_by_missile_launcher = {
+		}
+		stat_definitions.hook_broker_shared_ammo_through_aura = {
+			flags = {
+				StatFlags.hook,
+			},
+		}
+		stat_definitions.hook_broker_enemy_killed_ruffian_aura = {
+			flags = {
+				StatFlags.hook,
+			},
+		}
+		stat_definitions.hook_broker_critical_hit_with_anarchist_aura = {
+			flags = {
+				StatFlags.hook,
+			},
+		}
+		stat_definitions.hook_broker_stack_of_vulture_keystone = {
+			flags = {
+				StatFlags.hook,
+			},
+		}
+		stat_definitions.hook_broker_proc_max_stacks_adrenaline_keystone = {
+			flags = {
+				StatFlags.hook,
+			},
+		}
+		stat_definitions.hook_broker_exited_max_stacks_of_chemical_dependency = {
+			flags = {
+				StatFlags.hook,
+			},
+		}
+		stat_definitions.hook_broker_stimm_used = {
+			flags = {
+				StatFlags.hook,
+			},
+		}
+		stat_definitions.hook_broker_stimm_restored_tougness = {
+			flags = {
+				StatFlags.hook,
+			},
+		}
+		stat_definitions.broker_ammo_shared_through_aura = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {},
+			triggers = {
+				{
+					id = "hook_broker_shared_ammo_through_aura",
+					trigger = function (self, stat_data, ammo_restored)
+						return increment_by(self, stat_data, ammo_restored)
+					end,
+				},
+			},
+			include_condition = archetype_condition,
+		}
+		stat_definitions.broker_enemies_killed_ruffian_aura = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {},
+			triggers = {
+				{
+					id = "hook_broker_enemy_killed_ruffian_aura",
+					trigger = StatMacros.increment,
+				},
+			},
+			include_condition = archetype_condition,
+		}
+		stat_definitions.broker_critical_hits_with_anarchist_aura = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {},
+			triggers = {
+				{
+					id = "hook_broker_critical_hit_with_anarchist_aura",
+					trigger = StatMacros.increment,
+				},
+			},
+			include_condition = archetype_condition,
+		}
+		stat_definitions.broker_enemies_staggered_by_flash_grenade = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {},
+			triggers = {
+				{
+					id = "hook_broker_cluster_staggered_by_flash_grenade",
+					trigger = StatMacros.increment,
+				},
+			},
+			include_condition = archetype_condition,
+		}
+		stat_definitions.broker_enemies_killed_by_missile_launcher = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {},
+			triggers = {
+				{
+					id = "hook_kill",
+					trigger = function (self, stat_data, attack_data)
+						local breed = Breeds[attack_data.target_breed_name]
+						local is_special_elite_or_monster = breed and breed.tags and (breed.tags.special or breed.tags.elite or breed.tags.monster)
+						local weapon_name = attack_data.weapon_template_name
+
+						if is_special_elite_or_monster and weapon_name == "missile_launcher" then
+							return increment(self, stat_data)
+						end
+					end,
+				},
+			},
+			include_condition = archetype_condition,
+		}
+		stat_definitions.broker_enemies_affected_by_chem_bomb = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {},
+			triggers = {
+				{
+					id = "hook_liquid_area_entering_buff_added_on_enemy",
+					trigger = function (self, stat_data, liquid_area_buff_data)
+						local area_template_name = liquid_area_buff_data.area_template_name
+
+						if area_template_name == "broker_tox_grenade" then
+							return increment(self, stat_data)
+						end
+					end,
+				},
+			},
+			include_condition = archetype_condition,
+		}
+		stat_definitions.broker_enemies_killed_with_focus_mode = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {},
+			triggers = {
+				{
+					id = "hook_kill",
+					trigger = function (self, stat_data, attack_data)
+						local attacker_owner_buff_keywords = attack_data.attacker_owner_buff_keywords
+						local is_in_focus_stance = attacker_owner_buff_keywords and attacker_owner_buff_keywords.broker_combat_ability_focus
+
+						if is_in_focus_stance then
+							return increment(self, stat_data)
+						end
+					end,
+				},
+			},
+			include_condition = archetype_condition,
+		}
+		stat_definitions.broker_attacks_dodged_in_focus_mode = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {},
+			triggers = {
+				{
+					id = "hook_dodged_attack",
+					trigger = function (self, stat_data, breed_name, attack_type, dodge_type, attacker_action, previously_dodged, dodging_unit_buff_keywords)
+						local is_in_focus_stance = dodging_unit_buff_keywords and dodging_unit_buff_keywords.broker_combat_ability_focus
+
+						if is_in_focus_stance then
+							return increment(self, stat_data)
+						end
+					end,
+				},
+			},
+			include_condition = archetype_condition,
+		}
+		stat_definitions.broker_deal_damage_in_punk_rage = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {},
+			triggers = {
+				{
+					id = "hook_damage_dealt",
+					trigger = function (self, stat_data, attack_data)
+						local damage_dealt = attack_data.damage_dealt
+						local attacker_owner_buff_keywords = attack_data.attacker_owner_buff_keywords
+						local is_in_focus_stance = attacker_owner_buff_keywords and attacker_owner_buff_keywords.broker_combat_ability_punk_rage
+
+						if damage_dealt > 0 and is_in_focus_stance then
+							return increment_by(self, stat_data, damage_dealt)
+						end
+					end,
+				},
+			},
+			include_condition = archetype_condition,
+		}
+		stat_definitions.broker_time_stay_in_punk_rage = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {},
+			triggers = {
+				{
+					id = "hook_broker_exited_punk_rage",
+					trigger = function (self, stat_data, time_in_punk_rage_rounded)
+						if time_in_punk_rage_rounded > 0 then
+							return increment_by(self, stat_data, time_in_punk_rage_rounded)
+						end
+					end,
+				},
+			},
+			include_condition = archetype_condition,
+		}
+		stat_definitions.broker_deploy_stimm_field = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {},
+			triggers = {
+				{
+					id = "hook_broker_deployed_stimm_field",
+					trigger = StatMacros.increment,
+				},
+			},
+			include_condition = archetype_condition,
+		}
+		stat_definitions.broker_time_buff_allies_chem_field = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {},
+			triggers = {
+				{
+					id = "hook_broker_time_ally_buffed_by_stimm_field",
+					trigger = function (self, stat_data, time_buffed_rounded)
+						if time_buffed_rounded > 0 then
+							return increment_by(self, stat_data, time_buffed_rounded)
+						end
+					end,
+				},
+			},
+			include_condition = archetype_condition,
+		}
+		stat_definitions.broker_stacks_gained_of_vulture_keystone = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {},
+			triggers = {
+				{
+					id = "hook_broker_stack_of_vulture_keystone",
+					trigger = StatMacros.increment,
+				},
+			},
+			include_condition = archetype_condition,
+		}
+		stat_definitions.broker_times_activated_max_stacks_of_adrenaline_keystone = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {},
+			triggers = {
+				{
+					id = "hook_broker_proc_max_stacks_adrenaline_keystone",
+					trigger = StatMacros.increment,
+				},
+			},
+			include_condition = archetype_condition,
+		}
+		stat_definitions.broker_time_spent_max_stacks_chemical_dependency = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {},
+			triggers = {
+				{
+					id = "hook_broker_exited_max_stacks_of_chemical_dependency",
+					trigger = function (self, stat_data, time_at_max_stacks_rounded)
+						if time_at_max_stacks_rounded > 0 then
+							return increment_by(self, stat_data, time_at_max_stacks_rounded)
+						end
+					end,
+				},
+			},
+			include_condition = archetype_condition,
+		}
+		stat_definitions.broker_stimm_attack_speed_gained_from_stimm = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {},
+			triggers = {
+				{
+					id = "hook_broker_stimm_used",
+					trigger = function (self, stat_data, stats_gained, player)
+						local attack_speed_gained = stats_gained.attack_speed
+
+						if attack_speed_gained and attack_speed_gained > 0 then
+							local viscosity = TalentLayoutParser.profile_percent_specialization_points_used(player:profile())
+
+							if viscosity >= AchievementTweakData.broker_stimm_celerity_potency.min_potency then
+								return increment_by(self, stat_data, attack_speed_gained * 100)
+							end
+						end
+					end,
+				},
+			},
+			include_condition = archetype_condition,
+		}
+		stat_definitions.broker_stimm_hit_weakspots = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {},
+			triggers = {
+				{
+					id = "hook_damage_dealt",
+					trigger = function (self, stat_data, attack_data)
+						local hit_weakspot = attack_data.hit_weakspot
+						local attacker_owner_buff_keywords = attack_data.attacker_owner_buff_keywords
+						local has_broker_syringe_active = attacker_owner_buff_keywords and attacker_owner_buff_keywords.syringe_broker
+
+						if has_broker_syringe_active and hit_weakspot then
+							return increment(self, stat_data)
+						end
+					end,
+				},
+			},
+			include_condition = archetype_condition,
+		}
+		stat_definitions.broker_stimm_powerl_level_gained_from_stimm = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {},
+			triggers = {
+				{
+					id = "hook_broker_stimm_used",
+					trigger = function (self, stat_data, stats_gained, player)
+						local power_level_gained = stats_gained.power_level_modifier
+
+						if power_level_gained and power_level_gained > 0 then
+							local viscosity = TalentLayoutParser.profile_percent_specialization_points_used(player:profile())
+
+							if viscosity >= AchievementTweakData.broker_stimm_combat_potency.min_potency then
+								return increment_by(self, stat_data, power_level_gained * 100)
+							end
+						end
+					end,
+				},
+			},
+			include_condition = archetype_condition,
+		}
+		stat_definitions.broker_stimm_heavy_attack_kills = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {},
+			triggers = {
+				{
+					id = "hook_kill",
+					trigger = function (self, stat_data, attack_data)
+						local is_heavy_attack = attack_data.is_heavy_attack
+						local attacker_owner_buff_keywords = attack_data.attacker_owner_buff_keywords
+						local has_broker_syringe_active = attacker_owner_buff_keywords and attacker_owner_buff_keywords.syringe_broker
+
+						if has_broker_syringe_active and is_heavy_attack then
+							return increment(self, stat_data)
+						end
+					end,
+				},
+			},
+			include_condition = archetype_condition,
+		}
+		stat_definitions.broker_stimm_toughness_restored_from_stimm = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {},
+			triggers = {
+				{
+					id = "hook_broker_stimm_restored_tougness",
+					trigger = function (self, stat_data, toughness_restored, player)
+						local toughness_restored_rounded = math.round(toughness_restored)
+
+						if toughness_restored_rounded > 0 then
+							local viscosity = TalentLayoutParser.profile_percent_specialization_points_used(player:profile())
+
+							if viscosity >= AchievementTweakData.broker_stimm_durability_potency.min_potency then
+								return increment_by(self, stat_data, math.round(toughness_restored_rounded))
+							end
+						end
+					end,
+				},
+			},
+			include_condition = archetype_condition,
+		}
+		stat_definitions.broker_stimm_apply_toxin = {
+			flags = {
+				StatFlags.backend,
+			},
+			data = {},
+			triggers = {
+				{
+					id = "hook_buff",
+					trigger = function (self, stat_data, breed_name, template_name, stack_count, weapon_template_name, source_player_buff_keywords)
+						local has_broker_syringe_active = source_player_buff_keywords and source_player_buff_keywords.syringe_broker
+
+						if has_broker_syringe_active and template_name == "neurotoxin_interval_buff3" then
+							return increment(self, stat_data)
+						end
+					end,
+				},
+			},
+			include_condition = archetype_condition,
+		}
+	end
+
+	local archetype_condition = archetype_include_condition("cryptic")
+
+	stat_definitions.hook_cryptic_servo_skull_medicae_helps_ally = {
 		flags = {
-			StatFlags.backend,
+			StatFlags.hook,
 		},
-		data = {},
+	}
+	stat_definitions.hook_cryptic_servo_skull_hacking_completed = {
+		flags = {
+			StatFlags.hook,
+		},
+	}
+	stat_definitions.hook_cryptic_servo_skull_flame_attack_start = {
+		flags = {
+			StatFlags.hook,
+		},
+	}
+	stat_definitions.hook_cryptic_servo_skull_flame_attack_unique_minion_hit = {
+		flags = {
+			StatFlags.hook,
+		},
+	}
+	stat_definitions.hook_cryptic_overload_keystone_triggered = {
+		flags = {
+			StatFlags.hook,
+		},
+	}
+	stat_definitions.hook_cryptic_weapon_malfunction_applied_elite_ranged = {
+		flags = {
+			StatFlags.hook,
+		},
+	}
+	stat_definitions.hook_elite_chordclaw_kills = {
+		flags = {
+			StatFlags.never_log,
+			StatFlags.no_sync,
+		},
 		triggers = {
 			{
 				id = "hook_kill",
 				trigger = function (self, stat_data, attack_data)
-					local breed = Breeds[attack_data.target_breed_name]
-					local is_special_elite_or_monster = breed and breed.tags and (breed.tags.special or breed.tags.elite or breed.tags.monster)
-					local weapon_name = attack_data.weapon_template_name
+					local target_breed_name = attack_data.target_breed_name
+					local target_breed = target_breed_name and Breeds[target_breed_name]
+					local target_breed_tags = target_breed and target_breed.tags
 
-					if is_special_elite_or_monster and weapon_name == "missile_launcher" then
-						return increment(self, stat_data)
+					if attack_data.weapon_template_name == "transonic_claw_p1_m1" and target_breed_tags and target_breed_tags.elite then
+						return self.id, attack_data
 					end
 				end,
 			},
 		},
-		include_condition = archetype_condition,
 	}
-	stat_definitions.broker_enemies_affected_by_chem_bomb = {
+	stat_definitions.hook_weapon_chain_lightning_jump_triggered = {
 		flags = {
-			StatFlags.backend,
+			StatFlags.hook,
 		},
-		data = {},
-		triggers = {
-			{
-				id = "hook_liquid_area_entering_buff_added_on_enemy",
-				trigger = function (self, stat_data, liquid_area_buff_data)
-					local area_template_name = liquid_area_buff_data.area_template_name
+	}
+	stat_definitions.hook_arc_grenade_chain_lightning_jump_triggered = {
+		flags = {
+			StatFlags.hook,
+		},
+	}
+	stat_definitions.hook_crytic_force_field_hit = {
+		flags = {
+			StatFlags.hook,
+		},
+	}
+	stat_definitions.hook_cryptic_dissector_update_time_at_required_stacks = {
+		flags = {
+			StatFlags.hook,
+		},
+	}
 
-					if area_template_name == "broker_tox_grenade" then
-						return increment(self, stat_data)
-					end
-				end,
-			},
-		},
-		include_condition = archetype_condition,
+	local _cryptic_servo_skull_medicae_help_states = {
+		"hogtied",
+		"knocked_down",
+		"netted",
 	}
-	stat_definitions.broker_enemies_killed_with_focus_mode = {
-		flags = {
-			StatFlags.backend,
-		},
-		data = {},
-		triggers = {
-			{
-				id = "hook_kill",
-				trigger = function (self, stat_data, attack_data)
-					local attacker_owner_buff_keywords = attack_data.attacker_owner_buff_keywords
-					local is_in_focus_stance = attacker_owner_buff_keywords and attacker_owner_buff_keywords.broker_combat_ability_focus
 
-					if is_in_focus_stance then
-						return increment(self, stat_data)
-					end
-				end,
-			},
-		},
-		include_condition = archetype_condition,
-	}
-	stat_definitions.broker_attacks_dodged_in_focus_mode = {
-		flags = {
-			StatFlags.backend,
-		},
-		data = {},
-		triggers = {
-			{
-				id = "hook_dodged_attack",
-				trigger = function (self, stat_data, breed_name, attack_type, dodge_type, attacker_action, previously_dodged, dodging_unit_buff_keywords)
-					local is_in_focus_stance = dodging_unit_buff_keywords and dodging_unit_buff_keywords.broker_combat_ability_focus
+	for _, help_state in ipairs(_cryptic_servo_skull_medicae_help_states) do
+		local stat_name = string.format("cryptic_servo_skull_medicae_helps_%s_ally", help_state)
 
-					if is_in_focus_stance then
-						return increment(self, stat_data)
-					end
-				end,
+		stat_definitions[stat_name] = {
+			flags = {
+				StatFlags.backend,
 			},
-		},
-		include_condition = archetype_condition,
-	}
-	stat_definitions.broker_deal_damage_in_punk_rage = {
-		flags = {
-			StatFlags.backend,
-		},
-		data = {},
-		triggers = {
-			{
-				id = "hook_damage_dealt",
-				trigger = function (self, stat_data, attack_data)
-					local damage_dealt = attack_data.damage_dealt
-					local attacker_owner_buff_keywords = attack_data.attacker_owner_buff_keywords
-					local is_in_focus_stance = attacker_owner_buff_keywords and attacker_owner_buff_keywords.broker_combat_ability_punk_rage
+			stat_name = string.format("loc_glossary_term_%s", help_state),
+			data = {},
+			triggers = {
+				{
+					id = "hook_cryptic_servo_skull_medicae_helps_ally",
+					trigger = function (self, stat_data, ally_character_state)
+						if ally_character_state == help_state then
+							return increment(self, stat_data)
+						end
+					end,
+				},
+			},
+			include_condition = archetype_condition,
+		}
+	end
 
-					if damage_dealt > 0 and is_in_focus_stance then
-						return increment_by(self, stat_data, damage_dealt)
-					end
-				end,
-			},
-		},
-		include_condition = archetype_condition,
+	local _cryptic_servo_skull_hacking_target_missions = {
+		"cm_habs",
+		"cm_raid",
+		"lm_cooling",
+		"op_train",
 	}
-	stat_definitions.broker_time_stay_in_punk_rage = {
+
+	for _, mission_name in ipairs(_cryptic_servo_skull_hacking_target_missions) do
+		local stat_name = string.format("cryptic_servo_skull_hacking_on_mission_%s", mission_name)
+
+		stat_definitions[stat_name] = {
+			flags = {
+				StatFlags.backend,
+			},
+			stat_name = string.format("loc_mission_name_%s", mission_name),
+			data = {},
+			triggers = {
+				{
+					id = "hook_cryptic_servo_skull_hacking_completed",
+					trigger = StatMacros.set_flag,
+				},
+			},
+			include_condition = function (self, config)
+				local valid_archetype = archetype_condition(self, config)
+
+				return valid_archetype and config.mission_name == mission_name
+			end,
+		}
+	end
+
+	stat_definitions.cryptic_servo_skull_hacking_on_expeditions = {
+		stat_name = "loc_zone_expeditions",
 		flags = {
 			StatFlags.backend,
 		},
 		data = {},
 		triggers = {
 			{
-				id = "hook_broker_exited_punk_rage",
-				trigger = function (self, stat_data, time_in_punk_rage_rounded)
-					if time_in_punk_rage_rounded > 0 then
-						return increment_by(self, stat_data, time_in_punk_rage_rounded)
-					end
-				end,
+				id = "hook_cryptic_servo_skull_hacking_completed",
+				trigger = StatMacros.set_flag,
 			},
 		},
-		include_condition = archetype_condition,
+		include_condition = function (self, config)
+			local valid_archetype = archetype_condition(self, config)
+
+			return valid_archetype and config.game_mode_name == "expedition"
+		end,
 	}
-	stat_definitions.broker_deploy_stimm_field = {
+	stat_definitions.cryptic_servo_skull_flamethrower_unique_kills_on_single_use = {
 		flags = {
 			StatFlags.backend,
 		},
 		data = {},
 		triggers = {
 			{
-				id = "hook_broker_deployed_stimm_field",
+				id = "hook_cryptic_servo_skull_flame_attack_start",
+				trigger = StatMacros.clear_flag,
+			},
+			{
+				id = "hook_cryptic_servo_skull_flame_attack_unique_minion_hit",
 				trigger = StatMacros.increment,
 			},
 		},
 		include_condition = archetype_condition,
 	}
-	stat_definitions.broker_time_buff_allies_chem_field = {
+	stat_definitions.cryptic_overload_keystone_triggers_in_session = {
 		flags = {
-			StatFlags.backend,
+			StatFlags.never_log,
 		},
 		data = {},
 		triggers = {
 			{
-				id = "hook_broker_time_ally_buffed_by_stimm_field",
-				trigger = function (self, stat_data, time_buffed_rounded)
-					if time_buffed_rounded > 0 then
-						return increment_by(self, stat_data, time_buffed_rounded)
-					end
-				end,
-			},
-		},
-		include_condition = archetype_condition,
-	}
-	stat_definitions.broker_stacks_gained_of_vulture_keystone = {
-		flags = {
-			StatFlags.backend,
-		},
-		data = {},
-		triggers = {
-			{
-				id = "hook_broker_stack_of_vulture_keystone",
+				id = "hook_cryptic_overload_keystone_triggered",
 				trigger = StatMacros.increment,
 			},
 		},
 		include_condition = archetype_condition,
 	}
-	stat_definitions.broker_times_activated_max_stacks_of_adrenaline_keystone = {
+	stat_definitions.cryptic_weapon_malfunction_applied_on_elite_ranged = {
 		flags = {
 			StatFlags.backend,
 		},
 		data = {},
 		triggers = {
 			{
-				id = "hook_broker_proc_max_stacks_adrenaline_keystone",
+				id = "hook_cryptic_weapon_malfunction_applied_elite_ranged",
 				trigger = StatMacros.increment,
 			},
 		},
 		include_condition = archetype_condition,
 	}
-	stat_definitions.broker_time_spent_max_stacks_chemical_dependency = {
-		flags = {
-			StatFlags.backend,
-		},
-		data = {},
-		triggers = {
-			{
-				id = "hook_broker_exited_max_stacks_of_chemical_dependency",
-				trigger = function (self, stat_data, time_at_max_stacks_rounded)
-					if time_at_max_stacks_rounded > 0 then
-						return increment_by(self, stat_data, time_at_max_stacks_rounded)
-					end
-				end,
-			},
-		},
-		include_condition = archetype_condition,
-	}
-	stat_definitions.broker_stimm_attack_speed_gained_from_stimm = {
-		flags = {
-			StatFlags.backend,
-		},
-		data = {},
-		triggers = {
-			{
-				id = "hook_broker_stimm_used",
-				trigger = function (self, stat_data, stats_gained, player)
-					local attack_speed_gained = stats_gained.attack_speed
-
-					if attack_speed_gained and attack_speed_gained > 0 then
-						local viscosity = TalentLayoutParser.profile_percent_specialization_points_used(player:profile())
-
-						if viscosity >= AchievementTweakData.broker_stimm_celerity_potency.min_potency then
-							return increment_by(self, stat_data, attack_speed_gained * 100)
-						end
-					end
-				end,
-			},
-		},
-		include_condition = archetype_condition,
-	}
-	stat_definitions.broker_stimm_hit_weakspots = {
-		flags = {
-			StatFlags.backend,
-		},
-		data = {},
-		triggers = {
-			{
-				id = "hook_damage_dealt",
-				trigger = function (self, stat_data, attack_data)
-					local hit_weakspot = attack_data.hit_weakspot
-					local attacker_owner_buff_keywords = attack_data.attacker_owner_buff_keywords
-					local has_broker_syringe_active = attacker_owner_buff_keywords and attacker_owner_buff_keywords.syringe_broker
-
-					if has_broker_syringe_active and hit_weakspot then
-						return increment(self, stat_data)
-					end
-				end,
-			},
-		},
-		include_condition = archetype_condition,
-	}
-	stat_definitions.broker_stimm_powerl_level_gained_from_stimm = {
-		flags = {
-			StatFlags.backend,
-		},
-		data = {},
-		triggers = {
-			{
-				id = "hook_broker_stimm_used",
-				trigger = function (self, stat_data, stats_gained, player)
-					local power_level_gained = stats_gained.power_level_modifier
-
-					if power_level_gained and power_level_gained > 0 then
-						local viscosity = TalentLayoutParser.profile_percent_specialization_points_used(player:profile())
-
-						if viscosity >= AchievementTweakData.broker_stimm_combat_potency.min_potency then
-							return increment_by(self, stat_data, power_level_gained * 100)
-						end
-					end
-				end,
-			},
-		},
-		include_condition = archetype_condition,
-	}
-	stat_definitions.broker_stimm_heavy_attack_kills = {
-		flags = {
-			StatFlags.backend,
-		},
-		data = {},
-		triggers = {
-			{
-				id = "hook_kill",
-				trigger = function (self, stat_data, attack_data)
-					local is_heavy_attack = attack_data.is_heavy_attack
-					local attacker_owner_buff_keywords = attack_data.attacker_owner_buff_keywords
-					local has_broker_syringe_active = attacker_owner_buff_keywords and attacker_owner_buff_keywords.syringe_broker
-
-					if has_broker_syringe_active and is_heavy_attack then
-						return increment(self, stat_data)
-					end
-				end,
-			},
-		},
-		include_condition = archetype_condition,
-	}
-	stat_definitions.broker_stimm_toughness_restored_from_stimm = {
-		flags = {
-			StatFlags.backend,
-		},
-		data = {},
-		triggers = {
-			{
-				id = "hook_broker_stimm_restored_tougness",
-				trigger = function (self, stat_data, toughness_restored, player)
-					local toughness_restored_rounded = math.round(toughness_restored)
-
-					if toughness_restored_rounded > 0 then
-						local viscosity = TalentLayoutParser.profile_percent_specialization_points_used(player:profile())
-
-						if viscosity >= AchievementTweakData.broker_stimm_durability_potency.min_potency then
-							return increment_by(self, stat_data, math.round(toughness_restored_rounded))
-						end
-					end
-				end,
-			},
-		},
-		include_condition = archetype_condition,
-	}
-	stat_definitions.broker_stimm_apply_toxin = {
+	stat_definitions.cryptic_enemies_electrocuted = {
 		flags = {
 			StatFlags.backend,
 		},
@@ -7041,9 +7272,77 @@ do
 			{
 				id = "hook_buff",
 				trigger = function (self, stat_data, breed_name, template_name, stack_count, weapon_template_name, source_player_buff_keywords)
-					local has_broker_syringe_active = source_player_buff_keywords and source_player_buff_keywords.syringe_broker
+					local buff_template = BuffTemplates[template_name]
+					local buff_template_keywords = buff_template and buff_template.keywords
 
-					if has_broker_syringe_active and template_name == "neurotoxin_interval_buff3" then
+					if buff_template_keywords then
+						local has_electrocuted_keyword = false
+
+						for _, buff_keyword in ipairs(buff_template_keywords) do
+							if buff_keyword == "electrocuted" then
+								has_electrocuted_keyword = true
+
+								break
+							end
+						end
+
+						if has_electrocuted_keyword then
+							return increment(self, stat_data)
+						end
+					end
+				end,
+			},
+		},
+		include_condition = archetype_condition,
+	}
+	stat_definitions.cryptic_arc_jumps = {
+		flags = {
+			StatFlags.backend,
+		},
+		data = {},
+		triggers = {
+			{
+				id = "hook_weapon_chain_lightning_jump_triggered",
+				trigger = StatMacros.increment,
+			},
+			{
+				id = "hook_arc_grenade_chain_lightning_jump_triggered",
+				trigger = StatMacros.increment,
+			},
+		},
+		include_condition = archetype_condition,
+	}
+	stat_definitions.cryptic_chordclaw_kills_within_time = {
+		flags = {
+			StatFlags.no_recover,
+		},
+		data = {
+			kill_counter = 1,
+			remove_counter = 1,
+		},
+		triggers = {
+			{
+				id = "hook_elite_chordclaw_kills",
+				trigger = StatMacros.increment,
+			},
+			{
+				id = "hook_elite_chordclaw_kills",
+				trigger = StatMacros.decrement,
+				delay = seconds(10),
+			},
+		},
+		include_condition = archetype_condition,
+	}
+	stat_definitions.cryptic_combat_ability_used_at_one_charge = {
+		flags = {
+			StatFlags.backend,
+		},
+		data = {},
+		triggers = {
+			{
+				id = "hook_ability_charges_used_from_action",
+				trigger = function (self, stat_data, ability_type, ability_charges_used)
+					if ability_type == "combat_ability" and ability_charges_used == 1 then
 						return increment(self, stat_data)
 					end
 				end,
@@ -7051,6 +7350,340 @@ do
 		},
 		include_condition = archetype_condition,
 	}
+	stat_definitions.cryptic_combat_ability_used_at_three_charges = {
+		flags = {
+			StatFlags.backend,
+		},
+		data = {},
+		triggers = {
+			{
+				id = "hook_ability_charges_used_from_action",
+				trigger = function (self, stat_data, ability_type, ability_charges_used)
+					if ability_type == "combat_ability" and ability_charges_used >= 2 then
+						return increment(self, stat_data)
+					end
+				end,
+			},
+		},
+		include_condition = archetype_condition,
+	}
+	stat_definitions.cryptic_precision_stance_weakspot_kills = {
+		flags = {
+			StatFlags.backend,
+		},
+		data = {},
+		triggers = {
+			{
+				id = "hook_kill",
+				trigger = function (self, stat_data, attack_data)
+					local attacker_owner_buff_keywords = attack_data.attacker_owner_buff_keywords
+					local is_ranged_attack = attack_data.attack_type == "ranged"
+
+					if is_ranged_attack and attack_data.hit_weakspot and attacker_owner_buff_keywords and attacker_owner_buff_keywords.cryptic_precision_stance then
+						return increment(self, stat_data)
+					end
+				end,
+			},
+		},
+		include_condition = archetype_condition,
+	}
+	stat_definitions.cryptic_force_field_ranged_attacks_blocked = {
+		flags = {
+			StatFlags.backend,
+		},
+		data = {},
+		triggers = {
+			{
+				id = "hook_crytic_force_field_hit",
+				trigger = function (self, stat_data, damage_amount, damage_profile, attack_type)
+					local is_ranged_attack = attack_type == "ranged" or damage_profile and damage_profile.count_as_ranged_attack
+
+					if is_ranged_attack then
+						return increment(self, stat_data)
+					end
+				end,
+			},
+		},
+		include_condition = archetype_condition,
+	}
+	stat_definitions.cryptic_ability_charges_gained_using_power_generation = {
+		flags = {
+			StatFlags.backend,
+		},
+		data = {},
+		triggers = {
+			{
+				id = "hook_ability_charges_gained",
+				trigger = function (self, stat_data, ability_type, num_charges_gained)
+					if ability_type == "combat_ability" and num_charges_gained > 0 then
+						return increment_by(self, stat_data, num_charges_gained)
+					end
+				end,
+			},
+		},
+		include_condition = function (self, config)
+			if not archetype_condition(self, config) then
+				return false
+			end
+
+			local player = Managers.player:player(config.peer_id, config.local_player_id)
+
+			if not player then
+				return false
+			end
+
+			local profile = player:profile()
+
+			if not profile then
+				return false
+			end
+
+			local talents = profile.talents
+
+			if not talents then
+				return false
+			end
+
+			return talents.cryptic_redline ~= nil
+		end,
+	}
+	stat_definitions.cryptic_time_spent_at_max_dissector_stacks = {
+		flags = {
+			StatFlags.never_log,
+			StatFlags.no_sync,
+		},
+		data = {},
+		triggers = {
+			{
+				id = "hook_cryptic_dissector_update_time_at_required_stacks",
+				trigger = function (self, stat_data, dt)
+					return increment_by(self, stat_data, dt)
+				end,
+			},
+		},
+		include_condition = archetype_condition,
+	}
+	stat_definitions.cryptic_percent_mission_won_at_max_dissector_stacks = {
+		flags = {
+			StatFlags.backend,
+		},
+		data = {
+			percent_at_max_stacks = 90,
+		},
+		triggers = {
+			{
+				id = "whole_mission_won",
+				trigger = function (self, stat_data, difficulty, mission_time)
+					local data = self.data
+					local target_percent = data.percent_at_max_stacks / 100
+					local time_spent_at_required_stacks = read_stat(stat_definitions.cryptic_time_spent_at_max_dissector_stacks, stat_data)
+
+					if time_spent_at_required_stacks >= target_percent * mission_time then
+						return set_to(self, stat_data, 1)
+					end
+				end,
+			},
+		},
+		include_condition = archetype_condition,
+	}
+
+	local _cryptic_target_game_modes = {
+		{
+			game_mode_name = "coop_complete_objective",
+			stat_id = "coop",
+			stat_loc_string = "loc_group_finder_category_adventure",
+		},
+		{
+			game_mode_name = "expedition",
+			stat_id = "expeditions",
+			stat_loc_string = "loc_zone_expeditions",
+		},
+		{
+			game_mode_name = "survival",
+			stat_id = "hordes",
+			stat_loc_string = "loc_horde_title",
+		},
+	}
+
+	for _, target_game_mode_data in ipairs(_cryptic_target_game_modes) do
+		local stat_name = string.format("cryptic_win_in_game_mode_%s", target_game_mode_data.stat_id)
+
+		stat_definitions[stat_name] = {
+			flags = {
+				StatFlags.backend,
+			},
+			stat_name = target_game_mode_data.stat_loc_string,
+			data = {},
+			triggers = {
+				{
+					id = "whole_mission_won",
+					trigger = function (self, stat_data, difficulty, mission_time)
+						return set_to(self, stat_data, 1)
+					end,
+				},
+			},
+			include_condition = function (self, config)
+				local valid_archetype = archetype_condition(self, config)
+
+				return valid_archetype and config.game_mode_name == target_game_mode_data.game_mode_name
+			end,
+		}
+	end
+
+	local _cryptic_combat_ability_talents = {
+		{
+			talent_id = "discharge",
+			talent_name = "cryptic_discharge",
+		},
+		{
+			talent_id = "precision_stance",
+			talent_name = "cryptic_precision_stance",
+		},
+		{
+			talent_id = "chordclaw",
+			talent_name = "cryptic_chordclaw",
+		},
+	}
+	local _cryptic_grenade_ability_talents = {
+		{
+			talent_id = "servo_skull",
+			talent_name = "cryptic_servo_skull_improved",
+		},
+		{
+			talent_id = "force_field",
+			talent_name = "cryptic_grenade_ability_force_field",
+		},
+		{
+			talent_id = "arc_grenade",
+			talent_name = "cryptic_grenade_ability_arc_grenade",
+		},
+	}
+	local _cryptic_keystone_talents = {
+		{
+			talent_id = "power_generation_keystone",
+			talent_name = "cryptic_redline",
+		},
+		{
+			talent_id = "dissector_keystone",
+			talent_name = "cryptic_dissector",
+		},
+		{
+			talent_id = "overload_keystone",
+			talent_name = "cryptic_overload_keystone",
+		},
+	}
+	local _cryptic_aura_talents = {
+		{
+			talent_id = "toughness_regen_aura",
+			talent_name = "cryptic_coherency_regen_aura_improved",
+		},
+		{
+			talent_id = "blitz_aura",
+			talent_name = "cryptic_ammo_aura",
+		},
+		{
+			talent_id = "weapon_improved_aura",
+			talent_name = "cryptic_aura_weapon_improved",
+		},
+	}
+	local _cryptic_all_main_talents = {}
+
+	table.append(_cryptic_all_main_talents, _cryptic_combat_ability_talents)
+	table.append(_cryptic_all_main_talents, _cryptic_grenade_ability_talents)
+	table.append(_cryptic_all_main_talents, _cryptic_keystone_talents)
+	table.append(_cryptic_all_main_talents, _cryptic_aura_talents)
+
+	for _, talent_data in ipairs(_cryptic_all_main_talents) do
+		local stat_name = string.format("cryptic_completed_missions_using_%s", talent_data.talent_id)
+		local talent = ArchetypeTalents.cryptic[talent_data.talent_name]
+		local stat_loc_string = talent.display_name
+
+		stat_definitions[stat_name] = {
+			flags = {
+				StatFlags.backend,
+			},
+			stat_name = stat_loc_string,
+			data = {},
+			triggers = {
+				{
+					id = "whole_mission_won",
+					trigger = StatMacros.set_flag,
+				},
+			},
+			include_condition = function (self, config)
+				if not archetype_condition(self, config) then
+					return false
+				end
+
+				local player = Managers.player:player(config.peer_id, config.local_player_id)
+
+				if not player then
+					return false
+				end
+
+				local profile = player:profile()
+
+				if not profile then
+					return false
+				end
+
+				local talents = profile.talents
+
+				if not talents then
+					return false
+				end
+
+				return talents[talent_data.talent_name] ~= nil
+			end,
+		}
+	end
+
+	for _, keystone_talent_data in ipairs(_cryptic_keystone_talents) do
+		for _, combat_ability_data in ipairs(_cryptic_combat_ability_talents) do
+			local combat_ability_talent = ArchetypeTalents.cryptic[combat_ability_data.talent_name]
+			local stat_name = string.format("cryptic_completed_missions_using_%s_and_%s", keystone_talent_data.talent_id, combat_ability_data.talent_id)
+			local stat_loc_string = combat_ability_talent.display_name
+
+			stat_definitions[stat_name] = {
+				flags = {
+					StatFlags.backend,
+				},
+				stat_name = stat_loc_string,
+				data = {},
+				triggers = {
+					{
+						id = "whole_mission_won",
+						trigger = StatMacros.set_flag,
+					},
+				},
+				include_condition = function (self, config)
+					if not archetype_condition(self, config) then
+						return false
+					end
+
+					local player = Managers.player:player(config.peer_id, config.local_player_id)
+
+					if not player then
+						return false
+					end
+
+					local profile = player:profile()
+
+					if not profile then
+						return false
+					end
+
+					local talents = profile.talents
+
+					if not talents then
+						return false
+					end
+
+					return talents[keystone_talent_data.talent_name] ~= nil and talents[combat_ability_data.talent_name] ~= nil
+				end,
+			}
+		end
+	end
 end
 
 do
@@ -7136,12 +7769,15 @@ do
 
 	for _, weapon in ipairs(weapons) do
 		local stat_name = string.format("mastery_track_reached_20_%s", weapon.pattern)
+		local weapon_pattern_ui_setings = UiWeaponPatternSettings[weapon.pattern]
+		local stat_loc_string = weapon_pattern_ui_setings and weapon_pattern_ui_setings.display_name or nil
 
 		stat_definitions[stat_name] = {
 			flags = {
 				StatFlags.backend,
 				StatFlags.no_sync,
 			},
+			stat_name = stat_loc_string,
 			data = {},
 		}
 	end
@@ -8375,6 +9011,116 @@ stat_definitions.live_event_skulls_guns_recovered = {
 	},
 	data = {
 		stat_override = "live_event_skulls_guns",
+	},
+	include_condition = function (self, config)
+		return StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override)
+	end,
+}
+
+do
+	local leftover_pick_up_names = {
+		live_event_leftover_01_pickup_large = true,
+		live_event_leftover_01_pickup_medium = true,
+		live_event_leftover_01_pickup_small = true,
+	}
+
+	stat_definitions.hook_leftover_resource_collected = {
+		flags = {
+			StatFlags.team,
+		},
+		triggers = {
+			{
+				id = "hook_picked_up_item",
+				trigger = function (self, stat_data, item_name)
+					if leftover_pick_up_names[item_name] then
+						return constant(self, stat_data, 1)
+					end
+				end,
+			},
+		},
+		data = {
+			stat_override = "live_event_leftover",
+		},
+		include_condition = function (self, config)
+			return StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override)
+		end,
+	}
+	stat_definitions.leftover_resource_collected = {
+		flags = {
+			StatFlags.backend,
+			StatFlags.no_sync,
+		},
+		data = {
+			stat_override = "live_event_leftover",
+		},
+		triggers = {
+			{
+				id = "hook_leftover_resource_collected",
+				trigger = StatMacros.increment_by,
+			},
+		},
+		include_condition = function (self, config)
+			return StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override)
+		end,
+	}
+	stat_definitions.hook_leftover_resources_pledged = {
+		flags = {
+			StatFlags.hook,
+		},
+		data = {},
+		include_condition = function (self, config)
+			return true
+		end,
+	}
+	stat_definitions.leftover_resources_pledged = {
+		flags = {
+			StatFlags.backend,
+			StatFlags.no_sync,
+		},
+		data = {},
+		triggers = {
+			{
+				id = "hook_leftover_resources_pledged",
+				trigger = StatMacros.increment_by,
+			},
+		},
+		include_condition = function (self, config)
+			return true
+		end,
+	}
+end
+
+stat_definitions.live_event_barren_mission_won = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "mission_won",
+			trigger = StatMacros.increment,
+		},
+	},
+	data = {
+		stat_override = "live_event_barren",
+	},
+	include_condition = function (self, config)
+		return StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override)
+	end,
+}
+stat_definitions.live_event_endless_hordes_mission_won = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "mission_won",
+			trigger = StatMacros.increment,
+		},
+	},
+	data = {
+		stat_override = "live_event_endless_hordes",
 	},
 	include_condition = function (self, config)
 		return StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override)

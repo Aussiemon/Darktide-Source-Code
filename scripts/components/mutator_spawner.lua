@@ -9,9 +9,11 @@ local SharedNav = require("scripts/components/utilities/shared_nav")
 local action_data = BreedActions.chaos_daemonhost
 local MutatorSpawner = component("MutatorSpawner")
 local SIZE_LOOKUP = {
-	level_size_2 = 1,
-	level_size_4 = 2,
-	level_size_8 = 4,
+	level_size_1 = 1,
+	level_size_2 = 2,
+	level_size_4 = 4,
+	level_size_6 = 6,
+	level_size_8 = 8,
 }
 
 local function _calculate_positions(unit)
@@ -407,15 +409,19 @@ MutatorSpawner.component_data = {
 	level_size = {
 		ui_name = "Level Size",
 		ui_type = "combo_box",
-		value = "level_size_4",
+		value = "level_size_6",
 		options_keys = {
+			"1",
 			"2",
 			"4",
+			"6",
 			"8",
 		},
 		options_values = {
+			"level_size_1",
 			"level_size_2",
 			"level_size_4",
+			"level_size_6",
 			"level_size_8",
 		},
 	},

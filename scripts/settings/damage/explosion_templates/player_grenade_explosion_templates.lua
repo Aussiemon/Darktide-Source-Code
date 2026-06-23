@@ -2,7 +2,24 @@
 
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
+local arc_grenade_talent_settings = TalentSettings.cryptic.arc_grenade
 local damage_types = DamageSettings.damage_types
+local TARGETED_TEMPLATE_EFFECT_FINAL_TARGETS = Script.new_array(4)
+local TARGETED_TEMPLATE_EFFECT_SECONDARY = Script.new_array(4)
+local TARGETED_TEMPLATE_EFFECT_BACKUP = Script.new_array(4)
+local _arc_grenade_targeted_template_effect_data = {
+	num_backup_targets = 0,
+	num_final_targets = 0,
+	num_secondary_targets = 0,
+	stop_sorting = false,
+	max_targets = arc_grenade_talent_settings.base_num_arcs,
+}
+local _arc_grenade_targeted_template_effect_results = {
+	final_targets = TARGETED_TEMPLATE_EFFECT_FINAL_TARGETS,
+	secondary_targets = TARGETED_TEMPLATE_EFFECT_SECONDARY,
+	backup_targets = TARGETED_TEMPLATE_EFFECT_BACKUP,
+}
 local explosion_templates = {
 	frag_grenade = {
 		close_radius = 2,
@@ -459,6 +476,111 @@ local explosion_templates = {
 		},
 		vfx = {
 			"content/fx/particles/weapons/grenades/shock_mine/shock_mine_self_destruct_01",
+		},
+	},
+	arc_grenade = {
+		collision_filter = "filter_player_character_explosion",
+		damage_falloff = true,
+		min_radius = 5,
+		on_hit_buff_template_name = "arc_grenade_spread_target",
+		radius = 8,
+		scalable_radius = true,
+		static_power_level = 500,
+		damage_profile = DamageProfileTemplates.arc_grenade,
+		damage_type = damage_types.electrocution,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
+		explosion_area_suppression = {
+			distance = 15,
+			instant_aggro = true,
+			suppression_falloff = true,
+			suppression_value = 20,
+		},
+		radius_stat_buffs = {
+			"explosion_radius_modifier_frag",
+		},
+		targeted_template_effect = {
+			template_effect_name = "arc_grenade_chain_lightning_source",
+			explosion_start_function = function (owner_unit)
+				_arc_grenade_targeted_template_effect_data.stop_sorting = false
+				_arc_grenade_targeted_template_effect_data.num_final_targets = 0
+				_arc_grenade_targeted_template_effect_data.num_secondary_targets = 0
+				_arc_grenade_targeted_template_effect_data.num_backup_targets = 0
+
+				local buff_extension = ScriptUnit.has_extension(owner_unit, "buff_system")
+				local stat_buffs = buff_extension and buff_extension:stat_buffs()
+				local num_extra_arcs = stat_buffs and stat_buffs.arc_grenade_extra_arcs or 0
+
+				_arc_grenade_targeted_template_effect_data.max_targets = arc_grenade_talent_settings.base_num_arcs + num_extra_arcs
+
+				table.clear(TARGETED_TEMPLATE_EFFECT_FINAL_TARGETS)
+				table.clear(TARGETED_TEMPLATE_EFFECT_SECONDARY)
+				table.clear(TARGETED_TEMPLATE_EFFECT_BACKUP)
+			end,
+			on_target_hit_function = function (hit_unit, breed)
+				local targeting_data = _arc_grenade_targeted_template_effect_data
+				local target_results = _arc_grenade_targeted_template_effect_results
+				local breed_name = breed.name
+				local breed_tags = breed.breed_tags
+
+				if breed_name == "chaos_ogryn_executor" or breed_name == "chaos_armored_hound" or breed_name == "renegade_berzerker" or breed_name == "renegade_executor" then
+					table.insert(target_results.final_targets, hit_unit)
+
+					targeting_data.num_final_targets = targeting_data.num_final_targets + 1
+				elseif targeting_data.num_secondary_targets < targeting_data.max_targets and breed_tags and breed_tags.elite then
+					table.insert(target_results.secondary_targets, hit_unit)
+
+					targeting_data.num_secondary_targets = targeting_data.num_secondary_targets + 1
+				elseif targeting_data.num_backup_targets < targeting_data.max_targets then
+					table.insert(target_results.backup_targets, hit_unit)
+
+					targeting_data.num_backup_targets = targeting_data.num_backup_targets + 1
+				end
+
+				if targeting_data.num_final_targets >= targeting_data.max_targets then
+					targeting_data.stop_sorting = true
+				end
+			end,
+			can_stop_sorting = function ()
+				return _arc_grenade_targeted_template_effect_data.stop_sorting
+			end,
+			get_template_effect_targets = function ()
+				local targeting_data = _arc_grenade_targeted_template_effect_data
+				local target_results = _arc_grenade_targeted_template_effect_results
+				local final_targets = target_results.final_targets
+				local max_targets = targeting_data.max_targets
+
+				for _, target in ipairs(target_results.secondary_targets) do
+					table.insert(final_targets, target)
+
+					targeting_data.num_final_targets = targeting_data.num_final_targets + 1
+
+					if max_targets <= #final_targets then
+						return final_targets
+					end
+				end
+
+				for _, target in ipairs(target_results.backup_targets) do
+					table.insert(final_targets, target)
+
+					targeting_data.num_final_targets = targeting_data.num_final_targets + 1
+
+					if max_targets <= targeting_data.num_final_targets then
+						return final_targets
+					end
+				end
+
+				return final_targets
+			end,
+		},
+		vfx = {
+			"content/fx/particles/weapons/grenades/arc_grenade/arc_grenade_01",
+		},
+		sfx = {
+			"wwise/events/weapon/play_explosion_arc_grenade",
 		},
 	},
 }

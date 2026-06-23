@@ -1,6 +1,8 @@
 ﻿-- chunkname: @scripts/extension_systems/interaction/interactor_extension.lua
 
+local Attack = require("scripts/utilities/attack/attack")
 local Component = require("scripts/utilities/component")
+local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local Interactions = require("scripts/settings/interaction/interactions")
 local InteractionSettings = require("scripts/settings/interaction/interaction_settings")
 local InteractionTemplates = require("scripts/settings/interaction/interaction_templates")
@@ -55,7 +57,7 @@ InteractorExtension.destroy = function (self)
 		if state == interaction_states.is_interacting and ALIVE[target_unit] then
 			local interactee_extension = ScriptUnit.extension(target_unit, "interactee_system")
 
-			interactee_extension:stopped(interaction_results.interaction_cancelled)
+			interactee_extension:stopped(interaction_results.interaction_cancelled, self._unit)
 		end
 	end
 end
@@ -269,6 +271,17 @@ InteractorExtension._consume_conflicting_gamepad_inputs = function (self, t)
 	action_input_extension:consume_next_input("weapon_action", t)
 end
 
+local ELECTRIFIED_SOUND_EVENT_NAME = "wwise/events/player/play_player_get_hit_electricity_interact"
+local ELECTRIFIED_VFX_EVENT_NAME = "content/fx/particles/screenspace/screen_electricity_affliction"
+local ELECTRIFIED_DAMAGE_PER_DIFFICULTY = {
+	12000,
+	14400,
+	18000,
+	20400,
+	24000,
+}
+local ELECTRIFIED_DAMAGE_TEMPLATE = DamageProfileTemplates.shock_grenade_stun_interval
+
 InteractorExtension._check_current_state = function (self, unit, dt, t, chosen_target, state)
 	local input_extension = self._input_extension
 	local world, is_server = self._world, self._is_server
@@ -278,17 +291,48 @@ InteractorExtension._check_current_state = function (self, unit, dt, t, chosen_t
 		local interaction_input = interaction:interaction_input()
 		local interaction_button_pressed = input_extension:get(interaction_input)
 		local interaction_component = self._interaction_component
-		local action_happened = interaction_button_pressed and interaction:start(world, unit, interaction_component, t, is_server) ~= false
+		local target_unit = interaction_component.target_unit
+		local interactee_extension = ScriptUnit.extension(target_unit, "interactee_system")
+		local action_happened = false
+
+		if interaction_button_pressed then
+			if interactee_extension.is_electrified and interactee_extension:is_electrified() then
+				if self._is_server then
+					local attack_direction = Vector3.normalize(POSITION_LOOKUP[target_unit] - POSITION_LOOKUP[unit])
+					local power_level = Managers.state.difficulty:get_table_entry_by_challenge(ELECTRIFIED_DAMAGE_PER_DIFFICULTY)
+
+					Attack.execute(unit, ELECTRIFIED_DAMAGE_TEMPLATE, "power_level", power_level, "damage_type", "electrocution", "attack_direction", attack_direction)
+				end
+
+				local fx_extension = ScriptUnit.has_extension(unit, "fx_system")
+
+				if fx_extension then
+					fx_extension:trigger_wwise_event(ELECTRIFIED_SOUND_EVENT_NAME, nil, unit)
+
+					if fx_extension.spawn_particles then
+						local position = Vector3(0, 0, 1)
+
+						fx_extension:spawn_particles(ELECTRIFIED_VFX_EVENT_NAME, position)
+					end
+				end
+			end
+
+			action_happened = interaction_button_pressed and interaction:start(world, unit, interaction_component, t, is_server) ~= false
+		end
 
 		if action_happened then
 			self:_consume_conflicting_gamepad_inputs(t)
 
 			local interaction_type = interaction_component.type
-			local target_unit = interaction_component.target_unit
-			local interactee_extension = ScriptUnit.extension(target_unit, "interactee_system")
 
 			Vo.interaction_start_event(unit, target_unit, interaction:type())
-			self:_start_interaction_timer(t)
+
+			if interactee_extension:infinite_interaction() then
+				self:_start_infinite_interaction()
+			else
+				self:_start_interaction_timer(t)
+			end
+
 			interactee_extension:started(unit)
 
 			if is_server then
@@ -324,7 +368,7 @@ InteractorExtension._check_current_state = function (self, unit, dt, t, chosen_t
 				end
 			elseif not can_interact then
 				interaction_result = interaction_results.interaction_cancelled
-			elseif t >= interaction_component.done_time then
+			elseif t >= interaction_component.done_time and interaction_component.done_time ~= 0 then
 				interaction_result = interaction_results.success
 			else
 				interaction_result = interaction_results.ongoing
@@ -335,7 +379,7 @@ InteractorExtension._check_current_state = function (self, unit, dt, t, chosen_t
 				self:reset_interaction()
 
 				if is_server then
-					interactee_extension:stopped(interaction_result)
+					interactee_extension:stopped(interaction_result, self._unit)
 
 					local interaction_type = interaction_component.type
 
@@ -368,7 +412,7 @@ InteractorExtension.cancel_interaction = function (self, t)
 		if target_unit then
 			local interactee_extension = ScriptUnit.extension(target_unit, "interactee_system")
 
-			interactee_extension:stopped(interaction_result)
+			interactee_extension:stopped(interaction_result, self._unit)
 		end
 
 		if is_server then
@@ -387,6 +431,13 @@ InteractorExtension._start_interaction_timer = function (self, t)
 
 	interaction_component.start_time = t
 	interaction_component.done_time = t + interaction_component.duration
+end
+
+InteractorExtension._start_infinite_interaction = function (self)
+	local interaction_component = self._interaction_component
+
+	interaction_component.start_time = 0
+	interaction_component.done_time = 0
 end
 
 InteractorExtension._find_object_in_direct_line_of_sight = function (self, interactor_unit, fp_position, fp_forward)

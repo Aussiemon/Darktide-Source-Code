@@ -420,7 +420,7 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 		local charge_level, attack_type
 
 		table.clear(temp_hit_units)
-		Explosion.create_explosion(self._world, self._physics_world, position + direction * forward_offset + Vector3.up() * vertical_offset, impact_normal, unit, explosion_template, power_level, charge_level, attack_type, nil, nil, nil, nil, temp_hit_units)
+		Explosion.create_explosion(self._world, self._physics_world, position + direction * forward_offset + Vector3.up() * vertical_offset, Quaternion.identity(), unit, explosion_template, power_level, charge_level, attack_type, nil, nil, nil, nil, temp_hit_units)
 
 		local add_debuff_on_hit = lunge_template.add_debuff_on_hit
 		local number_of_stacks = lunge_template.add_debuff_on_hit_stacks or 1
@@ -674,6 +674,8 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 	local damage_type = damage_settings.damage_type
 	local locomotion_component = self._locomotion_component
 	local locomotion_position = locomotion_component.position
+	local lunge_character_state_component = self._lunge_character_state_component
+	local lunge_target = lunge_character_state_component.lunge_target
 	local t = Managers.time:time("gameplay")
 	local use_armor_type = not not lunge_template.stop_armor_types
 	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
@@ -710,41 +712,6 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 			else
 				attack_direction = left_attack_direction
 			end
-
-			local hit_world_position = Actor.position(hit_actor)
-			local behaviour_extension = ScriptUnit.has_extension(hit_unit, "behavior_system")
-			local hit_unit_action = behaviour_extension and behaviour_extension:running_action()
-			local attack_type = AttackSettings.attack_types.melee
-			local damage_dealt, attack_result, damage_efficiency = Attack.execute(hit_unit, damage_profile, "power_level", LUNGE_ATTACK_POWER_LEVEL, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "attack_type", attack_type, "attacking_unit", unit, "damage_type", damage_type)
-			local force_stagger = lunge_template.force_stagger
-
-			if self._is_server and force_stagger then
-				local force_stagger_ignore_no_stagger = lunge_template.force_stagger_ignore_no_stagger
-
-				Stagger.force_stagger(hit_unit, stagger_types.explosion, attack_direction, 4, 1, 4, unit, force_stagger_ignore_no_stagger)
-			end
-
-			ImpactEffect.play(hit_unit, hit_actor, damage_dealt, damage_type, nil, attack_result, hit_world_position, nil, attack_direction, unit, nil, nil, nil, damage_efficiency, damage_profile)
-
-			if t >= self._push_sfx_cooldown and self._is_server then
-				MinionPushFx.play_sfx_for_clients_except(hit_unit, MinionPushFxTemplates.lunge_push, self._player)
-
-				self._push_sfx_cooldown = t + math.random_range(0, 0.2)
-			end
-
-			local add_debuff_on_hit = lunge_template.add_debuff_on_hit
-
-			if add_debuff_on_hit and attack_result ~= "died" then
-				local number_of_stacks = lunge_template.add_debuff_on_hit_stacks or 1
-
-				_apply_buff_to_hit_unit(hit_unit, add_debuff_on_hit, number_of_stacks, t, unit)
-			end
-
-			hit_enemy_units[hit_unit] = true
-
-			_record_stat_on_lunge_hit(self._player, hit_unit, attack_result, hit_unit_action, lunge_template)
-
-			current_mass_hit = current_mass_hit + HitMass.target_hit_mass(unit, hit_unit, HIT_WEAKSPOT, IS_CRITICAL_STRIKE, attack_type)
 
 			if use_armor_type then
 				local hit_unit_data_extension = ScriptUnit.extension(hit_unit, "unit_data_system")
@@ -787,25 +754,62 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 						if stop_tags[tag] then
 							should_stop = true
 
-							local damage_profile_stop = damage_settings.damage_profile_damage
-
-							if damage_profile_stop then
-								local damage_dealt, attack_result, damage_efficiency = Attack.execute(hit_unit, damage_profile_stop, "power_level", LUNGE_ATTACK_POWER_LEVEL, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "attack_type", attack_type, "attacking_unit", unit, "damage_type", damage_type)
-							end
-
-							Managers.state.blood:play_screen_space_blood(self._fx_extension)
-
-							local anim_event_1p_on_damage = damage_settings.anim_event_1p_on_damage
-
-							if anim_event_1p_on_damage then
-								self._animation_extension:anim_event_1p(anim_event_1p_on_damage)
-							end
-
 							break
 						end
 					end
 				end
 			end
+
+			if should_stop then
+				Managers.state.blood:play_screen_space_blood(self._fx_extension)
+
+				local anim_event_1p_on_stopping_hit = damage_settings.anim_event_1p_on_stopping_hit
+
+				if anim_event_1p_on_stopping_hit then
+					self._animation_extension:anim_event_1p(anim_event_1p_on_stopping_hit)
+				end
+			end
+
+			local hit_world_position = Actor.position(hit_actor)
+			local behaviour_extension = ScriptUnit.has_extension(hit_unit, "behavior_system")
+			local hit_unit_action = behaviour_extension and behaviour_extension:running_action()
+			local attack_type = AttackSettings.attack_types.melee
+
+			if should_stop or lunge_target and lunge_target == hit_unit then
+				attack_direction = lunge_direction
+				damage_profile = damage_settings.damage_profile_stop or damage_profile
+			end
+
+			local damage_dealt, attack_result, damage_efficiency = Attack.execute(hit_unit, damage_profile, "power_level", LUNGE_ATTACK_POWER_LEVEL, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "attack_type", attack_type, "attacking_unit", unit, "damage_type", damage_type)
+			local force_stagger = lunge_template.force_stagger
+
+			if self._is_server and force_stagger then
+				local force_stagger_ignore_no_stagger = lunge_template.force_stagger_ignore_no_stagger
+
+				Stagger.force_stagger(hit_unit, stagger_types.explosion, attack_direction, 4, 1, 4, unit, force_stagger_ignore_no_stagger)
+			end
+
+			ImpactEffect.play(hit_unit, hit_actor, damage_dealt, damage_type, nil, attack_result, hit_world_position, nil, attack_direction, unit, nil, nil, nil, damage_efficiency, damage_profile)
+
+			if t >= self._push_sfx_cooldown and self._is_server then
+				MinionPushFx.play_sfx_for_clients_except(hit_unit, MinionPushFxTemplates.lunge_push, self._player)
+
+				self._push_sfx_cooldown = t + math.random_range(0, 0.2)
+			end
+
+			local add_debuff_on_hit = lunge_template.add_debuff_on_hit
+
+			if add_debuff_on_hit and attack_result ~= "died" then
+				local number_of_stacks = lunge_template.add_debuff_on_hit_stacks or 1
+
+				_apply_buff_to_hit_unit(hit_unit, add_debuff_on_hit, number_of_stacks, t, unit)
+			end
+
+			hit_enemy_units[hit_unit] = true
+
+			_record_stat_on_lunge_hit(self._player, hit_unit, attack_result, hit_unit_action, lunge_template)
+
+			current_mass_hit = current_mass_hit + HitMass.target_hit_mass(unit, hit_unit, HIT_WEAKSPOT, IS_CRITICAL_STRIKE, attack_type)
 		end
 	end
 

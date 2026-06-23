@@ -9,6 +9,7 @@ local ElementSettings = require("scripts/ui/hud/elements/tactical_overlay/hud_el
 local HordeBuffsData = require("scripts/settings/buff/hordes_buffs/hordes_buffs_data")
 local InputDevice = require("scripts/managers/input/input_device")
 local Items = require("scripts/utilities/items")
+local LiveEventManager = require("scripts/managers/live_event/live_event_manager")
 local MasterItems = require("scripts/backend/master_items")
 local MissionBuffsParser = require("scripts/ui/constant_elements/elements/mission_buffs/utilities/mission_buffs_parser")
 local MissionTypes = require("scripts/settings/mission/mission_types")
@@ -46,6 +47,19 @@ HudElementTacticalOverlay.init = function (self, parent, draw_layer, start_scale
 	self._right_panel_entries = {}
 	self._tracked_achievements = 0
 	self._grid_overrides = {}
+	self._dynamic_pages = {}
+	self._right_panel_order = {}
+
+	local static_order = ElementSettings.right_panel_order
+
+	for i = 1, #static_order do
+		if static_order[i] ~= "event" then
+			self._right_panel_order[#self._right_panel_order + 1] = static_order[i]
+		end
+	end
+
+	self._pending_live_event_activations = {}
+	self._pending_live_event_deactivations = {}
 
 	self:_setup_left_panel_widgets()
 	self:_setup_right_panel_widgets()
@@ -57,11 +71,23 @@ HudElementTacticalOverlay.init = function (self, parent, draw_layer, start_scale
 	self:_create_resource_renderer()
 	Managers.event:register(self, "reroll_contracts", "reroll_contracts")
 	Managers.event:register(self, "event_tactical_overlay_change_using_input", "set_using_input")
+	Managers.event:register(self, "event_live_event_activated", "_on_live_event_activated")
+	Managers.event:register(self, "event_live_event_deactivated", "_on_live_event_deactivated")
+
+	if Managers.live_event then
+		local active_events = Managers.live_event:get_active_events()
+
+		for event_id, _ in pairs(active_events) do
+			self._pending_live_event_activations[#self._pending_live_event_activations + 1] = event_id
+		end
+	end
 end
 
 HudElementTacticalOverlay.destroy = function (self, ui_renderer)
 	Managers.event:unregister(self, "reroll_contracts")
 	Managers.event:unregister(self, "event_tactical_overlay_change_using_input")
+	Managers.event:unregister(self, "event_live_event_activated")
+	Managers.event:unregister(self, "event_live_event_deactivated")
 
 	local contracts_promise = self._contracts_promise
 
@@ -172,7 +198,7 @@ HudElementTacticalOverlay._add_class_buffs_data = function (self, display_buffs,
 						if talent_type == "ability" and class_loadout.combat_ability then
 							modifier_icon = class_loadout.combat_ability.hud_icon or modifier_icon
 						else
-							modifier_icon = talent_type == "blitz" and class_loadout.grenade_ability and class_loadout.grenade_ability.hud_icon or modifier_icon
+							modifier_icon = talent_type == "blitz" and class_loadout.grenade_ability and modifier_talent.is_main_ability == nil and class_loadout.grenade_ability.hud_icon or modifier_icon
 						end
 
 						display_buffs[#display_buffs + 1] = {
@@ -189,11 +215,11 @@ HudElementTacticalOverlay._add_class_buffs_data = function (self, display_buffs,
 							category = category_id,
 							sub_category = talent_type,
 							size = {
-								40,
-								40,
+								65,
+								65,
 							},
 							offset = {
-								15,
+								-5,
 								-5,
 							},
 						}
@@ -1089,8 +1115,45 @@ end
 
 HudElementTacticalOverlay._get_page = function (self, page_key)
 	local grid_overrides = self._grid_overrides
+	local dynamic_pages = self._dynamic_pages
 
-	return grid_overrides[page_key] or ElementSettings.right_panel_grids[page_key]
+	return grid_overrides[page_key] or dynamic_pages[page_key] or ElementSettings.right_panel_grids[page_key]
+end
+
+HudElementTacticalOverlay._is_event_page_key = function (self, page_key)
+	return type(page_key) == "string" and string.sub(page_key, 1, 6) == "event_"
+end
+
+HudElementTacticalOverlay._resolve_event_slot = function (self, event_page_keys, current_key)
+	local n_events = #event_page_keys
+
+	if n_events == 0 then
+		return nil, ""
+	end
+
+	local current_is_event = self:_is_event_page_key(current_key)
+	local entries = self._right_panel_entries
+	local slot_page_key
+
+	if current_is_event and entries[current_key] then
+		slot_page_key = current_key
+	else
+		slot_page_key = event_page_keys[1]
+	end
+
+	local counter_text = ""
+
+	if n_events > 1 and current_is_event then
+		for i = 1, n_events do
+			if event_page_keys[i] == current_key then
+				counter_text = string.format("%d/%d", i, n_events)
+
+				break
+			end
+		end
+	end
+
+	return slot_page_key, counter_text
 end
 
 HudElementTacticalOverlay._update_right_tab_bar = function (self, ui_renderer)
@@ -1106,14 +1169,36 @@ HudElementTacticalOverlay._update_right_tab_bar = function (self, ui_renderer)
 		widgets_by_name.right_header_stick.content.visible = true
 		widgets_by_name.right_header_background.content.visible = true
 
-		local definitions = {}
-		local tab_bar_widgets = {}
-		local ordered_keys = ElementSettings.right_panel_order
-		local total_width = ElementSettings.buffer - ElementSettings.internal_buffer
-		local selected_blueprint, selected_definition, selected_config
+		local ordered_keys = self._right_panel_order
+		local event_page_keys = {}
+		local render_keys = {}
+		local event_slot_inserted = false
 
 		for _, page_key in ipairs(ordered_keys) do
 			if entries[page_key] then
+				if self:_is_event_page_key(page_key) then
+					event_page_keys[#event_page_keys + 1] = page_key
+
+					if not event_slot_inserted then
+						render_keys[#render_keys + 1] = "__event_slot__"
+						event_slot_inserted = true
+					end
+				else
+					render_keys[#render_keys + 1] = page_key
+				end
+			end
+		end
+
+		local slot_page_key, slot_counter_text = self:_resolve_event_slot(event_page_keys, current_key)
+		local definitions = {}
+		local tab_bar_widgets = {}
+		local total_width = ElementSettings.buffer - ElementSettings.internal_buffer
+		local selected_blueprint, selected_definition, selected_config
+
+		for _, render_key in ipairs(render_keys) do
+			local page_key = render_key == "__event_slot__" and slot_page_key or render_key
+
+			if page_key then
 				local page_settings = self:_get_page(page_key)
 				local blueprint_type = page_settings.icon.blueprint_type
 				local blueprint = Blueprints[blueprint_type]
@@ -1126,6 +1211,7 @@ HudElementTacticalOverlay._update_right_tab_bar = function (self, ui_renderer)
 					is_left = false,
 					value = page_settings.icon.value,
 					selected = selected,
+					counter_text = render_key == "__event_slot__" and slot_counter_text or "",
 				}
 				local index = #tab_bar_widgets + 1
 				local name = string.format("tab_%d", index)
@@ -1316,13 +1402,54 @@ HudElementTacticalOverlay._update_right_panel_widgets = function (self, ui_rende
 	return self:_on_right_panel_widgets(desired_page, "update", ui_renderer)
 end
 
-HudElementTacticalOverlay._setup_live_event = function (self, ui_renderer)
-	local live_event_id = Managers.live_event:active_event_id()
+HudElementTacticalOverlay._on_live_event_activated = function (self, event_id)
+	self._pending_live_event_activations[#self._pending_live_event_activations + 1] = event_id
+end
 
-	self._live_event_id = live_event_id
+HudElementTacticalOverlay._on_live_event_deactivated = function (self, event_id)
+	self._pending_live_event_deactivations[#self._pending_live_event_deactivations + 1] = event_id
+end
 
-	local page_key = "event"
-	local template = Managers.live_event:get_event_template(live_event_id)
+HudElementTacticalOverlay._live_event_page_key = function (self, event_id)
+	return "event_" .. tostring(event_id)
+end
+
+HudElementTacticalOverlay._add_live_event_page = function (self, event_id, ui_renderer)
+	if not self._context.show_right_side then
+		return
+	end
+
+	local template = Managers.live_event:get_event_template(event_id)
+
+	if not template then
+		return
+	end
+
+	local page_key = self:_live_event_page_key(event_id)
+	local page = table.clone(ElementSettings.right_panel_grids.event)
+
+	page.loc_key = Managers.live_event:get_event_name(event_id) or "loc_event_category_label"
+	page.timer = {
+		loc_key = "loc_event_time_left",
+		func = function (t)
+			return Managers.live_event:event_time_left(t, event_id)
+		end,
+	}
+
+	local template_icon = template.icon
+
+	if template_icon then
+		page.icon = {
+			blueprint_type = "text_icon",
+			value = template_icon,
+		}
+	end
+
+	page.index = nil
+	self._dynamic_pages[page_key] = page
+
+	self:_rebuild_right_panel_order()
+
 	local event_name = template.name
 	local event_description = template.description
 	local configs = {
@@ -1339,7 +1466,7 @@ HudElementTacticalOverlay._setup_live_event = function (self, ui_renderer)
 			text = Localize(event_description),
 		},
 	}
-	local tiers = Managers.live_event:get_event_tiers(live_event_id)
+	local tiers = Managers.live_event:get_event_tiers(event_id)
 	local tier_count = tiers and #tiers or 0
 	local max_tiers = ElementSettings.max_live_event_tiers
 	local shown_tiers = math.min(max_tiers, tier_count)
@@ -1351,7 +1478,7 @@ HudElementTacticalOverlay._setup_live_event = function (self, ui_renderer)
 		}
 	end
 
-	local progress = Managers.live_event:event_progress(nil, live_event_id)
+	local progress = Managers.live_event:event_progress(nil, event_id)
 	local start_from = tier_count - shown_tiers + 1
 
 	while start_from > 1 and progress < tiers[start_from - 1].target do
@@ -1367,7 +1494,7 @@ HudElementTacticalOverlay._setup_live_event = function (self, ui_renderer)
 			blueprint = "event_tier",
 			target = tier.target,
 			rewards = tier.rewards,
-			event_id = live_event_id,
+			event_id = event_id,
 		}
 	end
 
@@ -1385,15 +1512,63 @@ HudElementTacticalOverlay._setup_live_event = function (self, ui_renderer)
 	self:_create_right_panel_widgets(page_key, configs, ui_renderer)
 end
 
-HudElementTacticalOverlay._update_live_event = function (self, dt, ui_renderer)
-	local current_live_event_id = self._live_event_id
-	local backend_live_event_id = Managers.live_event:active_event_id()
-	local show_right_side = self._context.show_right_side
-	local wrong_event_id = current_live_event_id ~= backend_live_event_id and backend_live_event_id ~= nil
-	local should_create = show_right_side and wrong_event_id
+HudElementTacticalOverlay._remove_live_event_page = function (self, event_id, ui_renderer)
+	local page_key = self:_live_event_page_key(event_id)
 
-	if should_create then
-		self:_setup_live_event(ui_renderer)
+	if not self._dynamic_pages[page_key] then
+		return
+	end
+
+	self._dynamic_pages[page_key] = nil
+
+	self:_rebuild_right_panel_order()
+	self:_delete_right_panel_widgets(page_key, ui_renderer)
+end
+
+HudElementTacticalOverlay._rebuild_right_panel_order = function (self)
+	local active_events = Managers.live_event and Managers.live_event:get_active_events() or {}
+	local sorted_ids = LiveEventManager.sorted_active_event_ids(active_events)
+	local new_order = {}
+
+	for i = 1, #sorted_ids do
+		local page_key = self:_live_event_page_key(sorted_ids[i])
+
+		if self._dynamic_pages[page_key] then
+			new_order[#new_order + 1] = page_key
+		end
+	end
+
+	local static_order = ElementSettings.right_panel_order
+
+	for i = 1, #static_order do
+		local page_key = static_order[i]
+
+		if page_key ~= "event" then
+			new_order[#new_order + 1] = page_key
+		end
+	end
+
+	self._right_panel_order = new_order
+end
+
+HudElementTacticalOverlay._update_live_event = function (self, dt, ui_renderer)
+	local pending_deactivations = self._pending_live_event_deactivations
+	local pending_activations = self._pending_live_event_activations
+
+	if #pending_deactivations > 0 then
+		for i = 1, #pending_deactivations do
+			self:_remove_live_event_page(pending_deactivations[i], ui_renderer)
+		end
+
+		table.clear(pending_deactivations)
+	end
+
+	if #pending_activations > 0 then
+		for i = 1, #pending_activations do
+			self:_add_live_event_page(pending_activations[i], ui_renderer)
+		end
+
+		table.clear(pending_activations)
 	end
 end
 
@@ -1466,7 +1641,7 @@ end
 
 HudElementTacticalOverlay._switch_right_grid = function (self, ui_renderer)
 	local current_key = self._right_panel_key
-	local ordered_names = ElementSettings.right_panel_order
+	local ordered_names = self._right_panel_order
 	local current_index = current_key and table.index_of(ordered_names, current_key) or 0
 
 	for delta = 1, #ordered_names do
@@ -1846,7 +2021,6 @@ HudElementTacticalOverlay._update_materials_collected = function (self, ui_rende
 		local game_mode_manager = Managers.state.game_mode
 		local game_mode = game_mode_manager:game_mode()
 		local players_name_text = ""
-		local players_loot_text = ""
 		local players_salvage_text = ""
 		local players = Managers.player:players()
 
@@ -1857,31 +2031,25 @@ HudElementTacticalOverlay._update_materials_collected = function (self, ui_rende
 				local peer_id = player.peer_id and player:peer_id()
 				local player_name = player:name()
 				local expedition_currency = game_mode:expedition_currency(peer_id) or 0
-				local expedition_loot = game_mode:expedition_loot(peer_id) or 0
 				local player_text = player_name
 
 				if players_name_text ~= "" then
 					players_name_text = players_name_text .. "\n"
-					players_loot_text = players_loot_text .. "\n"
 					players_salvage_text = players_salvage_text .. "\n"
 				end
 
 				players_name_text = players_name_text .. player_text
-				players_loot_text = players_loot_text .. Text.format_currency(expedition_loot)
 				players_salvage_text = players_salvage_text .. Text.format_currency(expedition_currency)
 			end
 		end
 
-		local expedition_team_loot = game_mode:expedition_team_loot()
 		local expedition_currency_widget = self._widgets_by_name.expedition_currency
 		local expedition_currency_content = expedition_currency_widget.content
 		local widget_size = expedition_currency_widget.content.size
 
 		expedition_currency_widget.visible = show_details
 		expedition_currency_content.text = players_name_text
-		expedition_currency_content.loot = players_loot_text
 		expedition_currency_content.salvage = players_salvage_text
-		expedition_currency_content.total_loot = Text.format_currency(expedition_team_loot)
 
 		local text_style = expedition_currency_widget.style.text
 		local _, text_height = self:_text_size(ui_renderer, players_name_text, text_style, {

@@ -274,6 +274,7 @@ local action_data = {
 		tension_to_add = 20,
 		vo_event = "owner_call_pounced",
 		pounce_anim_event = {
+			cryptic = "leap_attack",
 			human = "leap_attack",
 			ogryn = "leap_attack_ogryn",
 		},

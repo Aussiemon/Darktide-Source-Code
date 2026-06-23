@@ -239,7 +239,7 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_stacking_crit_bonus_on_continu
 		},
 		ammo = {
 			format_type = "string",
-			value = "10%",
+			value = "8%",
 		},
 		stacks = {
 			format_type = "string",
@@ -286,7 +286,7 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_continuous_fire =
 		},
 		ammo = {
 			format_type = "string",
-			value = "10%",
+			value = "8%",
 		},
 		stacks = {
 			format_type = "string",
@@ -326,7 +326,7 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_power_bonus_on_continuous_fire
 		},
 		ammo = {
 			format_type = "string",
-			value = "10%",
+			value = "8%",
 		},
 		stacks = {
 			format_type = "string",

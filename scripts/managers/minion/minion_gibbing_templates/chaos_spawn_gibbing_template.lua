@@ -63,6 +63,16 @@ local head_warp_shard = table.clone(head_warp)
 
 head_warp_shard.stump_settings.vfx = SharedGibbingTemplates.vfx.warp_stump_shard
 
+local head_arc = table.clone(head_sever)
+
+head_arc.gib_settings = nil
+head_arc.stump_settings.vfx = SharedGibbingTemplates.vfx.arc_stump_small
+head_arc.stump_settings.sfx = SharedGibbingTemplates.sfx.arc_stump
+
+local head_phosphor = table.clone(head_full)
+
+head_phosphor.stump_settings.vfx = SharedGibbingTemplates.vfx.phosphor_stump
+
 local limb_segment = table.clone(SharedGibbingTemplates.limb_segment)
 
 limb_segment.gib_settings.vfx = SharedGibbingTemplates.vfx.blood_gushing

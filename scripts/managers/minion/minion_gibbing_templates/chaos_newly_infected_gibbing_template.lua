@@ -186,6 +186,16 @@ local head_warp_shard = table.clone(head_warp)
 
 head_warp_shard.stump_settings.vfx = SharedGibbingTemplates.vfx.warp_stump_shard
 
+local head_arc = table.clone(head_sever)
+
+head_arc.gib_settings = nil
+head_arc.stump_settings.vfx = SharedGibbingTemplates.vfx.arc_stump_small
+head_arc.stump_settings.sfx = SharedGibbingTemplates.sfx.arc_stump
+
+local head_phosphor = table.clone(head_full)
+
+head_phosphor.stump_settings.vfx = SharedGibbingTemplates.vfx.phosphor_stump
+
 local limb_segment = table.clone(SharedGibbingTemplates.limb_segment)
 
 limb_segment.gib_settings.vfx = SharedGibbingTemplates.vfx.blood_gushing
@@ -420,6 +430,78 @@ local lower_right_arm_warp_shard = table.clone(lower_right_arm)
 lower_right_arm_warp_shard.gib_settings.vfx = SharedGibbingTemplates.vfx.warp_gib
 lower_right_arm_warp_shard.stump_settings.vfx = SharedGibbingTemplates.vfx.warp_stump
 
+local left_arm_arc = table.clone(left_arm)
+
+left_arm_arc.gib_settings.vfx = SharedGibbingTemplates.vfx.arc_gib
+left_arm_arc.gib_settings.sfx = SharedGibbingTemplates.sfx.arc_gib
+left_arm_arc.stump_settings.vfx = SharedGibbingTemplates.vfx.arc_stump_small
+left_arm_arc.stump_settings.sfx = SharedGibbingTemplates.sfx.arc_stump
+
+local right_arm_arc = table.clone(right_arm)
+
+right_arm_arc.gib_settings.vfx = SharedGibbingTemplates.vfx.arc_gib
+right_arm_arc.gib_settings.sfx = SharedGibbingTemplates.sfx.arc_gib
+right_arm_arc.stump_settings.vfx = SharedGibbingTemplates.vfx.arc_stump_small
+right_arm_arc.stump_settings.sfx = SharedGibbingTemplates.sfx.arc_stump
+
+local upper_left_arm_arc = table.clone(upper_left_arm)
+
+upper_left_arm_arc.gib_settings.vfx = SharedGibbingTemplates.vfx.arc_gib
+upper_left_arm_arc.gib_settings.sfx = SharedGibbingTemplates.sfx.arc_gib
+upper_left_arm_arc.stump_settings.vfx = SharedGibbingTemplates.vfx.arc_stump_small
+upper_left_arm_arc.stump_settings.sfx = SharedGibbingTemplates.sfx.arc_stump
+
+local upper_right_arm_arc = table.clone(upper_right_arm)
+
+upper_right_arm_arc.gib_settings.vfx = SharedGibbingTemplates.vfx.arc_gib
+upper_right_arm_arc.gib_settings.sfx = SharedGibbingTemplates.sfx.arc_gib
+upper_right_arm_arc.stump_settings.vfx = SharedGibbingTemplates.vfx.arc_stump_small
+upper_right_arm_arc.stump_settings.sfx = SharedGibbingTemplates.sfx.arc_stump
+
+local lower_left_arm_arc = table.clone(lower_left_arm)
+
+lower_left_arm_arc.gib_settings.vfx = SharedGibbingTemplates.vfx.arc_gib
+lower_left_arm_arc.gib_settings.sfx = SharedGibbingTemplates.sfx.arc_gib
+lower_left_arm_arc.stump_settings.vfx = SharedGibbingTemplates.vfx.arc_stump_small
+lower_left_arm_arc.stump_settings.sfx = SharedGibbingTemplates.sfx.arc_stump
+
+local lower_right_arm_arc = table.clone(lower_right_arm)
+
+lower_right_arm_arc.gib_settings.vfx = SharedGibbingTemplates.vfx.arc_gib
+lower_right_arm_arc.gib_settings.sfx = SharedGibbingTemplates.sfx.arc_gib
+lower_right_arm_arc.stump_settings.vfx = SharedGibbingTemplates.vfx.arc_stump_small
+lower_right_arm_arc.stump_settings.sfx = SharedGibbingTemplates.sfx.arc_stump
+
+local left_arm_phosphor = table.clone(left_arm)
+
+left_arm_phosphor.gib_settings.vfx = SharedGibbingTemplates.vfx.phosphor_gib
+left_arm_phosphor.stump_settings.vfx = SharedGibbingTemplates.vfx.phosphor_stump
+
+local right_arm_phosphor = table.clone(right_arm)
+
+right_arm_phosphor.gib_settings.vfx = SharedGibbingTemplates.vfx.phosphor_gib
+right_arm_phosphor.stump_settings.vfx = SharedGibbingTemplates.vfx.phosphor_stump
+
+local upper_left_arm_phosphor = table.clone(upper_left_arm)
+
+upper_left_arm_phosphor.gib_settings.vfx = SharedGibbingTemplates.vfx.phosphor_gib
+upper_left_arm_phosphor.stump_settings.vfx = SharedGibbingTemplates.vfx.phosphor_stump
+
+local upper_right_arm_phosphor = table.clone(upper_right_arm)
+
+upper_right_arm_phosphor.gib_settings.vfx = SharedGibbingTemplates.vfx.phosphor_gib
+upper_right_arm_phosphor.stump_settings.vfx = SharedGibbingTemplates.vfx.phosphor_stump
+
+local lower_left_arm_phosphor = table.clone(lower_left_arm)
+
+lower_left_arm_phosphor.gib_settings.vfx = SharedGibbingTemplates.vfx.phosphor_gib
+lower_left_arm_phosphor.stump_settings.vfx = SharedGibbingTemplates.vfx.phosphor_stump
+
+local lower_right_arm_phosphor = table.clone(lower_right_arm)
+
+lower_right_arm_phosphor.gib_settings.vfx = SharedGibbingTemplates.vfx.phosphor_gib
+lower_right_arm_phosphor.stump_settings.vfx = SharedGibbingTemplates.vfx.phosphor_stump
+
 local upper_left_leg = table.clone(limb_segment)
 
 upper_left_leg.gib_settings.override_push_force = {
@@ -640,6 +722,78 @@ local lower_right_leg_warp_shard = table.clone(lower_right_leg)
 lower_right_leg_warp_shard.gib_settings.vfx = SharedGibbingTemplates.vfx.warp_gib
 lower_right_leg_warp_shard.stump_settings.vfx = SharedGibbingTemplates.vfx.warp_stump
 
+local left_leg_arc = table.clone(left_leg)
+
+left_leg_arc.gib_settings.vfx = SharedGibbingTemplates.vfx.arc_gib
+left_leg_arc.gib_settings.sfx = SharedGibbingTemplates.sfx.arc_gib
+left_leg_arc.stump_settings.vfx = SharedGibbingTemplates.vfx.arc_stump_small
+left_leg_arc.stump_settings.sfx = SharedGibbingTemplates.sfx.arc_stump
+
+local right_leg_arc = table.clone(right_leg)
+
+right_leg_arc.gib_settings.vfx = SharedGibbingTemplates.vfx.arc_gib
+right_leg_arc.gib_settings.sfx = SharedGibbingTemplates.sfx.arc_gib
+right_leg_arc.stump_settings.vfx = SharedGibbingTemplates.vfx.arc_stump_small
+right_leg_arc.stump_settings.sfx = SharedGibbingTemplates.sfx.arc_stump
+
+local upper_left_leg_arc = table.clone(upper_left_leg)
+
+upper_left_leg_arc.gib_settings.vfx = SharedGibbingTemplates.vfx.arc_gib
+upper_left_leg_arc.gib_settings.sfx = SharedGibbingTemplates.sfx.arc_gib
+upper_left_leg_arc.stump_settings.vfx = SharedGibbingTemplates.vfx.arc_stump_small
+upper_left_leg_arc.stump_settings.sfx = SharedGibbingTemplates.sfx.arc_stump
+
+local upper_right_leg_arc = table.clone(upper_right_leg)
+
+upper_right_leg_arc.gib_settings.vfx = SharedGibbingTemplates.vfx.arc_gib
+upper_right_leg_arc.gib_settings.sfx = SharedGibbingTemplates.sfx.arc_gib
+upper_right_leg_arc.stump_settings.vfx = SharedGibbingTemplates.vfx.arc_stump_small
+upper_right_leg_arc.stump_settings.sfx = SharedGibbingTemplates.sfx.arc_stump
+
+local lower_left_leg_arc = table.clone(lower_left_leg)
+
+lower_left_leg_arc.gib_settings.vfx = SharedGibbingTemplates.vfx.arc_gib
+lower_left_leg_arc.gib_settings.sfx = SharedGibbingTemplates.sfx.arc_gib
+lower_left_leg_arc.stump_settings.vfx = SharedGibbingTemplates.vfx.arc_stump_small
+lower_left_leg_arc.stump_settings.sfx = SharedGibbingTemplates.sfx.arc_stump
+
+local lower_right_leg_arc = table.clone(lower_right_leg)
+
+lower_right_leg_arc.gib_settings.vfx = SharedGibbingTemplates.vfx.arc_gib
+lower_right_leg_arc.gib_settings.sfx = SharedGibbingTemplates.sfx.arc_gib
+lower_right_leg_arc.stump_settings.vfx = SharedGibbingTemplates.vfx.arc_stump_small
+lower_right_leg_arc.stump_settings.sfx = SharedGibbingTemplates.sfx.arc_stump
+
+local left_leg_phosphor = table.clone(left_leg)
+
+left_leg_phosphor.gib_settings.vfx = SharedGibbingTemplates.vfx.phosphor_gib
+left_leg_phosphor.stump_settings.vfx = SharedGibbingTemplates.vfx.phosphor_stump
+
+local right_leg_phosphor = table.clone(right_leg)
+
+right_leg_phosphor.gib_settings.vfx = SharedGibbingTemplates.vfx.phosphor_gib
+right_leg_phosphor.stump_settings.vfx = SharedGibbingTemplates.vfx.phosphor_stump
+
+local upper_left_leg_phosphor = table.clone(upper_left_leg)
+
+upper_left_leg_phosphor.gib_settings.vfx = SharedGibbingTemplates.vfx.phosphor_gib
+upper_left_leg_phosphor.stump_settings.vfx = SharedGibbingTemplates.vfx.phosphor_stump
+
+local upper_right_leg_phosphor = table.clone(upper_right_leg)
+
+upper_right_leg_phosphor.gib_settings.vfx = SharedGibbingTemplates.vfx.phosphor_gib
+upper_right_leg_phosphor.stump_settings.vfx = SharedGibbingTemplates.vfx.phosphor_stump
+
+local lower_left_leg_phosphor = table.clone(lower_left_leg)
+
+lower_left_leg_phosphor.gib_settings.vfx = SharedGibbingTemplates.vfx.phosphor_gib
+lower_left_leg_phosphor.stump_settings.vfx = SharedGibbingTemplates.vfx.phosphor_stump
+
+local lower_right_leg_phosphor = table.clone(lower_right_leg)
+
+lower_right_leg_phosphor.gib_settings.vfx = SharedGibbingTemplates.vfx.phosphor_gib
+lower_right_leg_phosphor.stump_settings.vfx = SharedGibbingTemplates.vfx.phosphor_stump
+
 local torso_sever = table.clone(SharedGibbingTemplates.torso)
 
 torso_sever.gib_settings.override_push_force = {
@@ -712,6 +866,20 @@ local torso_warp_wind_slash = table.clone(torso_warp)
 
 torso_warp_wind_slash.stump_settings.sfx = SharedGibbingTemplates.sfx.warp_wind_slash_large
 torso_warp_wind_slash.stump_settings.vfx = SharedGibbingTemplates.vfx.warp_wind_slash_large
+
+local torso_remove_arc = table.clone(torso_remove)
+
+torso_remove_arc.stump_settings.vfx = SharedGibbingTemplates.vfx.arc_stump_large
+torso_remove_arc.stump_settings.sfx = SharedGibbingTemplates.sfx.arc_stump
+
+local torso_sever_phosphor = table.clone(torso_sever)
+
+torso_sever_phosphor.gib_settings.vfx = SharedGibbingTemplates.vfx.phosphor_gib
+torso_sever_phosphor.stump_settings.vfx = SharedGibbingTemplates.vfx.phosphor_stump
+
+local torso_remove_phosphor = table.clone(torso_remove)
+
+torso_remove_phosphor.stump_settings.vfx = SharedGibbingTemplates.vfx.phosphor_stump
 
 local center_mass_full = table.clone(torso_sever)
 
@@ -840,6 +1008,33 @@ center_mass_right_warp_lightning.stump_settings.vfx = SharedGibbingTemplates.vfx
 center_mass_right_warp_lightning.stump_settings.sfx = SharedGibbingTemplates.sfx.warp_stump_lightning
 center_mass_right_warp_lightning.gibbing_threshold = GibbingThresholds.heavy
 
+local center_mass_arc = table.clone(torso_remove)
+
+center_mass_arc.stump_settings.vfx = SharedGibbingTemplates.vfx.arc_stump_large
+center_mass_arc.stump_settings.sfx = SharedGibbingTemplates.sfx.arc_stump
+center_mass_arc.extra_hit_zone_gibs = {
+	"head",
+	"upper_right_arm",
+	"upper_left_arm",
+}
+
+local center_mass_arc_variation_1 = table.clone(center_mass_arc)
+
+center_mass_arc_variation_1.extra_hit_zone_gibs = {
+	"upper_right_arm",
+	"upper_left_arm",
+}
+
+local center_mass_arc_variation_2 = table.clone(center_mass_arc)
+
+center_mass_arc_variation_2.extra_hit_zone_gibs = {
+	"head",
+}
+
+local center_mass_phosphor = table.clone(center_mass_full)
+
+center_mass_phosphor.stump_settings.vfx = SharedGibbingTemplates.vfx.phosphor_stump
+
 local center_mass_toxin = table.clone(torso_remove)
 
 center_mass_toxin.stump_settings.vfx = SharedGibbingTemplates.vfx.toxin_gas_stump
@@ -874,6 +1069,8 @@ local gibbing_template = {
 		plasma = head_full,
 		warp = head_warp,
 		warp_shard = head_warp_shard,
+		arc = head_arc,
+		phosphor = head_phosphor,
 	},
 	upper_left_arm = {
 		default = {
@@ -902,6 +1099,18 @@ local gibbing_template = {
 		},
 		warp = upper_left_arm_warp,
 		warp_shard = upper_left_arm_warp_shard,
+		arc = {
+			conditional = {
+				upper_left_arm_arc,
+				left_arm_arc,
+			},
+		},
+		phosphor = {
+			conditional = {
+				upper_left_arm_phosphor,
+				left_arm_phosphor,
+			},
+		},
 	},
 	upper_right_arm = {
 		default = {
@@ -930,6 +1139,18 @@ local gibbing_template = {
 		},
 		warp = upper_right_arm_warp,
 		warp_shard = upper_right_arm_warp_shard,
+		arc = {
+			conditional = {
+				upper_right_arm_arc,
+				right_arm_arc,
+			},
+		},
+		phosphor = {
+			conditional = {
+				upper_right_arm_phosphor,
+				right_arm_phosphor,
+			},
+		},
 	},
 	upper_left_leg = {
 		default = {
@@ -958,6 +1179,18 @@ local gibbing_template = {
 		},
 		warp = upper_left_leg_warp,
 		warp_shard = upper_left_leg_warp_shard,
+		arc = {
+			conditional = {
+				upper_left_leg_arc,
+				left_leg_arc,
+			},
+		},
+		phosphor = {
+			conditional = {
+				upper_left_leg_phosphor,
+				left_leg_phosphor,
+			},
+		},
 	},
 	upper_right_leg = {
 		default = {
@@ -986,6 +1219,18 @@ local gibbing_template = {
 		},
 		warp = upper_right_leg_warp,
 		warp_shard = upper_right_leg_warp_shard,
+		arc = {
+			conditional = {
+				upper_right_leg_arc,
+				right_leg_arc,
+			},
+		},
+		phosphor = {
+			conditional = {
+				upper_right_leg_phosphor,
+				right_leg_phosphor,
+			},
+		},
 	},
 	lower_left_arm = {
 		default = lower_left_arm,
@@ -1000,6 +1245,8 @@ local gibbing_template = {
 		plasma = lower_left_arm_remove,
 		warp = lower_left_arm_warp,
 		warp_shard = lower_left_arm_warp_shard,
+		arc = lower_left_arm_arc,
+		phosphor = lower_left_arm_phosphor,
 	},
 	lower_right_arm = {
 		default = lower_right_arm,
@@ -1014,6 +1261,8 @@ local gibbing_template = {
 		plasma = lower_right_arm_remove,
 		warp = lower_right_arm_warp,
 		warp_shard = lower_right_arm_warp_shard,
+		arc = lower_right_arm_arc,
+		phosphor = lower_right_arm_phosphor,
 	},
 	lower_left_leg = {
 		default = lower_left_leg,
@@ -1028,6 +1277,8 @@ local gibbing_template = {
 		plasma = lower_left_leg_remove,
 		warp = lower_left_leg_warp,
 		warp_shard = lower_left_leg_warp_shard,
+		arc = lower_left_leg_arc,
+		phosphor = lower_left_leg_phosphor,
 	},
 	lower_right_leg = {
 		default = lower_right_leg,
@@ -1042,6 +1293,8 @@ local gibbing_template = {
 		plasma = lower_right_leg_remove,
 		warp = lower_right_leg_warp,
 		warp_shard = lower_right_leg_warp_shard,
+		arc = lower_right_leg_arc,
+		phosphor = lower_right_leg_phosphor,
 	},
 	torso = {
 		default = torso_sever,
@@ -1066,6 +1319,11 @@ local gibbing_template = {
 		},
 		warp_wind_slash_high = {
 			torso_warp_wind_slash,
+		},
+		arc = torso_remove_arc,
+		phosphor = {
+			torso_sever_phosphor,
+			torso_remove_phosphor,
 		},
 	},
 	center_mass = {
@@ -1117,6 +1375,14 @@ local gibbing_template = {
 			center_mass_toxin,
 			center_mass_toxin_variation_1,
 			center_mass_toxin_variation_2,
+		},
+		arc = {
+			center_mass_arc,
+			center_mass_arc_variation_1,
+			center_mass_arc_variation_2,
+		},
+		phosphor = {
+			center_mass_phosphor,
 		},
 	},
 }

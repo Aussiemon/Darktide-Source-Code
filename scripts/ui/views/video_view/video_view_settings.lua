@@ -21,6 +21,8 @@ end
 
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/adamant_intro")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/broker_intro")
+_extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/cryptic_intro_part1")
+_extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/cryptic_intro_part2")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/cs06")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/debriefing_01")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/debriefing_02")
@@ -48,6 +50,7 @@ _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/c
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/voxshot_rise")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/hli_mission_board")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/hli_mission_board_adamant")
+_extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/hli_mission_board_cryptic")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/hli_crafting_station_underground")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/hli_contracts")
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/hli_barbershop")

@@ -3,16 +3,6 @@
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerUnitHologramExtension = class("PlayerUnitHologramExtension")
 local UPDATE_WAITING_PERIOD = 0.5
-local UNITS = {
-	human = {
-		consumed = "content/characters/player/human/attachments_base/shared/see_through_skeleton/see_through_skeleton_bon",
-		default = "content/characters/player/human/attachments_base/shared/see_through_skeleton/see_through_skeleton",
-	},
-	ogryn = {
-		consumed = "content/characters/player/ogryn/attachments_base/shared/see_through_skeleton/see_through_skeleton_bon",
-		default = "content/characters/player/ogryn/attachments_base/shared/see_through_skeleton/see_through_skeleton",
-	},
-}
 local SWITCH_STATES = {
 	consumed = true,
 }
@@ -38,7 +28,7 @@ PlayerUnitHologramExtension.init = function (self, extension_init_context, unit,
 	self._character_state_component = nil
 	self._target_health_extension = nil
 	self._hologram_unit = nil
-	self._unit_resources = UNITS[extension_init_data.breed_name]
+	self._unit_resources = extension_init_data.breed.hologram_units
 	self._health_percent = 1
 	self._was_disabled = false
 end

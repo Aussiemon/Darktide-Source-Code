@@ -267,7 +267,7 @@ weapon_template.action_input_hierarchy = {
 
 ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
-local function _can_shoot_due_to_reload(action_settings, condition_func_params, used_input)
+local function _can_shoot_due_to_reload(action_settings, condition_func_params, used_input, t, time_in_action)
 	local inventory_slot_component = condition_func_params.inventory_slot_component
 	local should_cock = inventory_slot_component.reload_state == "cock_weapon"
 
@@ -673,7 +673,7 @@ weapon_template.actions = {
 				chain_time = 0.9,
 			},
 		},
-		action_condition_func = function (action_settings, condition_func_params, used_input)
+		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			local inventory_slot_component = condition_func_params.inventory_slot_component
 			local current_ammunition_clip = Ammo.current_ammo_in_clips(inventory_slot_component)
 			local max_ammunition_clip = Ammo.max_ammo_in_clips(inventory_slot_component)
@@ -960,6 +960,38 @@ weapon_template.actions = {
 		},
 		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
+	action_inspect_3p = {
+		action_prevents_jump = true,
+		block_first_person_rotation = true,
+		can_crouch = false,
+		can_jump = false,
+		force_look = true,
+		kind = "inspect_3p",
+		lock_view = false,
+		skip_3p_anims = false,
+		stop_input = "inspect_stop",
+		total_time = math.huge,
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
+		crosshair = {
+			crosshair_type = "inspect",
+		},
+		allowed_chain_actions = {
+			inspect_3p_stop = {
+				action_name = "action_inspect",
+				chain_time = 1.1,
+			},
+		},
+		action_movement_curve = {
+			{
+				modifier = 0,
+				t = 0,
+			},
+			start_modifier = 0,
+		},
+		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
+	},
 	action_inspect = {
 		anim_end_event = "inspect_end",
 		anim_event = "inspect_start",
@@ -970,6 +1002,12 @@ weapon_template.actions = {
 		total_time = math.huge,
 		crosshair = {
 			crosshair_type = "inspect",
+		},
+		allowed_chain_actions = {
+			inspect_3p_start = {
+				action_name = "action_inspect_3p",
+				chain_time = 0.75,
+			},
 		},
 		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
 	},
@@ -1252,5 +1290,13 @@ weapon_template.explicit_combo = {
 	},
 }
 weapon_template.special_action_name = "action_bash"
+
+weapon_template.action_inspect_3p_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_inspect_3p"
+end
+
+weapon_template.action_inspect_3p_base_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return current_action_name == "action_inspect"
+end
 
 return weapon_template

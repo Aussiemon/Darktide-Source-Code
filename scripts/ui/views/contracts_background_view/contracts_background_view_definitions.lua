@@ -139,15 +139,7 @@ local button_options_definitions = {
 				local content = widget.content
 
 				content.text = Localize("loc_live_events_view_title")
-
-				local disabled = true
-
-				if next(Managers.live_event:events()) ~= nil then
-					disabled = false
-					content.hotspot.pressed_callback = callback_function
-				end
-
-				content.hotspot.disabled = disabled
+				content.hotspot.pressed_callback = callback_function
 			end,
 		},
 	},

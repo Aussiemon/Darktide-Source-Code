@@ -1651,6 +1651,83 @@ damage_templates.poxwalker_explosion_close.power_distribution = {
 	impact = 50,
 }
 damage_templates.poxwalker_explosion_close.catapulting_template = CatapultingTemplates.poxwalker_bomber_close
+damage_templates.poxwalker_explosion_mild = table.clone(damage_templates.poxwalker_explosion)
+damage_templates.poxwalker_explosion_mild.targets = {
+	default_target = {
+		armor_damage_modifier_ranged = {
+			near = {
+				attack = {
+					[armor_types.unarmored] = 1,
+					[armor_types.armored] = 1,
+					[armor_types.resistant] = 1,
+					[armor_types.player] = 0,
+					[armor_types.berserker] = 1,
+					[armor_types.super_armor] = 1,
+					[armor_types.disgustingly_resilient] = 50,
+					[armor_types.void_shield] = 0,
+				},
+				impact = {
+					[armor_types.unarmored] = 2,
+					[armor_types.armored] = 5,
+					[armor_types.resistant] = 2,
+					[armor_types.player] = 2,
+					[armor_types.berserker] = 2,
+					[armor_types.super_armor] = 0,
+					[armor_types.disgustingly_resilient] = 2,
+					[armor_types.void_shield] = 2,
+				},
+			},
+			far = {
+				attack = {
+					[armor_types.unarmored] = 1,
+					[armor_types.armored] = 1,
+					[armor_types.resistant] = 1,
+					[armor_types.player] = 0,
+					[armor_types.berserker] = 1,
+					[armor_types.super_armor] = 1,
+					[armor_types.disgustingly_resilient] = 50,
+					[armor_types.void_shield] = 0,
+				},
+				impact = {
+					[armor_types.unarmored] = 2,
+					[armor_types.armored] = 5,
+					[armor_types.resistant] = 2,
+					[armor_types.player] = 2,
+					[armor_types.berserker] = 2,
+					[armor_types.super_armor] = 2,
+					[armor_types.disgustingly_resilient] = 2,
+					[armor_types.void_shield] = 2,
+				},
+			},
+		},
+		power_distribution = {
+			attack = 125,
+			impact = 20,
+		},
+	},
+}
+damage_templates.poxwalker_explosion_close_mild = table.clone(damage_templates.poxwalker_explosion_close)
+damage_templates.poxwalker_explosion_close_mild.targets = damage_templates.poxwalker_explosion_mild.targets
+damage_templates.poxwalker_bomber_instakill = {
+	stagger_category = "melee",
+	armor_damage_modifier = {
+		attack = default_armor_mod,
+		impact = default_armor_mod,
+	},
+	power_distribution = {
+		attack = 0.1,
+		impact = 0.5,
+	},
+	cleave_distribution = {
+		attack = 0.25,
+		impact = 0.25,
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+}
 damage_templates.default_rifleman = {
 	disorientation_type = "light",
 	interrupt_alternate_fire = false,

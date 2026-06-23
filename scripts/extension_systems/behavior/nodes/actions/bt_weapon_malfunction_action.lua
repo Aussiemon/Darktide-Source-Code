@@ -9,6 +9,10 @@ local Vo = require("scripts/utilities/vo")
 local BtWeaponMalfunctionAction = class("BtWeaponMalfunctionAction", "BtNode")
 
 BtWeaponMalfunctionAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
+	local weapon_malfunction_component = Blackboard.write_component(blackboard, "weapon_malfunction")
+
+	scratchpad.weapon_malfunction_component = weapon_malfunction_component
+
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
 	local events = action_data.anim_events
 	local animation_extension = ScriptUnit.has_extension(unit, "animation_system")
@@ -41,6 +45,29 @@ BtWeaponMalfunctionAction.enter = function (self, unit, breed, blackboard, scrat
 end
 
 BtWeaponMalfunctionAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
+	local weapon_malfunction_component = scratchpad.weapon_malfunction_component
+
+	if weapon_malfunction_component.refresh_malfunctioning_time then
+		local breed_malfunctioning_time = action_data.weapon_malfunction_time or 12
+
+		weapon_malfunction_component.malfunctioning_time = t + breed_malfunctioning_time
+		weapon_malfunction_component.refresh_malfunctioning_time = false
+	end
+
+	local malfunctioning_time = weapon_malfunction_component.malfunctioning_time
+
+	if malfunctioning_time <= t then
+		weapon_malfunction_component.is_malfunctioning = false
+
+		local cover_component = Blackboard.has_component(blackboard, "cover") and Blackboard.write_component(blackboard, "cover")
+
+		if cover_component then
+			cover_component.has_cover = false
+		end
+
+		return "done"
+	end
+
 	local perception_component = scratchpad.perception_component
 	local liquid_area_system = Managers.state.extension:system("liquid_area_system")
 	local is_position_in_liquid = liquid_area_system:is_position_in_liquid(POSITION_LOOKUP[unit])

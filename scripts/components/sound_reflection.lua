@@ -138,18 +138,18 @@ local QUERY_MATERIAL_CONTEXTS = {
 local _query_material_buffer = {}
 
 SoundReflection._reflection_distance = function (self, position, direction, max_distance, query_material)
-	local results = PhysicsWorld.raycast(self._physics_world, position, direction, max_distance, "all", "types", "both", "collision_filter", "filter_player_character_shooting_raycast_statics")
+	local results, num_hits, num_columns = PhysicsWorld.raycast(self._physics_world, position, direction, max_distance, "all", "types", "both", "collision_filter", "filter_player_character_shooting_raycast_statics")
 
-	if results then
+	if num_hits > 0 then
 		local surface_materials_lookup = self._surface_materials_lookup
 
-		for ii = 1, #results do
+		for ii = 1, num_hits do
 			local result = results[ii]
+			local hit_pos = result[INDEX_POSITION]
 			local actor = result[INDEX_ACTOR]
 			local unit = Actor.unit(actor)
 
 			if unit ~= nil and unit ~= self._unit then
-				local hit_pos = result[INDEX_POSITION]
 				local hit_distance = Vector3.distance(hit_pos, position)
 				local material
 

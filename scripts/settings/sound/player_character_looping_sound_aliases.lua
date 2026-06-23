@@ -17,6 +17,25 @@ local PlayerCharacterLoopingSoundAliases = {
 			event_alias = "stop_ability_target_activating",
 		},
 	},
+	ability_aiming = {
+		is_2d = true,
+		is_exclusive = true,
+		start = {
+			event_alias = "play_ability_aiming",
+		},
+		stop = {
+			event_alias = "stop_ability_aiming",
+		},
+	},
+	cryptic_force_shield_active = {
+		has_husk_events = true,
+		start = {
+			event_alias = "play_cryptic_force_shield_active",
+		},
+		stop = {
+			event_alias = "stop_cryptic_force_shield_active",
+		},
+	},
 	catapulted = {
 		start = {
 			event_alias = "play_catapulted",
@@ -39,6 +58,16 @@ local PlayerCharacterLoopingSoundAliases = {
 		},
 		stop = {
 			event_alias = "stop_netted",
+		},
+	},
+	melee_charging = {
+		is_2d = true,
+		is_exclusive = true,
+		start = {
+			event_alias = "play_melee_charging",
+		},
+		stop = {
+			event_alias = "stop_melee_charging",
 		},
 	},
 	ranged_charging = {
@@ -272,6 +301,46 @@ local PlayerCharacterLoopingSoundAliases = {
 		},
 		stop = {
 			event_alias = "stop_companion_breath_loop",
+		},
+	},
+	companion_servo_skull_flame_loop = {
+		exclude_from_unit_data_components = true,
+		has_husk_events = true,
+		start = {
+			event_alias = "play_companion_servo_skull_flame_loop",
+		},
+		stop = {
+			event_alias = "stop_companion_servo_skull_flame_loop",
+		},
+	},
+	companion_servo_skull_hack_loop = {
+		exclude_from_unit_data_components = true,
+		has_husk_events = true,
+		start = {
+			event_alias = "play_companion_servo_skull_hack_loop",
+		},
+		stop = {
+			event_alias = "stop_companion_servo_skull_hack_loop",
+		},
+	},
+	companion_servo_skull_heal_loop = {
+		exclude_from_unit_data_components = true,
+		has_husk_events = true,
+		start = {
+			event_alias = "play_companion_servo_skull_heal_loop",
+		},
+		stop = {
+			event_alias = "stop_companion_servo_skull_heal_loop",
+		},
+	},
+	companion_servoskull_empowered_loop = {
+		exclude_from_unit_data_components = true,
+		has_husk_events = true,
+		start = {
+			event_alias = "play_companion_servoskull_empowered_loop",
+		},
+		stop = {
+			event_alias = "stop_companion_servoskull_empowered_loop",
 		},
 	},
 }

@@ -112,16 +112,17 @@ ActionZealotChannel.start = function (self, action_settings, t, time_scale, acti
 
 	self._total_num_ticks = math.ceil((action_settings.total_time - 0.5) / TICK_RATE)
 	self._zealot_channel_corruption_healing_per_tick = HordesBuffsData.hordes_buff_zealot_channel_heals_corruption.buff_stats.health.value / self._total_num_ticks
+	self._ability_charges_used = self:_use_ability_charge()
 
 	local param_table = buff_extension:request_proc_event_param_table()
 
 	if param_table then
 		param_table.unit = player_unit
+		param_table.ability_charges_used = self._ability_charges_used_at_start + self._ability_charges_used
+		param_table.remaining_ability_charges_before_use = self._remaining_ability_charges_before_use_at_start
 
 		buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
 	end
-
-	self:_use_ability_charge()
 
 	self._combat_ability_component.cooldown_paused = true
 end

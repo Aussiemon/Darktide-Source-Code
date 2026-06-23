@@ -310,7 +310,7 @@ MoodHandler._update_particles = function (self, added_moods, removing_moods, rem
 			looping_particles[i] = nil
 
 			local mood = moods[removing_mood]
-			local particles_material_scalars = mood.particles_material_scalars
+			local particles_material_scalars = mood.particles_material_scalars or mood.particle_material_scalar_funcs
 
 			if particles_material_scalars then
 				for j = 1, #particles_material_scalars do
@@ -331,7 +331,7 @@ MoodHandler._update_particles = function (self, added_moods, removing_moods, rem
 			looping_particles[i] = nil
 
 			local mood = moods[removed_mood]
-			local particles_material_scalars = mood.particles_material_scalars
+			local particles_material_scalars = mood.particles_material_scalars or mood.particle_material_scalar_funcs
 
 			if particles_material_scalars then
 				for j = 1, #particles_material_scalars do

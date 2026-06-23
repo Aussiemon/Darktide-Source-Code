@@ -358,22 +358,31 @@ local action_data = {
 		tongue_length_variable_name = "tongue_length",
 		vo_event = "beast_of_nurgle_swallow",
 		consume_anims = {
+			cryptic = "attack_grab_start",
 			human = "attack_grab_start",
 			ogryn = "attack_grab_start",
 		},
 		consume_timing = {
+			cryptic = 0.43333333333333335,
 			human = 0.43333333333333335,
 			ogryn = 0.43333333333333335,
 		},
 		drag_in_anims = {
+			cryptic = "attack_grab_eat_human",
 			human = "attack_grab_eat_human",
 			ogryn = "attack_grab_eat_ogryn",
 		},
 		consume_durations = {
+			cryptic = 4.1,
 			human = 4.1,
 			ogryn = 4.766666666666667,
 		},
 		damage_timings = {
+			cryptic = {
+				1,
+				1.2,
+				1.4,
+			},
 			human = {
 				1,
 				1.2,
@@ -411,6 +420,12 @@ local action_data = {
 			move_start_right = 1.2666666666666666,
 		},
 		throw_anims = {
+			cryptic = {
+				bwd = "move_start_bwd",
+				fwd = "move_start_fwd",
+				left = "move_start_left",
+				right = "move_start_right",
+			},
 			human = {
 				bwd = "move_start_bwd",
 				fwd = "move_start_fwd",
@@ -425,18 +440,22 @@ local action_data = {
 			},
 		},
 		throw_timing = {
+			cryptic = 1.3333333333333333,
 			human = 1.3333333333333333,
 			ogryn = 1.3333333333333333,
 		},
 		throw_duration = {
+			cryptic = 1.6666666666666667,
 			human = 1.6666666666666667,
 			ogryn = 2.3333333333333335,
 		},
 		catapult_force = {
+			cryptic = 13,
 			human = 13,
 			ogryn = 10,
 		},
 		catapult_z_force = {
+			cryptic = 3,
 			human = 3,
 			ogryn = 4,
 		},
@@ -449,6 +468,7 @@ local action_data = {
 		},
 		damage_profile = DamageProfileTemplates.beast_of_nurgle_hit_by_vomit,
 		damage_type = {
+			cryptic = damage_types.minion_vomit,
 			human = damage_types.minion_vomit,
 			ogryn = damage_types.minion_vomit,
 		},
@@ -535,6 +555,7 @@ local action_data = {
 			turn_right = 1,
 		},
 		throw_anims = {
+			cryptic = "spit_out_player",
 			human = "spit_out_player",
 			ogryn = "spit_out_player",
 		},
@@ -545,10 +566,12 @@ local action_data = {
 			right = "turn_right",
 		},
 		throw_timing = {
+			cryptic = 0.7,
 			human = 0.7,
 			ogryn = 0.7,
 		},
 		throw_duration = {
+			cryptic = 1.5666666666666667,
 			human = 1.5666666666666667,
 			ogryn = 1.5666666666666667,
 		},
@@ -559,10 +582,12 @@ local action_data = {
 			turn_right = 1,
 		},
 		catapult_force = {
+			cryptic = 13,
 			human = 13,
 			ogryn = 12,
 		},
 		catapult_z_force = {
+			cryptic = 3,
 			human = 3,
 			ogryn = 4,
 		},

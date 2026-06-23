@@ -12,7 +12,7 @@ MissionObjectiveZoneFlow.init = function (self, unit)
 		local max_progress = self:get_data(unit, "max_progress")
 		local progress_ui_type = self:get_data(unit, "progress_ui_type")
 
-		mission_objective_zone_extension:setup_from_component(max_progress, progress_ui_type)
+		mission_objective_zone_extension:setup_from_component(return_to_skull, max_progress, progress_ui_type)
 	end
 end
 

@@ -10,7 +10,7 @@ local function _check_is_available()
 		return false
 	end
 
-	local is_xbox_release = BUILD == "release" and PLATFORM == "xbs"
+	local is_xbox_release = BUILD == "release" and IS_XBS
 
 	if is_xbox_release then
 		return false

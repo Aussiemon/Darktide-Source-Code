@@ -144,7 +144,7 @@ damage_templates.light_powersword_2h = {
 	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.power_sword,
+	wounds_template = WoundsTemplates.slash,
 	armor_damage_modifier = {
 		attack = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -261,7 +261,7 @@ damage_templates.light_powersword_2h_active = {
 	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.power_sword_active,
+	wounds_template = WoundsTemplates.energy_slash,
 	armor_damage_modifier = power_am,
 	targets = {
 		{
@@ -405,7 +405,7 @@ damage_templates.light_powersword_2h_smiter = {
 	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.power_sword,
+	wounds_template = WoundsTemplates.slash,
 	armor_damage_modifier = cutting_am,
 	targets = {
 		{
@@ -510,7 +510,7 @@ damage_templates.light_powersword_2h_smiter_active = {
 	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.power_sword_active,
+	wounds_template = WoundsTemplates.energy_slash,
 	armor_damage_modifier = power_am,
 	targets = {
 		{
@@ -589,7 +589,7 @@ damage_templates.light_powersword_2h_stab = {
 	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.power_sword,
+	wounds_template = WoundsTemplates.slash,
 	armor_damage_modifier = cutting_am,
 	targets = {
 		{
@@ -691,7 +691,7 @@ damage_templates.light_powersword_2h_stab_active = {
 	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.power_sword_active,
+	wounds_template = WoundsTemplates.energy_slash,
 	armor_damage_modifier = power_am,
 	targets = {
 		{
@@ -771,7 +771,7 @@ damage_templates.powersword_2h_heavy_smiter = {
 	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.power_sword,
+	wounds_template = WoundsTemplates.slash,
 	armor_damage_modifier = heavy_sword_am,
 	targets = {
 		{
@@ -844,7 +844,7 @@ damage_templates.powersword_2h_heavy_smiter_active = {
 	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.power_sword,
+	wounds_template = WoundsTemplates.slash,
 	armor_damage_modifier = power_am,
 	targets = {
 		{
@@ -941,7 +941,7 @@ damage_templates.powersword_2h_heavy_stab = {
 	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.power_sword,
+	wounds_template = WoundsTemplates.slash,
 	armor_damage_modifier = heavy_stab_am,
 	targets = {
 		{
@@ -1014,7 +1014,7 @@ damage_templates.powersword_2h_heavy_stab_active = {
 	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.power_sword,
+	wounds_template = WoundsTemplates.slash,
 	armor_damage_modifier = power_stab_am,
 	targets = {
 		{
@@ -1086,7 +1086,7 @@ damage_templates.powersword_2h_heavy_linesman = {
 	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.power_sword,
+	wounds_template = WoundsTemplates.slash,
 	armor_damage_modifier = cutting_am,
 	targets = {
 		{
@@ -1202,7 +1202,7 @@ damage_templates.powersword_2h_heavy_linesman_active = {
 	gibbing_type = gibbing_types.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.heavy,
-	wounds_template = WoundsTemplates.power_sword,
+	wounds_template = WoundsTemplates.slash,
 	armor_damage_modifier = power_am,
 	targets = {
 		{

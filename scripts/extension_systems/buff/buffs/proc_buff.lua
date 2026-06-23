@@ -83,6 +83,14 @@ ProcBuff._is_proc_active = function (self, t)
 	local active_duration = self:_active_duration()
 	local active_start_time = self._active_start_time
 	local is_active = t < active_start_time + active_duration
+	local template = self._template
+	local template_data = self._template_data
+	local template_context = self._template_context
+	local check_proc_buff_active_override_func = template.check_proc_buff_active_override_func
+
+	if is_active and check_proc_buff_active_override_func then
+		return check_proc_buff_active_override_func(template_data, template_context)
+	end
 
 	return is_active
 end
@@ -133,6 +141,12 @@ ProcBuff._active_percentage = function (self, t)
 	end
 
 	return 0
+end
+
+ProcBuff.is_cooling_down = function (self, t)
+	local t = FixedFrame.get_latest_fixed_time()
+
+	return self:_is_cooling_down(t)
 end
 
 ProcBuff._is_cooling_down = function (self, t)
@@ -517,7 +531,8 @@ ProcBuff._show_in_hud = function (self)
 
 	local t = FixedFrame.get_latest_fixed_time()
 	local is_active = self:_is_proc_active(t)
-	local is_cooling_down = self:_is_cooling_down(t)
+	local has_cooldown_duration = self:_cooldown_duration() ~= nil
+	local is_cooling_down = has_cooldown_duration and self:_is_cooling_down(t)
 	local show_in_hud_if_slot_is_wielded = template.show_in_hud_if_slot_is_wielded
 
 	if show_in_hud_if_slot_is_wielded and not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -545,6 +560,29 @@ ProcBuff._is_hud_active = function (self)
 	end
 
 	return ProcBuff.super._is_hud_active(self)
+end
+
+ProcBuff.skip_send_active_time_rpc = function (self)
+	local template = self._template
+	local active_duration = self:_active_duration()
+
+	if active_duration and active_duration > 0 then
+		return false
+	end
+
+	local cooldown_duration = self:_cooldown_duration()
+
+	if cooldown_duration and cooldown_duration > 0 then
+		return false
+	end
+
+	local proc_effects = template.proc_effects
+
+	if proc_effects then
+		return false
+	end
+
+	return true
 end
 
 return ProcBuff

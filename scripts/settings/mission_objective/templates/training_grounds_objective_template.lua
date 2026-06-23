@@ -188,6 +188,12 @@ local mission_objective_templates = {
 				header = "loc_objective_tg_basic_combat_items_exit_header",
 				mission_objective_type = "goal",
 			},
+			objective_tg_basic_combat_hacking = {
+				description = "loc_skulls_guns_servo_skull_interact_action",
+				header = "loc_objective_cm_raid_obscura_den_decode_header",
+				mission_objective_type = "decode",
+				progress_bar = true,
+			},
 			objective_tg_basic_combat_end = {
 				description = "loc_objective_tg_basic_combat_end_desc",
 				header = "loc_objective_tg_basic_combat_end_header",

@@ -24,11 +24,11 @@ CutsceneCompanion.init = function (self, unit)
 
 	local starting_animation_event = self:get_data(unit, "starting_animation_event")
 
-	self._starting_animation_event = cinematic_slot
+	self._starting_animation_event = starting_animation_event
 
 	local walking_animation_event = self:get_data(unit, "walking_animation_event")
 
-	self._walking_animation_event = cinematic_slot
+	self._walking_animation_event = walking_animation_event
 
 	local cutscene_companion_extension = ScriptUnit.fetch_component_extension(unit, "cutscene_character_system")
 
@@ -65,14 +65,6 @@ CutsceneCompanion.destroy = function (self, unit)
 	return
 end
 
-CutsceneCompanion.cinematic_name = function (self)
-	return self._cinematic_name
-end
-
-CutsceneCompanion.breed_name = function (self)
-	return self._breed_name
-end
-
 CutsceneCompanion.trigger_walk_animation_event = function (self)
 	if DEDICATED_SERVER or not self._cutscene_companion_extension then
 		return false
@@ -81,8 +73,8 @@ CutsceneCompanion.trigger_walk_animation_event = function (self)
 	self._cutscene_companion_extension:trigger_walk_animation_event()
 end
 
-local function set_eye_visibility(unit, state)
-	local size = state and Vector3(1, 1, 1) or Vector3(0, 0, 0)
+local function _set_eye_visibility(unit, state)
+	local size = state and Vector3.one() or Vector3.zero()
 	local children = Unit.get_child_units(unit)
 
 	if children ~= nil then
@@ -141,16 +133,16 @@ CutsceneCompanion.editor_update = function (self, unit, dt, t)
 	return self:update(unit, dt, t)
 end
 
-local function get_min(unit)
+local function _materialize_min_value(unit)
 	local pos = Unit.world_position(unit, 1)
 
 	return -0.1 + pos.z
 end
 
-local function get_max(unit, breed_name)
+local function _materialize_max_value(unit)
 	local pos = Unit.world_position(unit, 1)
-	local cutscene_character_extension = ScriptUnit.extension(unit, "cutscene_character_system")
-	local breed = cutscene_character_extension:breed()
+	local cutscene_companion_extension = ScriptUnit.extension(unit, "cutscene_character_system")
+	local breed = cutscene_companion_extension:breed()
 	local z_scale = Unit.local_scale(unit, 1).z
 	local height = Breed.height(unit, breed) * 1.2 * z_scale
 
@@ -166,11 +158,11 @@ CutsceneCompanion.init_materialize = function (self)
 
 	if self:get_data(unit, "materialize") == "enabled_visible" then
 		Unit.set_permutation_for_materials(unit, "HAS_DEMATERIALIZE", true, true)
-		Unit.set_scalar_for_materials(unit, "materialize_data", get_max(unit), true)
+		Unit.set_scalar_for_materials(unit, "materialize_data", _materialize_max_value(unit), true)
 	else
 		Unit.set_permutation_for_materials(unit, "HAS_DEMATERIALIZE", true, true)
-		Unit.set_scalar_for_materials(unit, "materialize_data", get_min(unit), true)
-		set_eye_visibility(unit, false)
+		Unit.set_scalar_for_materials(unit, "materialize_data", _materialize_min_value(unit), true)
+		_set_eye_visibility(unit, false)
 
 		if self._cutscene_companion_extension then
 			self._cutscene_companion_extension:set_visibility(false)
@@ -202,8 +194,8 @@ CutsceneCompanion.start_materialize = function (self)
 		wielded_per = 0.6,
 		wielded_set = false,
 		wielded_vis = true,
-		from = get_min(unit),
-		to = get_max(unit, self._breed_name),
+		from = _materialize_min_value(unit),
+		to = _materialize_max_value(unit, self._breed_name),
 	}
 	self._should_update = true
 
@@ -238,8 +230,8 @@ CutsceneCompanion.start_dematerialize = function (self)
 		wielded_per = 0.5,
 		wielded_set = false,
 		wielded_vis = false,
-		from = get_max(unit, self._breed_name),
-		to = get_min(unit),
+		from = _materialize_max_value(unit),
+		to = _materialize_min_value(unit),
 		eyes_per = eyes_percentage,
 	}
 	self._should_update = true
@@ -326,10 +318,12 @@ CutsceneCompanion.component_data = {
 		options_keys = {
 			"None",
 			"Companion Dog",
+			"Companion Servo-Skull",
 		},
 		options_values = {
 			"none",
 			"companion_dog",
+			"companion_servo_skull",
 		},
 	},
 	cinematic_slot = {

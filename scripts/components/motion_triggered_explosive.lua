@@ -257,7 +257,7 @@ MotionTriggeredExplosive._create_explosion = function (self)
 	if self._explosion_template then
 		local explosion_template = self._explosion_template
 
-		Explosion.create_explosion(self._world, self._physics_world, explosion_position, Quaternion.forward(Unit.local_rotation(unit, 1)), unit, explosion_template, power_level, charge_level, attack_type, nil, nil, nil, nil, nil, optional_attacking_unit_owner_unit)
+		Explosion.create_explosion(self._world, self._physics_world, explosion_position, Unit.local_rotation(unit, 1), unit, explosion_template, power_level, charge_level, attack_type, nil, nil, nil, nil, nil, optional_attacking_unit_owner_unit)
 	end
 
 	if self._liquid_area_template then
@@ -280,7 +280,7 @@ MotionTriggeredExplosive._self_destruct = function (self)
 	if self._on_destroy_explosion_template then
 		local explosion_template = self._on_destroy_explosion_template
 
-		Explosion.create_explosion(self._world, self._physics_world, explosion_position, Quaternion.forward(Unit.local_rotation(unit, 1)), unit, explosion_template, power_level, charge_level, attack_type, nil, nil, nil, nil, nil, optional_attacking_unit_owner_unit)
+		Explosion.create_explosion(self._world, self._physics_world, explosion_position, Unit.local_rotation(unit, 1), unit, explosion_template, power_level, charge_level, attack_type, nil, nil, nil, nil, nil, optional_attacking_unit_owner_unit)
 	end
 
 	self:_destroy_unit(unit)

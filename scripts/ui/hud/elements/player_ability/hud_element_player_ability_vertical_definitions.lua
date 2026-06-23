@@ -93,7 +93,9 @@ local widget_definitions = {
 			value = "content/ui/materials/icons/talents/hud/combat_container",
 			style = {
 				material_values = {
+					mask = nil,
 					progress = 0,
+					ramp = nil,
 					talent_icon = nil,
 				},
 				offset = {
@@ -121,6 +123,9 @@ local widget_definitions = {
 			style = {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				material_values = {
+					texture_map = nil,
+				},
 				offset = {
 					0,
 					0,
@@ -145,6 +150,10 @@ local widget_definitions = {
 			style = {
 				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				material_values = {
+					glow_shape = nil,
+					glow_spin = nil,
+				},
 				offset = {
 					0,
 					0,

@@ -3,11 +3,6 @@
 DamageVolumeSettings = DamageVolumeSettings or {}
 DamageVolumeSettings.electrical = {
 	buff_template_name = "damage_volume_electrical",
-	forbidden_keyword = "damage_volume_electrical",
-}
-DamageVolumeSettings.radioactive = {
-	buff_template_name = "damage_volume_radioactive",
-	forbidden_keyword = "damage_volume_radioactive",
 }
 DamageVolumeSettings.burning = {
 	buff_template_name = "damage_volume_burning",

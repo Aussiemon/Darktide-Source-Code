@@ -6,6 +6,7 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local MinionSpawnerSpawnPosition = require("scripts/extension_systems/minion_spawner/utilities/minion_spawner_spawn_position")
@@ -1472,7 +1473,7 @@ steps.incoming_suppression_crouch = {
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
 		local incoming_suppression_cover_unit = step_data.incoming_suppression_cover_unit
 		local enemy_pos = POSITION_LOOKUP[scenario_data.enemy]
-		local cover_pos = Unit.local_position(incoming_suppression_cover_unit, 1)
+		local cover_pos = Unit.world_position(incoming_suppression_cover_unit, 1)
 		local player_pos = POSITION_LOOKUP[player.player_unit]
 		local cover_is_in_front = Vector3.dot(enemy_pos - cover_pos, cover_pos - player_pos)
 
@@ -2184,6 +2185,202 @@ steps.psyker_biomancer_blitz_loop = {
 		end
 	end,
 }
+steps.cryptic_servo_skull_order_kill_prompt = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		_display_info(TrainingGroundsInfoLookup.cryptic_servo_skull_order_kill)
+	end,
+}
+steps.cryptic_servo_skull_order_kill_loop = {
+	events = {
+		"tg_on_attack_execute",
+	},
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		step_data.kill_count = 0
+		step_data.target_kill_count = 1
+		step_data.enemies = {}
+	end,
+	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		local condition_met = step_data.kill_count >= step_data.target_kill_count
+
+		if condition_met then
+			return true
+		end
+
+		local enemies = step_data.enemies
+		local enemies_alive = false
+
+		for i = 1, #enemies do
+			if HEALTH_ALIVE[enemies[i]] then
+				enemies_alive = true
+
+				break
+			end
+		end
+
+		if not enemies_alive and not step_data.ramping_spawn_ids then
+			for i = 1, #enemies do
+				_dissolve_unit(enemies[i], t)
+
+				enemies[i] = nil
+			end
+
+			local reference_unit = scenario_system:get_directional_unit("player_reset")
+
+			step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+				{
+					breed_name = "renegade_sniper",
+					relative_position = Vector3(0, 10, 0),
+					relative_look_direction = -Vector3.forward(),
+				},
+			})
+		end
+
+		return false
+	end,
+	on_event = function (scenario_system, player, scenario_data, step_data, event_name, event_data)
+		local target_killed = _target_died(event_data)
+		local target_is_valid_breed = event_data.breed_or_nil and event_data.breed_or_nil.name == "renegade_sniper"
+
+		if target_is_valid_breed and target_killed then
+			step_data.kill_count = step_data.kill_count + 1
+
+			_set_objective_tracker_value("cryptic_servo_skull_order_kill", step_data.kill_count, true)
+		end
+	end,
+	stop_func = function (scenario_system, player, scenario_data, step_data, t)
+		local enemies = step_data.enemies
+
+		for i = 1, #enemies do
+			_dissolve_unit(enemies[i], t)
+		end
+	end,
+}
+steps.cryptic_servo_skull_hacking_prompt = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		_display_info(TrainingGroundsInfoLookup.cryptic_servo_skull_hacking)
+	end,
+}
+steps.cryptic_servo_skull_hacking_loop = {
+	events = {
+		"tg_hacking_minigame_completed",
+		"tg_hacking_objective_completed",
+	},
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		local level = Managers.state.mission:mission_level()
+
+		Level.trigger_event(level, "event_start_hacking_minigame")
+
+		local hacking_station_position = Vector3(2.0312, 0, 0.3813)
+
+		_spawn_spawn_vfx(scenario_system, hacking_station_position)
+
+		step_data.objective_completed = false
+	end,
+	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		return step_data.objective_completed
+	end,
+	on_event = function (scenario_system, player, scenario_data, step_data, event_name, event_data)
+		if event_name == "tg_hacking_objective_completed" then
+			_set_objective_tracker_value("cryptic_servo_skull_hacking", 1, true)
+
+			step_data.objective_completed = true
+		end
+	end,
+	stop_func = function (scenario_system, player, scenario_data, step_data, t)
+		if not step_data.objective_completed then
+			step_data.objective_completed = true
+
+			local level = Managers.state.mission:mission_level()
+
+			Level.trigger_event(level, "event_cancel_hacking_minigame")
+		end
+
+		local hacking_station_position = Vector3(2.0312, 0, 0.3813)
+
+		_spawn_despawn_vfx(scenario_system, hacking_station_position)
+	end,
+}
+steps.cryptic_servo_skull_empower_prompt = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		_display_info(TrainingGroundsInfoLookup.cryptic_servo_skull_empower)
+	end,
+}
+steps.cryptic_servo_skull_empower_loop = {
+	events = {
+		"tg_on_servo_skull_empowered_finished",
+	},
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		step_data.objective_done = false
+
+		local reference_unit = scenario_system:get_directional_unit("player_reset")
+
+		step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+			{
+				breed_name = "renegade_sniper",
+				relative_position = Vector3(-2, 10, 0),
+				relative_look_direction = -Vector3.forward(),
+			},
+			{
+				breed_name = "renegade_sniper",
+				relative_position = Vector3(2, 10, 0),
+				relative_look_direction = -Vector3.forward(),
+			},
+		})
+	end,
+	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		if step_data.objective_done then
+			return true
+		end
+
+		local enemies = step_data.enemies
+		local enemies_alive = false
+
+		for i = 1, #enemies do
+			if HEALTH_ALIVE[enemies[i]] then
+				enemies_alive = true
+
+				break
+			end
+		end
+
+		if not enemies_alive then
+			for i = 1, #enemies do
+				_dissolve_unit(enemies[i], t)
+
+				enemies[i] = nil
+			end
+
+			local reference_unit = scenario_system:get_directional_unit("player_reset")
+
+			step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+				{
+					breed_name = "renegade_sniper",
+					relative_position = Vector3(-2, 6.75, 0),
+					relative_look_direction = -Vector3.forward(),
+				},
+				{
+					breed_name = "renegade_sniper",
+					relative_position = Vector3(2, 6.75, 0),
+					relative_look_direction = -Vector3.forward(),
+				},
+			})
+		end
+
+		return false
+	end,
+	on_event = function (scenario_system, player, scenario_data, step_data, event_name, event_data)
+		step_data.objective_done = true
+
+		_set_objective_tracker_value("cryptic_servo_skull_empower", 1, true)
+	end,
+	stop_func = function (scenario_system, player, scenario_data, step_data, t)
+		local enemies = step_data.enemies
+
+		for i = 1, #enemies do
+			_dissolve_unit(enemies[i], t)
+		end
+	end,
+}
 steps.psyker_3_ability_loop = {
 	events = {
 		"tg_on_attack_execute",
@@ -2191,7 +2388,8 @@ steps.psyker_3_ability_loop = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
 		step_data.kill_count = 0
 		step_data.target_kill_count = 3
-		step_data.enemies = {}
+		step_data.enemies = Script.new_array(3)
+		step_data.units_killed = Script.new_map(3)
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
 		local condition_met = step_data.kill_count >= step_data.target_kill_count
@@ -2252,10 +2450,15 @@ steps.psyker_3_ability_loop = {
 		return false
 	end,
 	on_event = function (scenario_system, player, scenario_data, step_data, event_name, event_data)
-		if _target_died(event_data) then
+		local attacked_unit = event_data.attacked_unit
+
+		if not step_data.units_killed[attacked_unit] and _target_died(event_data) then
+			step_data.units_killed[attacked_unit] = true
 			step_data.kill_count = step_data.kill_count + 1
 
-			_set_objective_tracker_value("protectorade_grenade", step_data.kill_count, true)
+			local objective_completed = step_data.kill_count >= step_data.target_kill_count
+
+			_set_objective_tracker_value("protectorade_grenade", step_data.kill_count, objective_completed)
 		end
 	end,
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
@@ -2339,7 +2542,7 @@ steps.adamant_companion_spawn = {
 		local position, rotation = _get_relative_position_rotation(player_unit, Vector3(0, 10, 0), -Vector3.forward(), DEFAULT_GROUND_POSITION)
 		local companion_spawner_extension = ScriptUnit.extension(player_unit, "companion_spawner_system")
 
-		companion_spawner_extension:spawn_units(position, rotation)
+		companion_spawner_extension:spawn_companion_units(position, rotation)
 	end,
 }
 steps.adamant_companion_despawn = {
@@ -2347,7 +2550,7 @@ steps.adamant_companion_despawn = {
 		local player_unit = player.player_unit
 		local companion_spawner_extension = ScriptUnit.extension(player_unit, "companion_spawner_system")
 
-		companion_spawner_extension:despawn_units()
+		companion_spawner_extension:despawn_companion_units()
 	end,
 }
 steps.adamant_companion_targeting_loop = {
@@ -3421,6 +3624,366 @@ steps.combat_ability_loop_broker = {
 		end
 	end,
 }
+steps.cryptic_cooldown_regen_prompt = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		_display_info(TrainingGroundsInfoLookup.cooldown_regen_cryptic)
+	end,
+}
+steps.cryptic_cooldown_regen_loop = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		scenario_system:add_scenario_buff(player.player_unit, "tg_player_remove_two_combat_ability_charge", t)
+
+		local ability_extension = ScriptUnit.extension(player.player_unit, "ability_system")
+
+		ability_extension:set_ability_charges("combat_ability", 0)
+
+		local reference_unit = scenario_system:get_directional_unit("player_reset")
+
+		step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+			{
+				breed_name = "renegade_assault",
+				relative_position = Vector3(-1, 5, 0),
+				relative_look_direction = -Vector3.forward(),
+			},
+			{
+				breed_name = "renegade_sniper",
+				relative_position = Vector3(0, 5.5, 0),
+				relative_look_direction = -Vector3.forward(),
+			},
+			{
+				breed_name = "renegade_assault",
+				relative_position = Vector3(1, 5, 0),
+				relative_look_direction = -Vector3.forward(),
+			},
+		})
+	end,
+	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		local ability_extension = ScriptUnit.extension(player.player_unit, "ability_system")
+		local remaining_ability_charges = ability_extension:remaining_ability_charges("combat_ability")
+
+		if remaining_ability_charges > 0 then
+			_set_objective_tracker_value("cooldown_regen_cryptic", 1, true)
+
+			return true
+		end
+
+		local enemies = step_data.enemies
+		local any_enemy_alive = false
+
+		for i = 1, #enemies do
+			if HEALTH_ALIVE[enemies[i]] then
+				any_enemy_alive = true
+
+				break
+			end
+		end
+
+		if not any_enemy_alive then
+			for i = 1, #enemies do
+				_dissolve_unit(enemies[i], t)
+
+				enemies[i] = nil
+			end
+
+			local reference_unit = scenario_system:get_directional_unit("player_reset")
+
+			step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+				{
+					breed_name = "renegade_assault",
+					relative_position = Vector3(-1, 5, 0),
+					relative_look_direction = -Vector3.forward(),
+				},
+				{
+					breed_name = "renegade_sniper",
+					relative_position = Vector3(0, 5.5, 0),
+					relative_look_direction = -Vector3.forward(),
+				},
+				{
+					breed_name = "renegade_assault",
+					relative_position = Vector3(1, 5, 0),
+					relative_look_direction = -Vector3.forward(),
+				},
+			})
+		end
+
+		return false
+	end,
+	stop_func = function (scenario_system, player, scenario_data, step_data, t)
+		local enemies = step_data.enemies
+
+		for i = 1, #enemies do
+			_dissolve_unit(enemies[i], t)
+		end
+
+		local current_scenario = scenario_system:current_scenario()
+
+		if current_scenario then
+			scenario_system:remove_scenario_buff(player.player_unit, "tg_player_remove_two_combat_ability_charge", t)
+		end
+	end,
+}
+steps.combat_ability_use_prompt_cryptic = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		_display_info(TrainingGroundsInfoLookup.combat_ability_use_cryptic)
+	end,
+}
+steps.combat_ability_use_loop_cryptic = {
+	events = {
+		"tg_on_combat_ability",
+	},
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		scenario_system:add_scenario_buff(player.player_unit, "tg_player_remove_two_combat_ability_charge", t)
+
+		local ability_extension = ScriptUnit.extension(player.player_unit, "ability_system")
+
+		ability_extension:set_ability_charges("combat_ability", 0)
+
+		step_data.ready_for_ability_use = false
+		step_data.objective_done = false
+	end,
+	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		local ability_extension = ScriptUnit.extension(player.player_unit, "ability_system")
+		local remaining_ability_charges = ability_extension:remaining_ability_charges("combat_ability")
+
+		if remaining_ability_charges <= 0 and not step_data.objective_done then
+			step_data.ready_for_ability_use = true
+
+			ability_extension:reduce_ability_cooldown_percentage("combat_ability", 1)
+		end
+
+		return step_data.objective_done
+	end,
+	on_event = function (scenario_system, player, scenario_data, step_data, event_name, event_data)
+		_set_objective_tracker_value("combat_ability_use", 1, true)
+
+		step_data.objective_done = true
+	end,
+	stop_func = function (scenario_system, player, scenario_data, step_data, t)
+		local current_scenario = scenario_system:current_scenario()
+
+		if current_scenario then
+			scenario_system:remove_scenario_buff(player.player_unit, "tg_player_remove_two_combat_ability_charge", t)
+		end
+	end,
+}
+steps.combat_ability_prompt_cryptic = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		_display_info(TrainingGroundsInfoLookup.combat_ability_cryptic_one_charge)
+	end,
+}
+steps.combat_ability_loop_cryptic = {
+	events = {
+		"tg_on_explosion_triggered",
+	},
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		local combat_ability_explosion_template_ranges = {
+			ExplosionTemplates.cryptic_discharge_aoe_electrocution_base.radius,
+			ExplosionTemplates.cryptic_discharge_aoe_electrocution_base_two.radius,
+			ExplosionTemplates.cryptic_discharge_aoe_electrocution_base_three.radius,
+		}
+		local combat_ability_charges_buffs_per_step = {
+			"tg_player_remove_two_combat_ability_charge",
+			"tg_player_remove_one_combat_ability_charge",
+		}
+		local objectives_per_step = {
+			objective_lookup_name = {
+				"combat_ability_cryptic_1",
+				"combat_ability_cryptic_2",
+				"combat_ability_cryptic_3",
+			},
+			display_info_lookup_name = {
+				"combat_ability_cryptic_one_charge",
+				"combat_ability_cryptic_two_charges",
+				"combat_ability_cryptic_three_charges",
+			},
+		}
+
+		scenario_system:add_scenario_buff(player.player_unit, combat_ability_charges_buffs_per_step[1], t)
+
+		step_data.current_step_end_t = nil
+		step_data.next_step_start_t = nil
+		step_data.current_ability_charges_step_index = 1
+		step_data.ability_charges_step_data = {}
+
+		local ability_extension = ScriptUnit.extension(player.player_unit, "ability_system")
+
+		ability_extension:set_ability_charges("combat_ability", 0)
+
+		for index, explosion_template_range in ipairs(combat_ability_explosion_template_ranges) do
+			local ability_step_data = {
+				buff_to_add = combat_ability_charges_buffs_per_step[index],
+				target_ability_charges_used = index,
+				enemies = {
+					{
+						breed_name = "chaos_newly_infected",
+						relative_position = Vector3Box(Vector3.multiply(Vector3.normalize(Vector3(0, 1, 0)), explosion_template_range - 1)),
+					},
+					{
+						breed_name = "chaos_newly_infected",
+						relative_position = Vector3Box(Vector3.multiply(Vector3.normalize(Vector3(1, 1, 0)), explosion_template_range - 1)),
+					},
+					{
+						breed_name = "chaos_newly_infected",
+						relative_position = Vector3Box(Vector3.multiply(Vector3.normalize(Vector3(-1, 1, 0)), explosion_template_range - 1)),
+					},
+				},
+				objective_lookup_name = objectives_per_step.objective_lookup_name[index],
+				display_info_lookup_name = objectives_per_step.display_info_lookup_name[index],
+			}
+
+			table.insert(step_data.ability_charges_step_data, ability_step_data)
+		end
+
+		local enemies_to_spawn = {}
+
+		for _, enemy_to_spawn_data in ipairs(step_data.ability_charges_step_data[step_data.current_ability_charges_step_index].enemies) do
+			table.insert(enemies_to_spawn, {
+				breed_name = enemy_to_spawn_data.breed_name,
+				relative_position = enemy_to_spawn_data.relative_position:unbox(),
+				relative_look_direction = -Vector3.forward(),
+			})
+		end
+
+		local reference_unit = scenario_system:get_directional_unit("player_reset")
+
+		step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, enemies_to_spawn)
+	end,
+	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		if step_data.current_ability_charges_step_index > #step_data.ability_charges_step_data then
+			return true
+		end
+
+		if step_data.current_step_end_t and t < step_data.current_step_end_t then
+			return false
+		elseif step_data.current_step_end_t and t >= step_data.current_step_end_t then
+			step_data.current_step_end_t = nil
+			step_data.next_step_start_t = t + 2
+
+			local current_step_index = step_data.current_ability_charges_step_index
+			local current_step_data = step_data.ability_charges_step_data[current_step_index]
+
+			step_data.current_ability_charges_step_index = current_step_index + 1
+
+			if current_step_data.buff_to_add then
+				scenario_system:remove_scenario_buff(player.player_unit, current_step_data.buff_to_add, t)
+			end
+
+			local next_step_data = step_data.ability_charges_step_data[step_data.current_ability_charges_step_index]
+
+			if next_step_data then
+				_hide_info()
+
+				local cleaning_up = scenario_data.cleaning_up
+
+				_remove_objective_tracker(nil, not cleaning_up)
+				_display_info(TrainingGroundsInfoLookup[next_step_data.display_info_lookup_name])
+
+				local next_buff_to_add = next_step_data.buff_to_add
+
+				if next_buff_to_add then
+					scenario_system:add_scenario_buff(player.player_unit, next_buff_to_add, t)
+				end
+			end
+		end
+
+		if step_data.next_step_start_t and t < step_data.next_step_start_t then
+			return false
+		elseif step_data.next_step_start_t and t >= step_data.next_step_start_t then
+			step_data.next_step_start_t = nil
+		end
+
+		local ability_extension = ScriptUnit.extension(player.player_unit, "ability_system")
+
+		if ability_extension:remaining_ability_charges("combat_ability") < step_data.current_ability_charges_step_index then
+			ability_extension:reduce_ability_cooldown_percentage("combat_ability", step_data.current_ability_charges_step_index)
+		end
+
+		local enemies = step_data.enemies
+		local all_enemies_alive = #enemies > 0
+
+		for i = 1, #enemies do
+			if not HEALTH_ALIVE[enemies[i]] then
+				all_enemies_alive = false
+
+				break
+			end
+		end
+
+		if not all_enemies_alive then
+			for i = 1, #enemies do
+				_dissolve_unit(enemies[i], t)
+
+				enemies[i] = nil
+			end
+
+			local enemies_to_spawn = {}
+
+			for _, enemy_to_spawn_data in ipairs(step_data.ability_charges_step_data[step_data.current_ability_charges_step_index].enemies) do
+				table.insert(enemies_to_spawn, {
+					breed_name = enemy_to_spawn_data.breed_name,
+					relative_position = enemy_to_spawn_data.relative_position:unbox(),
+					relative_look_direction = -Vector3.forward(),
+				})
+			end
+
+			local reference_unit = scenario_system:get_directional_unit("player_reset")
+
+			step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, enemies_to_spawn)
+		end
+
+		return false
+	end,
+	on_event = function (scenario_system, player, scenario_data, step_data, event_name, event_data)
+		if step_data.current_step_end_t or step_data.next_step_start_t then
+			return
+		end
+
+		local current_step_index = step_data.current_ability_charges_step_index
+		local current_step_data = step_data.ability_charges_step_data[current_step_index]
+		local explosion_template = event_data.explosion_template
+		local num_hit_units = event_data.num_hit_units
+		local hit_all_enemies = num_hit_units >= #current_step_data.enemies
+
+		_set_objective_tracker_value(current_step_data.objective_lookup_name, num_hit_units, hit_all_enemies)
+
+		local t = FixedFrame.get_latest_fixed_time()
+		local enemies = step_data.enemies
+
+		if hit_all_enemies then
+			for i = 1, #enemies do
+				_dissolve_unit(enemies[i], t)
+
+				enemies[i] = nil
+			end
+
+			step_data.current_step_end_t = t + 1.5
+
+			local ability_extension = ScriptUnit.extension(player.player_unit, "ability_system")
+
+			ability_extension:set_ability_charges("combat_ability", 0)
+		end
+	end,
+	stop_func = function (scenario_system, player, scenario_data, step_data, t)
+		local enemies = step_data.enemies
+
+		for i = 1, #enemies do
+			_dissolve_unit(enemies[i], t)
+		end
+
+		local current_scenario = scenario_system:current_scenario()
+
+		if not current_scenario then
+			return
+		end
+
+		local current_step_index = step_data.current_ability_charges_step_index
+		local current_step_data = step_data.ability_charges_step_data[current_step_index]
+
+		if current_step_data and current_step_data.buff_to_add then
+			scenario_system:remove_scenario_buff(player.player_unit, current_step_data.buff_to_add, t)
+		end
+	end,
+}
 steps.combat_ability_loop_veteran_ranger = {
 	events = {
 		"tg_on_attack_execute",
@@ -3784,12 +4347,16 @@ steps.combat_ability_loop_psyker_biomancer = {
 		step_data.knock_back_count = 0
 		step_data.target_knock_back_count = 5
 
+		local warp_charge_increase_template = {
+			use_charge = false,
+			warp_charge_percent = 0.7,
+		}
 		local player_unit = player.player_unit
 		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 		local warp_charge_component = unit_data_extension:write_component("warp_charge")
 
 		WarpCharge.decrease_immediate(1, warp_charge_component, player_unit)
-		WarpCharge.decrease_immediate(-0.7, warp_charge_component, player_unit)
+		WarpCharge.increase_immediate(t, nil, warp_charge_component, warp_charge_increase_template, player_unit, nil, true)
 
 		step_data.current_percentage = 0.7
 		scenario_data.enemies = {}
@@ -4073,6 +4640,11 @@ steps.weapon_special_prompt_forcesword = {
 steps.weapon_special_prompt_ogrynknife = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
 		_display_info(TrainingGroundsInfoLookup.weapon_special_ogrynknife)
+	end,
+}
+steps.weapon_special_prompt_powermaul_p3 = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		_display_info(TrainingGroundsInfoLookup.weapon_special_powermaul_p3)
 	end,
 }
 steps.m1_chain_attack_prompt = {

@@ -11,6 +11,8 @@ local AttackIntensity = require("scripts/utilities/attack_intensity")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local ChainLightning = require("scripts/utilities/action/chain_lightning")
+local ChainLightningAction = require("scripts/extension_systems/weapon/actions/utilities/chain_lightning_action")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local HazardProp = require("scripts/utilities/level_props/hazard_prop")
 local Health = require("scripts/utilities/health")
@@ -19,6 +21,7 @@ local HitZone = require("scripts/utilities/attack/hit_zone")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local LagCompensation = require("scripts/utilities/lag_compensation")
 local MinionDeath = require("scripts/utilities/minion_death")
+local MinionState = require("scripts/utilities/minion_state")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local Stamina = require("scripts/utilities/attack/stamina")
 local SweepSplineExported = require("scripts/extension_systems/weapon/actions/utilities/sweep_spline_exported")
@@ -26,9 +29,13 @@ local SweepStickyness = require("scripts/utilities/action/sweep_stickyness")
 local Weakspot = require("scripts/utilities/attack/weakspot")
 local WieldableSlotScripts = require("scripts/extension_systems/visual_loadout/utilities/wieldable_slot_scripts")
 local attack_results = AttackSettings.attack_results
+local buff_group_keywords = BuffSettings.group_keywords
+local buff_keywords = BuffSettings.keywords
+local hit_anim_types = ActionSweepSettings.hit_anim_types
 local melee_attack_strengths = AttackSettings.melee_attack_strength
 local proc_events = BuffSettings.proc_events
-local buff_keywords = BuffSettings.keywords
+local BROADPHASE_RESULTS = {}
+local _on_chain_node_add_func, _on_chain_node_remove_func
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local POWERED_WWISE_SWITCH = {
 	[false] = "false",
@@ -100,10 +107,30 @@ local ActionSweep = class("ActionSweep", "ActionWeaponBase")
 ActionSweep.init = function (self, action_context, action_params, action_settings)
 	ActionSweep.super.init(self, action_context, action_params, action_settings)
 
+	if action_settings.weapon_chain_lightning_template then
+		local weapon_tweak_templates_component = self._weapon_tweak_templates_component
+
+		weapon_tweak_templates_component.weapon_chain_lightning_template_name = action_settings.weapon_chain_lightning_template
+
+		local chain_lightning_action_data = {}
+		local weapon_chain_lightning_template = self._weapon_extension:weapon_chain_lightning_template()
+
+		ChainLightningAction.init_chain_lightning(chain_lightning_action_data, self._weapon, self._weapon_template, action_context, action_settings, weapon_chain_lightning_template, _on_chain_node_add_func, _on_chain_node_remove_func, "target_alive_and_electrocuted_or_previous_electrocuted")
+
+		self._chain_lightning_action_data = chain_lightning_action_data
+		self._do_chain_lightning_on_sweep = true
+		self._has_started_chain_lightning = false
+	end
+
+	local weapon_template = self._weapon_template
+	local weapon_special_charge_data = weapon_template and weapon_template.weapon_special_tweak_data
+
+	self._weapon_special_tweak_data = weapon_special_charge_data
 	self._sweep_splines, self._all_sweeps_aborted_mask, self._hit_units, self._sweep_process_mode, self._uses_matrix_data = self:_init_splines(action_settings)
 
 	local unit_data_extension = action_context.unit_data_extension
 
+	self._action_module_charge_component = unit_data_extension:write_component("action_module_charge")
 	self._action_sweep_component = unit_data_extension:write_component("action_sweep")
 	self._weapon_action_component = unit_data_extension:write_component("weapon_action")
 	self._dodge_character_state_component = unit_data_extension:write_component("dodge_character_state")
@@ -174,6 +201,10 @@ end
 ActionSweep.start = function (self, action_settings, t, time_scale, action_start_params)
 	ActionSweep.super.start(self, action_settings, t, time_scale, action_start_params)
 
+	if self._is_server and self._do_chain_lightning_on_shoot then
+		ChainLightningAction.action_start(self._chain_lightning_action_data)
+	end
+
 	self._weapon_tweak_templates_component.charge_template_name = action_settings.charge_template or self._weapon_template.special_charge_template or "none"
 	self._auto_completed = action_start_params.auto_completed
 
@@ -194,8 +225,15 @@ ActionSweep.start = function (self, action_settings, t, time_scale, action_start
 	self._time_before_processing_saved_entries = 0
 
 	local damage_profile, damage_profile_special_active = self:_hit_mass_damage_profile(1)
-	local is_critical_strike = self._critical_strike_component.is_active
 	local charge_level = 1
+
+	if action_settings.use_charge then
+		charge_level = self._action_module_charge_component.charge_level
+	end
+
+	self._charge_level = charge_level
+
+	local is_critical_strike = self._critical_strike_component.is_active
 	local power_level = action_settings.power_level or DEFAULT_POWER_LEVEL
 
 	self._max_hit_mass = self:_calculate_max_hit_mass(damage_profile, power_level, charge_level, is_critical_strike)
@@ -323,6 +361,13 @@ ActionSweep.server_correction_occurred = function (self)
 	local action_settings = self._action_settings
 	local power_level = action_settings.power_level or DEFAULT_POWER_LEVEL
 	local charge_level = 1
+
+	if action_settings.use_charge then
+		charge_level = self._action_module_charge_component.charge_level
+	end
+
+	self._charge_level = charge_level
+
 	local damage_profile, damage_profile_special_active = self:_damage_profile(1)
 
 	self._max_hit_mass = self:_calculate_max_hit_mass(damage_profile, power_level, charge_level)
@@ -334,6 +379,12 @@ ActionSweep.server_correction_occurred = function (self)
 end
 
 ActionSweep.finish = function (self, reason, data, t, time_in_action)
+	if self._do_chain_lightning_on_sweep then
+		ChainLightningAction.action_finish(self._chain_lightning_action_data)
+
+		self._has_started_chain_lightning = false
+	end
+
 	for i = 1, #self._hit_units do
 		table.clear(self._hit_units[i])
 	end
@@ -528,13 +579,14 @@ ActionSweep._start_hit_stickyness = function (self, hit_stickyness_settings, t, 
 	if start_anim_event then
 		local variable_name = "sticky_time"
 		local variable_index = Unit.animation_find_variable(self._first_person_unit, variable_name)
+		local start_anim_event_3p = hit_stickyness_settings.start_anim_event_3p or start_anim_event
 
 		if variable_index then
 			self._animation_extension:anim_event_with_variable_floats_1p(start_anim_event, variable_name, hit_sticky_duration)
-			self._animation_extension:anim_event_with_variable_floats(start_anim_event, variable_name, hit_sticky_duration)
+			self._animation_extension:anim_event_with_variable_floats(start_anim_event_3p, variable_name, hit_sticky_duration)
 		else
 			self._animation_extension:anim_event_1p(start_anim_event)
-			self._animation_extension:anim_event(start_anim_event)
+			self._animation_extension:anim_event(start_anim_event_3p)
 		end
 	end
 
@@ -721,7 +773,7 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 					damage_profile = normal_damage_profile
 				end
 
-				local damage_dealt, attack_result, damage_efficiency, _, hit_weakspot = Attack.execute(stick_to_unit, damage_profile, "power_level", DEFAULT_POWER_LEVEL, "target_index", 1, "target_number", 1, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "hit_zone_name", hit_zone_name, "attacking_unit", attacking_unit, "hit_actor", stick_to_actor, "attack_type", attack_type, "herding_template", herding_template, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", self._weapon.item, "wounds_shape", wounds_shape)
+				local damage_dealt, attack_result, damage_efficiency, _, hit_weakspot = Attack.execute(stick_to_unit, damage_profile, "power_level", DEFAULT_POWER_LEVEL, "charge_level", self._charge_level, "target_index", 1, "target_number", 1, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "hit_zone_name", hit_zone_name, "attacking_unit", attacking_unit, "hit_actor", stick_to_actor, "attack_type", attack_type, "herding_template", herding_template, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", self._weapon.item, "wounds_shape", wounds_shape)
 
 				if attack_result == attack_results.died then
 					self._num_killed_enemies = self._num_killed_enemies + 1
@@ -792,7 +844,7 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 				local wounds_shape = action_settings.wounds_shape_special_active
 				local player_rotation = self._first_person_component.rotation
 				local attack_direction = Vector3.normalize(Vector3.flat(Quaternion.forward(player_rotation)))
-				local damage_dealt, attack_result, damage_efficiency, _, _ = Attack.execute(stick_to_unit, damage.dodge_damage_profile, "power_level", DEFAULT_POWER_LEVEL, "target_index", 1, "target_number", 1, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "hit_zone_name", hit_zone_name, "attacking_unit", player_unit, "hit_actor", stick_to_actor, "attack_type", attack_type, "herding_template", nil, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", self._weapon.item, "wounds_shape", wounds_shape)
+				local damage_dealt, attack_result, damage_efficiency, _, _ = Attack.execute(stick_to_unit, damage.dodge_damage_profile, "power_level", DEFAULT_POWER_LEVEL, "charge_level", self._charge_level, "target_index", 1, "target_number", 1, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "hit_zone_name", hit_zone_name, "attacking_unit", player_unit, "hit_actor", stick_to_actor, "attack_type", attack_type, "herding_template", nil, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", self._weapon.item, "wounds_shape", wounds_shape)
 				local hit_normal
 
 				ImpactEffect.play(stick_to_unit, stick_to_actor, damage_dealt, damage_type, hit_zone_name, attack_result, hit_world_position, hit_normal, attack_direction, player_unit, stickyness_impact_fx_data, nil, nil, damage_efficiency, damage.dodge_damage_profile)
@@ -1391,6 +1443,12 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 	self._amount_of_mass_hit = amount_of_mass_hit
 	self._hit_weakspot = self._hit_weakspot or hit_weakspot
 
+	local can_do_chain = self._do_chain_lightning_on_sweep and (not action_settings.trigger_chain_while_special_active_only or is_special_active)
+
+	if can_do_chain and not self._has_started_chain_lightning then
+		self:_try_make_chain_from_sweep_hit(hit_unit, result, abort_attack, t)
+	end
+
 	return abort_attack, armor_aborts_attack
 end
 
@@ -1426,7 +1484,7 @@ ActionSweep._do_damage_to_unit = function (self, damage_profile, hit_unit, hit_a
 	end
 
 	local attack_type = AttackSettings.attack_types.melee
-	local damage, result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(hit_unit, damage_profile, "target_index", target_index, "target_number", num_hit_enemies, "power_level", power_level, "hit_world_position", hit_position, "attack_direction", attack_direction, "hit_zone_name", hit_zone_name_or_nil, "instakill", instakill, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", attack_type, "herding_template", herding_template, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "auto_completed_action", auto_completed_action, "item", self._weapon.item, "wounds_shape", wounds_shape)
+	local damage, result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(hit_unit, damage_profile, "target_index", target_index, "target_number", num_hit_enemies, "power_level", power_level, "charge_level", self._charge_level, "hit_world_position", hit_position, "attack_direction", attack_direction, "hit_zone_name", hit_zone_name_or_nil, "instakill", instakill, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", attack_type, "herding_template", herding_template, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "auto_completed_action", auto_completed_action, "item", self._weapon.item, "wounds_shape", wounds_shape)
 
 	ImpactEffect.play(hit_unit, hit_actor, damage, damage_type, hit_zone_name_or_nil, result, hit_position, hit_normal, attack_direction, player_unit, impact_fx_data, abort_attack, attack_type, damage_efficiency, damage_profile)
 
@@ -1570,37 +1628,66 @@ ActionSweep._weapon_half_extents = function (self, weapon_template, action_setti
 	return weapon_half_extents
 end
 
+local DEFAULT_HIT_ANIMS = hit_anim_types.default
+local SPECIAL_ACTIVE_HIT_ANIMS = hit_anim_types.special_active
+
 ActionSweep._play_hit_animations = function (self, action_settings, abort_attack, armor_aborts_attack, special_active)
-	local first_person_hit_anim, third_person_hit_anim
+	local anim_event_1p, anim_event_3p
 
 	if special_active and action_settings.no_hit_stop_on_active then
 		return
 	end
 
+	local hit_anims = action_settings.hit_anims
+
+	if hit_anims then
+		hit_anims = hit_anims[special_active and SPECIAL_ACTIVE_HIT_ANIMS or DEFAULT_HIT_ANIMS]
+
+		if abort_attack and armor_aborts_attack then
+			anim_event_1p = hit_anims.hit_armor or hit_anims.hit_stop
+			anim_event_3p = hit_anims.hit_armor_3p or hit_anims.hit_stop_3p or anim_event_1p
+		elseif abort_attack then
+			anim_event_1p = hit_anims.hit_stop
+			anim_event_3p = hit_anims.hit_stop or anim_event_1p
+		end
+
+		local anim_ext = self._animation_extension
+
+		if anim_event_1p then
+			anim_ext:anim_event_1p(anim_event_1p)
+		end
+
+		if anim_event_3p then
+			anim_ext:anim_event(anim_event_3p)
+		end
+
+		return
+	end
+
 	if abort_attack and special_active and armor_aborts_attack then
-		first_person_hit_anim = action_settings.special_active_hit_stop_armor_anim or action_settings.hit_stop_armor_anim or action_settings.special_active_hit_stop_anim or action_settings.hit_stop_anim
-		third_person_hit_anim = action_settings.special_active_hit_stop_armor_anim_3p or action_settings.hit_stop_armor_anim or action_settings.special_active_hit_stop_anim_3p or action_settings.hit_stop_anim
+		anim_event_1p = action_settings.special_active_hit_stop_armor_anim or action_settings.hit_stop_armor_anim or action_settings.special_active_hit_stop_anim or action_settings.hit_stop_anim
+		anim_event_3p = action_settings.special_active_hit_stop_armor_anim_3p or action_settings.hit_stop_armor_anim or action_settings.special_active_hit_stop_anim_3p or action_settings.hit_stop_anim
 	elseif abort_attack and special_active then
-		first_person_hit_anim = action_settings.special_active_hit_stop_anim or action_settings.hit_stop_anim
-		third_person_hit_anim = action_settings.special_active_hit_stop_anim_3p or action_settings.hit_stop_anim
+		anim_event_1p = action_settings.special_active_hit_stop_anim or action_settings.hit_stop_anim
+		anim_event_3p = action_settings.special_active_hit_stop_anim_3p or action_settings.hit_stop_anim
 	elseif armor_aborts_attack then
-		first_person_hit_anim = action_settings.hit_armor_anim
-		third_person_hit_anim = action_settings.hit_stop_anim
+		anim_event_1p = action_settings.hit_armor_anim
+		anim_event_3p = action_settings.hit_stop_anim
 	elseif abort_attack then
-		first_person_hit_anim = action_settings.first_person_hit_stop_anim or action_settings.hit_stop_anim
-		third_person_hit_anim = action_settings.hit_stop_anim
+		anim_event_1p = action_settings.first_person_hit_stop_anim or action_settings.hit_stop_anim
+		anim_event_3p = action_settings.hit_stop_anim
 	else
-		first_person_hit_anim = action_settings.first_person_hit_anim
+		anim_event_1p = action_settings.anim_event_1p
 	end
 
 	local anim_ext = self._animation_extension
 
-	if first_person_hit_anim then
-		anim_ext:anim_event_1p(first_person_hit_anim)
+	if anim_event_1p then
+		anim_ext:anim_event_1p(anim_event_1p)
 	end
 
-	if third_person_hit_anim then
-		anim_ext:anim_event(third_person_hit_anim)
+	if anim_event_3p then
+		anim_ext:anim_event(anim_event_3p)
 	end
 end
 
@@ -1661,6 +1748,90 @@ ActionSweep._damage_type = function (self, sweep_index)
 	end
 
 	return damage_type, damage_type_special_active, damage_type_on_abort, damage_type_special_active_on_abort
+end
+
+ActionSweep._try_make_chain_from_sweep_hit = function (self, hit_unit, result, abort_attack, t)
+	local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
+	local target_breed = unit_data_extension and unit_data_extension:breed()
+	local is_minion = target_breed and Breed.is_minion(target_breed) and not Health.is_ragdolled(hit_unit) or false
+	local root_target_unit
+	local is_valid_attack_result = not Health.is_ragdolled(hit_unit) and result == attack_results.damaged or result == attack_results.blocked or result == attack_results.shield_blocked or result == attack_results.toughness_absorbed or result == attack_results.shield_absorbed
+
+	if is_minion and HEALTH_ALIVE[hit_unit] and is_valid_attack_result then
+		root_target_unit = hit_unit
+	elseif is_minion and result == attack_results.died then
+		root_target_unit = self:_try_find_closest_enemy_to_furthest_dead_enemy_hit(hit_unit, t)
+
+		if self._is_server and root_target_unit then
+			Managers.stats:record_private("hook_weapon_chain_lightning_jump_triggered", self._player)
+		end
+	end
+
+	if root_target_unit then
+		self._has_started_chain_lightning = true
+
+		ChainLightningAction.make_chain_from_target(self._chain_lightning_action_data, root_target_unit, t)
+	end
+end
+
+ActionSweep._try_find_closest_enemy_to_furthest_dead_enemy_hit = function (self, last_hit_minion, t)
+	local player_unit = self._player_unit
+	local action_settings = self._action_settings
+	local broadphase_system = Managers.state.extension:system("broadphase_system")
+	local side_system = Managers.state.extension:system("side_system")
+	local side = side_system.side_by_unit[player_unit]
+	local enemy_side_names = side:relation_side_names("enemy")
+	local broadphase = broadphase_system.broadphase
+	local valid_target_unit
+
+	table.clear(BROADPHASE_RESULTS)
+
+	local stat_buffs = self._buff_extension:stat_buffs()
+	local chain_settings = action_settings.chain_settings
+	local time_in_action = t - self._weapon_action_component.start_t
+	local _, _, _, _, _, radius, _ = ChainLightning.targeting_parameters(time_in_action, chain_settings, stat_buffs)
+	local broadphase_position = POSITION_LOOKUP[last_hit_minion]
+	local num_results = broadphase.query(broadphase, broadphase_position, radius, BROADPHASE_RESULTS, enemy_side_names)
+
+	for i = 1, num_results do
+		local target_unit = BROADPHASE_RESULTS[i]
+
+		if target_unit ~= last_hit_minion and HEALTH_ALIVE[target_unit] then
+			local target_unit_buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
+			local is_electrocuted = MinionState.is_electrocuted(target_unit_buff_extension, buff_group_keywords.electrocuted)
+
+			if is_electrocuted then
+				valid_target_unit = target_unit
+
+				break
+			else
+				valid_target_unit = valid_target_unit or target_unit
+			end
+		end
+	end
+
+	return valid_target_unit
+end
+
+function _on_chain_node_add_func(node, context)
+	local target_unit = node:value("unit")
+	local start_t = node:value("start_t") or 0
+
+	context.hit_units[target_unit] = true
+
+	local target_buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
+
+	if target_buff_extension then
+		local target_buff = "arc_spread_target"
+
+		target_buff_extension:add_internally_controlled_buff(target_buff, start_t, "owner_unit", context.player_unit, "source_item", context.source_item)
+	end
+end
+
+function _on_chain_node_remove_func(node, context)
+	local target_unit = node:value("unit")
+
+	context.hit_units[target_unit] = nil
 end
 
 function _dot(direction, rotation)

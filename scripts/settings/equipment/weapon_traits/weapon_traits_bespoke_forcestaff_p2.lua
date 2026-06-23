@@ -286,7 +286,7 @@ templates.weapon_trait_bespoke_forcestaff_p2_burned_targets_receive_rending_debu
 		rending_percentage = {
 			format_type = "percentage",
 			find_value = {
-				buff_template_name = "rending_debuff",
+				buff_template_name = "rending_burn_debuff",
 				find_value_type = "buff_template",
 				path = {
 					"stat_buffs",
@@ -297,7 +297,7 @@ templates.weapon_trait_bespoke_forcestaff_p2_burned_targets_receive_rending_debu
 		duration = {
 			format_type = "number",
 			find_value = {
-				buff_template_name = "rending_debuff",
+				buff_template_name = "rending_burn_debuff",
 				find_value_type = "buff_template",
 				path = {
 					"duration",
@@ -307,7 +307,7 @@ templates.weapon_trait_bespoke_forcestaff_p2_burned_targets_receive_rending_debu
 		max_stacks = {
 			format_type = "number",
 			find_value = {
-				buff_template_name = "rending_debuff",
+				buff_template_name = "rending_burn_debuff",
 				find_value_type = "buff_template",
 				path = {
 					"max_stacks",

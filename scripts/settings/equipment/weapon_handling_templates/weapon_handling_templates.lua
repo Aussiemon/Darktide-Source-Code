@@ -17,6 +17,10 @@ local saw_crit_bump = {
 	lerp_perfect = 0.06,
 }
 local shivs_crit_bump = 0.125
+local transonic_crit_bump = {
+	lerp_basic = 0,
+	lerp_perfect = 0.08,
+}
 local weapon_handling_templates = {
 	time_scale_0_5 = {
 		time_scale = lerpable_timescale(0.5),
@@ -139,6 +143,24 @@ local weapon_handling_templates = {
 		time_scale = lerpable_timescale(1.2),
 		critical_strike = {
 			chance_modifier = shivs_crit_bump,
+		},
+	},
+	time_scale_0_9_transonic = {
+		time_scale = lerpable_timescale(0.9),
+		critical_strike = {
+			chance_modifier = transonic_crit_bump,
+		},
+	},
+	time_scale_1_transonic = {
+		time_scale = lerpable_timescale(1),
+		critical_strike = {
+			chance_modifier = transonic_crit_bump,
+		},
+	},
+	time_scale_1_1_transonic = {
+		time_scale = lerpable_timescale(1.1),
+		critical_strike = {
+			chance_modifier = transonic_crit_bump,
 		},
 	},
 	time_scale_0_75_ninja = {
@@ -631,6 +653,36 @@ local weapon_handling_templates = {
 			max_critical_shots = 3,
 		},
 	},
+	arc_rifle_p1_m1_full_auto = {
+		fire_rate = {
+			auto_fire_time = 0.385,
+			auto_fire_time_haptics = 0.15384615384615385,
+			fire_time = 0,
+			max_shots = nil,
+		},
+		critical_strike = {
+			max_critical_shots = 1,
+			chance_modifier = {
+				lerp_basic = 0.02,
+				lerp_perfect = 0.1,
+			},
+		},
+	},
+	arc_rifle_p1_m1_braced = {
+		fire_rate = {
+			auto_fire_time = 0.385,
+			auto_fire_time_haptics = 0.15384615384615385,
+			fire_time = 0,
+			max_shots = nil,
+		},
+		critical_strike = {
+			max_critical_shots = 1,
+			chance_modifier = {
+				lerp_basic = 0.02,
+				lerp_perfect = 0.1,
+			},
+		},
+	},
 	dual_autopistols_full_auto = {
 		fire_rate = {
 			fire_time = 0,
@@ -755,6 +807,19 @@ local weapon_handling_templates = {
 		time_scale = {
 			lerp_basic = 0.2,
 			lerp_perfect = 1,
+		},
+	},
+	phosphor_pistol_single_shot = {
+		fire_rate = {
+			auto_fire_time = nil,
+			fire_time = 0,
+			max_shots = nil,
+		},
+		critical_strike = {
+			chance_modifier = {
+				lerp_basic = 0.05,
+				lerp_perfect = 0.25,
+			},
 		},
 	},
 	ogryn_heavystubber_p1_m1_full_auto = {
@@ -951,6 +1016,13 @@ local weapon_handling_templates = {
 		},
 	},
 	needlepistol_burst = {
+		fire_rate = {
+			auto_fire_time = nil,
+			fire_time = 0,
+			max_shots = 1,
+		},
+	},
+	galvanic_rifle_p1_m1 = {
 		fire_rate = {
 			auto_fire_time = nil,
 			fire_time = 0,

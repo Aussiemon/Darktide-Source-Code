@@ -12,7 +12,8 @@ ActionTargetFinder.init = function (self, action_context, action_params, action_
 	local player_unit = self._player_unit
 	local unit_data_extension = action_context.unit_data_extension
 	local target_finder_module_class_name = action_settings.target_finder_module_class_name
-	local action_module_target_finder_component = unit_data_extension:write_component("action_module_target_finder")
+	local module_target_component_name = action_settings.module_target_component_name or "action_module_target_finder"
+	local action_module_target_finder_component = unit_data_extension:write_component(module_target_component_name)
 
 	self._target_finder_module = ActionModules[target_finder_module_class_name]:new(self._is_server, self._physics_world, player_unit, action_module_target_finder_component, action_settings)
 

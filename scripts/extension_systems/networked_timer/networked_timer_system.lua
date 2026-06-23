@@ -3,7 +3,7 @@
 require("scripts/extension_systems/networked_timer/networked_timer_extension")
 
 local NetworkedTimerSystem = class("NetworkedTimerSystem", "ExtensionSystemBase")
-local RPCS = {
+local CLIENT_RPCS = {
 	"rpc_networked_timer_sync_state",
 	"rpc_networked_timer_start",
 	"rpc_networked_timer_pause",
@@ -20,11 +20,16 @@ NetworkedTimerSystem.init = function (self, context, system_init_data, ...)
 
 	self._network_event_delegate = context.network_event_delegate
 
-	self._network_event_delegate:register_session_events(self, unpack(RPCS))
+	if not self._is_server then
+		self._network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
+	end
 end
 
 NetworkedTimerSystem.destroy = function (self)
-	self._network_event_delegate:unregister_events(unpack(RPCS))
+	if not self._is_server then
+		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
+	end
+
 	NetworkedTimerSystem.super.destroy(self)
 end
 

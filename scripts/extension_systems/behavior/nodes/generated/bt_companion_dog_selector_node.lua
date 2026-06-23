@@ -2,36 +2,28 @@
 
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
+local Profiler_start = Profiler.start
+local Profiler_stop = Profiler.stop
 local BtCompanionDogSelectorNode = class("BtCompanionDogSelectorNode", "BtNode")
 
 BtCompanionDogSelectorNode.init = function (self, ...)
 	BtCompanionDogSelectorNode.super.init(self, ...)
 
-	self._children = {}
-end
-
-BtCompanionDogSelectorNode.init_values = function (self, blackboard, action_data, node_data)
-	BtCompanionDogSelectorNode.super.init_values(self, blackboard, action_data, node_data)
-
-	local children = self._children
-
-	for i = 1, #children do
-		local child_node = children[i]
-		local child_tree_node = child_node.tree_node
-		local child_action_data = child_tree_node.action_data
-
-		child_node:init_values(blackboard, child_action_data, node_data)
-	end
+	self._selector_children = {}
 end
 
 BtCompanionDogSelectorNode.add_child = function (self, node)
-	self._children[#self._children + 1] = node
+	BtCompanionDogSelectorNode.super.add_child(self, node)
+
+	if not node.tree_node.state then
+		self._selector_children[#self._selector_children + 1] = node
+	end
 end
 
 BtCompanionDogSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
 	local node_identifier = self.identifier
 	local last_running_node = old_running_child_nodes[node_identifier]
-	local children = self._children
+	local children = self._selector_children
 
 	do
 		local node_manual_teleport = children[1]
@@ -178,7 +170,8 @@ BtCompanionDogSelectorNode.evaluate = function (self, unit, blackboard, scratchp
 		local behavior_component = blackboard.behavior
 		local owner_unit = behavior_component.owner_unit
 		local owner_attack_intensity_extension = ScriptUnit.has_extension(owner_unit, "attack_intensity_system")
-		local in_combat = not owner_attack_intensity_extension or owner_attack_intensity_extension:in_combat_for_companion()
+		local companion_buff_extension = ScriptUnit.has_extension(unit, "buff_extension")
+		local in_combat = not owner_attack_intensity_extension or owner_attack_intensity_extension:in_combat_for_companion(companion_buff_extension)
 		local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 		local owner_unit_data_extension = ScriptUnit.has_extension(owner_unit, "unit_data_system")
 		local character_state = owner_unit_data_extension and owner_unit_data_extension:read_component("character_state")
@@ -186,28 +179,8 @@ BtCompanionDogSelectorNode.evaluate = function (self, unit, blackboard, scratchp
 
 		in_combat = in_combat or owner_unit_is_disabled
 
-		local companion_whistle_target
-		local smart_tag_system = Managers.state.extension:system("smart_tag_system")
-		local tag_target, _ = smart_tag_system:unit_tagged_by_player_unit(owner_unit, "unit_threat_adamant")
-
-		if tag_target then
-			local unit_data_extension = ScriptUnit.has_extension(tag_target, "unit_data_system")
-			local breed = unit_data_extension and unit_data_extension:breed()
-			local daemonhost = breed and breed.tags.witch
-
-			if daemonhost then
-				local daemonhost_blackboard = BLACKBOARDS[tag_target]
-				local daemonhost_perception_component = daemonhost_blackboard.perception
-				local host_is_aggroed = daemonhost_perception_component.aggro_state == "aggroed"
-
-				if host_is_aggroed then
-					companion_whistle_target = tag_target
-				end
-			else
-				companion_whistle_target = tag_target
-			end
-		end
-
+		local companion_whistle_component = blackboard.whistle
+		local companion_whistle_target = companion_whistle_component.current_target
 		local force_combat = HEALTH_ALIVE[companion_whistle_target]
 		local pounce_component = blackboard.pounce
 		local condition_result = is_aggroed and (in_combat or force_combat) or pounce_component.started_leap or pounce_component.has_pounce_target
@@ -284,9 +257,9 @@ BtCompanionDogSelectorNode.run = function (self, unit, breed, blackboard, scratc
 	local running_node = running_child_nodes[node_identifier]
 	local running_tree_node = running_node.tree_node
 	local running_action_data = running_tree_node.action_data
-	local result, evaluate_utility_next_frame = running_node:run(unit, breed, blackboard, scratchpad, running_action_data, dt, t, node_data, running_child_nodes)
+	local result, evaluate_utility_next_frame, update_rate = running_node:run(unit, breed, blackboard, scratchpad, running_action_data, dt, t, node_data, running_child_nodes)
 
-	return result, evaluate_utility_next_frame
+	return result, evaluate_utility_next_frame, update_rate
 end
 
 return BtCompanionDogSelectorNode

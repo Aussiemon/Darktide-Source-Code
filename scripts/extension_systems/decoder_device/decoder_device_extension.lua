@@ -22,6 +22,7 @@ DecoderDeviceExtension.init = function (self, extension_init_context, unit, exte
 	self._material_slot_name = ""
 	self._materials = {}
 	self._install_anim_event = ""
+	self._last_interaction_time = 0
 
 	self:_set_visible_state(VISIBLE_STATES.none)
 end
@@ -286,6 +287,14 @@ DecoderDeviceExtension.wait_for_setup = function (self)
 	local decode_interaction = not self._started_decode and not self._is_placed
 
 	return self._unit_is_enabled and decode_interaction and not minigame_is_active
+end
+
+DecoderDeviceExtension.interaction_allowed = function (self)
+	return self:wait_for_restart() and Managers.time:time("gameplay") - self._last_interaction_time > 0.1
+end
+
+DecoderDeviceExtension.interaction_success = function (self)
+	self._last_interaction_time = Managers.time:time("gameplay")
 end
 
 DecoderDeviceExtension.wait_for_restart = function (self)

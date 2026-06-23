@@ -6,6 +6,7 @@ local elite_shocktrooper = "renegade_shocktrooper"
 local elite_plasma_gunner = "renegade_plasma_gunner"
 local elite_berzerker = "renegade_berzerker"
 local elite_gunner = "renegade_gunner"
+local roamer_vanguard = "renegade_vanguard"
 local roamer_packs = {
 	expeditions_renegade_melee_high = {
 		{
@@ -18,6 +19,7 @@ local roamer_packs = {
 				roamer_melee,
 				roamer_melee,
 				roamer_melee,
+				roamer_vanguard,
 			},
 		},
 		{
@@ -39,6 +41,7 @@ local roamer_packs = {
 				elite_berzerker,
 				roamer_melee,
 				roamer_melee,
+				roamer_vanguard,
 			},
 		},
 		{
@@ -57,6 +60,8 @@ local roamer_packs = {
 				"chaos_ogryn_bulwark",
 				roamer_melee,
 				roamer_melee,
+				roamer_vanguard,
+				roamer_vanguard,
 			},
 		},
 		{
@@ -74,6 +79,7 @@ local roamer_packs = {
 				"chaos_ogryn_bulwark",
 				roamer_melee,
 				roamer_melee,
+				roamer_vanguard,
 				elite_berzerker,
 			},
 		},
@@ -98,6 +104,7 @@ local roamer_packs = {
 				"chaos_ogryn_bulwark",
 				roamer_melee,
 				roamer_melee,
+				roamer_vanguard,
 			},
 		},
 	},
@@ -117,6 +124,7 @@ local roamer_packs = {
 			breeds = {
 				"chaos_ogryn_bulwark",
 				elite_berzerker,
+				roamer_vanguard,
 				roamer_rifleman,
 				roamer_rifleman,
 				roamer_melee,
@@ -159,6 +167,7 @@ local roamer_packs = {
 			weight = 0.5,
 			breeds = {
 				"chaos_ogryn_bulwark",
+				roamer_vanguard,
 				elite_shocktrooper,
 				roamer_rifleman,
 				roamer_rifleman,
@@ -233,6 +242,7 @@ local roamer_packs = {
 				roamer_rifleman,
 				roamer_rifleman,
 				roamer_melee,
+				roamer_vanguard,
 				roamer_melee,
 				elite_plasma_gunner,
 			},
@@ -277,6 +287,7 @@ local roamer_packs = {
 				roamer_melee,
 				roamer_melee,
 				roamer_melee,
+				roamer_vanguard,
 			},
 		},
 		{
@@ -294,6 +305,7 @@ local roamer_packs = {
 				elite_berzerker,
 				roamer_melee,
 				roamer_melee,
+				roamer_vanguard,
 			},
 		},
 		{
@@ -310,6 +322,8 @@ local roamer_packs = {
 			breeds = {
 				roamer_melee,
 				roamer_melee,
+				roamer_vanguard,
+				roamer_vanguard,
 			},
 		},
 		{
@@ -329,6 +343,7 @@ local roamer_packs = {
 				roamer_melee,
 				roamer_melee,
 				roamer_melee,
+				roamer_vanguard,
 				elite_berzerker,
 			},
 		},
@@ -348,6 +363,7 @@ local roamer_packs = {
 			breeds = {
 				roamer_melee,
 				roamer_melee,
+				roamer_vanguard,
 			},
 		},
 	},
@@ -367,6 +383,7 @@ local roamer_packs = {
 			breeds = {
 				"chaos_ogryn_bulwark",
 				elite_berzerker,
+				roamer_vanguard,
 				roamer_rifleman,
 				roamer_rifleman,
 				roamer_melee,
@@ -409,6 +426,7 @@ local roamer_packs = {
 			weight = 0.5,
 			breeds = {
 				"chaos_ogryn_bulwark",
+				roamer_vanguard,
 				elite_shocktrooper,
 				roamer_rifleman,
 				roamer_rifleman,
@@ -476,6 +494,7 @@ local roamer_packs = {
 				roamer_rifleman,
 				roamer_rifleman,
 				roamer_melee,
+				roamer_vanguard,
 				roamer_melee,
 			},
 		},

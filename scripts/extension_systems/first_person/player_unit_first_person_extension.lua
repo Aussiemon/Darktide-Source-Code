@@ -320,10 +320,16 @@ PlayerUnitFirstPersonExtension.fixed_update = function (self, unit, dt, t, frame
 		position = locomotion_position + Vector3(0, 0, height)
 	end
 
+	local action_settings = self._weapon_extension:running_action_settings()
+	local block_rotation = action_settings and action_settings.block_first_person_rotation
+
 	fp_component.position = position
 	fp_component.height = height
 	fp_component.previous_rotation = fp_component.rotation
-	fp_component.rotation = look_rotation
+
+	if not block_rotation then
+		fp_component.rotation = look_rotation
+	end
 
 	if self._is_server then
 		GameSession.set_game_object_field(self._game_session, self._game_object_id, "character_height", fp_component.height)

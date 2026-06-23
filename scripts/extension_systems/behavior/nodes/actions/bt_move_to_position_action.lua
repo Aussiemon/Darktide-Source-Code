@@ -4,6 +4,7 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local MinionMovement = require("scripts/utilities/minion_movement")
+local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local BtMoveToPositionAction = class("BtMoveToPositionAction", "BtNode")
 
 BtMoveToPositionAction.TIME_TO_FIRST_EVALUATE = {
@@ -18,8 +19,9 @@ BtMoveToPositionAction.CONSECUTIVE_EVALUATE_INTERVAL = {
 local minion_spawner_radius_checks = {
 	20,
 	40,
-	60,
+	50,
 }
+local _spawner = Script.new_array(8)
 
 BtMoveToPositionAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
@@ -39,29 +41,58 @@ BtMoveToPositionAction.enter = function (self, unit, breed, blackboard, scratchp
 	local move_to_closest_minion_spawner = action_data.move_to_closest_minion_spawner
 
 	if move_to_closest_minion_spawner then
+		local target_spawner_type = action_data.target_spawner_type or nil
 		local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")
 		local unit_postion = POSITION_LOOKUP[unit]
 		local spawners
 
 		for i = 1, #minion_spawner_radius_checks do
-			spawners = minion_spawn_system:spawners_in_range(unit_postion, minion_spawner_radius_checks[i])
+			local potential_spawners = minion_spawn_system:spawners_in_range(unit_postion, minion_spawner_radius_checks[i])
 
-			if spawners then
-				break
+			if potential_spawners then
+				if target_spawner_type then
+					table.clear(_spawner)
+
+					for _, spawner_extension in ipairs(potential_spawners) do
+						if spawner_extension:spawn_type() == target_spawner_type then
+							table.insert(_spawner, spawner_extension)
+						end
+					end
+
+					spawners = _spawner
+				else
+					spawners = potential_spawners
+
+					break
+				end
 			end
 		end
 
-		if spawners then
-			local num_spawners = #spawners
+		local num_spawners = spawners and #spawners or 0
+
+		if num_spawners > 0 then
 			local random_spawner = spawners[math.random(1, num_spawners)]
 
-			if random_spawner then
-				move_to_position = random_spawner._exit_position:unbox()
-			end
-
-			scratchpad.failed_to_find_spawner = true
+			move_to_position = random_spawner._exit_position:unbox()
 		else
 			scratchpad.failed_to_find_spawner = true
+		end
+
+		if scratchpad.failed_to_find_spawner then
+			local side_system = Managers.state.extension:system("side_system")
+			local side = side_system:get_side_from_name("villains")
+			local enemy_side = side_system:get_side_from_name("heroes")
+			local main_path_manager = Managers.state.main_path
+			local nav_world = navigation_extension:nav_world()
+			local nav_spawn_points = main_path_manager:nav_spawn_points()
+			local num_groups = GwNavSpawnPoints.get_count(nav_spawn_points)
+			local _, _, path_position = main_path_manager:ahead_unit(enemy_side.side_id)
+			local occluded_positions, num_occluded_positions = SpawnPointQueries.get_occluded_positions(nav_world, nav_spawn_points, path_position, side.valid_enemy_player_units_positions, 50, num_groups, 10, 50, nil, false)
+
+			if num_occluded_positions and num_occluded_positions > 0 then
+				move_to_position = occluded_positions[1]
+				scratchpad.failed_to_find_spawner = false
+			end
 		end
 	end
 
@@ -125,7 +156,7 @@ local ARRIVED_AT_POSITION_THRESHOLD_SQ = 1
 
 BtMoveToPositionAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
 	if scratchpad.failed_to_find_spawner then
-		return "failed"
+		return action_data.count_as_done_on_fail and "done" or "failed"
 	end
 
 	local self_position, move_to_position = POSITION_LOOKUP[unit], scratchpad.move_to_position:unbox()

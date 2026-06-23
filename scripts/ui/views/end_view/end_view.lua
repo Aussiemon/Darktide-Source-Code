@@ -1,5 +1,7 @@
 ﻿-- chunkname: @scripts/ui/views/end_view/end_view.lua
 
+require("scripts/ui/views/base_view")
+
 local Definitions = require("scripts/ui/views/end_view/end_view_definitions")
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
 local EndViewSettings = require("scripts/ui/views/end_view/end_view_settings")
@@ -188,7 +190,8 @@ EndView.update = function (self, dt, t, input_service)
 
 	self._skip_grace_time = grace_time
 
-	local is_waiting_for_vote_to_end = self._stay_in_party_voting_active and self._stay_in_party == STAY_IN_PARTY.yes
+	local expected_vote = STAY_IN_PARTY.yes
+	local is_waiting_for_vote_to_end = self._stay_in_party_voting_active and self._stay_in_party == expected_vote
 	local can_skip = not has_shown_summary_view or not is_waiting_for_vote_to_end
 
 	if can_skip ~= self._can_skip and (not can_skip or grace_time == 0) then
@@ -377,8 +380,11 @@ EndView._stay_in_party_voting_started = function (self)
 	Log.info("STAY_IN_PARTY_VOTING", "started")
 
 	if all_is_same_party and voting_id then
-		Managers.voting:cast_vote(voting_id, "no")
-		Log.info("STAY_IN_PARTY_VOTING", "everyone is same party, voting NO to merge")
+		Managers.voting:cast_vote(voting_id, STAY_IN_PARTY.no)
+
+		local log_message = "everyone is same party, voting NO to merge"
+
+		Log.info("STAY_IN_PARTY_VOTING", log_message)
 
 		return
 	end
@@ -388,7 +394,7 @@ EndView._stay_in_party_voting_started = function (self)
 	self:_sync_votes()
 end
 
-EndView.event_stay_in_party_voting_completed = function (self)
+EndView.event_stay_in_party_voting_completed = function (self, result, votes)
 	self._stay_in_party_voting_active = false
 	self._stay_in_party_voting_id = nil
 end
@@ -687,7 +693,7 @@ EndView._setup_spawn_slots = function (self, players)
 
 		local profile_spawner = UIProfileSpawner:new("EndView_" .. player_index, world, camera, unit_spawner)
 
-		profile_spawner:disable_rotation_input()
+		profile_spawner:disable_rotation_input(true)
 
 		for j = 1, #ignored_slots do
 			local slot_name = ignored_slots[j]
@@ -742,6 +748,20 @@ EndView._player_slot_id = function (self, account_id)
 			return i
 		end
 	end
+end
+
+local function _companion_data_from_end_of_round_pose_item(end_of_round_pose_item)
+	local companion_state_machine = end_of_round_pose_item and end_of_round_pose_item.companion_state_machine
+	local item_animation_event = end_of_round_pose_item and end_of_round_pose_item.companion_animation_event
+	local companion_data = {
+		ignore = false,
+		position = nil,
+		rotation = nil,
+		state_machine = companion_state_machine and companion_state_machine ~= "" and companion_state_machine,
+		animation_event = item_animation_event and item_animation_event ~= "" and item_animation_event,
+	}
+
+	return companion_data
 end
 
 EndView._assign_player_to_slot = function (self, player_info, slot, more_than_one_party)
@@ -800,10 +820,7 @@ EndView._assign_player_to_slot = function (self, player_info, slot, more_than_on
 	slot.boxed_rotation = QuaternionBox(spawn_rotation)
 
 	local profile_spawner = slot.profile_spawner
-	local companion_data = {
-		state_machine = end_of_round_pose_item and end_of_round_pose_item.companion_state_machine ~= nil and end_of_round_pose_item.companion_state_machine ~= "" and end_of_round_pose_item.companion_state_machine or nil,
-		animation_event = end_of_round_pose_item and end_of_round_pose_item.companion_animation_event ~= nil and end_of_round_pose_item.companion_animation_event ~= "" and end_of_round_pose_item.companion_animation_event or nil,
-	}
+	local companion_data = _companion_data_from_end_of_round_pose_item(end_of_round_pose_item)
 	local companion_visible = not not companion_data.state_machine
 
 	profile_spawner:spawn_profile(preview_profile, spawn_position, spawn_rotation, spawn_scale, item_state_machine, item_animation_event, nil, item_face_animation_event, nil, nil, nil, nil, companion_data)
@@ -1146,11 +1163,13 @@ EndView._sync_votes = function (self)
 					end
 				end
 
+				local checkmark_visible = vote == STAY_IN_PARTY.yes
+
 				num_votes = num_votes + 1
 
 				local checkmark_style = widget.style.checkmark
 
-				checkmark_style.visible = vote == STAY_IN_PARTY.yes
+				checkmark_style.visible = checkmark_visible
 			end
 		end
 	end

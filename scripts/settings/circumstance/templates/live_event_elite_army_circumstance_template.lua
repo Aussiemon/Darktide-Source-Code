@@ -17,6 +17,9 @@ local core_mutators = {
 	"mutator_no_encampments",
 }
 local base_templates = CircumstanceUtils.inherit(BaseLiveEventTemplate, core_mutators, {}, "elite_army")
+
+base_templates.elite_army_waves_spec = nil
+
 local circumstance_templates = table.reduce({
 	base_templates,
 }, table.merge, {})
@@ -35,9 +38,6 @@ circumstance_templates.elite_army.minion_health_modifier = minion_health_modifie
 circumstance_templates.elite_army_more_res.ui.display_name = "loc_circumstance_elite_army_increased_resistance_title"
 circumstance_templates.elite_army_more_res.ui.description = "loc_circumstance_elite_army_increased_resistance_description"
 circumstance_templates.elite_army_more_res.minion_health_modifier = minion_health_modifier
-circumstance_templates.elite_army_waves_spec.ui.display_name = "loc_circumstance_elite_army_waves_of_specials_title"
-circumstance_templates.elite_army_waves_spec.ui.description = "loc_circumstance_elite_army_waves_of_specials_description"
-circumstance_templates.elite_army_waves_spec.minion_health_modifier = minion_health_modifier
 circumstance_templates.elite_army_hunt_grou.ui.display_name = "loc_circumstance_elite_army_hunting_grounds_title"
 circumstance_templates.elite_army_hunt_grou.ui.description = "loc_circumstance_elite_army_hunting_grounds_description"
 circumstance_templates.elite_army_hunt_grou.minion_health_modifier = minion_health_modifier

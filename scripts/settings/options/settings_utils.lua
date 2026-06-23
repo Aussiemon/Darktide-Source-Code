@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/settings/options/settings_utils.lua
 
-local function print_func(format, ...)
-	print(string.format("[RenderSettings] " .. format, ...))
+local function print_func(...)
+	Log.info("RenderSettings", ...)
 end
 
 local function get_user_setting(location, key)

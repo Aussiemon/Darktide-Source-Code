@@ -232,6 +232,7 @@ UIWorldSpawner._setup_extension_manager = function (self)
 			false,
 			{
 				"CutsceneCharacterExtension",
+				"CutsceneCompanionExtension",
 			},
 		},
 		{

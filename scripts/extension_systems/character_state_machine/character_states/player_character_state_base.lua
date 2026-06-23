@@ -30,6 +30,7 @@ PlayerCharacterStateBase.init = function (self, character_state_init_context, na
 	self._stunned_character_state_component = character_state_init_context.stunned_character_state_component
 	self._weapon_action_component = character_state_init_context.weapon_action_component
 	self._combat_ability_action_component = character_state_init_context.combat_ability_action_component
+	self._grenade_ability_action_component = character_state_init_context.grenade_ability_action_component
 	self._sprint_character_state_component = character_state_init_context.sprint_character_state_component
 	self._inventory_component = character_state_init_context.inventory_component
 	self._character_state_component = character_state_init_context.character_state_component
@@ -334,6 +335,34 @@ PlayerCharacterStateBase._poll_ability_state_transitions = function (self, unit,
 	end
 
 	return wanted_ability_transition, ability_transition_params
+end
+
+PlayerCharacterStateBase._poll_weapon_state_transitions = function (self, unit, t)
+	local wanted_weapon_transition, weapon_transition_params = self._weapon_extension:wanted_character_state_transition()
+
+	if not wanted_weapon_transition then
+		return nil, nil
+	end
+
+	if wanted_weapon_transition == "lunging" then
+		local movement_state_component = self._movement_state_component
+		local locomotion_component = self._locomotion_component
+		local inair_state_component = self._inair_state_component
+		local input_extension = self._input_extension
+		local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, locomotion_component, inair_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t, false)
+
+		if is_crouching then
+			local can_exit = Crouch.can_exit(unit)
+
+			if not can_exit then
+				return nil, nil
+			else
+				Crouch.exit(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, locomotion_component, inair_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
+			end
+		end
+	end
+
+	return wanted_weapon_transition, weapon_transition_params
 end
 
 return PlayerCharacterStateBase

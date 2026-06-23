@@ -250,6 +250,10 @@ MinionGibbing.gib = function (self, hit_zone_name_or_nil, attack_direction, dama
 		return false
 	end
 
+	if damage_profile.skip_gibbing or damage_profile.only_allow_gibbing_on_critical_strike and not optional_is_critical_strike then
+		return false
+	end
+
 	local using_full_gib_override = false
 
 	if damage_profile.name == "havoc_self_gib" then

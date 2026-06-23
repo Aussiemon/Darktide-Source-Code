@@ -2,64 +2,31 @@
 
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
+local Profiler_start = Profiler.start
+local Profiler_stop = Profiler.stop
 local BtRenegadeTwinCaptainTwoSelectorNode = class("BtRenegadeTwinCaptainTwoSelectorNode", "BtNode")
 
 BtRenegadeTwinCaptainTwoSelectorNode.init = function (self, ...)
 	BtRenegadeTwinCaptainTwoSelectorNode.super.init(self, ...)
 
-	self._children = {}
-end
-
-BtRenegadeTwinCaptainTwoSelectorNode.init_values = function (self, blackboard, action_data, node_data)
-	BtRenegadeTwinCaptainTwoSelectorNode.super.init_values(self, blackboard, action_data, node_data)
-
-	local children = self._children
-
-	for i = 1, #children do
-		local child_node = children[i]
-		local child_tree_node = child_node.tree_node
-		local child_action_data = child_tree_node.action_data
-
-		child_node:init_values(blackboard, child_action_data, node_data)
-	end
+	self._selector_children = {}
 end
 
 BtRenegadeTwinCaptainTwoSelectorNode.add_child = function (self, node)
-	self._children[#self._children + 1] = node
+	BtRenegadeTwinCaptainTwoSelectorNode.super.add_child(self, node)
+
+	if not node.tree_node.state then
+		self._selector_children[#self._selector_children + 1] = node
+	end
 end
 
 BtRenegadeTwinCaptainTwoSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
 	local node_identifier = self.identifier
 	local last_running_node = old_running_child_nodes[node_identifier]
-	local children = self._children
+	local children = self._selector_children
 
 	do
-		local node_death = children[1]
-		local death_component = blackboard.death
-		local is_dead = death_component.is_dead
-		local condition_result = is_dead
-
-		if condition_result then
-			new_running_child_nodes[node_identifier] = node_death
-
-			return node_death
-		end
-	end
-
-	do
-		local node_exit_spawner = children[2]
-		local spawn_component = blackboard.spawn
-		local condition_result = spawn_component.is_exiting_spawner
-
-		if condition_result then
-			new_running_child_nodes[node_identifier] = node_exit_spawner
-
-			return node_exit_spawner
-		end
-	end
-
-	do
-		local node_smart_object = children[3]
+		local node_smart_object = children[1]
 		local condition_result
 
 		repeat
@@ -118,7 +85,7 @@ BtRenegadeTwinCaptainTwoSelectorNode.evaluate = function (self, unit, blackboard
 	end
 
 	do
-		local node_disappear_instant = children[4]
+		local node_disappear_instant = children[2]
 		local behavior_component = blackboard.behavior
 		local should_disappear_instant = behavior_component.should_disappear_instant
 		local condition_result = should_disappear_instant
@@ -131,7 +98,7 @@ BtRenegadeTwinCaptainTwoSelectorNode.evaluate = function (self, unit, blackboard
 	end
 
 	do
-		local node_disappear = children[5]
+		local node_disappear = children[3]
 		local behavior_component = blackboard.behavior
 		local should_disappear = behavior_component.should_disappear
 		local condition_result = should_disappear
@@ -144,7 +111,7 @@ BtRenegadeTwinCaptainTwoSelectorNode.evaluate = function (self, unit, blackboard
 	end
 
 	do
-		local node_disappear_idle = children[6]
+		local node_disappear_idle = children[4]
 		local is_running = last_leaf_node_running and last_running_node == node_disappear_idle
 		local condition_result
 
@@ -215,7 +182,7 @@ BtRenegadeTwinCaptainTwoSelectorNode.evaluate = function (self, unit, blackboard
 	end
 
 	do
-		local node_stagger = children[7]
+		local node_stagger = children[5]
 		local stagger_component = blackboard.stagger
 		local is_staggered = stagger_component.num_triggered_staggers > 0
 		local condition_result = is_staggered
@@ -228,7 +195,7 @@ BtRenegadeTwinCaptainTwoSelectorNode.evaluate = function (self, unit, blackboard
 	end
 
 	do
-		local node_shield_down_recharge = children[8]
+		local node_shield_down_recharge = children[6]
 		local is_running = last_leaf_node_running and last_running_node == node_shield_down_recharge
 		local condition_result
 
@@ -253,7 +220,7 @@ BtRenegadeTwinCaptainTwoSelectorNode.evaluate = function (self, unit, blackboard
 	end
 
 	do
-		local node_intro = children[9]
+		local node_intro = children[7]
 		local is_running = last_leaf_node_running and last_running_node == node_intro
 		local condition_result
 
@@ -325,7 +292,7 @@ BtRenegadeTwinCaptainTwoSelectorNode.evaluate = function (self, unit, blackboard
 	end
 
 	do
-		local node_blocked = children[10]
+		local node_blocked = children[8]
 		local blocked_component = blackboard.blocked
 		local is_blocked = blocked_component.is_blocked
 		local condition_result = is_blocked
@@ -338,7 +305,7 @@ BtRenegadeTwinCaptainTwoSelectorNode.evaluate = function (self, unit, blackboard
 	end
 
 	do
-		local node_combat = children[11]
+		local node_combat = children[9]
 		local is_running = last_leaf_node_running and last_running_node == node_combat
 		local condition_result
 
@@ -390,7 +357,7 @@ BtRenegadeTwinCaptainTwoSelectorNode.evaluate = function (self, unit, blackboard
 		end
 	end
 
-	local node_idle = children[12]
+	local node_idle = children[10]
 
 	new_running_child_nodes[node_identifier] = node_idle
 
@@ -402,9 +369,9 @@ BtRenegadeTwinCaptainTwoSelectorNode.run = function (self, unit, breed, blackboa
 	local running_node = running_child_nodes[node_identifier]
 	local running_tree_node = running_node.tree_node
 	local running_action_data = running_tree_node.action_data
-	local result, evaluate_utility_next_frame = running_node:run(unit, breed, blackboard, scratchpad, running_action_data, dt, t, node_data, running_child_nodes)
+	local result, evaluate_utility_next_frame, update_rate = running_node:run(unit, breed, blackboard, scratchpad, running_action_data, dt, t, node_data, running_child_nodes)
 
-	return result, evaluate_utility_next_frame
+	return result, evaluate_utility_next_frame, update_rate
 end
 
 return BtRenegadeTwinCaptainTwoSelectorNode

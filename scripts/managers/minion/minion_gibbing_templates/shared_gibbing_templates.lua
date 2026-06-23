@@ -34,6 +34,17 @@ local vfx_set = {
 		"content/fx/particles/impacts/flesh/protectorate_chainlightning_gib_torso_small_02",
 		"content/fx/particles/impacts/flesh/protectorate_chainlightning_gib_torso_small_03",
 	},
+	arc_small = {
+		"content/fx/particles/impacts/flesh/gib_splatter_arc_lightning_01",
+	},
+	arc_large = {
+		"content/fx/particles/impacts/flesh/arc_lightning_gib_torso_small_01",
+		"content/fx/particles/impacts/flesh/arc_lightning_gib_torso_small_02",
+		"content/fx/particles/impacts/flesh/arc_lightning_gib_torso_small_03",
+	},
+	phosphor = {
+		"content/fx/particles/impacts/flesh/blood_gushing_01",
+	},
 }
 
 SharedGibbingTemplates.vfx = {}
@@ -102,6 +113,27 @@ SharedGibbingTemplates.vfx.toxin_explosion_stump = {
 SharedGibbingTemplates.vfx.toxin_gas_stump = {
 	particle_effect = "content/fx/particles/impacts/flesh/gib_splatter_broker_toxin_01",
 }
+SharedGibbingTemplates.vfx.arc_gib = {
+	particle_effect = vfx_set.arc_small,
+}
+SharedGibbingTemplates.vfx.arc_stump_small = {
+	linked = true,
+	node_name = "fx_blood",
+	particle_effect = vfx_set.arc_small,
+}
+SharedGibbingTemplates.vfx.arc_stump_large = {
+	linked = false,
+	node_name = "fx_blood",
+	particle_effect = vfx_set.arc_large,
+}
+SharedGibbingTemplates.vfx.phosphor_gib = {
+	particle_effect = vfx_set.phosphor,
+}
+SharedGibbingTemplates.vfx.phosphor_stump = {
+	linked = true,
+	node_name = "fx_blood",
+	particle_effect = vfx_set.phosphor,
+}
 SharedGibbingTemplates.sfx = {}
 SharedGibbingTemplates.sfx.warp_gib_lightning = {
 	sound_event = "wwise/events/weapon/play_psyker_lightning_bolt_impact_death",
@@ -127,6 +159,12 @@ SharedGibbingTemplates.sfx.ritualist_warp_stump = {
 }
 SharedGibbingTemplates.sfx.ritualist_warp_stump_head = {
 	sound_event = "wwise/events/weapon/play_heresy_minion_ritualist_death_burst_head",
+}
+SharedGibbingTemplates.sfx.arc_gib = {
+	sound_event = "wwise/events/weapon/play_psyker_lightning_bolt_impact_death",
+}
+SharedGibbingTemplates.sfx.arc_stump = {
+	sound_event = "wwise/events/weapon/play_psyker_lightning_bolt_impact_death",
 }
 SharedGibbingTemplates.head = {
 	extra_hit_zone_actors_to_destroy = nil,

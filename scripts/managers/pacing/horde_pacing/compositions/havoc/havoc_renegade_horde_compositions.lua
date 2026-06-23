@@ -443,7 +443,7 @@ local horde_compositions = {
 		{
 			breeds = {
 				{
-					name = "chaos_ogryn_bulwark",
+					name = "renegade_vanguard",
 					amount = {
 						1,
 						1,
@@ -462,6 +462,13 @@ local horde_compositions = {
 			breeds = {
 				{
 					name = "chaos_ogryn_bulwark",
+					amount = {
+						1,
+						1,
+					},
+				},
+				{
+					name = "renegade_vanguard",
 					amount = {
 						1,
 						2,
@@ -480,6 +487,13 @@ local horde_compositions = {
 			breeds = {
 				{
 					name = "chaos_ogryn_bulwark",
+					amount = {
+						1,
+						1,
+					},
+				},
+				{
+					name = "renegade_vanguard",
 					amount = {
 						2,
 						3,
@@ -498,6 +512,13 @@ local horde_compositions = {
 			breeds = {
 				{
 					name = "chaos_ogryn_bulwark",
+					amount = {
+						1,
+						2,
+					},
+				},
+				{
+					name = "renegade_vanguard",
 					amount = {
 						3,
 						4,
@@ -517,8 +538,15 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
+						2,
+						2,
+					},
+				},
+				{
+					name = "renegade_vanguard",
+					amount = {
 						4,
-						5,
+						6,
 					},
 				},
 				{
@@ -559,6 +587,13 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
+						1,
+						1,
+					},
+				},
+				{
+					name = "renegade_vanguard",
+					amount = {
 						2,
 						3,
 					},
@@ -577,7 +612,14 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
-						4,
+						2,
+						2,
+					},
+				},
+				{
+					name = "renegade_vanguard",
+					amount = {
+						3,
 						5,
 					},
 				},
@@ -602,8 +644,15 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
+						2,
+						2,
+					},
+				},
+				{
+					name = "renegade_vanguard",
+					amount = {
 						4,
-						5,
+						6,
 					},
 				},
 				{
@@ -658,6 +707,13 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
+						1,
+						1,
+					},
+				},
+				{
+					name = "renegade_vanguard",
+					amount = {
 						2,
 						3,
 					},
@@ -690,40 +746,54 @@ local horde_compositions = {
 				{
 					name = "chaos_ogryn_bulwark",
 					amount = {
-						3,
-						4,
-					},
-				},
-				{
-					name = "renegade_shocktrooper",
-					amount = {
 						2,
-						3,
+						2,
 					},
 				},
 				{
-					name = "renegade_rifleman",
-					amount = {
-						6,
-						7,
-					},
-				},
-				{
-					name = "renegade_gunner",
+					name = "renegade_vanguard",
 					amount = {
 						3,
-						4,
-					},
-				},
-			},
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_ogryn_bulwark",
-					amount = {
-						4,
 						5,
+					},
+				},
+				{
+					name = "renegade_shocktrooper",
+					amount = {
+						2,
+						3,
+					},
+				},
+				{
+					name = "renegade_rifleman",
+					amount = {
+						6,
+						7,
+					},
+				},
+				{
+					name = "renegade_gunner",
+					amount = {
+						3,
+						4,
+					},
+				},
+			},
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_ogryn_bulwark",
+					amount = {
+						2,
+						2,
+					},
+				},
+				{
+					name = "renegade_vanguard",
+					amount = {
+						4,
+						6,
 					},
 				},
 				{

@@ -21,5 +21,6 @@ _create_prop_data_entry("scripts/settings/prop_data/props/ice_chunk_prop_data")
 _create_prop_data_entry("scripts/settings/prop_data/props/icicle_prop_data")
 _create_prop_data_entry("scripts/settings/prop_data/props/nurgle_totem")
 _create_prop_data_entry("scripts/settings/prop_data/props/train_cogitator_prop_data")
+_create_prop_data_entry("scripts/settings/prop_data/props/electrical_fusebox_01_prop_data")
 
 return settings("PropData", prop_data)

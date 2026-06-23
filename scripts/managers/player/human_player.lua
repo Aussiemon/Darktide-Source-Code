@@ -146,9 +146,9 @@ end
 
 HumanPlayer.companion_name = function (self)
 	local profile = self._profile
-	local companion_data = profile and profile.companion
+	local companion = profile and profile.companion
 
-	return companion_data and companion_data.name or nil
+	return companion and companion.name
 end
 
 HumanPlayer.set_telemetry_instance = function (self, instance)

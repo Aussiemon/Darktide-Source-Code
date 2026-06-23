@@ -5589,6 +5589,71 @@ damage_trait_templates.saw_p1_m1_crit_stat = {
 		},
 	},
 }
+damage_trait_templates.transonic_sword_transonic_knife_p1_m1_crit_stat = {
+	{
+		"crit_mod",
+		"attack",
+		armor_types.unarmored,
+		{
+			max = 0.8,
+			min = 0,
+		},
+	},
+	{
+		"crit_mod",
+		"attack",
+		armor_types.armored,
+		{
+			max = 0.8,
+			min = 0,
+		},
+	},
+	{
+		"crit_mod",
+		"attack",
+		armor_types.resistant,
+		{
+			max = 0.8,
+			min = 0,
+		},
+	},
+	{
+		"crit_mod",
+		"attack",
+		armor_types.berserker,
+		{
+			max = 0.8,
+			min = 0,
+		},
+	},
+	{
+		"crit_mod",
+		"attack",
+		armor_types.super_armor,
+		{
+			max = 0.9,
+			min = 0,
+		},
+	},
+	{
+		"crit_mod",
+		"attack",
+		armor_types.disgustingly_resilient,
+		{
+			max = 0.8,
+			min = 0,
+		},
+	},
+	{
+		"crit_mod",
+		"attack",
+		armor_types.void_shield,
+		{
+			max = 0.8,
+			min = 0,
+		},
+	},
+}
 damage_trait_templates.saw_p1_m1_finesse_stat = {
 	{
 		"targets",
@@ -5809,6 +5874,477 @@ damage_trait_templates.powermaul_cleave_damage_stat = {
 		{
 			max = 0.75,
 			min = 0.25,
+		},
+	},
+}
+damage_trait_templates.transonic_sword_transonic_knife_p1_m1_cleave_damage_and_targets_stat = {
+	{
+		"targets",
+		2,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.unarmored,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		2,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.disgustingly_resilient,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		2,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.berserker,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		2,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.resistant,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		3,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.unarmored,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		3,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.disgustingly_resilient,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		3,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.berserker,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		3,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.resistant,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		4,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.unarmored,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		4,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.disgustingly_resilient,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		4,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.berserker,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		4,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.resistant,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		5,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.unarmored,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		5,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.disgustingly_resilient,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		5,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.berserker,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		5,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.resistant,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		6,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.unarmored,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		6,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.disgustingly_resilient,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		6,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.berserker,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		6,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.resistant,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		7,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.unarmored,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		7,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.disgustingly_resilient,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		7,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.berserker,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		7,
+		"armor_damage_modifier",
+		"attack",
+		armor_types.resistant,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		"default_target",
+		"armor_damage_modifier",
+		"attack",
+		armor_types.unarmored,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		"default_target",
+		"armor_damage_modifier",
+		"attack",
+		armor_types.disgustingly_resilient,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		"default_target",
+		"armor_damage_modifier",
+		"attack",
+		armor_types.berserker,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		"default_target",
+		"armor_damage_modifier",
+		"attack",
+		armor_types.resistant,
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"cleave_distribution",
+		"attack",
+		{
+			max = 1,
+			min = 0,
+		},
+	},
+	{
+		"cleave_distribution",
+		"impact",
+		{
+			max = 1,
+			min = 0,
+		},
+	},
+}
+damage_trait_templates.powermaul_p3_arc_stat = {
+	{
+		"targets",
+		1,
+		"power_distribution",
+		"attack",
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		2,
+		"power_distribution",
+		"attack",
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		3,
+		"power_distribution",
+		"attack",
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		4,
+		"power_distribution",
+		"attack",
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		"default_target",
+		"power_distribution",
+		"attack",
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+}
+damage_trait_templates.arc_rifle_p1_arc_stat = {
+	{
+		"targets",
+		1,
+		"power_distribution",
+		"attack",
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		2,
+		"power_distribution",
+		"attack",
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		3,
+		"power_distribution",
+		"attack",
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		4,
+		"power_distribution",
+		"attack",
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+	{
+		"targets",
+		"default_target",
+		"power_distribution",
+		"attack",
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+}
+damage_trait_templates.arc_rifle_p1_dps_stat = {
+	{
+		"targets",
+		"default_target",
+		"power_distribution",
+		"attack",
+		{
+			max = 1,
+			min = 0.25,
+		},
+	},
+}
+damage_trait_templates.galvanic_rifle_p1_m1_finesse_stat = {
+	{
+		"targets",
+		1,
+		"boost_curve_multiplier_finesse",
+		{
+			max = 0.7,
+			min = 0.2,
+		},
+	},
+	{
+		"targets",
+		2,
+		"boost_curve_multiplier_finesse",
+		{
+			max = 0.7,
+			min = 0.2,
+		},
+	},
+	{
+		"targets",
+		"default_target",
+		"boost_curve_multiplier_finesse",
+		{
+			max = 0.7,
+			min = 0.2,
 		},
 	},
 }

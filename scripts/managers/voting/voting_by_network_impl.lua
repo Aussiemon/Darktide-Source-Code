@@ -361,7 +361,7 @@ end
 VotingByNetworkImpl.rpc_voting_client_ready = function (self, channel_id)
 	local network_interface
 
-	if Managers.connection:channel_to_peer(channel_id) then
+	if Network.peer_id(channel_id) then
 		network_interface = Managers.connection
 	end
 

@@ -2,6 +2,7 @@
 
 local UIResolution = require("scripts/managers/ui/ui_resolution")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local LoadingReason = class("LoadingReason")
 
 local function get_resolution()
@@ -23,8 +24,9 @@ local function get_resolution()
 	return width, height, scale
 end
 
-LoadingReason.init = function (self)
-	return
+LoadingReason.init = function (self, world, viewport)
+	self._world = world
+	self._viewport = viewport
 end
 
 LoadingReason.render = function (self, gui, wait_description, wait_time, text_opacity)
@@ -35,6 +37,20 @@ LoadingReason.render = function (self, gui, wait_description, wait_time, text_op
 
 	if wait_description then
 		self:_render_text(gui, anchor_x, anchor_y, resolution_scale, wait_description, text_opacity)
+	end
+
+	self._render_this_frame = true
+end
+
+LoadingReason.update = function (self)
+	if self._render_this_frame then
+		ScriptWorld.activate_viewport(self._world, self._viewport)
+
+		self._render_this_frame = false
+	elseif self._render_this_frame == false then
+		ScriptWorld.deactivate_viewport(self._world, self._viewport)
+
+		self._render_this_frame = nil
 	end
 end
 

@@ -3,51 +3,53 @@
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local Text = require("scripts/utilities/ui/text")
 local start_layer = 1
 local background_height = 200
+local box_width = 1000
 local text_box_height = background_height - 60
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
-	text_box = {
-		horizontal_alignment = "center",
+	text_box_background = {
 		parent = "screen",
+		scale = "fit_width",
 		vertical_alignment = "center",
 		size = {
-			1000,
-			text_box_height,
-		},
-		position = {
+			1920,
 			0,
-			0,
-			start_layer + 1,
-		},
-	},
-	description_text = {
-		horizontal_alignment = "center",
-		parent = "text_box",
-		vertical_alignment = "center",
-		size = {
-			1000,
-			text_box_height - 20,
-		},
-		position = {
-			0,
-			0,
-			2,
-		},
-	},
-	value_background = {
-		horizontal_alignment = "center",
-		parent = "text_box",
-		vertical_alignment = "bottom",
-		size = {
-			1000,
-			50,
 		},
 		position = {
 			0,
 			0,
 			1,
+		},
+	},
+	text_box_pivot = {
+		horizontal_alignment = "center",
+		parent = "text_box_background",
+		vertical_alignment = "center",
+		size = {
+			0,
+			0,
+		},
+		position = {
+			0,
+			0,
+			1,
+		},
+	},
+	text_box = {
+		horizontal_alignment = "center",
+		parent = "text_box_pivot",
+		vertical_alignment = "center",
+		size = {
+			box_width,
+			text_box_height,
+		},
+		position = {
+			0,
+			0,
+			2,
 		},
 	},
 }
@@ -88,9 +90,6 @@ local widget_definitions = {
 					0,
 					start_layer,
 				},
-				size = {
-					[2] = background_height,
-				},
 				color = {
 					166,
 					0,
@@ -99,17 +98,14 @@ local widget_definitions = {
 				},
 			},
 		},
-	}, "screen"),
-	edge_top = UIWidget.create_definition({
 		{
 			pass_type = "texture",
 			value = "content/ui/materials/buttons/background_selected_edge",
 			style = {
-				hdr = true,
-				vertical_alignment = "center",
+				vertical_alignment = "top",
 				offset = {
 					0,
-					-background_height * 0.5,
+					0,
 					start_layer + 1,
 				},
 				size = {
@@ -119,17 +115,14 @@ local widget_definitions = {
 				color = Color.terminal_corner(255, true),
 			},
 		},
-	}, "screen"),
-	edge_bottom = UIWidget.create_definition({
 		{
 			pass_type = "texture",
 			value = "content/ui/materials/buttons/background_selected_edge",
 			style = {
-				hdr = true,
-				vertical_alignment = "center",
+				vertical_alignment = "bottom",
 				offset = {
 					0,
-					background_height * 0.5,
+					0,
 					start_layer + 1,
 				},
 				size = {
@@ -139,34 +132,126 @@ local widget_definitions = {
 				color = Color.terminal_corner(255, true),
 			},
 		},
-	}, "screen"),
-	action_text = UIWidget.create_definition({
-		{
-			pass_type = "text",
-			style_id = "text",
-			value = "",
-			value_id = "text",
-			style = action_text_style,
+	}, "text_box_background"),
+}
+local blueprints = {
+	header = {
+		size_function = function (parent, element, ui_renderer)
+			local entry_height = 0
+			local desciption_height = Text.text_height(ui_renderer, element.text, action_text_style, {
+				box_width,
+				1000,
+			}, true)
+
+			entry_height = desciption_height or entry_height
+
+			return {
+				box_width,
+				entry_height,
+			}
+		end,
+		pass_template = {
+			{
+				pass_type = "text",
+				style_id = "text",
+				value = "",
+				value_id = "text",
+				style = action_text_style,
+			},
 		},
-	}, "text_box"),
-	description_text = UIWidget.create_definition({
-		{
-			pass_type = "text",
-			style_id = "text",
-			value = "",
-			value_id = "text",
-			style = description_text_style,
+		init = function (parent, widget, element)
+			widget.content.text = element.text
+		end,
+	},
+	description = {
+		size_function = function (parent, element, ui_renderer)
+			local entry_height = 0
+			local desciption_height = Text.text_height(ui_renderer, element.text, description_text_style, nil, true)
+
+			entry_height = desciption_height or entry_height
+
+			return {
+				box_width,
+				entry_height,
+			}
+		end,
+		pass_template = {
+			{
+				pass_type = "text",
+				style_id = "text",
+				value = "",
+				value_id = "text",
+				style = description_text_style,
+			},
 		},
-	}, "description_text"),
-	value_text = UIWidget.create_definition({
-		{
-			pass_type = "text",
-			style_id = "text",
-			value = "",
-			value_id = "text",
-			style = value_text_style,
+		init = function (parent, widget, element)
+			widget.content.text = element.text
+		end,
+	},
+	value = {
+		size_function = function (parent, element, ui_renderer)
+			local entry_height = 0
+			local desciption_height = Text.text_height(ui_renderer, element.text, value_text_style, nil, true)
+
+			entry_height = desciption_height or entry_height
+
+			return {
+				box_width,
+				entry_height,
+			}
+		end,
+		pass_template = {
+			{
+				pass_type = "text",
+				style_id = "text",
+				value = "",
+				value_id = "text",
+				style = value_text_style,
+			},
 		},
-	}, "value_background"),
+		init = function (parent, widget, element)
+			widget.content.text = element.text
+		end,
+		update = function (parent, widget, input_service, dt, t, ui_renderer)
+			local speed = 4
+			local anim_progress = 0.5 + math.sin(Application.time_since_launch() * speed) * 0.5
+
+			widget.alpha_multiplier = 0.4 + 0.6 * anim_progress
+		end,
+	},
+	conflict_title = {
+		size_function = function (parent, element, ui_renderer)
+			local entry_height = 0
+			local desciption_height = Text.text_height(ui_renderer, element.text, warning_text_style, {
+				box_width,
+				1000,
+			}, true)
+
+			entry_height = desciption_height or entry_height
+
+			return {
+				box_width,
+				entry_height,
+			}
+		end,
+		pass_template = {
+			{
+				pass_type = "text",
+				style_id = "text",
+				value = "",
+				value_id = "text",
+				style = warning_text_style,
+			},
+		},
+		init = function (parent, widget, element)
+			widget.content.text = element.text
+		end,
+	},
+	dynamic_spacing = {
+		size_function = function (parent, element)
+			return element.size
+		end,
+	},
 }
 
 return {
@@ -185,4 +270,5 @@ return {
 	}, "screen"),
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
+	grid_blueprints = blueprints,
 }

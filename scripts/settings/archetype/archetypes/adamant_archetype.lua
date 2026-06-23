@@ -7,7 +7,6 @@ local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/arc
 local ArchetypeToughnessTemplates = require("scripts/settings/toughness/archetype_toughness_templates")
 local ArchetypeWarpChargeTemplates = require("scripts/settings/warp_charge/archetype_warp_charge_templates")
 local UiSoundEvents = require("scripts/settings/ui/ui_sound_events")
-local CompanionSpawnConditions = require("scripts/utilities/companion_spawn_conditions")
 local archetype_data = {
 	archetype_background_large = "content/ui/materials/icons/classes/large/adamant",
 	archetype_badge = "content/ui/materials/icons/class_badges/adamant_01",
@@ -25,18 +24,25 @@ local archetype_data = {
 	backstory_snippet = "loc_character_backstory_snippet_adamant",
 	base_critical_strike_chance = 0.075,
 	breed = "human",
+	character_appearance_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/character_customization/character_customization_adamant",
+	character_creation_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/character_customization/character_customization_adamant",
 	companion_breed = "companion_dog",
-	companions_number = 1,
 	deluxe_dlc = "adamant_deluxe",
+	end_of_round_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/end_of_round/end_of_round_adamant",
 	health = 200,
+	inventory_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/inventory/inventory_adamant",
 	knocked_down_health = 1000,
+	main_menu_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/character_customization/character_customization_adamant",
+	mission_intro_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/mission_briefing/mission_briefing_adamant",
+	num_companions = 1,
+	onboarding_hub_destination_id_after_intro_video = "mission_board",
 	onboarding_intro_video_template_name = "adamant_intro",
+	portrait_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/portrait/portrait_adamant",
 	requires_dlc = "adamant",
 	requires_dlc_reconciliation = nil,
 	spawn_companions_from_talent_func = nil,
 	talent_layout_file_path = "scripts/ui/views/talent_builder_view/layouts/adamant_tree",
 	talents_package_path = "packages/ui/views/talent_builder_view/adamant",
-	companions_spawn_condition_func = CompanionSpawnConditions.adamant_companion_spawn_conditions,
 	toughness = ArchetypeToughnessTemplates.adamant,
 	dodge = ArchetypeDodgeTemplates.adamant,
 	sprint = ArchetypeSprintTemplates.default,
@@ -45,7 +51,7 @@ local archetype_data = {
 	talents = ArchetypeTalents.adamant,
 	base_talents = {
 		adamant_area_buff_drone = 1,
-		adamant_command_tog_with_tag = 1,
+		adamant_command_dog_with_tag = 1,
 		adamant_companion_aura = 1,
 		adamant_companion_damage_per_level = 1,
 		adamant_grenade = 1,
@@ -57,7 +63,26 @@ local archetype_data = {
 		training_reward = true,
 		visit_chapel = true,
 	},
+	main_menu_camera_offsets = {
+		x = 0,
+		z = -0.05,
+		y = {
+			0.2,
+			-0.3,
+		},
+	},
 	selection_sound_event = UiSoundEvents.character_create_archetype_adamant,
+	name_input = {
+		error_loc_key = "loc_character_create_name_validation_failed_message",
+		max_length = 18,
+	},
+	companion_name_input = {
+		error_loc_key = "loc_character_create_name_validation_failed_message_alphanumerical",
+		max_length = 15,
+		error_loc_variables = {
+			max_digits = 6,
+		},
+	},
 	defining_weapons = {
 		{
 			display_name = "loc_weapon_family_powermaul_p2_m1",

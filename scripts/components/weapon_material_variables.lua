@@ -3,11 +3,7 @@
 local WeaponMaterialVariables = component("WeaponMaterialVariables")
 
 WeaponMaterialVariables.init = function (self, unit)
-	self._start_time_variable_name = self:get_data(unit, "start_time_variable_name")
-	self._stop_time_variable_name = self:get_data(unit, "stop_time_variable_name")
-	self._on_off_variable_name = self:get_data(unit, "on_off_variable_name")
-	self._material_slot_name = self:get_data(unit, "material_slot_name")
-	self._intensity_variable_names = self:get_data(unit, "intensity_variable_names")
+	self._material_variables = self:get_data(unit, "material_variables")
 end
 
 WeaponMaterialVariables.editor_validate = function (self, unit)
@@ -26,70 +22,169 @@ WeaponMaterialVariables.destroy = function (self, unit)
 	return
 end
 
-WeaponMaterialVariables.set_start_time = function (self, t, unit)
-	if self._on_off_variable_name then
-		Unit.set_scalar_for_material(unit, self._material_slot_name, self._on_off_variable_name, 1)
-	end
+WeaponMaterialVariables.toggle_on_off = function (self, is_on, unit)
+	local material_variables = self._material_variables
 
-	if self._start_time_variable_name then
-		Unit.set_scalar_for_material(unit, self._material_slot_name, self._start_time_variable_name, t)
+	for ii = 1, #material_variables do
+		local material_variable = material_variables[ii]
+		local material_slot_name = material_variable.material_slot_name
+		local on_off_variable_name = material_variable.on_off_variable_name
+
+		if on_off_variable_name then
+			Unit.set_scalar_for_material(unit, material_slot_name, on_off_variable_name, is_on and 1 or 0)
+		end
+	end
+end
+
+WeaponMaterialVariables.set_start_time = function (self, t, unit)
+	local material_variables = self._material_variables
+
+	for ii = 1, #material_variables do
+		local material_variable = material_variables[ii]
+		local material_slot_name = material_variable.material_slot_name
+		local on_off_variable_name = material_variable.on_off_variable_name
+		local start_time_variable_name = material_variable.start_time_variable_name
+
+		if on_off_variable_name then
+			Unit.set_scalar_for_material(unit, material_slot_name, on_off_variable_name, 1)
+		end
+
+		if start_time_variable_name then
+			Unit.set_scalar_for_material(unit, material_slot_name, start_time_variable_name, t)
+		end
 	end
 end
 
 WeaponMaterialVariables.set_stop_time = function (self, t, unit)
-	if self._on_off_variable_name then
-		Unit.set_scalar_for_material(unit, self._material_slot_name, self._on_off_variable_name, 0)
-	end
+	local material_variables = self._material_variables
 
-	if self._stop_time_variable_name then
-		Unit.set_scalar_for_material(unit, self._material_slot_name, self._stop_time_variable_name, t)
+	for ii = 1, #material_variables do
+		local material_variable = material_variables[ii]
+		local material_slot_name = material_variable.material_slot_name
+		local on_off_variable_name = material_variable.on_off_variable_name
+		local stop_time_variable_name = material_variable.stop_time_variable_name
+
+		if on_off_variable_name then
+			Unit.set_scalar_for_material(unit, material_slot_name, on_off_variable_name, 0)
+		end
+
+		if stop_time_variable_name then
+			Unit.set_scalar_for_material(unit, material_slot_name, stop_time_variable_name, t)
+		end
 	end
 end
 
 WeaponMaterialVariables.set_intensity = function (self, intensity, unit)
-	local intensity_variable_names = self._intensity_variable_names
-	local material_slot_name = self._material_slot_name
+	local material_variables = self._material_variables
 
-	for ii = 1, #intensity_variable_names do
-		local variable_name = intensity_variable_names[ii].variable_name
+	for ii = 1, #material_variables do
+		local material_variable = material_variables[ii]
+		local material_slot_name = material_variable.material_slot_name
+		local intensity_variable_name = material_variable.intensity_variable_name
 
-		Unit.set_scalar_for_material(unit, material_slot_name, variable_name, intensity)
+		if intensity_variable_name then
+			Unit.set_scalar_for_material(unit, material_slot_name, intensity_variable_name, intensity)
+		end
+	end
+end
+
+WeaponMaterialVariables.set_charge_level = function (self, charge_level, unit)
+	local material_variables = self._material_variables
+
+	for ii = 1, #material_variables do
+		local material_variable = material_variables[ii]
+		local material_slot_name = material_variable.material_slot_name
+		local charge_level_variable_name = material_variable.charge_level_variable_name
+
+		if charge_level_variable_name then
+			Unit.set_scalar_for_material(unit, material_slot_name, charge_level_variable_name, charge_level)
+		end
+	end
+end
+
+WeaponMaterialVariables.toggle_direction = function (self, toggle_direction, unit)
+	local material_variables = self._material_variables
+
+	for ii = 1, #material_variables do
+		local material_variable = material_variables[ii]
+		local material_slot_name = material_variable.material_slot_name
+		local direction_variable_name = material_variable.direction_variable_name
+
+		if direction_variable_name then
+			Unit.set_scalar_for_material(unit, material_slot_name, direction_variable_name, toggle_direction and 1 or 0)
+		end
+	end
+end
+
+WeaponMaterialVariables.set_stance_trigger = function (self, value, unit)
+	local material_variables = self._material_variables
+
+	for ii = 1, #material_variables do
+		local material_variable = material_variables[ii]
+		local material_slot_name = material_variable.material_slot_name
+		local stance_trigger_variable_name = material_variable.stance_trigger_variable_name
+
+		if stance_trigger_variable_name then
+			Unit.set_scalar_for_material(unit, material_slot_name, stance_trigger_variable_name, value)
+		end
 	end
 end
 
 WeaponMaterialVariables.component_data = {
-	start_time_variable_name = {
-		ui_name = "Start Time Variable",
-		ui_type = "text_box",
-		value = "",
-	},
-	stop_time_variable_name = {
-		ui_name = "Stop Time Variable",
-		ui_type = "text_box",
-		value = "",
-	},
-	on_off_variable_name = {
-		ui_name = "On/Off Variable",
-		ui_type = "text_box",
-		value = "",
-	},
-	material_slot_name = {
-		ui_name = "Material Slot Name",
-		ui_type = "text_box",
-		value = "",
-	},
-	intensity_variable_names = {
-		ui_name = "Intensity Variables",
+	material_variables = {
+		ui_name = "Material Variables",
 		ui_type = "struct_array",
 		definition = {
-			variable_name = {
-				ui_name = "Variable Name",
+			material_slot_name = {
+				ui_name = "Material Slot Name",
+				ui_type = "text_box",
+				value = "",
+			},
+			start_time_variable_name = {
+				ui_name = "Start Time Variable",
+				ui_type = "text_box",
+				value = "",
+			},
+			stop_time_variable_name = {
+				ui_name = "Stop Time Variable",
+				ui_type = "text_box",
+				value = "",
+			},
+			on_off_variable_name = {
+				ui_name = "On/Off Variable",
+				ui_type = "text_box",
+				value = "",
+			},
+			charge_level_variable_name = {
+				ui_name = "Charge Level Variable",
+				ui_type = "text_box",
+				value = "",
+			},
+			intensity_variable_name = {
+				ui_name = "Intensity Variable",
+				ui_type = "text_box",
+				value = "",
+			},
+			direction_variable_name = {
+				ui_name = "Direction Variable",
+				ui_type = "text_box",
+				value = "",
+			},
+			stance_trigger_variable_name = {
+				ui_name = "Stance Trigger Variable",
 				ui_type = "text_box",
 				value = "",
 			},
 		},
 		control_order = {
-			"variable_name",
+			"material_slot_name",
+			"start_time_variable_name",
+			"stop_time_variable_name",
+			"on_off_variable_name",
+			"charge_level_variable_name",
+			"intensity_variable_name",
+			"direction_variable_name",
+			"stance_trigger_variable_name",
 		},
 	},
 }

@@ -563,7 +563,7 @@ InputManager._set_allow_cursor_rendering = function (self, allow_cursor_renderin
 end
 
 InputManager.set_cursor_position = function (self, reference, position)
-	if PLATFORM == "win32" then
+	if IS_WINDOWS then
 		local cursor_stack_data = self._cursor_stack_data
 		local stack_references = cursor_stack_data.stack_references
 
@@ -615,7 +615,7 @@ InputManager.pop_cursor = function (self, reference)
 end
 
 InputManager.cursor_active = function (self)
-	if PLATFORM == "win32" then
+	if IS_WINDOWS then
 		local cursor_stack_data = self._cursor_stack_data
 		local stack_depth = cursor_stack_data.stack_depth
 
@@ -626,7 +626,7 @@ InputManager.cursor_active = function (self)
 end
 
 InputManager._update_clip_cursor = function (self)
-	if PLATFORM == "win32" then
+	if IS_WINDOWS then
 		local cursor_stack_data = self._cursor_stack_data
 
 		if cursor_stack_data.stack_depth == 0 then

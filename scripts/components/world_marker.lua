@@ -70,7 +70,7 @@ WorldMarker.component_data = {
 			"training_grounds",
 			"unit_threat",
 			"unit_threat_veteran",
-			"unit_threat_adamant",
+			"unit_threat_companion",
 		},
 		options_values = {
 			"beacon",
@@ -91,7 +91,7 @@ WorldMarker.component_data = {
 			"training_grounds",
 			"unit_threat",
 			"unit_threat_veteran",
-			"unit_threat_adamant",
+			"unit_threat_companion",
 		},
 	},
 }

@@ -7,9 +7,7 @@ local CLIENT_RPCS = {
 	"rpc_client_expedition_collectible_collected",
 	"rpc_client_expedition_remove_collectible_collected",
 }
-local SERVER_RPCS = {
-	"rpc_server_expedition_collectible_collected",
-}
+local SERVER_RPCS = {}
 local ExpeditionCollectiblesHandler = class("ExpeditionCollectiblesHandler")
 
 ExpeditionCollectiblesHandler.init = function (self, expedition_template, is_server, network_event_delegate)
@@ -39,13 +37,6 @@ ExpeditionCollectiblesHandler.init = function (self, expedition_template, is_ser
 	else
 		network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
 	end
-end
-
-ExpeditionCollectiblesHandler.rpc_server_expedition_collectible_collected = function (self, channel_id, peer_id, collectible_id_lookup, amount)
-	local collectible_id = NetworkLookup.expedition_collectibles[collectible_id_lookup]
-	local collectible = self._collectibles_by_id[collectible_id]
-
-	collectible:server_expedition_collectible_collected(peer_id, collectible_id_lookup, amount)
 end
 
 ExpeditionCollectiblesHandler.rpc_client_expedition_collectible_collected = function (self, channel_id, peer_id, collectible_id_lookup, amount, expedition_collectible_show_notification)

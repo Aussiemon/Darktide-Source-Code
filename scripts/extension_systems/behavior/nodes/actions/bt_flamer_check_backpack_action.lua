@@ -25,14 +25,14 @@ BtFlamerCheckBackpackAction.enter = function (self, unit, breed, blackboard, scr
 
 		local explosion_template = action_data.interrupted_explosion_template
 
-		Explosion.create_explosion(world, physics_world, position, impact_normal, unit, explosion_template, 100, charge_level, explosion_attack_type, false, false, false, false)
+		Explosion.create_explosion(world, physics_world, position, Quaternion.look(impact_normal), unit, explosion_template, 100, charge_level, explosion_attack_type, false, false, false, false)
 		LiquidArea.try_create(position, Vector3.down(), nav_world, LiquidAreaTemplates[action_data.interrupted_liquid_area])
 	elseif statistics_component.flamer_backpack_impacts >= 4 then
 		_override_gib(blackboard)
 
 		local explosion_template = action_data.explosion_template
 
-		Explosion.create_explosion(world, physics_world, position, impact_normal, unit, explosion_template, 100, charge_level, explosion_attack_type, false, false, false, false)
+		Explosion.create_explosion(world, physics_world, position, Quaternion.look(impact_normal), unit, explosion_template, 100, charge_level, explosion_attack_type, false, false, false, false)
 		LiquidArea.try_create(position, Vector3.down(), nav_world, LiquidAreaTemplates[action_data.liquid_area])
 	end
 end

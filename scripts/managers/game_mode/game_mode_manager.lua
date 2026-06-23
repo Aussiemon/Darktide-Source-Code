@@ -51,7 +51,6 @@ GameModeManager.init = function (self, game_mode_context, game_mode_name, gamepl
 	self._raycast_callback = callback(self, "_async_raycast_result_cb")
 	self._num_physics_safe_callbacks = 0
 	self._physics_safe_callbacks = {}
-	self._run_single_threaded_physics = false
 	self._wants_single_threaded_physics = {}
 end
 
@@ -69,16 +68,8 @@ GameModeManager.set_wants_single_threaded_physics = function (self, single_threa
 	self._wants_single_threaded_physics[reason] = single_threaded and single_threaded or nil
 end
 
-GameModeManager._set_single_threaded_physics = function (self, single_threaded)
-	self._run_single_threaded_physics = single_threaded
-end
-
 GameModeManager.wants_single_threaded_physics = function (self)
 	return next(self._wants_single_threaded_physics) ~= nil
-end
-
-GameModeManager.run_single_threaded_physics = function (self)
-	return self._run_single_threaded_physics
 end
 
 GameModeManager.register_physics_safe_callback = function (self, cb)
@@ -189,6 +180,13 @@ end
 
 GameModeManager.game_mode = function (self)
 	return self._game_mode
+end
+
+GameModeManager.should_disable_minion_perception = function (self)
+	local game_mode_settings = self._game_mode:settings()
+	local disable_minion_perception = game_mode_settings.disable_minion_perception
+
+	return not not disable_minion_perception
 end
 
 GameModeManager.side_compositions = function (self)

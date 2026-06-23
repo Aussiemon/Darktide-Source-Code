@@ -6,6 +6,7 @@ local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CameraShake = require("scripts/utilities/camera/camera_shake")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local Health = require("scripts/utilities/health")
 local HitReaction = require("scripts/utilities/attack/hit_reaction")
 local HitZone = require("scripts/utilities/attack/hit_zone")
@@ -34,7 +35,7 @@ local destructibles_only_filter = {
 	"destructibles",
 }
 
-local function _resolve_params(explosion_template, optional_impact_normal, attacking_unit, charge_level, attack_type)
+local function _resolve_params(explosion_template, attacking_unit, charge_level, attack_type)
 	local attacking_unit_owner_unit = AttackingUnitResolver.resolve(attacking_unit)
 	local attacking_owner_buff_extension = ScriptUnit.has_extension(attacking_unit_owner_unit, "buff_system")
 	local attacker_owner_stat_buffs = attacking_owner_buff_extension and attacking_owner_buff_extension:stat_buffs()
@@ -42,20 +43,19 @@ local function _resolve_params(explosion_template, optional_impact_normal, attac
 	local attacker_breed_or_nil = attacker_unit_data_extension and attacker_unit_data_extension:breed()
 	local lerp_values = Explosion.lerp_values(attacking_unit, explosion_template.name)
 	local radius, close_radius = Explosion.radii(explosion_template, charge_level, lerp_values, attack_type, attacker_owner_stat_buffs, attacker_breed_or_nil)
-	local rotation = optional_impact_normal and Quaternion.look(optional_impact_normal) or Quaternion.identity()
 
-	return attacking_unit_owner_unit, attacking_owner_buff_extension, lerp_values, radius, close_radius, rotation
+	return attacking_unit_owner_unit, attacking_owner_buff_extension, lerp_values, radius, close_radius
 end
 
-Explosion.predict_explosion = function (world, physics_world, source_position, optional_impact_normal, attacking_unit, explosion_template, power_level, charge_level, attack_type, is_critical_strike, ignore_cover, item_or_nil, origin_slot_or_nil, optional_hit_units_table, optional_attacking_unit_owner_unit, optional_apply_owner_buffs, predicted, optional_line_of_sight, skip_sync)
-	local attacking_unit_owner_unit, _, _, radius, close_radius, rotation = _resolve_params(explosion_template, optional_impact_normal, attacking_unit, charge_level, attack_type)
+Explosion.predict_explosion = function (world, physics_world, source_position, rotation, attacking_unit, explosion_template, power_level, charge_level, attack_type, is_critical_strike, ignore_cover, item_or_nil, origin_slot_or_nil, optional_hit_units_table, optional_attacking_unit_owner_unit, optional_apply_owner_buffs, predicted, optional_line_of_sight, skip_sync)
+	local attacking_unit_owner_unit, _, _, radius, close_radius = _resolve_params(explosion_template, attacking_unit, charge_level, attack_type)
 	local wwise_world = Managers.world:wwise_world(world)
 
 	Explosion.create_husk_explosion(world, physics_world, wwise_world, attacking_unit_owner_unit, explosion_template, source_position, rotation, Vector3(radius, close_radius, radius), charge_level or 1)
 end
 
-Explosion.create_explosion = function (world, physics_world, source_position, optional_impact_normal, attacking_unit, explosion_template, power_level, charge_level, attack_type, is_critical_strike, ignore_cover, item_or_nil, origin_slot_or_nil, optional_hit_units_table, optional_attacking_unit_owner_unit, optional_apply_owner_buffs, predicted, optional_line_of_sight, skip_sync)
-	local attacking_unit_owner_unit, attacking_owner_buff_extension, lerp_values, radius, close_radius, rotation = _resolve_params(explosion_template, optional_impact_normal, attacking_unit, charge_level, attack_type)
+Explosion.create_explosion = function (world, physics_world, source_position, rotation, attacking_unit, explosion_template, power_level, charge_level, attack_type, is_critical_strike, ignore_cover, item_or_nil, origin_slot_or_nil, optional_hit_units_table, optional_attacking_unit_owner_unit, optional_apply_owner_buffs, predicted, optional_line_of_sight, skip_sync)
+	local attacking_unit_owner_unit, attacking_owner_buff_extension, lerp_values, radius, close_radius = _resolve_params(explosion_template, attacking_unit, charge_level, attack_type)
 	local is_server = Managers.state.game_session:is_server()
 
 	if is_server then
@@ -292,11 +292,12 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 		local param_table = attacking_owner_buff_extension:request_proc_event_param_table()
 
 		if param_table then
-			param_table.number_of_hit_units = number_of_attack_units
 			param_table.attacking_unit = attacking_unit_owner_unit
 			param_table.attack_instigator_unit = attacking_unit
-			param_table.item_slot_origin = origin_slot_or_nil
 			param_table.charge_level = charge_level
+			param_table.explosion_template_name = explosion_template.name
+			param_table.item_slot_origin = origin_slot_or_nil
+			param_table.number_of_hit_units = number_of_attack_units
 			param_table.weapon_special = explosion_template.weapon_special
 
 			attacking_owner_buff_extension:add_proc_event(proc_events.on_explosion_hit, param_table)
@@ -323,6 +324,25 @@ Explosion.create_husk_explosion = function (world, physics_world, wwise_world, a
 	local close_radius_squared = close_radius * close_radius
 
 	_play_husk_effects(world, physics_world, wwise_world, attacking_owner_unit_or_nil, explosion_template, charge_level, position, rotation, radius)
+
+	local on_hit_local_template_effect_name = explosion_template.on_hit_local_template_effect_name
+
+	if on_hit_local_template_effect_name then
+		local fx_system = Managers.state.extension:system("fx_system")
+		local broadphase_system = Managers.state.extension:system("broadphase_system")
+		local broadphase = broadphase_system.broadphase
+		local num_hits = broadphase.query(broadphase, position, radius, broadphase_results, {
+			"villains",
+		})
+
+		for i = 1, num_hits do
+			local hit_unit = broadphase_results[i]
+
+			if HEALTH_ALIVE[hit_unit] then
+				fx_system:start_local_template_effect(EffectTemplates[on_hit_local_template_effect_name], hit_unit, nil, position)
+			end
+		end
+	end
 
 	local attack_ragdolls_enabled_locally = Application.user_setting("gore_settings", "attack_ragdolls_enabled")
 
@@ -484,10 +504,10 @@ end
 function _play_husk_effects(world, physics_world, wwise_world, attacking_owner_unit_or_nil, explosion_template, charge_level, position, rotation, radius)
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local source_is_player = attacking_owner_unit_or_nil and player_unit_spawn_manager:is_player_unit(attacking_owner_unit_or_nil)
-	local vfx_extension
+	local fx_extension
 
 	if source_is_player then
-		vfx_extension = ScriptUnit.extension(attacking_owner_unit_or_nil, "fx_system")
+		fx_extension = ScriptUnit.extension(attacking_owner_unit_or_nil, "fx_system")
 	end
 
 	local charge_wwise_parameter_name = explosion_template.charge_wwise_parameter_name
@@ -508,8 +528,8 @@ function _play_husk_effects(world, physics_world, wwise_world, attacking_owner_u
 					local radius_variable_name = vfx_data.radius_variable_name
 					local particle_id
 
-					if vfx_extension then
-						particle_id = vfx_extension:spawn_particles(effect_name, position)
+					if fx_extension then
+						particle_id = fx_extension:spawn_particles_local(effect_name, position, rotation)
 					else
 						particle_id = World.create_particles(world, effect_name, position, rotation)
 					end
@@ -530,8 +550,8 @@ function _play_husk_effects(world, physics_world, wwise_world, attacking_owner_u
 		for i = 1, num_vfx do
 			local effect_name = vfx[i]
 
-			if vfx_extension then
-				vfx_extension:spawn_particles(effect_name, position)
+			if fx_extension then
+				fx_extension:spawn_particles_local(effect_name, position, rotation)
 			else
 				World.create_particles(world, effect_name, position, rotation)
 			end

@@ -22,6 +22,7 @@ Interactable.init = function (self, unit, is_server)
 		local display_start_event = self:get_data(unit, "display_start_event")
 		local require_all_players = self:get_data(unit, "require_all_players")
 		local interaction_length = self:get_data(unit, "interaction_length")
+		local infinite_interaction = self:get_data(unit, "infinite_interaction")
 		local interaction_icon = self:get_data(unit, "interaction_icon")
 		local shared_interaction = self:get_data(unit, "shared_interaction")
 		local only_once = self:get_data(unit, "only_once")
@@ -60,6 +61,7 @@ Interactable.init = function (self, unit, is_server)
 		local interaction_context = {}
 
 		interaction_context.duration = interaction_length
+		interaction_context.infinite_interaction = infinite_interaction
 		interaction_context.shared_interaction = shared_interaction
 		interaction_context.only_once = only_once
 		interaction_context.interactor_item_to_equip = interactor_item_to_equip
@@ -223,6 +225,14 @@ end
 
 Interactable.events.interactable_disable = function (self, unit)
 	self:disable(unit)
+end
+
+Interactable.events.set_electrified = function (self, state)
+	local interactee_extension = self._interactee_extension
+
+	if interactee_extension then
+		interactee_extension:set_electrified(state)
+	end
 end
 
 Interactable.disable_display_start_event = function (self, unit)
@@ -504,6 +514,11 @@ Interactable.component_data = {
 		ui_type = "number",
 		value = 1,
 	},
+	infinite_interaction = {
+		ui_name = "Infinite Interaction",
+		ui_type = "check_box",
+		value = false,
+	},
 	shared_interaction = {
 		ui_name = "Shared Interaction",
 		ui_type = "check_box",
@@ -614,6 +629,9 @@ Interactable.component_data = {
 			accessibility = "public",
 			type = "event",
 		},
+	},
+	extensions = {
+		"InteracteeExtension",
 	},
 }
 

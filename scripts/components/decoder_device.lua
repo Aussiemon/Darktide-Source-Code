@@ -19,6 +19,17 @@ DecoderDevice.init = function (self, unit, is_server)
 
 		decoder_device_extension:setup_from_component(material_slot, main_material, ghost_material, install_anim_event)
 	end
+
+	self._is_server = is_server
+	self._decoder_device_extension = decoder_device_extension
+end
+
+DecoderDevice.place_decoder_setup = function (self)
+	local decoder_device_extension = self._decoder_device_extension
+
+	if decoder_device_extension and self._is_server then
+		decoder_device_extension:decoder_setup_success()
+	end
 end
 
 DecoderDevice.editor_init = function (self, unit)
