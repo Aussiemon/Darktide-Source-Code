@@ -2910,7 +2910,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"",
+				"mission_forge_tutorial_corruptor_done",
 				OP.EQ,
 				0,
 			},
@@ -2918,7 +2918,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"",
+				"mission_forge_tutorial_corruptor_done",
 				OP.ADD,
 				1,
 			},

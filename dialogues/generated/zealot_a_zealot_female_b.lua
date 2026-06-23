@@ -1,6 +1,28 @@
 ﻿-- chunkname: @dialogues/generated/zealot_a_zealot_female_b.lua
 
 local zealot_a_zealot_female_b = {
+	combat_pause_limited_bolt_on_a_zealot_a_01_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_female_b__combat_pause_limited_bolt_on_a_zealot_a_01_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.057375,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_zealot_a_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_female_b__combat_pause_limited_bolt_on_a_zealot_a_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.100583,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_zealot_a_06_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

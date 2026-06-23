@@ -1,6 +1,17 @@
 ﻿-- chunkname: @dialogues/generated/zealot_a_adamant_female_c.lua
 
 local zealot_a_adamant_female_c = {
+	combat_pause_limited_bolt_on_a_zealot_a_01_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_female_c__combat_pause_limited_bolt_on_a_zealot_a_01_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.51525,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_zealot_a_02_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -75,8 +86,8 @@ local zealot_a_adamant_female_c = {
 			[2] = "loc_adamant_female_c__combat_pause_quirk_disappointment_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 4.282406,
+			[2] = 4.724458,
 		},
 		randomize_indexes = {},
 	},
@@ -128,7 +139,7 @@ local zealot_a_adamant_female_c = {
 		},
 		sound_events_duration = {
 			[1] = 2.861719,
-			[2] = 3.45678,
+			[2] = 4.181094,
 		},
 		randomize_indexes = {},
 	},

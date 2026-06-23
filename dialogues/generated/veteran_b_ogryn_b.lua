@@ -1,6 +1,17 @@
 ﻿-- chunkname: @dialogues/generated/veteran_b_ogryn_b.lua
 
 local veteran_b_ogryn_b = {
+	combat_pause_limited_bolt_on_a_veteran_b_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_b__combat_pause_limited_bolt_on_a_veteran_b_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.648104,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_veteran_b_08_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
@@ -141,10 +152,6 @@ local veteran_b_ogryn_b = {
 		sound_events_duration = {
 			[1] = 2.158052,
 			[2] = 2.41424,
-		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
 		},
 		randomize_indexes = {},
 	},

@@ -585,7 +585,7 @@ return function ()
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"smart_tag_vo_seen_netgunner_flee",
+					"seen_netgunner_flee",
 				},
 			},
 			{
@@ -1718,6 +1718,56 @@ return function ()
 	define_rule({
 		category = "player_on_demand_vo",
 		database = "on_demand_vo",
+		name = "smart_tag_vo_enemy_plasma",
+		response = "smart_tag_vo_enemy_plasma",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"on_demand_vo_tag_enemy",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.SET_INCLUDES,
+				args = {
+					"renegade_plasma_gunner",
+				},
+			},
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMEDIFF,
+				OP.GT,
+				5,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMESET,
+			},
+			{
+				"faction_memory",
+				"enemy_heavy_gunner",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "self",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15,
+			},
+		},
+	})
+	define_rule({
+		category = "player_on_demand_vo",
+		database = "on_demand_vo",
 		name = "smart_tag_vo_enemy_scab_flamer",
 		response = "smart_tag_vo_enemy_scab_flamer",
 		wwise_route = 0,
@@ -1878,7 +1928,6 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"renegade_gunner",
-					"renegade_plasma_gunner",
 				},
 			},
 			{

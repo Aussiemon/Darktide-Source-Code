@@ -32,9 +32,6 @@ local veteran_a_psyker_male_b = {
 		sound_events_duration = {
 			[1] = 4.511396,
 		},
-		sound_event_weights = {
-			[1] = 1,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_limited_veteran_a_11_b = {

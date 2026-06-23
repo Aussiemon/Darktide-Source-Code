@@ -1,6 +1,17 @@
 ﻿-- chunkname: @dialogues/generated/veteran_c_adamant_male_b.lua
 
 local veteran_c_adamant_male_b = {
+	combat_pause_limited_bolt_on_a_veteran_c_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__combat_pause_limited_bolt_on_a_veteran_c_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 5.65024,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_veteran_c_02_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -101,8 +112,8 @@ local veteran_c_adamant_male_b = {
 			[2] = "loc_adamant_male_b__combat_pause_quirk_trust_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 3.916083,
+			[2] = 2.24599,
 		},
 		randomize_indexes = {},
 	},
@@ -114,8 +125,8 @@ local veteran_c_adamant_male_b = {
 			[2] = "loc_adamant_male_b__combat_pause_quirk_turncoat_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 1.991635,
+			[2] = 5.66776,
 		},
 		randomize_indexes = {},
 	},

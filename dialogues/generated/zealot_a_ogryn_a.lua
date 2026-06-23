@@ -1,6 +1,39 @@
 ﻿-- chunkname: @dialogues/generated/zealot_a_ogryn_a.lua
 
 local zealot_a_ogryn_a = {
+	combat_pause_limited_bolt_on_a_zealot_a_01_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_a__combat_pause_limited_bolt_on_a_zealot_a_01_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.743573,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_zealot_a_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_a__combat_pause_limited_bolt_on_a_zealot_a_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.222458,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_zealot_a_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_a__combat_pause_limited_bolt_on_a_zealot_a_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 5.576,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_zealot_a_08_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

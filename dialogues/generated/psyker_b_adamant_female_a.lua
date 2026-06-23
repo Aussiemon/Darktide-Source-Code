@@ -1,6 +1,28 @@
 ﻿-- chunkname: @dialogues/generated/psyker_b_adamant_female_a.lua
 
 local psyker_b_adamant_female_a = {
+	combat_pause_limited_bolt_on_a_psyker_b_01_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_female_a__combat_pause_limited_bolt_on_a_psyker_b_01_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.357146,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_psyker_b_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_female_a__combat_pause_limited_bolt_on_a_psyker_b_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.14674,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_psyker_b_03_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -129,19 +151,6 @@ local psyker_b_adamant_female_a = {
 		sound_events_duration = {
 			[1] = 2.452313,
 			[2] = 3.581333,
-		},
-		randomize_indexes = {},
-	},
-	combat_pause_quirk_heights_b = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1] = "loc_adamant_female_a__combat_pause_quirk_heights_b_01",
-			[2] = "loc_adamant_female_a__combat_pause_quirk_heights_b_02",
-		},
-		sound_events_duration = {
-			[1] = 2.175177,
-			[2] = 3.197271,
 		},
 		randomize_indexes = {},
 	},

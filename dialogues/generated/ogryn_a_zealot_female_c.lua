@@ -193,10 +193,6 @@ local ogryn_a_zealot_female_c = {
 			[1] = 3.306406,
 			[2] = 3.43799,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	oval_bonding_conversation_contradictions_b = {

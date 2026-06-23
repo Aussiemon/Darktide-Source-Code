@@ -1,6 +1,17 @@
 ﻿-- chunkname: @dialogues/generated/veteran_c_veteran_female_a.lua
 
 local veteran_c_veteran_female_a = {
+	combat_pause_limited_bolt_on_a_veteran_c_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_a__combat_pause_limited_bolt_on_a_veteran_c_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.033896,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_veteran_c_05_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

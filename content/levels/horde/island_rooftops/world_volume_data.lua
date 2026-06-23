@@ -482,6 +482,54 @@ local volume_data = {
 		},
 	},
 	{
+		height = 2,
+		name = "dz_volume_001",
+		type = "content/volume_types/player_instakill",
+		alt_max_vector = {
+			75.5,
+			363.5,
+			-3.7046079635620117,
+		},
+		alt_min_vector = {
+			75.5,
+			363.5,
+			-5.704607963562012,
+		},
+		bottom_points = {
+			{
+				73,
+				350,
+				-5.704607963562012,
+			},
+			{
+				77,
+				350,
+				-5.704607963562012,
+			},
+			{
+				78,
+				377,
+				-5.704607963562012,
+			},
+			{
+				73,
+				377,
+				-5.704607963562012,
+			},
+		},
+		color = {
+			255,
+			255,
+			64,
+			0,
+		},
+		up_vector = {
+			0,
+			0,
+			1,
+		},
+	},
+	{
 		height = 1,
 		name = "volume_mover_blocker_007",
 		type = "content/volume_types/player_mover_blocker",

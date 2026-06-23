@@ -2531,7 +2531,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"",
+				"mission_station_briefing_a",
 				OP.EQ,
 				0,
 			},
@@ -2539,7 +2539,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"",
+				"mission_station_briefing_a",
 				OP.ADD,
 				1,
 			},

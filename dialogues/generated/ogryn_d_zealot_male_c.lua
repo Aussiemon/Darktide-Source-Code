@@ -1,6 +1,17 @@
 ﻿-- chunkname: @dialogues/generated/ogryn_d_zealot_male_c.lua
 
 local ogryn_d_zealot_male_c = {
+	combat_pause_limited_bolt_on_a_ogryn_d_04_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_c__combat_pause_limited_bolt_on_a_ogryn_d_04_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.303708,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_ogryn_d_01_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

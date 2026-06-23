@@ -23,6 +23,17 @@ local veteran_a_adamant_female_b = {
 		},
 		randomize_indexes = {},
 	},
+	combat_pause_limited_veteran_a_10_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_female_b__combat_pause_limited_veteran_a_10_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.176823,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_veteran_a_11_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

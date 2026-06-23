@@ -1,31 +1,6 @@
 ﻿-- chunkname: @dialogues/generated/conversations_hub_credit_store_servitor_a.lua
 
 local conversations_hub_credit_store_servitor_a = {
-	credit_store_servitor_distance_restocked = {
-		randomize_indexes_n = 0,
-		sound_events_n = 8,
-		sound_events = {
-			"loc_credit_store_servitor_a__credit_store_servitor_distance_restocked_01",
-			"loc_credit_store_servitor_a__credit_store_servitor_distance_restocked_03",
-			"loc_credit_store_servitor_a__credit_store_servitor_distance_restocked_04",
-			"loc_credit_store_servitor_a__credit_store_servitor_distance_restocked_12",
-			"loc_credit_store_servitor_a__credit_store_servitor_distance_restocked_13",
-			"loc_credit_store_servitor_a__credit_store_servitor_distance_restocked_15",
-			"loc_credit_store_servitor_a__credit_store_servitor_distance_restocked_19",
-			"loc_credit_store_servitor_a__credit_store_servitor_distance_restocked_20",
-		},
-		sound_events_duration = {
-			1.996958,
-			2.425979,
-			2.416417,
-			3.293021,
-			2.530375,
-			3.959833,
-			4.547271,
-			4.252521,
-		},
-		randomize_indexes = {},
-	},
 	credit_store_servitor_goodbye = {
 		randomize_indexes_n = 0,
 		sound_events_n = 15,

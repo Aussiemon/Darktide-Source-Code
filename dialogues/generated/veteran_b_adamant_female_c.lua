@@ -1,6 +1,28 @@
 ﻿-- chunkname: @dialogues/generated/veteran_b_adamant_female_c.lua
 
 local veteran_b_adamant_female_c = {
+	combat_pause_limited_bolt_on_a_veteran_b_01_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_female_c__combat_pause_limited_bolt_on_a_veteran_b_01_b_01",
+		},
+		sound_events_duration = {
+			[1] = 5.680271,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_veteran_b_04_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_female_c__combat_pause_limited_bolt_on_a_veteran_b_04_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.855125,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_veteran_b_02_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -75,8 +97,8 @@ local veteran_b_adamant_female_c = {
 			[2] = "loc_adamant_female_c__combat_pause_quirk_desert_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 3.389083,
+			[2] = 4.834969,
 		},
 		randomize_indexes = {},
 	},
@@ -88,8 +110,8 @@ local veteran_b_adamant_female_c = {
 			[2] = "loc_adamant_female_c__combat_pause_quirk_end_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 2.67075,
+			[2] = 7.910938,
 		},
 		randomize_indexes = {},
 	},
@@ -168,10 +190,6 @@ local veteran_b_adamant_female_c = {
 		sound_events_duration = {
 			[1] = 5.556813,
 			[2] = 1.418406,
-		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
 		},
 		randomize_indexes = {},
 	},

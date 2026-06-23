@@ -1215,7 +1215,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"",
+				"mission_armoury_rooftops_a",
 				OP.EQ,
 				0,
 			},
@@ -1223,7 +1223,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"",
+				"mission_armoury_rooftops_a",
 				OP.ADD,
 				1,
 			},

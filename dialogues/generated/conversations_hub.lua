@@ -2554,74 +2554,6 @@ return function ()
 	define_rule({
 		category = "npc_prio_0",
 		database = "conversations_hub",
-		name = "credit_store_servitor_distance_restocked",
-		response = "credit_store_servitor_distance_restocked",
-		wwise_route = 19,
-		speaker_routing = {
-			target = "dialogist",
-		},
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"npc_interacting_vo",
-			},
-			{
-				"query_context",
-				"vo_event",
-				OP.EQ,
-				"credit_store_servitor_distance_restocked_b",
-			},
-			{
-				"query_context",
-				"interactor_voice_profile",
-				OP.SET_INCLUDES,
-				args = {
-					"",
-				},
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"",
-				},
-			},
-			{
-				"global_context",
-				"player_voice_profiles",
-				OP.SET_INTERSECTS,
-				args = {
-					"",
-				},
-			},
-			{
-				"user_memory",
-				"",
-				OP.EQ,
-				0,
-			},
-			{
-				"faction_memory",
-				"",
-				OP.EQ,
-				0,
-			},
-		},
-		on_done = {
-			{
-				"user_memory",
-				"",
-				OP.ADD,
-				1,
-			},
-		},
-	})
-	define_rule({
-		category = "npc_prio_0",
-		database = "conversations_hub",
 		name = "credit_store_servitor_distance_restocked_b",
 		response = "credit_store_servitor_distance_restocked_b",
 		wwise_route = 19,
@@ -14691,6 +14623,7 @@ return function ()
 				args = {
 					"adamant_officer",
 					"explicator",
+					"tech_priest",
 				},
 			},
 			{
@@ -14742,6 +14675,7 @@ return function ()
 				args = {
 					"adamant_officer",
 					"explicator",
+					"tech_priest",
 				},
 			},
 		},
@@ -17720,7 +17654,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"",
+				"npc_first_interaction_boon_vendor",
 				OP.EQ,
 				0,
 			},
@@ -17728,7 +17662,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"",
+				"npc_first_interaction_boon_vendor",
 				OP.ADD,
 				1,
 			},

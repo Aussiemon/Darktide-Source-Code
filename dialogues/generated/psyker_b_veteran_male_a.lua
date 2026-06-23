@@ -1,6 +1,17 @@
 ﻿-- chunkname: @dialogues/generated/psyker_b_veteran_male_a.lua
 
 local psyker_b_veteran_male_a = {
+	combat_pause_limited_bolt_on_a_psyker_b_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_a__combat_pause_limited_bolt_on_a_psyker_b_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.088417,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_psyker_b_03_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -129,19 +140,6 @@ local psyker_b_veteran_male_a = {
 		sound_events_duration = {
 			[1] = 3.522792,
 			[2] = 3.540625,
-		},
-		randomize_indexes = {},
-	},
-	combat_pause_quirk_heights_b = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1] = "loc_veteran_male_a__combat_pause_quirk_heights_b_01",
-			[2] = "loc_veteran_male_a__combat_pause_quirk_heights_b_02",
-		},
-		sound_events_duration = {
-			[1] = 3.892583,
-			[2] = 2.346979,
 		},
 		randomize_indexes = {},
 	},

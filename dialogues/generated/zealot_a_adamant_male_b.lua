@@ -140,8 +140,8 @@ local zealot_a_adamant_male_b = {
 			[2] = "loc_adamant_male_b__combat_pause_quirk_stench_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 2.399563,
+			[2] = 3.191417,
 		},
 		randomize_indexes = {},
 	},
@@ -153,8 +153,8 @@ local zealot_a_adamant_male_b = {
 			[2] = "loc_adamant_male_b__combat_pause_quirk_zealot_a_emperor_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 3.781708,
+			[2] = 3.637729,
 		},
 		randomize_indexes = {},
 	},
@@ -166,8 +166,8 @@ local zealot_a_adamant_male_b = {
 			[2] = "loc_adamant_male_b__combat_pause_quirk_zealot_a_wounded_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 3.704917,
+			[2] = 2.346771,
 		},
 		randomize_indexes = {},
 	},

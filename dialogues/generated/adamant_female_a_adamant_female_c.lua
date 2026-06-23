@@ -85,7 +85,7 @@ local adamant_female_a_adamant_female_c = {
 			[1] = "loc_adamant_female_c__adamant_to_adamant_bonding_conversation_39_d_01",
 		},
 		sound_events_duration = {
-			[1] = 6.092844,
+			[1] = 2.685188,
 		},
 		randomize_indexes = {},
 	},

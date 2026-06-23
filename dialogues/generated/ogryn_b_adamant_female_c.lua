@@ -67,6 +67,50 @@ local ogryn_b_adamant_female_c = {
 		},
 		randomize_indexes = {},
 	},
+	combat_pause_limited_bolt_on_a_ogryn_b_01_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_female_c__combat_pause_limited_bolt_on_a_ogryn_b_01_b_01",
+		},
+		sound_events_duration = {
+			[1] = 6.356875,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_ogryn_b_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_female_c__combat_pause_limited_bolt_on_a_ogryn_b_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.707729,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_ogryn_b_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_female_c__combat_pause_limited_bolt_on_a_ogryn_b_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 5.173552,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_ogryn_b_04_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_female_c__combat_pause_limited_bolt_on_a_ogryn_b_04_b_01",
+		},
+		sound_events_duration = {
+			[1] = 1.900469,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_ogryn_b_01_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -75,6 +119,17 @@ local ogryn_b_adamant_female_c = {
 		},
 		sound_events_duration = {
 			[1] = 3.743823,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_ogryn_b_04_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_female_c__combat_pause_limited_ogryn_b_04_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.227635,
 		},
 		randomize_indexes = {},
 	},
@@ -130,8 +185,8 @@ local ogryn_b_adamant_female_c = {
 			[2] = "loc_adamant_female_c__combat_pause_quirk_bored_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 2.726,
+			[2] = 2.661531,
 		},
 		randomize_indexes = {},
 	},
@@ -143,8 +198,8 @@ local ogryn_b_adamant_female_c = {
 			[2] = "loc_adamant_female_c__combat_pause_quirk_bullets_tickle_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 6.115083,
+			[2] = 1.915573,
 		},
 		randomize_indexes = {},
 	},

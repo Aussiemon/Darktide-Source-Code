@@ -30,7 +30,7 @@ local broker_a_psyker_female_b = {
 			[1] = "loc_psyker_female_b__combat_pause_quirk_broker_a_trait_01_b_01",
 		},
 		sound_events_duration = {
-			[1] = 2.329375,
+			[1] = 2.350479,
 		},
 		randomize_indexes = {},
 	},
@@ -63,7 +63,7 @@ local broker_a_psyker_female_b = {
 			[1] = "loc_psyker_female_b__combat_pause_quirk_broker_a_trait_04_b_01",
 		},
 		sound_events_duration = {
-			[1] = 4.042604,
+			[1] = 4.351854,
 		},
 		randomize_indexes = {},
 	},

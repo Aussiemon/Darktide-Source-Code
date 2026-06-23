@@ -1,6 +1,28 @@
 ﻿-- chunkname: @dialogues/generated/ogryn_d_adamant_male_b.lua
 
 local ogryn_d_adamant_male_b = {
+	combat_pause_limited_bolt_on_a_ogryn_d_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__combat_pause_limited_bolt_on_a_ogryn_d_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.897823,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_ogryn_d_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__combat_pause_limited_bolt_on_a_ogryn_d_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.407583,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_ogryn_d_06_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

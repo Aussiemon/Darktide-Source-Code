@@ -111,6 +111,39 @@ local ogryn_a_adamant_female_b = {
 		},
 		randomize_indexes = {},
 	},
+	combat_pause_limited_bolt_on_a_ogryn_a_01_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_female_b__combat_pause_limited_bolt_on_a_ogryn_a_01_b_01",
+		},
+		sound_events_duration = {
+			[1] = 5.762115,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_ogryn_a_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_female_b__combat_pause_limited_bolt_on_a_ogryn_a_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.34925,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_ogryn_a_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_female_b__combat_pause_limited_bolt_on_a_ogryn_a_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.699292,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_ogryn_a_06_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -267,10 +300,6 @@ local ogryn_a_adamant_female_b = {
 		sound_events_duration = {
 			[1] = 6.01501,
 			[2] = 3.334344,
-		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
 		},
 		randomize_indexes = {},
 	},

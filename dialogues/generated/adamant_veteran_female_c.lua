@@ -51,9 +51,9 @@ local adamant_veteran_female_c = {
 			"loc_veteran_female_c__found_health_booster_adamant_low_on_health_04",
 		},
 		sound_events_duration = {
-			3.45678,
+			1.715854,
 			2.05001,
-			3.45678,
+			1.923719,
 			1.514333,
 		},
 		randomize_indexes = {},
@@ -68,9 +68,9 @@ local adamant_veteran_female_c = {
 			"loc_veteran_female_c__found_health_booster_adamant_low_on_health_04",
 		},
 		sound_events_duration = {
-			3.45678,
+			1.715854,
 			2.05001,
-			3.45678,
+			1.923719,
 			1.514333,
 		},
 		sound_event_weights = {
@@ -93,7 +93,7 @@ local adamant_veteran_female_c = {
 			"loc_veteran_female_c__friendly_fire_from_adamant_to_veteran_06",
 		},
 		sound_events_duration = {
-			3.45678,
+			1.781771,
 			1.774667,
 			2.112677,
 			1.771333,

@@ -131,7 +131,7 @@ local adamant_psyker_male_c = {
 		sound_events_duration = {
 			2.354365,
 			2.162635,
-			3.45678,
+			2.358729,
 			3.069958,
 		},
 		randomize_indexes = {},

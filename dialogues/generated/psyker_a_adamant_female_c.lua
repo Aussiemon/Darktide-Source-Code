@@ -1,6 +1,17 @@
 ﻿-- chunkname: @dialogues/generated/psyker_a_adamant_female_c.lua
 
 local psyker_a_adamant_female_c = {
+	combat_pause_limited_bolt_on_a_psyker_a_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_female_c__combat_pause_limited_bolt_on_a_psyker_a_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.336604,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_psyker_a_01_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -75,8 +86,8 @@ local psyker_a_adamant_female_c = {
 			[2] = "loc_adamant_female_c__combat_pause_quirk_bad_feeling_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 4.577104,
+			[2] = 3.112802,
 		},
 		randomize_indexes = {},
 	},
@@ -88,8 +99,8 @@ local psyker_a_adamant_female_c = {
 			[2] = "loc_adamant_female_c__combat_pause_quirk_cold_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 2.808885,
+			[2] = 5.138885,
 		},
 		randomize_indexes = {},
 	},
@@ -101,8 +112,8 @@ local psyker_a_adamant_female_c = {
 			[2] = "loc_adamant_female_c__combat_pause_quirk_dislikes_grenades_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 4.263979,
+			[2] = 4.466594,
 		},
 		randomize_indexes = {},
 	},

@@ -232,8 +232,8 @@ local adamant_c_adamant_male_b = {
 			[2] = "loc_adamant_male_b__combat_pause_quirk_adamant_c_trait_08_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 3.263406,
+			[2] = 4.487177,
 		},
 		randomize_indexes = {},
 	},
@@ -245,8 +245,8 @@ local adamant_c_adamant_male_b = {
 			[2] = "loc_adamant_male_b__combat_pause_quirk_adamant_c_trait_09_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 2.538729,
+			[2] = 2.524333,
 		},
 		randomize_indexes = {},
 	},
@@ -258,8 +258,8 @@ local adamant_c_adamant_male_b = {
 			[2] = "loc_adamant_male_b__combat_pause_quirk_adamant_c_trait_10_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 2.524333,
+			[2] = 2.66351,
 		},
 		randomize_indexes = {},
 	},

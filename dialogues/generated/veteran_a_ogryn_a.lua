@@ -23,10 +23,6 @@ local veteran_a_ogryn_a = {
 			[1] = 2.820021,
 			[2] = 1.610365,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_limited_veteran_a_14_b = {

@@ -1304,6 +1304,11 @@ return function ()
 		heard_speak_routing = {
 			target = "mission_giver_default",
 		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1340,6 +1345,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
 		},
 	})
 	define_rule({
@@ -1378,6 +1388,11 @@ return function ()
 		heard_speak_routing = {
 			target = "mission_giver_default",
 		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1414,6 +1429,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
 		},
 	})
 	define_rule({
@@ -1452,6 +1472,11 @@ return function ()
 		heard_speak_routing = {
 			target = "mission_giver_default",
 		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1488,6 +1513,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
 		},
 	})
 	define_rule({
@@ -1526,6 +1556,11 @@ return function ()
 		heard_speak_routing = {
 			target = "mission_giver_default",
 		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1562,6 +1597,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
 		},
 	})
 	define_rule({
@@ -1600,6 +1640,11 @@ return function ()
 		heard_speak_routing = {
 			target = "mission_giver_default",
 		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1636,6 +1681,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
 		},
 	})
 	define_rule({
@@ -1674,6 +1724,11 @@ return function ()
 		heard_speak_routing = {
 			target = "mission_giver_default",
 		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1710,6 +1765,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
 		},
 	})
 	define_rule({
@@ -1748,6 +1808,11 @@ return function ()
 		heard_speak_routing = {
 			target = "mission_giver_default",
 		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1784,6 +1849,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
 		},
 	})
 	define_rule({
@@ -1822,6 +1892,11 @@ return function ()
 		heard_speak_routing = {
 			target = "mission_giver_default",
 		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1858,6 +1933,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
 		},
 	})
 	define_rule({
@@ -1896,6 +1976,11 @@ return function ()
 		heard_speak_routing = {
 			target = "mission_giver_default",
 		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -1932,6 +2017,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
 		},
 	})
 	define_rule({
@@ -1970,6 +2060,11 @@ return function ()
 		heard_speak_routing = {
 			target = "mission_giver_default",
 		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2006,6 +2101,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
 		},
 	})
 	define_rule({
@@ -2044,6 +2144,11 @@ return function ()
 		heard_speak_routing = {
 			target = "mission_giver_default",
 		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2080,6 +2185,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
 		},
 	})
 	define_rule({
@@ -2118,6 +2228,11 @@ return function ()
 		heard_speak_routing = {
 			target = "mission_giver_default",
 		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2154,6 +2269,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
 		},
 	})
 	define_rule({
@@ -2192,6 +2312,11 @@ return function ()
 		heard_speak_routing = {
 			target = "mission_giver_default",
 		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2228,6 +2353,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
 		},
 	})
 	define_rule({
@@ -2266,6 +2396,11 @@ return function ()
 		heard_speak_routing = {
 			target = "mission_giver_default",
 		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2302,6 +2437,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
 		},
 	})
 	define_rule({
@@ -2340,6 +2480,11 @@ return function ()
 		heard_speak_routing = {
 			target = "mission_giver_default",
 		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2376,6 +2521,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
 		},
 	})
 	define_rule({
@@ -2414,6 +2564,11 @@ return function ()
 		heard_speak_routing = {
 			target = "mission_giver_default",
 		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2450,6 +2605,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
 		},
 	})
 	define_rule({
@@ -2488,6 +2648,11 @@ return function ()
 		heard_speak_routing = {
 			target = "mission_giver_default",
 		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2524,6 +2689,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
 		},
 	})
 	define_rule({
@@ -2562,6 +2732,11 @@ return function ()
 		heard_speak_routing = {
 			target = "mission_giver_default",
 		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2598,6 +2773,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
 		},
 	})
 	define_rule({
@@ -2636,6 +2816,11 @@ return function ()
 		heard_speak_routing = {
 			target = "mission_giver_default",
 		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2672,6 +2857,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
 		},
 	})
 	define_rule({
@@ -2710,6 +2900,11 @@ return function ()
 		heard_speak_routing = {
 			target = "mission_giver_default",
 		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2746,6 +2941,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
 		},
 	})
 	define_rule({
@@ -2784,6 +2984,11 @@ return function ()
 		heard_speak_routing = {
 			target = "mission_giver_default",
 		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2820,6 +3025,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
 		},
 	})
 	define_rule({
@@ -2858,6 +3068,11 @@ return function ()
 		heard_speak_routing = {
 			target = "mission_giver_default",
 		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
+		},
 	})
 	define_rule({
 		category = "vox_prio_0",
@@ -2894,6 +3109,11 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "mission_giver_default",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.1,
+			},
 		},
 	})
 	define_rule({

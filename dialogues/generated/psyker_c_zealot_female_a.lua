@@ -10,9 +10,6 @@ local psyker_c_zealot_female_a = {
 		sound_events_duration = {
 			[1] = 4.232771,
 		},
-		sound_event_weights = {
-			[1] = 1,
-		},
 		randomize_indexes = {},
 	},
 	combat_pause_limited_psyker_c_05_b = {

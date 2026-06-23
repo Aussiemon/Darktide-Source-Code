@@ -1,6 +1,17 @@
 ﻿-- chunkname: @dialogues/generated/zealot_b_broker_male_a.lua
 
 local zealot_b_broker_male_a = {
+	combat_pause_limited_zealot_b_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_broker_male_a__combat_pause_limited_zealot_b_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 1.870677,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_zealot_b_05_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

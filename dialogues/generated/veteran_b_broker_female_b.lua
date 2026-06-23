@@ -122,6 +122,17 @@ local veteran_b_broker_female_b = {
 		},
 		randomize_indexes = {},
 	},
+	combat_pause_quirk_trinket_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_broker_female_b__combat_pause_quirk_trinket_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.445323,
+		},
+		randomize_indexes = {},
+	},
 }
 
 return settings("veteran_b_broker_female_b", veteran_b_broker_female_b)

@@ -180,10 +180,6 @@ local veteran_b_veteran_male_c = {
 			[1] = 3.336406,
 			[2] = 2.694948,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	veteran_gang_metropolitan_breather_b = {

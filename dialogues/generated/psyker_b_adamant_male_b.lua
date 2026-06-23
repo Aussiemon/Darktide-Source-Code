@@ -1,6 +1,17 @@
 ﻿-- chunkname: @dialogues/generated/psyker_b_adamant_male_b.lua
 
 local psyker_b_adamant_male_b = {
+	combat_pause_limited_bolt_on_a_psyker_b_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__combat_pause_limited_bolt_on_a_psyker_b_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 1.948115,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_psyker_b_01_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -132,19 +143,6 @@ local psyker_b_adamant_male_b = {
 		},
 		randomize_indexes = {},
 	},
-	combat_pause_quirk_heights_b = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1] = "loc_adamant_male_b__combat_pause_quirk_heights_b_01",
-			[2] = "loc_adamant_male_b__combat_pause_quirk_heights_b_02",
-		},
-		sound_events_duration = {
-			[1] = 4.862875,
-			[2] = 4.561469,
-		},
-		randomize_indexes = {},
-	},
 	combat_pause_quirk_lonely_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
@@ -166,8 +164,8 @@ local psyker_b_adamant_male_b = {
 			[2] = "loc_adamant_male_b__combat_pause_quirk_togetherness_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 5.019875,
+			[2] = 2.937063,
 		},
 		randomize_indexes = {},
 	},

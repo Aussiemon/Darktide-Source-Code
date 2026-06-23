@@ -369,7 +369,7 @@ local adamant_psyker_female_b = {
 			2.314563,
 			1.609729,
 			1.54925,
-			4.937,
+			2.360833,
 		},
 		randomize_indexes = {},
 	},

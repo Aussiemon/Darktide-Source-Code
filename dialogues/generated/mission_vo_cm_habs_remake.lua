@@ -72,7 +72,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"",
+				"level_hab_block_apartments_time",
 				OP.TIMEDIFF,
 				OP.GT,
 				20,
@@ -87,7 +87,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"",
+				"level_hab_block_apartments_time",
 				OP.TIMESET,
 			},
 			{

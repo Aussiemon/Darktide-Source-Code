@@ -111,6 +111,28 @@ local ogryn_c_adamant_female_b = {
 		},
 		randomize_indexes = {},
 	},
+	combat_pause_limited_bolt_on_a_ogryn_c_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_female_b__combat_pause_limited_bolt_on_a_ogryn_c_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.613615,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_ogryn_c_04_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_female_b__combat_pause_limited_bolt_on_a_ogryn_c_04_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.430427,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_ogryn_c_01_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

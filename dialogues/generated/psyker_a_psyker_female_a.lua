@@ -1,6 +1,50 @@
 ﻿-- chunkname: @dialogues/generated/psyker_a_psyker_female_a.lua
 
 local psyker_a_psyker_female_a = {
+	combat_pause_limited_bolt_on_a_psyker_a_01_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_a__combat_pause_limited_bolt_on_a_psyker_a_01_a_01",
+		},
+		sound_events_duration = {
+			[1] = 5.272,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_psyker_a_02_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_a__combat_pause_limited_bolt_on_a_psyker_a_02_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.430167,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_psyker_a_03_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_a__combat_pause_limited_bolt_on_a_psyker_a_03_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.051917,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_psyker_a_04_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_a__combat_pause_limited_bolt_on_a_psyker_a_04_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.378313,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_psyker_a_01_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

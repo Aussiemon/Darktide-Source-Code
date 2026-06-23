@@ -29,6 +29,7 @@ return function ()
 				args = {
 					"adamant_officer",
 					"explicator",
+					"tech_priest",
 				},
 			},
 			{
@@ -79,6 +80,7 @@ return function ()
 				args = {
 					"adamant_officer",
 					"explicator",
+					"tech_priest",
 				},
 			},
 		},
@@ -116,6 +118,7 @@ return function ()
 				args = {
 					"adamant_officer",
 					"explicator",
+					"tech_priest",
 				},
 			},
 		},
@@ -153,6 +156,7 @@ return function ()
 				args = {
 					"adamant_officer",
 					"explicator",
+					"tech_priest",
 				},
 			},
 		},
@@ -190,6 +194,7 @@ return function ()
 				args = {
 					"adamant_officer",
 					"explicator",
+					"tech_priest",
 				},
 			},
 		},

@@ -23,6 +23,39 @@ local ogryn_b_veteran_female_c = {
 		},
 		randomize_indexes = {},
 	},
+	combat_pause_limited_bolt_on_a_ogryn_b_01_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_c__combat_pause_limited_bolt_on_a_ogryn_b_01_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.724365,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_ogryn_b_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_c__combat_pause_limited_bolt_on_a_ogryn_b_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.989719,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_ogryn_b_04_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_c__combat_pause_limited_bolt_on_a_ogryn_b_04_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.135865,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_ogryn_b_06_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

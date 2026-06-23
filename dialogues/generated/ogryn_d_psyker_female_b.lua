@@ -1,6 +1,17 @@
 ﻿-- chunkname: @dialogues/generated/ogryn_d_psyker_female_b.lua
 
 local ogryn_d_psyker_female_b = {
+	combat_pause_limited_bolt_on_a_ogryn_d_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_female_b__combat_pause_limited_bolt_on_a_ogryn_d_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.744417,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_ogryn_d_06_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

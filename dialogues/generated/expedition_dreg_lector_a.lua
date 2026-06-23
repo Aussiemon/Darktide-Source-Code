@@ -135,14 +135,13 @@ local expedition_dreg_lector_a = {
 	},
 	expeditions_heat_detected_heat_rise_a = {
 		randomize_indexes_n = 0,
-		sound_events_n = 6,
+		sound_events_n = 5,
 		sound_events = {
 			"loc_dreg_lector_a__expeditions_heat_detected_heat_rise_a_01",
 			"loc_dreg_lector_a__expeditions_heat_detected_heat_rise_a_02",
 			"loc_dreg_lector_a__expeditions_heat_detected_heat_rise_a_03",
 			"loc_dreg_lector_a__expeditions_heat_detected_heat_rise_a_04",
 			"loc_dreg_lector_a__expeditions_heat_detected_heat_rise_a_05",
-			"loc_dreg_lector_a__expeditions_heat_detected_heat_rise_a_06",
 		},
 		sound_events_duration = {
 			5.246844,
@@ -150,7 +149,6 @@ local expedition_dreg_lector_a = {
 			4.880156,
 			5.416021,
 			4.951229,
-			4.19199,
 		},
 		randomize_indexes = {},
 	},

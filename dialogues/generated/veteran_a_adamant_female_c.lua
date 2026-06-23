@@ -34,6 +34,17 @@ local veteran_a_adamant_female_c = {
 		},
 		randomize_indexes = {},
 	},
+	combat_pause_limited_veteran_a_10_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_female_c__combat_pause_limited_veteran_a_10_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.743083,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_veteran_a_11_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -75,8 +86,8 @@ local veteran_a_adamant_female_c = {
 			[2] = "loc_adamant_female_c__combat_pause_quirk_accuracy_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 2.827302,
+			[2] = 3.757458,
 		},
 		randomize_indexes = {},
 	},
@@ -88,8 +99,8 @@ local veteran_a_adamant_female_c = {
 			[2] = "loc_adamant_female_c__combat_pause_quirk_discipline_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 2.854938,
+			[2] = 6.069042,
 		},
 		randomize_indexes = {},
 	},
@@ -101,8 +112,8 @@ local veteran_a_adamant_female_c = {
 			[2] = "loc_adamant_female_c__combat_pause_quirk_emperor_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 5.405958,
+			[2] = 4.448177,
 		},
 		randomize_indexes = {},
 	},

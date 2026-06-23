@@ -2090,6 +2090,7 @@ return function ()
 					"zealot",
 					"adamant",
 					"broker",
+					"cryptic",
 				},
 			},
 			{
@@ -6086,6 +6087,15 @@ return function ()
 			},
 			{
 				"user_context",
+				"class_name",
+				OP.SET_NOT_INCLUDES,
+				args = {
+					"cryptic",
+					"temp",
+				},
+			},
+			{
+				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
@@ -6158,6 +6168,15 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"psyker",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_NOT_INCLUDES,
+				args = {
+					"cryptic",
+					"temp",
 				},
 			},
 			{
@@ -6238,6 +6257,15 @@ return function ()
 			},
 			{
 				"user_context",
+				"class_name",
+				OP.SET_NOT_INCLUDES,
+				args = {
+					"cryptic",
+					"temp",
+				},
+			},
+			{
+				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
@@ -6310,6 +6338,15 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"zealot",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_NOT_INCLUDES,
+				args = {
+					"cryptic",
+					"temp",
 				},
 			},
 			{
@@ -6463,6 +6500,15 @@ return function ()
 				},
 			},
 			{
+				"user_context",
+				"class_name",
+				OP.SET_NOT_INCLUDES,
+				args = {
+					"cryptic",
+					"temp",
+				},
+			},
+			{
 				"faction_memory",
 				"deployed_medical_crate",
 				OP.TIMEDIFF,
@@ -6514,6 +6560,15 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"psyker",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_NOT_INCLUDES,
+				args = {
+					"cryptic",
+					"temp",
 				},
 			},
 			{
@@ -6571,6 +6626,15 @@ return function ()
 				},
 			},
 			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"cryptic",
+					"temp",
+				},
+			},
+			{
 				"faction_memory",
 				"deployed_medical_crate",
 				OP.TIMEDIFF,
@@ -6622,6 +6686,15 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"zealot",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_NOT_INCLUDES,
+				args = {
+					"cryptic",
+					"temp",
 				},
 			},
 			{
@@ -6697,6 +6770,15 @@ return function ()
 				},
 			},
 			{
+				"user_context",
+				"class_name",
+				OP.SET_NOT_INCLUDES,
+				args = {
+					"cryptic",
+					"temp",
+				},
+			},
+			{
 				"faction_memory",
 				"last_saw_health",
 				OP.TIMEDIFF,
@@ -6764,6 +6846,15 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"psyker",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_NOT_INCLUDES,
+				args = {
+					"cryptic",
+					"temp",
 				},
 			},
 			{
@@ -6837,6 +6928,15 @@ return function ()
 				},
 			},
 			{
+				"user_context",
+				"class_name",
+				OP.SET_NOT_INCLUDES,
+				args = {
+					"cryptic",
+					"temp",
+				},
+			},
+			{
 				"faction_memory",
 				"last_saw_health",
 				OP.TIMEDIFF,
@@ -6904,6 +7004,15 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"zealot",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_NOT_INCLUDES,
+				args = {
+					"cryptic",
+					"temp",
 				},
 			},
 			{
@@ -8310,52 +8419,6 @@ return function ()
 	define_rule({
 		category = "enemy_alerts_prio_0",
 		database = "gameplay_vo",
-		name = "heard_enemy_monster_generic",
-		response = "heard_enemy_monster_generic",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_enemy",
-			},
-			{
-				"query_context",
-				"enemy_tag",
-				OP.EQ,
-				"monster",
-			},
-			{
-				"query_context",
-				"enemies_close",
-				OP.GTEQ,
-				0,
-			},
-			{
-				"faction_memory",
-				"heard_enemy_monster_generic",
-				OP.TIMEDIFF,
-				OP.GT,
-				0,
-			},
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"heard_enemy_monster_generic",
-				OP.TIMESET,
-			},
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 1,
-			},
-		},
-	})
-	define_rule({
-		category = "enemy_alerts_prio_0",
-		database = "gameplay_vo",
 		name = "heard_enemy_plague_ogryn",
 		response = "heard_enemy_plague_ogryn",
 		wwise_route = 0,
@@ -9613,7 +9676,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_ogryn",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -9675,7 +9738,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_psyker",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -9742,7 +9805,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_veteran",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -9804,7 +9867,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_zealot",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -10448,7 +10511,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_ogryn",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -10515,7 +10578,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_psyker",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -10577,7 +10640,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_veteran",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -10644,7 +10707,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_zealot",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -12873,11 +12936,6 @@ return function ()
 		heard_speak_routing = {
 			target = "players",
 		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2,
-			},
-		},
 	})
 	define_rule({
 		category = "player_prio_1",
@@ -12956,7 +13014,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"",
+				"response_for_ogryn_enemy_kill_monster",
 				OP.TIMEDIFF,
 				OP.GT,
 				240,
@@ -12965,7 +13023,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"",
+				"response_for_ogryn_enemy_kill_monster",
 				OP.TIMESET,
 			},
 		},
@@ -14028,11 +14086,6 @@ return function ()
 		heard_speak_routing = {
 			target = "players",
 		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2,
-			},
-		},
 	})
 	define_rule({
 		category = "player_prio_1",
@@ -15012,11 +15065,6 @@ return function ()
 		heard_speak_routing = {
 			target = "players",
 		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2,
-			},
-		},
 	})
 	define_rule({
 		category = "player_prio_1",
@@ -15989,11 +16037,6 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players",
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2,
-			},
 		},
 	})
 	define_rule({
@@ -18145,7 +18188,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_ogryn",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -18212,7 +18255,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_psyker",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -18279,7 +18322,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_veteran",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -18346,7 +18389,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_zealot",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -18667,7 +18710,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_ogryn",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -18734,7 +18777,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_psyker",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -18801,7 +18844,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_veteran",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -18868,7 +18911,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_zealot",
+				"seen_killstreak",
 			},
 			{
 				"query_context",

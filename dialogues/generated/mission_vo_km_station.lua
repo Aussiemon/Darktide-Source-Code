@@ -1558,7 +1558,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"",
+				"mission_station_interrogate_splice_point",
 				OP.EQ,
 				0,
 			},
@@ -1566,7 +1566,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"",
+				"mission_station_interrogate_splice_point",
 				OP.ADD,
 				1,
 			},

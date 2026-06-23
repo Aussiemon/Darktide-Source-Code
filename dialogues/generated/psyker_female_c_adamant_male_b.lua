@@ -41,7 +41,7 @@ local psyker_female_c_adamant_male_b = {
 			[1] = "loc_adamant_male_b__adamant_male_b_psyker_bonding_conversation_57_d_01",
 		},
 		sound_events_duration = {
-			[1] = 5.644083,
+			[1] = 3.446563,
 		},
 		randomize_indexes = {},
 	},

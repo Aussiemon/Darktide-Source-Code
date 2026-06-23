@@ -110,7 +110,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_broker",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -337,7 +337,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_adamant",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -394,7 +394,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_broker",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -451,7 +451,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_ogryn",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -513,7 +513,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_psyker",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -580,7 +580,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_veteran",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -637,7 +637,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_zealot",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -1117,6 +1117,15 @@ return function ()
 			},
 			{
 				"user_context",
+				"class_name",
+				OP.SET_NOT_INCLUDES,
+				args = {
+					"cryptic",
+					"temp",
+				},
+			},
+			{
+				"user_context",
 				"threat_level",
 				OP.SET_INCLUDES,
 				args = {
@@ -1171,6 +1180,15 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"broker",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_NOT_INCLUDES,
+				args = {
+					"cryptic",
+					"temp",
 				},
 			},
 			{
@@ -1243,6 +1261,15 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"broker",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_NOT_INCLUDES,
+				args = {
+					"cryptic",
+					"temp",
 				},
 			},
 			{
@@ -2091,7 +2118,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_broker",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -2255,7 +2282,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_broker",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -2691,11 +2718,6 @@ return function ()
 		heard_speak_routing = {
 			target = "players",
 		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2,
-			},
-		},
 	})
 	define_rule({
 		category = "player_prio_1",
@@ -2774,7 +2796,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"",
+				"response_for_broker_enemy_kill_monster",
 				OP.TIMEDIFF,
 				OP.GT,
 				240,
@@ -2783,7 +2805,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"",
+				"response_for_broker_enemy_kill_monster",
 				OP.TIMESET,
 			},
 		},
@@ -5161,7 +5183,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_broker",
+				"seen_killstreak",
 			},
 			{
 				"query_context",
@@ -5272,7 +5294,7 @@ return function ()
 				"query_context",
 				"concept",
 				OP.EQ,
-				"seen_killstreak_broker",
+				"seen_killstreak",
 			},
 			{
 				"query_context",

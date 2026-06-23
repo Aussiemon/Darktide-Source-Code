@@ -52,7 +52,7 @@ local broker_b_broker_male_a = {
 			[1] = "loc_broker_male_a__combat_pause_limited_broker_b_05_b_01",
 		},
 		sound_events_duration = {
-			[1] = 4.921188,
+			[1] = 2.422604,
 		},
 		randomize_indexes = {},
 	},

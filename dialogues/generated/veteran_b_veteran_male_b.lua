@@ -1,6 +1,50 @@
 ﻿-- chunkname: @dialogues/generated/veteran_b_veteran_male_b.lua
 
 local veteran_b_veteran_male_b = {
+	combat_pause_limited_bolt_on_a_veteran_b_01_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_b__combat_pause_limited_bolt_on_a_veteran_b_01_a_01",
+		},
+		sound_events_duration = {
+			[1] = 2.522813,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_veteran_b_02_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_b__combat_pause_limited_bolt_on_a_veteran_b_02_a_01",
+		},
+		sound_events_duration = {
+			[1] = 6.367438,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_veteran_b_03_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_b__combat_pause_limited_bolt_on_a_veteran_b_03_a_01",
+		},
+		sound_events_duration = {
+			[1] = 2.898271,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_veteran_b_04_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_b__combat_pause_limited_bolt_on_a_veteran_b_04_a_01",
+		},
+		sound_events_duration = {
+			[1] = 2.675979,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_veteran_b_01_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -497,10 +541,6 @@ local veteran_b_veteran_male_b = {
 		sound_events_duration = {
 			[1] = 3.503917,
 			[2] = 4.226333,
-		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
 		},
 		randomize_indexes = {},
 	},

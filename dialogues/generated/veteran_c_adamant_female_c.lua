@@ -1,6 +1,17 @@
 ﻿-- chunkname: @dialogues/generated/veteran_c_adamant_female_c.lua
 
 local veteran_c_adamant_female_c = {
+	combat_pause_limited_bolt_on_a_veteran_c_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_female_c__combat_pause_limited_bolt_on_a_veteran_c_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.387958,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_veteran_c_02_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -53,8 +64,8 @@ local veteran_c_adamant_female_c = {
 			[2] = "loc_adamant_female_c__combat_pause_quirk_dead_already_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 5.415167,
+			[2] = 4.540271,
 		},
 		randomize_indexes = {},
 	},
@@ -66,8 +77,8 @@ local veteran_c_adamant_female_c = {
 			[2] = "loc_adamant_female_c__combat_pause_quirk_doomed_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 3.941656,
+			[2] = 4.991531,
 		},
 		randomize_indexes = {},
 	},

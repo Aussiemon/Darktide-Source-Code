@@ -41,24 +41,12 @@ return function ()
 				OP.GT,
 				30,
 			},
-			{
-				"faction_memory",
-				"",
-				OP.EQ,
-				0,
-			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMESET,
-			},
-			{
-				"faction_memory",
-				"",
-				OP.ADD,
-				0,
 			},
 		},
 	})
@@ -822,24 +810,12 @@ return function ()
 				OP.GT,
 				30,
 			},
-			{
-				"faction_memory",
-				"",
-				OP.EQ,
-				0,
-			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMESET,
-			},
-			{
-				"faction_memory",
-				"",
-				OP.ADD,
-				0,
 			},
 		},
 	})
@@ -933,24 +909,12 @@ return function ()
 				OP.GT,
 				30,
 			},
-			{
-				"faction_memory",
-				"",
-				OP.EQ,
-				0,
-			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMESET,
-			},
-			{
-				"faction_memory",
-				"",
-				OP.ADD,
-				0,
 			},
 		},
 	})
@@ -994,24 +958,12 @@ return function ()
 				OP.GT,
 				30,
 			},
-			{
-				"faction_memory",
-				"",
-				OP.EQ,
-				0,
-			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMESET,
-			},
-			{
-				"faction_memory",
-				"",
-				OP.ADD,
-				0,
 			},
 		},
 	})
@@ -1360,24 +1312,12 @@ return function ()
 				OP.GT,
 				30,
 			},
-			{
-				"faction_memory",
-				"",
-				OP.EQ,
-				0,
-			},
 		},
 		on_done = {
 			{
 				"faction_memory",
 				"time_since_found_way",
 				OP.TIMESET,
-			},
-			{
-				"faction_memory",
-				"",
-				OP.ADD,
-				0,
 			},
 		},
 	})

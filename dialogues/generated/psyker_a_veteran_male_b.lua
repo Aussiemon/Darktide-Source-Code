@@ -1,6 +1,17 @@
 ﻿-- chunkname: @dialogues/generated/psyker_a_veteran_male_b.lua
 
 local psyker_a_veteran_male_b = {
+	combat_pause_limited_bolt_on_a_psyker_a_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_b__combat_pause_limited_bolt_on_a_psyker_a_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.196688,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_psyker_a_01_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

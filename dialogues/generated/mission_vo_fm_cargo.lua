@@ -82,7 +82,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"",
+				"mission_cargo_consignment_yard",
 				OP.EQ,
 				0,
 			},
@@ -90,7 +90,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"",
+				"mission_cargo_consignment_yard",
 				OP.ADD,
 				1,
 			},

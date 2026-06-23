@@ -1269,7 +1269,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"",
+				"ranged_gameplay_05",
 				OP.EQ,
 				0,
 			},
@@ -1277,7 +1277,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"",
+				"ranged_gameplay_05",
 				OP.ADD,
 				1,
 			},

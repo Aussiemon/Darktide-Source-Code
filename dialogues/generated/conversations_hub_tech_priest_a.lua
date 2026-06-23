@@ -391,6 +391,28 @@ local conversations_hub_tech_priest_a = {
 		},
 		randomize_indexes = {},
 	},
+	hub_onboarding_03_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_tech_priest_a__hub_onboarding_03_a_01",
+		},
+		sound_events_duration = {
+			[1] = 3.530438,
+		},
+		randomize_indexes = {},
+	},
+	hub_onboarding_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_tech_priest_a__hub_onboarding_03_a_02",
+		},
+		sound_events_duration = {
+			[1] = 5.662625,
+		},
+		randomize_indexes = {},
+	},
 	may_hub_conversation_04_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

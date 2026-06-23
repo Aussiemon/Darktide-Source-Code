@@ -1,6 +1,17 @@
 ﻿-- chunkname: @dialogues/generated/psyker_c_broker_female_a.lua
 
 local psyker_c_broker_female_a = {
+	combat_pause_limited_psyker_c_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_broker_female_a__combat_pause_limited_psyker_c_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.337594,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_psyker_c_05_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

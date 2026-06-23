@@ -263,10 +263,6 @@ local ogryn_a_ogryn_c = {
 			[1] = 4.336958,
 			[2] = 6.064333,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 }

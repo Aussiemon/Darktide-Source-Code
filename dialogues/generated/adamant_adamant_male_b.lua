@@ -310,7 +310,7 @@ local adamant_adamant_male_b = {
 			1.191167,
 			1.244573,
 			0.693146,
-			3.45678,
+			1.039469,
 		},
 		randomize_indexes = {},
 	},
@@ -335,7 +335,7 @@ local adamant_adamant_male_b = {
 			1.191167,
 			1.244573,
 			0.693146,
-			3.45678,
+			1.039469,
 		},
 		sound_event_weights = {
 			0.125,

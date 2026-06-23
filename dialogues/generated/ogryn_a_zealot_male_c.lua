@@ -215,10 +215,6 @@ local ogryn_a_zealot_male_c = {
 			[1] = 3.260531,
 			[2] = 4.615375,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	oval_bonding_conversation_beautiful_b = {

@@ -91,6 +91,39 @@ local mission_briefing_interrogator_a = {
 		},
 		randomize_indexes = {},
 	},
+	mission_cargo_briefing_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_interrogator_a__mission_cargo_briefing_a_01",
+		},
+		sound_events_duration = {
+			[1] = 3.45678,
+		},
+		randomize_indexes = {},
+	},
+	mission_cargo_briefing_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_interrogator_a__mission_cargo_briefing_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.45678,
+		},
+		randomize_indexes = {},
+	},
+	mission_cargo_briefing_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_interrogator_a__mission_cargo_briefing_c_01",
+		},
+		sound_events_duration = {
+			[1] = 3.45678,
+		},
+		randomize_indexes = {},
+	},
 	mission_complex_brief_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 3,

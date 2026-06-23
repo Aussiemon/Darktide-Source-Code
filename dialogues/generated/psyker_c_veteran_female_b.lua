@@ -1,6 +1,28 @@
 ﻿-- chunkname: @dialogues/generated/psyker_c_veteran_female_b.lua
 
 local psyker_c_veteran_female_b = {
+	combat_pause_limited_bolt_on_a_psyker_c_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__combat_pause_limited_bolt_on_a_psyker_c_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.551083,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_psyker_c_04_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_b__combat_pause_limited_bolt_on_a_psyker_c_04_b_01",
+		},
+		sound_events_duration = {
+			[1] = 5.334229,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_psyker_c_04_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

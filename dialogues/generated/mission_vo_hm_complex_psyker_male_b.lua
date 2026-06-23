@@ -75,7 +75,7 @@ local mission_vo_hm_complex_psyker_male_b = {
 		},
 		sound_events_duration = {
 			[1] = 4.410271,
-			[2] = 3.45678,
+			[2] = 5.720104,
 		},
 		randomize_indexes = {},
 	},

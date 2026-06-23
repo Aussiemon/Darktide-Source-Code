@@ -1,6 +1,17 @@
 ﻿-- chunkname: @dialogues/generated/psyker_c_adamant_male_b.lua
 
 local psyker_c_adamant_male_b = {
+	combat_pause_limited_bolt_on_a_psyker_c_01_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__combat_pause_limited_bolt_on_a_psyker_c_01_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.701844,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_psyker_c_04_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -103,8 +114,8 @@ local psyker_c_adamant_male_b = {
 			[2] = "loc_adamant_male_b__combat_pause_quirk_tertium_splendour_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 5.71575,
+			[2] = 4.180031,
 		},
 		randomize_indexes = {},
 	},

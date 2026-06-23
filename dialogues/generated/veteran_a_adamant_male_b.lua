@@ -23,6 +23,17 @@ local veteran_a_adamant_male_b = {
 		},
 		randomize_indexes = {},
 	},
+	combat_pause_limited_veteran_a_10_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_adamant_male_b__combat_pause_limited_veteran_a_10_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.355333,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_veteran_a_11_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -129,8 +140,8 @@ local veteran_a_adamant_male_b = {
 			[2] = "loc_adamant_male_b__combat_pause_quirk_veteran_a_professional_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 3.02824,
+			[2] = 5.197448,
 		},
 		randomize_indexes = {},
 	},
@@ -142,8 +153,8 @@ local veteran_a_adamant_male_b = {
 			[2] = "loc_adamant_male_b__combat_pause_quirk_victory_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 3.656927,
+			[2] = 3.085833,
 		},
 		randomize_indexes = {},
 	},
@@ -155,8 +166,8 @@ local veteran_a_adamant_male_b = {
 			[2] = "loc_adamant_male_b__combat_pause_quirk_weapons_b_02",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
-			[2] = 3.45678,
+			[1] = 3.584938,
+			[2] = 3.584938,
 		},
 		randomize_indexes = {},
 	},

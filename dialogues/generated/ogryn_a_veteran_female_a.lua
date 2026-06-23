@@ -400,10 +400,6 @@ local ogryn_a_veteran_female_a = {
 			[1] = 3.536271,
 			[2] = 2.056375,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 }

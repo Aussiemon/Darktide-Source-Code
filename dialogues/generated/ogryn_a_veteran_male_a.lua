@@ -169,10 +169,6 @@ local ogryn_a_veteran_male_a = {
 			[1] = 2.792167,
 			[2] = 2.595333,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	oval_world_conversation_daviot_steel_one_b = {

@@ -1,6 +1,28 @@
 ﻿-- chunkname: @dialogues/generated/psyker_b_veteran_male_c.lua
 
 local psyker_b_veteran_male_c = {
+	combat_pause_limited_bolt_on_a_psyker_b_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_c__combat_pause_limited_bolt_on_a_psyker_b_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.785333,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_psyker_b_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_male_c__combat_pause_limited_bolt_on_a_psyker_b_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.131677,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_psyker_b_01_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -129,19 +151,6 @@ local psyker_b_veteran_male_c = {
 		sound_events_duration = {
 			[1] = 2.20125,
 			[2] = 3.596958,
-		},
-		randomize_indexes = {},
-	},
-	combat_pause_quirk_heights_b = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1] = "loc_veteran_male_c__combat_pause_quirk_heights_b_01",
-			[2] = "loc_veteran_male_c__combat_pause_quirk_heights_b_02",
-		},
-		sound_events_duration = {
-			[1] = 2.351323,
-			[2] = 1.816052,
 		},
 		randomize_indexes = {},
 	},

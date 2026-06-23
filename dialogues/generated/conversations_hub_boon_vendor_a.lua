@@ -593,7 +593,7 @@ local conversations_hub_boon_vendor_a = {
 			[1] = "loc_boon_vendor_a__shipmistress_hub_announcement_a_33_b_01",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
+			[1] = 6.193333,
 		},
 		randomize_indexes = {},
 	},

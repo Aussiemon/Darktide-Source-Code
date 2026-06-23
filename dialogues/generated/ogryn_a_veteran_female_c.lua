@@ -1,6 +1,39 @@
 ﻿-- chunkname: @dialogues/generated/ogryn_a_veteran_female_c.lua
 
 local ogryn_a_veteran_female_c = {
+	combat_pause_limited_bolt_on_a_ogryn_a_01_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_c__combat_pause_limited_bolt_on_a_ogryn_a_01_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.045052,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_ogryn_a_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_c__combat_pause_limited_bolt_on_a_ogryn_a_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.70874,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_ogryn_a_04_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_veteran_female_c__combat_pause_limited_bolt_on_a_ogryn_a_04_b_01",
+		},
+		sound_events_duration = {
+			[1] = 1.832583,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_ogryn_a_02_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -179,10 +212,6 @@ local ogryn_a_veteran_female_c = {
 		sound_events_duration = {
 			[1] = 1.986573,
 			[2] = 2.220906,
-		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
 		},
 		randomize_indexes = {},
 	},

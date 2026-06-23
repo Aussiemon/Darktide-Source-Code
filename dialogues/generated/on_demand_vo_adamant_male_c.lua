@@ -351,8 +351,8 @@ local on_demand_vo_adamant_male_c = {
 			"loc_adamant_male_c__smart_tag_stimm_power_a_04",
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
+			1.068844,
+			0.975344,
 			3.45678,
 			3.45678,
 		},
@@ -677,6 +677,19 @@ local on_demand_vo_adamant_male_c = {
 			1.218104,
 			1.058979,
 			0.969698,
+		},
+		randomize_indexes = {},
+	},
+	smart_tag_vo_enemy_plasma = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_adamant_male_c__smart_tag_vo_enemy_plasma_01",
+			[2] = "loc_adamant_male_c__smart_tag_vo_enemy_plasma_02",
+		},
+		sound_events_duration = {
+			[1] = 0.974052,
+			[2] = 1.075563,
 		},
 		randomize_indexes = {},
 	},

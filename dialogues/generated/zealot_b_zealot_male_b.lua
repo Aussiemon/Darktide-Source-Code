@@ -1,6 +1,61 @@
 ﻿-- chunkname: @dialogues/generated/zealot_b_zealot_male_b.lua
 
 local zealot_b_zealot_male_b = {
+	combat_pause_limited_bolt_on_a_zealot_b_01_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_b__combat_pause_limited_bolt_on_a_zealot_b_01_a_01",
+		},
+		sound_events_duration = {
+			[1] = 5.240396,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_zealot_b_02_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_b__combat_pause_limited_bolt_on_a_zealot_b_02_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.99075,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_zealot_b_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_b__combat_pause_limited_bolt_on_a_zealot_b_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 2.514604,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_zealot_b_03_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_b__combat_pause_limited_bolt_on_a_zealot_b_03_a_01",
+		},
+		sound_events_duration = {
+			[1] = 4.358458,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_zealot_b_04_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_male_b__combat_pause_limited_bolt_on_a_zealot_b_04_a_01",
+		},
+		sound_events_duration = {
+			[1] = 5.363,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_zealot_b_01_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

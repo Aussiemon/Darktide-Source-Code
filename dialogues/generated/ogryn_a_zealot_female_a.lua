@@ -1,6 +1,28 @@
 ﻿-- chunkname: @dialogues/generated/ogryn_a_zealot_female_a.lua
 
 local ogryn_a_zealot_female_a = {
+	combat_pause_limited_bolt_on_a_ogryn_a_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_female_a__combat_pause_limited_bolt_on_a_ogryn_a_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.426396,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_ogryn_a_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_zealot_female_a__combat_pause_limited_bolt_on_a_ogryn_a_03_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.684458,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_ogryn_a_06_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -157,10 +179,6 @@ local ogryn_a_zealot_female_a = {
 		sound_events_duration = {
 			[1] = 3.1165,
 			[2] = 4.594625,
-		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
 		},
 		randomize_indexes = {},
 	},

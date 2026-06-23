@@ -751,14 +751,14 @@ return function ()
 				"enemy_memory_chaos_ogryn_executor_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				2,
+				10,
 			},
 			{
 				"faction_memory",
-				"",
+				"chaos_ogryn_executor_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				0,
+				2,
 			},
 		},
 		on_done = {
@@ -769,7 +769,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"",
+				"chaos_ogryn_executor_alerted_idle",
 				OP.TIMESET,
 			},
 		},
@@ -3180,7 +3180,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"",
+				"faction_traitor_berzerker_assault",
 				OP.TIMESET,
 			},
 		},
@@ -3219,7 +3219,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"",
+				"traitor_enforcer_executor_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
 				0,
@@ -3233,7 +3233,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"",
+				"traitor_enforcer_executor_alerted_idle",
 				OP.TIMESET,
 			},
 		},

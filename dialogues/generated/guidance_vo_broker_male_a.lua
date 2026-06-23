@@ -422,6 +422,32 @@ local guidance_vo_broker_male_a = {
 		},
 		randomize_indexes = {},
 	},
+	guidance_stairs_sighted = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_broker_male_a__stairs_sighted_01",
+			"loc_broker_male_a__stairs_sighted_02",
+			"loc_broker_male_a__stairs_sighted_03",
+			"loc_broker_male_a__stairs_sighted_04",
+			"loc_broker_male_a__stairs_sighted_05",
+		},
+		sound_events_duration = {
+			0.614802,
+			0.910156,
+			1.036729,
+			1.133188,
+			2.423073,
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+		},
+		randomize_indexes = {},
+	},
 	guidance_stairs_sighted_1 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

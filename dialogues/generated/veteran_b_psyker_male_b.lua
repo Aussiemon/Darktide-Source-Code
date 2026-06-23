@@ -1,6 +1,28 @@
 ﻿-- chunkname: @dialogues/generated/veteran_b_psyker_male_b.lua
 
 local veteran_b_psyker_male_b = {
+	combat_pause_limited_bolt_on_a_veteran_b_01_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_b__combat_pause_limited_bolt_on_a_veteran_b_01_b_01",
+		},
+		sound_events_duration = {
+			[1] = 3.116479,
+		},
+		randomize_indexes = {},
+	},
+	combat_pause_limited_bolt_on_a_veteran_b_04_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_psyker_male_b__combat_pause_limited_bolt_on_a_veteran_b_04_b_01",
+		},
+		sound_events_duration = {
+			[1] = 4.209729,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_veteran_b_02_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -168,10 +190,6 @@ local veteran_b_psyker_male_b = {
 		sound_events_duration = {
 			[1] = 2.415396,
 			[2] = 5.187646,
-		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
 		},
 		randomize_indexes = {},
 	},

@@ -1,6 +1,17 @@
 ﻿-- chunkname: @dialogues/generated/ogryn_b_ogryn_d.lua
 
 local ogryn_b_ogryn_d = {
+	combat_pause_limited_bolt_on_a_ogryn_b_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_ogryn_d__combat_pause_limited_bolt_on_a_ogryn_b_02_b_01",
+		},
+		sound_events_duration = {
+			[1] = 7.369281,
+		},
+		randomize_indexes = {},
+	},
 	combat_pause_limited_ogryn_b_02_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -20,9 +31,6 @@ local ogryn_b_ogryn_d = {
 		},
 		sound_events_duration = {
 			[1] = 4.623479,
-		},
-		sound_event_weights = {
-			[1] = 1,
 		},
 		randomize_indexes = {},
 	},

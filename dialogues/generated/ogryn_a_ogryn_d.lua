@@ -169,10 +169,6 @@ local ogryn_a_ogryn_d = {
 			[1] = 4.140125,
 			[2] = 3.429958,
 		},
-		sound_event_weights = {
-			[1] = 0.5,
-			[2] = 0.5,
-		},
 		randomize_indexes = {},
 	},
 	oval_bonding_conversation_advice_b = {
