@@ -41,7 +41,6 @@ local archetype_data = {
 	onboarding_skip_intro_video = false,
 	portrait_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/portrait/portrait_broker",
 	requires_dlc = "broker",
-	requires_dlc_reconciliation = "broker_cosmetic",
 	spawn_companions_from_talent_func = nil,
 	specialization_talent_layout_file_path = "scripts/ui/views/broker_stimm_builder_view/layouts/broker_stimm_tree",
 	specialization_talent_package_path = "packages/ui/views/talent_builder_view/broker",
@@ -122,6 +121,10 @@ local archetype_data = {
 			display_name = "loc_weapon_family_needlepistol_p1_m1",
 			item = "content/items/weapons/player/ranged/needlepistol_p1_m1",
 		},
+	},
+	requires_dlc_reconciliation = {
+		"broker_deluxe",
+		"broker_cosmetic",
 	},
 }
 

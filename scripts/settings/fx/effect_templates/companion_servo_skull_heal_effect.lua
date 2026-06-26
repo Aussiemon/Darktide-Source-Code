@@ -19,7 +19,7 @@ local effect_template = {
 		local unit = template_data.unit
 		local fx_extension = ScriptUnit.has_extension(unit, "fx_system")
 
-		if not fx_extension then
+		if not ALIVE[unit] or not fx_extension then
 			return
 		end
 
@@ -37,6 +37,10 @@ local effect_template = {
 
 		template_data.attachment_unit = attachment_unit
 		template_data.attachment_node = node
+
+		if not ALIVE[attachment_unit] then
+			return
+		end
 
 		Unit.set_scalar_for_material(attachment_unit, "skull_medicae_vials", "stage_01", 0)
 		Unit.set_scalar_for_material(attachment_unit, "skull_medicae_vials", "stage_02", 0)
@@ -72,6 +76,10 @@ local effect_template = {
 		local stage_02 = template_data._stage_02
 		local stage_03 = template_data._stage_03
 		local attachment_unit = template_data.attachment_unit
+
+		if not ALIVE[attachment_unit] then
+			return
+		end
 
 		if stage_01 < 1 then
 			stage_01 = math.clamp01(stage_01 + dt / stage_01_duration_t)
@@ -115,9 +123,11 @@ local effect_template = {
 
 		local attachment_unit = template_data.attachment_unit
 
-		Unit.set_scalar_for_material(attachment_unit, "skull_medicae_vials", "stage_01", 0)
-		Unit.set_scalar_for_material(attachment_unit, "skull_medicae_vials", "stage_02", 0)
-		Unit.set_scalar_for_material(attachment_unit, "skull_medicae_vials", "stage_03", 0)
+		if ALIVE[attachment_unit] then
+			Unit.set_scalar_for_material(attachment_unit, "skull_medicae_vials", "stage_01", 0)
+			Unit.set_scalar_for_material(attachment_unit, "skull_medicae_vials", "stage_02", 0)
+			Unit.set_scalar_for_material(attachment_unit, "skull_medicae_vials", "stage_03", 0)
+		end
 
 		template_data.source_id = nil
 		template_data.playing_id = nil

@@ -6,7 +6,6 @@ local BootStateInitCrashify = class("BootStateInitCrashify", "StateBootSubStateB
 
 BootStateInitCrashify._state_update = function (self, dt)
 	local settings = require("scripts/settings/crashify/crashify")
-	local is_modded = GameParameters.is_modded_crashify_property
 	local launcher_verification_passed = GameParameters.launcher_verification_passed_crashify_property
 
 	Crashify.print_property("project", settings.project)
@@ -17,7 +16,7 @@ BootStateInitCrashify._state_update = function (self, dt)
 	Crashify.print_property("rendering_backend", Renderer.render_device_string())
 	Crashify.print_property("teamcity_build_id", APPLICATION_SETTINGS.teamcity_build_id)
 	Crashify.print_property("server", DEDICATED_SERVER)
-	Crashify.print_property("is_modded", is_modded)
+	Crashify.print_property("is_modded", IS_MODDED)
 	Crashify.print_property("launcher_verification_passed", launcher_verification_passed)
 	Crashify.print_property("game_version", APPLICATION_SETTINGS.game_version)
 	Crashify.print_property("game_resume_count", 0)
@@ -27,7 +26,7 @@ BootStateInitCrashify._state_update = function (self, dt)
 	end
 
 	if IS_WINDOWS then
-		if is_modded then
+		if IS_MODDED then
 			Script.disable_low_memory_lua_state_dumps()
 		end
 

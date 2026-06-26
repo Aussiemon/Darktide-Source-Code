@@ -543,12 +543,6 @@ InventoryView.cb_on_grid_entry_pressed = function (self, widget, element)
 			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
 		else
 			local item = element.item
-			local item_gear_id = item.gear_id
-			local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
-
-			if active_profile_preset_id then
-				ProfileUtils.save_item_id_for_profile_preset(active_profile_preset_id, slot_name, item_gear_id)
-			end
 
 			Managers.event:trigger("event_inventory_view_equip_item", slot_name, item)
 			self:_play_voice_preview(slot_name, item)

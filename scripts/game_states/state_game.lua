@@ -204,7 +204,7 @@ StateGame._init_managers = function (self, event_delegate, approve_channel_deleg
 
 	local version_id = PLATFORM .. "#" .. (APPLICATION_SETTINGS.content_revision or LOCAL_CONTENT_REVISION or "")
 	local language = Managers.localization:language()
-	local is_modded = tostring(rawget(_G, "Mods") ~= nil)
+	local is_modded = tostring(IS_MODDED)
 
 	Managers.backend = BackendManager:new(function ()
 		return {

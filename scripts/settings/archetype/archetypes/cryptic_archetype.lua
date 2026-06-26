@@ -43,7 +43,6 @@ local archetype_data = {
 	onboarding_intro_video_template_name = "cryptic_intro_part2",
 	portrait_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/portrait/portrait_cryptic",
 	requires_dlc = "cryptic",
-	requires_dlc_reconciliation = "cryptic_cosmetic",
 	talent_layout_file_path = "scripts/ui/views/talent_builder_view/layouts/cryptic_tree",
 	talents_package_path = "packages/ui/views/talent_builder_view/cryptic",
 	spawn_companions_from_talent_func = SpawnCompanionsFromTalent.cryptic_spawn_companions_from_talent,
@@ -107,6 +106,10 @@ local archetype_data = {
 			display_name = "loc_weapon_family_phosphor_pistol_p1_m1",
 			item = "content/items/weapons/player/ranged/phosphor_pistol_p1_m1",
 		},
+	},
+	requires_dlc_reconciliation = {
+		"cryptic_deluxe",
+		"cryptic_cosmetic",
 	},
 }
 

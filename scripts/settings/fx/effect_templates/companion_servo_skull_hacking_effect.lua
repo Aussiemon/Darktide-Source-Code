@@ -16,14 +16,23 @@ local effect_template = {
 		local unit = template_data.unit
 		local fx_extension = ScriptUnit.has_extension(unit, "fx_system")
 
-		if not fx_extension then
+		if not ALIVE[unit] or not fx_extension then
 			return
 		end
 
 		local game_session = Managers.state.game_session:game_session()
 		local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
 		local hacking_unit_id = GameSession.game_object_field(game_session, game_object_id, "hacking_unit_id")
+
+		if hacking_unit_id == -1 then
+			return
+		end
+
 		local hacking_unit = Managers.state.unit_spawner:unit(hacking_unit_id, true)
+
+		if not ALIVE[hacking_unit] then
+			return
+		end
 
 		template_data.hacking_unit = hacking_unit
 
@@ -52,11 +61,16 @@ local effect_template = {
 		end
 	end,
 	update = function (template_data, template_context, dt, t)
+		local hacking_unit = template_data.hacking_unit
 		local unit = template_data.unit
+
+		if not ALIVE[hacking_unit] or not ALIVE[unit] then
+			return
+		end
+
 		local world = template_context.world
 		local effect_id = template_data.stream_effect_id
 		local attachment_unit = template_data.attachment_unit
-		local hacking_unit = template_data.hacking_unit
 		local fx_source_name = sfx.source_name
 		local node = Unit.node(unit, fx_source_name)
 		local from_pos = Unit.world_position(attachment_unit, node)
@@ -72,8 +86,6 @@ local effect_template = {
 
 		if stream_effect_id then
 			World.destroy_particles(world, stream_effect_id)
-		else
-			Log.exception("CompanionServoSkullHackingEffect", "No effect ID, unless you died, it is suspicious")
 		end
 
 		local source_id = template_data.source_id
@@ -98,6 +110,11 @@ local effect_template = {
 
 function _start_effect(unit, attachment_unit, node, template_data, world)
 	local hacking_unit = template_data.hacking_unit
+
+	if not ALIVE[hacking_unit] or not ALIVE[unit] then
+		return
+	end
+
 	local from_pos = Unit.world_position(attachment_unit, node)
 	local to_pos = Unit.world_position(hacking_unit, Unit.node(hacking_unit, "targeting_rotation_node"))
 	local rotation = Quaternion.look(to_pos - from_pos)

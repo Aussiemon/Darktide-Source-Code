@@ -233,10 +233,17 @@ ClassSelectionView._on_continue_pressed = function (self)
 	self._widgets_by_name.continue_button.disabled = true
 	self._is_in_blocked_state = true
 
-	local product_ids = DLCUtils.get_ids_for_auth_method(archetype.requires_dlc_reconciliation, Backend:get_auth_method())
-	local product_id_promise = (IS_XBS or IS_GDK) and Managers.dlc:xbs_get_and_inform_entitlements(product_ids) or Promise.resolved({
+	local all_product_ids = {}
+
+	for i = 1, #archetype.requires_dlc_reconciliation do
+		local product_ids = DLCUtils.get_ids_for_auth_method(archetype.requires_dlc_reconciliation[i], Backend:get_auth_method())
+
+		table.append_no_duplicates(all_product_ids, product_ids)
+	end
+
+	local product_id_promise = (IS_XBS or IS_GDK) and Managers.dlc:xbs_get_and_inform_entitlements(all_product_ids) or Promise.resolved({
 		show_popup_function = nil,
-		product_ids = product_ids,
+		product_ids = all_product_ids,
 	})
 
 	self._promise_container:cancel_on_destroy(product_id_promise)

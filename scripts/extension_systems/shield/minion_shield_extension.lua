@@ -263,6 +263,7 @@ local IGNORED_DAMAGE_KEYWORDS = {
 	bleeding = true,
 	burning = true,
 	toxin = true,
+	warpfire = true,
 }
 
 MinionShieldExtension.apply_stagger = function (self, unit, damage_profile, stagger_strength, attack_result, stagger_type, duration_scale, length_scale, attack_type, damage_type)

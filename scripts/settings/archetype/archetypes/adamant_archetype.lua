@@ -39,7 +39,6 @@ local archetype_data = {
 	onboarding_intro_video_template_name = "adamant_intro",
 	portrait_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/portrait/portrait_adamant",
 	requires_dlc = "adamant",
-	requires_dlc_reconciliation = nil,
 	spawn_companions_from_talent_func = nil,
 	talent_layout_file_path = "scripts/ui/views/talent_builder_view/layouts/adamant_tree",
 	talents_package_path = "packages/ui/views/talent_builder_view/adamant",
@@ -100,6 +99,10 @@ local archetype_data = {
 			display_name = "loc_weapon_family_shotpistol_shield_p1_m1",
 			item = "content/items/weapons/player/ranged/shotpistol_shield_p1_m1",
 		},
+	},
+	requires_dlc_reconciliation = {
+		"adamant_deluxe",
+		"adamant_cosmetic",
 	},
 }
 

@@ -43,16 +43,32 @@ HudElementCharacterNewsFeed.event_resync_character_news_feed = function (self)
 				local gear = gear_list and gear_list[gear_id]
 
 				if gear and type(notification_data) == "table" then
-					local show_notification = notification_data.show_notification
+					local new_presentation_items = self._new_presentation_items
+					local item_already_found = false
 
-					if show_notification == nil then
-						show_notification = false
+					for i = 1, #new_presentation_items do
+						local new_presentation_item = new_presentation_items[i]
+
+						if new_presentation_item and new_presentation_item.item_gear_id == gear_id then
+							item_already_found = true
+
+							break
+						end
 					end
 
-					self._new_presentation_items[#self._new_presentation_items + 1] = {
-						item = MasterItems.get_item_instance(gear, gear_id),
-						show_notification = show_notification,
-					}
+					if not item_already_found then
+						local show_notification = notification_data.show_notification
+
+						if show_notification == nil then
+							show_notification = false
+						end
+
+						self._new_presentation_items[#self._new_presentation_items + 1] = {
+							item = MasterItems.get_item_instance(gear, gear_id),
+							show_notification = show_notification,
+							item_gear_id = gear_id,
+						}
+					end
 				else
 					ItemUtils.unmark_item_notification_id_as_new(gear_id)
 				end

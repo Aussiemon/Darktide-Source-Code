@@ -550,26 +550,40 @@ local explosion_templates = {
 			get_template_effect_targets = function ()
 				local targeting_data = _arc_grenade_targeted_template_effect_data
 				local target_results = _arc_grenade_targeted_template_effect_results
-				local final_targets = target_results.final_targets
 				local max_targets = targeting_data.max_targets
+				local final_targets = target_results.final_targets
 
-				for _, target in ipairs(target_results.secondary_targets) do
-					table.insert(final_targets, target)
+				for i = #final_targets, 1, -1 do
+					local target_unit = final_targets[i]
 
-					targeting_data.num_final_targets = targeting_data.num_final_targets + 1
+					if not HEALTH_ALIVE[target_unit] or not ALIVE[target_unit] then
+						table.remove(final_targets, i)
 
-					if max_targets <= #final_targets then
-						return final_targets
+						targeting_data.num_final_targets = targeting_data.num_final_targets - 1
 					end
 				end
 
-				for _, target in ipairs(target_results.backup_targets) do
-					table.insert(final_targets, target)
+				for _, target_unit in ipairs(target_results.secondary_targets) do
+					if HEALTH_ALIVE[target_unit] and ALIVE[target_unit] then
+						table.insert(final_targets, target_unit)
 
-					targeting_data.num_final_targets = targeting_data.num_final_targets + 1
+						targeting_data.num_final_targets = targeting_data.num_final_targets + 1
 
-					if max_targets <= targeting_data.num_final_targets then
-						return final_targets
+						if max_targets <= targeting_data.num_final_targets then
+							return final_targets
+						end
+					end
+				end
+
+				for _, target_unit in ipairs(target_results.backup_targets) do
+					if HEALTH_ALIVE[target_unit] and ALIVE[target_unit] then
+						table.insert(final_targets, target_unit)
+
+						targeting_data.num_final_targets = targeting_data.num_final_targets + 1
+
+						if max_targets <= targeting_data.num_final_targets then
+							return final_targets
+						end
 					end
 				end
 

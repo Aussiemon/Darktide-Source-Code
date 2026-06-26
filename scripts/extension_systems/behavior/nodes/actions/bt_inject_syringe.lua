@@ -71,6 +71,11 @@ BtInjectSyringeAction.run = function (self, unit, breed, blackboard, scratchpad,
 	end
 
 	local target_position, target_ally = self:_set_move_position(scratchpad, action_data)
+
+	if not target_position or not target_ally then
+		return "failed"
+	end
+
 	local unit_position = POSITION_LOOKUP[unit]
 	local distance_sq = Vector3.distance_squared(unit_position, target_position)
 
@@ -132,6 +137,11 @@ end
 BtInjectSyringeAction._set_move_position = function (self, scratchpad, action_data)
 	local behavior_component = scratchpad.behavior_component
 	local target_ally = behavior_component.target_unit
+
+	if not ALIVE[target_ally] then
+		return nil, nil
+	end
+
 	local target_position = POSITION_LOOKUP[target_ally]
 
 	target_position.z = target_position.z + action_data.position_height
@@ -142,6 +152,10 @@ BtInjectSyringeAction._set_move_position = function (self, scratchpad, action_da
 end
 
 BtInjectSyringeAction._apply_syringe = function (self, target_ally, action_data, t)
+	if not ALIVE[target_ally] then
+		return
+	end
+
 	local target_buff_extension = ScriptUnit.has_extension(target_ally, "buff_system")
 
 	if target_buff_extension then
@@ -149,7 +163,7 @@ BtInjectSyringeAction._apply_syringe = function (self, target_ally, action_data,
 
 		local assist_notification_type = action_data.assist_notification_type
 
-		if assist_notification_type and ALIVE[target_ally] then
+		if assist_notification_type then
 			PlayerAssistNotifications.show_notification(target_ally, target_ally, assist_notification_type)
 		end
 	end
@@ -210,7 +224,7 @@ BtInjectSyringeAction._send_revived_ally_telemetry = function (self, interactor_
 	local target_player = player_unit_spawn_manager:owner(target_unit)
 	local interactor_unit = interactor_player.player_unit
 
-	if not HEALTH_ALIVE[interactor_unit] then
+	if not HEALTH_ALIVE[interactor_unit] or not ALIVE[target_unit] then
 		return
 	end
 

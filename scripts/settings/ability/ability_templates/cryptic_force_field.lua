@@ -19,7 +19,7 @@ ability_template.action_inputs = {
 ability_template.action_input_hierarchy = {
 	{
 		input = "aim_pressed",
-		transition = "base",
+		transition = "stay",
 	},
 }
 ability_template.actions = {

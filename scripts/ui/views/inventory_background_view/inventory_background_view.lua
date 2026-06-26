@@ -32,6 +32,13 @@ local ALLOWED_EMPTY_SLOTS = InventoryBackgroundViewSettings.allowed_empty_slots
 local IGNORED_SLOTS = InventoryBackgroundViewSettings.ignored_validation_slots
 local InventoryBackgroundView = class("InventoryBackgroundView", "BaseView")
 
+local function _is_valid_item_change(new_item, previous_item)
+	local item_gear_id = new_item and new_item.gear_id
+	local previous_item_gear_id = previous_item and previous_item.gear_id
+
+	return item_gear_id and previous_item_gear_id and item_gear_id ~= previous_item_gear_id or item_gear_id and previous_item_gear_id and item_gear_id == previous_item_gear_id and previous_item and new_item and previous_item.name ~= new_item.name or new_item and (new_item.always_owned or item_gear_id) and (not previous_item or previous_item and new_item.name ~= previous_item.name) or not not previous_item and not not not new_item
+end
+
 InventoryBackgroundView.init = function (self, settings, context)
 	self._context = context
 
@@ -594,9 +601,25 @@ InventoryBackgroundView._update_equipped_items = function (self)
 	end
 end
 
-InventoryBackgroundView.event_inventory_view_equip_item = function (self, slot_name, item, force_update)
+InventoryBackgroundView._equip_and_validate_item = function (self, slot_name, item, force_update)
 	self:_equip_slot_item(slot_name, item, force_update)
 	self:_update_loadout_validation()
+end
+
+InventoryBackgroundView.event_inventory_view_equip_item = function (self, slot_name, item, force_update)
+	local new_item = self:_get_item(item)
+	local item_id = new_item and (new_item.gear_id or new_item.always_owned and new_item.name)
+	local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
+
+	if active_profile_preset_id then
+		ProfileUtils.save_item_id_for_profile_preset(active_profile_preset_id, slot_name, item_id)
+	end
+
+	if not force_update then
+		Managers.telemetry_events:equip_item(slot_name, new_item)
+	end
+
+	self:_equip_and_validate_item(slot_name, new_item, force_update)
 end
 
 InventoryBackgroundView.event_equip_local_changes = function (self)
@@ -697,8 +720,7 @@ InventoryBackgroundView.event_item_icon_updated = function (self, item)
 		if slot_item and item and slot_item.gear_id == item.gear_id then
 			local force_update = true
 
-			self:_equip_slot_item(slot_name, item, force_update)
-			self:_update_loadout_validation()
+			self:_equip_and_validate_item(slot_name, item, force_update)
 
 			break
 		end
@@ -708,18 +730,17 @@ end
 InventoryBackgroundView._equip_slot_item = function (self, slot_name, item, force_update)
 	local presentation_loadout = self._preview_profile_equipped_items
 	local current_loadout = self._current_profile_equipped_items
-	local previous_item = current_loadout[slot_name]
-	local item_gear_id = type(item) == "table" and item.gear_id or type(item) == "string" and item
-	local previous_item_gear_id = type(previous_item) == "table" and previous_item.gear_id or type(previous_item) == "string" and previous_item
-	local valid_item_change = item_gear_id and previous_item_gear_id and item_gear_id ~= previous_item_gear_id or type(item) == "table" and item.always_owned and type(previous_item) == "table" and item.name ~= previous_item.name or (item_gear_id or type(item) == "table" and item.always_owned) and not previous_item_gear_id or type(previous_item) == "table" and not not not item or force_update
+	local new_item = self:_get_item(item)
+	local previous_item = self:_get_item(current_loadout[slot_name])
+	local valid_item_change = _is_valid_item_change(new_item, previous_item) or force_update
 
 	if valid_item_change then
-		presentation_loadout[slot_name] = item
+		presentation_loadout[slot_name] = new_item
 
 		local player_profile = self._presentation_profile
 
 		if player_profile then
-			current_loadout[slot_name] = item
+			current_loadout[slot_name] = new_item
 		end
 	end
 end
@@ -741,17 +762,14 @@ InventoryBackgroundView._equip_local_changes = function (self)
 
 	for slot_name, slot_data in pairs(ItemSlotSettings) do
 		if not self._invalid_slots[slot_name] and not self._duplicated_slots[slot_name] and self:_valid_slot_for_archetype(slot_name) then
-			local previous_item = original_equips[slot_name]
-			local item = preview_loadout[slot_name]
-			local item_gear_id = type(item) == "table" and item.gear_id or type(item) == "string" and item
-			local previous_item_gear_id = type(previous_item) == "table" and previous_item.gear_id or type(previous_item) == "string" and previous_item
-			local valid_item_change = item_gear_id and previous_item_gear_id and item_gear_id ~= previous_item_gear_id or type(item) == "table" and item.always_owned and type(previous_item) == "table" and item.name ~= previous_item.name or (item_gear_id or type(item) == "table" and item.always_owned) and not previous_item_gear_id or type(previous_item) == "table" and not not not item or item_gear_id and previous_item_gear_id and item_gear_id == previous_item_gear_id and previous_item.name ~= item.name
+			local item = self:_get_item(preview_loadout[slot_name])
+			local previous_item = self:_get_item(original_equips[slot_name])
+			local item_gear_id = item and item.gear_id
+			local valid_item_change = _is_valid_item_change(item, previous_item)
 
 			if valid_item_change then
 				if item then
-					local valid_item = self:_get_inventory_item_by_id(item.gear_id)
-
-					if valid_item then
+					if item_gear_id then
 						equip_items_by_slot[slot_name] = item
 					elseif item.always_owned then
 						equip_local_items_by_slot[slot_name] = item
@@ -1816,7 +1834,7 @@ InventoryBackgroundView._setup_profile_presets = function (self)
 			local loadout = preset and preset.loadout
 
 			for slot_name, preset_item_gear_id in pairs(loadout) do
-				local preset_item = self:_get_inventory_item_by_id(preset_item_gear_id)
+				local preset_item = self:_get_item(preset_item_gear_id)
 				local preset_item_gear_id = preset_item and preset_item.gear_id
 				local preset_item_name = preset_item and preset_item.name
 				local equipped_item = self._preview_profile_equipped_items[slot_name]
@@ -1839,11 +1857,12 @@ InventoryBackgroundView._setup_profile_presets = function (self)
 		if preset_loadout then
 			for slot_name, item in pairs(self._preview_profile_equipped_items) do
 				if self:_valid_slot_for_archetype(slot_name) then
+					local preview_item = self:_get_item(item)
 					local preset_item_gear_id = preset_loadout[slot_name]
-					local item_gear_id = item and item.gear_id
+					local item_gear_id = preview_item and preview_item.gear_id
 
 					if item_gear_id ~= preset_item_gear_id then
-						local preset_item = self:_get_inventory_item_by_id(preset_item_gear_id)
+						local preset_item = self:_get_item(preset_item_gear_id)
 
 						Log.warning("InventoryBackgroundView", "Deselecting active preset due to previewed item %s in slot %s not matching expected item %s", item and item.name or nil, slot_name, preset_item and preset_item.name or nil)
 						self._profile_presets_element:remove_active_profile_preset()
@@ -1972,7 +1991,7 @@ InventoryBackgroundView.event_on_profile_preset_changed = function (self, profil
 		end
 
 		for slot_name, gear_id in pairs(profile_preset.loadout) do
-			local item = self:_get_inventory_item_by_id(gear_id)
+			local item = self:_get_item(gear_id)
 
 			self:_equip_slot_item(slot_name, item, true)
 		end
@@ -3049,18 +3068,15 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 			-- Nothing
 		else
 			local item_data = loadout[slot_name]
-			local gear_id = type(item_data) == "table" and item_data.gear_id
-			local item = gear_id and self:_get_inventory_item_by_id(gear_id) or self:_get_inventory_item_by_id(item_data)
+			local item = self:_get_item(item_data)
+			local item_gear_id = item and item.gear_id
 			local fallback_item = MasterItems.find_fallback_item(slot_name)
 
-			if not item and (type(item_data) ~= "table" or not item_data.always_owned) then
-				invalid_slots[slot_name] = true
-			elseif item and not item.always_owned and fallback_item and item.name == fallback_item.name then
+			if not item or item and not item.always_owned and fallback_item and item.name == fallback_item.name then
 				invalid_slots[slot_name] = true
 			else
 				for checked_slot_name, checked_load_data in pairs(loadout) do
 					local checked_gear_id = type(checked_load_data) == "table" and checked_load_data.gear_id or type(checked_load_data) == "string" and checked_load_data
-					local item_gear_id = type(item_data) == "table" and item_data.gear_id or type(item_data) == "string" and item_data
 
 					if checked_gear_id == item_gear_id and checked_slot_name ~= slot_name and not invalid_slots[slot_name] and (not ALLOWED_DUPLICATE_SLOTS[checked_slot_name] or not ALLOWED_DUPLICATE_SLOTS[slot_name]) then
 						duplicated_slots[checked_slot_name] = true
@@ -3071,10 +3087,9 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 				local player = self._preview_player
 				local profile = player:profile()
-				local item_or_nil = type(item_data) == "table" and self:_get_inventory_item_by_id(gear_id) or self:_get_inventory_item_by_id(item_data)
 
-				if item_or_nil then
-					local compatible_profile = Items.is_item_compatible_with_profile(item_or_nil, profile)
+				if item then
+					local compatible_profile = Items.is_item_compatible_with_profile(item, profile)
 
 					if not compatible_profile then
 						only_show_slot_as_invalid[slot_name] = true
@@ -3092,8 +3107,8 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 			local starting_item = self._starting_profile_equipped_items and self._starting_profile_equipped_items[removed_slot_name]
 			local valid_stored_item = self._valid_profile_equipped_items and self._valid_profile_equipped_items[removed_slot_name]
 
-			starting_item = starting_item and self:_get_inventory_item_by_id(starting_item.gear_id)
-			valid_stored_item = valid_stored_item and self:_get_inventory_item_by_id(valid_stored_item.gear_id)
+			starting_item = self:_get_item(starting_item)
+			valid_stored_item = self:_get_item(valid_stored_item)
 
 			local fallback_item = MasterItems.find_fallback_item(removed_slot_name)
 			local starting_item_valid = starting_item and (starting_item.always_owned or fallback_item and fallback_item.name ~= starting_item.name)
@@ -3232,12 +3247,24 @@ InventoryBackgroundView._update_valid_items_list = function (self)
 	self._valid_profile_equipped_items = self._valid_profile_equipped_items or {}
 
 	for slot_name, item in pairs(self._current_profile_equipped_items) do
-		local valid_item = self:_get_inventory_item_by_id(item.gear_id) or item.always_owned
+		local item = self:_get_item(item)
+		local valid_item = item and (item.gear_id or item.always_owned)
 
 		if valid_item and not self._invalid_slots[slot_name] and not self._modified_slots[slot_name] and not self._duplicated_slots[slot_name] then
 			self._valid_profile_equipped_items[slot_name] = item
 		end
 	end
+end
+
+InventoryBackgroundView._get_item = function (self, item_data)
+	if not item_data then
+		return
+	end
+
+	local gear_id = type(item_data) == "table" and math.is_uuid(item_data.gear_id) and item_data.gear_id or type(item_data) == "string" and math.is_uuid(item_data) and item_data
+	local item = gear_id and self:_get_inventory_item_by_id(gear_id) or type(item_data) == "table" and item_data.always_owned and item_data or type(item_data) == "string" and MasterItems.get_item(item_data)
+
+	return item or nil
 end
 
 return InventoryBackgroundView

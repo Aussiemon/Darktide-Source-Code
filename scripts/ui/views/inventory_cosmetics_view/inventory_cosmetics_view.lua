@@ -1175,14 +1175,6 @@ InventoryCosmeticsView._equip_item = function (self, slot_name, item)
 			end
 		end
 
-		local item_gear_id = item and item.gear_id
-		local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
-
-		if active_profile_preset_id then
-			ProfileUtils.save_item_id_for_profile_preset(active_profile_preset_id, slot_name, item_gear_id)
-		end
-
-		Managers.telemetry_events:equip_item(slot_name, item)
 		Managers.event:trigger("event_inventory_view_equip_item", slot_name, item)
 	end
 end
