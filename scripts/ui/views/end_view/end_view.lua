@@ -3,12 +3,14 @@
 require("scripts/ui/views/base_view")
 
 local Definitions = require("scripts/ui/views/end_view/end_view_definitions")
+local Breeds = require("scripts/settings/breed/breeds")
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
 local EndViewSettings = require("scripts/ui/views/end_view/end_view_settings")
 local EndViewTestify = GameParameters.testify and require("scripts/ui/views/end_view/end_view_testify")
 local LoadingStateData = require("scripts/ui/loading_state_data")
 local MasterItems = require("scripts/backend/master_items")
 local Missions = require("scripts/settings/mission/mission_templates")
+local PlayerHeight = require("scripts/utilities/player_height")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
 local Text = require("scripts/utilities/ui/text")
@@ -813,8 +815,9 @@ EndView._assign_player_to_slot = function (self, player_info, slot, more_than_on
 
 	local spawn_position = Unit.world_position(spawn_point_unit, 1)
 	local spawn_rotation = Unit.world_rotation(spawn_point_unit, 1)
-	local profile_size = profile.personal and profile.personal.character_height
-	local spawn_scale = profile_size and Vector3(profile_size, profile_size, profile_size)
+	local breed = Breeds[breed_name]
+	local scale = PlayerHeight.player_character_third_person_scale(breed, profile, nil)
+	local spawn_scale = Vector3(scale, scale, scale)
 
 	slot.boxed_position = Vector3Box(spawn_position)
 	slot.boxed_rotation = QuaternionBox(spawn_rotation)

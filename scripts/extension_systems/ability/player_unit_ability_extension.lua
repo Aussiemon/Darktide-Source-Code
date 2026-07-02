@@ -894,7 +894,7 @@ PlayerUnitAbilityExtension.reduce_ability_cooldown_time = function (self, abilit
 	end
 
 	local ability_component = self._ability_components[ability_type]
-	local current_cooldown = ability_component.cooldown
+	local current_cooldown_t = ability_component.cooldown
 	local fixed_frame_t = FixedFrame.get_latest_fixed_time()
 	local stat_buffs = self._buff_extension:stat_buffs()
 	local combat_ability_cooldown_replenish_modifier = stat_buffs.combat_ability_cooldown_replenish_modifier or 1
@@ -904,7 +904,7 @@ PlayerUnitAbilityExtension.reduce_ability_cooldown_time = function (self, abilit
 	local max_ability_charges = self:max_ability_charges(ability_type)
 	local remaining_ability_charges = self:remaining_ability_charges(ability_type)
 	local max_cooldown = self:max_ability_cooldown(ability_type)
-	local remaining_cooldown = self:remaining_ability_cooldown(ability_type)
+	local remaining_cooldown = math.max(current_cooldown_t - fixed_frame_t, 0)
 
 	if max_ability_charges <= remaining_ability_charges then
 		return
@@ -913,7 +913,7 @@ PlayerUnitAbilityExtension.reduce_ability_cooldown_time = function (self, abilit
 	if remaining_ability_charges < max_ability_charges and remaining_cooldown == 0 then
 		remaining_cooldown = max_cooldown
 
-		if current_cooldown == fixed_frame_t then
+		if current_cooldown_t == fixed_frame_t then
 			remaining_ability_charges = remaining_ability_charges + 1
 		end
 	end
@@ -954,17 +954,17 @@ end
 
 PlayerUnitAbilityExtension.increase_ability_cooldown_time = function (self, ability_type, increase_time)
 	local ability_component = self._ability_components[ability_type]
-	local current_cooldown = ability_component.cooldown
+	local current_cooldown_t = ability_component.cooldown
 	local fixed_frame_t = FixedFrame.get_latest_fixed_time()
 	local max_ability_charges = self:max_ability_charges(ability_type)
 	local max_cooldown = self:max_ability_cooldown(ability_type)
-	local remaining_cooldown = self:remaining_ability_cooldown(ability_type)
+	local remaining_cooldown = math.max(current_cooldown_t - fixed_frame_t, 0)
 	local remaining_ability_charges = self:remaining_ability_charges(ability_type)
 
 	if remaining_ability_charges < max_ability_charges and remaining_cooldown == 0 then
 		remaining_cooldown = max_cooldown
 
-		if current_cooldown == fixed_frame_t then
+		if current_cooldown_t == fixed_frame_t then
 			remaining_ability_charges = math.max(remaining_ability_charges - 1, 0)
 		end
 	end

@@ -49,6 +49,10 @@ MissionCleanupUtilies.cleanup = function (shared_state, gameplay_state, initiali
 		Managers.state.cinematic:stop_all_stories()
 	end
 
+	if Managers.ui then
+		Managers.ui:on_mission_cleanup(on_shutdown)
+	end
+
 	if Managers.state.game_mode then
 		Managers.state.game_mode:mission_cleanup(on_shutdown)
 	end

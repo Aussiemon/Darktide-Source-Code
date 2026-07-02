@@ -564,6 +564,10 @@ MiscTestCases.spawn_all_units = function (case_settings)
 			"content/fx/units/weapons/small_caliber_plastic_large_01",
 			"core/editor_slave/preview/preview_terrain",
 			"content/environment/artsets/imperial/expeditions/gameplay/electricity/electrical_button_01",
+			"content/characters/player/human/attachments_gear/upperbody/cryptic_upperbody_b/upperbody_b_torso_cloth",
+			"content/debug/cloth/cloth_solid_sphere",
+			"content/debug/cloth/cloth_test",
+			"content/debug/cloth/cloth_test_dense",
 		}
 
 		Deadlock.pause()

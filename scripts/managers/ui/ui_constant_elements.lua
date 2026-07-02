@@ -293,6 +293,16 @@ UIConstantElements._abort_hud_scale = function (self)
 	render_settings.using_hud_scale = nil
 end
 
+UIConstantElements.on_mission_cleanup = function (self, on_shutdown)
+	local elements_array = self._elements_array
+
+	for _, element in ipairs(elements_array) do
+		if element.on_mission_cleanup then
+			element:on_mission_cleanup(on_shutdown)
+		end
+	end
+end
+
 UIConstantElements.destroy = function (self)
 	local elements_array = self._elements_array
 

@@ -11,6 +11,7 @@ local LobbyViewTestify = GameParameters.testify and require("scripts/ui/views/lo
 local MasterItems = require("scripts/backend/master_items")
 local Missions = require("scripts/settings/mission/mission_templates")
 local MissionTypes = require("scripts/settings/mission/mission_types")
+local PlayerHeight = require("scripts/utilities/player_height")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local TalentBuilderViewSettings = require("scripts/ui/views/talent_builder_view/talent_builder_view_settings")
 local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
@@ -1034,8 +1035,8 @@ end
 LobbyView._assign_player_to_slot = function (self, player, slot)
 	local unique_id = player:unique_id()
 	local profile = player:profile()
-	local archetype_settings = profile.archetype
-	local breed_name = archetype_settings.breed
+	local archetype = profile.archetype
+	local breed_name = archetype.breed
 	local breed = Breeds[breed_name]
 	local body_size = breed.body_size
 	local spawn_point_unit
@@ -1048,7 +1049,7 @@ LobbyView._assign_player_to_slot = function (self, player, slot)
 
 	local spawn_position = Unit.world_position(spawn_point_unit, 1)
 	local spawn_rotation = Unit.world_rotation(spawn_point_unit, 1)
-	local inventory_state_machine = archetype_settings.inventory_state_machine
+	local inventory_state_machine = archetype.inventory_state_machine
 	local slot_name = slot.default_slot
 	local slot_item = profile.loadout[slot_name]
 	local item_inventory_animation_event = slot_item and slot_item.inventory_animation_event or "inventory_idle_default"
@@ -1068,8 +1069,8 @@ LobbyView._assign_player_to_slot = function (self, player, slot)
 		rotation = spawn_rotation,
 		state_machine = companion_state_machine,
 	}
-	local profile_size = profile.personal and profile.personal.character_height
-	local spawn_scale = profile_size and Vector3(profile_size, profile_size, profile_size)
+	local scale = PlayerHeight.player_character_third_person_scale(breed, profile, nil)
+	local spawn_scale = Vector3(scale, scale, scale)
 	local profile_spawner = slot.profile_spawner
 
 	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, spawn_scale, inventory_state_machine, item_inventory_animation_event, nil, nil, nil, nil, nil, nil, companion_data)
@@ -1873,6 +1874,7 @@ LobbyView._setup_weapon_widgets = function (self, spawn_slot)
 
 	local archetype_settings = profile.archetype
 	local breed_name = archetype_settings.breed
+	local breed = Breeds[breed_name]
 	local spawn_point_unit = _spawn_point_unit(profile, spawn_slot)
 	local spawn_position = Unit.world_position(spawn_point_unit, 1)
 	local spawn_rotation = Unit.world_rotation(spawn_point_unit, 1)
@@ -1884,9 +1886,9 @@ LobbyView._setup_weapon_widgets = function (self, spawn_slot)
 	local companion_state_machine
 
 	if has_companion then
-		local companion_breed_settings = Breeds[companion_breed_name]
+		local companion_breed = Breeds[companion_breed_name]
 
-		companion_state_machine = companion_breed_settings.inventory_state_machine
+		companion_state_machine = companion_breed.inventory_state_machine
 	end
 
 	local companion_data = {
@@ -1896,8 +1898,8 @@ LobbyView._setup_weapon_widgets = function (self, spawn_slot)
 		rotation = spawn_rotation,
 		state_machine = companion_state_machine,
 	}
-	local profile_size = profile.personal and profile.personal.character_height
-	local spawn_scale = profile_size and Vector3(profile_size, profile_size, profile_size)
+	local scale = PlayerHeight.player_character_third_person_scale(breed, profile, nil)
+	local spawn_scale = Vector3(scale, scale, scale)
 	local profile_spawner = spawn_slot.profile_spawner
 
 	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, spawn_scale, inventory_state_machine, item_inventory_animation_event, nil, nil, nil, nil, nil, nil, companion_data)

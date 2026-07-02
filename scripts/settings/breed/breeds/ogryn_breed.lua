@@ -55,6 +55,7 @@ local breed_data = {
 	},
 	size_variation_range = OGRYN_SIZE_VARIATION_RANGE,
 	first_person_pose_scale = AVERAGE_OGRYN_SIZE * 0.8,
+	average_size = AVERAGE_OGRYN_SIZE,
 	fade = {
 		max_distance = 1.2,
 		max_height_difference = 1.2,

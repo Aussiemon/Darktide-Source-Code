@@ -53,6 +53,7 @@ local breed_data = {
 	},
 	size_variation_range = CRYPTIC_SIZE_VARIATION_RANGE,
 	first_person_pose_scale = AVERAGE_CRYPTIC_SIZE * 0.95,
+	average_size = AVERAGE_CRYPTIC_SIZE,
 	fade = {
 		max_distance = 0.9,
 		max_height_difference = 1.1,

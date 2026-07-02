@@ -2285,12 +2285,12 @@ do
 			description = "loc_achievement_cryptic_weapon_malfunction_on_elite_ranged_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0014",
 			stat_name = "cryptic_weapon_malfunction_applied_on_elite_ranged",
-			target = 500,
+			target = 75,
 			title = "loc_achievement_cryptic_weapon_malfunction_on_elite_ranged_name",
 			type = AchievementTypesLookup.increasing_stat,
 			category = category_abilites,
 			loc_variables = {
-				target = 500,
+				target = 75,
 			},
 			flags = {},
 		}
@@ -2298,12 +2298,12 @@ do
 			description = "loc_achievement_cryptic_enemies_electrocuted_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0015",
 			stat_name = "cryptic_enemies_electrocuted",
-			target = 5000,
+			target = 1500,
 			title = "loc_achievement_cryptic_enemies_electrocuted_name",
 			type = AchievementTypesLookup.increasing_stat,
 			category = category_abilites,
 			loc_variables = {
-				target = 5000,
+				target = 1500,
 			},
 			flags = {},
 		}
@@ -2311,12 +2311,12 @@ do
 			description = "loc_achievement_cryptic_arc_jumps_description",
 			icon = "content/ui/textures/icons/achievements/class_achievements/cryptic/achievement_icon_cryptic_0016",
 			stat_name = "cryptic_arc_jumps",
-			target = 5000,
+			target = 2500,
 			title = "loc_achievement_cryptic_arc_jumps_name",
 			type = AchievementTypesLookup.increasing_stat,
 			category = category_abilites,
 			loc_variables = {
-				target = 5000,
+				target = 2500,
 			},
 			flags = {},
 		}
@@ -4640,7 +4640,7 @@ do
 			500,
 			1000,
 			10000,
-			100000,
+			20000,
 		})
 		tiered_target_family("expedition_unlock_nodes_{index:%d}", {
 			category = "mission_expeditions",

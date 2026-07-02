@@ -24,6 +24,7 @@ local weakspot_types = WeakspotSettings.types
 local breed_name = "chaos_poxwalker_bomber"
 local breed_data = {
 	achievement_breed_group = "chaos_poxwalker_bomber",
+	always_stagger_on_melee_push = true,
 	base_height = 1.7,
 	base_unit = "content/characters/enemy/chaos_poxwalker_bomber/third_person/base",
 	bone_lod_radius = 1.1,

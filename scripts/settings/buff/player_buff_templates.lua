@@ -70,6 +70,7 @@ templates.knocked_down_damage_tick = {
 	interval = 2,
 	is_negative = true,
 	predicted = false,
+	skip_tactical_overlay = true,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 

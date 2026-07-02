@@ -93,11 +93,11 @@ ActionCrypticDischarge.start = function (self, action_settings, t, time_scale, a
 	if base_ability then
 		local explosion_template = target_num_ability_charges_effect == 1 and ExplosionTemplates.cryptic_discharge_aoe_electrocution_base or target_num_ability_charges_effect == 2 and ExplosionTemplates.cryptic_discharge_aoe_electrocution_base_two or target_num_ability_charges_effect == 3 and ExplosionTemplates.cryptic_discharge_aoe_electrocution_base_three
 
-		Explosion.create_explosion(self._world, self._physics_world, player_position, Quaternion.identity(), player_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
+		Explosion.create_explosion(self._world, self._physics_world, player_position, Quaternion.identity(), player_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion, nil, true)
 	else
 		local explosion_template = ExplosionTemplates.cryptic_discharge_aoe_electrocution
 
-		Explosion.create_explosion(self._world, self._physics_world, player_position, Quaternion.identity(), player_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
+		Explosion.create_explosion(self._world, self._physics_world, player_position, Quaternion.identity(), player_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion, nil, true)
 
 		if target_num_ability_charges_effect >= discharge_ability_talent_settings.two_charge_bonus.num_charges_used_required and talent_extension:has_special_rule("cryptic_discharge_gives_attack_speed") then
 			buff_extension:add_internally_controlled_buff("cryptic_discharge_attack_speed_increase", t)
@@ -117,7 +117,7 @@ ActionCrypticDischarge.start = function (self, action_settings, t, time_scale, a
 
 		local weapon_malfunction_explosion_template = ExplosionTemplates.cryptic_discharge_weapon_malfunction
 
-		Explosion.create_explosion(self._world, self._physics_world, player_position, Quaternion.identity(), player_unit, weapon_malfunction_explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
+		Explosion.create_explosion(self._world, self._physics_world, player_position + Vector3.up() * 1.5, Quaternion.identity(), player_unit, weapon_malfunction_explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
 
 		if target_num_ability_charges_effect < 3 then
 			return

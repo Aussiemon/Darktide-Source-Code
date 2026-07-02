@@ -212,7 +212,6 @@ AccountManagerPSN._check_input = function (self)
 			options = {
 				{
 					close_on_pressed = true,
-					hotkey = "validate",
 					text = "loc_alias_view_close_view",
 					callback = callback(self, "cb_validate_input_reconnected"),
 				},

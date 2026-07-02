@@ -77,6 +77,13 @@ local template_visual_definitions = {
 					2.8,
 				},
 			},
+			cryptic = {
+				position_offset = {
+					0,
+					0,
+					2.4,
+				},
+			},
 		},
 	},
 }

@@ -24,6 +24,7 @@ Main.init = function (self)
 			"scripts/game_states/boot/boot_state_apply_patches",
 			"scripts/game_states/boot/boot_state_resolve_parameters",
 			"scripts/game_states/boot/boot_state_create_boot_ui",
+			"scripts/game_states/boot/boot_state_startup_tests",
 			"scripts/game_states/boot/boot_state_load_render_settings",
 			"scripts/game_states/boot/boot_state_init_managers",
 			"scripts/game_states/boot/boot_state_load_boot_assets",
@@ -33,7 +34,6 @@ Main.init = function (self)
 			"scripts/game_states/boot/boot_state_require_game_scripts",
 			"scripts/game_states/boot/boot_state_load_audio_settings",
 			"scripts/game_states/boot/boot_state_activate_plugins",
-			"scripts/game_states/boot/boot_state_startup_tests",
 			"scripts/game_states/boot/boot_state_last",
 		},
 	}

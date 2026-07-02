@@ -95,8 +95,10 @@ ViewElementKeybindPopup.setup_popup = function (self, keys_list, key_index, comp
 		local devices = key.devices
 		local key_info = alias:get_keys_for_alias(alias_name, devices)
 
-		keys_in_use[key_info.main] = keys_in_use[key_info.main] or {}
-		keys_in_use[key_info.main][#keys_in_use[key_info.main] + 1] = key
+		if key_info and key_info.main then
+			keys_in_use[key_info.main] = keys_in_use[key_info.main] or {}
+			keys_in_use[key_info.main][#keys_in_use[key_info.main] + 1] = key
+		end
 	end
 
 	self:_generate_grid(header, active_value)
@@ -120,7 +122,7 @@ ViewElementKeybindPopup._update_popup = function (self, new_key)
 	local new_alias = new_key.alias
 	local devices = self._active_popup_data.devices
 	local new_value = new_alias:get_keys_for_alias(new_active_alias_name, devices)
-	local alias_used_by_key = keys_in_use[new_value.main]
+	local alias_used_by_key = new_value and new_value.main and keys_in_use[new_value.main]
 	local current_header = self._active_popup_data.current_key.display_name
 
 	self:_generate_grid(current_header, new_value, alias_used_by_key)
@@ -422,7 +424,7 @@ ViewElementKeybindPopup.update = function (self, dt, t, input_service)
 			local stored_key = self._active_popup_data.stored_key
 			local stored_value_key = stored_key and stored_key.alias:get_keys_for_alias(stored_key.alias_name, stored_key.devices)
 			local keys_in_use = self._active_popup_data.keys_in_use
-			local is_valid, reason = self:_is_change_valid(new_key.main, current_value_key.main, stored_value_key and stored_value_key.main, keys_in_use)
+			local is_valid, reason = self:_is_change_valid(new_key.main, current_value_key and current_value_key.main, stored_value_key and stored_value_key.main, keys_in_use)
 
 			if is_valid or not is_valid and reason == "cancel" then
 				local complete_callback = self._active_popup_data.complete_callback

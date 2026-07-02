@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/reload_templates/arc_rifle_reload_template.lua
 
+local ONE_FRAME = 0.019230769230769232
 local reload_template = {
 	name = "arc_rifle",
 	states = {
@@ -20,19 +21,19 @@ local reload_template = {
 			},
 			{
 				anim_1p = "reload_cancel_severed_connection",
-				t = 1.2,
+				t = 1.2 - ONE_FRAME,
 			},
 			{
 				anim_1p = "reload_cancel_mag_removed",
-				t = 2.6,
+				t = 2.6 - ONE_FRAME,
 			},
 			{
 				anim_1p = "reload_cancel",
-				t = 4.23,
+				t = 4.23 - ONE_FRAME,
 			},
 			{
 				anim_1p = "reload_finished",
-				t = 5.1,
+				t = 5.1 - ONE_FRAME,
 			},
 		},
 		state_transitions = {
@@ -57,15 +58,15 @@ local reload_template = {
 			},
 			{
 				anim_1p = "reload_cancel_mag_removed",
-				t = 0.7,
+				t = 0.7 - ONE_FRAME,
 			},
 			{
 				anim_1p = "reload_cancel",
-				t = 2.33,
+				t = 2.33 - ONE_FRAME,
 			},
 			{
 				anim_1p = "reload_finished",
-				t = 3.16,
+				t = 3.16 - ONE_FRAME,
 			},
 		},
 		state_transitions = {
@@ -88,11 +89,11 @@ local reload_template = {
 			},
 			{
 				anim_1p = "reload_cancel",
-				t = 0.96,
+				t = 0.96 - ONE_FRAME,
 			},
 			{
 				anim_1p = "reload_finished",
-				t = 1.76,
+				t = 1.76 - ONE_FRAME,
 			},
 		},
 		state_transitions = {
@@ -114,7 +115,7 @@ local reload_template = {
 			},
 			{
 				anim_1p = "reload_finished",
-				t = 1.783,
+				t = 1.783 - ONE_FRAME,
 			},
 		},
 		state_transitions = {

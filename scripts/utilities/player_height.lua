@@ -14,6 +14,7 @@ end
 PlayerHeight.player_character_third_person_scale = function (breed, profile, random_seed)
 	local profile_character_height = profile.personal and profile.personal.character_height
 	local size_variation_range = breed.size_variation_range
+	local average_size = breed.average_size
 	local scale = 1
 
 	if profile_character_height then
@@ -23,7 +24,7 @@ PlayerHeight.player_character_third_person_scale = function (breed, profile, ran
 		local body_size = breed.body_size
 		local is_ogryn_sized = body_size == "ogryn_sized"
 		local wanted_body_size_height = is_ogryn_sized and BASE_BODY_SIZE_HEIGHTS.ogryn_sized or BASE_BODY_SIZE_HEIGHTS.human_sized
-		local scale_relative_to_body_size_height = scaled_default_height / wanted_body_size_height
+		local scale_relative_to_body_size_height = scaled_default_height / wanted_body_size_height * average_size
 
 		scale = scale_relative_to_body_size_height
 	elseif size_variation_range and random_seed then

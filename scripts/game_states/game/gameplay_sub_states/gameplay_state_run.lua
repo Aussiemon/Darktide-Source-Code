@@ -52,6 +52,8 @@ GameplayStateRun.on_enter = function (self, parent, params)
 end
 
 GameplayStateRun.on_exit = function (self, exit_params)
+	Managers.state.position_lookup:force_update()
+
 	local shared_state = self._shared_state
 	local gameplay_state = self._gameplay_state
 	local is_server = shared_state.is_server

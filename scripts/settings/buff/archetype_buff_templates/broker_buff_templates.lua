@@ -1426,6 +1426,9 @@ templates.broker_passive_reload_speed_on_close_kill_effect = {
 	stat_buffs = {
 		[stat_buffs.reload_speed] = talent_settings.broker_passive_reload_speed_on_close_kill.reload_speed,
 	},
+	related_talents = {
+		"broker_passive_reload_speed_on_close_kill",
+	},
 }
 templates.broker_passive_crit_kill_at_close_range_reload = {
 	class_name = "proc_buff",

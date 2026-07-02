@@ -40,12 +40,16 @@ hordes_legendary_cryptic_buffs_data.hordes_buff_cryptic_precision_stance_duratio
 	filter_category = filtering_categories.regular,
 	buff_stats = {
 		capacitance = {
-			format_type = "number",
+			format_type = "percentage",
 			value = 0.05,
 		},
 		talent_name = {
 			format_type = "loc_string",
 			value = "loc_talent_cryptic_precision_stance",
+		},
+		capacitance_keyword = {
+			format_type = "loc_string",
+			value = "loc_talent_cryptic_power_keyword",
 		},
 	},
 }

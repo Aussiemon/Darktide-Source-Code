@@ -57,7 +57,7 @@ templates.live_event_leftover_buff_faction_a = {
 	title = "Faction A support",
 	buff_category = buff_categories.live_event,
 	stat_buffs = {
-		[stat_buffs.coherency_radius_multiplier] = 0.25,
+		[stat_buffs.coherency_radius_modifier] = 0.25,
 		[stat_buffs.attack_speed] = 0.15,
 		[stat_buffs.movement_speed] = 0.15,
 	},

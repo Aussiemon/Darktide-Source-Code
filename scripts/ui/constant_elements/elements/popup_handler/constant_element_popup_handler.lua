@@ -911,6 +911,16 @@ ConstantElementPopupHandler._update_button_input = function (self, input_service
 	local current_selected_button_index = self._selected_button_index
 	local gamepad_active = InputDevice.gamepad_active
 
+	if #content_widgets > 0 and current_selected_button_index ~= nil and not content_widgets[current_selected_button_index] then
+		if gamepad_active or Managers.input:has_active_gamepad() then
+			self:_select_button_index(1)
+		else
+			self:_select_button_index(nil)
+		end
+
+		return
+	end
+
 	if current_selected_button_index then
 		local input_direction
 

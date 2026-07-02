@@ -869,6 +869,12 @@ UIManager.wwise_music_state = function (self, wwise_state_group_name)
 	return self._view_handler:wwise_music_state(wwise_state_group_name)
 end
 
+UIManager.on_mission_cleanup = function (self, on_shutdown)
+	if self._ui_constant_elements then
+		self._ui_constant_elements:on_mission_cleanup(on_shutdown)
+	end
+end
+
 UIManager.destroy = function (self)
 	Managers.event:unregister(self, "event_show_ui_popup")
 	Managers.event:unregister(self, "event_remove_ui_popup")

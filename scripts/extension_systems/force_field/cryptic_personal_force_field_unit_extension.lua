@@ -8,7 +8,7 @@ local SPAWNING = {
 	real_shield_visible_time = 0,
 }
 local DESPAWNING = {
-	lingering_time_after_shield_expire = 0,
+	lingering_time_after_shield_expire = 0.1,
 	particle_name = "content/fx/particles/abilities/cryptic/force_field_despawn",
 	spawn_time_before_expired = 1,
 }

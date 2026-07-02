@@ -219,7 +219,8 @@ MutatorGameplayLiveEventLeftover.get_side_notification_data_formatter = function
 		end
 
 		local selected_color = Color.terminal_corner_selected(255, true)
-		local amount = string.format("{#color(%d,%d,%d)}%s{#reset()}", selected_color[2], selected_color[3], selected_color[4], amount_size)
+		local localized_amount = string.format("{#color(%d,%d,%d)}%s{#reset()}", selected_color[2], selected_color[3], selected_color[4], amount_size)
+		local amount = string.format(" %s \n +%s", localized_amount, data.amount_value)
 		local for_amount = string.format("{#color(%d,%d,%d)}%s{#reset()}", selected_color[2], selected_color[3], selected_color[4], Localize("loc_player_leftover_pickup_notification", true, {
 			player_name = player_name,
 			amount = amount_value,
@@ -227,7 +228,6 @@ MutatorGameplayLiveEventLeftover.get_side_notification_data_formatter = function
 		local text = Localize(text_localization_key, true, {
 			amount = amount,
 			player_name = player_name,
-			amount_value = data.amount_value,
 		})
 		local enter_sound_event = notification_settings.notification_sound_event
 		local texts = {}
@@ -237,9 +237,6 @@ MutatorGameplayLiveEventLeftover.get_side_notification_data_formatter = function
 		}
 		texts[#texts + 1] = {
 			display_name = text,
-		}
-		texts[#texts + 1] = {
-			display_name = for_amount,
 		}
 
 		return {

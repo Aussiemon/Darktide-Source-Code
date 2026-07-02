@@ -250,12 +250,8 @@ local hogtied_players = {}
 
 RespawnBeaconSystem._update_hogtied_players = function (self, side_id)
 	local players = Managers.player:players()
-	local main_path_manager = Managers.state.main_path
-	local has_main_path = main_path_manager:is_main_path_available()
 
 	table.clear(hogtied_players)
-
-	local lowest_player_travel_distance = math.huge
 
 	for _, player in pairs(players) do
 		local player_unit = player.player_unit
@@ -266,19 +262,8 @@ RespawnBeaconSystem._update_hogtied_players = function (self, side_id)
 
 			if PlayerUnitStatus.is_hogtied(character_state_component) then
 				hogtied_players[#hogtied_players + 1] = player
-			elseif has_main_path then
-				local alive_player_position = POSITION_LOOKUP[player_unit]
-				local _, alive_player_distance, _, _, _ = MainPathQueries.closest_position(alive_player_position)
-
-				if alive_player_distance < lowest_player_travel_distance then
-					lowest_player_travel_distance = alive_player_distance
-				end
 			end
 		end
-	end
-
-	if lowest_player_travel_distance == math.huge then
-		lowest_player_travel_distance = 0
 	end
 
 	local unit_to_extension_map = self._unit_to_extension_map
@@ -292,9 +277,18 @@ RespawnBeaconSystem._update_hogtied_players = function (self, side_id)
 
 	if num_hogtied_players == 0 then
 		self._current_active_respawn_beacon = nil
+
+		return false
 	end
 
-	if not has_main_path or main_path_manager:path_type() == "open" then
+	local main_path_manager = Managers.state.main_path
+	local has_main_path = main_path_manager:is_main_path_available()
+
+	if not has_main_path then
+		return false
+	end
+
+	if main_path_manager:path_type() == "open" then
 		return false
 	end
 
@@ -302,9 +296,10 @@ RespawnBeaconSystem._update_hogtied_players = function (self, side_id)
 		return false
 	end
 
+	local _, lowest_player_travel_distance = main_path_manager:behind_unit(side_id)
 	local nav_spawn_points = main_path_manager:nav_spawn_points()
 
-	if nav_spawn_points then
+	if nav_spawn_points and lowest_player_travel_distance then
 		for i = num_hogtied_players, 1, -1 do
 			local hogtied_position = POSITION_LOOKUP[hogtied_players[i].player_unit]
 			local _, hogtied_player_distance, _, _, _ = MainPathQueries.closest_position(hogtied_position)

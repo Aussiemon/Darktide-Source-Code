@@ -768,6 +768,8 @@ local function _generate_blueprints_function(grid_size, optional_item)
 			return
 		end
 
+		local weapon_template_name = weapon_template.name
+		local item_name = item and item.name
 		local chain_data = damage_stats[attack_index]
 		local attack_data = chain_data[chain_index] or chain_data
 		local attack_type_data = attack_data.type_data

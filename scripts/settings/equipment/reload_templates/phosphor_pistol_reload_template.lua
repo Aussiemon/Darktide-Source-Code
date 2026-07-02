@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/reload_templates/phosphor_pistol_reload_template.lua
 
+local ONE_FRAME = 0.019230769230769232
 local reload_template = {
 	name = "phosphor_pistol",
 	states = {
@@ -18,15 +19,15 @@ local reload_template = {
 			},
 			{
 				anim_1p = "reload_cancel_empty",
-				t = 0.3,
+				t = 0.3 - ONE_FRAME,
 			},
 			{
 				anim_1p = "reload_cancel_full",
-				t = 1.46,
+				t = 1.46 - ONE_FRAME,
 			},
 			{
 				anim_1p = "reload_finished",
-				t = 2.2,
+				t = 2.2 - ONE_FRAME,
 			},
 		},
 		state_transitions = {
@@ -50,11 +51,11 @@ local reload_template = {
 			},
 			{
 				anim_1p = "reload_cancel_full",
-				t = 0.83,
+				t = 0.83 - ONE_FRAME,
 			},
 			{
 				anim_1p = "reload_finished",
-				t = 1.66,
+				t = 1.66 - ONE_FRAME,
 			},
 		},
 		state_transitions = {
@@ -76,7 +77,7 @@ local reload_template = {
 			},
 			{
 				anim_1p = "reload_finished",
-				t = 0.36,
+				t = 0.36 - ONE_FRAME,
 			},
 		},
 		state_transitions = {

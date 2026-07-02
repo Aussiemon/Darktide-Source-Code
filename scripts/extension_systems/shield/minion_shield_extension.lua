@@ -26,7 +26,6 @@ MinionShieldExtension.init = function (self, extension_init_context, unit, exten
 	self._template = shield_template
 	self._regen_hit_strength_rate = shield_template.regen_hit_strength_rate
 	self._hit_strength = 0
-	self._damage_index = 0
 
 	self:_initialize_health(shield_template)
 
@@ -267,10 +266,11 @@ local IGNORED_DAMAGE_KEYWORDS = {
 }
 
 MinionShieldExtension.apply_stagger = function (self, unit, damage_profile, stagger_strength, attack_result, stagger_type, duration_scale, length_scale, attack_type, damage_type)
-	if damage_type and IGNORED_DAMAGE_KEYWORDS[damage_type] then
-		stagger_type, duration_scale, length_scale = nil, 0, 0
+	local template = self._template
+	local is_ignored_damage = damage_type and IGNORED_DAMAGE_KEYWORDS[damage_type]
 
-		return stagger_type, duration_scale, length_scale
+	if is_ignored_damage and not stagger_type and (stagger_strength or 0) <= 0 then
+		return nil, 0, 0
 	end
 
 	local is_blocking = self._shield_component.is_blocking
@@ -293,7 +293,6 @@ MinionShieldExtension.apply_stagger = function (self, unit, damage_profile, stag
 
 	stagger_strength = override_multiplier * (stagger_strength or 0)
 
-	local template = self._template
 	local default_min_stagger_strength = template.attack_type_min_stagger_strength and template.attack_type_min_stagger_strength[attack_type] or 0
 
 	stagger_strength = math.max(stagger_strength, default_min_stagger_strength)
@@ -308,14 +307,12 @@ MinionShieldExtension.apply_stagger = function (self, unit, damage_profile, stag
 	local quarter_open_up_threshold = open_up_threshold / 20
 	local hit_strength = self._hit_strength
 
-	hit_strength = math.min(hit_strength + stagger_strength, open_up_threshold)
-	self._hit_strength = hit_strength
+	if not is_ignored_damage then
+		hit_strength = math.min(hit_strength + stagger_strength, open_up_threshold)
+		self._hit_strength = hit_strength
+	end
 
-	if attack_result == attack_results.damaged then
-		stagger_type, duration_scale, length_scale = self:_check_for_ignore_override(stagger_type)
-
-		return stagger_type, duration_scale or 0, length_scale
-	elseif hit_strength == open_up_threshold then
+	if open_up_threshold <= hit_strength then
 		stagger_type, duration_scale, length_scale = stagger_types.shield_heavy_block, 1, 1
 
 		local skip_open_up_vfx = self._template.skip_open_up_vfx
@@ -332,6 +329,10 @@ MinionShieldExtension.apply_stagger = function (self, unit, damage_profile, stag
 		end
 
 		self._hit_strength = 0
+	elseif attack_result == attack_results.damaged then
+		stagger_type, duration_scale, length_scale = self:_check_for_ignore_override(stagger_type)
+
+		return stagger_type, duration_scale or 0, length_scale
 	elseif quarter_open_up_threshold < hit_strength then
 		stagger_type, duration_scale, length_scale = stagger_types.shield_block, 1, 1
 	else

@@ -13,8 +13,17 @@ Interrupt.ability = function (t, unit, reason, reason_data_or_nil, ignore_immuni
 	end
 
 	local ability_extension = ScriptUnit.extension(unit, "ability_system")
+	local action_settings = ability_extension:running_action_settings()
+	local sprinting = reason and reason == "started_sprint"
 
-	ability_extension:stop_action(reason, reason_data_or_nil, t)
+	if sprinting and action_settings then
+		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+		local no_interruption_for_sprint = Sprint.no_interruption_for_sprint(action_settings, buff_extension)
+
+		if not no_interruption_for_sprint then
+			ability_extension:stop_action(reason, reason_data_or_nil, t)
+		end
+	end
 end
 
 Interrupt.action = function (t, unit, reason, reason_data_or_nil, ignore_immunity)

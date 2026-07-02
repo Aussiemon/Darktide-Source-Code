@@ -75,4 +75,8 @@ PositionLookupManager.post_update = function (self)
 	return
 end
 
+PositionLookupManager.force_update = function (self)
+	self:pre_update()
+end
+
 return PositionLookupManager

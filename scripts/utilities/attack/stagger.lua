@@ -12,6 +12,7 @@ local MinionState = require("scripts/utilities/minion_state")
 local StaggerCalculation = require("scripts/utilities/attack/stagger_calculation")
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local buff_keywords = BuffSettings.keywords
+local stagger_types = StaggerSettings.stagger_types
 local Stagger = {}
 local _apply_action_controlled_stagger, _get_breed, _get_action_data_overrides, _apply_stagger, _get_stagger_duration_modifier, _get_stagger_count, _should_trigger_stagger, _get_system_overrides
 local EMPTY_STAT_BUFFS = {}
@@ -76,6 +77,18 @@ Stagger.apply_stagger = function (unit, damage_profile, damage_profile_lerp_valu
 	end
 
 	stagger_type, duration_scale, length_scale = _get_system_overrides(unit, damage_profile, stagger_type, duration_scale, length_scale, stagger_strength, attack_result, attack_type, damage_type)
+
+	local always_stagger_on_melee_push = breed.always_stagger_on_melee_push and damage_profile.is_push and damage_profile.stagger_category == "melee"
+
+	if always_stagger_on_melee_push then
+		action_controlled_stagger = false
+
+		if not stagger_type then
+			stagger_type = stagger_types.light
+			duration_scale = 1
+			length_scale = 1
+		end
+	end
 
 	if stagger_type then
 		stagger_component.stagger_strength_pool = 0
@@ -314,6 +327,14 @@ function _apply_stagger(unit, attacker_unit, breed, stagger_type, attack_directi
 	local stagger_component = Blackboard.write_component(blackboard, "stagger")
 	local t = Managers.time:time("gameplay")
 	local should_trigger_stagger = _should_trigger_stagger(t, stagger_component, stagger_type)
+
+	if not should_trigger_stagger then
+		local melee_push_stagger = breed.always_stagger_on_melee_push and damage_profile.is_push and damage_profile.stagger_category == "melee"
+
+		if melee_push_stagger then
+			should_trigger_stagger = true
+		end
+	end
 
 	if should_trigger_stagger then
 		local stagger_durations = breed.stagger_durations

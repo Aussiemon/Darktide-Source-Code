@@ -7516,7 +7516,7 @@ do
 			data = {},
 			triggers = {
 				{
-					id = "whole_mission_won",
+					id = "mission_won",
 					trigger = function (self, stat_data, difficulty, mission_time)
 						return set_to(self, stat_data, 1)
 					end,

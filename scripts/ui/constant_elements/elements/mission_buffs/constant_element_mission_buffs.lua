@@ -1105,6 +1105,10 @@ MissionBuffs._reset_view = function (self, ui_renderer)
 	end
 end
 
+MissionBuffs.on_mission_cleanup = function (self, on_shutdown)
+	self:_reset_view(self._ui_renderer)
+end
+
 MissionBuffs.destroy = function (self, ui_renderer)
 	self:_reset_view(ui_renderer)
 

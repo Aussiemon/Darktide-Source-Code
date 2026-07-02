@@ -22,7 +22,6 @@ local breed_data = {
 	debug_color_name = "cyan",
 	display_name = "loc_breed_display_name_undefined",
 	faction_name = "imperium",
-	first_person_pose_scale = 1,
 	first_person_unit = "content/characters/player/human/first_person/base",
 	friendly_hit_mass = 0,
 	hit_mass = 2,
@@ -54,6 +53,8 @@ local breed_data = {
 		vault = 0.9 / AVERAGE_HUMAN_SIZE,
 	},
 	size_variation_range = HUMAN_SIZE_VARIATION_RANGE,
+	first_person_pose_scale = AVERAGE_HUMAN_SIZE * 1,
+	average_size = AVERAGE_HUMAN_SIZE,
 	fade = {
 		max_distance = 0.9,
 		max_height_difference = 1,
