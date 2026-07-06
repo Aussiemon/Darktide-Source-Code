@@ -91,11 +91,14 @@ PrecisionTargetFinderAutoAim._try_find_target_with_raycast = function (self, vis
 				break
 			end
 
+			local hit_unit_center_position, _ = Actor_world_bounds(hit_actor)
+			local node_to_aim_afro = Unit.node(hit_unit, "r_afro")
 			local node_to_aim_torso = Unit.node(hit_unit, "enemy_aim_target_02")
 			local node_to_aim_head = Unit.node(hit_unit, "enemy_aim_target_03")
-			local aim_target_position_head = Unit.world_position(hit_unit, node_to_aim_head)
+			local aim_target_position_afro = Unit.world_position(hit_unit, node_to_aim_afro)
 			local aim_target_position_torso = Unit.world_position(hit_unit, node_to_aim_torso)
-			local aim_target_position = aim_target_position_torso + Vector3.multiply(aim_target_position_head - aim_target_position_torso, 0.5)
+			local aim_target_position_head = Unit.world_position(hit_unit, node_to_aim_head)
+			local aim_target_position = hit_unit_center_position + (aim_target_position_torso - aim_target_position_afro) + Vector3.multiply(aim_target_position_head - aim_target_position_torso, 0.4)
 			local to_target_aim_position = aim_target_position - ray_origin
 			local to_target_aim_position_normalized = Vector3_normalize(to_target_aim_position)
 			local distance_to_target = Vector3_length(to_target_aim_position)
@@ -132,7 +135,7 @@ PrecisionTargetFinderAutoAim._try_find_target_with_raycast = function (self, vis
 				end
 
 				table.insert(target_units, hit_unit)
-				table.insert(target_positions, POSITION_LOOKUP[hit_unit])
+				table.insert(target_positions, hit_unit_center_position)
 				table.insert(target_distances, distance_to_target)
 			end
 		until true
@@ -201,6 +204,7 @@ PrecisionTargetFinderAutoAim.update_precision_target = function (self, unit, sma
 			i = i + 1
 
 			local hit_unit = nearby_target_units[i]
+			local hit_unit_position = nearby_target_positions[i]
 			local distance = nearby_target_distances[i]
 
 			if optional_line_of_sight_cache then
@@ -237,14 +241,14 @@ PrecisionTargetFinderAutoAim.update_precision_target = function (self, unit, sma
 			local world_extents_forward = object_forward * (breed.half_extent_forward or 0.3)
 			local half_width = math_max(math_abs(Vector3_dot(right, world_extents_right + world_extents_forward)), math_abs(Vector3_dot(right, world_extents_right - world_extents_forward)))
 			local half_height = Breed_height(hit_unit, breed) * 0.5
-			local hit_unit_center_pos = POSITION_LOOKUP[hit_unit] + object_up * half_height
+			local hit_unit_center_pos = hit_unit_position
 			local direction_to_unit = hit_unit_center_pos - ray_origin
 			local x_diff_no_abs = Vector3_dot(direction_to_unit, right)
 			local x_diff = math_abs(x_diff_no_abs)
 			local y_diff = math_abs(Vector3_dot(direction_to_unit, up))
 			local epsilon = 0.01
 			local direct_hit = x_diff <= half_width + epsilon and y_diff <= half_height + epsilon
-			local aim_position = self:_target_aim_position_using_actor(ray_origin, forward, right, up, hit_unit_center_pos, distance, half_width, half_height, x_diff_no_abs, hit_unit, fixed_frame)
+			local aim_position = self:_target_aim_position_using_actor(ray_origin, forward, right, up, hit_unit_center_pos, distance, hit_unit_position, half_width, half_height, x_diff_no_abs, hit_unit, fixed_frame)
 
 			if direct_hit and not ignore_direct_hit then
 				best_unit = hit_unit
@@ -351,7 +355,7 @@ PrecisionTargetFinderAutoAim._target_aim_position_using_box = function (self, ra
 	return aim_target
 end
 
-PrecisionTargetFinderAutoAim._target_aim_position_using_actor = function (self, ray_origin, forward, right, up, hit_unit_center_pos, distance_to_center_pos, half_width, half_height, x_diff_no_abs, hit_unit)
+PrecisionTargetFinderAutoAim._target_aim_position_using_actor = function (self, ray_origin, forward, right, up, hit_unit_center_pos, distance_to_center_pos, rewound_afro_center_pos, half_width, half_height, x_diff_no_abs, hit_unit)
 	local aim_position = ray_origin + forward * distance_to_center_pos
 	local sub_box_half_height = half_height * half_height_mod
 	local top_position = hit_unit_center_pos + up * sub_box_half_height * 2
@@ -367,8 +371,11 @@ PrecisionTargetFinderAutoAim._target_aim_position_using_actor = function (self, 
 
 	local node_to_aim_towards = Unit.node(hit_unit, node_name_to_aim_towards)
 	local aim_target = Unit.world_position(hit_unit, node_to_aim_towards)
+	local hit_unit_afro = Unit.node(hit_unit, "r_afro")
+	local hit_unit_afro_position = Unit.world_position(hit_unit, hit_unit_afro)
+	local final_aim_target_position = rewound_afro_center_pos + Vector3.multiply(aim_target - hit_unit_afro_position, 1)
 
-	return aim_target
+	return final_aim_target_position
 end
 
 PrecisionTargetFinderAutoAim.assisted_hitscan_trajectory = function (self, targeting_data, smart_targeting_template, weapon_template, raw_aim_rotation)
