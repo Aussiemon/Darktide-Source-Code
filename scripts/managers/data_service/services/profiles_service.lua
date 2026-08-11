@@ -254,4 +254,31 @@ ProfilesService.fetch_character_operation = function (self, shopkeep, operation_
 	end)
 end
 
+ProfilesService.transform_character = function (self, character_id, parsed_profile, operation_cost)
+	return self._backend_interface.characters:transform(character_id, parsed_profile, operation_cost):next(function (data)
+		local new_items = data.body and data.body.gear
+
+		if new_items then
+			for i = 1, #new_items do
+				local item = new_items[i]
+				local gear = table.clone(item)
+				local gear_id = gear.uuid
+
+				gear.overrides = nil
+				gear.id = nil
+				gear.uuid = nil
+				gear.gear_id = nil
+
+				Managers.data_service.gear:on_gear_created(gear_id, gear)
+			end
+		end
+
+		return new_items
+	end):catch(function (error)
+		Managers.error:report_error(BackendError:new(error))
+
+		return Promise.rejected({})
+	end)
+end
+
 return ProfilesService

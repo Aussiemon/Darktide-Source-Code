@@ -103,6 +103,10 @@ MainMenuBackgroundView.event_main_menu_load_profile = function (self, profile, p
 end
 
 MainMenuBackgroundView.event_main_menu_set_presentation_profile = function (self, profile)
+	if self._presentation_profile == profile then
+		return
+	end
+
 	self._presentation_profile = profile
 
 	local loaded = false
@@ -240,6 +244,8 @@ MainMenuBackgroundView._show_dummy_unit = function (self)
 
 	self:_move_camera(nil, nil)
 	Unit.set_unit_visibility(self._dummy_unit, true, true)
+
+	self._presentation_profile = nil
 end
 
 MainMenuBackgroundView._set_profile_in_loading_queue = function (self, profile, prioritized)

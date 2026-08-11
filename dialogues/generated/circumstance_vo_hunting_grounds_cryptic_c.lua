@@ -1,6 +1,32 @@
 ﻿-- chunkname: @dialogues/generated/circumstance_vo_hunting_grounds_cryptic_c.lua
 
 local circumstance_vo_hunting_grounds_cryptic_c = {
+	disabled_by_chaos_hound_mutator = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_cryptic_c__disabled_by_chaos_hound_01",
+			"loc_cryptic_c__disabled_by_chaos_hound_02",
+			"loc_cryptic_c__disabled_by_chaos_hound_03",
+			"loc_cryptic_c__disabled_by_chaos_hound_04",
+			"loc_cryptic_c__disabled_by_chaos_hound_05",
+		},
+		sound_events_duration = {
+			3.145427,
+			1.837927,
+			3.461896,
+			4.010302,
+			3.290385,
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+		},
+		randomize_indexes = {},
+	},
 	heard_enemy_chaos_hound_mutator = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

@@ -5,6 +5,7 @@ local ability_template = {}
 
 ability_template.allowed_inputs_in_sprint = {
 	grenade_ability = true,
+	wield = true,
 }
 ability_template.action_inputs = {
 	aim_pressed = {

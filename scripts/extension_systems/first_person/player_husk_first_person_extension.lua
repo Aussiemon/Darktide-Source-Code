@@ -4,6 +4,7 @@ local FirstPersonLookDeltaAnimationControl = require("scripts/extension_systems/
 local FirstPersonRunSpeedAnimationControl = require("scripts/extension_systems/first_person/first_person_run_speed_animation_control")
 local MaterialFx = require("scripts/utilities/material_fx")
 local PlayerUnitPeeking = require("scripts/utilities/player_unit_peeking")
+local SpectatedAimInterpolator = require("scripts/extension_systems/first_person/utilities/spectated_aim_interpolator")
 local PlayerHuskFirstPersonExtension = class("PlayerHuskFirstPersonExtension")
 local FOOTSTEP_SOUND_ALIAS = "footstep_right"
 local UPPER_BODY_FOLEY = "sfx_foley_upper_body"
@@ -57,6 +58,8 @@ PlayerHuskFirstPersonExtension.init = function (self, extension_init_context, un
 
 	self._is_camera_follow_target = false
 	self._is_first_person_spectated = false
+	self._spectated_aim_rotation = QuaternionBox(rotation_root)
+	self._spectated_aim_interpolator = SpectatedAimInterpolator:new(Managers.state.game_session.fixed_time_step)
 	self._footstep_time = 0
 	self._right_foot_next = true
 
@@ -120,15 +123,23 @@ PlayerHuskFirstPersonExtension.update = function (self, unit, dt, t)
 	self._show_1p_equipment, self._wants_1p_camera = self:_update_first_person_mode(t)
 
 	local is_in_first_person_mode = self:is_in_first_person_mode()
+	local fp_component = self._first_person_component
+	local spectated_aim_rotation
+
+	if self._is_first_person_spectated then
+		spectated_aim_rotation = self._spectated_aim_interpolator:update(fp_component.rotation, self._unit_data_extension:last_received_frame(), dt)
+
+		self._spectated_aim_rotation:store(spectated_aim_rotation)
+	end
 
 	if is_in_first_person_mode then
 		self._run_animation_speed_control:update(dt, t)
-		self._look_delta_animation_control:update(dt, t)
+		self._look_delta_animation_control:update(dt, t, spectated_aim_rotation)
 		PlayerUnitPeeking.update_first_person_animations(self._first_person_unit, self._1p_peeking_animation_data, dt, t)
 	else
 		local position_root = Unit.local_position(unit, 1)
 
-		self:update_unit_position_and_rotation(position_root, false)
+		self:update_unit_position_and_rotation(position_root, fp_component.rotation, false)
 	end
 
 	PlayerUnitPeeking.update_third_person_animations(unit, self._3p_peeking_animation_data, dt)
@@ -146,13 +157,17 @@ PlayerHuskFirstPersonExtension.update = function (self, unit, dt, t)
 	self._extrapolated_character_height = self._first_person_component.height
 end
 
-PlayerHuskFirstPersonExtension.update_unit_position_and_rotation = function (self, position_3p_unit, force_update_unit_and_children)
+PlayerHuskFirstPersonExtension.spectated_aim_rotation = function (self)
+	return self._spectated_aim_rotation:unbox()
+end
+
+PlayerHuskFirstPersonExtension.update_unit_position_and_rotation = function (self, position_3p_unit, rotation, force_update_unit_and_children)
 	local first_person_unit = self._first_person_unit
 	local fp_component = self._first_person_component
 	local height = fp_component.height
 	local position = position_3p_unit + Vector3(0, 0, height)
 
-	Unit.set_local_rotation(first_person_unit, 1, fp_component.rotation)
+	Unit.set_local_rotation(first_person_unit, 1, rotation)
 	Unit.set_local_position(first_person_unit, 1, position)
 
 	if force_update_unit_and_children then
@@ -174,6 +189,8 @@ end
 PlayerHuskFirstPersonExtension.set_camera_follow_target = function (self, is_followed, first_person_spectating)
 	self._is_camera_follow_target = is_followed
 	self._is_first_person_spectated = is_followed and first_person_spectating
+
+	self._spectated_aim_interpolator:reset()
 end
 
 PlayerHuskFirstPersonExtension.is_camera_follow_target = function (self)

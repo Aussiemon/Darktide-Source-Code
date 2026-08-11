@@ -280,7 +280,6 @@ InventoryWeaponMarksView._setup_item_grid = function (self, optional_grid_settin
 	end
 
 	InventoryWeaponMarksView.super._setup_item_grid(self, optional_grid_settings)
-	self._item_grid:set_visibility(false)
 end
 
 InventoryWeaponMarksView._generate_fake_mark_item = function (self, mark, marks)
@@ -587,10 +586,6 @@ InventoryWeaponMarksView._preview_item = function (self, item)
 
 		self._weapon_preview:present_item(item, disable_auto_spin)
 	end
-
-	local visible = true
-
-	self:_set_preview_widgets_visibility(visible)
 end
 
 InventoryWeaponMarksView.on_back_pressed = function (self)

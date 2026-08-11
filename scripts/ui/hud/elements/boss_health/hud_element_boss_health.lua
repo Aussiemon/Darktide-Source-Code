@@ -197,9 +197,11 @@ HudElementBossHealth.update = function (self, dt, t, ui_renderer, render_setting
 				self:_apply_widget_bar_fractions(widget, bar_width, health_fraction, health_ghost_fraction, health_max_fraction)
 			end
 
+			local boss_extension = target.boss_extension
+			local start_depleted = boss_extension and boss_extension:boss_is_depleted_interrupter()
 			local toughness_extension = target.toughness_extension
 
-			if toughness_extension then
+			if toughness_extension and not start_depleted then
 				local toughness_bar_logic = target.toughness_bar_logic
 				local max_toughness_percentage = 1
 				local current_toughness_percentage = toughness_extension:current_toughness_percent()

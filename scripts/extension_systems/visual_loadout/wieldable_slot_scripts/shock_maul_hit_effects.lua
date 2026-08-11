@@ -70,6 +70,7 @@ end
 ShockMaulHitEffects.unwield = function (self)
 	self:_unregister()
 	self:_stop_sound()
+	self:_stop_particle_effect()
 
 	self._is_wielded = false
 end
@@ -77,6 +78,7 @@ end
 ShockMaulHitEffects.destroy = function (self)
 	self:_unregister()
 	self:_stop_sound()
+	self:_stop_particle_effect()
 
 	self._is_wielded = false
 end

@@ -141,7 +141,7 @@ PlayerHuskLocomotionExtension.post_update = function (self, unit, dt, t)
 
 	if first_person_extension:is_in_first_person_mode() then
 		World.update_unit_and_children(self._world, unit)
-		first_person_extension:update_unit_position_and_rotation(final_position, true)
+		first_person_extension:update_unit_position_and_rotation(final_position, first_person_extension:spectated_aim_rotation(), true)
 	end
 
 	local visual_loadout_extension = self._visual_loadout_extension
@@ -184,7 +184,7 @@ PlayerHuskLocomotionExtension.post_update = function (self, unit, dt, t)
 			Unit.animation_set_variable(unit, active_stop_anim_var_id, active_stop)
 		end
 
-		self._movement_direction_animation_control:update(dt, t)
+		self._movement_direction_animation_control:update_direction_variables(dt, t)
 	end
 end
 

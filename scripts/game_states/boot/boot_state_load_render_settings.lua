@@ -54,8 +54,15 @@ BootStateLoadRenderSettings._check_settings_to_run = function (self, settings, s
 			end
 
 			local apply_on_startup = setting.apply_on_startup
+			local validation_function = setting.validation_function
 
-			if apply_on_startup then
+			if apply_on_startup and (not validation_function or validation_function()) then
+				local init = setting.init
+
+				if init then
+					init(setting)
+				end
+
 				local get_function = setting.get_function
 
 				if get_function then

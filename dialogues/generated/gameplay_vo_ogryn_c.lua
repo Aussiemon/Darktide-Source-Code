@@ -4758,6 +4758,13 @@ local gameplay_vo_ogryn_c = {
 			3.731813,
 			2.13425,
 		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+		},
 		randomize_indexes = {},
 	},
 	seen_netgunner = {

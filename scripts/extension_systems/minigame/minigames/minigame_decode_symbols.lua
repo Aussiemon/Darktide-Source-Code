@@ -19,7 +19,6 @@ MinigameDecodeSymbols.init = function (self, unit, is_server, seed)
 	self._symbols = {}
 	self._decode_targets = {}
 	self._decode_start_time = nil
-	self._misses_per_player = {}
 
 	Unit.set_flow_variable(unit, "lua_auspex_scanner_speed", MinigameSettings.decode_symbols_sweep_duration)
 end
@@ -44,18 +43,6 @@ MinigameDecodeSymbols.hot_join_sync = function (self, sender, channel)
 	if #symbols > 0 then
 		self:send_rpc_to_channel(channel, "rpc_minigame_sync_decode_symbols_set_symbols", symbols)
 	end
-end
-
-MinigameDecodeSymbols._player_miss_target = function (self, player)
-	if not player then
-		Log.error("MinigameDecodeSymbols", "Trying to access user but there is none")
-
-		return
-	end
-
-	local unique_id = player:unique_id()
-
-	self._misses_per_player[unique_id] = (self._misses_per_player[unique_id] or 0) + 1
 end
 
 MinigameDecodeSymbols.start = function (self, player, send_to_self_client)
@@ -85,38 +72,15 @@ MinigameDecodeSymbols.start = function (self, player, send_to_self_client)
 	end
 end
 
-MinigameDecodeSymbols.stop = function (self)
+MinigameDecodeSymbols.stop = function (self, is_automatic)
 	local is_server = self._is_server
 
-	if is_server then
-		if not self._player_session_id then
-			return
-		end
-
-		local player = Managers.player:player_from_session_id(self._player_session_id)
-
-		if self:is_completed() then
-			local unique_id = player:unique_id()
-			local mistakes = self._misses_per_player[unique_id] or 0
-
-			if player then
-				Managers.stats:record_private("hook_hack", player, mistakes)
-			end
-
-			local is_human_player = player and player:is_human_controlled()
-
-			if is_human_player then
-				Managers.telemetry_events:player_hacked_terminal(player, mistakes, self._is_automatic)
-			end
-
-			table.clear(self._misses_per_player)
-		elseif self._current_stage and self._current_stage > 1 then
-			self:_player_miss_target(player)
-		end
+	if is_server and not self._player_session_id then
+		return
 	end
 
 	Unit.flow_event(self._minigame_unit, "lua_minigame_stop")
-	MinigameDecodeSymbols.super.stop(self)
+	MinigameDecodeSymbols.super.stop(self, is_automatic)
 
 	if is_server then
 		self._decode_start_time = nil
@@ -201,11 +165,7 @@ MinigameDecodeSymbols.on_action_pressed = function (self, t)
 			self:play_sound("sfx_minigame_success")
 		end
 	else
-		local player = Managers.player:player_from_session_id(self._player_session_id)
-
-		if player then
-			self:_player_miss_target(player)
-		end
+		self:_increment_mistakes()
 
 		self._current_stage = math.max(self._current_stage - 1, 1)
 

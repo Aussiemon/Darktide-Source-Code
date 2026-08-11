@@ -124,7 +124,13 @@ Destructible._hotjoin_stage_update = function (self, unit, dt, t)
 		return false
 	end
 
-	local current_health_percent = self._current_health_percent
+	local health_extension = self._health_extension
+
+	if not health_extension then
+		return false
+	end
+
+	local current_health_percent = health_extension:current_health_percent()
 	local current_stage_index, stage_count = get_current_stage(destructible_stages, current_health_percent)
 	local stage = destructible_stages[current_stage_index]
 	local hot_join_event_name = stage.hot_join_event_name

@@ -1011,7 +1011,7 @@ local action_data = {
 					"stagger_shield_light_fwd",
 				},
 				bwd = {
-					"stagger_shield_light_fwd",
+					"stagger_shield_light_bwd",
 				},
 				left = {
 					"stagger_shield_light_left",
@@ -1028,7 +1028,7 @@ local action_data = {
 					"stagger_shield_medium_fwd",
 				},
 				bwd = {
-					"stagger_shield_medium_fwd",
+					"stagger_shield_heavy_open",
 				},
 				left = {
 					"stagger_shield_medium_left",
@@ -1045,7 +1045,7 @@ local action_data = {
 					"stagger_shield_medium_fwd",
 				},
 				bwd = {
-					"stagger_shield_medium_fwd",
+					"stagger_shield_medium_bwd",
 				},
 				left = {
 					"stagger_shield_medium_left",

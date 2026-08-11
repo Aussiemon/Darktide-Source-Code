@@ -217,7 +217,7 @@ PlayerSessionPSN.get_session_invite_code = function (web_api, user_id, session_i
 		local session = result.playerSessions[1]
 
 		if not session then
-			Promise.rejected({
+			return Promise.rejected({
 				string.format("PSN session %s not found", session_id),
 			})
 		end

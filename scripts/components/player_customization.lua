@@ -191,12 +191,17 @@ PlayerCustomization.spawn_items = function (self, items, optional_mission_templa
 	local in_editor = self._in_editor
 	local attachment_count = self._total_num_attachments
 	local item_units = {}
+	local stabilize_neck
 
 	for i = 1, #items do
 		local item = items[i]
 
 		if item then
 			local item_data_clone = table.clone_instance(item)
+
+			if item_data_clone.stabilize_neck and item_data_clone.stabilize_neck > (stabilize_neck or -math.huge) then
+				stabilize_neck = item_data_clone.stabilize_neck
+			end
 
 			if not is_first_person or item_data_clone.show_in_1p then
 				local equipment
@@ -249,6 +254,42 @@ PlayerCustomization.spawn_items = function (self, items, optional_mission_templa
 					end
 				end
 			end
+		end
+	end
+
+	if stabilize_neck and Unit.has_animation_state_machine(unit) then
+		if Unit.has_animation_event(unit, "lock_head") and Unit.has_animation_event(unit, "unlock_head") then
+			if stabilize_neck > 0 then
+				Unit.animation_event(unit, "lock_head")
+
+				local sm_variable_index = Unit.animation_find_variable(unit, "lock_neck_weight")
+				local stabilize_amount
+
+				if sm_variable_index then
+					stabilize_amount = math.clamp(stabilize_neck, 0, 80) / 80
+
+					Unit.animation_set_variable(unit, sm_variable_index, stabilize_amount)
+				end
+
+				sm_variable_index = Unit.animation_find_variable(unit, "lock_head_weight")
+
+				if sm_variable_index then
+					if stabilize_neck >= 50 then
+						stabilize_amount = (stabilize_neck - 50) / 50
+
+						Unit.animation_set_variable(unit, sm_variable_index, stabilize_amount)
+					else
+						Unit.animation_set_variable(unit, sm_variable_index, 0)
+					end
+				end
+
+				Log.info("PlayerCustomization", "Neck locked", unit)
+			else
+				Unit.animation_event(unit, "unlock_head")
+				Log.info("PlayerCustomization", "Neck unlocked", unit)
+			end
+		elseif stabilize_neck > 0 then
+			Log.info("PlayerCustomization", "Neck lock events not found in state machine for %s", unit)
 		end
 	end
 

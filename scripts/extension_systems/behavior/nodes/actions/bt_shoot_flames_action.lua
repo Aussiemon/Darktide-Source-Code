@@ -352,7 +352,7 @@ end
 BtShootFlamesAction._burn_target = function (self, dt, t, force_burn, attacking_unit, action_data, scratchpad)
 	local burn_time = scratchpad._burn_time - dt
 	local max_stacks = action_data.flamer_gas_template.burn_max_stacks
-	local number_of_stacks = 1
+	local number_of_stacks = action_data.flamer_gas_template.stacks
 
 	if burn_time <= 0 or force_burn then
 		local targets = scratchpad._dot_targets
@@ -435,8 +435,6 @@ BtShootFlamesAction._acquire_suppressed_units = function (self, unit, scratchpad
 
 	local flamer_gas_template = action_data.flamer_gas_template
 	local suppression_radius = flamer_gas_template.suppression_radius
-	local suppression_radius_squared = suppression_radius * suppression_radius
-	local suppression_cone_radius = action_data.suppression_cone_radius
 	local suppression_cone_dot = flamer_gas_template.suppression_cone_dot
 	local side_system = scratchpad.side_system
 	local side = side_system.side_by_unit[unit]
@@ -444,7 +442,7 @@ BtShootFlamesAction._acquire_suppressed_units = function (self, unit, scratchpad
 	local unit_position = POSITION_LOOKUP[unit]
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
 	local broadphase = broadphase_system.broadphase
-	local num_hits = broadphase.query(broadphase, unit_position, suppression_cone_radius, broadphase_results, enemy_side_names)
+	local num_hits = broadphase.query(broadphase, unit_position, suppression_radius, broadphase_results, enemy_side_names)
 	local rotation = Unit.world_rotation(unit, 1)
 	local forward = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
 

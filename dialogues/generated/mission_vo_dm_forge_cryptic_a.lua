@@ -1,6 +1,26 @@
 ﻿-- chunkname: @dialogues/generated/mission_vo_dm_forge_cryptic_a.lua
 
 local mission_vo_dm_forge_cryptic_a = {
+	event_demolition_first_corruptor_destroyed_a_enginseer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_cryptic_a__event_demolition_first_corruptor_destroyed_a_01",
+			"loc_cryptic_a__event_demolition_first_corruptor_destroyed_a_02",
+			"loc_cryptic_a__event_demolition_first_corruptor_destroyed_a_03",
+		},
+		sound_events_duration = {
+			2.438969,
+			2.618979,
+			3.662542,
+		},
+		sound_event_weights = {
+			0.3333333,
+			0.3333333,
+			0.3333333,
+		},
+		randomize_indexes = {},
+	},
 	mission_forge_first_objective_response = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

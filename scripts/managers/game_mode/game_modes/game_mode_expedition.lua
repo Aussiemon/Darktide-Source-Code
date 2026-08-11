@@ -358,11 +358,18 @@ GameModeExpedition._gamemode_complete = function (self, result, reason)
 		local mechanism = mechanism_manager:current_mechanism()
 		local mechanism_data = mechanism:mechanism_data()
 		local loot_handler = self:get_loot_handler()
+		local highest_loot_held = loot_handler and loot_handler:highest_loot_held_this_run() or 0
+
+		if result == "won" then
+			local total_unstashed_loot = loot_handler and loot_handler:collected_team_loot_by_stash_method(false) or 0
+
+			highest_loot_held = highest_loot_held + total_unstashed_loot
+		end
 
 		Managers.mission_server:on_gamemode_completed(result, reason, {
 			settings_version = mechanism_data.settings_version,
 			expedition_template = mechanism_data.expedition_template_name,
-			highest_loot_held = loot_handler and loot_handler:highest_loot_held_this_run() or 0,
+			highest_loot_held = highest_loot_held,
 		})
 	end
 end
@@ -695,7 +702,15 @@ GameModeExpedition._apply_persistent_player_data = function (self, player)
 				local equipped_abilities = ability_extension:equipped_abilities()
 				local grenade_ability = equipped_abilities.grenade_ability
 
-				if not grenade_ability.exclude_from_persistant_player_data then
+				if grenade_ability and not grenade_ability.exclude_from_persistant_player_data then
+					local buff_extension = ScriptUnit.has_extension(player_unit, "buff_system")
+
+					if buff_extension then
+						local t = Managers.time:time("gameplay")
+
+						buff_extension:_update_stat_buffs_and_keywords(t)
+					end
+
 					local max_grenades = ability_extension:max_ability_charges("grenade_ability")
 					local num_grenades = math.round(selected_data.grenades_percent * max_grenades)
 

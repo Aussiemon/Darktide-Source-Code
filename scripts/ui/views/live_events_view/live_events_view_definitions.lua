@@ -92,7 +92,6 @@ local scenegraph_definition = {
 		},
 		size = {
 			48,
-			48,
 		},
 	},
 	navigation_arrow_right = {
@@ -105,7 +104,6 @@ local scenegraph_definition = {
 			10,
 		},
 		size = {
-			48,
 			48,
 		},
 	},
@@ -290,6 +288,10 @@ local navigation_arrow_left = UIWidget.create_definition({
 	{
 		content_id = "hotspot",
 		pass_type = "hotspot",
+		style_id = "hotspot",
+		style = {
+			anim_hover_speed = 4,
+		},
 	},
 	{
 		pass_type = "texture_uv",
@@ -297,6 +299,7 @@ local navigation_arrow_left = UIWidget.create_definition({
 		value = "content/ui/materials/buttons/premium_store_button_next_page",
 		value_id = "arrow",
 		style = {
+			vertical_alignment = "center",
 			uvs = {
 				{
 					1,
@@ -306,6 +309,15 @@ local navigation_arrow_left = UIWidget.create_definition({
 					0,
 					1,
 				},
+			},
+			size = {
+				48,
+				48,
+			},
+			offset = {
+				0,
+				0,
+				2,
 			},
 		},
 		visibility_function = function (content, style)
@@ -320,6 +332,7 @@ local navigation_arrow_left = UIWidget.create_definition({
 		value = "content/ui/materials/buttons/premium_store_button_next_page_hover",
 		value_id = "arrow_active",
 		style = {
+			vertical_alignment = "center",
 			uvs = {
 				{
 					1,
@@ -330,11 +343,40 @@ local navigation_arrow_left = UIWidget.create_definition({
 					1,
 				},
 			},
+			size = {
+				48,
+				48,
+			},
+			offset = {
+				0,
+				0,
+				3,
+			},
 		},
 		visibility_function = function (content, style)
 			local hotspot = content.hotspot
 
 			return hotspot.is_selected or hotspot.is_hover or hotspot.is_focused
+		end,
+	},
+	{
+		pass_type = "texture",
+		style_id = "arrow_background_fade",
+		value = "content/ui/materials/hud/backgrounds/fade_horizontal",
+		value_id = "arrow_background_fade",
+		style = {
+			vertical_alignment = "center",
+			offset = {
+				-4,
+				0,
+				1,
+			},
+			color = Color.ui_terminal(255, true),
+		},
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+
+			style.color[1] = 125 * (hotspot.anim_hover_progress or 0)
 		end,
 	},
 }, "navigation_arrow_left")
@@ -342,12 +384,28 @@ local navigation_arrow_right = UIWidget.create_definition({
 	{
 		content_id = "hotspot",
 		pass_type = "hotspot",
+		style_id = "hotspot",
+		style = {
+			anim_hover_speed = 4,
+		},
 	},
 	{
 		pass_type = "texture",
 		style_id = "arrow",
 		value = "content/ui/materials/buttons/premium_store_button_next_page",
 		value_id = "arrow",
+		style = {
+			vertical_alignment = "center",
+			size = {
+				48,
+				48,
+			},
+			offset = {
+				0,
+				0,
+				2,
+			},
+		},
 		visibility_function = function (content, style)
 			local hotspot = content.hotspot
 
@@ -359,10 +417,52 @@ local navigation_arrow_right = UIWidget.create_definition({
 		style_id = "arrow_active",
 		value = "content/ui/materials/buttons/premium_store_button_next_page_hover",
 		value_id = "arrow_active",
+		style = {
+			vertical_alignment = "center",
+			size = {
+				48,
+				48,
+			},
+			offset = {
+				0,
+				0,
+				3,
+			},
+		},
 		visibility_function = function (content, style)
 			local hotspot = content.hotspot
 
 			return hotspot.is_selected or hotspot.is_hover or hotspot.is_focused
+		end,
+	},
+	{
+		pass_type = "texture_uv",
+		style_id = "arrow_background_fade",
+		value = "content/ui/materials/hud/backgrounds/fade_horizontal",
+		value_id = "arrow_background_fade",
+		style = {
+			vertical_alignment = "center",
+			uvs = {
+				{
+					1,
+					0,
+				},
+				{
+					0,
+					1,
+				},
+			},
+			offset = {
+				4,
+				0,
+				1,
+			},
+			color = Color.ui_terminal(255, true),
+		},
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+
+			style.color[1] = 125 * (hotspot.anim_hover_progress or 0)
 		end,
 	},
 }, "navigation_arrow_right")

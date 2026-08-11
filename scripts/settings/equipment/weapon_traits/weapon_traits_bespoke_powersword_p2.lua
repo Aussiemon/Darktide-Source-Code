@@ -595,25 +595,25 @@ templates.weapon_trait_bespoke_powersword_p2_stacking_finesse_on_one_hit_kill = 
 			{
 				max_stacks = 5,
 				stat_buffs = {
-					[stat_buffs.melee_finesse_modifier_bonus] = 0.18,
+					[stat_buffs.melee_finesse_modifier_bonus] = 0.1,
 				},
 			},
 			{
 				max_stacks = 5,
 				stat_buffs = {
-					[stat_buffs.melee_finesse_modifier_bonus] = 0.2,
+					[stat_buffs.melee_finesse_modifier_bonus] = 0.12,
 				},
 			},
 			{
 				max_stacks = 5,
 				stat_buffs = {
-					[stat_buffs.melee_finesse_modifier_bonus] = 0.22,
+					[stat_buffs.melee_finesse_modifier_bonus] = 0.14,
 				},
 			},
 			{
 				max_stacks = 5,
 				stat_buffs = {
-					[stat_buffs.melee_finesse_modifier_bonus] = 0.24,
+					[stat_buffs.melee_finesse_modifier_bonus] = 0.16,
 				},
 			},
 		},

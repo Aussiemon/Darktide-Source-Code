@@ -653,6 +653,82 @@ local animations = {
 		},
 	},
 }
+local checkbox_text_style = table.clone(UIFontSettings.body)
+
+checkbox_text_style.text_horizontal_alignment = "left"
+checkbox_text_style.text_vertical_alignment = "center"
+checkbox_text_style.offset = {
+	50,
+	0,
+	2,
+}
+checkbox_text_style.size_addition = {
+	-50,
+	0,
+}
+
+local pass_templates = {
+	checkbox_size = {
+		374,
+		45,
+	},
+	checkbox = {
+		{
+			content_id = "hotspot",
+			pass_type = "hotspot",
+			style_id = "hotspot",
+		},
+		{
+			pass_type = "texture",
+			style_id = "checkbox_background",
+			value = "content/ui/materials/icons/list_buttons/box",
+			value_id = "checkbox_background",
+			style = {
+				horizontal_alignment = "left",
+				vertical_alignment = "center",
+				size = {
+					32,
+					32,
+				},
+				offset = {
+					5,
+					0,
+					1,
+				},
+				color = Color.terminal_text_body(255, true),
+			},
+		},
+		{
+			pass_type = "texture",
+			style_id = "check_mark",
+			value = "content/ui/materials/icons/list_buttons/check",
+			value_id = "check_mark",
+			style = {
+				horizontal_alignment = "left",
+				vertical_alignment = "center",
+				size = {
+					32,
+					32,
+				},
+				offset = {
+					5,
+					0,
+					2,
+				},
+				color = Color.terminal_text_body(255, true),
+			},
+			visibility_function = function (content, style)
+				return content.checked
+			end,
+		},
+		{
+			pass_type = "text",
+			style_id = "text",
+			value_id = "text",
+			style = checkbox_text_style,
+		},
+	},
+}
 
 return {
 	button_definition = UIWidget.create_definition(ButtonPassTemplates.default_button, "button_pivot", nil, {
@@ -665,4 +741,5 @@ return {
 	popup_type_style = popup_type_style,
 	wallet_definitions = wallet_definitions,
 	offer_definitions = offer_definitions,
+	pass_templates = pass_templates,
 }

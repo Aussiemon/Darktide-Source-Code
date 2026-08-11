@@ -493,6 +493,17 @@ local settings_definitions = {
 	},
 	{
 		default_value = true,
+		display_name = "loc_interface_setting_dot_special_crosshair",
+		id = "dot_special_crosshair_enabled",
+		save_location = "interface_settings",
+		tooltip_text = "loc_interface_setting_dot_special_crosshair_mouseover",
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_dot_special_crosshair", value)
+		end,
+	},
+	{
+		default_value = true,
 		display_name = "loc_interface_setting_input_hints_enabled",
 		id = "input_hints_enabled",
 		save_location = "interface_settings",

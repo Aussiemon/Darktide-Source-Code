@@ -1,6 +1,41 @@
 ﻿-- chunkname: @dialogues/generated/circumstance_vo_hunting_grounds_adamant_male_c.lua
 
 local circumstance_vo_hunting_grounds_adamant_male_c = {
+	disabled_by_chaos_hound_mutator = {
+		randomize_indexes_n = 0,
+		sound_events_n = 8,
+		sound_events = {
+			"loc_adamant_male_c__disabled_by_chaos_hound_01",
+			"loc_adamant_male_c__disabled_by_chaos_hound_02",
+			"loc_adamant_male_c__disabled_by_chaos_hound_03",
+			"loc_adamant_male_c__disabled_by_chaos_hound_04",
+			"loc_adamant_male_c__disabled_by_chaos_hound_05",
+			"loc_adamant_male_c__disabled_by_chaos_hound_06",
+			"loc_adamant_male_c__disabled_by_chaos_hound_07",
+			"loc_adamant_male_c__disabled_by_chaos_hound_08",
+		},
+		sound_events_duration = {
+			1.944667,
+			1.681344,
+			2.951344,
+			4.246677,
+			3.854677,
+			5.098677,
+			3.46001,
+			2.660344,
+		},
+		sound_event_weights = {
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+			0.125,
+		},
+		randomize_indexes = {},
+	},
 	heard_enemy_chaos_hound_mutator = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

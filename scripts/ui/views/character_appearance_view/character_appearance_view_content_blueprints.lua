@@ -2344,10 +2344,10 @@ local blueprints = {
 						local value_x = content.slider_value_x
 						local value_y = content.slider_value_y
 
-						style.offset[1] = value_x * size_x - position_diff_x + 170
-						style.offset[2] = value_y * size_y - position_diff_y - 15
+						style.offset[1] = value_x * size_x - position_diff_x + 125
+						style.offset[2] = value_y * size_y - position_diff_y - 5
 					else
-						local slider_x = 5
+						local slider_x = -32
 						local slider_y = 209
 
 						style.offset[1] = slider_x
@@ -2445,7 +2445,7 @@ local blueprints = {
 					if not drag_active then
 						local cursor = (IS_XBS or IS_PLAYSTATION) and base_cursor or UiResolution.inverse_scale_vector(base_cursor, renderer.inverse_scale)
 						local input_coordinate_x = cursor[1] - position[1]
-						local input_coordinate_y = cursor[2] - position[2] - 15
+						local input_coordinate_y = cursor[2] - position[2] - 30
 						local slide_size_x = 340
 						local slide_size_y = 270
 

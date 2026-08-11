@@ -64,10 +64,7 @@ VideoView._load_template = function (self, template)
 	local subtitles = template.subtitles
 	local wwise_music_state = template.music
 
-	if sound_name then
-		self._current_sound_id = self:_play_sound(sound_name)
-	end
-
+	self._start_sound_name = sound_name
 	self._subtitles = subtitles
 	self._pre_video_action = template.pre_video_action
 	self._post_video_action = template.post_video_action
@@ -87,6 +84,10 @@ VideoView.on_enter = function (self)
 	self._packages_loaded = {}
 	self._current_sound_id = nil
 	self._loading = false
+	self._playback_started = false
+	self._start_sound_name = nil
+	self._sound_ready = false
+	self._video_has_frame = false
 
 	local context = self._context
 	local template_name = context.template
@@ -182,7 +183,14 @@ VideoView.on_exit = function (self)
 		self._world_spawner = nil
 	end
 
-	if self._post_video_action and (self._widgets_by_name.video.content.video_completed or self._player_skipped) then
+	local video_finished = self._player_skipped or self._widgets_by_name.video.content.video_completed
+	local narrative_event = context and context.narrative_event
+
+	if narrative_event and video_finished then
+		Managers.narrative:complete_event(narrative_event)
+	end
+
+	if self._post_video_action and video_finished then
 		self:_trigger_action(self._post_video_action)
 	end
 end
@@ -273,6 +281,21 @@ VideoView.update = function (self, dt, t, input_service)
 	elseif self._loading_packages then
 		self:_update_package_loading()
 		self:_set_background_visibility(true)
+	elseif not self._playback_started then
+		local view_data = Managers.ui:view_active_data(self.view_name)
+
+		if not view_data or not view_data.fade_in then
+			self._playback_started = true
+
+			if self._start_sound_name then
+				self._current_sound_id = self:_play_sound(self._start_sound_name)
+			else
+				self._sound_ready = true
+				self._video_start_time = t
+
+				self:_setup_video(self._video_name, self._loop_video)
+			end
+		end
 	elseif not self._sound_ready then
 		local playing_elapsed = self:_get_sound_playing_elapsed()
 
@@ -323,6 +346,10 @@ VideoView.update = function (self, dt, t, input_service)
 		end
 	end
 
+	if self._sound_ready then
+		self:_update_video_frame_visibility()
+	end
+
 	local pass_input, pass_draw = VideoView.super.update(self, dt, t, input_service)
 
 	if self._widgets_by_name.video.content.video_completed and not Managers.ui:is_view_closing("video_view") then
@@ -346,6 +373,31 @@ VideoView.can_exit = function (self)
 	return self._can_exit
 end
 
+VideoView._set_video_visibility = function (self, visible)
+	self._widgets_by_name.video.content.visible = visible
+end
+
+VideoView._update_video_frame_visibility = function (self)
+	if self._video_has_frame or not self._sound_ready then
+		return
+	end
+
+	local widget_content = self._widgets_by_name.video.content
+	local video_player_reference = widget_content.video_player_reference
+
+	if not video_player_reference then
+		return
+	end
+
+	local video_player = UIRenderer.video_player(self._ui_renderer, video_player_reference)
+
+	if VideoPlayer.current_frame(video_player) > 0 then
+		self._video_has_frame = true
+
+		self:_set_video_visibility(true)
+	end
+end
+
 VideoView._destroy_current_video = function (self)
 	local widget = self._widgets_by_name.video
 	local widget_content = widget.content
@@ -360,6 +412,9 @@ VideoView._destroy_current_video = function (self)
 		widget_content.video_player = nil
 	end
 
+	self._video_has_frame = false
+
+	self:_set_video_visibility(true)
 	self:_set_background_visibility(false)
 end
 
@@ -383,6 +438,9 @@ VideoView._setup_video = function (self, video_name, loop_video)
 		self:_trigger_action(pre_video_action)
 	end
 
+	self._video_has_frame = false
+
+	self:_set_video_visibility(false)
 	self:_set_background_visibility(true)
 end
 

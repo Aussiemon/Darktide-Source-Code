@@ -118,4 +118,16 @@ CosmeticsVendorBackgroundView.cb_on_camera_zoom_toggled = function (self)
 	view_instance:cb_on_camera_zoom_toggled()
 end
 
+CosmeticsVendorBackgroundView.cb_switch_tab = function (self, index)
+	local active_view_instance = self._active_view_instance
+
+	if active_view_instance and active_view_instance._profile_spawner then
+		active_view_instance._profile_spawner:destroy()
+
+		active_view_instance._profile_spawner = nil
+	end
+
+	VendorInteractionViewBase.super.cb_switch_tab(self, index)
+end
+
 return CosmeticsVendorBackgroundView

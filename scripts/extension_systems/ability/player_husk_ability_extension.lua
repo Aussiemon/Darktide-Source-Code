@@ -295,6 +295,14 @@ PlayerHuskAbilityExtension.reduce_ability_cooldown_time = function (self)
 	error("not allowed to call on husk")
 end
 
+PlayerHuskAbilityExtension.remaining_ability_capacitance = function (self)
+	error("not allowed to call on husk")
+end
+
+PlayerHuskAbilityExtension.has_enough_ability_capacitance = function (self)
+	error("not allowed to call on husk")
+end
+
 PlayerHuskAbilityExtension.increase_ability_cooldown_percentage = function (self)
 	error("not allowed to call on husk")
 end

@@ -18,10 +18,10 @@ templates.weapon_trait_bespoke_saw_p1_chained_hits_increases_crit_chance_parent.
 templates.weapon_trait_bespoke_saw_p1_chained_hits_increases_crit_chance_child = table.clone(BaseWeaponTraitBuffTemplates.chained_hits_increases_crit_chance_child)
 templates.weapon_trait_bespoke_saw_p1_stacking_finesse_on_one_hit_kill_parent = {
 	child_buff_template = "weapon_trait_bespoke_saw_p1_stacking_finesse_on_one_hit_kill_child",
-	child_duration = 8,
+	child_duration = 5,
 	class_name = "weapon_trait_parent_proc_buff",
 	predicted = false,
-	stacks_to_remove = 5,
+	stacks_to_remove = 1,
 	proc_events = {
 		[proc_events.on_kill] = 1,
 	},

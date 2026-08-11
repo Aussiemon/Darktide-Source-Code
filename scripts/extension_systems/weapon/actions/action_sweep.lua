@@ -1795,8 +1795,11 @@ ActionSweep._try_find_closest_enemy_to_furthest_dead_enemy_hit = function (self,
 
 	for i = 1, num_results do
 		local target_unit = BROADPHASE_RESULTS[i]
+		local target_unit_data_extension = ScriptUnit.has_extension(target_unit, "unit_data_system")
+		local target_breed = target_unit_data_extension and target_unit_data_extension:breed()
+		local untargetable = target_breed and target_breed.is_untargetable
 
-		if target_unit ~= last_hit_minion and HEALTH_ALIVE[target_unit] then
+		if target_unit ~= last_hit_minion and HEALTH_ALIVE[target_unit] and not untargetable then
 			local target_unit_buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
 			local is_electrocuted = MinionState.is_electrocuted(target_unit_buff_extension, buff_group_keywords.electrocuted)
 

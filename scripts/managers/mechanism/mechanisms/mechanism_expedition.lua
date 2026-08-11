@@ -197,6 +197,7 @@ MechanismExpedition.destroy = function (self)
 	end
 
 	self._promise_container:delete()
+	self._levels_spawner:destroy()
 end
 
 MechanismExpedition.sync_data = function (self, channel_id)
@@ -388,7 +389,7 @@ MechanismExpedition._check_state_change = function (self, state, data)
 				Managers.grpc:create_empty_party(Managers.connection.combined_hash):next(function (response)
 					Log.info("MechanismExpedition", "response:%s", table.tostring(response))
 
-					local voting_template = "stay_in_party"
+					local voting_template = GameParameters.should_stay_in_party_eor and "stay_in_party_by_default" or "stay_in_party"
 
 					return Managers.voting:start_voting(voting_template, {
 						new_party_id = response.party_id,

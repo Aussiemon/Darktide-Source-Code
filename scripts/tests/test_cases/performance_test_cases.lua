@@ -28,7 +28,7 @@ PerformanceTestCases.measure_memory_usage_evolution = function (case_settings)
 		local cached_last_mission_loaded = Testify:retrieve_cache("last_mission_loaded") or "boot"
 		local cached_memory_usage_data = Testify:retrieve_cache("memory_usage_data") or {}
 		local memory_usage = Testify:make_request("memory_usage")
-		local memory_tree = TestifySnippets.memory_tree(depth, ascii_separator, memory_limit)
+		local memory_tree = Testify:make_request("memory_tree", depth, ascii_separator, memory_limit)
 		local memory_usage_data = {
 			map = cached_last_mission_loaded,
 			memory = memory_usage,
@@ -83,7 +83,7 @@ PerformanceTestCases.memory_tree = function (mission_name)
 		TestifySnippets.wait_for_mission_intro()
 		TestifySnippets.wait(1)
 
-		local memory_tree = TestifySnippets.memory_tree(depth, ascii_separator, memory_limit)
+		local memory_tree = Testify:make_request("memory_tree", depth, ascii_separator, memory_limit)
 		local telemetry_event_name = "perf_memory_tree"
 
 		Testify:make_request("create_telemetry_event", telemetry_event_name, mission_name, memory_tree)

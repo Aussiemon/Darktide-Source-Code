@@ -144,7 +144,7 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 		self:_update_player_mood(true, old_unit)
 	end
 
-	self:_update_camera_manager(dt, t, player_orientation)
+	self:_update_camera_manager(dt, t)
 
 	return new_unit
 end
@@ -160,23 +160,37 @@ CameraHandler.remove_all_moods = function (self, unit)
 	end
 end
 
-CameraHandler._update_camera_manager = function (self, dt, t, player_orientation)
+CameraHandler._update_camera_manager = function (self, dt, t)
 	local player = self._player
 	local camera_manager, viewport_name = Managers.state.camera, player.viewport_name
+
+	camera_manager:update(dt, t, viewport_name)
+end
+
+CameraHandler._camera_root_orientation = function (self, player_orientation)
 	local camera_follow_unit = self._camera_follow_unit
+	local yaw, pitch, roll
 
 	if self._mode == CameraModes.observer and self._first_person_spectating_mode and ALIVE[camera_follow_unit] then
-		local unit_data_component = ScriptUnit.extension(camera_follow_unit, "unit_data_system")
-		local fp_component = unit_data_component:read_component("first_person")
-		local y, p, r = Quaternion.to_yaw_pitch_roll(fp_component.rotation)
+		local first_person_extension = ScriptUnit.has_extension(camera_follow_unit, "first_person_system")
 
-		camera_manager:update(dt, t, viewport_name, y, p, r)
+		if first_person_extension then
+			yaw, pitch, roll = Quaternion.to_yaw_pitch_roll(first_person_extension:spectated_aim_rotation())
+		else
+			local unit_data_component = ScriptUnit.extension(camera_follow_unit, "unit_data_system")
+			local fp_component = unit_data_component:read_component("first_person")
+
+			yaw, pitch, roll = Quaternion.to_yaw_pitch_roll(fp_component.rotation)
+		end
 	else
-		local yaw, pitch, roll = player_orientation:orientation()
+		yaw, pitch, roll = player_orientation:orientation()
+
 		local yaw_offset, pitch_offset, roll_offset = player_orientation:orientation_offset()
 
-		camera_manager:update(dt, t, viewport_name, yaw + yaw_offset, pitch + pitch_offset, roll + roll_offset)
+		yaw, pitch, roll = yaw + yaw_offset, pitch + pitch_offset, roll + roll_offset
 	end
+
+	return yaw, pitch, roll
 end
 
 CameraHandler._switch_follow_target = function (self, new_unit)
@@ -232,13 +246,18 @@ CameraHandler._post_update = function (self, dt, t, player_orientation)
 	local camera_manager = Managers.state.camera
 	local viewport_name = self._viewport_name
 	local camera_follow_unit = self._camera_follow_unit
+	local yaw, pitch, roll = self:_camera_root_orientation(player_orientation)
+
+	camera_manager:set_node_trees_aim_orientation(viewport_name, yaw, pitch, roll)
 
 	if ALIVE[camera_follow_unit] then
 		local first_person_extension = ScriptUnit.has_extension(camera_follow_unit, "first_person_system")
 
 		if first_person_extension then
 			if self._using_hub_camera then
-				self:_update_hub_camera_variables(dt, t, camera_follow_unit, viewport_name)
+				local camera_rotation = Quaternion.from_yaw_pitch_roll(yaw, pitch, roll)
+
+				self:_update_hub_camera_variables(dt, t, camera_follow_unit, viewport_name, camera_rotation)
 			end
 
 			camera_manager:set_variable(viewport_name, "character_height", first_person_extension:extrapolated_character_height())
@@ -274,10 +293,8 @@ local vector3_cross = Vector3.cross
 local vector3_dot = Vector3.dot
 local math_lerp = math.lerp
 
-CameraHandler._update_hub_camera_variables = function (self, dt, t, unit, viewport_name)
+CameraHandler._update_hub_camera_variables = function (self, dt, t, unit, viewport_name, camera_rotation)
 	local unit_data = ScriptUnit.extension(unit, "unit_data_system")
-	local first_person = unit_data:read_component("first_person")
-	local locomotion = unit_data:read_component("locomotion")
 	local hub_jog_character_state_component = unit_data:read_component("hub_jog_character_state")
 	local move_state = hub_jog_character_state_component.move_state
 	local move_method = hub_jog_character_state_component.method
@@ -310,12 +327,11 @@ CameraHandler._update_hub_camera_variables = function (self, dt, t, unit, viewpo
 	self._hub_camera_speed_zoom = camera_speed_zoom
 	self._hub_idle_timer = idle_timer
 
-	local look_rotation = first_person.rotation
-	local camera_forward = quaternion_forward(look_rotation)
-	local camera_right = quaternion_right(look_rotation)
+	local camera_forward = quaternion_forward(camera_rotation)
+	local camera_right = quaternion_right(camera_rotation)
 	local flat_look_direction = vector3_cross(camera_right, Vector3.down())
-	local locomotion_rotation = locomotion.rotation
-	local character_forward = quaternion_forward(locomotion_rotation)
+	local character_rotation = Unit.local_rotation(unit, 1)
+	local character_forward = quaternion_forward(character_rotation)
 	local hub_back_look_offset = (1 - vector3_dot(flat_look_direction, character_forward)) / 2
 	local hub_up_look_offset = vector3_dot(camera_forward, Vector3.up())
 	local camera_manager = Managers.state.camera
@@ -334,6 +350,8 @@ CameraHandler._update_follow = function (self, follow_unit_switch)
 	local follow_unit_available = follow_unit and ALIVE[follow_unit]
 
 	if self._mode == CameraModes.dead then
+		Managers.state.camera:set_has_proper_3d_camera(true)
+
 		if follow_unit_switch then
 			local camera_manager, viewport_name = Managers.state.camera, self._viewport_name
 
@@ -344,12 +362,15 @@ CameraHandler._update_follow = function (self, follow_unit_switch)
 			camera_manager:set_camera_node(viewport_name, DEFAULT_DEAD_CAMERA_TREE, DEFAULT_DEAD_CAMERA_NODE)
 		end
 	elseif follow_unit_available then
+		Managers.state.camera:set_has_proper_3d_camera(true)
 		self:_update_follow_camera(follow_unit, follow_unit_switch)
 	elseif follow_unit_switch then
 		local camera_manager, viewport_name = Managers.state.camera, self._viewport_name
 		local current_camera_node = camera_manager:current_camera_node(viewport_name)
 
 		if follow_unit_available then
+			Managers.state.camera:set_has_proper_3d_camera(true)
+
 			local camera_extension = ScriptUnit.extension(follow_unit, "camera_system")
 			local _, _, wanted_object = camera_extension:camera_tree_node()
 
@@ -358,8 +379,12 @@ CameraHandler._update_follow = function (self, follow_unit_switch)
 			if current_camera_node ~= DEFAULT_CAMERA_NODE then
 				camera_manager:set_camera_node(viewport_name, DEFAULT_CAMERA_TREE, DEFAULT_CAMERA_NODE)
 			end
-		elseif current_camera_node ~= DEFAULT_CAMERA_NODE then
-			camera_manager:set_camera_node(viewport_name, DEFAULT_CAMERA_TREE, DEFAULT_CAMERA_NODE)
+		else
+			Managers.state.camera:set_has_proper_3d_camera(false)
+
+			if current_camera_node ~= DEFAULT_CAMERA_NODE then
+				camera_manager:set_camera_node(viewport_name, DEFAULT_CAMERA_TREE, DEFAULT_CAMERA_NODE)
+			end
 		end
 	end
 end

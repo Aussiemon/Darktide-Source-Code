@@ -66,6 +66,7 @@ CameraManager.init = function (self, world)
 	self._listener_elevation_scale = 1
 	self._listener_elevation_min = -math.huge
 	self._listener_elevation_max = math.huge
+	self._has_proper_3d_camera = false
 	self._sequence_event_settings = {
 		current_values = nil,
 		end_time = 0,
@@ -89,6 +90,14 @@ CameraManager.init = function (self, world)
 	local vertical_fov = Application.user_setting("render_settings", "vertical_fov") or GameParameters.vertical_fov
 
 	self._fov_multiplier = vertical_fov / GameParameters.vertical_fov
+end
+
+CameraManager.set_has_proper_3d_camera = function (self, has_proper_3d_camera)
+	self._has_proper_3d_camera = has_proper_3d_camera
+end
+
+CameraManager.has_proper_3d_camera = function (self)
+	return self._has_proper_3d_camera
 end
 
 CameraManager.add_environment = function (self, shading_environment_extension)
@@ -508,7 +517,11 @@ CameraManager._setup_node = function (self, node_settings, parent_node, root_nod
 	return node
 end
 
-CameraManager.update = function (self, dt, t, viewport_name, yaw, pitch, roll)
+CameraManager.update = function (self, dt, t, viewport_name)
+	return
+end
+
+CameraManager.set_node_trees_aim_orientation = function (self, viewport_name, yaw, pitch, roll)
 	local node_trees = self._node_trees[viewport_name]
 
 	for tree_id, tree in pairs(node_trees) do

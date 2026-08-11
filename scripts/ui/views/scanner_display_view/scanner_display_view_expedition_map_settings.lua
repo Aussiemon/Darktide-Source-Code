@@ -18,9 +18,21 @@ local scanner_display_view_expedition_map_settings = {
 		84,
 		84,
 	},
-	luggable_widget_size = {
-		64,
-		64,
+	dropped_loot_settings = {
+		luggable = {
+			icon = "scanner_map_luggable",
+			widget_size = {
+				64,
+				64,
+			},
+		},
+		default = {
+			icon = "scanner_map_loot_small",
+			widget_size = {
+				128,
+				128,
+			},
+		},
 	},
 	marked_widget_size = {
 		128,

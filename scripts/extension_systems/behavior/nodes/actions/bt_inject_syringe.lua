@@ -64,6 +64,10 @@ BtInjectSyringeAction.run = function (self, unit, breed, blackboard, scratchpad,
 
 	if scratchpad._force_assist_end_t then
 		if t >= scratchpad._force_assist_end_t then
+			local target_ally = scratchpad._target_ally
+
+			self:_apply_syringe(target_ally, action_data, t)
+
 			return "done"
 		end
 
@@ -92,9 +96,17 @@ BtInjectSyringeAction.run = function (self, unit, breed, blackboard, scratchpad,
 			return "failed"
 		end
 
-		self:_apply_syringe(target_ally, action_data, t)
-
+		scratchpad._target_ally = target_ally
 		scratchpad._force_assist_delay = t + action_data.delay_before_reviving
+
+		local target_ally_buff_extension = ScriptUnit.has_extension(target_ally, "buff_system")
+
+		if target_ally_buff_extension then
+			local _, buff_index = target_ally_buff_extension:add_externally_controlled_buff(action_data.invulnerable_buff, t, "owner_unit", target_ally)
+
+			scratchpad._invulnerable_buff_index = buff_index
+			scratchpad._target_ally_buff_extension = target_ally_buff_extension
+		end
 
 		local syringe_effect_template_name = action_data.syringe_effect_template_name
 
@@ -123,6 +135,13 @@ BtInjectSyringeAction.leave = function (self, unit, breed, blackboard, scratchpa
 
 	if inject_stop_animation then
 		scratchpad.animation_extension:anim_event(inject_stop_animation)
+	end
+
+	local target_ally_buff_extension = scratchpad._target_ally_buff_extension
+	local invulnerable_buff_index = scratchpad._invulnerable_buff_index
+
+	if target_ally_buff_extension and invulnerable_buff_index then
+		target_ally_buff_extension:remove_externally_controlled_buff(invulnerable_buff_index)
 	end
 
 	local optional_leave_function = action_data.optional_leave_function
@@ -184,6 +203,8 @@ BtInjectSyringeAction._revive_ally_if_needed = function (self, owner_player, tar
 			if PlayerUnitStatus.is_assisted(assisted_state_input_component) then
 				return false
 			end
+
+			Managers.event:trigger("event_hogtied_player_rescued", target_ally, owner_player and owner_player.player_unit)
 
 			if owner_player then
 				Managers.stats:record_private("hook_cryptic_servo_skull_medicae_helps_ally", owner_player, character_state_component.state_name)

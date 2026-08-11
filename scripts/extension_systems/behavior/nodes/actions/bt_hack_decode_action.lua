@@ -125,7 +125,10 @@ BtHackDecodeAction.run = function (self, unit, breed, blackboard, scratchpad, ac
 	if minigame then
 		if minigame:automatic_minigame_complete_manually() and scratchpad._hack_time and t >= scratchpad._hack_time then
 			minigame:set_state(MinigameSettings.game_states.complete)
-			minigame:stop()
+
+			local is_automatic = true
+
+			minigame:stop(is_automatic)
 			minigame:automatic_minigame_on_stop()
 
 			local owner_player = scratchpad.owner_player
@@ -138,7 +141,9 @@ BtHackDecodeAction.run = function (self, unit, breed, blackboard, scratchpad, ac
 		end
 
 		if minigame:is_completed() then
-			minigame:stop()
+			local is_automatic = true
+
+			minigame:stop(is_automatic)
 			minigame:automatic_minigame_on_stop()
 
 			local owner_player = scratchpad.owner_player
@@ -176,7 +181,9 @@ BtHackDecodeAction.leave = function (self, unit, breed, blackboard, scratchpad, 
 	local minigame = scratchpad.minigame
 
 	if minigame and not minigame:is_completed() then
-		minigame:stop()
+		local is_automatic = true
+
+		minigame:stop(is_automatic)
 		minigame:automatic_minigame_on_stop()
 	end
 

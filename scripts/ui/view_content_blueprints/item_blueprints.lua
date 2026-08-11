@@ -65,32 +65,6 @@ local function _is_item_equipped_in_any_slot(parent, item, slots)
 	return false
 end
 
-local function _get_generic_profile(breed, gender, archetype)
-	local dummy_profile = {
-		loadout = {},
-		archetype = archetype,
-		breed = archetype.breed,
-		gender = gender,
-	}
-	local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed]
-	local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender]
-	local required_items = required_gender_item_names_per_slot and required_gender_item_names_per_slot.default
-
-	if required_items then
-		for slot_name, slot_item_name in pairs(required_items) do
-			local item_definition = MasterItems.get_item(slot_item_name)
-
-			if item_definition then
-				local slot_item = table.clone(item_definition)
-
-				dummy_profile.loadout[slot_name] = slot_item
-			end
-		end
-	end
-
-	return dummy_profile
-end
-
 local function _generate_blueprints_function(grid_size)
 	local grid_width = grid_size[1]
 	local group_header_font_style = table.clone(UIFontSettings.header_3)
@@ -1324,15 +1298,6 @@ local function _generate_blueprints_function(grid_size)
 					local render_context
 					local item_type = item.item_type
 					local ui_item_types = UISettings.ITEM_TYPES
-					local dummy_profile
-
-					if item_type == ui_item_types.END_OF_ROUND then
-						local gender = item.genders and item.genders[1] or "male"
-						local breed = item.breeds and item.breeds[1] or "human"
-						local archetype = item.archetypes and item.archetypes[1] and Archetypes[item.archetypes[1]] or Archetypes.veteran
-
-						dummy_profile = _get_generic_profile(breed, gender, archetype)
-					end
 
 					if item_type == ui_item_types.GEAR_HEAD or item_type == ui_item_types.GEAR_LOWERBODY or item_type == ui_item_types.GEAR_UPPERBODY or item_type == ui_item_types.GEAR_EXTRA_COSMETIC or item_type == ui_item_types.END_OF_ROUND then
 						local item_state_machine = item.state_machine

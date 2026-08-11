@@ -2045,7 +2045,7 @@ base_templates.bleed_on_ranged = {
 		num_stacks_on_proc = 1,
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_ranged_hit),
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_ranged_hit, CheckProcFunctions.on_item_match),
 	start_func = _add_debuff_on_hit_start,
 	proc_func = _add_debuff_on_hit_proc,
 }

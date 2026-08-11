@@ -21,6 +21,7 @@ local breed_data = {
 	faction_name = "imperium",
 	fx_proximity_culling_weight = 6,
 	game_object_type = "minion_companion_servo_skull",
+	ignore_smoke_fog_los = true,
 	inventory_state_machine = "content/characters/player/companion_servo_skull/third_person/animations/inventory",
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	run_speed = 8,

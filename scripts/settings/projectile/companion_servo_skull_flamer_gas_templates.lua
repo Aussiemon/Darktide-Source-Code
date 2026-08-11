@@ -4,12 +4,13 @@ local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_t
 local companion_servo_skull_flamer_gas_templates = {}
 
 companion_servo_skull_flamer_gas_templates.auto = {
-	burn_max_stacks = 16,
+	burn_max_stacks = 12,
 	dot_buff_name = "flamer_assault",
 	dot_stack_application_rate = 0.375,
 	initial_burn_delay = 0,
+	stacks = 2,
 	suppression_cone_dot = 0.75,
-	suppression_radius = 3,
+	suppression_radius = 4,
 	damage_times = {
 		0.3,
 		0.3,

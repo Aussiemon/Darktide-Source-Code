@@ -4,6 +4,7 @@ local Promise = require("scripts/foundation/utilities/promise")
 local ScriptWebApiPsn = class("ScriptWebApiPsn")
 local web_api = WebApi
 local debug_psn = false
+local DEFAULT_TIMEOUT_SECONDS = 30
 local method_to_string = {
 	[web_api.GET] = "GET",
 	[web_api.PUT] = "PUT",
@@ -56,13 +57,21 @@ ScriptWebApiPsn._handle_request_response = function (self, request_index, succes
 
 		local response = web_api.request_result(id, response_format)
 
-		response_promise:resolve(response)
+		if response then
+			response_promise:resolve(response)
+		else
+			response_promise:reject({
+				message = string.format("PSN web API returned nil result: %s", request.debug_text or "unknown"),
+			})
+		end
 	else
 		if debug_psn then
 			Log.info("[ScriptWebApiPsn]", "Failed Request: %s", request.debug_text or "n/a")
 		end
 
-		response_promise:reject({})
+		response_promise:reject({
+			message = string.format("PSN web API request failed: %s", request.debug_text or "unknown"),
+		})
 	end
 
 	web_api.free(id)
@@ -71,10 +80,12 @@ end
 
 ScriptWebApiPsn.send_request = function (self, user_id, api_group, path, method, content, headers, response_format)
 	if user_id == nil then
-		return
+		return Promise.rejected({
+			message = "PSN web API send_request called with nil user_id",
+		})
 	end
 
-	local id = web_api.send_request(user_id, api_group, path, method, content, headers)
+	local id = web_api.send_request(user_id, api_group, path, method, content, headers, DEFAULT_TIMEOUT_SECONDS)
 	local response_promise = Promise.new()
 
 	self._requests[#self._requests + 1] = {

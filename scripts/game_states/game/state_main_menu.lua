@@ -292,6 +292,10 @@ StateMainMenu.waiting_for_profile_synchronization = function (self)
 	return self:_waiting_for_synchronizations()
 end
 
+StateMainMenu.set_wait_for_character_profile_upload = function (self, value)
+	self._wait_for_character_profile_upload = value
+end
+
 StateMainMenu._previous_character_create_view = function (self)
 	local views_index = (self._current_character_create_state_views_index or 1) - 1
 	local success = self:_open_character_create_state_views(views_index)
@@ -326,10 +330,6 @@ StateMainMenu._next_character_create_view = function (self, skip_onboarding)
 		self._wait_for_character_profile_upload = true
 		self._skip_onboarding_for_created_character = skip_onboarding
 	end
-end
-
-StateMainMenu.set_wait_for_character_profile_upload = function (self, value)
-	self._wait_for_character_profile_upload = value
 end
 
 StateMainMenu._on_profile_create_completed = function (self, created_profile)
@@ -513,7 +513,22 @@ StateMainMenu.update = function (self, main_dt, main_t)
 		Managers.party_immaterium:leave_party()
 	elseif not self._reconnect_pressed and self._reconnect_popup_activated and session_in_progress then
 		if not self._reconnect_popup_id then
-			self:_show_reconnect_popup()
+			local session_id = Managers.party_immaterium:current_game_session_id()
+
+			if session_id then
+				Log.info("StateMainMenu", "Found ongoing session with id %s from a previous session, showing reconnect popup", session_id)
+				self._promise_container:cancel_on_destroy(Managers.backend.interfaces.gameplay_session:fetch_server_details(session_id)):next(function (server_details)
+					if server_details and server_details.ticket and server_details.ticket ~= "" and not self._reconnect_popup_id then
+						self:_show_reconnect_popup()
+					else
+						Log.info("StateMainMenu", "No valid ticket found for session %s, not showing reconnect popup", session_id)
+					end
+				end, function (error)
+					Log.error("StateMainMenu", "Error fetching server details for session %s: %s", session_id, error)
+				end)
+
+				return
+			end
 		end
 	elseif self._reconnect_popup_id then
 		Managers.event:trigger("event_remove_ui_popup", self._reconnect_popup_id)

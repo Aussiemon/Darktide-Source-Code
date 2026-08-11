@@ -661,50 +661,13 @@ local legend_inputs = {
 	},
 }
 local animations = {
-	on_enter = {
-		{
-			end_time = 0,
-			name = "init",
-			start_time = 0,
-			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-				for i = 1, #params.widgets do
-					local widget = params.widgets[i]
-
-					widget.alpha_multiplier = 0
-				end
-			end,
-		},
-		{
-			end_time = 1.5,
-			name = "fade_in",
-			start_time = 1,
-			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-				local anim_progress = math.easeOutCubic(progress)
-
-				for i = 1, #params.widgets do
-					local widget = params.widgets[i]
-
-					widget.alpha_multiplier = anim_progress
-				end
-			end,
-		},
-	},
-	on_level_switch = {
+	transition_fade = {
 		{
 			end_time = 1.5,
 			name = "fade_in",
 			start_time = 0,
-			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-				widgets.transition_fade.alpha_multiplier = 1
-			end,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = math.easeOutCubic(progress)
-
-				for ii = 1, #widgets do
-					local widget = widgets[ii]
-
-					widget.alpha_multiplier = anim_progress
-				end
 
 				widgets.transition_fade.alpha_multiplier = 1 - anim_progress
 			end,

@@ -150,9 +150,7 @@ SocialXboxLive.fetch_blocked_list = function (self)
 
 		self._blocked_promise:resolve(profiles)
 	end):catch(function (error)
-		self._blocked_promise:reject({
-			error,
-		})
+		self._blocked_promise:reject(error)
 	end)
 
 	return self._blocked_promise

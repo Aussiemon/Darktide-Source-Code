@@ -104,6 +104,28 @@ Crosshair.center_dot = function ()
 	})
 end
 
+Crosshair.center_dot_special = function ()
+	return table.clone({
+		pass_type = "texture",
+		style_id = "center",
+		value = "content/ui/materials/hud/crosshairs/center_dot_special",
+		style = {
+			horizontal_alignment = "center",
+			vertical_alignment = "center",
+			offset = {
+				0,
+				0,
+				1,
+			},
+			size = {
+				10,
+				10,
+			},
+			color = UIHudSettings.color_tint_main_1,
+		},
+	})
+end
+
 Crosshair.hit_indicator_segment = function (position_name)
 	local style_id = string.format("hit_%s", position_name)
 	local texture = "content/ui/materials/hud/crosshairs/hit_marker"

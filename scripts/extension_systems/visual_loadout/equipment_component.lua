@@ -994,7 +994,7 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 				Unit.animation_event(unit_3p, "unlock_head")
 			end
 		elseif stabilize_neck > 0 then
-			Log.info("EquipmentComponent", "Neck lock events not found in state machine for %s", unit_3p)
+			-- Nothing
 		end
 	end
 

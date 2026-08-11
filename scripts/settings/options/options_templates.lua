@@ -36,14 +36,7 @@ local function generate_settings(entries)
 
 	for _, entry in ipairs(entries) do
 		local path = entry.path
-		local config
-
-		if entry.dofile then
-			config = dofile(path)
-		else
-			config = require(path)
-		end
-
+		local config = require(path)
 		local settings = config.settings
 		local reset_function = config.reset_function
 		local category_display_name = config.display_name or "n/a"

@@ -641,7 +641,7 @@ templates.power_maul_shock_hit = {
 			local stick_to_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
 
 			if stick_to_buff_extension then
-				stick_to_buff_extension:add_internally_controlled_buff("shock_effect", t)
+				stick_to_buff_extension:add_internally_controlled_buff("shock_effect", t, "owner_unit", template_context.owner_unit)
 			end
 		end
 	end,
@@ -884,7 +884,7 @@ templates.power_maul_stun = {
 			local buff_extension = template_context.buff_extension
 
 			if buff_extension then
-				buff_extension:add_internally_controlled_buff("shock_effect", t)
+				buff_extension:add_internally_controlled_buff("shock_effect", t, "owner_unit", template_context.owner_unit)
 			end
 		end
 	end,
@@ -2170,7 +2170,7 @@ templates.melee_power_bonus_scaled_on_special_charges = {
 	display_description = "loc_weapon_keyword_melee_power_bonus_scaled_on_special_charges_mouseover",
 	display_title = "loc_weapon_keyword_melee_power_bonus_scaled_on_special_charges",
 	hud_icon = "content/ui/textures/icons/traits/weapon_trait_252",
-	melee_power_level_modifier_per_charge = 0.04,
+	melee_power_level_modifier_per_charge = 0.05,
 	predicted = false,
 	show_in_hud_if_slot_is_wielded = true,
 	title = "Power Overwhelming",
@@ -2531,6 +2531,195 @@ templates.arc_spread_target.keywords = {
 templates.arc_grenade_spread_target = _shock_effect_buff_generator(10, "content/fx/particles/enemies/buff_arclightning")
 templates.arc_grenade_spread_target.keywords = {
 	buff_keywords.electrocuted_arc_grenade,
+}
+templates.arc_grenade_electrocution = {
+	buff_id = "shock_grenade_shock",
+	class_name = "interval_buff",
+	duration = 1.1,
+	interval = 0.2,
+	max_stacks = 1,
+	max_stacks_cap = 1,
+	predicted = false,
+	refresh_duration_on_stack = false,
+	start_interval_on_apply = true,
+	start_with_frame_offset = true,
+	keywords = {
+		buff_keywords.electrocuted,
+		buff_keywords.shock_grenade_shock,
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local unit_data = ScriptUnit.has_extension(unit, "unit_data_system")
+		local breed = unit_data and unit_data:breed()
+		local is_poxwalker_bomber = breed and breed.tags and breed.name == "chaos_poxwalker_bomber"
+
+		template_data.is_poxwalker_bomber = is_poxwalker_bomber
+	end,
+	interval_func = function (template_data, template_context, template, dt, t)
+		local is_server = template_context.is_server
+
+		if not is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local is_staggered_poxwalker_bomber = template_data.is_poxwalker_bomber and MinionState.is_staggered(unit)
+
+		if HEALTH_ALIVE[unit] and not is_staggered_poxwalker_bomber then
+			local damage_template = DamageProfileTemplates.cryptic_arc_grenade_shock_damage
+			local owner_unit = template_context.owner_unit
+			local power_level = DEFAULT_POWER_LEVEL
+			local random_radians = math.random_range(0, PI_2)
+			local attack_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
+
+			attack_direction = Vector3.normalize(attack_direction)
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.electrocution, "attack_type", attack_types.buff, "attacking_unit", HEALTH_ALIVE[owner_unit] and owner_unit, "attack_direction", attack_direction)
+		end
+	end,
+	minion_effects = {
+		node_effects = {
+			{
+				node_name = "j_spine",
+				vfx = {
+					material_emission = true,
+					orphaned_policy = "destroy",
+					particle_effect = "content/fx/particles/enemies/buff_chainlightning",
+					stop_type = "stop",
+				},
+				sfx = {
+					looping_wwise_start_event = "wwise/events/weapon/play_psyker_chain_lightning_hit",
+					looping_wwise_stop_event = "wwise/events/weapon/stop_psyker_chain_lightning_hit",
+				},
+			},
+		},
+	},
+}
+templates.discharge_arc_electrocution = {
+	buff_id = "shock_grenade_shock",
+	class_name = "interval_buff",
+	duration = 0.5,
+	interval = 0.2,
+	max_stacks = 1,
+	max_stacks_cap = 1,
+	predicted = false,
+	refresh_duration_on_stack = false,
+	start_interval_on_apply = true,
+	start_with_frame_offset = true,
+	keywords = {
+		buff_keywords.electrocuted,
+		buff_keywords.shock_grenade_shock,
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local unit_data = ScriptUnit.has_extension(unit, "unit_data_system")
+		local breed = unit_data and unit_data:breed()
+		local is_poxwalker_bomber = breed and breed.tags and breed.name == "chaos_poxwalker_bomber"
+
+		template_data.is_poxwalker_bomber = is_poxwalker_bomber
+	end,
+	interval_func = function (template_data, template_context, template, dt, t)
+		local is_server = template_context.is_server
+
+		if not is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local is_staggered_poxwalker_bomber = template_data.is_poxwalker_bomber and MinionState.is_staggered(unit)
+
+		if HEALTH_ALIVE[unit] and not is_staggered_poxwalker_bomber then
+			local damage_template = DamageProfileTemplates.cryptic_arc_shock_damage
+			local owner_unit = template_context.owner_unit
+			local power_level = 125
+			local random_radians = math.random_range(0, PI_2)
+			local attack_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
+
+			attack_direction = Vector3.normalize(attack_direction)
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.electrocution, "attack_type", attack_types.buff, "attacking_unit", HEALTH_ALIVE[owner_unit] and owner_unit, "attack_direction", attack_direction)
+		end
+	end,
+	minion_effects = {
+		node_effects = {
+			{
+				node_name = "j_spine",
+				vfx = {
+					material_emission = true,
+					orphaned_policy = "destroy",
+					particle_effect = "content/fx/particles/enemies/buff_chainlightning",
+					stop_type = "stop",
+				},
+				sfx = {
+					looping_wwise_start_event = "wwise/events/weapon/play_psyker_chain_lightning_hit",
+					looping_wwise_stop_event = "wwise/events/weapon/stop_psyker_chain_lightning_hit",
+				},
+			},
+		},
+	},
+}
+templates.force_field_arc_electrocution = {
+	buff_id = "shock_grenade_shock",
+	class_name = "interval_buff",
+	duration = 0.5,
+	interval = 0.2,
+	max_stacks = 1,
+	max_stacks_cap = 1,
+	predicted = false,
+	refresh_duration_on_stack = false,
+	start_interval_on_apply = true,
+	start_with_frame_offset = true,
+	keywords = {
+		buff_keywords.electrocuted,
+		buff_keywords.shock_grenade_shock,
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local unit_data = ScriptUnit.has_extension(unit, "unit_data_system")
+		local breed = unit_data and unit_data:breed()
+		local is_poxwalker_bomber = breed and breed.tags and breed.name == "chaos_poxwalker_bomber"
+
+		template_data.is_poxwalker_bomber = is_poxwalker_bomber
+	end,
+	interval_func = function (template_data, template_context, template, dt, t)
+		local is_server = template_context.is_server
+
+		if not is_server then
+			return
+		end
+
+		local unit = template_context.unit
+		local is_staggered_poxwalker_bomber = template_data.is_poxwalker_bomber and MinionState.is_staggered(unit)
+
+		if HEALTH_ALIVE[unit] and not is_staggered_poxwalker_bomber then
+			local damage_template = DamageProfileTemplates.cryptic_arc_shock_damage
+			local owner_unit = template_context.owner_unit
+			local power_level = 125
+			local random_radians = math.random_range(0, PI_2)
+			local attack_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
+
+			attack_direction = Vector3.normalize(attack_direction)
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.electrocution, "attack_type", attack_types.buff, "attacking_unit", HEALTH_ALIVE[owner_unit] and owner_unit, "attack_direction", attack_direction)
+		end
+	end,
+	minion_effects = {
+		node_effects = {
+			{
+				node_name = "j_spine",
+				vfx = {
+					material_emission = true,
+					orphaned_policy = "destroy",
+					particle_effect = "content/fx/particles/enemies/buff_chainlightning",
+					stop_type = "stop",
+				},
+				sfx = {
+					looping_wwise_start_event = "wwise/events/weapon/play_psyker_chain_lightning_hit",
+					looping_wwise_stop_event = "wwise/events/weapon/stop_psyker_chain_lightning_hit",
+				},
+			},
+		},
+	},
 }
 templates.arc_ability_spread_target = _shock_effect_buff_generator(5, "content/fx/particles/enemies/buff_arclightning")
 templates.arc_ability_spread_target.keywords = {

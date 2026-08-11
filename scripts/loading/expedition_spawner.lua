@@ -55,6 +55,7 @@ ExpeditionSpawner.init = function (self, expedition_settings_template, section_s
 	self._main_path_level = nil
 	self._level_spawn_queue = {}
 	self._despawning_levels = {}
+	self.prop_health_game_objects = {}
 end
 
 ExpeditionSpawner.expedition = function (self)
@@ -272,7 +273,7 @@ ExpeditionSpawner._register_level = function (self, level_data, wanted_level_id)
 	local category_name
 	local extension_manager = Managers.state.extension
 
-	extension_manager:add_and_register_units(world, level_units, nil, category_name)
+	extension_manager:add_and_register_units(world, level_units, nil, category_name, true)
 
 	if is_server then
 		local destructible_system_unit_ids = {}
@@ -288,6 +289,31 @@ ExpeditionSpawner._register_level = function (self, level_data, wanted_level_id)
 		end
 
 		level_data.destructible_system_unit_ids = destructible_system_unit_ids
+	else
+		local unit_spawner = Managers.state.unit_spawner
+		local game_session = Managers.state.game_session:game_session()
+		local game_objects = self.prop_health_game_objects
+		local keep = {}
+
+		for i = 1, #game_objects do
+			local game_object_id = game_objects[i]
+
+			if GameSession.game_object_exists(game_session, game_object_id) then
+				local unit_id = GameSession.game_object_field(game_session, game_object_id, "unit_id")
+				local is_level_unit = GameSession.game_object_field(game_session, game_object_id, "is_level_unit")
+
+				if unit_id and unit_spawner:unit_exists(unit_id, is_level_unit) then
+					local unit = unit_spawner:unit(unit_id, is_level_unit)
+					local health_extension = ScriptUnit.extension(unit, "health_system")
+
+					health_extension:on_game_object_created(game_session, game_object_id)
+				else
+					keep[#keep + 1] = game_object_id
+				end
+			end
+		end
+
+		self.prop_health_game_objects = keep
 	end
 
 	Level.set_flow_variable(level, "expedition_location_index", location_index)
@@ -826,6 +852,12 @@ ExpeditionSpawner.despawn_levels_sync = function (self)
 				local reference_name = level_data.reference_name
 
 				section[reference_name] = nil
+			elseif not self._done then
+				self:_level_data_cleanup(level_data)
+
+				local reference_name = level_data.reference_name
+
+				section[reference_name] = nil
 			end
 		end
 	end
@@ -861,26 +893,6 @@ ExpeditionSpawner._despawn_level = function (self, level_data)
 
 		if extension_manager then
 			extension_manager:unregister_units(level_units, #level_units)
-		end
-	end
-
-	local world_markers = level_data.world_markers
-
-	if world_markers then
-		local event_manager = Managers.event
-
-		for k = 1, #world_markers do
-			local marker_id = world_markers[k]
-
-			event_manager:trigger("remove_world_marker", marker_id)
-		end
-
-		table.clear(world_markers)
-
-		local world_markers_by_unit = level_data.world_markers_by_unit
-
-		if world_markers_by_unit then
-			table.clear(world_markers_by_unit)
 		end
 	end
 
@@ -920,6 +932,34 @@ ExpeditionSpawner._despawn_level = function (self, level_data)
 		nav_mesh_manager:remove_nav_tag_volumes_for_level(level)
 	end
 
+	self:_level_data_cleanup(level_data)
+	Level.trigger_level_shutdown(level)
+	World.destroy_level(self._world, level)
+
+	return true
+end
+
+ExpeditionSpawner._level_data_cleanup = function (self, level_data)
+	local world_markers = level_data.world_markers
+
+	if world_markers then
+		local event_manager = Managers.event
+
+		for k = 1, #world_markers do
+			local marker_id = world_markers[k]
+
+			event_manager:trigger("remove_world_marker", marker_id)
+		end
+
+		table.clear(world_markers)
+
+		local world_markers_by_unit = level_data.world_markers_by_unit
+
+		if world_markers_by_unit then
+			table.clear(world_markers_by_unit)
+		end
+	end
+
 	if self._is_server then
 		local destructible_system_unit_ids = level_data.destructible_system_unit_ids
 
@@ -944,15 +984,10 @@ ExpeditionSpawner._despawn_level = function (self, level_data)
 		level_data.themes = nil
 	end
 
-	Level.trigger_level_shutdown(level)
-	World.destroy_level(self._world, level)
-
 	level_data.level = nil
 	level_data.spawned = false
 	level_data.was_spawned = true
 	level_data.despawning = false
-
-	return true
 end
 
 ExpeditionSpawner._update_despawning_navigation = function (self, dt)
@@ -1041,6 +1076,7 @@ ExpeditionSpawner.destroy = function (self)
 
 	self:despawn_levels_sync()
 	self:unload_despawned_levels(on_shutdown)
+	table.clear(self._level_spawn_queue)
 
 	if self._nav_data_created then
 		Navigation.remove_nav_data(self._nav_data_created)

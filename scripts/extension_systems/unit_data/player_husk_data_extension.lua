@@ -205,6 +205,10 @@ PlayerHuskDataExtension.is_local_unit = function (self)
 	return false
 end
 
+PlayerHuskDataExtension.last_received_frame = function (self)
+	return self._last_received_frame
+end
+
 PlayerHuskDataExtension.pre_update = function (self)
 	self:_read_server_husk_data_state()
 end

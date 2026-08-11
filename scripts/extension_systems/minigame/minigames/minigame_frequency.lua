@@ -55,9 +55,9 @@ MinigameFrequency.start = function (self, player, send_to_self_client)
 	self:_update_frequency_sound(self._frequency)
 end
 
-MinigameFrequency.stop = function (self)
+MinigameFrequency.stop = function (self, is_automatic)
 	Unit.flow_event(self._minigame_unit, "lua_minigame_stop")
-	MinigameFrequency.super.stop(self)
+	MinigameFrequency.super.stop(self, is_automatic)
 
 	if self._is_server then
 		self._current_stage = nil
@@ -268,6 +268,8 @@ MinigameFrequency.test_frequency = function (self, x, y)
 			self:play_sound("sfx_minigame_success")
 		end
 	else
+		self:_increment_mistakes()
+
 		if self._current_stage > 1 then
 			self:_change_target_frequency()
 		end

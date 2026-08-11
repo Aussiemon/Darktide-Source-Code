@@ -23,7 +23,6 @@ MinigameDecodeSearch.init = function (self, unit, is_server, seed, context)
 	self._decode_symbols_total_items = MinigameSettings.decode_symbols_total_items
 	self._symbols = {}
 	self._decode_targets = {}
-	self._misses_per_player = {}
 end
 
 MinigameDecodeSearch.hot_join_sync = function (self, sender, channel)
@@ -36,12 +35,6 @@ MinigameDecodeSearch.hot_join_sync = function (self, sender, channel)
 	if self._cursor_position then
 		self:send_rpc_to_channel(channel, "rpc_minigame_sync_decode_search_set_cursor", self._cursor_position.x, self._cursor_position.y)
 	end
-end
-
-MinigameDecodeSearch._player_miss_target = function (self, player)
-	local unique_id = player:unique_id()
-
-	self._misses_per_player[unique_id] = (self._misses_per_player[unique_id] or 0) + 1
 end
 
 MinigameDecodeSearch.start = function (self, player, send_to_self_client)
@@ -57,7 +50,7 @@ MinigameDecodeSearch.start = function (self, player, send_to_self_client)
 	end
 end
 
-MinigameDecodeSearch.stop = function (self)
+MinigameDecodeSearch.stop = function (self, is_automatic)
 	local is_server = self._is_server
 
 	if is_server then
@@ -66,29 +59,10 @@ MinigameDecodeSearch.stop = function (self)
 		if not player then
 			return
 		end
-
-		if self:is_completed() then
-			local unique_id = player:unique_id()
-			local mistakes = self._misses_per_player[unique_id] or 0
-
-			if player then
-				Managers.stats:record_private("hook_hack", player, mistakes)
-			end
-
-			local is_human_player = player and player:is_human_controlled()
-
-			if is_human_player then
-				Managers.telemetry_events:player_hacked_terminal(player, mistakes, self._is_automatic)
-			end
-
-			table.clear(self._misses_per_player)
-		elseif self._current_stage and self._current_stage > 1 then
-			self:_player_miss_target(player)
-		end
 	end
 
 	Unit.flow_event(self._minigame_unit, "lua_minigame_stop")
-	MinigameDecodeSearch.super.stop(self)
+	MinigameDecodeSearch.super.stop(self, is_automatic)
 end
 
 MinigameDecodeSearch.setup_game = function (self)
@@ -215,11 +189,7 @@ MinigameDecodeSearch.on_action_pressed = function (self, t)
 			self:play_sound("sfx_minigame_success")
 		end
 	else
-		local player = Managers.player:player_from_session_id(self._player_session_id)
-
-		if player then
-			self:_player_miss_target(player)
-		end
+		self:_increment_mistakes()
 
 		self._current_stage = math.max(self._current_stage - 1, 1)
 

@@ -162,8 +162,11 @@ ActionCrypticDischarge._trigger_arcs_in_front = function (self, num_charges_used
 
 	for i = 1, num_hits do
 		local enemy_unit = BROADPHASE_RESULTS[i]
+		local unit_data_extension = ScriptUnit.has_extension(enemy_unit, "unit_data_system")
+		local breed = unit_data_extension and unit_data_extension:breed()
+		local untargetable = breed and breed.is_untargetable
 
-		if HEALTH_ALIVE[enemy_unit] then
+		if HEALTH_ALIVE[enemy_unit] and not untargetable then
 			local enemy_position = POSITION_LOOKUP[enemy_unit]
 			local is_enemy_in_front = Vector3.dot(Vector3.normalize(enemy_position - player_position), player_forward_flat) > 0.5
 

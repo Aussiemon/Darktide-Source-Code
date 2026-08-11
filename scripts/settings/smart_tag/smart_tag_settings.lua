@@ -848,10 +848,13 @@ local templates = {
 			local ability_extension = ScriptUnit.extension(tagger_unit, "ability_system")
 			local target_unit = tag:target_unit()
 			local companion_unit = companion_spawner_extension:spawned_unit_lookup(special_rules.cryptic_servo_skull_hack)
+			local can_shoot, prevent_shooting_activation_on_fail = CompanionServoSkullAbility.validate_target_func_shooting_ability(target_unit, ability_extension, companion_unit)
 
-			if CompanionServoSkullAbility.validate_target_func_shooting_ability(target_unit, ability_extension, companion_unit) then
+			if can_shoot then
 				CompanionServoSkullAbility.start_shooting_ability(companion_unit, target_unit, ability_extension)
 
+				tag.started_shooting = true
+			elseif prevent_shooting_activation_on_fail then
 				tag.started_shooting = true
 			else
 				tag.started_shooting = false

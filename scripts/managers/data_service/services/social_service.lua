@@ -1173,7 +1173,7 @@ SocialService._fetch_platform_friends = function (self)
 
 		return friends
 	end):catch(function (error)
-		_warning(string.format("Failed fetching %s friends: %s", self._platform, error))
+		_warning(string.format("Failed fetching %s friends: %s", self._platform, table.tostring(error, 3)))
 	end)
 end
 

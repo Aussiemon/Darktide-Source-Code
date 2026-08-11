@@ -139,17 +139,17 @@ companion_servo_skull_movement_settings.movement_settings = {
 			tilt = {
 				responsiveness = 2,
 				roll_sensitivity = 7.5,
-				max_roll = math.degrees_to_radians(25),
+				max_roll = math.degrees_to_radians(0),
 			},
 			side_responsiveness = {
-				in_combat = 100,
-				out_of_combat = 100,
-				rest = 100,
+				in_combat = 1000,
+				out_of_combat = 1000,
+				rest = 1000,
 			},
 			rotation_responsiveness = {
-				in_combat = 6,
-				out_of_combat = 4,
-				rest = 4,
+				in_combat = 1000,
+				out_of_combat = 1000,
+				rest = 1000,
 			},
 			pitch_rotation_responsiveness = {
 				in_combat = 2,
@@ -227,17 +227,17 @@ companion_servo_skull_movement_settings.movement_settings = {
 			tilt = {
 				responsiveness = 2,
 				roll_sensitivity = 7.5,
-				max_roll = math.degrees_to_radians(25),
+				max_roll = math.degrees_to_radians(0),
 			},
 			side_responsiveness = {
-				in_combat = 100,
-				out_of_combat = 100,
-				rest = 100,
+				in_combat = 1000,
+				out_of_combat = 1000,
+				rest = 1000,
 			},
 			rotation_responsiveness = {
-				in_combat = 6,
-				out_of_combat = 4,
-				rest = 4,
+				in_combat = 1000,
+				out_of_combat = 1000,
+				rest = 1000,
 			},
 			pitch_rotation_responsiveness = {
 				in_combat = 2,

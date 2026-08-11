@@ -810,7 +810,7 @@ local mission_info_widget_definitions = {
 	}, "reward_main_mission"),
 }
 local details_static_widgets_definitions = {
-	details_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.default_scrollbar, "details_scrollbar"),
+	details_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "details_scrollbar"),
 	details_interaction = UIWidget.create_definition({
 		{
 			content_id = "hotspot",

@@ -1241,6 +1241,13 @@ damage_templates.cryptic_discharge_shock_damage = {
 		},
 	},
 }
+damage_templates.cryptic_arc_grenade_shock_damage = table.clone(damage_templates.cryptic_discharge_shock_damage)
+damage_templates.cryptic_arc_grenade_shock_damage.skip_on_hit_proc = true
+damage_templates.cryptic_arc_grenade_shock_damage.power_distribution = {
+	attack = 600,
+	impact = 100,
+}
+damage_templates.cryptic_arc_shock_damage = table.clone(damage_templates.cryptic_arc_grenade_shock_damage)
 damage_templates.cryptic_discharge_weapon_shock = {
 	ignore_shield = true,
 	stagger_category = "sticky",
@@ -1248,7 +1255,7 @@ damage_templates.cryptic_discharge_weapon_shock = {
 		attack = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_0_5,
 			[armor_types.armored] = damage_lerp_values.lerp_1,
-			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.resistant] = damage_lerp_values.lerp_0_1,
 			[armor_types.player] = damage_lerp_values.lerp_0_75,
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_1,
@@ -1748,7 +1755,7 @@ damage_templates.arc_grenade = {
 		},
 	},
 	power_distribution = {
-		attack = 100,
+		attack = 0,
 		impact = 50,
 	},
 	targets = {
@@ -1762,6 +1769,7 @@ damage_templates.arc_grenade = {
 damage_templates.arc_grenade_chain_jump_damage = {
 	ignore_hitzone_multiplier = true,
 	ignore_stagger_reduction = true,
+	skip_on_hit_proc = true,
 	stagger_category = "melee",
 	armor_damage_modifier = {
 		attack = {
@@ -1790,7 +1798,7 @@ damage_templates.arc_grenade_chain_jump_damage = {
 		impact = 5,
 	},
 	power_distribution = {
-		attack = 1000,
+		attack = 0,
 		impact = 10,
 	},
 	damage_type = damage_types.arc_chain,
@@ -1811,9 +1819,9 @@ damage_templates.arc_grenade_chain_jump_damage = {
 	},
 }
 damage_templates.discharge_chain_jump_damage = table.clone(damage_templates.arc_grenade_chain_jump_damage)
-damage_templates.discharge_chain_jump_damage.power_distribution.attack = 200
+damage_templates.discharge_chain_jump_damage.power_distribution.attack = 0
 damage_templates.force_field_chain_jump_damage = table.clone(damage_templates.arc_grenade_chain_jump_damage)
-damage_templates.force_field_chain_jump_damage.power_distribution.attack = 200
+damage_templates.force_field_chain_jump_damage.power_distribution.attack = 0
 
 return {
 	base_templates = damage_templates,

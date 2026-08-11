@@ -6,6 +6,7 @@ local ability_template = {}
 
 ability_template.allowed_inputs_in_sprint = {
 	grenade_ability = true,
+	wield = true,
 }
 ability_template.action_inputs = {
 	aim_pressed = {
@@ -61,7 +62,7 @@ ability_template.actions = {
 		allowed_during_sprint = true,
 		effect_template_name = "companion_servo_skull_aim_on_ground_effect",
 		kind = "servo_skull_order_target_finder",
-		minimum_hold_time = 0.025,
+		minimum_hold_time = 0.1,
 		reset_smart_targeting_on_start = true,
 		sprint_ready_up_time = 0,
 		start_input = "aim_pressed",

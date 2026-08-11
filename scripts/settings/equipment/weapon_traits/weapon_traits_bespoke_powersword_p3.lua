@@ -360,25 +360,25 @@ templates.weapon_trait_bespoke_powersword_p3_stacking_finesse_on_one_hit_kill = 
 			{
 				max_stacks = 5,
 				stat_buffs = {
-					[stat_buffs.melee_finesse_modifier_bonus] = 0.18,
+					[stat_buffs.melee_finesse_modifier_bonus] = 0.1,
 				},
 			},
 			{
 				max_stacks = 5,
 				stat_buffs = {
-					[stat_buffs.melee_finesse_modifier_bonus] = 0.2,
+					[stat_buffs.melee_finesse_modifier_bonus] = 0.12,
 				},
 			},
 			{
 				max_stacks = 5,
 				stat_buffs = {
-					[stat_buffs.melee_finesse_modifier_bonus] = 0.22,
+					[stat_buffs.melee_finesse_modifier_bonus] = 0.14,
 				},
 			},
 			{
 				max_stacks = 5,
 				stat_buffs = {
-					[stat_buffs.melee_finesse_modifier_bonus] = 0.24,
+					[stat_buffs.melee_finesse_modifier_bonus] = 0.16,
 				},
 			},
 		},
@@ -400,16 +400,16 @@ templates.weapon_trait_bespoke_powersword_p3_refund_charge_on_weapon_special_wea
 	buffs = {
 		weapon_trait_bespoke_powersword_p3_refund_charge_on_weapon_special_weakspot_kill = {
 			{
-				cooldown_duration = 6,
+				cooldown_duration = 5.5,
 			},
 			{
-				cooldown_duration = 5,
+				cooldown_duration = 4.5,
 			},
 			{
-				cooldown_duration = 4,
+				cooldown_duration = 3.5,
 			},
 			{
-				cooldown_duration = 3,
+				cooldown_duration = 2.5,
 			},
 		},
 	},

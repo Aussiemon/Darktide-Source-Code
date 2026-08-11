@@ -4446,6 +4446,13 @@ local gameplay_vo_zealot_female_b = {
 			3.162104,
 			3.006729,
 		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+		},
 		randomize_indexes = {},
 	},
 	seen_kill_streak_prayer_c = {

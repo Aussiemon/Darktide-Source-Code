@@ -432,10 +432,24 @@ ExtensionManager.update_time_slice_add_and_register_level_units = function (self
 	return self:_units_added_and_registered()
 end
 
-ExtensionManager.add_and_register_units = function (self, world, unit_list, num_units, optional_category)
+ExtensionManager.add_and_register_units = function (self, world, unit_list, num_units, optional_category, run_on_unit_id_resolved)
 	local added_list, num_added = TEMP_TABLE, 0
 
 	num_added = self:_add_and_register_units(world, unit_list, 1, num_units or #unit_list, optional_category, added_list, num_added)
+
+	if run_on_unit_id_resolved then
+		local unit_spawner_manager = Managers.state.unit_spawner
+
+		if unit_spawner_manager then
+			for i = 1, num_added do
+				local unit = added_list[i]
+
+				if ScriptUnit.has_extension(unit, "health_system") then
+					self:on_unit_id_resolved(unit, true, unit_spawner_manager:unit_index(unit))
+				end
+			end
+		end
+	end
 
 	if num_added > 0 then
 		self:register_units_extensions(added_list, num_added)

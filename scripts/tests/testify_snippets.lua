@@ -371,17 +371,6 @@ TestifySnippets.lua_trace_statistics = function ()
 	return lua_trace_statistics
 end
 
-TestifySnippets.memory_tree = function (depth, ascii_separator, memory_limit)
-	Testify:make_request_to_runner("start_memory_tree_monitoring", ascii_separator)
-	Testify:make_request("console_command_memory_tree_formatted", depth, ascii_separator, memory_limit)
-
-	local memory_tree = Testify:make_request_to_runner("stop_memory_tree_monitoring")
-
-	memory_tree = cjson.decode(memory_tree)
-
-	return memory_tree
-end
-
 TestifySnippets.memory_resources_all = function (include_details)
 	Testify:make_request_to_runner("start_memory_resources_all_monitoring")
 	Testify:make_request("console_command_memory_resources_all")

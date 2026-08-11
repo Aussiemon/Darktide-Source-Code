@@ -335,18 +335,25 @@ ConstantElementNotificationFeed.event_update_crafting_pickup_notification_type =
 	self._crafting_pickup_notifications_enabled = value == "notification"
 end
 
-ConstantElementNotificationFeed.event_add_notification_message = function (self, message_type, data, callback, sound_event, done_callback, delay)
+ConstantElementNotificationFeed.event_add_notification_message = function (self, message_type, data, add_callback, sound_event, done_callback, delay, start_callback)
+	local notification_id = self:_get_new_id()
+
+	if add_callback then
+		add_callback(notification_id)
+	end
+
 	if delay then
 		self._notification_message_delay_queue[#self._notification_message_delay_queue + 1] = {
 			message_type = message_type,
 			data = data,
-			callback = callback,
+			start_callback = start_callback,
 			sound_event = sound_event,
 			done_callback = done_callback,
 			delay = delay,
+			id = notification_id,
 		}
 	else
-		self:_add_notification_message(message_type, data, callback, sound_event, done_callback)
+		self:_add_notification_message(message_type, data, notification_id, start_callback, sound_event, done_callback)
 	end
 end
 
@@ -371,6 +378,22 @@ ConstantElementNotificationFeed.event_update_notification_message = function (se
 
 	if notification then
 		self:_set_texts(notification, texts)
+
+		return
+	end
+
+	local queue = self._queue_notifications
+
+	for i = #queue, 1, -1 do
+		if queue[i].id == notification_id then
+			for ii = 1, #texts do
+				local text = texts[ii]
+
+				queue[i].data.texts[ii] = text
+			end
+
+			return
+		end
 	end
 end
 
@@ -389,6 +412,19 @@ ConstantElementNotificationFeed.event_remove_notification = function (self, noti
 
 	if notification then
 		notification.time, notification.total_time = 0, 0
+
+		return
+	end
+
+	local queue = self._queue_notifications
+
+	for i = #queue, 1, -1 do
+		if queue[i].id == notification_id then
+			table.remove(queue, i)
+			self:_update_notification_queue_counter()
+
+			return
+		end
 	end
 end
 
@@ -1297,7 +1333,7 @@ ConstantElementNotificationFeed._can_show_assist_notification = function (self)
 	return self._assist_notifications_enabled
 end
 
-ConstantElementNotificationFeed._add_notification_message = function (self, message_type, data, callback, sound_event, done_callback)
+ConstantElementNotificationFeed._add_notification_message = function (self, message_type, data, notification_id, start_callback, sound_event, done_callback)
 	local notifications = self._notifications
 	local num_notifications = #notifications
 
@@ -1305,9 +1341,10 @@ ConstantElementNotificationFeed._add_notification_message = function (self, mess
 		self._queue_notifications[#self._queue_notifications + 1] = {
 			message_type = message_type,
 			data = data,
-			callback = callback,
+			start_callback = start_callback,
 			done_callback = done_callback,
 			sound_event = sound_event,
+			id = notification_id,
 		}
 
 		self:_update_notification_queue_counter()
@@ -1318,13 +1355,12 @@ ConstantElementNotificationFeed._add_notification_message = function (self, mess
 	local notification_data = self:_generate_notification_data(message_type, data)
 
 	if notification_data then
-		local notification = self:_create_notification_entry(notification_data)
-		local notification_id = notification.id
+		local notification = self:_create_notification_entry(notification_data, notification_id)
 
 		notification.done_callback = done_callback
 
-		if callback then
-			callback(notification_id)
+		if start_callback then
+			start_callback(notification_id)
 		end
 
 		if notification.animation_enter then
@@ -1406,8 +1442,9 @@ ConstantElementNotificationFeed._remove_notification = function (self, notificat
 				local queued_data = queued_notification.data
 				local callback = queued_notification.callback
 				local sound_event = queued_notification.sound_event
+				local notification_id = queued_notification.id
 
-				self:_add_notification_message(message_type, queued_data, callback, sound_event)
+				self:_add_notification_message(message_type, queued_data, notification_id, callback, sound_event)
 				table.remove(self._queue_notifications, 1)
 				self:_update_notification_queue_counter()
 			end
@@ -1415,12 +1452,11 @@ ConstantElementNotificationFeed._remove_notification = function (self, notificat
 	end
 end
 
-ConstantElementNotificationFeed._create_notification_entry = function (self, notification_data)
+ConstantElementNotificationFeed._create_notification_entry = function (self, notification_data, notification_id)
 	local notification_type = notification_data.type
 	local notification_template = self._notification_templates[notification_type]
 	local priority_order = notification_template.priority_order
-	local id = self:_get_new_id()
-	local name = "notification_" .. id
+	local name = "notification_" .. notification_id
 	local pass_template_function = notification_template.widget_definition.pass_template_function
 	local pass_template = pass_template_function and pass_template_function(self) or notification_template.widget_definition.pass_template
 	local widget_definition = UiWidget.create_definition(pass_template, "background", nil)
@@ -1430,7 +1466,7 @@ ConstantElementNotificationFeed._create_notification_entry = function (self, not
 	notification.priority_order = notification_template.priority_order
 	notification.total_time = notification_template.total_time
 	notification.widget = widget
-	notification.id = id
+	notification.id = notification_id
 	notification.time = 0
 	notification.data = notification_data
 	notification.animation_enter = notification_template.animation_enter
@@ -1561,11 +1597,12 @@ ConstantElementNotificationFeed.update = function (self, dt, t, ui_renderer, ren
 		if delay <= 0 then
 			local message_type = message_data.message_type
 			local data = message_data.data
-			local callback = message_data.callback
+			local start_callback = message_data.start_callback
 			local sound_event = message_data.sound_event
 			local done_callback = message_data.done_callback
+			local notification_id = message_data.id
 
-			self:_add_notification_message(message_type, data, callback, sound_event, done_callback)
+			self:_add_notification_message(message_type, data, notification_id, start_callback, sound_event, done_callback)
 			table.remove(notification_message_delay_queue, i)
 		else
 			message_data.delay = delay - dt

@@ -69,6 +69,11 @@ MissionIntroView.on_enter = function (self)
 	self._num_animation_events_used = 0
 end
 
+MissionIntroView.draw_while_loading = function (self, dt, t)
+	Managers.ui:render_loading_icon()
+	Managers.ui:render_black_background()
+end
+
 USE_DEBUG_RENDERER = false
 
 MissionIntroView.draw = function (self, dt, t, input_service, layer)

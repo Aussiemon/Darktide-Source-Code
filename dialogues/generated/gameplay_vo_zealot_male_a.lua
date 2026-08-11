@@ -4515,18 +4515,27 @@ local gameplay_vo_zealot_male_a = {
 	},
 	seen_enemy_tox_flamer = {
 		randomize_indexes_n = 0,
-		sound_events_n = 4,
+		sound_events_n = 5,
 		sound_events = {
 			"loc_zealot_male_a__seen_enemy_tox_flamer_01",
 			"loc_zealot_male_a__seen_enemy_tox_flamer_02",
+			"loc_zealot_male_a__seen_enemy_tox_flamer_03",
 			"loc_zealot_male_a__seen_enemy_tox_flamer_04",
 			"loc_zealot_male_a__seen_enemy_tox_flamer_05",
 		},
 		sound_events_duration = {
 			0.996667,
 			2.383146,
+			1.196604,
 			1.43575,
 			2.223,
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2,
 		},
 		randomize_indexes = {},
 	},

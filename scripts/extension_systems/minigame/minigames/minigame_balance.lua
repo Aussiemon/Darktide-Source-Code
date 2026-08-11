@@ -33,18 +33,6 @@ MinigameBalance.hot_join_sync = function (self, sender, channel)
 	MinigameBalance.super.hot_join_sync(self, sender, channel)
 end
 
-MinigameBalance._player_fail = function (self, player)
-	if not player then
-		Log.error("MinigameBalance", "Trying to access user but there is none")
-
-		return
-	end
-
-	local unique_id = player:unique_id()
-
-	self._misses_per_player[unique_id] = (self._misses_per_player[unique_id] or 0) + 1
-end
-
 MinigameBalance._get_objective = function (self)
 	local target_extension = ScriptUnit.has_extension(self._minigame_unit, "mission_objective_target_system")
 
@@ -89,9 +77,9 @@ MinigameBalance.start = function (self, player, send_to_self_client)
 	end
 end
 
-MinigameBalance.stop = function (self)
+MinigameBalance.stop = function (self, is_automatic)
 	Unit.flow_event(self._minigame_unit, "lua_minigame_stop")
-	MinigameBalance.super.stop(self)
+	MinigameBalance.super.stop(self, is_automatic)
 end
 
 MinigameBalance.setup_game = function (self)
@@ -151,6 +139,7 @@ MinigameBalance.update = function (self, dt, t)
 
 			if is_stuck ~= self._is_stuck_indication then
 				if is_stuck then
+					self:_increment_mistakes()
 					self:play_sound("sfx_minigame_fail")
 				end
 

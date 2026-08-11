@@ -120,6 +120,7 @@ CrypticPersonalForceFieldUnitExtension.fixed_update = function (self, unit, dt, 
 	local game_session = self._game_session
 	local game_object_id = self._game_object_id
 	local is_server = self._is_server
+	local owner_unit = self.owner_unit
 
 	if is_server then
 		local duration = math.max(self._duration - dt, 0)
@@ -140,11 +141,11 @@ CrypticPersonalForceFieldUnitExtension.fixed_update = function (self, unit, dt, 
 			if not is_server then
 				self:on_death(t)
 			end
-		elseif not self.is_expired then
+		elseif not self.is_expired and HEALTH_ALIVE[owner_unit] then
 			local spawn_animation_ended = self._max_duration - self._duration >= SPAWNING.real_shield_visible_time
 
 			if not spawn_animation_ended and not self._effect_id then
-				local target_node = Unit.node(self.owner_unit, "j_hips")
+				local target_node = Unit.node(owner_unit, "j_hips")
 				local current_position = POSITION_LOOKUP[self._unit]
 				local spawn_particle_effect = SPAWNING.particle_name
 
@@ -163,7 +164,7 @@ CrypticPersonalForceFieldUnitExtension.fixed_update = function (self, unit, dt, 
 		end
 	end
 
-	if not self.is_expired and ALIVE[self.owner_unit] then
+	if not self.is_expired and ALIVE[owner_unit] then
 		local wwise_world = self._wwise_world
 		local sfx_source_name = "hips"
 		local sound_source_id = self._owner_unit_fx_extension:sound_source(sfx_source_name)
@@ -184,6 +185,11 @@ CrypticPersonalForceFieldUnitExtension.update = function (self, unit, dt, t)
 	end
 
 	local owner_unit = self.owner_unit
+
+	if not ALIVE[owner_unit] then
+		return
+	end
+
 	local target_node = Unit.node(owner_unit, "j_hips")
 	local node_position = Unit.world_position(owner_unit, target_node)
 

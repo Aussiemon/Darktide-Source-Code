@@ -7,6 +7,7 @@ local Explosion = require("scripts/utilities/attack/explosion")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
+local MemoryTreeParser = require("scripts/utilities/memory_tree_parser")
 local NavQueries = require("scripts/utilities/nav_queries")
 local PlayerVisibility = require("scripts/utilities/player_visibility")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
@@ -426,6 +427,11 @@ local StateGameplayTestify = {
 		local memory_usage = Memory.usage()
 
 		return memory_usage
+	end,
+	memory_tree = function (_, _, depth, ascii_separator, memory_limit)
+		local formatted_memory_tree = Application.memory_tree(depth, ascii_separator, memory_limit)
+
+		return MemoryTreeParser.new(ascii_separator):parse_output(formatted_memory_tree)
 	end,
 	play_cutscene = function (_, _, cutscene_name)
 		Log.info("StateGameplayTestify", "Playing cutscene %s", cutscene_name)

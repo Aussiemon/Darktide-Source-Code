@@ -100,7 +100,7 @@ InventoryBackgroundView.on_enter = function (self)
 	self:_register_event("event_player_profile_updated", "event_player_profile_updated")
 	self:_register_event("event_player_talent_node_updated", "event_player_talent_node_updated")
 	self:_register_event("event_player_specialization_talent_node_updated", "event_player_specialization_talent_node_updated")
-	self:_register_event("event_item_icon_updated", "event_item_icon_updated")
+	self:_register_event("event_weapon_cosmetic_updated", "event_weapon_cosmetic_updated")
 	self:_register_event("event_switch_mark", "event_switch_mark")
 	self:_register_event("event_mastery_traits_update", "event_mastery_traits_update")
 	self:_setup_input_legend()
@@ -154,41 +154,16 @@ InventoryBackgroundView.event_switch_mark = function (self, gear_id, mark_id)
 			return
 		end
 
-		Managers.data_service.gear:invalidate_gear_cache()
+		local gear = data and data.body and data.body.gear
 
-		local player = self._preview_player
-		local character_id = player:character_id()
+		if gear and self._inventory_items[gear_id] then
+			Managers.data_service.gear:invalidate_gear_cache()
 
-		return Managers.data_service.gear:fetch_inventory(character_id)
-	end):next(function (items)
-		self._inventory_items = items
+			local weapon_mark_item = MasterItems.get_item_instance(gear, gear_id)
 
-		local weapon_mark_item
-		local inventory_items = self._inventory_items
+			self._inventory_items[gear_id] = weapon_mark_item
 
-		for _, inventory_item in pairs(inventory_items) do
-			if inventory_item.gear_id == gear_id then
-				weapon_mark_item = inventory_item
-
-				break
-			end
-		end
-
-		if weapon_mark_item then
 			local slot = weapon_mark_item.slots[1]
-			local presets = ProfileUtils.get_profile_presets()
-
-			if presets then
-				for i = 1, #presets do
-					local preset = presets[i]
-					local loadout = preset and preset.loadout
-					local preset_gear_id = loadout and loadout[slot]
-
-					if preset_gear_id and preset_gear_id == gear_id then
-						loadout[slot] = weapon_mark_item.gear_id
-					end
-				end
-			end
 
 			if self._current_profile_equipped_items[slot].gear_id == gear_id then
 				self._current_profile_equipped_items[slot] = weapon_mark_item
@@ -713,17 +688,33 @@ InventoryBackgroundView.event_player_profile_updated = function (self)
 	self:_update_has_empty_talent_nodes()
 end
 
-InventoryBackgroundView.event_item_icon_updated = function (self, item)
-	local presentation_loadout = self._preview_profile_equipped_items
+InventoryBackgroundView.event_weapon_cosmetic_updated = function (self, item)
+	local gear_id = item.gear_id
+	local slot_name = item.slots[1]
 
-	for slot_name, slot_item in pairs(presentation_loadout) do
-		if slot_item and item and slot_item.gear_id == item.gear_id then
-			local force_update = true
+	Managers.data_service.gear:invalidate_gear_cache()
 
-			self:_equip_and_validate_item(slot_name, item, force_update)
+	if self._inventory_items[gear_id] then
+		self._inventory_items[gear_id] = item
+	end
 
-			break
-		end
+	if self._current_profile_equipped_items[slot_name] and self._current_profile_equipped_items[slot_name].gear_id == gear_id then
+		self._current_profile_equipped_items[slot_name] = item
+	end
+
+	if self._preview_profile_equipped_items[slot_name] and self._preview_profile_equipped_items[slot_name].gear_id == gear_id then
+		local force_update = true
+
+		self:_equip_and_validate_item(slot_name, item, force_update)
+
+		self._preview_profile_equipped_items[slot_name] = item
+	end
+
+	local profile = self._presentation_profile
+	local loadout = profile and profile.loadout
+
+	if loadout and loadout[slot_name] and loadout[slot_name].gear_id == gear_id then
+		loadout[slot_name] = item
 	end
 end
 

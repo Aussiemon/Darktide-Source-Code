@@ -34,7 +34,7 @@ local chain_settings_spread = {
 	max_jumps_stat_buff = "chain_lightning_max_jumps",
 	max_radius_stat_buff = "chain_lightning_max_radius",
 	max_z_diff_stat_buff = "chain_lightning_max_z_diff",
-	radius = 8,
+	radius = 12,
 	staff = false,
 	max_targets = {
 		num_targets = 1,
@@ -72,6 +72,7 @@ local function _on_chain_node_add_func(node, context)
 		local target_buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
 
 		if target_buff_extension then
+			target_buff_extension:add_internally_controlled_buff("arc_grenade_electrocution", start_t, "owner_unit", context.player_unit, "source_item", context.source_item)
 			target_buff_extension:add_internally_controlled_buff("arc_grenade_spread_target", start_t, "owner_unit", context.player_unit, "source_item", context.source_item)
 
 			if context.apply_brittleness then

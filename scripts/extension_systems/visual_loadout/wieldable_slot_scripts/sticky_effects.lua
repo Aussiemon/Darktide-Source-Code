@@ -85,6 +85,11 @@ local _external_properties = {
 StickyEffects._start_stickyness = function (self, t)
 	local weapon_action_component = self._weapon_action_component
 	local action_settings = Action.current_action_settings_from_component(weapon_action_component, self._weapon_actions)
+
+	if not action_settings then
+		return
+	end
+
 	local special_active_at_start = weapon_action_component.special_active_at_start
 	local hit_stickyness_settings = special_active_at_start and action_settings.hit_stickyness_settings_special_active or action_settings.hit_stickyness_settings
 

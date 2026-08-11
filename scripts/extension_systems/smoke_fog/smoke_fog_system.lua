@@ -218,6 +218,13 @@ local Vector3_distance_squared = Vector3 and Vector3.distance_squared
 local Vector3_length_squared = Vector3 and Vector3.length_squared
 
 SmokeFogSystem.check_fog_los = function (self, source_position, target_position, source_unit, count_standing_in_smoke)
+	local unit_data_extension = source_unit and ScriptUnit.has_extension(source_unit, "unit_data_system")
+	local breed = unit_data_extension and unit_data_extension:breed()
+
+	if breed and breed.ignore_smoke_fog_los then
+		return false
+	end
+
 	if not self._has_los_blocker then
 		return false
 	end

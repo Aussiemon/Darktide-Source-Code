@@ -53,62 +53,22 @@ local function has_side_mission(mission_data)
 	return true
 end
 
-local function calculate_text_size(widget, text_and_style_id, ui_renderer)
+local function calculate_text_height(widget, text_and_style_id, ui_renderer)
 	local text = widget.content[text_and_style_id]
 	local text_style = widget.style[text_and_style_id]
-	local size = text_style.size or widget.content.size
+	local size = {
+		text_style.size[1],
+		1000,
+	}
 
-	return Text.text_size(ui_renderer, text, text_style, size)
-end
-
-local function circumstance_init_function(widget, content, ui_renderer)
-	local circumstance_name = content.circumstance
-	local circumstance_template = CircumstanceTemplates[circumstance_name]
-	local descriptors = {}
-	local mutators = circumstance_template.mutators or {}
-
-	for i = 1, #mutators do
-		local mutator_name = mutators[i]
-		local mutator = MutatorTemplates[mutator_name]
-		local descriptions = mutator.description
-
-		for j = 1, #descriptions do
-			descriptors[#descriptors + 1] = Localize(descriptions[j])
-		end
-	end
-
-	local formatted_description = ""
-
-	for i = 1, #descriptors do
-		formatted_description = formatted_description .. string.format("· %s\n", descriptors[i])
-	end
-
-	local widget_content = widget.content
-
-	widget_content.icon = circumstance_template.ui.icon
-	widget_content.title = Localize(circumstance_template.ui.display_name)
-	widget_content.description = formatted_description
-
-	local widget_size = widget.content.size
-	local _, title_height = calculate_text_size(widget, "title", ui_renderer)
-	local _, description_height = calculate_text_size(widget, "description", ui_renderer)
-	local description_offset = widget.style.description.offset
-
-	description_offset[2] = description_offset[2] + title_height + widget.style.title.offset[2]
-
-	local bottom_margin = 10
-	local total_text_height = description_offset[2] + description_height + bottom_margin
-
-	if total_text_height > widget_size[2] then
-		widget_size[2] = total_text_height
-	end
+	return Text.text_height(ui_renderer, text, text_style, size)
 end
 
 local details_widgets_blueprints = {
 	templates = {
 		main_objective = {
 			size = {
-				475,
+				520,
 				130,
 			},
 			pass_template = {
@@ -161,8 +121,11 @@ local details_widgets_blueprints = {
 				local header_text_style = style.objective_header
 
 				header_text_style.offset[1] = text_x_offset
+				header_text_style.size = {
+					widget.content.size[1] - header_text_style.offset[1],
+				}
 
-				local _, header_text_height = calculate_text_size(widget, "objective_header", ui_renderer)
+				local header_text_height = calculate_text_height(widget, "objective_header", ui_renderer)
 				local body_text_style = style.body_text
 				local body_text_y_offset = header_text_height + text_padding
 
@@ -171,21 +134,25 @@ local details_widgets_blueprints = {
 					body_text_y_offset,
 					1,
 				}
+				body_text_style.size = {
+					widget.content.size[1] - body_text_style.offset[1],
+				}
 
+				local body_text_height = calculate_text_height(widget, "body_text", ui_renderer)
 				local rewards_text_style = style.rewards_text
-				local _, body_text_height = calculate_text_size(widget, "body_text", ui_renderer)
-				local rewards_y_offset = body_text_y_offset + body_text_height + text_padding
+				local rewards_y_offset = body_text_style.offset[2] + body_text_height + text_padding + 5
 
 				rewards_text_style.offset = {
 					text_x_offset,
-					rewards_y_offset + 5,
+					rewards_y_offset,
 					10,
 				}
+				widget.content.size[2] = rewards_text_style.offset[2] + 20
 			end,
 		},
 		side_mission = {
 			size = {
-				475,
+				520,
 				100,
 			},
 			pass_template = {
@@ -252,8 +219,11 @@ local details_widgets_blueprints = {
 					0,
 					1,
 				}
+				objective_header_style.size = {
+					widget.content.size[1] - objective_header_style.offset[1],
+				}
 
-				local _, objective_header_height = calculate_text_size(widget, "objective_header", ui_renderer)
+				local objective_header_height = calculate_text_height(widget, "objective_header", ui_renderer)
 				local body_text_y_offset = objective_header_height + text_padding
 
 				body_text_style.offset = {
@@ -261,20 +231,24 @@ local details_widgets_blueprints = {
 					body_text_y_offset,
 					1,
 				}
+				body_text_style.size = {
+					widget.content.size[1] - body_text_style.offset[1],
+				}
 
-				local _, body_text_height = calculate_text_size(widget, "body_text", ui_renderer)
-				local reward_text_y_offset = body_text_y_offset + text_padding + body_text_height
+				local body_text_height = calculate_text_height(widget, "body_text", ui_renderer)
+				local reward_text_y_offset = body_text_style.offset[2] + body_text_height + text_padding + 5
 
 				rewards_text_style.offset = {
 					text_x_offset,
 					reward_text_y_offset,
 					1,
 				}
+				widget.content.size[2] = rewards_text_style.offset[2] + 20
 			end,
 		},
 		circumstance = {
 			size = {
-				475,
+				520,
 				100,
 			},
 			pass_template = {
@@ -317,28 +291,70 @@ local details_widgets_blueprints = {
 
 				local style = widget.style
 				local text_x_offset = 60
-				local text_y_offset = 30
 				local text_padding = 10
-				local circumstance_title_style = style.circumstance_title
-				local body_text_style = style.body_text
 
-				circumstance_title_style.offset = {
-					text_x_offset,
-					text_y_offset,
+				style.circumstance_icon.offset = {
+					0,
+					0,
 					1,
 				}
 
-				local _, circumstance_title_height = calculate_text_size(widget, "circumstance_title", ui_renderer)
-				local _, body_text_height = calculate_text_size(widget, "body_text", ui_renderer)
-				local body_text_y_offset = circumstance_title_height + text_padding + text_y_offset
+				local circumstance_title_style = style.circumstance_title
+
+				circumstance_title_style.offset = {
+					text_x_offset,
+					0,
+					1,
+				}
+				circumstance_title_style.size = {
+					widget.content.size[1] - circumstance_title_style.offset[1],
+				}
+
+				local circumstance_title_height = calculate_text_height(widget, "circumstance_title", ui_renderer)
+				local body_text_style = style.body_text
+				local body_text_y_offset = circumstance_title_height + circumstance_title_style.offset[2] + text_padding
 
 				body_text_style.offset = {
 					text_x_offset,
 					body_text_y_offset,
 					1,
 				}
-				widget.style.circumstance_icon.offset[2] = text_y_offset
-				widget.size[2] = body_text_y_offset + body_text_height
+				body_text_style.size = {
+					widget.content.size[1] - body_text_style.offset[1],
+				}
+
+				local body_text_height = calculate_text_height(widget, "body_text", ui_renderer)
+
+				widget.content.size[2] = body_text_y_offset + body_text_height
+			end,
+		},
+		dynamic_spacing = {
+			pass_template = {
+				{
+					pass_type = "rect",
+					style_id = "background",
+					style = {
+						visible = false,
+						offset = {
+							0,
+							0,
+							0,
+						},
+						color = Color.terminal_frame(25, true),
+					},
+				},
+			},
+			size = {
+				0,
+				0,
+			},
+			init = function (widget, data)
+				local style = widget.style
+
+				style.background.visible = false
+			end,
+			size_function = function (data)
+				return data.size
 			end,
 		},
 		category_name = {
@@ -354,8 +370,8 @@ local details_widgets_blueprints = {
 				},
 			},
 			style = blueprint_styles.category_name,
-			init = function (widget, content)
-				local title_text = content.title_text
+			init = function (widget, data)
+				local title_text = data.title_text
 
 				if Managers.localization:exists(title_text) then
 					title_text = Managers.localization:localize(title_text)

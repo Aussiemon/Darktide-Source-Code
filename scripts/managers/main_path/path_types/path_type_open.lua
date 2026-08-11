@@ -29,7 +29,6 @@ PathTypeOpen.init = function (self, world, nav_world, num_sides, is_server, use_
 	self._travel_distance_by_side = {}
 	self._last_travel_distance_update_by_side = {}
 	self._last_position_by_side = {}
-	self._segment_index_by_unit = {}
 end
 
 PathTypeOpen.destroy = function (self)
@@ -88,7 +87,7 @@ PathTypeOpen.time_since_behind_travel_changed = function (self, side_id)
 end
 
 PathTypeOpen.segment_index_by_unit = function (self, unit)
-	return self._segment_index_by_unit[unit]
+	return 1
 end
 
 PathTypeOpen.closest_main_path_position = function (self, position, return_on_no_index)
@@ -114,10 +113,6 @@ end
 PathTypeOpen.update_progress_on_path = function (self, t)
 	local side_system = Managers.state.extension:system("side_system")
 	local sides = side_system:sides()
-	local segment_index_by_unit = self._segment_index_by_unit
-
-	table.clear(segment_index_by_unit)
-
 	local side_progress_on_path = self._side_progress_on_path
 	local invalid_vector = Vector3.invalid_vector()
 	local num_sides = #sides
@@ -172,8 +167,6 @@ PathTypeOpen.update_progress_on_path = function (self, t)
 				behind_path_position = player_position
 				worst_travel_distance = travel_distance
 			end
-
-			segment_index_by_unit[player_unit] = 1
 		end
 
 		local progress_on_path = side_progress_on_path[i]

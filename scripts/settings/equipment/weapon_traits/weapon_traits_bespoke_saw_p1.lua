@@ -151,6 +151,18 @@ templates.weapon_trait_bespoke_saw_p1_stacking_finesse_on_one_hit_kill = {
 			{
 				max_stacks = 5,
 				stat_buffs = {
+					[stat_buffs.melee_finesse_modifier_bonus] = 0.14,
+				},
+			},
+			{
+				max_stacks = 5,
+				stat_buffs = {
+					[stat_buffs.melee_finesse_modifier_bonus] = 0.16,
+				},
+			},
+			{
+				max_stacks = 5,
+				stat_buffs = {
 					[stat_buffs.melee_finesse_modifier_bonus] = 0.18,
 				},
 			},
@@ -158,18 +170,6 @@ templates.weapon_trait_bespoke_saw_p1_stacking_finesse_on_one_hit_kill = {
 				max_stacks = 5,
 				stat_buffs = {
 					[stat_buffs.melee_finesse_modifier_bonus] = 0.2,
-				},
-			},
-			{
-				max_stacks = 5,
-				stat_buffs = {
-					[stat_buffs.melee_finesse_modifier_bonus] = 0.22,
-				},
-			},
-			{
-				max_stacks = 5,
-				stat_buffs = {
-					[stat_buffs.melee_finesse_modifier_bonus] = 0.24,
 				},
 			},
 		},

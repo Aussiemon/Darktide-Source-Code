@@ -249,9 +249,6 @@ local StateGameTestify = {
 	console_command_lua_trace = function ()
 		_console_command("lua", "trace")
 	end,
-	console_command_memory_tree_formatted = function (_, depth, ascii_separator, memory_limit)
-		_console_command("memory_tree", depth, ascii_separator, memory_limit)
-	end,
 	console_command_memory_resources_all = function (_)
 		_console_command("memory_resources", "all")
 	end,

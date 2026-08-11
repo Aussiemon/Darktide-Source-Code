@@ -304,13 +304,13 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 		PlayerUnitVisualLoadout.wield_previous_slot(self._inventory_component, unit, t)
 	end
 
+	local side_system = Managers.state.extension:system("side_system")
+	local side = side_system.side_by_unit[unit]
 	local on_finish_directional_shout = lunge_template.on_finish_directional_shout
 
-	if on_finish_directional_shout then
+	if on_finish_directional_shout and side then
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
 		local broadphase = broadphase_system.broadphase
-		local side_system = Managers.state.extension:system("side_system")
-		local side = side_system.side_by_unit[unit]
 		local enemy_side_names = side:relation_side_names("enemy")
 		local shout_direction = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
 		local total_hits = {}
@@ -437,8 +437,9 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 	end
 
 	local add_delayed_buff = lunge_template.add_delayed_buff
+	local talent_extension = self._talent_extension
 
-	if add_delayed_buff then
+	if add_delayed_buff and talent_extension then
 		local add_buff_delay = lunge_template.add_buff_delay or 0
 		local time_in_lunge = t - self._character_state_component.entered_t
 		local has_exit_before_delay = time_in_lunge < add_buff_delay
@@ -446,7 +447,7 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 		if has_exit_before_delay then
 			local add_delayed_buff_special_rule = lunge_template.add_delayed_buff_special_rule
 
-			if add_delayed_buff_special_rule and self._talent_extension:has_special_rule(lunge_template.special_rule) then
+			if add_delayed_buff_special_rule and talent_extension:has_special_rule(lunge_template.special_rule) then
 				add_delayed_buff = add_delayed_buff_special_rule
 			end
 

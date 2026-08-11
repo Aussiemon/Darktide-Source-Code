@@ -78,6 +78,43 @@ dodge_trait_templates.ogryn_dodge_stat = {
 		},
 	},
 }
+dodge_trait_templates.eighty_percent_mobility_extra_dodge_stat = {
+	{
+		"distance_scale",
+		{
+			max = 0.75,
+			min = 0.25,
+		},
+	},
+	{
+		"diminishing_return_distance_modifier",
+		{
+			max = 0.75,
+			min = 0.25,
+		},
+	},
+	{
+		"diminishing_return_start",
+		{
+			max = 0.775,
+			min = 0.25,
+		},
+	},
+	{
+		"diminishing_return_limit",
+		{
+			max = 0.75,
+			min = 0.25,
+		},
+	},
+	{
+		"speed_modifier",
+		{
+			max = 0.75,
+			min = 0.25,
+		},
+	},
+}
 dodge_trait_templates.default_dodge_perk = {
 	{
 		"distance_scale",

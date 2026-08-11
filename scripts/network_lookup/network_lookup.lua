@@ -184,6 +184,10 @@ NetworkLookup.emote_slots = {
 }
 NetworkLookup.expedition_collectibles = _create_lookup({}, ExpeditionCollectibles)
 NetworkLookup.expedition_airstrikes = _create_lookup({}, ExpeditionAirstrikes)
+NetworkLookup.expedition_dropped_loot_mark_types = {
+	"luggable",
+	"default",
+}
 NetworkLookup.flow_events = FlowEvents
 NetworkLookup.game_mode_outcomes = {
 	"n/a",

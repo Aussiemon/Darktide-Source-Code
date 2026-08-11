@@ -7,6 +7,15 @@ PlayerDeath.die = function (unit, optional_despawn_time, optional_attacking_unit
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local dead_state_input = unit_data_extension:write_component("dead_state_input")
 
+	if dead_state_input.die then
+		local character_state_component = unit_data_extension:read_component("character_state")
+		local character_state = character_state_component.state_name
+
+		Log.error("PlayerDeath", "die called on player (%q) who is already dead. In state %s.", tostring(unit), character_state)
+
+		return
+	end
+
 	dead_state_input.die = true
 	dead_state_input.despawn_time = optional_despawn_time or PlayerCharacterConstants.time_to_despawn_corpse
 

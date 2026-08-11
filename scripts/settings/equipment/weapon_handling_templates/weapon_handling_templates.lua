@@ -19,7 +19,7 @@ local saw_crit_bump = {
 local shivs_crit_bump = 0.125
 local transonic_crit_bump = {
 	lerp_basic = 0,
-	lerp_perfect = 0.08,
+	lerp_perfect = 0.1,
 }
 local weapon_handling_templates = {
 	time_scale_0_5 = {

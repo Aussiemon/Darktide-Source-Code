@@ -4478,6 +4478,13 @@ local gameplay_vo_zealot_male_c = {
 			1.330875,
 			2.038375,
 		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+		},
 		randomize_indexes = {},
 	},
 	seen_kill_streak_prayer_c = {

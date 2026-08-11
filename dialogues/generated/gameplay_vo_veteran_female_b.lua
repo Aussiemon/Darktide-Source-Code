@@ -4546,6 +4546,13 @@ local gameplay_vo_veteran_female_b = {
 			2.683958,
 			3.810083,
 		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+		},
 		randomize_indexes = {},
 	},
 	seen_netgunner = {

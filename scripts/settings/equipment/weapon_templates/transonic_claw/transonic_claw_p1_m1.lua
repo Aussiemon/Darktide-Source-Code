@@ -342,7 +342,7 @@ weapon_template.actions = {
 		start_input = "no_running_action_unwield_prievious",
 		total_time = 0,
 		uninterruptible = true,
-		unwield_to_weapon = false,
+		unwield_to_weapon = true,
 		allowed_chain_actions = {},
 	},
 	action_wield = {

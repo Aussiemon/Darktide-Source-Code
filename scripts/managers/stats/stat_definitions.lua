@@ -26,6 +26,8 @@ local Weakspot = require("scripts/utilities/attack/weakspot")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
 local Zones = require("scripts/settings/zones/zones")
+local group_keywords = BuffSettings.group_keywords
+local group_to_keywords = BuffSettings.group_to_keywords
 local _stat_count = 0
 local _stat_data = {}
 local stat_definitions = setmetatable({}, {
@@ -7277,9 +7279,10 @@ do
 
 					if buff_template_keywords then
 						local has_electrocuted_keyword = false
+						local electrocuted_group_keywords = group_to_keywords[group_keywords.electrocuted]
 
 						for _, buff_keyword in ipairs(buff_template_keywords) do
-							if buff_keyword == "electrocuted" then
+							if electrocuted_group_keywords[buff_keyword] then
 								has_electrocuted_keyword = true
 
 								break
@@ -7473,12 +7476,12 @@ do
 		triggers = {
 			{
 				id = "whole_mission_won",
-				trigger = function (self, stat_data, difficulty, mission_time)
+				trigger = function (self, stat_data, difficulty, mission_time, mission_play_time_since_in_game_state_reached)
 					local data = self.data
 					local target_percent = data.percent_at_max_stacks / 100
 					local time_spent_at_required_stacks = read_stat(stat_definitions.cryptic_time_spent_at_max_dissector_stacks, stat_data)
 
-					if time_spent_at_required_stacks >= target_percent * mission_time then
+					if time_spent_at_required_stacks >= target_percent * mission_play_time_since_in_game_state_reached then
 						return set_to(self, stat_data, 1)
 					end
 				end,

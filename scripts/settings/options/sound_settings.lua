@@ -28,7 +28,7 @@ local function construct_audio_settings_dropdown(template)
 		end
 
 		if not SettingsUtilities.is_same(current_value, new_value) then
-			entry.commit(new_value)
+			entry.commit(new_value, entry)
 			SettingsUtilities.set_user_setting(save_location, id, new_value)
 			Application.save_user_settings()
 		end
@@ -43,6 +43,9 @@ local function construct_audio_settings_dropdown(template)
 			return old_value
 		end
 	end
+
+	entry.init = template.init
+	entry.validation_function = template.validation_function
 
 	return entry
 end
@@ -80,11 +83,14 @@ local function construct_audio_settings_boolean(template)
 		end
 
 		if not SettingsUtilities.is_same(current_value, new_value) then
-			entry.commit(new_value)
+			entry.commit(new_value, entry)
 			SettingsUtilities.set_user_setting(save_location, id, new_value)
 			Application.save_user_settings()
 		end
 	end
+
+	entry.init = template.init
+	entry.validation_function = template.validation_function
 
 	return entry
 end
@@ -101,131 +107,130 @@ local default_sound_volume = 100
 local default_sound_chat_volume = 50
 local master_volume_value_name = "option_master_slider"
 local master_volume_display_name = "loc_settings_master_volume"
-
-local function master_volume_value_change_function(value)
-	Wwise.set_parameter(master_volume_value_name, value)
-	Application.set_user_setting("sound_settings", master_volume_value_name, value)
-	Application.save_user_settings()
-end
-
-local function master_volume_value_get_function()
-	return Application.user_setting("sound_settings", master_volume_value_name) or default_sound_volume
-end
-
 local master_volume_slider_params = {
 	apply_on_drag = true,
 	display_name = master_volume_display_name,
 	default_value = default_sound_volume,
-	value_get_function = master_volume_value_get_function,
-	on_value_changed_function = master_volume_value_change_function,
+	value_get_function = function ()
+		return Application.user_setting("sound_settings", master_volume_value_name) or default_sound_volume
+	end,
+	on_value_changed_function = function (value)
+		Wwise.set_parameter(master_volume_value_name, value)
+		Application.set_user_setting("sound_settings", master_volume_value_name, value)
+		Application.save_user_settings()
+	end,
 	id = master_volume_value_name,
+	commit = function (value)
+		Wwise.set_parameter(master_volume_value_name, value)
+	end,
 }
-local master_volume_template = Options.create_percent_slider_template(master_volume_slider_params)
 
-master_volume_template.commit = function (value)
-	Wwise.set_parameter(master_volume_value_name, value)
-end
-
-settings[#settings + 1] = master_volume_template
+settings[#settings + 1] = Options.create_percent_slider_template(master_volume_slider_params)
 
 local sfx_volume_value_name = "options_sfx_slider"
 local sfx_volume_display_name = "loc_settings_sfx_volume"
-
-local function sfx_volume_value_change_function(value)
-	Wwise.set_parameter(sfx_volume_value_name, value)
-	Application.set_user_setting("sound_settings", sfx_volume_value_name, value)
-	Application.save_user_settings()
-end
-
-local function sfx_volume_value_get_function()
-	return Application.user_setting("sound_settings", sfx_volume_value_name) or default_sound_volume
-end
-
 local sfx_volume_slider_params = {
 	apply_on_drag = true,
 	display_name = sfx_volume_display_name,
 	default_value = default_sound_volume,
-	value_get_function = sfx_volume_value_get_function,
-	on_value_changed_function = sfx_volume_value_change_function,
+	value_get_function = function ()
+		return Application.user_setting("sound_settings", sfx_volume_value_name) or default_sound_volume
+	end,
+	on_value_changed_function = function (value)
+		Wwise.set_parameter(sfx_volume_value_name, value)
+		Application.set_user_setting("sound_settings", sfx_volume_value_name, value)
+		Application.save_user_settings()
+	end,
 	id = sfx_volume_value_name,
+	commit = function (value)
+		Wwise.set_parameter(sfx_volume_value_name, value)
+	end,
 }
-local sfx_volume_template = Options.create_percent_slider_template(sfx_volume_slider_params)
 
-sfx_volume_template.commit = function (value)
-	Wwise.set_parameter(sfx_volume_value_name, value)
-end
-
-settings[#settings + 1] = sfx_volume_template
+settings[#settings + 1] = Options.create_percent_slider_template(sfx_volume_slider_params)
 
 local music_volume_value_name = "options_music_slider"
 local music_volume_display_name = "loc_settings_music_volume"
-
-local function music_volume_value_change_function(value)
-	Wwise.set_parameter(music_volume_value_name, value)
-	Application.set_user_setting("sound_settings", music_volume_value_name, value)
-	Application.save_user_settings()
-end
-
-local function music_volume_value_get_function()
-	return Application.user_setting("sound_settings", music_volume_value_name) or default_sound_volume
-end
-
 local music_volume_slider_params = {
 	apply_on_drag = true,
 	display_name = music_volume_display_name,
 	default_value = default_sound_volume,
-	value_get_function = music_volume_value_get_function,
-	on_value_changed_function = music_volume_value_change_function,
+	value_get_function = function ()
+		return Application.user_setting("sound_settings", music_volume_value_name) or default_sound_volume
+	end,
+	on_value_changed_function = function (value)
+		Wwise.set_parameter(music_volume_value_name, value)
+		Application.set_user_setting("sound_settings", music_volume_value_name, value)
+		Application.save_user_settings()
+	end,
 	id = music_volume_value_name,
+	commit = function (value)
+		Wwise.set_parameter(music_volume_value_name, value)
+	end,
 }
-local music_volume_template = Options.create_percent_slider_template(music_volume_slider_params)
 
-music_volume_template.commit = function (value)
-	Wwise.set_parameter(music_volume_value_name, value)
-end
+settings[#settings + 1] = Options.create_percent_slider_template(music_volume_slider_params)
+settings[#settings + 1] = {
+	display_name = "loc_settings_menu_group_audio_settings",
+	group_name = "audio_settings",
+	widget_type = "group_header",
+}
 
-settings[#settings + 1] = music_volume_template
-
-local sound_device
-
-if not IS_XBS and Wwise.get_device_list and Wwise.get_device_list() then
-	sound_device = {
-		default_value = 0,
-		display_name = "loc_setting_sound_device",
-		id = "sound_device",
-		save_location = "sound_settings",
-		options = {
-			{
-				display_name = "loc_setting_default_device",
-				id = 0,
-			},
+local sound_device = {
+	default_value = 0,
+	display_name = "loc_setting_sound_device",
+	id = "sound_device",
+	save_location = "sound_settings",
+	options = {
+		{
+			display_name = "loc_setting_default_device",
+			id = 0,
 		},
-		commit = function (value)
-			if value == 0 then
-				Wwise.set_active_device(0)
+	},
+	commit = function (value, template)
+		if value == 0 then
+			Wwise.set_active_device(0)
+		else
+			local option = template.options[value + 1]
+
+			if option then
+				local device_id = option.device_id
+
+				Wwise.set_active_device(device_id)
 			else
-				local option = sound_device.options[value + 1]
-
-				if option then
-					local device_id = option.device_id
-
-					Wwise.set_active_device(device_id)
-				else
-					Wwise.set_active_device(0)
-				end
+				Wwise.set_active_device(0)
 			end
-		end,
-	}
+		end
+	end,
+	validation_function = function ()
+		return not IS_XBS and not not Wwise.get_device_list and not not Wwise.get_device_list()
+	end,
+	init = function (template)
+		table.clear(template.options)
 
-	for i, device in ipairs(Wwise.get_device_list()) do
-		sound_device.options[i + 1] = {
-			ignore_localization = true,
-			id = i,
-			display_name = device.device_name,
-			device_id = device.device_id,
+		template.options[1] = {
+			display_name = "loc_setting_default_device",
+			id = 0,
 		}
-	end
-end
+
+		for i, device in ipairs(Wwise.get_device_list()) do
+			template.options[#template.options + 1] = {
+				ignore_localization = true,
+				id = i,
+				display_name = device.device_name,
+				device_id = device.device_id,
+			}
+		end
+
+		local value = template.get_function()
+
+		if not template.options[value + 1] then
+			template.on_activated(template.default_value)
+		end
+	end,
+}
+
+settings[#settings + 1] = construct_audio_settings_dropdown(sound_device)
 
 local speaker_settings = {
 	default_value = 0,
@@ -302,6 +307,9 @@ local speaker_settings = {
 		end
 	end,
 }
+
+settings[#settings + 1] = construct_audio_settings_dropdown(speaker_settings)
+
 local mix_presets_settings = {
 	default_value = 1,
 	display_name = "loc_setting_mix_presets",
@@ -352,6 +360,8 @@ local mix_presets_settings = {
 	end,
 }
 
+settings[#settings + 1] = construct_audio_settings_dropdown(mix_presets_settings)
+
 local function get_dialogue_wwise_value(value)
 	local setting_value = "neutral"
 
@@ -367,19 +377,6 @@ end
 local dialogue_volume_value_name = "options_vo_trim"
 local dialogue_volume_display_name = "loc_audio_volume_settings_dialogue"
 local default_volume_default_value = 0
-
-local function dialogue_volume_value_change_function(value)
-	local setting_value = get_dialogue_wwise_value(value)
-
-	Wwise.set_state(dialogue_volume_value_name, setting_value)
-	Application.set_user_setting("sound_settings", dialogue_volume_value_name, value)
-	Application.save_user_settings()
-end
-
-local function dialogue_volume_value_get_function()
-	return Application.user_setting("sound_settings", dialogue_volume_value_name) or default_volume_default_value
-end
-
 local dialogue_volume_slider_params = {
 	apply_on_drag = true,
 	max_value = 5,
@@ -387,19 +384,27 @@ local dialogue_volume_slider_params = {
 	step_size_value = 1,
 	display_name = dialogue_volume_display_name,
 	default_value = default_volume_default_value,
-	value_get_function = dialogue_volume_value_get_function,
-	on_value_changed_function = dialogue_volume_value_change_function,
+	value_get_function = function ()
+		return Application.user_setting("sound_settings", dialogue_volume_value_name) or default_volume_default_value
+	end,
+	on_value_changed_function = function (value)
+		local setting_value = get_dialogue_wwise_value(value)
+
+		Wwise.set_state(dialogue_volume_value_name, setting_value)
+		Application.set_user_setting("sound_settings", dialogue_volume_value_name, value)
+		Application.save_user_settings()
+	end,
 	format_value_function = function (value)
 		return string.format("%d dB", value)
 	end,
+	commit = function (value)
+		local setting_value = get_dialogue_wwise_value(value)
+
+		Wwise.set_state(dialogue_volume_value_name, setting_value)
+	end,
 }
-local dialogue_volume_template = Options.create_value_slider_template(dialogue_volume_slider_params)
 
-dialogue_volume_template.commit = function (value)
-	local setting_value = get_dialogue_wwise_value(value)
-
-	Wwise.set_state(dialogue_volume_value_name, setting_value)
-end
+settings[#settings + 1] = Options.create_value_slider_template(dialogue_volume_slider_params)
 
 local mute_in_background_setting = {
 	default_value = false,
@@ -411,6 +416,9 @@ local mute_in_background_setting = {
 		return
 	end,
 }
+
+settings[#settings + 1] = construct_audio_settings_boolean(mute_in_background_setting)
+
 local game_interface_setting = {
 	default_value = true,
 	display_name = "loc_settings_audio_headshot_sound",
@@ -426,6 +434,9 @@ local game_interface_setting = {
 		end
 	end,
 }
+
+settings[#settings + 1] = construct_audio_settings_boolean(game_interface_setting)
+
 local audio_backstab_sound_setting = {
 	default_value = true,
 	display_name = "loc_settings_audio_backstab_sound",
@@ -441,6 +452,9 @@ local audio_backstab_sound_setting = {
 		end
 	end,
 }
+
+settings[#settings + 1] = construct_audio_settings_boolean(audio_backstab_sound_setting)
+
 local audio_teammate_ping_setting = {
 	default_value = true,
 	display_name = "loc_settings_audio_teammate_ping",
@@ -456,6 +470,9 @@ local audio_teammate_ping_setting = {
 		end
 	end,
 }
+
+settings[#settings + 1] = construct_audio_settings_boolean(audio_teammate_ping_setting)
+
 local audio_voice_fx_setting = {
 	default_value = true,
 	display_name = "loc_settings_audio_headgear_voice_effect",
@@ -471,6 +488,9 @@ local audio_voice_fx_setting = {
 		end
 	end,
 }
+
+settings[#settings + 1] = construct_audio_settings_boolean(audio_voice_fx_setting)
+
 local audio_cryptic_fx_setting = {
 	default_value = true,
 	display_name = "loc_settings_audio_cryptic_voice_effect",
@@ -487,28 +507,6 @@ local audio_cryptic_fx_setting = {
 	end,
 }
 
-settings[#settings + 1] = {
-	display_name = "loc_settings_menu_group_audio_settings",
-	group_name = "audio_settings",
-	widget_type = "group_header",
-}
-
-if sound_device then
-	settings[#settings + 1] = construct_audio_settings_dropdown(sound_device)
-end
-
-settings[#settings + 1] = construct_audio_settings_dropdown(speaker_settings)
-settings[#settings + 1] = construct_audio_settings_dropdown(mix_presets_settings)
-settings[#settings + 1] = dialogue_volume_template
-
-if IS_WINDOWS then
-	settings[#settings + 1] = construct_audio_settings_boolean(mute_in_background_setting)
-end
-
-settings[#settings + 1] = construct_audio_settings_boolean(game_interface_setting)
-settings[#settings + 1] = construct_audio_settings_boolean(audio_backstab_sound_setting)
-settings[#settings + 1] = construct_audio_settings_boolean(audio_teammate_ping_setting)
-settings[#settings + 1] = construct_audio_settings_boolean(audio_voice_fx_setting)
 settings[#settings + 1] = construct_audio_settings_boolean(audio_cryptic_fx_setting)
 settings[#settings + 1] = {
 	display_name = "loc_settings_menu_group_voice_chat_settings",
@@ -519,118 +517,121 @@ settings[#settings + 1] = {
 local chat_volume_value_name = "options_voip_volume_slider_v2"
 local chat_volume_display_name = "loc_settings_audio_voice_chat_volume"
 local chat_volume_tooltip_text = "loc_settings_audio_voice_chat_volume_mouseover"
-
-local function _chat_volume_value_change_function(value)
-	Wwise.set_parameter(chat_volume_value_name, value)
-	Application.set_user_setting("sound_settings", chat_volume_value_name, value)
-	Application.save_user_settings()
-
-	if Managers.chat then
-		Managers.chat:mic_volume_changed()
-	end
-end
-
-local function _chat_volume_value_get_function()
-	return Application.user_setting("sound_settings", chat_volume_value_name) or default_sound_chat_volume
-end
-
 local chat_volume_slider_params = {
 	apply_on_drag = false,
 	normalized_step_size = 0.005,
 	display_name = chat_volume_display_name,
 	tooltip_text = chat_volume_tooltip_text,
 	default_value = default_sound_chat_volume,
-	value_get_function = _chat_volume_value_get_function,
-	on_value_changed_function = _chat_volume_value_change_function,
+	value_get_function = function ()
+		return Application.user_setting("sound_settings", chat_volume_value_name) or default_sound_chat_volume
+	end,
+	on_value_changed_function = function (value)
+		Wwise.set_parameter(chat_volume_value_name, value)
+		Application.set_user_setting("sound_settings", chat_volume_value_name, value)
+		Application.save_user_settings()
+
+		if Managers.chat then
+			Managers.chat:mic_volume_changed()
+		end
+	end,
 	format_value_function = function (percent_value)
 		local result = string.format("%d %%", percent_value * 2)
 
 		return result
 	end,
+	commit = function (value)
+		Wwise.set_parameter(chat_volume_value_name, value)
+
+		if Managers.chat then
+			Managers.chat:mic_volume_changed()
+		end
+	end,
 }
-local chat_volume_template = Options.create_percent_slider_template(chat_volume_slider_params)
 
-chat_volume_template.commit = function (value)
-	Wwise.set_parameter(chat_volume_value_name, value)
+settings[#settings + 1] = Options.create_percent_slider_template(chat_volume_slider_params)
 
-	if Managers.chat then
-		Managers.chat:mic_volume_changed()
-	end
-end
+local capture_device
 
-settings[#settings + 1] = chat_volume_template
+capture_device = {
+	default_value = "Default System Device",
+	display_name = "loc_setting_microphone_device",
+	id = "capture_device",
+	save_location = "sound_settings",
+	options = {},
+	commit = function (value)
+		if Managers.chat then
+			Managers.chat:set_capture_device(value)
+		end
+	end,
+	init = function (template)
+		table.clear(template.options)
 
-if IS_WINDOWS and rawget(_G, "Managers") and Managers.chat and Managers.chat.get_capture_devices then
-	local capture_device
+		template.options[1] = {
+			display_name = "loc_setting_default_device",
+			id = "Default System Device",
+		}
 
-	capture_device = {
-		default_value = "Default System Device",
-		display_name = "loc_setting_microphone_device",
-		id = "capture_device",
-		save_location = "sound_settings",
-		options = {
-			{
-				display_name = "loc_setting_default_device",
-				id = "Default System Device",
+		for _, device in ipairs(Managers.chat:get_capture_devices()) do
+			if device.device ~= "Default System Device" and device.device ~= "Default Communication Device" then
+				template.options[#template.options + 1] = {
+					ignore_localization = true,
+					id = device.device,
+					display_name = device.display_name,
+				}
+			end
+		end
+
+		local value = template.get_function()
+		local found = false
+
+		for i = 1, #template.options do
+			local option = template.options[i]
+			local id = option.id
+
+			if id == value then
+				found = true
+
+				break
+			end
+		end
+
+		if not found then
+			template.on_activated(template.default_value)
+		end
+	end,
+	validation_function = function ()
+		return not not IS_WINDOWS and not not rawget(_G, "Managers") and not not Managers.chat and not not Managers.chat.get_capture_devices
+	end,
+}
+settings[#settings + 1] = construct_audio_settings_dropdown(capture_device)
+
+local voice_chat_options = {
+	{
+		display_name = "loc_setting_voice_chat_presets_mic_muted",
+		id = 0,
+		values = {
+			sound_settings = {
+				voice_chat_preset = 0,
 			},
 		},
-		commit = function (value)
-			if Managers.chat then
-				Managers.chat:set_capture_device(value)
-			end
-		end,
-	}
-
-	local i = 1
-
-	for _, device in ipairs(Managers.chat:get_capture_devices()) do
-		if device.device ~= "Default System Device" and device.device ~= "Default Communication Device" then
-			capture_device.options[i + 1] = {
-				ignore_localization = true,
-				id = device.device,
-				display_name = device.display_name,
-			}
-			i = i + 1
-		end
-	end
-
-	settings[#settings + 1] = construct_audio_settings_dropdown(capture_device)
-end
-
+	},
+	{
+		display_name = "loc_setting_voice_chat_presets_mic_voice_activated",
+		id = 1,
+		values = {
+			sound_settings = {
+				voice_chat_preset = 1,
+			},
+		},
+	},
+}
 local voice_chat_settings = {
 	default_value = 2,
 	display_name = "loc_setting_voice_chat_presets",
 	id = "voice_chat",
 	save_location = "sound_settings",
-	options = {
-		{
-			display_name = "loc_setting_voice_chat_presets_mic_muted",
-			id = 0,
-			values = {
-				sound_settings = {
-					voice_chat_preset = 0,
-				},
-			},
-		},
-		{
-			display_name = "loc_setting_voice_chat_presets_mic_voice_activated",
-			id = 1,
-			values = {
-				sound_settings = {
-					voice_chat_preset = 1,
-				},
-			},
-		},
-		{
-			display_name = "loc_setting_voice_chat_presets_mic_push_to_talk",
-			id = 2,
-			values = {
-				sound_settings = {
-					voice_chat_preset = 2,
-				},
-			},
-		},
-	},
+	options = {},
 	commit = function (value)
 		if Managers.chat then
 			local mute = value == 0 or value == 2
@@ -638,27 +639,31 @@ local voice_chat_settings = {
 			Managers.chat:mute_local_mic(mute)
 		end
 	end,
-}
+	init = function (template)
+		template.default_value = not IS_WINDOWS and 1 or 2
 
-if not IS_WINDOWS then
-	voice_chat_settings.options[3] = nil
-	voice_chat_settings.default_value = 1
-end
+		table.clear(template.options)
+
+		for i = 1, #voice_chat_options do
+			template.options[#template.options + 1] = voice_chat_options[i]
+		end
+
+		if IS_WINDOWS then
+			template.options[#template.options + 1] = {
+				display_name = "loc_setting_voice_chat_presets_mic_push_to_talk",
+				id = 2,
+				values = {
+					sound_settings = {
+						voice_chat_preset = 2,
+					},
+				},
+			}
+		end
+	end,
+}
 
 settings[#settings + 1] = construct_audio_settings_dropdown(voice_chat_settings)
 SettingsUtilities = SettingsUtilitiesFunction(settings)
-
-if SettingsUtilities.settings_by_id.sound_device then
-	local setting = SettingsUtilities.settings_by_id.sound_device
-
-	if setting.get_function then
-		local value = setting.get_function()
-
-		if not setting.options[value + 1] then
-			setting.on_activated(0)
-		end
-	end
-end
 
 return {
 	display_name = "loc_settings_menu_category_sound",

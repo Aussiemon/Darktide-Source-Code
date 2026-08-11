@@ -8,10 +8,10 @@ local slot_configuration = PlayerCharacterConstants.slot_configuration
 local MAX_BAR_MODIFIER = 0.35
 local MAX_NUM_BARS = 8
 local FILL_TEXTURE = "content/ui/textures/masks/square"
-local UNFILLED_FILL_OPACITY = 0.7
-local FILLED_FILL_OPACITY = 0.6
+local UNFILLED_FILL_OPACITY = 0.8
+local FILLED_FILL_OPACITY = 0.7
 local UNFILLED_OUTLINE_COLOR = UIHudSettings.color_tint_main_2
-local FILLED_OUTLINE_COLOR = UIHudSettings.color_tint_main_2
+local FILLED_OUTLINE_COLOR = UIHudSettings.color_tint_main_1
 local SIZE_THICKNESS_OUTLINE_DEFAULT = {
 	0.6,
 	0.015,
@@ -22,8 +22,8 @@ local SIZE_THICKNESS_OUTLINE_SPECIAL_ACTIVE = {
 	0.017,
 	0.011,
 }
-local OUTLINE_OPACITY_DEFAULT = 0.8
-local OUTLINE_OPACITY_SPECIAL_ACTIVE = 1
+local OUTLINE_OPACITY_DEFAULT = 0.875
+local OUTLINE_OPACITY_SPECIAL_ACTIVE = 1.075
 local SPECIAL_ACTIVE_TRANSITION_TIME = 0.2
 local DISPLAY_CHARGES_HIT_CATCHUP_TIME = 0.2
 local DISPLAY_CHARGES_SNAP_THRESHOLD = 2
@@ -34,7 +34,7 @@ local PULSE_DECAY_RATE = 4
 local PULSE_FILL_INTENSITY_PEAK = 5
 local PULSE_OUTLINE_INTENSITY_PEAK = 2
 local PULSE_THICKNESS_PEAK = 0.01
-local FADE_WHEN_FULL = true
+local FADE_WHEN_FULL = false
 local FADE_LINGER_TIME = 2
 local FADE_OUT_TIME = 0.5
 local CHARGE_BAR_STYLE_IDS = {}

@@ -16,16 +16,24 @@ end
 BootStateLoadAudioSettings._apply_audio_settings = function (self, settings)
 	if not DEDICATED_SERVER then
 		for _, setting in ipairs(settings) do
-			local get_function = setting.get_function
+			if not setting.validation_function or setting.validation_function() then
+				local init = setting.init
 
-			if get_function then
-				local value = get_function()
+				if init then
+					init(setting)
+				end
 
-				if value ~= nil then
-					local commit = setting.commit
+				local get_function = setting.get_function
 
-					if commit then
-						commit(value)
+				if get_function then
+					local value = get_function()
+
+					if value ~= nil then
+						local commit = setting.commit
+
+						if commit then
+							commit(value, setting)
+						end
 					end
 				end
 			end

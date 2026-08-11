@@ -4890,6 +4890,13 @@ local gameplay_vo_psyker_male_b = {
 			1.964438,
 			2.630417,
 		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+		},
 		randomize_indexes = {},
 	},
 	seen_netgunner = {

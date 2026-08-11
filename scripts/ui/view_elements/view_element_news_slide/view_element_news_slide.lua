@@ -70,7 +70,7 @@ ViewElementNewsSlide._initialize_slides = function (self, backend_data)
 		local raw_data = backend_data[i]
 		local contents = raw_data.contents
 		local content_count = contents and #contents or 0
-		local title, image_url, body_text, body_number, slide_action, slide_button_cta
+		local title, image_url, body_text, timer_countdown, slide_action, slide_button_cta
 		local should_skip = false
 
 		for j = 1, content_count do
@@ -89,10 +89,7 @@ ViewElementNewsSlide._initialize_slides = function (self, backend_data)
 			elseif type == "body" then
 				body_text = content.data
 			elseif type == "timer_countdown" then
-				local server_time = Managers.backend:get_server_time(Managers.time:time("main"))
-				local time_left = math.max(tonumber(content.data) - server_time, 0) / 1000
-
-				body_number = Text.format_time_span_localized(time_left, true)
+				timer_countdown = tonumber(content.data)
 			elseif type == "button" then
 				slide_action = {
 					action = content.action,
@@ -121,7 +118,7 @@ ViewElementNewsSlide._initialize_slides = function (self, backend_data)
 				id = raw_data.id,
 				title = title or "",
 				body_text = body_text or "",
-				body_number = body_number or "",
+				timer_countdown = timer_countdown,
 				image_url = image_url,
 				backend_index = i,
 				sort_index = raw_data.displayPriority and tonumber(raw_data.displayPriority) or 0,
@@ -299,7 +296,6 @@ ViewElementNewsSlide._change_slide = function (self, target, optional_start_time
 
 	news_button.content.title = slide_data.title
 	news_button.content.body_text = slide_data.body_text
-	news_button.content.body_number = slide_data.body_number
 	self._widgets_by_name.open_news_button.content.original_text = slide_data.button_cta or Localize("loc_main_menu_show_news")
 
 	Managers.telemetry_events:update_news_widget(target, slide_data.id)
@@ -347,6 +343,8 @@ ViewElementNewsSlide.update = function (self, dt, t, input_service)
 		return
 	end
 
+	self:update_timer_countdown(t)
+
 	if self:_has_progress_bar() then
 		self._slide_time = self._slide_time + dt
 	end
@@ -380,6 +378,30 @@ ViewElementNewsSlide.update = function (self, dt, t, input_service)
 	end
 
 	return ViewElementNewsSlide.super.update(self, dt, t, input_service)
+end
+
+ViewElementNewsSlide.update_timer_countdown = function (self, t)
+	if not self._current_index then
+		return
+	end
+
+	if not self._slide_data then
+		return
+	end
+
+	local slide_data = self._slide_data[self._current_index]
+	local news_button = self._widgets_by_name.news_button
+
+	if not slide_data.timer_countdown then
+		news_button.content.body_number = ""
+
+		return
+	end
+
+	local server_time = Managers.backend:get_server_time(t)
+	local time_left = math.max(tonumber(slide_data.timer_countdown) - server_time, 0) / 1000
+
+	news_button.content.body_number = time_left > 0 and Text.format_time_span_localized(time_left, true) or ""
 end
 
 ViewElementNewsSlide._get_text_dimensions = function (self, pass_name, ui_renderer)

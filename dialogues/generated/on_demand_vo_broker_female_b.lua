@@ -177,26 +177,6 @@ local on_demand_vo_broker_female_b = {
 		},
 		randomize_indexes = {},
 	},
-	com_wheel_vo_thank_you_delayed = {
-		randomize_indexes_n = 0,
-		sound_events_n = 3,
-		sound_events = {
-			"loc_broker_female_b__com_wheel_vo_thank_you_01",
-			"loc_broker_female_b__com_wheel_vo_thank_you_02",
-			"loc_broker_female_b__com_wheel_vo_thank_you_03",
-		},
-		sound_events_duration = {
-			0.710344,
-			0.70301,
-			0.810677,
-		},
-		sound_event_weights = {
-			0.3333333,
-			0.3333333,
-			0.3333333,
-		},
-		randomize_indexes = {},
-	},
 	com_wheel_vo_yes = {
 		randomize_indexes_n = 0,
 		sound_events_n = 3,
@@ -430,6 +410,45 @@ local on_demand_vo_broker_female_b = {
 		},
 		randomize_indexes = {},
 	},
+	smart_tag_vo_enemy_flamer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_broker_female_b__smart_tag_vo_enemy_scab_flamer_a_01",
+			[2] = "loc_broker_female_b__smart_tag_vo_enemy_scab_flamer_a_02",
+		},
+		sound_events_duration = {
+			[1] = 0.71201,
+			[2] = 0.652344,
+		},
+		randomize_indexes = {},
+	},
+	smart_tag_vo_enemy_grenadier = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_broker_female_b__smart_tag_vo_enemy_traitor_grenadier_01",
+			[2] = "loc_broker_female_b__smart_tag_vo_enemy_traitor_grenadier_02",
+		},
+		sound_events_duration = {
+			[1] = 0.525667,
+			[2] = 0.537833,
+		},
+		randomize_indexes = {},
+	},
+	smart_tag_vo_enemy_gunner = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_broker_female_b__smart_tag_vo_enemy_traitor_gunner_01",
+			[2] = "loc_broker_female_b__smart_tag_vo_enemy_traitor_gunner_02",
+		},
+		sound_events_duration = {
+			[1] = 0.586333,
+			[2] = 0.557344,
+		},
+		randomize_indexes = {},
+	},
 	smart_tag_vo_enemy_houndmaster = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
@@ -482,16 +501,16 @@ local on_demand_vo_broker_female_b = {
 		},
 		randomize_indexes = {},
 	},
-	smart_tag_vo_enemy_scab_flamer = {
+	smart_tag_vo_enemy_shocktrooper = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1] = "loc_broker_female_b__smart_tag_vo_enemy_scab_flamer_a_01",
-			[2] = "loc_broker_female_b__smart_tag_vo_enemy_scab_flamer_a_02",
+			[1] = "loc_broker_female_b__smart_tag_vo_enemy_traitor_scout_shocktrooper_01",
+			[2] = "loc_broker_female_b__smart_tag_vo_enemy_traitor_scout_shocktrooper_02",
 		},
 		sound_events_duration = {
-			[1] = 0.71201,
-			[2] = 0.652344,
+			[1] = 0.801344,
+			[2] = 0.992333,
 		},
 		randomize_indexes = {},
 	},
@@ -505,45 +524,6 @@ local on_demand_vo_broker_female_b = {
 		sound_events_duration = {
 			[1] = 0.645167,
 			[2] = 0.703333,
-		},
-		randomize_indexes = {},
-	},
-	smart_tag_vo_enemy_traitor_grenadier = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1] = "loc_broker_female_b__smart_tag_vo_enemy_traitor_grenadier_01",
-			[2] = "loc_broker_female_b__smart_tag_vo_enemy_traitor_grenadier_02",
-		},
-		sound_events_duration = {
-			[1] = 0.525667,
-			[2] = 0.537833,
-		},
-		randomize_indexes = {},
-	},
-	smart_tag_vo_enemy_traitor_gunner = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1] = "loc_broker_female_b__smart_tag_vo_enemy_traitor_gunner_01",
-			[2] = "loc_broker_female_b__smart_tag_vo_enemy_traitor_gunner_02",
-		},
-		sound_events_duration = {
-			[1] = 0.586333,
-			[2] = 0.557344,
-		},
-		randomize_indexes = {},
-	},
-	smart_tag_vo_enemy_traitor_scout_shocktrooper = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1] = "loc_broker_female_b__smart_tag_vo_enemy_traitor_scout_shocktrooper_01",
-			[2] = "loc_broker_female_b__smart_tag_vo_enemy_traitor_scout_shocktrooper_02",
-		},
-		sound_events_duration = {
-			[1] = 0.801344,
-			[2] = 0.992333,
 		},
 		randomize_indexes = {},
 	},

@@ -3033,6 +3033,13 @@ local gameplay_vo_adamant_female_a = {
 			1.96,
 			3.285333,
 		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+		},
 		randomize_indexes = {},
 	},
 	seen_netgunner = {

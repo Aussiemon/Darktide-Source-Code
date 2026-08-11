@@ -158,7 +158,11 @@ ability_action_data.action_kind_condition_funcs = {
 
 		return not combat_ability_component.active and can_use_ability
 	end,
-	activate_force_shield = _can_use_ability_check,
+	activate_force_shield = function (action_settings, condition_func_params, used_input, t, time_in_action)
+		local can_use_ability = _can_use_ability_check(action_settings, condition_func_params, used_input)
+
+		return can_use_ability
+	end,
 }
 ability_action_data.action_kind_total_time_funcs = {}
 ability_action_data.conditional_state_functions = {

@@ -1884,22 +1884,22 @@ Items.preview_stats_change = function (item, expertise_increase, stats, max_stat
 	return result
 end
 
-Items.create_mannequin_profile_by_item = function (item, preferred_gender, preferred_archetype, preferred_breed)
+Items.create_mannequin_profile_by_item = function (item, prefered_gender, prefered_archetype, prefered_breed)
+	local Breeds = require("scripts/settings/breed/breeds")
 	local Archetypes = require("scripts/settings/archetype/archetypes")
 	local item_gender, item_breed, item_archetype, item_slot_name
 
-	if item.archetypes and not table.is_empty(item.archetypes) then
-		if preferred_archetype and table.find(item.archetypes, preferred_archetype) then
-			item_archetype = type(preferred_archetype) == "string" and Archetypes[preferred_archetype] or preferred_archetype
-		else
-			local archetype
-			local num_archetypes = #item.archetypes
+	if item.breeds and not table.is_empty(item.breeds) then
+		if prefered_breed and table.find(item.breeds, prefered_breed) then
+			item_breed = prefered_breed
+		end
 
-			for ii = 1, num_archetypes do
-				archetype = Archetypes[item.archetypes[ii]]
+		if not item_breed then
+			for i = 1, #item.breeds do
+				local breed_name = item.breeds[i]
 
-				if archetype then
-					item_archetype = archetype
+				if Breeds[breed_name] then
+					item_breed = breed_name
 
 					break
 				end
@@ -1907,22 +1907,79 @@ Items.create_mannequin_profile_by_item = function (item, preferred_gender, prefe
 		end
 	end
 
-	if item.breeds and not table.is_empty(item.breeds) then
-		if #item.breeds > 1 and preferred_breed and table.find(item.breeds, preferred_breed) then
-			item_breed = preferred_breed
-		else
-			item_breed = #item.breeds > 1 and item_archetype and item_archetype.name == "ogryn" and table.find(item.breeds, "ogryn") and "ogryn" or item.breeds[1]
+	item_breed = item_breed or prefered_breed
+
+	if item.archetypes and not table.is_empty(item.archetypes) and prefered_archetype and table.find(item.archetypes, prefered_archetype) then
+		item_archetype = prefered_archetype
+	end
+
+	local archetypes_by_breed = {}
+	local archetypes_by_breed_size = 0
+
+	if not item_archetype then
+		for archtype_name, archetype_data in pairs(Archetypes) do
+			if archetype_data.breed == item_breed then
+				archetypes_by_breed[#archetypes_by_breed + 1] = archtype_name
+				archetypes_by_breed_size = archetypes_by_breed_size + 1
+			end
+		end
+
+		if archetypes_by_breed_size == 1 then
+			item_archetype = archetypes_by_breed[1]
 		end
 	end
 
-	if item.genders and not table.is_empty(item.genders) then
-		if preferred_gender and table.find(item.genders, preferred_gender) then
-			item_gender = preferred_gender
-		else
-			item_gender = table.find(item.genders, "male") and "male" or item.genders[1]
+	if not item_archetype and item.archetypes then
+		local archetype
+		local num_archetypes = #item.archetypes
+
+		for ii = 1, num_archetypes do
+			local archetype_name = item.archetypes[ii]
+
+			archetype = Archetypes[archetype_name]
+
+			if archetype then
+				item_archetype = archetype_name
+
+				break
+			end
 		end
-	elseif (not item.genders or item.genders and table.is_empty(item.genders)) and preferred_gender and item_breed ~= "ogryn" then
-		item_gender = preferred_gender
+	end
+
+	if not item_archetype and archetypes_by_breed_size > 1 then
+		local archetype_index = math.random(1, archetypes_by_breed_size)
+
+		item_archetype = archetypes_by_breed[archetype_index]
+	end
+
+	item_archetype = item_archetype or prefered_archetype
+
+	if item.genders and not table.is_empty(item.genders) and prefered_gender and table.find(item.genders, prefered_gender) then
+		item_gender = prefered_gender
+	end
+
+	if not item_gender then
+		local breed_data = Breeds[item_breed]
+
+		if breed_data then
+			local default_gender
+
+			for i = 1, #breed_data.genders do
+				local gender = breed_data.genders[i]
+
+				if gender == prefered_gender then
+					item_gender = prefered_gender
+				end
+
+				if gender == "male" then
+					default_gender = gender
+				end
+			end
+
+			item_gender = item_gender or default_gender or breed_data.genders[1]
+		end
+
+		item_gender = item_gender or prefered_gender
 	end
 
 	if item.slots and not table.is_empty(item.slots) then
@@ -1931,12 +1988,9 @@ Items.create_mannequin_profile_by_item = function (item, preferred_gender, prefe
 		item_slot_name = nil
 	end
 
-	local breed = item_breed or "human"
-	local archetype = item_archetype or breed == "cryptic" and Archetypes.cryptic or breed == "ogryn" and Archetypes.ogryn or Archetypes.veteran
-	local gender = item_gender or "male"
 	local loadout = {}
-	local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed]
-	local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender]
+	local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[item_breed]
+	local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[item_gender]
 	local required_items = required_gender_item_names_per_slot and (required_gender_item_names_per_slot[item_slot_name] or required_gender_item_names_per_slot.default)
 
 	if required_items then
@@ -1951,6 +2005,8 @@ Items.create_mannequin_profile_by_item = function (item, preferred_gender, prefe
 		end
 	end
 
+	local archetype = Archetypes[item_archetype]
+
 	if archetype.companion_breed == "companion_dog" and item.companion_state_machine then
 		loadout.slot_companion_gear_full = MasterItems.get_item("content/items/characters/companion/companion_dog/gear_full/companion_dog_set_02_var_01")
 	end
@@ -1959,12 +2015,14 @@ Items.create_mannequin_profile_by_item = function (item, preferred_gender, prefe
 		loadout.slot_companion_gear_full = MasterItems.get_item("content/items/characters/companion/companion_servo_skull/gear_full/cryptic_servo_skull_scanning_var_01")
 	end
 
-	return {
+	local result = {
 		loadout = loadout,
 		archetype = archetype,
-		breed = breed,
-		gender = gender,
+		breed = Breeds[item_breed],
+		gender = item_gender,
 	}
+
+	return result
 end
 
 Items.track_reward_item_to_gear = function (item)

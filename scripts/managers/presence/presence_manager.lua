@@ -50,9 +50,13 @@ PresenceManager.init = function (self)
 	if IS_XBS or IS_GDK or IS_PLAYSTATION then
 		self._load_buffer_in_flight = nil
 		self._load_buffer_request_platform_username = {}
-		self._load_buffer_request_platform_username_length = 0
+		self._has_pending_platform_username_requests = false
 		self._last_request_platform_username = 0
 		self._loaded_platform_username = {}
+	end
+
+	if IS_PLAYSTATION then
+		self._psn_session_join_pending = false
 	end
 
 	self._batched_presence_streams = {}
@@ -409,7 +413,7 @@ PresenceManager.request_platform_username_async = function (self, platform, plat
 		end
 
 		self._load_buffer_request_platform_username[platform_user_id] = true
-		self._load_buffer_request_platform_username_length = self._load_buffer_request_platform_username_length + 1
+		self._has_pending_platform_username_requests = true
 	end
 end
 
@@ -509,18 +513,12 @@ PresenceManager.update = function (self, dt, t)
 		end
 	end
 
-	if self._load_buffer_request_platform_username_length and self._load_buffer_request_platform_username_length > 0 then
+	local wait_for_platform_username_request = IS_PLAYSTATION and Managers.account:is_public_profiles_promise_pending() or false
+
+	if not wait_for_platform_username_request and self._has_pending_platform_username_requests then
 		self._last_request_platform_username = self._last_request_platform_username + dt
 
 		if self._last_request_platform_username > 0.2 then
-			if IS_PLAYSTATION then
-				local is_public_profiles_promise_pending = Managers.account:is_public_profiles_promise_pending()
-
-				if is_public_profiles_promise_pending then
-					return
-				end
-			end
-
 			local buffer = {}
 
 			self._load_buffer_in_flight = {}
@@ -531,7 +529,7 @@ PresenceManager.update = function (self, dt, t)
 				self._load_buffer_in_flight[id] = true
 			end
 
-			self._load_buffer_request_platform_username_length = 0
+			self._has_pending_platform_username_requests = false
 			self._load_buffer_request_platform_username = {}
 
 			Log.info("PresenceManager", "Doing batched call to get_user_profiles with %s uids", tostring(#buffer))
@@ -580,6 +578,10 @@ PresenceManager.update = function (self, dt, t)
 		self:_check_cross_play()
 
 		self._next_cross_play_check = t + CROSS_PLAY_CHECK_INTERVAL
+	end
+
+	if IS_PLAYSTATION then
+		self:_update_pending_psn_session_join()
 	end
 end
 
@@ -735,6 +737,8 @@ PresenceManager._delete_platform_presence = function (self)
 end
 
 PresenceManager._create_or_join_psn_session = function (self)
+	self._psn_session_join_pending = false
+
 	local psn_party_members = Managers.party_immaterium:other_members_by_platform("psn")
 
 	if #psn_party_members == 0 then
@@ -747,6 +751,34 @@ PresenceManager._create_or_join_psn_session = function (self)
 		end)
 	else
 		local session_id = psn_party_members[1]:psn_session_id()
+
+		if not session_id then
+			self._psn_session_join_pending = true
+
+			return
+		end
+
+		Managers.account:join_psn_session(session_id)
+	end
+end
+
+PresenceManager._update_pending_psn_session_join = function (self)
+	if not self._psn_session_join_pending then
+		return
+	end
+
+	local psn_party_members = Managers.party_immaterium:other_members_by_platform("psn")
+
+	if #psn_party_members == 0 then
+		self._psn_session_join_pending = false
+
+		return
+	end
+
+	local session_id = psn_party_members[1]:psn_session_id()
+
+	if session_id then
+		self._psn_session_join_pending = false
 
 		Managers.account:join_psn_session(session_id)
 	end

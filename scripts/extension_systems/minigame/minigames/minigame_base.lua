@@ -15,6 +15,7 @@ MinigameBase.init = function (self, unit, is_server, seed, wwise_world)
 	self._current_stage = nil
 	self._state_started = nil
 	self._is_automatic = false
+	self._mistakes = 0
 	self._action_held = nil
 
 	if is_server then
@@ -141,25 +142,47 @@ MinigameBase._update_side_mission_progression = function (self)
 	end
 end
 
-MinigameBase.stop = function (self, player)
+MinigameBase.stop = function (self, is_automatic)
 	if self._is_server and self._current_state ~= MinigameSettings.game_states.complete and self:is_completed() then
 		self:complete()
 	end
 
-	self._player_session_id = nil
-	self._action_held = nil
+	local player = Managers.player:player_from_session_id(self._player_session_id)
+
+	if self:is_completed() then
+		local mistakes = self._mistakes
+
+		if player then
+			Managers.stats:record_private("hook_hack", player, mistakes)
+		end
+
+		local is_human_player = player and player:is_human_controlled()
+
+		if is_human_player then
+			Managers.telemetry_events:player_hacked_terminal(player, mistakes, self._is_automatic)
+		end
+
+		self._mistakes = 0
+	end
 
 	if self._minigame_extension then
 		self._minigame_extension:set_active(false)
 
 		if self._is_server then
-			if player then
+			if player and not is_automatic then
 				Managers.state.game_session:send_rpc_clients_except("rpc_minigame_sync_stop", player:channel_id(), self._minigame_unit_id, self._is_level_unit)
 			else
 				Managers.state.game_session:send_rpc_clients("rpc_minigame_sync_stop", self._minigame_unit_id, self._is_level_unit)
 			end
 		end
 	end
+
+	self._player_session_id = nil
+	self._action_held = nil
+end
+
+MinigameBase._increment_mistakes = function (self)
+	self._mistakes = self._mistakes + 1
 end
 
 MinigameBase.state = function (self)

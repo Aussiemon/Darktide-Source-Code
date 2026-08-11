@@ -39,6 +39,17 @@ ThirdPersonHubMovementDirectionAnimationControl.init = function (self, unit, ini
 end
 
 ThirdPersonHubMovementDirectionAnimationControl.update = function (self, dt, t)
+	if self._is_server then
+		local game_session = self._game_session
+		local game_object_id = self._game_object_id
+		local velocity_current_direction, velocity_wanted_direction = self:_directions()
+
+		GameSession.set_game_object_field(game_session, game_object_id, "velocity_current_direction", velocity_current_direction)
+		GameSession.set_game_object_field(game_session, game_object_id, "velocity_wanted_direction", velocity_wanted_direction)
+	end
+end
+
+ThirdPersonHubMovementDirectionAnimationControl.update_direction_variables = function (self, dt, t)
 	local unit = self._unit
 	local movement_settings = HubMovementLocomotion.fetch_movement_settings(unit, self._player_character_constants, self._hub_jog_character_state_component)
 	local move_state_movement_settings = movement_settings.current_move_state
@@ -46,14 +57,6 @@ ThirdPersonHubMovementDirectionAnimationControl.update = function (self, dt, t)
 	local movement_direction = self:_movement_direction(move_state_movement_settings, velocity_current_direction, velocity_wanted_direction, dt)
 
 	self:_set_variables(unit, movement_direction)
-
-	if self._is_server then
-		local game_session = self._game_session
-		local game_object_id = self._game_object_id
-
-		GameSession.set_game_object_field(game_session, game_object_id, "velocity_current_direction", velocity_current_direction)
-		GameSession.set_game_object_field(game_session, game_object_id, "velocity_wanted_direction", velocity_wanted_direction)
-	end
 end
 
 ThirdPersonHubMovementDirectionAnimationControl._directions = function (self)

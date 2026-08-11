@@ -72,6 +72,7 @@ HudElementCrosshair.init = function (self, parent, draw_layer, start_scale, defi
 	event_manager:register(self, "event_update_crosshair_enabled", "event_update_crosshair_enabled")
 	event_manager:register(self, "event_update_hit_indicator_enabled", "event_update_hit_indicator_enabled")
 	event_manager:register(self, "event_update_hit_indicator_duration", "event_update_hit_indicator_duration")
+	event_manager:register(self, "event_update_dot_special_crosshair", "event_update_dot_special_crosshair")
 
 	local save_manager = Managers.save
 
@@ -83,6 +84,7 @@ HudElementCrosshair.init = function (self, parent, draw_layer, start_scale, defi
 		self._crosshair_enabled = account_data.interface_settings.crosshair_enabled
 		self._hit_indicator_enabled = account_data.interface_settings.hit_indicator_enabled
 		self._hit_indicator_duration = account_data.interface_settings.hit_indicator_duration
+		self._dot_special_crosshair = account_data.interface_settings.dot_special_crosshair_enabled
 	end
 end
 
@@ -95,6 +97,7 @@ HudElementCrosshair.destroy = function (self, ui_renderer)
 	event_manager:unregister(self, "event_update_crosshair_enabled")
 	event_manager:unregister(self, "event_update_hit_indicator_enabled")
 	event_manager:unregister(self, "event_update_hit_indicator_duration")
+	event_manager:unregister(self, "event_update_dot_special_crosshair")
 	HudElementCrosshair.super.destroy(self, ui_renderer)
 end
 
@@ -141,6 +144,14 @@ end
 
 HudElementCrosshair.event_update_crosshair_enabled = function (self, value)
 	self._crosshair_enabled = value
+
+	local crosshair_settings = self:_crosshair_settings()
+
+	self:_sync_active_crosshair(crosshair_settings)
+end
+
+HudElementCrosshair.event_update_dot_special_crosshair = function (self, value)
+	self._dot_special_crosshair = value
 
 	local crosshair_settings = self:_crosshair_settings()
 
@@ -355,6 +366,10 @@ HudElementCrosshair._get_current_crosshair_type = function (self, crosshair_sett
 	end
 
 	if self._forced_dot_crosshair and (not crosshair_type or crosshair_type == "none") then
+		crosshair_type = "dot"
+	end
+
+	if not self._dot_special_crosshair and crosshair_type == "dot_special" then
 		crosshair_type = "dot"
 	end
 

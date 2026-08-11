@@ -61,6 +61,10 @@ local talent_settings = {
 			capacitance = 0.25,
 			cooldown_modifier = 0.15,
 			duration = 2,
+			minimum_capacitance = 0.25,
+		},
+		servo_skull_extra_charges = {
+			extra_grenade_charges = 2,
 		},
 		discharge_ability = {
 			buff_duration = 15,
@@ -157,7 +161,8 @@ local talent_settings = {
 			},
 		},
 		force_field = {
-			cooldown = 45,
+			capacitance_cost_when_empty = 1,
+			cooldown = 75,
 			duration = 8,
 			increased_duration = 12,
 			max_charges = 3,
@@ -166,7 +171,7 @@ local talent_settings = {
 			force_field_arcs = {
 				broadphase_radius = 12,
 				max_arcs = 4,
-				num_hits_needed_per_arc = 10,
+				num_hits_needed_per_arc = 6,
 			},
 		},
 		force_field_extra_charges = {
@@ -174,7 +179,9 @@ local talent_settings = {
 		},
 		arc_grenade = {
 			base_num_arcs = 4,
+			capacitance_per_kill = 0.04,
 			charges = 3,
+			cooldown = 75,
 			extra_arcs = 2,
 			radius = 8,
 			rending_stacks_on_minions_hit_by_arc = 8,

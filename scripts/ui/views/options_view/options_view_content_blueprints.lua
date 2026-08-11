@@ -1037,6 +1037,14 @@ local function controller_image_apply_text_function(widget)
 								temp_input_display_values[main_input] = Localize(display_name)
 							end
 
+							local extra_descriptions = alias:controller_layout_extra_descriptions(alias_name)
+
+							if extra_descriptions then
+								for i = 1, #extra_descriptions do
+									temp_input_display_values[main_input] = temp_input_display_values[main_input] .. "/" .. Localize(extra_descriptions[i])
+								end
+							end
+
 							local input_style = style[main_input]
 							local additional_inputs = input_style and input_style.additional_inputs
 
@@ -1052,6 +1060,14 @@ local function controller_image_apply_text_function(widget)
 
 											if additional_alias_display_name then
 												temp_input_display_values[main_input] = temp_input_display_values[main_input] .. "/" .. Localize(additional_alias_display_name)
+											end
+
+											local extra_descriptions = alias:controller_layout_extra_descriptions(extra_alias_name)
+
+											if extra_descriptions then
+												for i = 1, #extra_descriptions do
+													temp_input_display_values[main_input] = temp_input_display_values[main_input] .. "/" .. Localize(extra_descriptions[i])
+												end
 											end
 										end
 									end

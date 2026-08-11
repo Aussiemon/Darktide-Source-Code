@@ -1,6 +1,32 @@
 ﻿-- chunkname: @dialogues/generated/guidance_vo_cryptic_d.lua
 
 local guidance_vo_cryptic_d = {
+	guidance_correct_doorway = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_cryptic_d__guidance_correct_path_01",
+			"loc_cryptic_d__guidance_correct_path_02",
+			"loc_cryptic_d__guidance_correct_path_03",
+			"loc_cryptic_d__guidance_correct_path_04",
+			"loc_cryptic_d__guidance_correct_path_05",
+		},
+		sound_events_duration = {
+			2.530906,
+			2.542563,
+			2.124365,
+			2.900656,
+			2.18549,
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+		},
+		randomize_indexes = {},
+	},
 	guidance_correct_path = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
@@ -292,6 +318,32 @@ local guidance_vo_cryptic_d = {
 		},
 		randomize_indexes = {},
 	},
+	guidance_ladder_down = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_cryptic_d__ladder_sighted_01",
+			"loc_cryptic_d__ladder_sighted_02",
+			"loc_cryptic_d__ladder_sighted_03",
+			"loc_cryptic_d__ladder_sighted_04",
+			"loc_cryptic_d__ladder_sighted_05",
+		},
+		sound_events_duration = {
+			1.12324,
+			1.152813,
+			2.150333,
+			1.893208,
+			2.322031,
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+		},
+		randomize_indexes = {},
+	},
 	guidance_ladder_sighted = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
@@ -308,6 +360,84 @@ local guidance_vo_cryptic_d = {
 			2.150333,
 			1.893208,
 			2.322031,
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+		},
+		randomize_indexes = {},
+	},
+	guidance_ladder_up = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_cryptic_d__ladder_sighted_01",
+			"loc_cryptic_d__ladder_sighted_02",
+			"loc_cryptic_d__ladder_sighted_03",
+			"loc_cryptic_d__ladder_sighted_04",
+			"loc_cryptic_d__ladder_sighted_05",
+		},
+		sound_events_duration = {
+			1.12324,
+			1.152813,
+			2.150333,
+			1.893208,
+			2.322031,
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+		},
+		randomize_indexes = {},
+	},
+	guidance_stairs_down = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_cryptic_d__stairs_sighted_01",
+			"loc_cryptic_d__stairs_sighted_02",
+			"loc_cryptic_d__stairs_sighted_03",
+			"loc_cryptic_d__stairs_sighted_04",
+			"loc_cryptic_d__stairs_sighted_05",
+		},
+		sound_events_duration = {
+			1.122729,
+			1.078344,
+			1.845292,
+			2.085573,
+			2.405021,
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+		},
+		randomize_indexes = {},
+	},
+	guidance_stairs_sighted = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_cryptic_d__stairs_sighted_01",
+			"loc_cryptic_d__stairs_sighted_02",
+			"loc_cryptic_d__stairs_sighted_03",
+			"loc_cryptic_d__stairs_sighted_04",
+			"loc_cryptic_d__stairs_sighted_05",
+		},
+		sound_events_duration = {
+			1.122729,
+			1.078344,
+			1.845292,
+			2.085573,
+			2.405021,
 		},
 		sound_event_weights = {
 			0.2,
@@ -397,6 +527,32 @@ local guidance_vo_cryptic_d = {
 		randomize_indexes = {},
 	},
 	guidance_stairs_sighted_4 = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_cryptic_d__stairs_sighted_01",
+			"loc_cryptic_d__stairs_sighted_02",
+			"loc_cryptic_d__stairs_sighted_03",
+			"loc_cryptic_d__stairs_sighted_04",
+			"loc_cryptic_d__stairs_sighted_05",
+		},
+		sound_events_duration = {
+			1.122729,
+			1.078344,
+			1.845292,
+			2.085573,
+			2.405021,
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+		},
+		randomize_indexes = {},
+	},
+	guidance_stairs_up = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
 		sound_events = {

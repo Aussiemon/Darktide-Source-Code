@@ -80,6 +80,7 @@ navigation_button_pass_template[#navigation_button_pass_template + 1] = {
 	style = {
 		font_size = 18,
 		font_type = "proxima_nova_bold",
+		text_fit_with = true,
 		text_horizontal_alignment = "left",
 		text_vertical_alignment = "bottom",
 		incomplete_color = Color.light_gray(255, true),

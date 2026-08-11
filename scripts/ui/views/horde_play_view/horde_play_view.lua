@@ -674,7 +674,7 @@ HordePlayView.on_exit = function (self)
 	HordePlayView.super.on_exit(self)
 end
 
-HordePlayView.ui_renderer = function (self)
+HordePlayView.destroy = function (self)
 	self._promise_container:delete()
 	HordePlayView.super.destroy(self)
 end

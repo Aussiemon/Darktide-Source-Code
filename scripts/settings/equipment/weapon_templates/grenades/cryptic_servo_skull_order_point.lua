@@ -32,17 +32,7 @@ weapon_template.action_inputs = {
 			},
 		},
 	},
-	order_servo_skull = {
-		buffer_time = 0.6,
-		input_sequence = {
-			{
-				input = "grenade_ability_hold",
-				value = false,
-				time_window = math.huge,
-			},
-		},
-	},
-	instant_aim_servo_skull = {
+	aim_servo_skull_on_release = {
 		buffer_time = 0.1,
 		input_sequence = {
 			{
@@ -52,10 +42,15 @@ weapon_template.action_inputs = {
 			},
 		},
 	},
-	instant_order_servo_skull = {
-		buffer_time = 0,
-		dont_queue = true,
-		input_sequence = nil,
+	order_servo_skull = {
+		buffer_time = 0.6,
+		input_sequence = {
+			{
+				input = "grenade_ability_hold",
+				value = false,
+				time_window = math.huge,
+			},
+		},
 	},
 	cancel = {
 		buffer_time = 0,
@@ -103,10 +98,10 @@ weapon_template.action_input_hierarchy = {
 		},
 	},
 	{
-		input = "instant_aim_servo_skull",
+		input = "aim_servo_skull_on_release",
 		transition = {
 			{
-				input = "instant_order_servo_skull",
+				input = "order_servo_skull",
 				transition = "base",
 			},
 			{
@@ -150,7 +145,7 @@ weapon_template.actions = {
 		kind = "unwield_to_previous",
 		total_time = 0,
 		uninterruptible = true,
-		unwield_to_weapon = false,
+		unwield_to_weapon = true,
 		allowed_chain_actions = {},
 	},
 	action_wield = {
@@ -195,10 +190,11 @@ weapon_template.actions = {
 			},
 		},
 		allowed_chain_actions = {
-			instant_aim_servo_skull = {
-				action_name = "action_instant_aim_servo_skull",
-			},
 			aim_servo_skull = {
+				action_name = "action_aim_servo_skull",
+				chain_time = 0.1,
+			},
+			aim_servo_skull_on_release = {
 				action_name = "action_aim_servo_skull",
 				chain_time = 0.1,
 			},
@@ -223,30 +219,6 @@ weapon_template.actions = {
 			order_servo_skull = {
 				action_name = "action_order_servo_skull",
 				chain_time = 0.1,
-			},
-			cancel = {
-				action_name = "action_cancel",
-			},
-		},
-	},
-	action_instant_aim_servo_skull = {
-		abort_sprint = true,
-		allowed_during_sprint = true,
-		kind = "dummy",
-		prevent_sprint = true,
-		total_time = 0,
-		uninterruptible = true,
-		conditional_state_to_action_input = {
-			action_end = {
-				input_name = "instant_order_servo_skull",
-			},
-		},
-		allowed_chain_actions = {
-			wield = {
-				action_name = "action_unwield",
-			},
-			instant_order_servo_skull = {
-				action_name = "action_instant_order_servo_skull",
 			},
 			cancel = {
 				action_name = "action_cancel",
@@ -328,10 +300,6 @@ weapon_template.actions = {
 		},
 	},
 }
-weapon_template.actions.action_instant_order_servo_skull = table.clone(weapon_template.actions.action_order_servo_skull)
-weapon_template.actions.action_instant_order_servo_skull.total_time = 0.1
-weapon_template.actions.action_instant_order_servo_skull.place_time = 0
-weapon_template.actions.action_instant_order_servo_skull.anim_event = nil
 
 table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
 

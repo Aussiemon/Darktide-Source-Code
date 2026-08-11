@@ -113,10 +113,6 @@ local layouts = {
 					"ps4_controller_circle",
 					"xbox_controller_b",
 				},
-				slide = {
-					"ps4_controller_circle",
-					"xbox_controller_b",
-				},
 				sprint = {
 					"ps4_controller_l3",
 					"xbox_controller_left_thumb",
@@ -140,16 +136,8 @@ local layouts = {
 		sort_order = 4,
 		input_settings = {
 			Ingame = {
-				keyboard_move_backward = nil,
-				keyboard_move_forward = nil,
-				keyboard_move_left = nil,
-				keyboard_move_right = nil,
-				look_raw = nil,
-				voip_push_to_talk = nil,
 				wield_1 = nil,
 				wield_2 = nil,
-				wield_scroll_down = nil,
-				wield_scroll_up = nil,
 				action_one = {
 					"ps4_controller_r2",
 					"xbox_controller_right_trigger",
@@ -189,6 +177,8 @@ local layouts = {
 					"ps4_controller_triangle",
 					"xbox_controller_y",
 				},
+				wield_scroll_down = StrictNil,
+				wield_scroll_up = StrictNil,
 				weapon_reload = {
 					"ps4_controller_square",
 					"xbox_controller_x",
@@ -225,6 +215,11 @@ local layouts = {
 					"ps4_controller_cross",
 					"xbox_controller_a",
 				},
+				voip_push_to_talk = StrictNil,
+				keyboard_move_forward = StrictNil,
+				keyboard_move_backward = StrictNil,
+				keyboard_move_left = StrictNil,
+				keyboard_move_right = StrictNil,
 				dodge = {
 					"ps4_controller_cross",
 					"xbox_controller_a",
@@ -237,14 +232,11 @@ local layouts = {
 					"ps4_controller_circle",
 					"xbox_controller_b",
 				},
-				slide = {
-					"ps4_controller_circle",
-					"xbox_controller_b",
-				},
 				sprint = {
 					"ps4_controller_l3",
 					"xbox_controller_left_thumb",
 				},
+				look_raw = StrictNil,
 				look_raw_controller = {
 					"ps4_controller_right",
 					"xbox_controller_right",
@@ -263,16 +255,7 @@ local layouts = {
 		sort_order = 5,
 		input_settings = {
 			Ingame = {
-				keyboard_move_backward = nil,
-				keyboard_move_forward = nil,
-				keyboard_move_left = nil,
-				keyboard_move_right = nil,
 				look_raw = nil,
-				voip_push_to_talk = nil,
-				wield_1 = nil,
-				wield_2 = nil,
-				wield_scroll_down = nil,
-				wield_scroll_up = nil,
 				action_one = {
 					"ps4_controller_r1",
 					"xbox_controller_right_shoulder",
@@ -293,6 +276,8 @@ local layouts = {
 					"ps4_controller_triangle",
 					"xbox_controller_y",
 				},
+				wield_1 = StrictNil,
+				wield_2 = StrictNil,
 				wield_3 = {
 					"ps4_controller_d_left",
 					"xbox_controller_d_left",
@@ -312,6 +297,8 @@ local layouts = {
 					"ps4_controller_triangle",
 					"xbox_controller_y",
 				},
+				wield_scroll_down = StrictNil,
+				wield_scroll_up = StrictNil,
 				weapon_reload = {
 					"ps4_controller_square",
 					"xbox_controller_x",
@@ -348,6 +335,11 @@ local layouts = {
 					"ps4_controller_cross",
 					"xbox_controller_a",
 				},
+				voip_push_to_talk = StrictNil,
+				keyboard_move_forward = StrictNil,
+				keyboard_move_backward = StrictNil,
+				keyboard_move_left = StrictNil,
+				keyboard_move_right = StrictNil,
 				dodge = {
 					"ps4_controller_cross",
 					"xbox_controller_a",
@@ -357,10 +349,6 @@ local layouts = {
 					"xbox_controller_a",
 				},
 				crouch = {
-					"ps4_controller_circle",
-					"xbox_controller_b",
-				},
-				slide = {
 					"ps4_controller_circle",
 					"xbox_controller_b",
 				},
@@ -386,16 +374,6 @@ local layouts = {
 		sort_order = 6,
 		input_settings = {
 			Ingame = {
-				keyboard_move_backward = nil,
-				keyboard_move_forward = nil,
-				keyboard_move_left = nil,
-				keyboard_move_right = nil,
-				look_raw = nil,
-				voip_push_to_talk = nil,
-				wield_1 = nil,
-				wield_2 = nil,
-				wield_scroll_down = nil,
-				wield_scroll_up = nil,
 				action_one = {
 					"ps4_controller_r1",
 					"xbox_controller_right_shoulder",
@@ -416,6 +394,8 @@ local layouts = {
 					"ps4_controller_triangle",
 					"xbox_controller_y",
 				},
+				wield_1 = StrictNil,
+				wield_2 = StrictNil,
 				wield_3 = {
 					hide_in_controller_layout = true,
 				},
@@ -434,6 +414,8 @@ local layouts = {
 					"ps4_controller_triangle",
 					"xbox_controller_y",
 				},
+				wield_scroll_down = StrictNil,
+				wield_scroll_up = StrictNil,
 				weapon_reload = {
 					"ps4_controller_square",
 					"xbox_controller_x",
@@ -470,6 +452,11 @@ local layouts = {
 					"ps4_controller_cross",
 					"xbox_controller_a",
 				},
+				voip_push_to_talk = StrictNil,
+				keyboard_move_forward = StrictNil,
+				keyboard_move_backward = StrictNil,
+				keyboard_move_left = StrictNil,
+				keyboard_move_right = StrictNil,
 				dodge = {
 					"ps4_controller_l2",
 					"xbox_controller_left_trigger",
@@ -482,14 +469,11 @@ local layouts = {
 					"ps4_controller_circle",
 					"xbox_controller_b",
 				},
-				slide = {
-					"ps4_controller_circle",
-					"xbox_controller_b",
-				},
 				sprint = {
 					"ps4_controller_l3",
 					"xbox_controller_left_thumb",
 				},
+				look_raw = StrictNil,
 				look_raw_controller = {
 					"ps4_controller_right",
 					"xbox_controller_right",
@@ -508,16 +492,6 @@ local layouts = {
 		sort_order = 9,
 		input_settings = {
 			Ingame = {
-				keyboard_move_backward = nil,
-				keyboard_move_forward = nil,
-				keyboard_move_left = nil,
-				keyboard_move_right = nil,
-				look_raw = nil,
-				voip_push_to_talk = nil,
-				wield_1 = nil,
-				wield_2 = nil,
-				wield_scroll_down = nil,
-				wield_scroll_up = nil,
 				action_one = {
 					"ps4_controller_r2",
 					"xbox_controller_right_trigger",
@@ -538,6 +512,8 @@ local layouts = {
 					"ps4_controller_triangle",
 					"xbox_controller_y",
 				},
+				wield_1 = StrictNil,
+				wield_2 = StrictNil,
 				wield_3 = {
 					"ps4_controller_d_left",
 					"xbox_controller_d_left",
@@ -557,6 +533,8 @@ local layouts = {
 					"ps4_controller_triangle",
 					"xbox_controller_y",
 				},
+				wield_scroll_down = StrictNil,
+				wield_scroll_up = StrictNil,
 				weapon_reload = {
 					"ps4_controller_square",
 					"xbox_controller_x",
@@ -593,6 +571,11 @@ local layouts = {
 					"ps4_controller_cross",
 					"xbox_controller_a",
 				},
+				voip_push_to_talk = StrictNil,
+				keyboard_move_forward = StrictNil,
+				keyboard_move_backward = StrictNil,
+				keyboard_move_left = StrictNil,
+				keyboard_move_right = StrictNil,
 				dodge = {
 					"ps4_controller_cross",
 					"xbox_controller_a",
@@ -605,14 +588,11 @@ local layouts = {
 					"ps4_controller_circle",
 					"xbox_controller_b",
 				},
-				slide = {
-					"ps4_controller_circle",
-					"xbox_controller_b",
-				},
 				sprint = {
 					"ps4_controller_l3",
 					"xbox_controller_left_thumb",
 				},
+				look_raw = StrictNil,
 				look_raw_controller = {
 					"ps4_controller_right",
 					"xbox_controller_right",
@@ -631,16 +611,6 @@ local layouts = {
 		sort_order = 3,
 		input_settings = {
 			Ingame = {
-				keyboard_move_backward = nil,
-				keyboard_move_forward = nil,
-				keyboard_move_left = nil,
-				keyboard_move_right = nil,
-				look_raw = nil,
-				voip_push_to_talk = nil,
-				wield_1 = nil,
-				wield_2 = nil,
-				wield_scroll_down = nil,
-				wield_scroll_up = nil,
 				action_one = {
 					"ps4_controller_r2",
 					"xbox_controller_right_trigger",
@@ -661,6 +631,8 @@ local layouts = {
 					"ps4_controller_triangle",
 					"xbox_controller_y",
 				},
+				wield_1 = StrictNil,
+				wield_2 = StrictNil,
 				wield_3 = {
 					hide_in_controller_layout = true,
 				},
@@ -679,6 +651,8 @@ local layouts = {
 					"ps4_controller_triangle",
 					"xbox_controller_y",
 				},
+				wield_scroll_down = StrictNil,
+				wield_scroll_up = StrictNil,
 				weapon_reload = {
 					"ps4_controller_square",
 					"xbox_controller_x",
@@ -715,6 +689,11 @@ local layouts = {
 					"ps4_controller_cross",
 					"xbox_controller_a",
 				},
+				voip_push_to_talk = StrictNil,
+				keyboard_move_forward = StrictNil,
+				keyboard_move_backward = StrictNil,
+				keyboard_move_left = StrictNil,
+				keyboard_move_right = StrictNil,
 				dodge = {
 					"ps4_controller_circle",
 					"xbox_controller_b",
@@ -727,14 +706,11 @@ local layouts = {
 					"ps4_controller_r3",
 					"xbox_controller_right_thumb",
 				},
-				slide = {
-					"ps4_controller_circle",
-					"xbox_controller_b",
-				},
 				sprint = {
 					"ps4_controller_l3",
 					"xbox_controller_left_thumb",
 				},
+				look_raw = StrictNil,
 				look_raw_controller = {
 					"ps4_controller_right",
 					"xbox_controller_right",
@@ -849,10 +825,6 @@ local layouts = {
 					"ps4_controller_circle",
 					"xbox_controller_b",
 				},
-				slide = {
-					"ps4_controller_circle",
-					"xbox_controller_b",
-				},
 				sprint = {
 					"ps4_controller_l3",
 					"xbox_controller_left_thumb",
@@ -885,8 +857,8 @@ local layouts = {
 					"xbox_controller_left_trigger",
 				},
 				weapon_extra = {
-					"ps4_controller_r1",
-					"xbox_controller_right_shoulder",
+					"ps4_controller_l1",
+					"xbox_controller_left_shoulder",
 				},
 				interact = {
 					"ps4_controller_square",
@@ -928,8 +900,8 @@ local layouts = {
 					"xbox_controller_d_down",
 				},
 				combat_ability = {
-					"ps4_controller_cross",
-					"xbox_controller_a",
+					"ps4_controller_r1",
+					"xbox_controller_right_shoulder",
 				},
 				smart_tag = {
 					"ps4_controller_r3",
@@ -961,18 +933,14 @@ local layouts = {
 				keyboard_move_left = StrictNil,
 				keyboard_move_right = StrictNil,
 				dodge = {
-					"ps4_controller_l1",
-					"xbox_controller_left_shoulder",
+					"ps4_controller_cross",
+					"xbox_controller_a",
 				},
 				jump = {
-					"ps4_controller_l1",
-					"xbox_controller_left_shoulder",
+					"ps4_controller_cross",
+					"xbox_controller_a",
 				},
 				crouch = {
-					"ps4_controller_circle",
-					"xbox_controller_b",
-				},
-				slide = {
 					"ps4_controller_circle",
 					"xbox_controller_b",
 				},

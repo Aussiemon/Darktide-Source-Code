@@ -128,9 +128,8 @@ ViewInteraction._start = function (self, interactor_unit, interactee_unit)
 		ui_interaction, context = "video_view", {
 			allow_skip_input = true,
 			template = video_template,
+			narrative_event = hli_settings.narrative_event_name,
 		}
-
-		Managers.narrative:complete_event(narrative_event)
 	end
 
 	Managers.ui:open_view(ui_interaction, nil, nil, nil, nil, context)

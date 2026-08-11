@@ -11,15 +11,14 @@ local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
-local UISettings = require("scripts/settings/ui/ui_settings")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
+local ViewElementNewsSlide = require("scripts/ui/view_elements/view_element_news_slide/view_element_news_slide")
 local ViewElementServerMigration = require("scripts/ui/view_elements/view_element_server_migration/view_element_server_migration")
 local ViewElementWallet = require("scripts/ui/view_elements/view_element_wallet/view_element_wallet")
-local ViewElementNewsSlide = require("scripts/ui/view_elements/view_element_news_slide/view_element_news_slide")
-local Text = require("scripts/utilities/ui/text")
 local MainMenuView = class("MainMenuView", "BaseView")
 
 MainMenuView.init = function (self, settings, context)
@@ -39,9 +38,8 @@ MainMenuView.on_enter = function (self)
 	MainMenuView.super.on_enter(self)
 
 	self._character_list_widgets = {}
-	self._character_slot_spawn_id = 0
-	self._profiles_wait_overlay_active = self._parent and self._parent._profiles_are_syncing or false
-	self._waiting_on_character = self._parent and self._parent._character_is_syncing or false
+	self._profiles_wait_overlay_active = not not self._parent and not not self._parent._profiles_are_syncing
+	self._waiting_on_character = not not self._parent and not not self._parent._character_is_syncing
 	self._is_main_menu_open = false
 	self._character_list_grid = nil
 	self._news_list_requested = false
@@ -111,6 +109,140 @@ MainMenuView.on_enter = function (self)
 
 	if self._show_news_popup then
 		self:_update_news_list()
+	end
+end
+
+MainMenuView._get_character_list_order = function (self, characters_list)
+	local save_manager = Managers.save
+	local save_data = save_manager:account_data()
+
+	if save_data.main_menu_character_list_order and not table.is_empty(save_data.main_menu_character_list_order) then
+		local index_by_character_id = {}
+		local characters_list_size = table.size(characters_list)
+
+		for i = 1, characters_list_size do
+			local character_list = characters_list[i]
+
+			index_by_character_id[character_list.character_id] = i
+		end
+
+		local dirty = false
+
+		for i = #save_data.main_menu_character_list_order, 1, -1 do
+			local character_id = save_data.main_menu_character_list_order[i]
+
+			if not index_by_character_id[character_id] then
+				table.remove(save_data.main_menu_character_list_order, i)
+
+				dirty = true
+			else
+				index_by_character_id[character_id] = nil
+			end
+		end
+
+		for character_id, index in pairs(index_by_character_id) do
+			save_data.main_menu_character_list_order[#save_data.main_menu_character_list_order + 1] = character_id
+			dirty = true
+		end
+
+		if dirty then
+			save_manager:queue_save()
+		end
+	else
+		save_data.main_menu_character_list_order = save_data.main_menu_character_list_order or {}
+
+		for i = 1, #characters_list do
+			local character_list = characters_list[i]
+			local character_id = character_list.character_id
+
+			save_data.main_menu_character_list_order[i] = character_id
+		end
+
+		save_manager:queue_save()
+	end
+
+	return save_data.main_menu_character_list_order
+end
+
+MainMenuView._change_character_id_order = function (self, character_id, new_index)
+	local save_manager = Managers.save
+	local save_data = save_manager:account_data()
+
+	if save_data.main_menu_character_list_order and not table.is_empty(save_data.main_menu_character_list_order) then
+		if save_data.main_menu_character_list_order[new_index] == character_id then
+			return
+		end
+
+		local character_list_order_size = table.size(save_data.main_menu_character_list_order)
+		local num_characters = character_list_order_size
+
+		if new_index < 1 or num_characters < new_index then
+			return
+		end
+
+		local current_character_id_index
+
+		for i = 1, character_list_order_size do
+			if save_data.main_menu_character_list_order[i] == character_id then
+				current_character_id_index = i
+
+				break
+			end
+		end
+
+		if not current_character_id_index then
+			return
+		end
+
+		local reverse = new_index < current_character_id_index
+		local start_index = new_index
+		local direction = reverse and 1 or -1
+		local end_index = current_character_id_index - direction
+
+		for i = start_index, end_index, direction do
+			local character_in_index = save_data.main_menu_character_list_order[i]
+
+			save_data.main_menu_character_list_order[i + direction] = character_in_index
+		end
+
+		save_data.main_menu_character_list_order[new_index] = character_id
+
+		save_manager:queue_save()
+
+		local index_by_character_id = {}
+
+		for i = 1, character_list_order_size do
+			local ordered_character_id = save_data.main_menu_character_list_order[i]
+
+			index_by_character_id[ordered_character_id] = i
+		end
+
+		table.sort(self._character_profiles, function (a, b)
+			return index_by_character_id[a.character_id] < index_by_character_id[b.character_id]
+		end)
+
+		local starting_scrollbar_position
+
+		if self._character_list_grid and self._character_list_grid:can_scroll() then
+			local current_character_scrollbar_position = self._character_list_grid:get_scrollbar_percentage_by_index(current_character_id_index)
+			local new_character_scrollbar_position = self._character_list_grid:get_scrollbar_percentage_by_index(new_index)
+			local diff_scrollbar_position = new_character_scrollbar_position - current_character_scrollbar_position
+
+			starting_scrollbar_position = self._character_list_grid:scrollbar_progress() + diff_scrollbar_position
+		end
+
+		local character_slot_widgets = self._character_list_widgets
+
+		for i = 1, #character_slot_widgets do
+			local widget = character_slot_widgets[i]
+
+			widget.content.hotspot.is_hover = false
+			widget.content.hotspot.is_focused = false
+			widget.content.hotspot.anim_hover_progress = 0
+			widget.content.hotspot.anim_focus_progress = 0
+		end
+
+		self:_sync_character_slots(starting_scrollbar_position, true)
 	end
 end
 
@@ -295,10 +427,28 @@ end
 MainMenuView._event_profiles_changed = function (self, profiles, max_characters_slots)
 	self._character_profiles = profiles
 
+	local list_order = self:_get_character_list_order(self._character_profiles)
+
+	if list_order then
+		local character_list_order_size = table.size(list_order)
+		local index_by_character_id = {}
+
+		for i = 1, character_list_order_size do
+			local character_id = list_order[i]
+
+			if character_id then
+				index_by_character_id[character_id] = i
+			end
+		end
+
+		table.sort(self._character_profiles, function (a, b)
+			return index_by_character_id[a.character_id] < index_by_character_id[b.character_id]
+		end)
+	end
+
 	self:_sync_character_slots()
 
-	local profile_list = self._character_profiles
-	local num_characters = #profile_list or 0
+	local num_characters = #self._character_profiles or 0
 	local max_num_characters = max_characters_slots or MainMenuViewSettings.max_num_characters
 
 	self._max_num_characters = max_num_characters
@@ -445,6 +595,10 @@ MainMenuView.update = function (self, dt, t, input_service)
 
 	self._is_main_menu_open = Managers.ui:view_active("system_view")
 
+	local was_main_menu_on_top = self._is_main_menu_on_top or false
+
+	self._is_main_menu_on_top = Managers.ui:active_top_view() == "main_menu_view"
+
 	if not self._server_migration_element and not self:_is_processing_backend_request() and self._news_list.starting_slide_index then
 		local slide_data = table.clone(self._news_list)
 
@@ -460,6 +614,10 @@ MainMenuView.update = function (self, dt, t, input_service)
 
 	if character_list_grid then
 		character_list_grid:update(dt, t, input_service)
+
+		if self._is_main_menu_on_top and not was_main_menu_on_top and self._selected_character_list_index then
+			self:_set_selected_character_list_index(self._selected_character_list_index)
+		end
 	end
 
 	if GameParameters.testify then
@@ -572,18 +730,31 @@ MainMenuView._handle_input = function (self, input_service, dt, t)
 
 	local character_slot_widgets = self._character_list_widgets
 	local num_character_slots = #character_slot_widgets or 0
+	local input_handled = false
 
-	if selected_character_list_index then
-		for i = 1, num_character_slots do
-			local widget = character_slot_widgets[i]
+	for i = 1, num_character_slots do
+		local widget = character_slot_widgets[i]
 
-			widget.content.hotspot.disabled = self._is_main_menu_open
+		widget.content.hotspot.disabled = self._is_main_menu_open
+		widget.content.hotspot_arrow_up.disabled = self._is_main_menu_open or widget.content.position_index == 1
+		widget.content.hotspot_arrow_down.disabled = self._is_main_menu_open or widget.content.position_index == widget.content.max_positions
 
-			if widget.content.hotspot.on_pressed and i ~= selected_character_list_index then
-				self:_on_character_widget_selected(i)
+		if widget.content.hotspot_arrow_up.on_pressed and not widget.content.hotspot_arrow_up.disabled then
+			self:_move_character_up_on_list(widget.content.position_index)
 
-				break
-			end
+			input_handled = true
+		elseif widget.content.hotspot_arrow_down.on_pressed and not widget.content.hotspot_arrow_down.disabled then
+			self:_move_character_down_on_list(widget.content.position_index)
+
+			input_handled = true
+		elseif widget.content.hotspot.on_pressed and i ~= selected_character_list_index then
+			self:_on_character_widget_selected(i)
+
+			input_handled = true
+		end
+
+		if input_handled then
+			break
 		end
 	end
 
@@ -720,51 +891,100 @@ MainMenuView.destroy = function (self)
 	MainMenuView.super.destroy(self)
 end
 
-MainMenuView._sync_character_slots = function (self)
-	self:_destroy_character_grid()
-
-	self._character_slot_spawn_id = 0
-
+MainMenuView._sync_character_slots = function (self, starting_scrollbar_position, refresh)
+	local selected_character_id = self._selected_profile and self._selected_profile.character_id
 	local profiles = self._character_profiles
 	local num_characters = profiles and #profiles or 0
-	local grid_direction = "down"
-	local grid_scenegraph_id = "character_grid_start"
-	local char_list = {}
+	local found_selected_character_index
 
-	for i = 1, num_characters do
-		local widget_definition = UIWidget.create_definition(CharacterSelectPassTemplates.character_select, "character_grid_content_pivot", nil, CharacterSelectPassTemplates.character_create_size)
-		local profile = profiles[i]
+	if not refresh then
+		self:_destroy_character_grid()
 
-		self._character_slot_spawn_id = self._character_slot_spawn_id + 1
+		local grid_direction = "down"
+		local grid_scenegraph_id = "character_grid_start"
+		local char_list = {}
 
-		local widget_name = "character_slot_" .. self._character_slot_spawn_id
-		local widget = self:_create_widget(widget_name, widget_definition)
-		local widget_content = widget.content
+		for i = 1, num_characters do
+			local widget_definition = UIWidget.create_definition(CharacterSelectPassTemplates.character_select, "character_grid_content_pivot", nil, CharacterSelectPassTemplates.character_create_size)
+			local profile = profiles[i]
+			local widget_name = "character_slot_" .. i
+			local widget = self:_create_widget(widget_name, widget_definition)
+			local widget_content = widget.content
 
-		widget_content.profile = profile
+			widget_content.profile = profile
+			widget_content.position_index = i
+			widget_content.max_positions = num_characters
 
-		if profile then
-			self:_set_player_profile_information(profile, widget)
-			Managers.event:trigger("event_main_menu_load_profile", profile)
+			if profile then
+				self:_set_player_profile_information(profile, widget)
+				Managers.event:trigger("event_main_menu_load_profile", profile)
+			end
+
+			char_list[#char_list + 1] = widget
+
+			if selected_character_id and selected_character_id == profile.character_id then
+				found_selected_character_index = i
+			end
 		end
 
-		char_list[#char_list + 1] = widget
+		local grid = UIWidgetGrid:new(char_list, char_list, self._ui_scenegraph, grid_scenegraph_id, grid_direction, {
+			0,
+			0,
+		})
+		local scrollbar_widget = self._widgets_by_name.character_grid_scrollbar
+		local grid_content_scenegraph_id = "character_grid_content_pivot"
+		local interaction_scenegraph_id = "character_grid_interaction"
+
+		grid:assign_scrollbar(scrollbar_widget, grid_content_scenegraph_id, interaction_scenegraph_id)
+
+		self._character_list_widgets = char_list
+		self._character_list_grid = grid
+	else
+		local character_list_order_by_character_id = {}
+
+		for i = 1, #profiles do
+			local profile = profiles[i]
+			local character_id = profile.character_id
+
+			character_list_order_by_character_id[character_id] = i
+		end
+
+		table.sort(self._character_list_widgets, function (a, b)
+			return character_list_order_by_character_id[a.content.profile.character_id] < character_list_order_by_character_id[b.content.profile.character_id]
+		end)
+
+		local num_widgets = #self._character_list_widgets
+
+		for i = 1, num_widgets do
+			local widget = self._character_list_widgets[i]
+			local widget_content = widget.content
+			local profile = widget_content.profile
+
+			widget_content.position_index = i
+			widget_content.max_positions = num_widgets
+
+			if selected_character_id and selected_character_id == profile.character_id then
+				found_selected_character_index = i
+			end
+
+			widget.dirty = true
+		end
+
+		self._character_list_grid:force_update_list_size()
 	end
 
-	local grid = UIWidgetGrid:new(char_list, char_list, self._ui_scenegraph, grid_scenegraph_id, grid_direction, {
-		0,
-		0,
-	})
-	local scrollbar_widget = self._widgets_by_name.character_grid_scrollbar
-	local grid_content_scenegraph_id = "character_grid_content_pivot"
-	local interaction_scenegraph_id = "character_grid_interaction"
+	if selected_character_id and not found_selected_character_index then
+		self._selected_profile = nil
+		self._selected_character_list_index = nil
+	elseif selected_character_id then
+		local is_using_gampepad = not self._using_cursor_navigation
 
-	grid:assign_scrollbar(scrollbar_widget, grid_content_scenegraph_id, interaction_scenegraph_id)
-	grid:set_scrollbar_progress(0)
+		self._character_list_grid:select_grid_index(found_selected_character_index, starting_scrollbar_position or 0, true, is_using_gampepad)
 
-	self._character_list_widgets = char_list
-	self._character_list_grid = grid
-	self._selected_profile = nil
+		self._selected_character_list_index = found_selected_character_index
+	end
+
+	self._character_list_grid:set_scrollbar_progress(starting_scrollbar_position or 0)
 end
 
 MainMenuView._draw_character_list = function (self, dt, t, input_service, layer)
@@ -799,10 +1019,6 @@ end
 
 MainMenuView.character_profiles = function (self)
 	return self._character_profiles
-end
-
-MainMenuView.character_wait_overlay_active = function (self)
-	return self._profiles_wait_overlay_active
 end
 
 MainMenuView.on_character_widget_selected = function (self, index)
@@ -1105,6 +1321,44 @@ MainMenuView._can_show_news = function (self)
 	local news_element = self._news_element
 
 	return news_element and news_element:can_open_view()
+end
+
+MainMenuView._move_character_up_on_list = function (self, current_index)
+	local character_widget = self._character_list_widgets[current_index]
+	local character_id = character_widget and character_widget.content.profile and character_widget.content.profile.character_id
+
+	if character_id then
+		self:_change_character_id_order(character_id, current_index - 1)
+	end
+end
+
+MainMenuView._move_character_down_on_list = function (self, current_index)
+	local character_widget = self._character_list_widgets[current_index]
+	local character_id = character_widget and character_widget.content.profile and character_widget.content.profile.character_id
+
+	if character_id then
+		self:_change_character_id_order(character_id, current_index + 1)
+	end
+end
+
+MainMenuView._move_selected_character_up_on_list = function (self)
+	local selected_profile = self._selected_profile
+	local character_id = selected_profile and selected_profile.character_id
+	local current_index = self._selected_character_list_index
+
+	if character_id and current_index then
+		self:_change_character_id_order(character_id, current_index - 1)
+	end
+end
+
+MainMenuView._move_selected_character_down_on_list = function (self)
+	local selected_profile = self._selected_profile
+	local character_id = selected_profile and selected_profile.character_id
+	local current_index = self._selected_character_list_index
+
+	if character_id and current_index then
+		self:_change_character_id_order(character_id, current_index + 1)
+	end
 end
 
 return MainMenuView

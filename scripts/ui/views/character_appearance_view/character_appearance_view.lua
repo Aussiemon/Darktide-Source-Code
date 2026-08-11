@@ -14,6 +14,7 @@ local Items = require("scripts/utilities/items")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ItemSourceSettings = require("scripts/settings/item/item_source_settings_new")
 local MasterItems = require("scripts/backend/master_items")
+local PlayerHeight = require("scripts/utilities/player_height")
 local Popups = require("scripts/utilities/ui/popups")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local Promise = require("scripts/foundation/utilities/promise")
@@ -126,11 +127,11 @@ CharacterAppearanceView.on_enter = function (self)
 			end
 		end
 
-		self:_register_event("update_profiles_sync_state", "_event_profiles_sync_changed")
+		self:_register_event("update_profiles_sync_state", "_show_loading_character")
 
-		local is_syncing = self._parent and self._parent._character_is_syncing or false
+		local is_syncing = not not self._parent and not not self._parent._character_is_syncing
 
-		self:_event_profiles_sync_changed(is_syncing)
+		self:_show_loading_character(is_syncing)
 		self:_create_offscreen_renderer()
 		self:_setup_input_legend()
 		self:_setup_button_callbacks()
@@ -164,8 +165,7 @@ CharacterAppearanceView.on_enter = function (self)
 			self._character_create:reset_backstory()
 		end
 
-		self._fade_animation_id = self:_start_animation("on_level_switch")
-
+		self:_trigger_transition_fade_animation(false)
 		self:_open_page(1)
 
 		self._character_create_promise = nil
@@ -368,6 +368,14 @@ CharacterAppearanceView._get_pages = function (self)
 
 					self:_populate_page_grid(1, grid)
 				end
+			end
+
+			local valid_archetype = archetype == "broker"
+
+			valid_archetype = valid_archetype or archetype == "cryptic"
+
+			if valid_archetype and previous_page.index > page.index then
+				self:_trigger_transition_fade_animation(true)
 			end
 		end,
 		on_leave = function (page, next_page)
@@ -1359,6 +1367,10 @@ CharacterAppearanceView._get_pages = function (self)
 			end
 
 			self._navigation.index = self._navigation.index + 1
+
+			if not self._is_barber_mindwipe and previous_page.index > page.index then
+				self:_trigger_transition_fade_animation(true)
+			end
 		end,
 		on_leave = function (page, next_page)
 			local world_spawner = self._world_spawners[self._active_world]
@@ -1380,14 +1392,6 @@ CharacterAppearanceView._get_pages = function (self)
 				WwiseWorld.destroy_manual_source(wwise_world, self._voice_sample_source)
 
 				self._voice_sample_source = nil
-			end
-
-			if not self._is_barber_mindwipe and archetype == "cryptic" and next_page.index > page.index then
-				if self._fade_animation_id then
-					self:_stop_animation(self._fade_animation_id)
-				end
-
-				self._fade_animation_id = self:_start_animation("on_level_switch")
 			end
 
 			self._profile_spawner:set_auto_rotation_return(false)
@@ -1775,6 +1779,10 @@ CharacterAppearanceView._get_pages = function (self)
 
 				self:_check_input_errors(name, error_message)
 			end
+
+			if not self._is_barber_mindwipe and archetype == "cryptic" and previous_page.index < page.index then
+				self:_trigger_transition_fade_animation(true)
+			end
 		end,
 		on_leave = function (page, next_page)
 			local show_gear = next_page.index > page.index
@@ -1786,15 +1794,6 @@ CharacterAppearanceView._get_pages = function (self)
 			end
 
 			self:_set_camera(nil, nil, nil)
-
-			if not self._is_barber_mindwipe and archetype == "cryptic" and next_page.index < page.index then
-				if self._fade_animation_id then
-					self:_stop_animation(self._fade_animation_id)
-				end
-
-				self._fade_animation_id = self:_start_animation("on_level_switch")
-			end
-
 			self:_toggle_continue_alternative_action(false)
 
 			if next_page.index < page.index then
@@ -2766,7 +2765,7 @@ CharacterAppearanceView._show_final_popup = function (self)
 					callback = function ()
 						if not self.__deleted then
 							local character_create = self._character_create
-							local height = character_create:height()
+							local profile_character_height = character_create:height()
 							local profile = character_create and character_create:profile()
 							local loadout = profile and profile.loadout
 
@@ -2783,11 +2782,16 @@ CharacterAppearanceView._show_final_popup = function (self)
 								if self._character_create:has_modifications(real_profile, {
 									"height",
 								}) then
-									Managers.data_service.profiles:set_character_height(character_id, height)
+									Managers.data_service.profiles:set_character_height(character_id, profile_character_height)
 
-									real_profile.personal.character_height = height
+									real_profile.personal.character_height = profile_character_height
 
-									Unit.set_local_scale(real_unit, 1, Vector3.one() * height)
+									local breed_name = archetype.breed
+									local breed = Breeds[breed_name]
+									local scale = PlayerHeight.player_character_third_person_scale(breed, real_profile, nil)
+									local spawn_scale = Vector3(scale, scale, scale)
+
+									Unit.set_local_scale(real_unit, 1, spawn_scale)
 								end
 							end
 
@@ -3138,17 +3142,15 @@ CharacterAppearanceView._change_page_indicator = function (self, index)
 	end
 end
 
-CharacterAppearanceView._event_profiles_sync_changed = function (self, is_active)
-	self:_show_loading_character(is_active)
-end
-
 CharacterAppearanceView._show_loading_character = function (self, is_active)
 	self._loading_overlay_visible = is_active
+	self._widgets_by_name.loading_overlay.content.text = ""
+	self._widgets_by_name.loading_overlay.content.visible = is_active
+end
 
-	if is_active then
-		self._widgets_by_name.loading_overlay.content.text = ""
-	end
-
+CharacterAppearanceView._show_loading_awaiting_validation = function (self, is_active)
+	self._loading_overlay_visible = is_active
+	self._widgets_by_name.loading_overlay.content.text = is_active and Localize("loc_character_create_await_validation") or ""
 	self._widgets_by_name.loading_overlay.content.visible = is_active
 end
 
@@ -3159,8 +3161,8 @@ CharacterAppearanceView.update = function (self, dt, t, input_service)
 
 	local continue_disabled = false
 
-	if self._fade_animation_id and self:_is_animation_completed(self._fade_animation_id) then
-		self._fade_animation_id = nil
+	if self._transition_fade_animation_id and self:_is_animation_completed(self._transition_fade_animation_id) then
+		self._transition_fade_animation_id = nil
 	end
 
 	for ii = 1, #self._page_grids do
@@ -3276,6 +3278,8 @@ CharacterAppearanceView.update = function (self, dt, t, input_service)
 
 			self._level = nil
 		end
+	elseif self._loading_overlay_visible then
+		self:_show_loading_character(false)
 	end
 
 	if self._in_barber_chair and self._twitching_time then
@@ -3305,11 +3309,17 @@ CharacterAppearanceView.update = function (self, dt, t, input_service)
 				parent:_update_wallets()
 				parent:play_vo_events(VO_EVENTS.mindwipe_conclusion, "training_ground_psyker_a", nil, 0.5)
 
-				local height = character_create:height()
+				local profile_character_height = character_create:height()
 				local player = Managers.player:local_player(1)
+				local real_profile = player:profile()
+				local archetype = real_profile and real_profile.archetype
 				local real_unit = player.player_unit
+				local breed_name = archetype.breed
+				local breed = Breeds[breed_name]
+				local scale = PlayerHeight.player_character_third_person_scale(breed, real_profile, nil)
+				local spawn_scale = Vector3(scale, scale, scale)
 
-				Unit.set_local_scale(real_unit, 1, Vector3.one() * height)
+				Unit.set_local_scale(real_unit, 1, spawn_scale)
 
 				local mission_board_service = Managers.data_service.mission_board
 				local narrative_manager = Managers.narrative
@@ -8381,16 +8391,6 @@ CharacterAppearanceView._stop_name_input = function (self, input_widget)
 	end
 end
 
-CharacterAppearanceView._show_loading_awaiting_validation = function (self, is_active)
-	self._loading_overlay_visible = is_active
-
-	if is_active then
-		self._widgets_by_name.loading_overlay.content.text = Localize("loc_character_create_await_validation")
-	end
-
-	self._widgets_by_name.loading_overlay.content.visible = is_active
-end
-
 CharacterAppearanceView._handle_input = function (self, input_service)
 	if input_service:get("navigate_up_continuous") then
 		self:_grid_navigation("up")
@@ -8749,11 +8749,8 @@ CharacterAppearanceView._set_active_world = function (self, page_name, spawn_cha
 			self:_destroy_background()
 		end
 
-		if self._fade_animation_id then
-			self:_stop_animation(self._fade_animation_id)
-		end
+		self:_trigger_transition_fade_animation(true)
 
-		self._fade_animation_id = self:_start_animation("on_level_switch")
 		self._spawn_point_unit = nil
 
 		self:_setup_background_world(page_name)
@@ -8786,6 +8783,15 @@ CharacterAppearanceView._world_spawner_by_world = function (self, world)
 			return world_spawner
 		end
 	end
+end
+
+CharacterAppearanceView._trigger_transition_fade_animation = function (self, stop_existing)
+	if stop_existing and self._transition_fade_animation_id then
+		self:_stop_animation(self._transition_fade_animation_id)
+	end
+
+	self._widgets_by_name.transition_fade.alpha_multiplier = 1
+	self._transition_fade_animation_id = self:_start_animation("transition_fade")
 end
 
 function _continue_validation_item_slots(self, slots)

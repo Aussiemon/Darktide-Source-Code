@@ -46,6 +46,7 @@ NewsService.init = function (self, backend_interface)
 	self._backend_interface = backend_interface
 	self._cached_data = {}
 	self._cached_promise = {}
+	self._has_news = false
 end
 
 NewsService.get_category = function (self, category, use_cache)
@@ -95,7 +96,17 @@ NewsService.get_category = function (self, category, use_cache)
 end
 
 NewsService.get_news = function (self)
-	return self:get_category("news", true)
+	return self:get_category("news", true):next(function (data)
+		if data and #data > 0 then
+			self._has_news = true
+		end
+
+		return data
+	end)
+end
+
+NewsService.has_news_cached = function (self)
+	return self._has_news
 end
 
 NewsService.get_events = function (self)

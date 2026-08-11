@@ -28,6 +28,7 @@ PowerWeaponEffects.init = function (self, context, slot, weapon_template, fx_sou
 	self._slot_name = slot.name
 	self._world = context.world
 	self._wwise_world = context.wwise_world
+	self._weapon_template = weapon_template
 
 	if GameParameters.destroy_unmanaged_particles then
 		self._particle_group_id = context.player_particle_group_id
@@ -84,8 +85,12 @@ PowerWeaponEffects.wield = function (self)
 end
 
 PowerWeaponEffects.unwield = function (self)
+	local force_stop_vfx = false
+
+	force_stop_vfx = force_stop_vfx or self._weapon_template.name == "powermaul_p3_m1" or self._weapon_template.name == "powermaul_p3_m2" or self._weapon_template.name == "powermaul_p3_m3"
+
 	self:_stop_sfx_loop()
-	self:_stop_vfx_loop()
+	self:_stop_vfx_loop(force_stop_vfx)
 	self:_stop_emit_vfx_loop(true)
 	self:_set_stop_time()
 

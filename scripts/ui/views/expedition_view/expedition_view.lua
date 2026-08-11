@@ -1074,6 +1074,10 @@ ExpeditionView.cb_on_unlock_node_input_pressed = function (self)
 end
 
 ExpeditionView.cb_on_back_pressed = function (self)
+	if self._options and self._options:is_open() then
+		return
+	end
+
 	self:_play_sound(UISoundEvents.expedition_view_select_unlocked_end)
 	Managers.ui:close_view(self.view_name)
 end

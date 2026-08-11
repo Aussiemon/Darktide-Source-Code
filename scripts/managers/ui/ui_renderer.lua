@@ -1205,9 +1205,15 @@ UIRenderer.draw_video = function (self, material_name, position, size, color, vi
 		Gui.video(gui, material_name, video_player, y_slot_name, uv_slot_name, position, UIResolution.scale_vector(size, scale, pixel_snap), color)
 	end
 
-	local is_complete = VideoPlayer.current_frame(video_player) == VideoPlayer.number_of_frames(video_player)
+	local number_of_frames = VideoPlayer.number_of_frames(video_player)
 
-	return is_complete
+	if number_of_frames == 0 then
+		return false
+	end
+
+	local current_frame = VideoPlayer.current_frame(video_player)
+
+	return number_of_frames <= current_frame
 end
 
 local circleVerts = {}

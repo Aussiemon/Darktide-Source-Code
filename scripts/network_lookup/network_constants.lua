@@ -99,6 +99,7 @@ _check_network_lookup_boundaries("lookup_1bit", "weapon_blood_amounts")
 _check_network_lookup_boundaries("optional_wounds_shape_id", "wounds_shapes")
 _check_network_lookup_boundaries("camera_shake_id", "camera_shake_events")
 _check_network_lookup_boundaries("dialogue_breed_id", "dialogue_breed_names")
+_check_network_lookup_boundaries("lookup_2bit", "expedition_dropped_loot_mark_types")
 
 NetworkConstants.check_network_lookup_boundaries = _check_network_lookup_boundaries
 

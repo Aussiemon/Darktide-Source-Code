@@ -1,6 +1,26 @@
 ﻿-- chunkname: @dialogues/generated/mission_vo_hm_strain_broker_female_a.lua
 
 local mission_vo_hm_strain_broker_female_a = {
+	event_demolition_first_corruptor_destroyed_strain_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_broker_female_a__event_demolition_first_corruptor_destroyed_a_01",
+			"loc_broker_female_a__event_demolition_first_corruptor_destroyed_a_02",
+			"loc_broker_female_a__event_demolition_first_corruptor_destroyed_a_03",
+		},
+		sound_events_duration = {
+			3.193781,
+			3.104615,
+			2.29401,
+		},
+		sound_event_weights = {
+			0.3333333,
+			0.3333333,
+			0.3333333,
+		},
+		randomize_indexes = {},
+	},
 	mission_strain_crossroads = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

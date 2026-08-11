@@ -479,7 +479,7 @@ OptionsView.update = function (self, dt, t, input_service, view_data)
 			end
 
 			if category_data.settings then
-				for _, settings_data in pairs(category_data.settings) do
+				for setting_name, settings_data in pairs(category_data.settings) do
 					local valid = settings_data.validation_function and settings_data.validation_function()
 
 					if valid ~= nil and valid ~= settings_data.validation_result then
@@ -811,6 +811,10 @@ OptionsView._setup_settings_config = function (self, config)
 
 			if setting.get_function then
 				settings_default_values[category][setting] = setting.default_value
+			end
+
+			if setting.init then
+				setting.init(setting)
 			end
 
 			local widget_suffix = "setting_" .. tostring(setting_index)

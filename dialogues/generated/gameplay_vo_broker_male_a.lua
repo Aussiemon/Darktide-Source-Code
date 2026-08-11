@@ -2962,6 +2962,32 @@ local gameplay_vo_broker_male_a = {
 		},
 		randomize_indexes = {},
 	},
+	seen_enemy_tox_flamer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_broker_male_a__seen_enemy_scab_flamer_a_01",
+			"loc_broker_male_a__seen_enemy_scab_flamer_a_02",
+			"loc_broker_male_a__seen_enemy_scab_flamer_a_03",
+			"loc_broker_male_a__seen_enemy_scab_flamer_a_04",
+			"loc_broker_male_a__seen_enemy_scab_flamer_a_05",
+		},
+		sound_events_duration = {
+			2.22624,
+			2.143427,
+			1.617979,
+			1.714083,
+			2.795854,
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+		},
+		randomize_indexes = {},
+	},
 	seen_netgunner = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

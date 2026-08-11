@@ -35,6 +35,7 @@ local stat_buffs = BuffSettings.stat_buffs
 local talent_settings = TalentSettings.veteran
 local talent_settings_2 = TalentSettings.veteran_2
 local talent_settings_3 = TalentSettings.veteran_3
+local GREANDE_ABILITY_TYPE = "grenade_ability"
 local _can_show_outline, _start_outlines, _update_outlines, _end_outlines, _is_in_weapon_alternate_fire_with_stamina
 
 local function _volley_fire_penance_start(template_data, template_context)
@@ -1828,8 +1829,6 @@ templates.veteran_frag_grenade_bleed = {
 	end,
 }
 
-local grenade_replenishment_cooldown = talent_settings_2.offensive_1_3.grenade_replenishment_cooldown
-local ABILITY_TYPE = "grenade_ability"
 local grenades_restored = talent_settings_2.offensive_1_3.grenade_restored
 local external_properties = {}
 
@@ -1846,15 +1845,18 @@ templates.veteran_grenade_replenishment = {
 		template_data.fx_extension = ScriptUnit.extension(unit, "fx_system")
 		template_data.first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 		template_data.missing_charges = 0
+		template_data.grenade_replenishment_cooldown = talent_settings_2.offensive_1_3.grenade_replenishment_cooldown
 
 		local ability_name = template_data.ability_extension:get_current_grenade_ability_name()
 
+		template_data.ability_found = ability_name ~= nil
+
 		if ability_name == "veteran_krak_grenade" then
-			grenade_replenishment_cooldown = talent_settings_2.offensive_1_3.krak_time
+			template_data.grenade_replenishment_cooldown = talent_settings_2.offensive_1_3.krak_time
 		elseif ability_name == "veteran_frag_grenade" then
-			grenade_replenishment_cooldown = talent_settings_2.offensive_1_3.frag_time
+			template_data.grenade_replenishment_cooldown = talent_settings_2.offensive_1_3.frag_time
 		elseif ability_name == "veteran_smoke_grenade" then
-			grenade_replenishment_cooldown = talent_settings_2.offensive_1_3.smoke_time
+			template_data.grenade_replenishment_cooldown = talent_settings_2.offensive_1_3.smoke_time
 		end
 	end,
 	update_func = function (template_data, template_context, dt, t, template)
@@ -1871,14 +1873,28 @@ templates.veteran_grenade_replenishment = {
 
 		local ability_extension = template_data.ability_extension
 
-		if not ability_extension or not ability_extension:has_ability_type(ABILITY_TYPE) then
+		if not ability_extension or not ability_extension:has_ability_type(GREANDE_ABILITY_TYPE) then
 			template_data.next_grenade_t = nil
 			template_data.missing_charges = 0
 
 			return
 		end
 
-		local missing_charges = ability_extension and ability_extension:missing_ability_charges(ABILITY_TYPE)
+		if not template_data.ability_found then
+			local ability_name = template_data.ability_extension:get_current_grenade_ability_name()
+
+			template_data.ability_found = ability_name ~= nil
+
+			if ability_name == "veteran_krak_grenade" then
+				template_data.grenade_replenishment_cooldown = talent_settings_2.offensive_1_3.krak_time
+			elseif ability_name == "veteran_frag_grenade" then
+				template_data.grenade_replenishment_cooldown = talent_settings_2.offensive_1_3.frag_time
+			elseif ability_name == "veteran_smoke_grenade" then
+				template_data.grenade_replenishment_cooldown = talent_settings_2.offensive_1_3.smoke_time
+			end
+		end
+
+		local missing_charges = ability_extension and ability_extension:missing_ability_charges(GREANDE_ABILITY_TYPE)
 
 		if missing_charges == 0 then
 			template_data.next_grenade_t = nil
@@ -1892,14 +1908,14 @@ templates.veteran_grenade_replenishment = {
 		local next_grenade_t = template_data.next_grenade_t
 
 		if not next_grenade_t then
-			template_data.next_grenade_t = t + grenade_replenishment_cooldown
+			template_data.next_grenade_t = t + template_data.grenade_replenishment_cooldown
 
 			return
 		end
 
 		if next_grenade_t < t then
-			if ability_extension and ability_extension:has_ability_type(ABILITY_TYPE) then
-				ability_extension:restore_ability_charge(ABILITY_TYPE, grenades_restored)
+			if ability_extension and ability_extension:has_ability_type(GREANDE_ABILITY_TYPE) then
+				ability_extension:restore_ability_charge(GREANDE_ABILITY_TYPE, grenades_restored)
 
 				local first_person_extension = template_data.first_person_extension
 
@@ -1927,7 +1943,7 @@ templates.veteran_grenade_replenishment = {
 
 		local t = FixedFrame.get_latest_fixed_time()
 		local time_until_next = next_grenade_t - t
-		local percentage_left = time_until_next / grenade_replenishment_cooldown
+		local percentage_left = time_until_next / template_data.grenade_replenishment_cooldown
 
 		return 1 - percentage_left
 	end,
@@ -2107,8 +2123,8 @@ templates.veteran_aura_gain_grenade_on_elite_kill = {
 
 		local ability_extension = ScriptUnit.has_extension(unit, "ability_system")
 
-		if ability_extension and ability_extension:has_ability_type(ABILITY_TYPE) then
-			ability_extension:restore_ability_charge(ABILITY_TYPE, grenades_restored)
+		if ability_extension and ability_extension:has_ability_type(GREANDE_ABILITY_TYPE) then
+			ability_extension:restore_ability_charge(GREANDE_ABILITY_TYPE, grenades_restored)
 		end
 	end,
 }
@@ -2902,6 +2918,7 @@ templates.veteran_snipers_focus_rending_buff = {
 local max_ranged_stacks = 10
 local max_melee_stacks = 1
 local toughness_cd = 3
+local veteran_weapon_switch_keystone_ammo_replenish_percent = 0.33
 
 templates.veteran_weapon_switch_passive_buff = {
 	class_name = "server_only_proc_buff",
@@ -2926,10 +2943,11 @@ templates.veteran_weapon_switch_passive_buff = {
 
 		local talent_extension = ScriptUnit.extension(unit, "talent_system")
 
+		template_data.restore_ammo = talent_extension:has_special_rule("veteran_weapon_switch_replenish_ammo")
+		template_data.give_reload_speed = talent_extension:has_special_rule("veteran_weapon_switch_reload_speed")
 		template_data.restore_toughness = talent_extension:has_special_rule("veteran_weapon_switch_replenish_toughness")
 		template_data.last_ranged_toughness = 0
 		template_data.last_melee_toughness = 0
-		template_data.restore_ammo = talent_extension:has_special_rule("veteran_weapon_switch_replenish_ammo")
 
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 
@@ -2972,6 +2990,25 @@ templates.veteran_weapon_switch_passive_buff = {
 		end,
 		on_wield_ranged = function (params, template_data, template_context, t)
 			template_context.buff_extension:add_internally_controlled_buff_with_stacks("veteran_weapon_switch_ranged_buff", template_data.ranged_stacks, t)
+
+			if template_data.restore_ammo and template_data.ranged_stacks > 0 then
+				local inventory_slot_secondary_component = template_data.inventory_slot_secondary_component
+				local missing_ammo_in_clip = Ammo.missing_ammo_in_clips(inventory_slot_secondary_component)
+				local amount = math.ceil(missing_ammo_in_clip * veteran_weapon_switch_keystone_ammo_replenish_percent * (template_data.ranged_stacks / max_ranged_stacks))
+
+				Ammo.transfer_from_reserve_to_clip(inventory_slot_secondary_component, amount)
+
+				local weapon_template = template_data.visual_loadout_extension:weapon_template_from_slot("slot_secondary")
+				local reload_template = weapon_template.reload_template
+
+				if reload_template then
+					ReloadStates.reset(reload_template, inventory_slot_secondary_component)
+				end
+			end
+
+			if template_data.give_reload_speed and template_data.ranged_stacks > 0 then
+				template_context.buff_extension:add_internally_controlled_buff("veteran_weapon_switch_reload_speed", t)
+			end
 
 			if template_data.ranged_id then
 				template_context.buff_extension:remove_externally_controlled_buff(template_data.ranged_id)
@@ -3032,6 +3069,9 @@ templates.veteran_weapon_switch_ranged_visual = {
 	predicted = false,
 	use_talent_resource = true,
 	max_stacks = max_ranged_stacks,
+	related_talents = {
+		"veteran_weapon_switch_passive",
+	},
 }
 templates.veteran_weapon_switch_melee_visual = {
 	class_name = "buff",
@@ -3045,7 +3085,6 @@ templates.veteran_weapon_switch_melee_visual = {
 	},
 }
 
-local ammo_replenish_percent = 0.33
 local veteran_weapon_switch_ranged_duration = talent_settings.veteran_weapon_swap_keystone.ranged_duration
 
 templates.veteran_weapon_switch_ranged_buff = {
@@ -3053,6 +3092,7 @@ templates.veteran_weapon_switch_ranged_buff = {
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_weapon_switch_crit_bonus",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
 	predicted = false,
+	skip_tactical_overlay = true,
 	max_stacks = max_ranged_stacks,
 	max_stacks_cap = max_ranged_stacks,
 	duration = veteran_weapon_switch_ranged_duration,
@@ -3083,44 +3123,6 @@ templates.veteran_weapon_switch_ranged_buff = {
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 
 		template_data.inventory_component = unit_data_extension:read_component("inventory")
-		template_data.inventory_slot_secondary_component = unit_data_extension:write_component("slot_secondary")
-
-		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-
-		template_data.visual_loadout_extension = visual_loadout_extension
-	end,
-	update_func = function (template_data, template_context)
-		if template_data.first_update_done then
-			return
-		end
-
-		local unit = template_context.unit
-		local talent_extension = ScriptUnit.extension(unit, "talent_system")
-		local restore_ammo = talent_extension:has_special_rule("veteran_weapon_switch_replenish_ammo")
-		local add_reload_speed = talent_extension:has_special_rule("veteran_weapon_switch_reload_speed")
-
-		if restore_ammo then
-			local inventory_slot_secondary_component = template_data.inventory_slot_secondary_component
-			local missing_ammo_in_clip = Ammo.missing_ammo_in_clips(inventory_slot_secondary_component)
-			local amount = math.ceil(missing_ammo_in_clip * ammo_replenish_percent * (template_context.stack_count / max_ranged_stacks))
-
-			Ammo.transfer_from_reserve_to_clip(inventory_slot_secondary_component, amount)
-
-			local weapon_template = template_data.visual_loadout_extension:weapon_template_from_slot("slot_secondary")
-			local reload_template = weapon_template.reload_template
-
-			if reload_template then
-				ReloadStates.reset(reload_template, inventory_slot_secondary_component)
-			end
-		end
-
-		if add_reload_speed then
-			local t = FixedFrame.get_latest_fixed_time()
-
-			template_context.buff_extension:add_internally_controlled_buff("veteran_weapon_switch_reload_speed", t)
-		end
-
-		template_data.first_update_done = true
 	end,
 	conditional_exit_func = function (template_data, template_context)
 		local wielded_slot_name = template_data.inventory_component.wielded_slot
@@ -3152,6 +3154,7 @@ templates.veteran_weapon_switch_melee_buff = {
 	hud_icon = "content/ui/textures/icons/buffs/hud/veteran/veteran_weapon_switch_cleave_bonus",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
 	predicted = false,
+	skip_tactical_overlay = true,
 	max_stacks = max_melee_stacks,
 	max_stacks_cap = max_melee_stacks,
 	proc_events = {
@@ -3190,7 +3193,7 @@ templates.veteran_weapon_switch_melee_buff = {
 		return wielded_slot_name ~= "slot_primary"
 	end,
 	related_talents = {
-		"veteran_weapon_switch_melee_buff",
+		"veteran_weapon_switch_melee",
 	},
 }
 
@@ -3500,7 +3503,7 @@ templates.veteran_improved_tag_allied_buff = {
 		[stat_buffs.damage] = 0.025,
 	},
 	related_talents = {
-		"veteran_improved_tag_dead_bonus",
+		"veteran_improved_tag_dead_coherency_bonus",
 	},
 }
 templates.veteran_improved_tag_allied_buff_increased_stacks = table.clone(templates.veteran_improved_tag_allied_buff)

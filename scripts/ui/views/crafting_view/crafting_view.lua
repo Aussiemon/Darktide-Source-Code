@@ -128,7 +128,7 @@ CraftingView.on_enter = function (self)
 	achievements_manager:unlock_achievement(player, achievement_name)
 	self:play_vo_events({
 		"hub_idle_crafting",
-	}, "tech_priest_a", nil, 0.8)
+	}, "tech_priest_a", nil, 0.8, true)
 
 	self._next_tab_index = nil
 end
@@ -424,7 +424,7 @@ CraftingView.craft = function (self, recipe, ingredients, callback, done_callbac
 
 		self:play_vo_events({
 			"crafting_complete",
-		}, "tech_priest_a", nil, 1.4)
+		}, "tech_priest_a", nil, 1.4, true)
 
 		local input_item = ingredients.item
 

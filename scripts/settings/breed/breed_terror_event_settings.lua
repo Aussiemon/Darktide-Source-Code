@@ -77,10 +77,10 @@ breed_terror_event_settings.renegade_melee = {
 	point_cost = 3,
 }
 breed_terror_event_settings.renegade_vanguard = {
-	point_cost = 5,
+	point_cost = 10,
 }
 breed_terror_event_settings.cultist_vanguard = {
-	point_cost = 4,
+	point_cost = 8,
 }
 breed_terror_event_settings.renegade_captain = {
 	point_cost = 10,

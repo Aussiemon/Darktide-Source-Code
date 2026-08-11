@@ -3,6 +3,7 @@
 require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
 
 local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
+local AchievementFlags = require("scripts/settings/achievements/achievement_flags")
 local AchievementUiHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
 local Breeds = require("scripts/settings/breed/breeds")
 local CrimesCompabilityMapping = require("scripts/settings/character/crimes_compability_mapping")
@@ -16,6 +17,7 @@ local Promise = require("scripts/foundation/utilities/promise")
 local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local ScriptCamera = require("scripts/foundation/utilities/script_camera")
 local SelectedVoiceSettings = require("scripts/settings/dialogue/selected_voice_settings")
+local StatDefinitions = require("scripts/managers/stats/stat_definitions")
 local Text = require("scripts/utilities/ui/text")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
@@ -51,6 +53,25 @@ local ANIMATION_SLOTS_MAP = {
 	slot_animation_emote_5 = true,
 	slot_animation_end_of_round = true,
 }
+
+local function _stats_sort_iterator(stats, stats_sorting)
+	local sort_table = stats_sorting
+
+	if not sort_table then
+		sort_table = table.keys(stats)
+
+		table.sort(sort_table)
+	end
+
+	local ii = 0
+
+	return function ()
+		ii = ii + 1
+
+		return sort_table[ii], stats[sort_table[ii]]
+	end
+end
+
 local InventoryCosmeticsView = class("InventoryCosmeticsView", "ItemGridViewBase")
 
 InventoryCosmeticsView.init = function (self, settings, context)
@@ -450,6 +471,40 @@ InventoryCosmeticsView._setup_side_panel = function (self, item, is_locked, dx, 
 
 		if unlock_description then
 			_add_text_widget(Definitions.big_details_text_pass, unlock_description)
+		end
+
+		local achievement = unlock_title and AchievementUiHelper.get_acheivement_by_reward_item(item)
+		local stats = achievement and achievement.stats
+
+		if stats and is_locked then
+			local player = self._preview_player
+			local player_id = player.remote and player.stat_id or player:local_player_id()
+			local use_checkboxes = achievement.flags[AchievementFlags.use_checkboxes]
+
+			_add_spacing(8)
+
+			for stat_name, stat_settings in _stats_sort_iterator(stats, achievement.stats_sorting) do
+				local target = stat_settings.target
+				local value = math.min(Managers.stats:read_user_stat(player_id, stat_name), target)
+				local stat_is_complete = target <= value
+				local progress_text
+
+				if use_checkboxes then
+					local color = stat_is_complete and Color.ui_achievement_icon_completed(255, true) or Color.terminal_text_body_dark(255, true)
+
+					progress_text = Text.apply_color_to_text("", color)
+				else
+					local value_text = stat_is_complete and Text.apply_color_to_text(tostring(value), Color.ui_achievement_icon_completed(255, true)) or tostring(value)
+					local target_text = stat_is_complete and Text.apply_color_to_text(tostring(target), Color.ui_achievement_icon_completed(255, true)) or tostring(target)
+
+					progress_text = value_text .. "/" .. target_text
+				end
+
+				local loc_stat_name = Localize(StatDefinitions[stat_name].stat_name or "unknown")
+
+				_add_spacing(8)
+				_add_text_widget(Definitions.small_body_text_pass, string.format("• %s: %s", loc_stat_name, progress_text))
+			end
 		end
 	end
 

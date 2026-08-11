@@ -19,6 +19,7 @@ local Unit_set_vector3_for_materials = Unit.set_vector3_for_materials
 local Unit_set_vector4_for_materials = Unit.set_vector4_for_materials
 local Unit_set_texture_for_materials = Unit.set_texture_for_materials
 local Unit_set_texture_for_material = Unit.set_texture_for_material
+local Unit_set_material = Unit.set_material
 
 VisualLoadoutCustomization.apply_material_override_item = function (unit, parent_unit, apply_to_parent, material_override_item, in_editor, item_definitions, item_manager)
 	local material_override_item_data = _validate_item_name(material_override_item)
@@ -549,10 +550,23 @@ function _apply_material_override_item(unit, material_override_item, in_editor)
 			local material_slot = texture_override_data.material_slot
 			local resource = texture_override_data.texture
 
-			if material_slot == nil or material_slot == "" then
-				Unit_set_texture_for_materials(unit, texture_slot, resource, true)
-			else
-				Unit_set_texture_for_material(unit, material_slot, texture_slot, resource)
+			if resource ~= nil and resource ~= "" and texture_slot ~= nil and texture_slot ~= "" then
+				if material_slot == nil or material_slot == "" then
+					Unit_set_texture_for_materials(unit, texture_slot, resource, true)
+				else
+					Unit_set_texture_for_material(unit, material_slot, texture_slot, resource)
+				end
+			end
+		end
+	end
+
+	if material_override_item.material_overrides ~= nil then
+		for _, material_override_data in pairs(material_override_item.material_overrides) do
+			local material_slot = material_override_data.material_slot
+			local material_resource = material_override_data.material
+
+			if material_resource ~= nil and material_resource ~= "" and material_slot ~= nil and material_slot ~= "" then
+				Unit_set_material(unit, material_slot, material_resource)
 			end
 		end
 	end

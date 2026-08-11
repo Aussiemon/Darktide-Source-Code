@@ -4566,6 +4566,13 @@ local gameplay_vo_veteran_male_b = {
 			2.435583,
 			3.671917,
 		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+		},
 		randomize_indexes = {},
 	},
 	seen_netgunner = {

@@ -157,26 +157,6 @@ local on_demand_vo_adamant_female_c = {
 		},
 		randomize_indexes = {},
 	},
-	com_wheel_vo_thank_you_delayed = {
-		randomize_indexes_n = 0,
-		sound_events_n = 3,
-		sound_events = {
-			"loc_adamant_female_c__com_wheel_vo_thank_you_01",
-			"loc_adamant_female_c__com_wheel_vo_thank_you_03",
-			"loc_adamant_female_c__com_wheel_vo_thank_you_05",
-		},
-		sound_events_duration = {
-			0.945229,
-			1.586917,
-			0.81074,
-		},
-		sound_event_weights = {
-			0.3333333,
-			0.3333333,
-			0.3333333,
-		},
-		randomize_indexes = {},
-	},
 	com_wheel_vo_yes = {
 		randomize_indexes_n = 0,
 		sound_events_n = 3,

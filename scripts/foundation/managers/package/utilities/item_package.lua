@@ -60,7 +60,7 @@ ItemPackage._require_level_items = function (level_name, item_data)
 					if data_type == "resource" then
 						ItemPackage._get_item_data_from_component(item_data, unit_data, editor_only_component_default, dynamic_data_path)
 					elseif data_type == "resource_array" then
-						ItemPackage._get_items_data_from_component(item_data, unit_data, editor_only_component_default, dynamic_data_path)
+						ItemPackage._get_items_data_from_component(level_name, item_data, unit_data, editor_only_component_default, dynamic_data_path)
 					end
 				end
 			end
@@ -96,7 +96,7 @@ ItemPackage._get_item_data_from_component = function (items, unit_data, editor_o
 	end
 end
 
-ItemPackage._get_items_data_from_component = function (items, unit_data, editor_only_component_default, path)
+ItemPackage._get_items_data_from_component = function (level_name, items, unit_data, editor_only_component_default, path)
 	local data_field = path[#path]
 
 	path[#path] = "editor_only"
@@ -114,11 +114,11 @@ ItemPackage._get_items_data_from_component = function (items, unit_data, editor_
 		local i = 1
 		local found_items = 0
 
-		while found_items <= num_items do
+		while found_items < num_items do
 			path[#path + 1] = i
 			path[#path + 1] = "resource"
 
-			local field_value = DynamicData.get(unit_data, unpack(path)) or ""
+			local field_value = DynamicData.get(unit_data, unpack(path))
 
 			if field_value ~= nil then
 				if field_value ~= "" then
@@ -132,6 +132,10 @@ ItemPackage._get_items_data_from_component = function (items, unit_data, editor_
 			table.remove(path, #path)
 
 			i = i + 1
+
+			if i > 50 then
+				found_items = num_items
+			end
 		end
 	end
 end

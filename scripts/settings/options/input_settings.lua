@@ -200,6 +200,7 @@ local function construct_interface_settings_dropdown(template)
 		tooltip_text = template.tooltip_text,
 		disable_rules = template.disable_rules,
 		apply_on_startup = template.apply_on_startup,
+		default_value = template.default_value,
 	}
 
 	return params
@@ -363,6 +364,7 @@ local settings_definitions = {
 		widget_type = "value_slider",
 	},
 	{
+		default_value = "none",
 		display_name = "loc_setting_com_wheel_single_tap",
 		id = "com_wheel_single_tap",
 		save_location = "input_settings",
@@ -370,6 +372,7 @@ local settings_definitions = {
 		options = _com_wheel_tap_options(),
 	},
 	{
+		default_value = "none",
 		display_name = "loc_setting_com_wheel_double_tap",
 		id = "com_wheel_double_tap",
 		save_location = "input_settings",

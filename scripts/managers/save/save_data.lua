@@ -75,6 +75,7 @@ SaveData.default_account_data = {
 		crosshair_enabled = true,
 		crosshair_type_override = "weapon",
 		crossplay_enabled = true,
+		dot_special_crosshair_enabled = true,
 		forced_dot_crosshair_enabled = false,
 		group_buff_icon_in_categories = true,
 		hit_indicator_duration = 0.5,

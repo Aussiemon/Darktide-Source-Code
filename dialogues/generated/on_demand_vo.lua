@@ -484,46 +484,6 @@ return function ()
 	define_rule({
 		category = "player_on_demand_vo",
 		database = "on_demand_vo",
-		name = "com_wheel_vo_thank_you_delayed",
-		response = "com_wheel_vo_thank_you_delayed",
-		wwise_route = 0,
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"on_demand_com_wheel",
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"com_thank_you_delayed",
-			},
-			{
-				"user_memory",
-				"time_since_com_wheel_vo_over_here",
-				OP.TIMEDIFF,
-				OP.GT,
-				5,
-			},
-		},
-		on_done = {
-			{
-				"user_memory",
-				"time_since_com_wheel_vo_over_here",
-				OP.TIMESET,
-			},
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.7,
-			},
-		},
-	})
-	define_rule({
-		category = "player_on_demand_vo",
-		database = "on_demand_vo",
 		name = "com_wheel_vo_yes",
 		response = "com_wheel_vo_yes",
 		wwise_route = 0,
@@ -1574,6 +1534,205 @@ return function ()
 	define_rule({
 		category = "player_on_demand_vo",
 		database = "on_demand_vo",
+		name = "smart_tag_vo_enemy_flamer",
+		response = "smart_tag_vo_enemy_flamer",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"on_demand_vo_tag_enemy",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.SET_INCLUDES,
+				args = {
+					"renegade_flamer",
+					"cultist_flamer",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_NOT_INCLUDES,
+				args = {
+					"ogryn",
+					"psyker",
+					"veteran",
+					"zealot",
+					"adamant",
+				},
+			},
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMEDIFF,
+				OP.GT,
+				5,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMESET,
+			},
+			{
+				"faction_memory",
+				"enemy_cultist_flamer",
+				OP.TIMESET,
+			},
+			{
+				"faction_memory",
+				"enemy_renegade_flamer",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "self",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15,
+			},
+		},
+	})
+	define_rule({
+		category = "player_on_demand_vo",
+		database = "on_demand_vo",
+		name = "smart_tag_vo_enemy_grenadier",
+		response = "smart_tag_vo_enemy_grenadier",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"on_demand_vo_tag_enemy",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.SET_INCLUDES,
+				args = {
+					"renegade_grenadier",
+					"cultist_grenadier",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_NOT_INCLUDES,
+				args = {
+					"ogryn",
+					"psyker",
+					"veteran",
+					"zealot",
+					"adamant",
+				},
+			},
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMEDIFF,
+				OP.GT,
+				5,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMESET,
+			},
+			{
+				"faction_memory",
+				"enemy_cultist_grenadier",
+				OP.TIMESET,
+			},
+			{
+				"faction_memory",
+				"enemy_renegade_grenadier",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "self",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15,
+			},
+		},
+	})
+	define_rule({
+		category = "player_on_demand_vo",
+		database = "on_demand_vo",
+		name = "smart_tag_vo_enemy_gunner",
+		response = "smart_tag_vo_enemy_gunner",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"on_demand_vo_tag_enemy",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.SET_INCLUDES,
+				args = {
+					"renegade_gunner",
+					"cultist_gunner",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_NOT_INCLUDES,
+				args = {
+					"ogryn",
+					"psyker",
+					"veteran",
+					"zealot",
+					"adamant",
+				},
+			},
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMEDIFF,
+				OP.GT,
+				5,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMESET,
+			},
+			{
+				"faction_memory",
+				"enemy_heavy_gunner",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "self",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15,
+			},
+		},
+	})
+	define_rule({
+		category = "player_on_demand_vo",
+		database = "on_demand_vo",
 		name = "smart_tag_vo_enemy_houndmaster",
 		response = "smart_tag_vo_enemy_houndmaster",
 		wwise_route = 0,
@@ -1801,6 +1960,69 @@ return function ()
 			{
 				"faction_memory",
 				"enemy_renegade_flamer",
+				OP.TIMESET,
+			},
+		},
+		heard_speak_routing = {
+			target = "self",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15,
+			},
+		},
+	})
+	define_rule({
+		category = "player_on_demand_vo",
+		database = "on_demand_vo",
+		name = "smart_tag_vo_enemy_shocktrooper",
+		response = "smart_tag_vo_enemy_shocktrooper",
+		wwise_route = 0,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"on_demand_vo_tag_enemy",
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.SET_INCLUDES,
+				args = {
+					"renegade_shocktrooper",
+					"cultist_shocktrooper",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_NOT_INCLUDES,
+				args = {
+					"ogryn",
+					"psyker",
+					"veteran",
+					"zealot",
+					"adamant",
+				},
+			},
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMEDIFF,
+				OP.GT,
+				5,
+			},
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMESET,
+			},
+			{
+				"faction_memory",
+				"enemy_shocktrooper",
 				OP.TIMESET,
 			},
 		},

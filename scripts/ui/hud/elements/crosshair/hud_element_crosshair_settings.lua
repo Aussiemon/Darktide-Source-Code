@@ -26,6 +26,7 @@ local hud_element_crosshair_settings = {
 		"scripts/ui/hud/elements/crosshair/templates/crosshair_template_charge_up",
 		"scripts/ui/hud/elements/crosshair/templates/crosshair_template_cross",
 		"scripts/ui/hud/elements/crosshair/templates/crosshair_template_dot",
+		"scripts/ui/hud/elements/crosshair/templates/crosshair_template_dot_special",
 		"scripts/ui/hud/elements/crosshair/templates/crosshair_template_flamer",
 		"scripts/ui/hud/elements/crosshair/templates/crosshair_template_ironsight",
 		"scripts/ui/hud/elements/crosshair/templates/crosshair_template_projectile_drop",

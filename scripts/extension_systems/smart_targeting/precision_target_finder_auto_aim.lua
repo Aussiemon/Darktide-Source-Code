@@ -248,7 +248,7 @@ PrecisionTargetFinderAutoAim.update_precision_target = function (self, unit, sma
 			local y_diff = math_abs(Vector3_dot(direction_to_unit, up))
 			local epsilon = 0.01
 			local direct_hit = x_diff <= half_width + epsilon and y_diff <= half_height + epsilon
-			local aim_position = self:_target_aim_position_using_actor(ray_origin, forward, right, up, hit_unit_center_pos, distance, hit_unit_position, half_width, half_height, x_diff_no_abs, hit_unit, fixed_frame)
+			local aim_position = self:_target_aim_position_using_actor(ray_origin, forward, right, up, hit_unit_center_pos, distance, hit_unit_position, breed.name, half_width, half_height, x_diff_no_abs, hit_unit, fixed_frame)
 
 			if direct_hit and not ignore_direct_hit then
 				best_unit = hit_unit
@@ -355,7 +355,12 @@ PrecisionTargetFinderAutoAim._target_aim_position_using_box = function (self, ra
 	return aim_target
 end
 
-PrecisionTargetFinderAutoAim._target_aim_position_using_actor = function (self, ray_origin, forward, right, up, hit_unit_center_pos, distance_to_center_pos, rewound_afro_center_pos, half_width, half_height, x_diff_no_abs, hit_unit)
+local OVERRIDE_AIM_NODE_BY_BREED = {
+	chaos_armored_hound = "enemy_aim_target_02",
+	chaos_hound = "enemy_aim_target_02",
+}
+
+PrecisionTargetFinderAutoAim._target_aim_position_using_actor = function (self, ray_origin, forward, right, up, hit_unit_center_pos, distance_to_center_pos, rewound_afro_center_pos, breed_name, half_width, half_height, x_diff_no_abs, hit_unit)
 	local aim_position = ray_origin + forward * distance_to_center_pos
 	local sub_box_half_height = half_height * half_height_mod
 	local top_position = hit_unit_center_pos + up * sub_box_half_height * 2
@@ -367,7 +372,11 @@ PrecisionTargetFinderAutoAim._target_aim_position_using_actor = function (self, 
 	local shortest_distance = math_min(top_z_distance, mid_z_distance, bot_z_distance)
 	local node_name_to_aim_towards
 
-	node_name_to_aim_towards = top_z_distance == shortest_distance and "enemy_aim_target_03" or mid_z_distance == shortest_distance and "enemy_aim_target_02" or bot_z_distance == shortest_distance and "enemy_aim_target_01" or "enemy_aim_target_02"
+	if OVERRIDE_AIM_NODE_BY_BREED[breed_name] ~= nil then
+		node_name_to_aim_towards = OVERRIDE_AIM_NODE_BY_BREED[breed_name]
+	else
+		node_name_to_aim_towards = top_z_distance == shortest_distance and "enemy_aim_target_03" or mid_z_distance == shortest_distance and "enemy_aim_target_02" or bot_z_distance == shortest_distance and "enemy_aim_target_01" or "enemy_aim_target_02"
+	end
 
 	local node_to_aim_towards = Unit.node(hit_unit, node_name_to_aim_towards)
 	local aim_target = Unit.world_position(hit_unit, node_to_aim_towards)

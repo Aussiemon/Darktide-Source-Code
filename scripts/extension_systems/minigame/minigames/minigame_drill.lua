@@ -54,9 +54,9 @@ MinigameDrill.start = function (self, player, send_to_self_client)
 	end
 end
 
-MinigameDrill.stop = function (self)
+MinigameDrill.stop = function (self, is_automatic)
 	Unit.flow_event(self._minigame_unit, "lua_minigame_stop")
-	MinigameDrill.super.stop(self)
+	MinigameDrill.super.stop(self, is_automatic)
 
 	if self._is_server then
 		self._current_stage = nil
@@ -250,6 +250,7 @@ MinigameDrill.on_action_pressed = function (self, t)
 			self:play_sound("sfx_minigame_bio_progress")
 		end
 	else
+		self:_increment_mistakes()
 		Unit.flow_event(self._minigame_unit, "lua_minigame_fail")
 		self:play_sound("sfx_minigame_bio_fail")
 	end

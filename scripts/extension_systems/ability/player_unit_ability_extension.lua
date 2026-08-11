@@ -18,6 +18,7 @@ local buff_keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
 local special_rules = SpecialRulesSettings.special_rules
 local PlayerUnitAbilityExtension = class("PlayerUnitAbilityExtension")
+local EPSILON = 0.001
 
 PlayerUnitAbilityExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
 	self._unit = unit
@@ -887,6 +888,19 @@ PlayerUnitAbilityExtension.reduce_ability_cooldown_percentage = function (self, 
 end
 
 PlayerUnitAbilityExtension.reduce_ability_cooldown_time = function (self, ability_type, reduce_time)
+	local enabled = self:ability_enabled(ability_type)
+
+	if not enabled then
+		return
+	end
+
+	local equipped_abilities = self._equipped_abilities
+	local ability = equipped_abilities[ability_type]
+
+	if not ability then
+		return
+	end
+
 	local missing_charges = self:missing_ability_charges(ability_type)
 
 	if missing_charges == 0 then
@@ -920,13 +934,15 @@ PlayerUnitAbilityExtension.reduce_ability_cooldown_time = function (self, abilit
 
 	local current_total_cooldown_time = remaining_ability_charges * max_cooldown + (remaining_cooldown > 0 and max_cooldown - remaining_cooldown or 0)
 	local reduced_total_cooldown_time = math.min(current_total_cooldown_time + reduce_time, max_ability_charges * max_cooldown)
-	local new_num_ability_charges = math.clamp(math.floor(reduced_total_cooldown_time / max_cooldown), 0, max_ability_charges)
+	local new_num_ability_charges = math.clamp(math.floor(reduced_total_cooldown_time / max_cooldown + EPSILON), 0, max_ability_charges)
+	local reminder_cooldown = -1
 
 	if new_num_ability_charges == max_ability_charges then
 		ability_component.cooldown = 0
 		ability_component.cooldown_regen_buffer = 0
 	else
-		local reminder_cooldown = max_cooldown - (reduced_total_cooldown_time - new_num_ability_charges * max_cooldown)
+		reminder_cooldown = max_cooldown - (reduced_total_cooldown_time - new_num_ability_charges * max_cooldown)
+
 		local new_cooldown = fixed_frame_t + reminder_cooldown
 
 		ability_component.cooldown = math.round_to_closest_multiple(new_cooldown, Managers.state.game_session.fixed_time_step)
@@ -945,6 +961,40 @@ PlayerUnitAbilityExtension.reduce_ability_cooldown_time = function (self, abilit
 	self:set_ability_charges(ability_type, new_num_ability_charges)
 end
 
+PlayerUnitAbilityExtension._get_total_ability_recharge_value = function (self, ability_type)
+	local max_ability_charges = self:max_ability_charges(ability_type)
+	local max_cooldown = self:max_ability_cooldown(ability_type)
+
+	if max_cooldown <= 0 then
+		return 0, max_cooldown
+	end
+
+	local ability_component = self._ability_components[ability_type]
+	local current_cooldown_t = ability_component.cooldown
+	local fixed_frame_t = FixedFrame.get_latest_fixed_time()
+	local remaining_cooldown = math.max(current_cooldown_t - fixed_frame_t, 0)
+	local remaining_ability_charges = self:remaining_ability_charges(ability_type)
+	local total_recharge_value = remaining_ability_charges * max_cooldown + (remaining_cooldown > 0 and max_cooldown - remaining_cooldown or 0)
+
+	return total_recharge_value, max_cooldown
+end
+
+PlayerUnitAbilityExtension.remaining_ability_capacitance = function (self, ability_type)
+	local total_recharge_value, max_cooldown = self:_get_total_ability_recharge_value(ability_type)
+
+	if max_cooldown <= 0 then
+		return 0
+	end
+
+	return total_recharge_value / max_cooldown
+end
+
+PlayerUnitAbilityExtension.has_enough_ability_capacitance = function (self, ability_type, required_percentage)
+	local remaining_capacitance = self:remaining_ability_capacitance(ability_type)
+
+	return required_percentage <= remaining_capacitance
+end
+
 PlayerUnitAbilityExtension.increase_ability_cooldown_percentage = function (self, ability_type, increase_percetage)
 	local max_cooldown = self:max_ability_cooldown(ability_type)
 	local increase_time = increase_percetage * max_cooldown
@@ -953,6 +1003,19 @@ PlayerUnitAbilityExtension.increase_ability_cooldown_percentage = function (self
 end
 
 PlayerUnitAbilityExtension.increase_ability_cooldown_time = function (self, ability_type, increase_time)
+	local enabled = self:ability_enabled(ability_type)
+
+	if not enabled then
+		return 0, 1
+	end
+
+	local equipped_abilities = self._equipped_abilities
+	local ability = equipped_abilities[ability_type]
+
+	if not ability then
+		return 0, 1
+	end
+
 	local ability_component = self._ability_components[ability_type]
 	local current_cooldown_t = ability_component.cooldown
 	local fixed_frame_t = FixedFrame.get_latest_fixed_time()
@@ -960,18 +1023,9 @@ PlayerUnitAbilityExtension.increase_ability_cooldown_time = function (self, abil
 	local max_cooldown = self:max_ability_cooldown(ability_type)
 	local remaining_cooldown = math.max(current_cooldown_t - fixed_frame_t, 0)
 	local remaining_ability_charges = self:remaining_ability_charges(ability_type)
-
-	if remaining_ability_charges < max_ability_charges and remaining_cooldown == 0 then
-		remaining_cooldown = max_cooldown
-
-		if current_cooldown_t == fixed_frame_t then
-			remaining_ability_charges = math.max(remaining_ability_charges - 1, 0)
-		end
-	end
-
 	local total_cooldown_value = remaining_ability_charges * max_cooldown + (remaining_cooldown > 0 and max_cooldown - remaining_cooldown or 0)
 	local new_total_cooldown = math.max(total_cooldown_value - increase_time, 0)
-	local new_num_charges = math.floor(new_total_cooldown / max_cooldown)
+	local new_num_charges = math.floor(new_total_cooldown / max_cooldown + EPSILON)
 	local reminder_cooldown = max_cooldown - (new_total_cooldown - new_num_charges * max_cooldown)
 	local new_cooldown = fixed_frame_t + reminder_cooldown
 	local num_charges_lost = remaining_ability_charges - new_num_charges

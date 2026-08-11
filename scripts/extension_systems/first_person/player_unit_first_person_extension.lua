@@ -8,6 +8,7 @@ local ForceLookRotation = require("scripts/extension_systems/first_person/utilit
 local MaterialFx = require("scripts/utilities/material_fx")
 local PlayerUnitPeeking = require("scripts/utilities/player_unit_peeking")
 local Recoil = require("scripts/utilities/recoil")
+local SpectatedAimInterpolator = require("scripts/extension_systems/first_person/utilities/spectated_aim_interpolator")
 local FOOTSTEP_SOUND_ALIAS = "footstep_right" or "footstep_left"
 local UPPER_BODY_FOLEY = "sfx_foley_upper_body"
 local WEAPON_FOLEY = "sfx_weapon_locomotion"
@@ -68,6 +69,7 @@ PlayerUnitFirstPersonExtension.init = function (self, extension_init_context, un
 	self._look_delta_x = 0
 	self._extrapolated_character_height = character_height
 	self._last_fixed_t = Managers.time:time("gameplay")
+	self._last_fixed_frame = extension_init_context.fixed_frame
 
 	local input_extension = ScriptUnit.extension(unit, "input_system")
 
@@ -112,6 +114,8 @@ PlayerUnitFirstPersonExtension.init = function (self, extension_init_context, un
 	self._first_person_mode_component = unit_data_extension:read_component("first_person_mode")
 	self._is_camera_follow_target = false
 	self._is_first_person_spectated = false
+	self._spectated_aim_rotation = QuaternionBox(look_rotation)
+	self._spectated_aim_interpolator = SpectatedAimInterpolator:new(Managers.state.game_session.fixed_time_step)
 	self._fixed_time_step = Managers.state.game_session.fixed_time_step
 
 	local fixed_t = extension_init_context.fixed_frame * self._fixed_time_step
@@ -336,20 +340,31 @@ PlayerUnitFirstPersonExtension.fixed_update = function (self, unit, dt, t, frame
 	end
 
 	self._last_fixed_t = t
+	self._last_fixed_frame = frame
 end
 
 PlayerUnitFirstPersonExtension.server_correction_occurred = function (self, unit, from_frame)
 	self._last_fixed_t = from_frame * self._fixed_time_step
+	self._last_fixed_frame = from_frame
 end
 
 PlayerUnitFirstPersonExtension.update = function (self, unit, dt, t)
 	self._show_1p_equipment, self._wants_1p_camera = self:_update_first_person_mode(t)
 
 	local is_in_first_person_mode = self:is_in_first_person_mode()
+	local spectated_aim_rotation
+
+	if self._is_first_person_spectated then
+		local fp_component = self._first_person_component
+
+		spectated_aim_rotation = self._spectated_aim_interpolator:update(fp_component.rotation, self._last_fixed_frame, dt)
+
+		self._spectated_aim_rotation:store(spectated_aim_rotation)
+	end
 
 	if is_in_first_person_mode then
 		self._run_animation_speed_control:update(dt, t)
-		self._look_delta_animation_control:update(dt, t)
+		self._look_delta_animation_control:update(dt, t, spectated_aim_rotation)
 		PlayerUnitPeeking.update_first_person_animations(self._first_person_unit, self._1p_peeking_animation_data, dt, t)
 	end
 
@@ -383,10 +398,14 @@ PlayerUnitFirstPersonExtension._update_rotation = function (self, unit, dt, t)
 
 		Unit.set_local_rotation(first_person_unit, 1, rot)
 	elseif self._is_first_person_spectated then
-		Unit.set_local_rotation(first_person_unit, 1, fp_component.rotation)
+		Unit.set_local_rotation(first_person_unit, 1, self._spectated_aim_rotation:unbox())
 	else
 		Unit.set_local_rotation(first_person_unit, 1, fp_component.rotation)
 	end
+end
+
+PlayerUnitFirstPersonExtension.spectated_aim_rotation = function (self)
+	return self._spectated_aim_rotation:unbox()
 end
 
 PlayerUnitFirstPersonExtension.update_unit_position = function (self, unit, dt, t)
@@ -536,6 +555,8 @@ PlayerUnitFirstPersonExtension.set_camera_follow_target = function (self, is_fol
 	local is_local_human = self._is_local_unit and self._player:is_human_controlled()
 
 	self._is_first_person_spectated = not is_local_human and is_followed and first_person_spectating
+
+	self._spectated_aim_interpolator:reset()
 end
 
 PlayerUnitFirstPersonExtension.is_camera_follow_target = function (self)

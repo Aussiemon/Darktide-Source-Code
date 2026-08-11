@@ -410,6 +410,58 @@ local on_demand_vo_cryptic_c = {
 		},
 		randomize_indexes = {},
 	},
+	smart_tag_vo_enemy_flamer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_cryptic_c__smart_tag_vo_enemy_scab_flamer_a_01",
+			[2] = "loc_cryptic_c__smart_tag_vo_enemy_scab_flamer_a_02",
+		},
+		sound_events_duration = {
+			[1] = 0.690719,
+			[2] = 0.635542,
+		},
+		randomize_indexes = {},
+	},
+	smart_tag_vo_enemy_grenadier = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_cryptic_c__smart_tag_vo_enemy_traitor_grenadier_01",
+			[2] = "loc_cryptic_c__smart_tag_vo_enemy_traitor_grenadier_02",
+		},
+		sound_events_duration = {
+			[1] = 0.623688,
+			[2] = 0.645198,
+		},
+		randomize_indexes = {},
+	},
+	smart_tag_vo_enemy_gunner = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_cryptic_c__smart_tag_vo_enemy_traitor_gunner_01",
+			[2] = "loc_cryptic_c__smart_tag_vo_enemy_traitor_gunner_02",
+		},
+		sound_events_duration = {
+			[1] = 0.643313,
+			[2] = 0.587719,
+		},
+		randomize_indexes = {},
+	},
+	smart_tag_vo_enemy_houndmaster = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1] = "loc_cryptic_c__smart_tag_vo_enemy_houndmaster_a_01",
+			[2] = "loc_cryptic_c__smart_tag_vo_enemy_houndmaster_a_02",
+		},
+		sound_events_duration = {
+			[1] = 0.819229,
+			[2] = 0.915448,
+		},
+		randomize_indexes = {},
+	},
 	smart_tag_vo_enemy_netgunner = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
@@ -449,16 +501,16 @@ local on_demand_vo_cryptic_c = {
 		},
 		randomize_indexes = {},
 	},
-	smart_tag_vo_enemy_scab_flamer = {
+	smart_tag_vo_enemy_shocktrooper = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
 		sound_events = {
-			[1] = "loc_cryptic_c__smart_tag_vo_enemy_scab_flamer_a_01",
-			[2] = "loc_cryptic_c__smart_tag_vo_enemy_scab_flamer_a_02",
+			[1] = "loc_cryptic_c__smart_tag_vo_enemy_traitor_scout_shocktrooper_01",
+			[2] = "loc_cryptic_c__smart_tag_vo_enemy_traitor_scout_shocktrooper_02",
 		},
 		sound_events_duration = {
-			[1] = 0.690719,
-			[2] = 0.635542,
+			[1] = 0.934344,
+			[2] = 0.879875,
 		},
 		randomize_indexes = {},
 	},
@@ -472,45 +524,6 @@ local on_demand_vo_cryptic_c = {
 		sound_events_duration = {
 			[1] = 0.71449,
 			[2] = 0.659927,
-		},
-		randomize_indexes = {},
-	},
-	smart_tag_vo_enemy_traitor_grenadier = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1] = "loc_cryptic_c__smart_tag_vo_enemy_traitor_grenadier_01",
-			[2] = "loc_cryptic_c__smart_tag_vo_enemy_traitor_grenadier_02",
-		},
-		sound_events_duration = {
-			[1] = 0.623688,
-			[2] = 0.645198,
-		},
-		randomize_indexes = {},
-	},
-	smart_tag_vo_enemy_traitor_gunner = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1] = "loc_cryptic_c__smart_tag_vo_enemy_traitor_gunner_01",
-			[2] = "loc_cryptic_c__smart_tag_vo_enemy_traitor_gunner_02",
-		},
-		sound_events_duration = {
-			[1] = 0.643313,
-			[2] = 0.587719,
-		},
-		randomize_indexes = {},
-	},
-	smart_tag_vo_enemy_traitor_scout_shocktrooper = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1] = "loc_cryptic_c__smart_tag_vo_enemy_traitor_scout_shocktrooper_01",
-			[2] = "loc_cryptic_c__smart_tag_vo_enemy_traitor_scout_shocktrooper_02",
-		},
-		sound_events_duration = {
-			[1] = 0.934344,
-			[2] = 0.879875,
 		},
 		randomize_indexes = {},
 	},

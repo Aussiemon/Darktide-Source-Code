@@ -12,6 +12,7 @@ WieldedIdlingEffects.init = function (self, context, slot, weapon_template, fx_s
 	self._wwise_world = context.wwise_world
 	self._is_husk = context.is_husk
 	self._is_local_unit = context.is_local_unit
+	self._weapon_template = weapon_template
 	self._fx_extension = context.fx_extension
 	self._visual_loadout_extension = context.visual_loadout_extension
 
@@ -43,8 +44,12 @@ WieldedIdlingEffects.wield = function (self)
 end
 
 WieldedIdlingEffects.unwield = function (self)
+	local force_stop_vfx = false
+
+	force_stop_vfx = force_stop_vfx or self._weapon_template.name == "powermaul_p3_m1" or self._weapon_template.name == "powermaul_p3_m2" or self._weapon_template.name == "powermaul_p3_m3"
+
 	self:_stop_sfx_loop()
-	self:_stop_vfx_loop()
+	self:_stop_vfx_loop(force_stop_vfx)
 end
 
 WieldedIdlingEffects.fixed_update = function (self, unit, dt, t, frame)

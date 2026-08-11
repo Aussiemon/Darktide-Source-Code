@@ -5,11 +5,14 @@ local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local attack_types = AttackSettings.attack_types
 local shield_templates = {
 	cultist_vanguard = {
+		allow_push_stagger_override = true,
 		always_override_stagger_type = "shield_block",
 		destroyed_vfx = "content/fx/particles/enemies/rotten_armor_death",
 		is_invulnerable = false,
 		open_up_threshold = 45,
 		open_up_vfx_slot_name = "slot_shield",
+		push_combo_window = 2,
+		push_open_up_count = 2,
 		regen_hit_strength_rate = 5,
 		skip_open_up_vfx = true,
 		health = {
@@ -19,7 +22,7 @@ local shield_templates = {
 			450,
 			550,
 		},
-		blocking_angle = math.degrees_to_radians(60),
+		blocking_angle = math.degrees_to_radians(50),
 		attack_type_min_stagger_strength = {
 			[attack_types.ranged] = 3,
 			[attack_types.melee] = 10,

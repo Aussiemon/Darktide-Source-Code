@@ -1,6 +1,32 @@
 ﻿-- chunkname: @dialogues/generated/circumstance_vo_hunting_grounds_broker_male_c.lua
 
 local circumstance_vo_hunting_grounds_broker_male_c = {
+	disabled_by_chaos_hound_mutator = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_broker_male_c__disabled_by_chaos_hound_01",
+			"loc_broker_male_c__disabled_by_chaos_hound_02",
+			"loc_broker_male_c__disabled_by_chaos_hound_03",
+			"loc_broker_male_c__disabled_by_chaos_hound_04",
+			"loc_broker_male_c__disabled_by_chaos_hound_05",
+		},
+		sound_events_duration = {
+			2.100875,
+			2.971625,
+			2.411844,
+			1.015885,
+			2.667542,
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+		},
+		randomize_indexes = {},
+	},
 	heard_enemy_chaos_hound_mutator = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

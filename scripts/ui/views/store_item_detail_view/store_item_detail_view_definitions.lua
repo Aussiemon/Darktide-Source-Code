@@ -1775,7 +1775,7 @@ local legend_inputs = {
 
 			parent._input_legend_element:set_display_name(id, display_name)
 
-			return parent._can_preview_with_gear and parent._selected_element and parent._selected_element.item and not parent._aquilas_showing
+			return parent._profile_spawner and parent._can_preview_with_gear and parent._selected_element and parent._selected_element.item and not parent._aquilas_showing
 		end,
 	},
 	{

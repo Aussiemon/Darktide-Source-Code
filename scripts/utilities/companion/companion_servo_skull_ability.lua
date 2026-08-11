@@ -12,7 +12,7 @@ local servo_skull_states = CompanionServoSkullSettings.STATES
 local servo_skull_flamethrower_types = CompanionServoSkullSettings.FLAMETHROWER_TYPES
 local servo_skull_buff_settings = CompanionServoSkullSettings.buffs
 local talent_settings = TalentSettings.cryptic
-local _set_servo_skull_state, _get_servo_skull_state, _play_servo_skull_order_vo
+local _set_servo_skull_state, _get_servo_skull_state, _play_servo_skull_order_vo, _is_order_ability_aiming
 local CompanionServoSkullAbility = {}
 
 CompanionServoSkullAbility.start_order_ability_base = function (target_finder_component, position_finder_component, player_unit, is_server)
@@ -79,12 +79,8 @@ CompanionServoSkullAbility.start_order_ability = function (target_finder_compone
 end
 
 CompanionServoSkullAbility.can_aim_on_ground = function (unit_data_extension, ability_extension, companion_spawner_extension, input_extension, talent_extension)
-	local has_input = input_extension:get("grenade_ability_hold")
-
-	if not has_input then
-		local no_outline = true
-
-		return false, no_outline
+	if not _is_order_ability_aiming(unit_data_extension) then
+		return false
 	end
 
 	if talent_extension:has_special_rule(special_rules.cryptic_servo_skull_flamethrower) then
@@ -217,9 +213,7 @@ CompanionServoSkullAbility.can_target_unit = function (unit_data_extension, smar
 end
 
 CompanionServoSkullAbility.effect_validate_target_func = function (unit_data_extension, smart_target_unit, ability_extension, companion_spawner_extension, input_extension, talent_extension)
-	local has_input = input_extension:get("grenade_ability_hold")
-
-	if not has_input then
+	if not _is_order_ability_aiming(unit_data_extension) then
 		local no_outline = true
 
 		return false, no_outline
@@ -512,8 +506,9 @@ CompanionServoSkullAbility.start_shooting_ability = function (companion_unit, ta
 	local ability_percentage_consumed = talent_settings.servo_skull_shooting_tagging.capacitance
 	local current_buff_duration_left_percent = companion_buff_extension:buff_duration_progress(buff_name)
 	local percent_cost = 1 - current_buff_duration_left_percent
+	local total_cooldown_cost = ability_percentage_consumed * percent_cost
 
-	ability_extension:increase_ability_cooldown_percentage("combat_ability", ability_percentage_consumed * percent_cost)
+	ability_extension:increase_ability_cooldown_percentage("combat_ability", total_cooldown_cost)
 
 	local t = Managers.time:time("gameplay")
 
@@ -533,6 +528,14 @@ CompanionServoSkullAbility.validate_target_func_shooting_ability = function (tar
 
 	if state ~= servo_skull_states.following and state ~= servo_skull_states.following_shooting and state ~= servo_skull_states.following_shooting_ability then
 		return false
+	end
+
+	local remaining_ability_capacitance = ability_extension:remaining_ability_capacitance("combat_ability")
+
+	if remaining_ability_capacitance < talent_settings.servo_skull_shooting_tagging.minimum_capacitance then
+		local prevent_shooting_activation_on_fail = true
+
+		return false, prevent_shooting_activation_on_fail
 	end
 
 	local unit_data_extension = ScriptUnit.has_extension(target_unit, "unit_data_system")
@@ -609,6 +612,12 @@ function _play_servo_skull_order_vo(player_unit)
 	local vo_tag = "cryptic_blitz_01_a"
 
 	Vo.play_combat_ability_event(player_unit, vo_tag)
+end
+
+function _is_order_ability_aiming(unit_data_extension)
+	local grenade_ability_action = unit_data_extension and unit_data_extension:read_component("grenade_ability_action")
+
+	return grenade_ability_action and grenade_ability_action.current_action_name == "action_aim"
 end
 
 return CompanionServoSkullAbility

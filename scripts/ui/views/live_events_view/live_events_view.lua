@@ -16,6 +16,7 @@ local TextUtilities = require("scripts/utilities/ui/text")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local Definitions = require("scripts/ui/views/live_events_view/live_events_view_definitions")
 local Styles = require("scripts/ui/views/live_events_view/live_events_view_styles")
 local Settings = require("scripts/ui/views/live_events_view/live_events_view_settings")
@@ -155,8 +156,14 @@ LiveEventsView.on_enter = function (self)
 	left_navigation_arrow_widget.content.hotspot.pressed_callback = callback(self, "_on_previous_page_pressed")
 	right_navigation_arrow_widget.content.hotspot.pressed_callback = callback(self, "_on_next_page_pressed")
 
-	if active_event_id then
-		self:_on_entry_selected(active_event_id, self._selected_button_list_index or 1)
+	local first_button_widget = self._button_list_widgets and self._button_list_widgets[1]
+
+	if first_button_widget then
+		local content = first_button_widget.content
+		local template_name = content.template_name
+		local event_id = content.event_id
+
+		self:_on_entry_selected(event_id or template_name, 1)
 	end
 
 	Managers.event:register(self, "event_leftover_pledge_result", "_on_leftover_pledge_result")
@@ -312,8 +319,10 @@ LiveEventsView._create_entry_button_widget = function (self, event_data, templat
 		original_text = Localize(event_data.name),
 		text = Localize(event_data.name),
 		template_name = template_name,
+		event_id = event_id,
 		hotspot = {
 			pressed_callback = callback(self, "_on_entry_selected", event_id or template_name, button_index),
+			on_pressed_sound = UISoundEvents.default_click,
 		},
 	}
 	local button_definition = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "button_list_anchor", button_content_override, Styles.sizes.event_button_size)
@@ -883,6 +892,8 @@ LiveEventsView.set_entries_scenegraph_size = function (self, width, height)
 	self:_set_scenegraph_size("entries_anchor", width, height)
 	self:_set_scenegraph_size("entries_mask", width, height)
 	self:_set_scenegraph_size("entries", width, height)
+	self:_set_scenegraph_size("navigation_arrow_left", nil, height)
+	self:_set_scenegraph_size("navigation_arrow_right", nil, height)
 end
 
 LiveEventsView._create_offscreen_renderer = function (self)

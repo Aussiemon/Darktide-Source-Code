@@ -100,6 +100,10 @@ local VIEW_SETTINGS = {
 				end
 			end
 
+			if Managers.state and Managers.state.camera and not Managers.state.camera:has_proper_3d_camera() then
+				return true
+			end
+
 			if Managers.state and Managers.state.extension then
 				local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
 				local intro_played = cinematic_scene_system:intro_played()
@@ -226,6 +230,10 @@ ConstantElementLoading.init = function (self, parent, draw_layer, start_scale)
 end
 
 ConstantElementLoading.update = function (self, dt, t, ui_renderer, render_settings, input_service)
+	return
+end
+
+ConstantElementLoading.post_update = function (self, dt, t)
 	local current_sub_state_name = Managers.ui:get_current_sub_state_name()
 	local current_state_name = current_sub_state_name == "" and Managers.ui:get_current_state_name() or current_sub_state_name
 

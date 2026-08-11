@@ -11,7 +11,6 @@ local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templ
 local CosmeticsVendorViewSettings = require("scripts/ui/views/cosmetics_vendor_view/cosmetics_vendor_view_settings")
 local Items = require("scripts/utilities/items")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
 local Text = require("scripts/utilities/ui/text")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
@@ -77,6 +76,16 @@ CosmeticsVendorView.on_enter = function (self)
 	if context and not context.spawn_player then
 		self:_register_event("vendor_wallet_updated", "_update_wallets_presentation")
 	end
+
+	local player = self:_player()
+	local player_profile = player and player:profile()
+
+	self._preview_profile = player_profile
+end
+
+CosmeticsVendorView._on_category_pressed = function (self, parent, cosmetic_tab)
+	parent:cb_switch_tab(cosmetic_tab.ui_selection_order)
+	self._archetype_tabs:set_selected_panel_index(cosmetic_tab.ui_selection_order)
 end
 
 CosmeticsVendorView._setup_tabs = function (self)
@@ -111,10 +120,7 @@ CosmeticsVendorView._setup_tabs = function (self)
 		for i = 1, #cosmetic_tabs do
 			local cosmetic_tab = cosmetic_tabs[i]
 
-			self._archetype_tabs:add_entry(Localize(cosmetic_tab.display_name), function ()
-				parent:cb_switch_tab(cosmetic_tab.ui_selection_order)
-				self._archetype_tabs:set_selected_panel_index(cosmetic_tab.ui_selection_order)
-			end)
+			self._archetype_tabs:add_entry(Localize(cosmetic_tab.display_name), callback(self, "_on_category_pressed", parent, cosmetic_tab))
 		end
 
 		self._archetype_tabs:set_selected_panel_index(parent:selected_index())
@@ -143,74 +149,19 @@ CosmeticsVendorView._set_preview_widgets_visibility = function (self, visible)
 	end
 end
 
-CosmeticsVendorView._reset_mannequin = function (self)
-	if self._mannequin_loadout then
-		for key, value in pairs(self._mannequin_loadout) do
-			if self._default_mannequin_loadout[key] ~= self._mannequin_loadout[key] then
-				self._mannequin_loadout[key] = self._default_mannequin_loadout[key]
-			end
-		end
+CosmeticsVendorView._get_profiles = function (self, previewed_item)
+	local player_profile = self._preview_profile
+	local archetype_name = player_profile.archetype.name
+	local breed_name = player_profile.breed
+	local gender_name = player_profile.gender
+	local mannequin_profile = Items.create_mannequin_profile_by_item(previewed_item, gender_name, archetype_name, breed_name)
 
-		local profile = self._store_presentation_profile
-		local archetype = profile and profile.archetype
-		local breed_name = profile and archetype.breed or ""
-		local gender_name = profile and profile.gender or ""
-		local previewed_item = self._previewed_item
-		local item_type = previewed_item and previewed_item.item_type
-
-		if item_type == "GEAR_LOWERBODY" then
-			local slots = previewed_item.slots
-			local slot_name = slots and slots[1]
-
-			if slot_name then
-				local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed_name]
-				local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
-				local required_items = required_breed_item_names_per_slot and (required_gender_item_names_per_slot[slot_name] or required_gender_item_names_per_slot.default)
-
-				if required_items then
-					for required_item_slot_name, slot_item_name in pairs(required_items) do
-						local item_definition = MasterItems.get_item(slot_item_name)
-
-						if item_definition then
-							local slot_item = table.clone(item_definition)
-
-							self._mannequin_loadout[required_item_slot_name] = slot_item
-						end
-					end
-				end
-			end
-		else
-			local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed_name]
-			local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
-			local required_items = required_gender_item_names_per_slot and required_gender_item_names_per_slot.default
-
-			if required_items then
-				for required_item_slot_name, slot_item_name in pairs(required_items) do
-					local item_definition = MasterItems.get_item(slot_item_name)
-
-					if item_definition then
-						local slot_item = table.clone(item_definition)
-
-						self._mannequin_loadout[required_item_slot_name] = slot_item
-					end
-				end
-			end
-		end
-	end
+	return mannequin_profile, player_profile
 end
 
 CosmeticsVendorView._stop_previewing = function (self)
 	CosmeticsVendorView.super._stop_previewing(self)
 	self:_reset_set_item_parts_representation()
-	self:_reset_mannequin()
-
-	if self._gear_loadout and self._default_gear_loadout then
-		table.clear(self._gear_loadout)
-
-		for key, value in pairs(self._default_gear_loadout) do
-			self._gear_loadout[key] = value
-		end
-	end
 
 	if self._item_name_widget then
 		self:_unregister_widget_name(self._item_name_widget.name)
@@ -269,41 +220,65 @@ end
 
 CosmeticsVendorView._preview_item = function (self, element)
 	CosmeticsVendorView.super._preview_item(self, element)
-	self:_reset_mannequin()
 
 	local previewed_item = self._previewed_item
 	local item_type = previewed_item and previewed_item.item_type
 
-	if item_type == "GEAR_UPPERBODY" or item_type == "GEAR_LOWERBODY" or item_type == "GEAR_HEAD" or item_type == "GEAR_EXTRA_COSMETIC" or item_type == "END_OF_ROUND" then
-		local slots = previewed_item.slots
-		local slot_name = slots and slots[1]
+	if item_type == "GEAR_UPPERBODY" or item_type == "GEAR_LOWERBODY" or item_type == "GEAR_HEAD" or item_type == "GEAR_EXTRA_COSMETIC" or item_type == "END_OF_ROUND" or item_type == "SET" then
+		local first_item = item_type == "SET" and previewed_item.items[1] or previewed_item
+		local mannequin_profile, player_profile = self:_get_profiles(first_item)
+		local changed_breed = not self._mannequin_profile or self._mannequin_profile.breed ~= mannequin_profile.breed
+		local changed_gender = not self._mannequin_profile or self._mannequin_profile.gender ~= mannequin_profile.gender
+		local changed_archetype = not self._mannequin_profile or self._mannequin_profile.archetype.name ~= mannequin_profile.archetype.name
+		local changed_profile = changed_breed or changed_gender or changed_archetype or not self._profile_spawner
 
-		if slot_name then
-			self._mannequin_loadout[slot_name] = previewed_item
+		if changed_profile then
+			self._mannequin_profile = mannequin_profile
+			self._gear_profile = table.clone_instance(player_profile)
+			self._gear_profile.loadout = table.clone_instance(player_profile.loadout)
 
-			if self._gear_loadout then
-				self._gear_loadout[slot_name] = self._previewed_item
+			if self.can_preview_with_gear then
+				self._store_presentation_profile = self._previewed_with_gear and self._gear_profile or self._mannequin_profile
+			else
+				self._store_presentation_profile = self._mannequin_profile
+			end
+
+			self._spawn_player = true
+		else
+			table.clear(self._mannequin_profile.loadout)
+
+			for slot_id, item_loadout in pairs(mannequin_profile.loadout) do
+				self._mannequin_profile.loadout[slot_id] = item_loadout
+			end
+
+			table.clear(self._gear_profile.loadout)
+
+			for slot_id, item_loadout in pairs(player_profile.loadout) do
+				self._gear_profile.loadout[slot_id] = item_loadout
 			end
 		end
 
-		self._previewed_gear_item_slot_name = slot_name
-	elseif item_type == "SET" then
-		local set_items = previewed_item.items
+		if item_type == "SET" then
+			local set_items = previewed_item.items
 
-		for i = 1, #set_items do
-			local set_item = set_items[i]
-			local first_slot_name = set_item.slots and set_item.slots[1]
+			for i = 1, #set_items do
+				local set_item = set_items[i]
+				local first_slot_name = set_item.slots and set_item.slots[1]
 
-			if first_slot_name then
-				self._mannequin_loadout[first_slot_name] = set_item
-
-				if self._gear_loadout then
-					self._gear_loadout[first_slot_name] = set_item
+				if first_slot_name then
+					self._mannequin_profile.loadout[first_slot_name] = set_item
+					self._gear_profile.loadout[first_slot_name] = set_item
 				end
 			end
-		end
 
-		self:_setup_set_item_parts_representation(set_items)
+			self:_setup_set_item_parts_representation(set_items)
+		else
+			local slots = previewed_item.slots
+			local slot_name = slots and slots[1]
+
+			self._mannequin_profile.loadout[slot_name] = self._previewed_item
+			self._gear_profile.loadout[slot_name] = self._previewed_item
+		end
 	end
 
 	self:_setup_item_texts(previewed_item)
@@ -553,71 +528,6 @@ CosmeticsVendorView.on_exit = function (self)
 	end
 end
 
-CosmeticsVendorView._initialize_background_profile = function (self, optional_archetype_name)
-	if self._profile_spawner then
-		self._profile_spawner:destroy()
-
-		self._profile_spawner = nil
-	end
-
-	local profile
-	local player = self:_player()
-	local player_profile = player and player:profile()
-
-	if optional_archetype_name then
-		local archetype = Archetypes[optional_archetype_name]
-		local breed_name = archetype.breed
-		local breed = Breeds[breed_name]
-		local genders = breed.genders
-		local player_gender = player_profile and player_profile.gender
-		local gender_index = math.random(1, table.size(genders))
-		local gender_name = genders[gender_index]
-
-		if player_gender and table.find(genders, player_gender) then
-			gender_name = player_gender
-		end
-
-		local loadout = {}
-
-		profile = {
-			loadout = loadout,
-			archetype = archetype,
-			gender = gender_name,
-			breed = breed_name,
-		}
-
-		local slot_items_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed_name][gender_name].default
-
-		for slot_name, item_path in pairs(slot_items_per_slot) do
-			loadout[slot_name] = item_path
-		end
-	else
-		profile = player_profile
-	end
-
-	self._preview_profile = profile
-	self._mannequin_loadout = self:_generate_mannequin_loadout(self._preview_profile)
-	self._default_mannequin_loadout = table.clone_instance(self._mannequin_loadout)
-	self._mannequin_profile = table.clone_instance(self._preview_profile)
-	self._mannequin_profile.loadout = self._mannequin_loadout
-
-	if player_profile and player_profile.archetype.name == self._preview_profile.archetype.name then
-		local gear_profile = table.clone_instance(player_profile)
-
-		self._default_gear_loadout = table.clone_instance(gear_profile.loadout)
-		self._gear_loadout = table.clone_instance(gear_profile.loadout)
-		gear_profile.loadout = self._gear_loadout
-		gear_profile.character_id = "cosmetics_view_character"
-		self._gear_profile = gear_profile
-		self.can_preview_with_gear = true
-	else
-		self.can_preview_with_gear = false
-	end
-
-	self._store_presentation_profile = self._mannequin_profile
-	self._spawned_profile = nil
-end
-
 CosmeticsVendorView.cb_on_preview_with_gear_toggled = function (self, id, input_pressed, instant)
 	self._previewed_with_gear = not self._previewed_with_gear
 	self._store_presentation_profile = self._previewed_with_gear and self._gear_profile or self._mannequin_profile
@@ -648,12 +558,10 @@ CosmeticsVendorView.present_items = function (self, optional_context)
 	end
 
 	self:_clear_list()
-	self:_initialize_background_profile(optional_archetype_name)
 
-	local presentation_profile = self._store_presentation_profile
-	local active_archetype = presentation_profile.archetype
-
-	self._active_archetype_name = active_archetype.name
+	self._active_archetype_name = optional_context and optional_context.archetype_name or self._preview_profile.archetype.name
+	self.can_preview_with_gear = self._preview_profile.archetype.name == self._active_archetype_name
+	self._spawned_profile = nil
 
 	local ignore_focus_on_offer = true
 	local promises = {
@@ -686,6 +594,7 @@ CosmeticsVendorView.present_items = function (self, optional_context)
 
 	local context = self._context
 	local optional_camera_breed_name = context and context.optional_camera_breed_name
+	local active_archetype = Archetypes[self._active_archetype_name]
 	local breed_name = optional_camera_breed_name or active_archetype.breed or "human"
 	local breed = Breeds[breed_name]
 	local body_size = breed.body_size
@@ -698,13 +607,6 @@ end
 
 CosmeticsVendorView._fetch_store_items = function (self, ignore_focus_on_offer, optional_context)
 	return CosmeticsVendorView.super._fetch_store_items(self, ignore_focus_on_offer):next(function (data)
-		if not self._spawned_profile then
-			local context = self._context
-
-			self._spawn_player = context and context.spawn_player
-			self._initial_rotation = nil
-		end
-
 		local options_tab_bar = self._options_tab_bar
 
 		if options_tab_bar then

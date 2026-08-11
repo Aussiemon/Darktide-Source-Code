@@ -114,6 +114,28 @@ damage_templates.transonic_sword_transonic_knife_light_linesman = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					40,
@@ -130,6 +152,28 @@ damage_templates.transonic_sword_transonic_knife_light_linesman = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					30,
@@ -146,6 +190,28 @@ damage_templates.transonic_sword_transonic_knife_light_linesman = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					20,
@@ -162,6 +228,28 @@ damage_templates.transonic_sword_transonic_knife_light_linesman = {
 			},
 		},
 		default_target = {
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					15,
@@ -259,6 +347,28 @@ damage_templates.transonic_sword_transonic_knife_light_ninja = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					35,
@@ -275,6 +385,28 @@ damage_templates.transonic_sword_transonic_knife_light_ninja = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					20,
@@ -291,6 +423,28 @@ damage_templates.transonic_sword_transonic_knife_light_ninja = {
 			},
 		},
 		default_target = {
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					10,
@@ -387,6 +541,28 @@ damage_templates.transonic_sword_transonic_knife_light_smiter = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_9,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					35,
@@ -403,6 +579,28 @@ damage_templates.transonic_sword_transonic_knife_light_smiter = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_9,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					20,
@@ -419,6 +617,28 @@ damage_templates.transonic_sword_transonic_knife_light_smiter = {
 			},
 		},
 		default_target = {
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_9,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					10,
@@ -515,6 +735,28 @@ damage_templates.transonic_sword_transonic_knife_light_linesman_ap = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
+					[armor_types.armored] = damage_lerp_values.lerp_0_8,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_7,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_7,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					45,
@@ -531,6 +773,28 @@ damage_templates.transonic_sword_transonic_knife_light_linesman_ap = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
+					[armor_types.armored] = damage_lerp_values.lerp_0_8,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_7,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_7,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					25,
@@ -547,6 +811,28 @@ damage_templates.transonic_sword_transonic_knife_light_linesman_ap = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
+					[armor_types.armored] = damage_lerp_values.lerp_0_8,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_7,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_7,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					20,
@@ -563,6 +849,28 @@ damage_templates.transonic_sword_transonic_knife_light_linesman_ap = {
 			},
 		},
 		default_target = {
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
+					[armor_types.armored] = damage_lerp_values.lerp_0_8,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_7,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_7,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					15,
@@ -660,6 +968,28 @@ damage_templates.transonic_sword_transonic_knife_light_ninja_ap = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
+					[armor_types.armored] = damage_lerp_values.lerp_0_8,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_7,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_7,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					35,
@@ -676,6 +1006,28 @@ damage_templates.transonic_sword_transonic_knife_light_ninja_ap = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
+					[armor_types.armored] = damage_lerp_values.lerp_0_8,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_7,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_7,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					20,
@@ -692,6 +1044,28 @@ damage_templates.transonic_sword_transonic_knife_light_ninja_ap = {
 			},
 		},
 		default_target = {
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
+					[armor_types.armored] = damage_lerp_values.lerp_0_8,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_7,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_7,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					10,
@@ -788,6 +1162,28 @@ damage_templates.transonic_sword_transonic_knife_light_smiter_ap = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
+					[armor_types.armored] = damage_lerp_values.lerp_0_9,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_7,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_7,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					35,
@@ -804,6 +1200,28 @@ damage_templates.transonic_sword_transonic_knife_light_smiter_ap = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
+					[armor_types.armored] = damage_lerp_values.lerp_0_9,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_7,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_7,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					20,
@@ -820,6 +1238,28 @@ damage_templates.transonic_sword_transonic_knife_light_smiter_ap = {
 			},
 		},
 		default_target = {
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
+					[armor_types.armored] = damage_lerp_values.lerp_0_9,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_7,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_7,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					10,
@@ -918,13 +1358,13 @@ damage_templates.transonic_sword_transonic_knife_heavy_double_linesman = {
 		{
 			armor_damage_modifier = {
 				attack = {
-					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
 					[armor_types.armored] = damage_lerp_values.lerp_0_75,
-					[armor_types.resistant] = damage_lerp_values.lerp_1,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
 					[armor_types.player] = damage_lerp_values.lerp_1,
-					[armor_types.berserker] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
-					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
 					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
 				},
 				impact = {
@@ -970,6 +1410,28 @@ damage_templates.transonic_sword_transonic_knife_heavy_double_linesman = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					60,
@@ -982,6 +1444,28 @@ damage_templates.transonic_sword_transonic_knife_heavy_double_linesman = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					40,
@@ -994,6 +1478,28 @@ damage_templates.transonic_sword_transonic_knife_heavy_double_linesman = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					40,
@@ -1006,6 +1512,28 @@ damage_templates.transonic_sword_transonic_knife_heavy_double_linesman = {
 			},
 		},
 		default_target = {
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					20,
@@ -1102,6 +1630,28 @@ damage_templates.transonic_sword_transonic_knife_heavy_linesman = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_6,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					100,
@@ -1118,6 +1668,28 @@ damage_templates.transonic_sword_transonic_knife_heavy_linesman = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_6,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					70,
@@ -1134,6 +1706,28 @@ damage_templates.transonic_sword_transonic_knife_heavy_linesman = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_6,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					45,
@@ -1146,6 +1740,28 @@ damage_templates.transonic_sword_transonic_knife_heavy_linesman = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_6,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					30,
@@ -1158,6 +1774,28 @@ damage_templates.transonic_sword_transonic_knife_heavy_linesman = {
 			},
 		},
 		default_target = {
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_6,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.no_damage,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					20,
@@ -1256,13 +1894,13 @@ damage_templates.transonic_sword_transonic_knife_heavy_double_smiter_ap = {
 		{
 			armor_damage_modifier = {
 				attack = {
-					[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_7,
 					[armor_types.armored] = damage_lerp_values.lerp_1,
-					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_6,
 					[armor_types.player] = damage_lerp_values.lerp_1,
-					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_6,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_7,
-					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_7,
 					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
 				},
 				impact = {
@@ -1296,6 +1934,28 @@ damage_templates.transonic_sword_transonic_knife_heavy_double_smiter_ap = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
+					[armor_types.armored] = damage_lerp_values.lerp_0_9,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_7,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_7,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_3,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					50,
@@ -1312,6 +1972,28 @@ damage_templates.transonic_sword_transonic_knife_heavy_double_smiter_ap = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
+					[armor_types.armored] = damage_lerp_values.lerp_0_9,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_7,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_7,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_3,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					50,
@@ -1328,6 +2010,28 @@ damage_templates.transonic_sword_transonic_knife_heavy_double_smiter_ap = {
 			},
 		},
 		default_target = {
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
+					[armor_types.armored] = damage_lerp_values.lerp_0_9,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_7,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_7,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_3,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					30,
@@ -1427,6 +2131,28 @@ damage_templates.transonic_sword_transonic_knife_heavy_smiter_ap = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
+					[armor_types.armored] = damage_lerp_values.lerp_0_9,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_7,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_7,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_3,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					80,
@@ -1443,6 +2169,28 @@ damage_templates.transonic_sword_transonic_knife_heavy_smiter_ap = {
 			},
 		},
 		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
+					[armor_types.armored] = damage_lerp_values.lerp_0_9,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_7,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_7,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_3,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					30,
@@ -1459,6 +2207,28 @@ damage_templates.transonic_sword_transonic_knife_heavy_smiter_ap = {
 			},
 		},
 		default_target = {
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
+					[armor_types.armored] = damage_lerp_values.lerp_0_9,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_7,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_7,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_3,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
+				},
+				impact = {
+					[armor_types.unarmored] = damage_lerp_values.lerp_0_9,
+					[armor_types.armored] = damage_lerp_values.lerp_0_7,
+					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+					[armor_types.player] = damage_lerp_values.lerp_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
+					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+				},
+			},
 			power_distribution = {
 				attack = {
 					25,

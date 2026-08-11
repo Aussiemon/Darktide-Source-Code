@@ -254,6 +254,7 @@ local expedition_settings = {
 		},
 		settings_by_type = {
 			small = {
+				automatically_stashed = true,
 				values_per_tier = {
 					10,
 					25,
@@ -261,6 +262,7 @@ local expedition_settings = {
 				},
 			},
 			crate = {
+				automatically_stashed = false,
 				values_per_tier = {
 					50,
 					60,
@@ -276,6 +278,7 @@ local expedition_settings = {
 				},
 			},
 			heavy = {
+				automatically_stashed = false,
 				values_per_tier = {
 					200,
 					200,

@@ -130,8 +130,8 @@ CrypticPersonalForceFieldUnitHealthExtension.kill = function (self)
 		return
 	end
 
-	local num_arcs_based_on_ranged_attacks_received = math.floor(self._num_ranged_attacks_received / force_field_ability_talent_settings.force_field_arcs.num_hits_needed_per_arc)
-	local max_num_arcs = math.clamp(num_arcs_based_on_ranged_attacks_received, 0, force_field_ability_talent_settings.force_field_arcs.max_arcs)
+	local num_arcs_based_on_ranged_attacks_received = math.ceil(self._num_ranged_attacks_received / force_field_ability_talent_settings.force_field_arcs.num_hits_needed_per_arc)
+	local max_num_arcs = math.clamp(num_arcs_based_on_ranged_attacks_received, 1, force_field_ability_talent_settings.force_field_arcs.max_arcs)
 
 	if max_num_arcs <= 0 then
 		return
@@ -157,8 +157,11 @@ CrypticPersonalForceFieldUnitHealthExtension.kill = function (self)
 
 	for i = 1, num_hits do
 		local enemy_unit = BROADPHASE_RESULTS[i]
+		local enemy_unit_data_extension = ScriptUnit.has_extension(enemy_unit, "unit_data_system")
+		local breed = enemy_unit_data_extension and enemy_unit_data_extension:breed()
+		local untargetable = breed and breed.is_untargetable
 
-		if HEALTH_ALIVE[enemy_unit] then
+		if HEALTH_ALIVE[enemy_unit] and not untargetable then
 			local enemy_position = POSITION_LOOKUP[enemy_unit]
 			local is_enemy_in_front = Vector3.dot(Vector3.normalize(enemy_position - player_position), player_forward_flat) > 0.5
 

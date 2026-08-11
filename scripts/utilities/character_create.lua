@@ -19,6 +19,7 @@ local Personalities = require("scripts/settings/character/personalities")
 local PlayerCharacterCreatorPresets = require("scripts/settings/player_character/player_character_creator_presets")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local Voices = require("scripts/settings/character/voice_effects_cryptic")
+local CrimesCompabilityMapping = require("scripts/settings/character/crimes_compability_mapping")
 local CharacterCreate = class("CharacterCreate")
 local EMPTY_TABLE = {}
 local FALLBACK_SLOTS_TO_STRIP = {
@@ -200,23 +201,6 @@ CharacterCreate.init = function (self, item_definitions, owned_gear, optional_re
 					self._saved_gender_loadout[breed][gender][slot_name] = item
 				end
 			end
-
-			self._real_profile_gear = {}
-
-			local relevant_slots = self:_relevant_backstory_slots()
-
-			for i = 1, #relevant_slots do
-				local slot = relevant_slots[i]
-
-				self._real_profile_gear[slot] = loadout[slot]
-			end
-
-			local backstory_items_promise = self:_fetch_backstory_items()
-
-			backstory_items_promise:next(function (backstory_items)
-				self._possible_backstory_items = table.invert(backstory_items)
-				self._all_backstory_items = backstory_items
-			end)
 		end
 	else
 		self._profile = {
@@ -1449,7 +1433,7 @@ end
 CharacterCreate._add_backstory_items = function (self)
 	local backstory = self._profile.lore.backstory
 	local item_definitions = self._item_definitions
-	local items, backstory_field_per_slot = {}, {}
+	local items = {}
 
 	for backstory_field, option_id in pairs(backstory) do
 		local option_settings = BACKSTORY_FIELD_TO_OPTIONS[backstory_field]
@@ -1467,24 +1451,11 @@ CharacterCreate._add_backstory_items = function (self)
 				items[slot_name] = {
 					id = item.name,
 				}
-				backstory_field_per_slot[slot_name] = backstory_field
 			end
 		end
 	end
 
-	return items, backstory_field_per_slot
-end
-
-local function _granted_item_to_gear(item)
-	local gear = table.clone(item)
-	local gear_id = gear.uuid
-
-	gear.overrides = nil
-	gear.id = nil
-	gear.uuid = nil
-	gear.gear_id = nil
-
-	return gear_id, gear
+	return items
 end
 
 CharacterCreate.filter_changed_items = function (self, real_profile)
@@ -1532,8 +1503,8 @@ CharacterCreate.has_modifications = function (self, real_profile, whitelist)
 	local use_voice_effects = false
 
 	if whitelist then
-		for ii = 1, #whitelist do
-			local whitelist_id = whitelist[ii]
+		for i = 1, #whitelist do
+			local whitelist_id = whitelist[i]
 
 			if whitelist_id == "loadout" then
 				use_loadout = true
@@ -1638,58 +1609,45 @@ CharacterCreate.transform = function (self, character_id, operation_cost)
 	parsed_profile.career = nil
 	parsed_profile.inventory.slot_animation_end_of_round = nil
 
-	local backstory_items, backstory_field_per_slot = self:_add_backstory_items()
-	local real_profile_gear = self._real_profile_gear
-	local slots_to_equip = {}
+	local backstory_items = self:_add_backstory_items()
 
-	for slot, item in pairs(real_profile_gear) do
-		local backstory_field = backstory_field_per_slot[slot]
-		local item_field = BACKSTORY_FIELD_TO_ITEM_FIELD[backstory_field]
-
-		if item[item_field] and not table.is_empty(item[item_field]) then
-			slots_to_equip[slot] = true
-		end
+	for slot_id, item_data in pairs(backstory_items) do
+		parsed_profile.inventory[slot_id] = item_data
 	end
 
-	for slot_id, item in pairs(backstory_items) do
-		if slots_to_equip[slot_id] then
-			parsed_profile.inventory[slot_id] = backstory_items[slot_id]
-		else
-			local actual_item = real_profile_gear[slot_id]
+	local promise = Managers.data_service.profiles:transform_character(character_id, parsed_profile, operation_cost)
+	local granted_gear_items_by_slot = {}
 
-			parsed_profile.inventory[slot_id] = actual_item and {
-				id = actual_item.name,
-			} or nil
+	promise:next(function (items)
+		if self._destroyed then
+			return
 		end
-	end
 
-	local character_interface = Managers.backend.interfaces.characters
-	local promise = character_interface:transform(character_id, parsed_profile, operation_cost)
-	local granted_items = {}
+		local relevant_gear_slots = {}
 
-	promise:next(function (data)
-		if data then
-			local new_items = data.body and data.body.gear
+		if items then
+			for i = 1, #items do
+				local item = items[i]
+				local slot = item.slots and item.slots[1]
 
-			if new_items then
-				for ii = 1, #new_items do
-					local item = new_items[ii]
-					local slot = item.slots and item.slots[1]
-
-					if backstory_items[slot] then
-						granted_items[#granted_items + 1] = item
-					end
-
-					local gear_id, gear = _granted_item_to_gear(item)
-
-					Managers.data_service.gear:on_gear_created(gear_id, gear)
+				if ItemSlotSettings[slot].equipped_in_inventory then
+					granted_gear_items_by_slot[slot] = item
+					relevant_gear_slots[#relevant_gear_slots + 1] = slot
 				end
 			end
 		end
 
+		local player = Managers.player:local_player(1)
+		local character_id = player:character_id()
+
+		return Managers.data_service.gear:fetch_inventory(character_id, relevant_gear_slots)
+	end):next(function (gear_inventory_items)
+		if self._destroyed then
+			return
+		end
+
+		self:_replace_invalid_items_in_loadouts(granted_gear_items_by_slot, gear_inventory_items, parsed_profile)
 		self:reload_real_character()
-	end):next(function (result)
-		self:_replace_old_backstory_items_in_loadouts(slots_to_equip, granted_items)
 
 		self._transformation_complete.success = true
 	end):catch(function (errors)
@@ -1718,62 +1676,6 @@ CharacterCreate.reload_real_character = function (self)
 	end
 end
 
-CharacterCreate._relevant_backstory_slots = function (self)
-	local relevant_slots = {}
-
-	for _, options in pairs(BACKSTORY_FIELD_TO_OPTIONS) do
-		for _, option in pairs(options) do
-			if option.slot_items then
-				for slot_name in pairs(option.slot_items) do
-					relevant_slots[slot_name] = true
-				end
-			end
-		end
-	end
-
-	return table.keys(relevant_slots)
-end
-
-CharacterCreate._fetch_backstory_items = function (self)
-	local player = Managers.player:local_player(1)
-	local character_id = player:character_id()
-	local relevant_slots = self:_relevant_backstory_slots()
-	local gear_service = Managers.data_service.gear
-
-	return gear_service:fetch_inventory(character_id, relevant_slots):next(function (items)
-		if self._destroyed then
-			return
-		end
-
-		self._body_gear_items = items
-
-		local backstory_items = {}
-
-		for id, item in pairs(items) do
-			local master_item = item.__master_item
-
-			if master_item then
-				for _, item_field in pairs(BACKSTORY_FIELD_TO_ITEM_FIELD) do
-					local options = master_item[item_field]
-
-					if options and not table.is_empty(options) then
-						local item_name = master_item.name
-
-						backstory_items[item_name] = id
-					end
-				end
-			end
-		end
-
-		return backstory_items
-	end):catch(function ()
-		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = Localize("loc_popup_description_backend_error"),
-		})
-		self:cb_on_close_pressed()
-	end)
-end
-
 CharacterCreate._get_current_backstory_items_ids = function (self, backstory_items)
 	local backstory = self._profile.lore.backstory
 	local items = {}
@@ -1797,58 +1699,70 @@ CharacterCreate._get_current_backstory_items_ids = function (self, backstory_ite
 	return items
 end
 
-CharacterCreate._replace_old_backstory_items_in_loadouts = function (self, slots_to_equip, granted_items)
-	local possible_backstory_items = self._possible_backstory_items
-	local new_backstory_items = {}
+CharacterCreate._item_valid_by_current_profile = function (self, item, parsed_profile)
+	local player = Managers.player:local_player(1)
+	local profile = player:profile()
+	local archetype = profile.archetype
+	local lore = profile.lore
+	local backstory = lore.backstory
 
-	if #granted_items > 0 then
-		for ii = 1, #granted_items do
-			local item = granted_items[ii]
-			local slot = item.slots[1]
-			local uuid = item.uuid
-
-			new_backstory_items[slot] = uuid
-			item.gear_id = uuid
-			self._body_gear_items[uuid] = item
-		end
-	else
-		local all_backstory_items = self._all_backstory_items
-
-		new_backstory_items = self:_get_current_backstory_items_ids(all_backstory_items)
+	if parsed_profile then
+		lore = parsed_profile.lore
+		backstory = lore.backstory
 	end
 
+	local crime = CrimesCompabilityMapping[backstory.crime] or backstory.crime
+	local archetype_name = archetype.name
+	local breed_name = archetype.breed
+	local breed_valid = not item.breeds or table.is_empty(item.breeds) or table.contains(item.breeds, breed_name)
+	local crime_valid = not item.crimes or table.is_empty(item.crimes) or table.contains(item.crimes, crime)
+	local archetype_valid = not item.archetypes or table.is_empty(item.archetypes) or table.contains(item.archetypes, archetype_name)
+
+	if archetype_valid and breed_valid and crime_valid then
+		return true
+	end
+
+	return false
+end
+
+CharacterCreate._replace_invalid_items_in_loadouts = function (self, granted_items, inventory_items, parsed_profile)
 	local profile_presets = ProfileUtils.get_profile_presets()
-	local num_profile_presets = profile_presets and #profile_presets or 0
 
-	for ii = num_profile_presets, 1, -1 do
-		local profile_preset = profile_presets[ii]
-		local preset_loadout = profile_preset.loadout
+	if profile_presets then
+		for i = 1, #profile_presets do
+			local profile_preset = profile_presets[i]
+			local preset_loadout = profile_preset.loadout
 
-		for slot, id in pairs(preset_loadout) do
-			if possible_backstory_items[id] then
-				ProfileUtils.save_item_id_for_profile_preset(profile_preset.id, slot, new_backstory_items[slot])
+			for slot, preset_item_id in pairs(preset_loadout) do
+				local granted_item_data = granted_items[slot]
+				local granted_item_id = granted_item_data and granted_item_data.uuid
+
+				if granted_item_id then
+					local preset_item = math.is_uuid(preset_item_id) and inventory_items[preset_item_id] or MasterItems.get_item(preset_item_id)
+					local item_valid = preset_item and self:_item_valid_by_current_profile(preset_item, parsed_profile)
+
+					if not item_valid then
+						ProfileUtils.save_item_id_for_profile_preset(profile_preset.id, slot, granted_item_id)
+					end
+				end
 			end
 		end
 	end
 
-	for slot_to_equip, _ in pairs(slots_to_equip) do
-		local id = new_backstory_items[slot_to_equip]
-		local item = id and self:_get_backstory_item_by_id(id)
+	local player = Managers.player:local_player(1)
+	local profile = player:profile()
+	local loadout = profile.loadout
 
-		if item then
-			ItemUtils.equip_item_in_slot(slot_to_equip, item)
-		end
-	end
-end
+	for slot, profile_item in pairs(loadout) do
+		local granted_item_data = granted_items[slot]
+		local granted_item = granted_item_data and inventory_items[granted_item_data.uuid]
 
-CharacterCreate._get_backstory_item_by_id = function (self, gear_id)
-	if not gear_id then
-		return
-	end
+		if granted_item then
+			local item_valid = profile_item and profile_item.gear_id and math.is_uuid(profile_item.gear_id) and inventory_items[profile_item.gear_id] and self:_item_valid_by_current_profile(inventory_items[profile_item.gear_id], parsed_profile)
 
-	for _, item in pairs(self._body_gear_items) do
-		if item.gear_id == gear_id then
-			return item
+			if not item_valid then
+				ItemUtils.equip_item_in_slot(slot, granted_item)
+			end
 		end
 	end
 end

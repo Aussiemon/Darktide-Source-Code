@@ -2,7 +2,6 @@
 
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
-local InputDevice = require("scripts/managers/input/input_device")
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
 local Text = require("scripts/utilities/ui/text")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
@@ -929,6 +928,24 @@ local legend_inputs = {
 		on_pressed_callback = "_on_delete_selected_character_pressed",
 		visibility_function = function (parent)
 			return not parent._is_main_menu_open and parent._character_details_active
+		end,
+	},
+	{
+		alignment = "right_alignment",
+		display_name = "loc_main_menu_move_character_up",
+		input_action = "navigate_primary_left_pressed",
+		on_pressed_callback = "_move_selected_character_up_on_list",
+		visibility_function = function (parent)
+			return not parent._is_main_menu_open and not parent._using_cursor_navigation and parent._selected_character_list_index and parent._selected_character_list_index > 1
+		end,
+	},
+	{
+		alignment = "right_alignment",
+		display_name = "loc_main_menu_move_character_down",
+		input_action = "navigate_primary_right_pressed",
+		on_pressed_callback = "_move_selected_character_down_on_list",
+		visibility_function = function (parent)
+			return not parent._is_main_menu_open and not parent._using_cursor_navigation and parent._selected_character_list_index and parent._selected_character_list_index < #parent._character_list_widgets
 		end,
 	},
 }

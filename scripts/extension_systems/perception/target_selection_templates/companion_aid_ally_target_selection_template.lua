@@ -77,7 +77,7 @@ local function _reference_position(unit, side)
 		local bot_positions = side.player_unit_positions
 
 		for i = 1, #bot_positions do
-			local ally_pos = ally_positions[i]
+			local ally_pos = bot_positions[i]
 			local dist_sq = vector3_distance_squared(own_pos, ally_pos)
 
 			if dist_sq < best_dist_sq then

@@ -9,6 +9,7 @@ local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local Stagger = require("scripts/utilities/attack/stagger")
 local attack_results = AttackSettings.attack_results
 local stagger_types = StaggerSettings.stagger_types
+local push = AttackSettings.attack_types.push
 local MinionShieldExtension = class("MinionShieldExtension")
 local IS_BLOCKING_INITIALLY = true
 local IS_ALIVE_INITALLY = true
@@ -26,6 +27,8 @@ MinionShieldExtension.init = function (self, extension_init_context, unit, exten
 	self._template = shield_template
 	self._regen_hit_strength_rate = shield_template.regen_hit_strength_rate
 	self._hit_strength = 0
+	self._push_count = 0
+	self._last_push_t = 0
 
 	self:_initialize_health(shield_template)
 
@@ -282,11 +285,24 @@ MinionShieldExtension.apply_stagger = function (self, unit, damage_profile, stag
 		if in_open_up_stagger then
 			stagger_type, duration_scale, length_scale = stagger_types.shield_broken, 1, 1
 			self._hit_strength = 0
+
+			return stagger_type, duration_scale, length_scale
 		end
 
 		stagger_type, duration_scale, length_scale = self:_check_for_ignore_override(stagger_type)
 
 		return stagger_type, duration_scale, length_scale
+	end
+
+	local t = Managers.time:time("gameplay")
+
+	if attack_type == push and template.allow_push_stagger_override then
+		if t - self._last_push_t > template.push_combo_window then
+			self._push_count = 0
+		end
+
+		self._push_count = self._push_count + 1
+		self._last_push_t = t
 	end
 
 	local override_multiplier = damage_profile.shield_multiplier or DEFAULT_MULTIPLIER
@@ -306,6 +322,11 @@ MinionShieldExtension.apply_stagger = function (self, unit, damage_profile, stag
 	local open_up_threshold = template.open_up_threshold
 	local quarter_open_up_threshold = open_up_threshold / 20
 	local hit_strength = self._hit_strength
+
+	if template.allow_push_stagger_override and self._push_count >= template.push_open_up_count then
+		hit_strength = open_up_threshold
+		self._push_count = 0
+	end
 
 	if not is_ignored_damage then
 		hit_strength = math.min(hit_strength + stagger_strength, open_up_threshold)

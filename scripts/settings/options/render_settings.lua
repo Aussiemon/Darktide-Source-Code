@@ -682,6 +682,21 @@ local RENDER_TEMPLATES = {
 			return upscaling_mode == "fsr2"
 		end,
 		options = {},
+		init = function (template)
+			local fsr_upscaling_versions = Application.fsr_upscaling_versions()
+
+			table.clear(template.options)
+
+			for v = 1, #fsr_upscaling_versions do
+				template.options[v] = {
+					ignore_localization = true,
+					require_apply = true,
+					require_restart = false,
+					id = v - 1,
+					display_name = fsr_upscaling_versions[v],
+				}
+			end
+		end,
 	},
 	{
 		apply_on_startup = true,
@@ -746,6 +761,21 @@ local RENDER_TEMPLATES = {
 			return ffx_framegen
 		end,
 		options = {},
+		init = function (template)
+			local fsr_framegen_versions = Application.fsr_framegen_versions()
+
+			table.clear(template.options)
+
+			for v = 1, #fsr_framegen_versions do
+				template.options[v] = {
+					ignore_localization = true,
+					require_apply = true,
+					require_restart = false,
+					id = v - 1,
+					display_name = fsr_framegen_versions[v],
+				}
+			end
+		end,
 	},
 	{
 		apply_on_startup = true,
@@ -2326,6 +2356,7 @@ local function create_render_settings_entry(template)
 	local default_value = template.default_value
 	local get_function = template.get_function
 	local on_changed = template.on_changed
+	local init = template.init
 	local default_value_type = value_type or default_value ~= nil and type(default_value) or nil
 	local options = template.options
 	local save_location = template.save_location
@@ -2386,6 +2417,7 @@ local function create_render_settings_entry(template)
 					return old_value
 				end
 			end,
+			init = init,
 		}
 	elseif default_value_type == "number" then
 		local function change_function(value, template)
@@ -2950,38 +2982,6 @@ for i = 1, #RENDER_TEMPLATES do
 
 	if template.supported_platforms[platform] then
 		render_settings[#render_settings + 1] = create_render_settings_entry(template)
-	end
-end
-
-for i = 1, #render_settings do
-	local setting = render_settings[i]
-
-	if setting.id == "fsr_upscaling_version" then
-		local fsr_upscaling_versions = Application.fsr_upscaling_versions()
-
-		for v = 1, #fsr_upscaling_versions do
-			setting.options[v] = {
-				ignore_localization = true,
-				require_apply = true,
-				require_restart = false,
-				id = v - 1,
-				display_name = fsr_upscaling_versions[v],
-			}
-		end
-	end
-
-	if setting.id == "fsr_framegen_version" then
-		local fsr_framegen_versions = Application.fsr_framegen_versions()
-
-		for v = 1, #fsr_framegen_versions do
-			setting.options[v] = {
-				ignore_localization = true,
-				require_apply = true,
-				require_restart = false,
-				id = v - 1,
-				display_name = fsr_framegen_versions[v],
-			}
-		end
 	end
 end
 

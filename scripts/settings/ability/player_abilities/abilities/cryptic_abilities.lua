@@ -20,7 +20,7 @@ local abilities = {
 		hud_icon = "content/ui/textures/icons/throwables/hud/cryptic_servo_skull_order_shooting",
 		icon = "content/ui/materials/icons/abilities/combat/default",
 		inventory_item_name = "content/items/weapons/player/cryptic_servo_skull_order",
-		max_charges = 4,
+		max_charges = 3,
 		stat_buff = "extra_max_amount_of_grenades",
 		hud_configuration = {
 			uses_ammunition = true,
@@ -172,6 +172,7 @@ local abilities = {
 		hud_configuration = {
 			uses_ammunition = true,
 		},
+		cooldown = force_field_talent_settings.cooldown,
 		max_charges = force_field_talent_settings.max_charges,
 		archetypes = {
 			"cryptic",

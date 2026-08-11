@@ -60,6 +60,8 @@ ActionPrecisionStanceToggle.start = function (self, action_settings, t, time_sca
 
 	local ability_extension = self._ability_extension
 
+	self._remaining_ability_charges_before_use_at_start = ability_extension:remaining_ability_charges("combat_ability") or 0
+
 	ability_extension:increase_ability_cooldown_percentage("combat_ability", talent_settings.precision_stance.cooldown_percent_cost_on_activation)
 
 	local inventory_component = self._inventory_component
@@ -72,9 +74,9 @@ ActionPrecisionStanceToggle.start = function (self, action_settings, t, time_sca
 		PlayerUnitVisualLoadout.wield_slot("slot_secondary", player_unit, t, false)
 	end
 
-	local remaining_ability_charges = ability_extension:get_num_ability_charges_to_use("combat_ability")
+	local num_charges_used_on_activation = math.floor(talent_settings.precision_stance.cooldown_percent_cost_on_activation)
 
-	self._ability_charges_used_at_start = remaining_ability_charges
+	self._ability_charges_used_at_start = math.max(num_charges_used_on_activation, 1)
 
 	local ability_template_tweak_data = self._ability_template_tweak_data
 	local buff_to_add
@@ -110,7 +112,7 @@ ActionPrecisionStanceToggle.start = function (self, action_settings, t, time_sca
 
 		if param_table then
 			param_table.unit = player_unit
-			param_table.ability_charges_used = self._ability_charges_used_at_start
+			param_table.ability_charges_used = num_charges_used_on_activation
 			param_table.remaining_ability_charges_before_use = self._remaining_ability_charges_before_use_at_start
 
 			buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)

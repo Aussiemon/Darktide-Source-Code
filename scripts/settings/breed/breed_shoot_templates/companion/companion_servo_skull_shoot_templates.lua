@@ -5,7 +5,7 @@ local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates
 local LineEffects = require("scripts/settings/effects/line_effects")
 local damage_types = DamageSettings.damage_types
 local companion_servo_skull_default = {
-	collision_filter = "filter_minion_shooting",
+	collision_filter = "filter_minion_shooting_no_blockers",
 	scope_reflection_distance = 10,
 	scope_reflection_timing = 0,
 	scope_reflection_vfx_name = "content/fx/particles/abilities/cryptic/companion_servo_skull_scope_flash",
@@ -22,7 +22,7 @@ local companion_servo_skull_default = {
 	},
 }
 local companion_servo_skull_improved = {
-	collision_filter = "filter_minion_shooting",
+	collision_filter = "filter_minion_shooting_no_blockers",
 	scope_reflection_distance = 10,
 	scope_reflection_timing = 0,
 	scope_reflection_vfx_name = "content/fx/particles/abilities/cryptic/companion_servo_skull_scope_flash",

@@ -84,9 +84,9 @@ Sprint.check = function (t, unit, movement_state_component, sprint_character_sta
 	end
 
 	local orientation_forward = Quaternion.forward(flat_rotation)
-	local vel_to_orientation_angle = Vector3.angle(flat_velocity, orientation_forward, true)
+	local velocity_to_orientation_angle = Vector3.angle(flat_velocity, orientation_forward, true)
 
-	if vel_to_orientation_angle > VELOCITY_ALIGNED_WITH_ORIENTATION then
+	if velocity_to_orientation_angle > VELOCITY_ALIGNED_WITH_ORIENTATION then
 		return false
 	end
 

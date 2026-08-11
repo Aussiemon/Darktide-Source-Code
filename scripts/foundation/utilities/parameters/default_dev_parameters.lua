@@ -747,6 +747,7 @@ params.physics_debug_filter = {
 		"filter_minion_shooting_geometry",
 		"filter_minion_throwing",
 		"filter_minion_shooting_no_friendly_fire",
+		"filter_minion_shooting_no_blockers",
 		"filter_minion_explosion",
 		"filter_player_character_melee_sweep",
 		"filter_player_character_ballistic_raycast",
@@ -6141,6 +6142,11 @@ local function _set_build_override_parameter(parameter_name, value)
 	params[parameter_name].value = value
 end
 
+_set_build_override_parameter("debug_change_time_scale", false)
+_set_build_override_parameter("debug_change_time_scale", false)
+_set_build_override_parameter("debug_change_time_scale", false)
+_set_build_override_parameter("debug_change_time_scale", false)
+_set_build_override_parameter("debug_change_time_scale", false)
 _set_build_override_parameter("debug_change_time_scale", false)
 _set_build_override_parameter("debug_change_time_scale", false)
 _set_build_override_parameter("debug_change_time_scale", false)

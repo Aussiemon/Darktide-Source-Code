@@ -251,28 +251,31 @@ InventoryWeaponCosmeticsView._equip_items_on_server = function (self)
 		equip_weapon_skin_promise = Items.equip_weapon_skin(selected_item, self._equipped_weapon_skin)
 	end
 
-	if self._equipped_weapon_trinket_name ~= self._starting_weapon_trinket_name then
-		equip_trinket_promise = Items.equip_weapon_trinket(selected_item, self._equipped_weapon_trinket)
-	end
+	local gear_id = selected_item and selected_item.gear_id
+	local gear
 
 	equip_weapon_skin_promise:next(function (skin_equip_result)
-		equip_trinket_promise:next(function (trinket_equip_result)
-			local gear
+		if skin_equip_result and skin_equip_result.item then
+			gear = skin_equip_result.item
+		end
 
+		if self._equipped_weapon_trinket_name ~= self._starting_weapon_trinket_name then
+			local item = gear and MasterItems.get_item_instance(gear, gear_id) or selected_item
+
+			equip_trinket_promise = Items.equip_weapon_trinket(item, self._equipped_weapon_trinket)
+		end
+
+		equip_trinket_promise:next(function (trinket_equip_result)
 			if trinket_equip_result and trinket_equip_result.item then
 				gear = trinket_equip_result.item
-			elseif skin_equip_result and skin_equip_result.item then
-				gear = skin_equip_result.item
 			end
 
 			if gear then
-				local gear_id = selected_item and selected_item.gear_id
 				local item = MasterItems.get_item_instance(gear, gear_id)
 
 				if item then
 					Managers.ui:item_icon_updated(item)
-					Managers.event:trigger("event_item_icon_updated", item)
-					Managers.event:trigger("event_replace_list_item", item)
+					Managers.event:trigger("event_weapon_cosmetic_updated", item)
 					Log.debug("InventoryWeaponCosmeticsView", "Items equipped in loadout slots")
 
 					local peer_id = Network.peer_id()
@@ -1164,9 +1167,6 @@ InventoryWeaponCosmeticsView._preview_element = function (self, element)
 
 	local is_locked = element.locked
 	local should_display_button = self:_update_equip_button_status() ~= "locked"
-
-	self:_set_preview_widgets_visibility(false, should_display_button)
-
 	local y_offset = not should_display_button and 80 or 0
 
 	widget.offset[2] = widget.offset[2] + y_offset
@@ -1189,10 +1189,6 @@ InventoryWeaponCosmeticsView._preview_item = function (self, item)
 			self:_set_weapon_zoom(self._weapon_zoom_fraction)
 		end)
 	end
-
-	local visible = true
-
-	self:_set_preview_widgets_visibility(visible)
 end
 
 InventoryWeaponCosmeticsView.on_back_pressed = function (self)

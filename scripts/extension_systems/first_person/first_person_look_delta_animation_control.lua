@@ -39,10 +39,10 @@ end
 
 local SHOOTING_GRACE_DURATION = 0.2
 
-FirstPersonLookDeltaAnimationControl.update = function (self, dt, t)
+FirstPersonLookDeltaAnimationControl.update = function (self, dt, t, rotation_override)
 	local first_person_component = self._first_person_component
 	local weapon_action_component = self._weapon_action_component
-	local rotation = first_person_component.rotation
+	local rotation = rotation_override or first_person_component.rotation
 	local look_delta_template = LookDelta.look_delta_template(weapon_action_component, self._alternate_fire_component, self._unit)
 	local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
 	local _, action_settings = Action.current_action(weapon_action_component, weapon_template)

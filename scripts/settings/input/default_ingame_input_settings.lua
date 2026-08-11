@@ -286,14 +286,9 @@ local default_ingame_input_settings = {
 			description = "loc_ingame_crouch",
 			group = "input_group_movement",
 			sort_order = 7,
-		},
-		slide = {
-			"ps4_controller_circle",
-			"xbox_controller_b",
-			bindable = false,
-			description = "loc_ingame_slide",
-			group = "input_group_movement",
-			sort_order = 8,
+			controller_layout_extra_descriptions = {
+				"loc_ingame_slide",
+			},
 		},
 		sprint = {
 			"keyboard_left shift",

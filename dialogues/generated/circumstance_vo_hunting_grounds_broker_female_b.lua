@@ -1,6 +1,32 @@
 ﻿-- chunkname: @dialogues/generated/circumstance_vo_hunting_grounds_broker_female_b.lua
 
 local circumstance_vo_hunting_grounds_broker_female_b = {
+	disabled_by_chaos_hound_mutator = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_broker_female_b__disabled_by_chaos_hound_01",
+			"loc_broker_female_b__disabled_by_chaos_hound_02",
+			"loc_broker_female_b__disabled_by_chaos_hound_03",
+			"loc_broker_female_b__disabled_by_chaos_hound_04",
+			"loc_broker_female_b__disabled_by_chaos_hound_05",
+		},
+		sound_events_duration = {
+			3.005698,
+			3.072958,
+			3.492813,
+			3.074604,
+			1.88351,
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+		},
+		randomize_indexes = {},
+	},
 	heard_enemy_chaos_hound_mutator = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

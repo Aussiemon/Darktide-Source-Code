@@ -480,6 +480,14 @@ GameModeCoopCompleteObjective._apply_persistent_player_data = function (self, pl
 				local grenade_ability = equipped_abilities.grenade_ability
 
 				if grenade_ability and not grenade_ability.exclude_from_persistant_player_data then
+					local buff_extension = ScriptUnit.has_extension(player_unit, "buff_system")
+
+					if buff_extension then
+						local t = Managers.time:time("gameplay")
+
+						buff_extension:_update_stat_buffs_and_keywords(t)
+					end
+
 					local max_grenades = ability_extension:max_ability_charges("grenade_ability")
 					local num_grenades = math.round(selected_data.grenades_percent * max_grenades)
 

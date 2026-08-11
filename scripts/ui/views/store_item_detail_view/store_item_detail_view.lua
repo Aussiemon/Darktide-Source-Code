@@ -63,8 +63,9 @@ StoreItemDetailView.init = function (self, settings, context)
 	self._using_cursor_navigation = Managers.ui:using_cursor_navigation()
 
 	local player = self:_player()
+	local profile = player:profile()
 
-	self._profile = player:profile()
+	self._preview_profile = profile
 	self._aquilas_showing = false
 	self._url_textures = {}
 	self._zoom_speed, self._zoom_level, self._zoom_delay = 0, 1, 0
@@ -369,12 +370,7 @@ StoreItemDetailView._setup_item_presentation = function (self, keep_item)
 			element.offer = offer
 			self._selected_element = element
 
-			local profile = self:_generic_profile_from_item(item)
-			local slots = item.slots
-
-			if slots then
-				profile.loadout[slots[1]] = item
-			end
+			local profile = self:_generate_mannequin_profile(self._preview_profile, item)
 
 			element.dummy_profile = profile
 
@@ -822,7 +818,7 @@ StoreItemDetailView._create_grid_entry_for_item = function (self, entry, index)
 		end
 	end
 
-	local profile = self:_generic_profile_from_item(item)
+	local profile = self:_generate_mannequin_profile(self._preview_profile, item)
 
 	profile.loadout[item.slots[1]] = item
 	element.dummy_profile = profile
@@ -1167,47 +1163,63 @@ StoreItemDetailView._present_item = function (self, item, visual_item)
 		self._present_bundle_promise:cancel()
 	end
 
+	local item_type = item.item_type
 	local slot_name = item.slots[1]
 
 	self._selected_slot = ItemSlotSettings[slot_name]
 
-	local item_type = item.item_type
 	local preview_on_player = item_type ~= "WEAPON_RANGED" and item_type ~= "WEAPON_MELEE" and item_type ~= "WEAPON_SKIN" and item_type ~= "WEAPON_TRINKET"
-	local valid_on_profile = self._profile_spawner and self:_is_spawn_profile_by_item_valid(item)
+	local player_profile = self._preview_profile
+	local preview_item = item_type == "WEAPON_SKIN" and Items.weapon_skin_preview_item(item) or item
+	local mannequin_profile = self:_generate_mannequin_profile(player_profile, preview_item)
+	local changed_breed = not self._mannequin_profile or self._mannequin_profile.breed ~= mannequin_profile.breed
+	local changed_gender = not self._mannequin_profile or self._mannequin_profile.gender ~= mannequin_profile.gender
+	local changed_archetype = not self._mannequin_profile or self._mannequin_profile.archetype.name ~= mannequin_profile.archetype.name
+	local changed_profile = changed_breed or changed_gender or changed_archetype
 
-	if not preview_on_player or not valid_on_profile then
-		self:_destroy_profile()
+	if changed_profile then
+		self._mannequin_profile = mannequin_profile
+		self._gear_profile = table.clone_instance(player_profile)
+		self._gear_profile.loadout = table.clone_instance(player_profile.loadout)
+
+		local item_archetypes = preview_item.archetypes
+
+		if item_archetypes and not table.is_empty(item_archetypes) then
+			self._can_preview_with_gear = table.array_contains(item_archetypes, player_profile.archetype and player_profile.archetype.name)
+		else
+			self._can_preview_with_gear = true
+		end
+
+		if self._can_preview_with_gear then
+			self._presentation_profile = self._previewed_with_gear and self._gear_profile or self._mannequin_profile
+		else
+			self._presentation_profile = self._mannequin_profile
+		end
+	else
+		table.clear(self._mannequin_profile.loadout)
+
+		for slot_id, loadout_item in pairs(mannequin_profile.loadout) do
+			self._mannequin_profile.loadout[slot_id] = loadout_item
+		end
+
+		table.clear(self._gear_profile.loadout)
+
+		for slot_id, loadout_item in pairs(player_profile.loadout) do
+			self._gear_profile.loadout[slot_id] = loadout_item
+		end
 	end
 
 	if preview_on_player then
 		self:_destroy_weapon()
-	end
 
-	local set_initial_viewport = false
+		if not self._profile_spawner then
+			self._spawn_player = true
 
-	if not preview_on_player then
-		self._weapon_preview_show_original = false
+			local default_camera_settings = self:_default_camera_settings()
 
-		self:_setup_weapon_preview()
-		self:_present_weapon(visual_item)
+			self:_set_initial_viewport_camera_position(default_camera_settings)
+		end
 
-		set_initial_viewport = true
-	elseif not self._profile_spawner then
-		self:_generate_spawn_profile(item)
-
-		self._spawn_player = true
-		set_initial_viewport = true
-	else
-		self:_reset_mannequin(item)
-	end
-
-	if set_initial_viewport then
-		local default_camera_settings = self:_default_camera_settings()
-
-		self:_set_initial_viewport_camera_position(default_camera_settings)
-	end
-
-	if preview_on_player then
 		local initial_rotation = 0
 
 		if slot_name == "slot_gear_extra_cosmetic" then
@@ -1215,31 +1227,77 @@ StoreItemDetailView._present_item = function (self, item, visual_item)
 		end
 
 		self._initial_rotation = initial_rotation
-
-		if slot_name then
-			self._mannequin_loadout[slot_name] = item
-
-			local gear_loadout = self._gear_loadout
-
-			if gear_loadout then
-				gear_loadout[slot_name] = item
-			end
-		end
-
-		self._previewed_gear_item_slot_name = slot_name
+		self._mannequin_profile.loadout[slot_name] = item
+		self._gear_profile.loadout[slot_name] = item
 
 		self:_trigger_zoom_logic(self._spawn_player)
+	else
+		if self._profile_spawner then
+			local default_camera_settings = self:_default_camera_settings()
+
+			self:_set_initial_viewport_camera_position(default_camera_settings)
+			self:_destroy_profile()
+		end
+
+		self._weapon_preview_show_original = false
+
+		self:_setup_weapon_preview()
+		self:_present_weapon(visual_item)
 	end
 
-	local ui_renderer = self._ui_forward_renderer
 	local title = item.display_name and Localize(item.display_name) or ""
 	local sub_type = Items.type_display_name(item)
 	local title_item = {
 		display_name = title,
 		item_type = sub_type,
 	}
+	local ui_renderer = self._ui_forward_renderer
 
 	self:_create_item_name_widget(title_item, "item_name_pivot", ui_renderer)
+end
+
+StoreItemDetailView._setup_item_texts = function (self, item)
+	self:_setup_side_panel(item)
+
+	if not item then
+		return
+	end
+
+	local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
+	local item_size = {
+		700,
+		60,
+	}
+	local ui_renderer = self._ui_default_renderer
+	local scenegraph_id = "item_name_pivot"
+	local widget_type = "item_name"
+	local ContentBlueprints = generate_blueprints_function(item_size)
+	local template = ContentBlueprints[widget_type]
+	local config = {
+		horizontal_alignment = "right",
+		vertical_alignment = "bottom",
+		size = item_size,
+		item = item,
+	}
+	local size = template.size_function and template.size_function(self, config, ui_renderer) or template.size
+	local pass_template = template.pass_template_function and template.pass_template_function(self, config, ui_renderer) or template.pass_template
+	local optional_style = template.style_function and template.style_function(self, config, size) or template.style
+	local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size, optional_style)
+
+	if widget_definition then
+		local name = "item_name"
+		local widget = self:_create_widget(name, widget_definition)
+
+		widget.type = widget_type
+
+		local init = template.init
+
+		if init then
+			init(self, widget, config, nil, nil, ui_renderer)
+		end
+
+		self._item_name_widget = widget
+	end
 end
 
 local _item_name_item_size = {
@@ -1511,138 +1569,14 @@ StoreItemDetailView._destroy_details = function (self)
 	self._details_widget = nil
 end
 
-StoreItemDetailView._generic_profile_from_item = function (self, item)
-	local profile = self._profile
-	local item_gender, item_breed, item_archetype
-
-	if profile then
-		local wanted_gender = profile.gender
-		local item_genders = item.genders
-
-		if item_genders and not table.is_empty(item_genders) then
-			item_gender = table.array_contains(item_genders, wanted_gender) and wanted_gender
-		else
-			item_gender = wanted_gender
-		end
-
-		local wanted_breed = profile.archetype.breed
-		local item_breeds = item.breeds
-
-		if item_breeds and not table.is_empty(item_breeds) then
-			item_breed = table.array_contains(item_breeds, wanted_breed) and wanted_breed
-		else
-			item_breed = wanted_breed
-		end
-
-		local wanted_archetype = profile.archetype
-		local item_archetypes = item.archetypes
-
-		if item_archetypes and not table.is_empty(item_archetypes) then
-			item_archetype = table.array_contains(item_archetypes, wanted_archetype.name) and wanted_archetype
-		else
-			item_archetype = wanted_archetype
-		end
-	end
-
-	local dummy_profile
-	local compatible_profile = item_gender and item_breed and item_archetype
-
-	if compatible_profile then
-		dummy_profile = table.clone_instance(profile)
-	else
-		local breed = item_breed or item.breeds and item.breeds[1] or "human"
-		local archetype = item_archetype or item.archetypes and item.archetypes[1] and Archetypes[item.archetypes[1]] or breed == "ogryn" and Archetypes.ogryn or Archetypes.veteran
-		local gender = breed ~= "ogryn" and (item_gender or item.genders and item.genders[1]) or "male"
-
-		dummy_profile = {
-			loadout = {},
-			archetype = archetype,
-			breed = breed,
-			gender = gender,
-		}
-	end
-
-	return dummy_profile
-end
-
-StoreItemDetailView._generate_spawn_profile = function (self, item)
-	local profile
-
-	if item then
-		profile = self:_generic_profile_from_item(item)
-	else
-		local player = self:_player()
-
-		profile = player:profile()
-	end
-
-	self._preview_profile = profile
-	self._mannequin_loadout = self:_generate_mannequin_loadout(profile, item)
-	self._default_mannequin_loadout = table.clone_instance(self._mannequin_loadout)
-	self._mannequin_profile = table.clone_instance(profile)
-	self._mannequin_profile.loadout = self._mannequin_loadout
-
-	local player = self:_player()
-	local player_profile = player:profile()
-
-	if player_profile and player_profile.archetype.name == profile.archetype.name then
-		local gear_profile = table.clone_instance(player_profile)
-
-		self._default_gear_loadout = table.clone_instance(gear_profile.loadout)
-		self._gear_loadout = table.clone_instance(gear_profile.loadout)
-		gear_profile.loadout = self._gear_loadout
-		gear_profile.character_id = "cosmetics_view_character"
-		self._gear_profile = gear_profile
-		self._can_preview_with_gear = true
-	else
-		self._can_preview_with_gear = false
-	end
-
-	self._presentation_profile = self._mannequin_profile
-	self._spawned_profile = nil
-end
-
-StoreItemDetailView._is_spawn_profile_by_item_valid = function (self, item)
-	local current_profile = self._preview_profile
-
-	if not current_profile then
-		local player = self:_player()
-
-		current_profile = player:profile()
-	end
-
-	local required_profile = self:_generic_profile_from_item(item)
-	local same_breed = required_profile.archetype.breed == current_profile.archetype.breed
-	local same_gender = required_profile.gender == current_profile.gender
-	local same_archetype = required_profile.archetype.name == current_profile.archetype.name
-
-	return same_breed and same_gender and same_archetype
-end
-
-StoreItemDetailView._generate_mannequin_loadout = function (self, profile, optional_item)
+StoreItemDetailView._generate_mannequin_profile = function (self, profile, optional_item)
 	local presentation_profile = profile
 	local gender_name = presentation_profile.gender
 	local archetype = presentation_profile.archetype
 	local breed_name = archetype.breed
-	local new_loadout = {}
-	local item_slot = optional_item and optional_item.slots[1]
-	local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed_name]
-	local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
-	local required_items = required_gender_item_names_per_slot and (required_gender_item_names_per_slot[item_slot] or required_gender_item_names_per_slot.default)
+	local mannequin_profile = Items.create_mannequin_profile_by_item(optional_item, gender_name, archetype.name, breed_name)
 
-	if required_items then
-		for slot_name, slot_item_name in pairs(required_items) do
-			local item_definition = MasterItems.get_item(slot_item_name)
-
-			if item_definition then
-				local slot_item = table.clone(item_definition)
-
-				new_loadout[slot_name] = slot_item
-			end
-		end
-	end
-
-	return new_loadout
+	return mannequin_profile
 end
 
 StoreItemDetailView._setup_input_legend = function (self)
@@ -1795,58 +1729,10 @@ StoreItemDetailView.cb_on_preview_with_gear_toggled = function (self, id, input_
 end
 
 StoreItemDetailView._stop_previewing = function (self)
-	self:_reset_mannequin()
-
-	local loadout = self._gear_loadout
-	local default_loadout = self._default_gear_loadout
-
-	if loadout and default_loadout then
-		table.clear(loadout)
-
-		for key, value in pairs(default_loadout) do
-			loadout[key] = value
-		end
-	end
-
 	if self._item_name_widget then
 		self:_unregister_widget_name(self._item_name_widget.name)
 
 		self._item_name_widget = nil
-	end
-end
-
-StoreItemDetailView._reset_mannequin = function (self, optional_item)
-	local mannequin_loadout = self._mannequin_loadout
-
-	if not mannequin_loadout then
-		return
-	end
-
-	local default_mannequin_loadout = self._default_mannequin_loadout
-
-	for key, _ in pairs(mannequin_loadout) do
-		mannequin_loadout[key] = default_mannequin_loadout[key]
-	end
-
-	local profile = self._presentation_profile
-	local archetype = profile and profile.archetype
-	local breed_name = profile and archetype.breed or ""
-	local gender_name = profile and profile.gender or ""
-	local item_slot = optional_item and optional_item.slots[1]
-	local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed_name]
-	local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
-	local required_items = required_gender_item_names_per_slot and (required_gender_item_names_per_slot[item_slot] or required_gender_item_names_per_slot.default)
-
-	if required_items then
-		for slot_name, slot_item_name in pairs(required_items) do
-			local item_definition = MasterItems.get_item(slot_item_name)
-
-			if item_definition then
-				local slot_item = table.clone(item_definition)
-
-				mannequin_loadout[slot_name] = slot_item
-			end
-		end
 	end
 end
 
@@ -2715,7 +2601,14 @@ StoreItemDetailView._get_weapon_spawn_position_normalized = function (self)
 	return scale_x, scale_y
 end
 
-StoreItemDetailView._destroy_weapon_preview = function (self)
+StoreItemDetailView._present_weapon = function (self, item)
+	local disable_auto_spin = true
+	local weapon_preview = self._weapon_preview
+
+	weapon_preview:present_item(item, disable_auto_spin)
+end
+
+StoreItemDetailView._destroy_weapon = function (self)
 	if not self._weapon_preview then
 		return
 	end
@@ -2725,20 +2618,6 @@ StoreItemDetailView._destroy_weapon_preview = function (self)
 	self:_remove_element(reference_name)
 
 	self._weapon_preview = nil
-end
-
-StoreItemDetailView._present_weapon = function (self, item)
-	local disable_auto_spin = true
-
-	self._can_preview_with_gear = false
-
-	local weapon_preview = self._weapon_preview
-
-	weapon_preview:present_item(item, disable_auto_spin)
-end
-
-StoreItemDetailView._destroy_weapon = function (self)
-	self:_destroy_weapon_preview()
 end
 
 StoreItemDetailView._destroy_profile = function (self)
@@ -3393,29 +3272,14 @@ StoreItemDetailView.cb_on_inspect_pressed = function (self)
 			view_name = "inventory_weapon_details_view"
 		end
 
-		local player = self:_player()
-		local player_profile = player:profile() or {}
-		local archetype = player_profile.archetype
 		local include_skin_item_texts = true
 		local item = item_type == "WEAPON_SKIN" and Items.weapon_skin_preview_item(previewed_item, include_skin_item_texts) or previewed_item
-		local is_item_supported_on_played_character
-		local item_archetypes = item.archetypes
-
-		if item_archetypes and not table.is_empty(item_archetypes) then
-			is_item_supported_on_played_character = table.array_contains(item_archetypes, archetype and archetype.name)
-		else
-			is_item_supported_on_played_character = true
-		end
-
-		local gender_name = player_profile.gender
-		local archetype_name = archetype and archetype.name
-		local breed_name = archetype and archetype.breed
-		local profile = is_item_supported_on_played_character and table.clone_instance(player_profile) or Items.create_mannequin_profile_by_item(item, gender_name, archetype_name, breed_name)
+		local profile = self._can_preview_with_gear and self._gear_profile or self._mannequin_profile
 
 		context = {
 			use_store_appearance = true,
 			profile = profile,
-			preview_with_gear = is_item_supported_on_played_character,
+			preview_with_gear = self._can_preview_with_gear,
 			preview_item = item,
 		}
 

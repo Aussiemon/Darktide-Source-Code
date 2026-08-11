@@ -379,58 +379,24 @@ ActionHandler._calculate_time_scale = function (self, action_settings)
 
 	local action_time_scale_stat_buffs = action_settings.time_scale_stat_buffs
 
-	if not action_time_scale_stat_buffs then
-		return time_scale
-	end
+	if action_time_scale_stat_buffs then
+		local num_applied_stat_buffs, total_modifier = 0, 0
 
-	local num_applied_stat_buffs, total_modifier = 0, 0
+		for ii = 1, #action_time_scale_stat_buffs do
+			local stat_buff = action_time_scale_stat_buffs[ii]
+			local stat_buff_value = stat_buffs[stat_buff]
 
-	for ii = 1, #action_time_scale_stat_buffs do
-		local stat_buff = action_time_scale_stat_buffs[ii]
-		local stat_buff_value = stat_buffs[stat_buff]
-
-		if stat_buff_value then
-			total_modifier = total_modifier + stat_buff_value
-			num_applied_stat_buffs = num_applied_stat_buffs + 1
-		end
-	end
-
-	total_modifier = total_modifier - (num_applied_stat_buffs - 1)
-	time_scale = time_scale * total_modifier
-
-	local min, max = NetworkConstants.action_time_scale.min, NetworkConstants.action_time_scale.max
-
-	if time_scale < min or max < time_scale then
-		local active_buffs = "Buffs:"
-		local buffs = buff_extension:buffs()
-
-		for ii = 1, #buffs do
-			local template = buffs[ii]:template()
-			local template_stat_buffs = template.stat_buffs
-			local template_conditional_stat_buffs = template.conditional_stat_buffs
-			local template_lerped_stat_buffs = template.lerped_stat_buffs
-			local template_proc_stat_buffs = template.proc_stat_buffs
-
-			for jj = 1, #action_time_scale_stat_buffs do
-				local key = action_time_scale_stat_buffs[jj]
-
-				if template_stat_buffs and template_stat_buffs[key] or template_conditional_stat_buffs and template_conditional_stat_buffs[key] or template_lerped_stat_buffs and template_lerped_stat_buffs[key] or template_proc_stat_buffs and template_proc_stat_buffs[key] then
-					active_buffs = string.format("%s %s,", active_buffs, template.name)
-				end
+			if stat_buff_value then
+				total_modifier = total_modifier + stat_buff_value
+				num_applied_stat_buffs = num_applied_stat_buffs + 1
 			end
 		end
 
-		local active_stat_buffs = "Time scales:"
-
-		for ii = 1, #action_time_scale_stat_buffs do
-			local key = action_time_scale_stat_buffs[ii]
-			local value = stat_buffs[key]
-
-			active_stat_buffs = string.format("%s (%s:%s),", active_stat_buffs, key, value and string.format("%.3f", value) or "n/a")
-		end
-
-		Log.exception("ActionHandler", "action time scale value of %.3f fell outside allowed %.3f-%.3f range! %s %s", time_scale, min, max, active_stat_buffs, active_buffs)
+		total_modifier = total_modifier - (num_applied_stat_buffs - 1)
+		time_scale = time_scale * total_modifier
 	end
+
+	local min, max = NetworkConstants.action_time_scale.min, NetworkConstants.action_time_scale.max
 
 	time_scale = math.clamp(time_scale, min, max)
 

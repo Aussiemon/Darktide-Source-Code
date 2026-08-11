@@ -46,7 +46,8 @@ VotingNotificationHandler._get_dynamic_text = function (self, voting_id)
 	notification.time_left = time_left
 
 	local entries = {}
-	local show_timer = config.show_timer
+	local vote_is_ongoing = not Managers.voting:voting_result(voting_id)
+	local show_timer = config.show_timer and vote_is_ongoing
 
 	if show_timer then
 		entries[#entries + 1] = Text.format_time_span_long_form_localized(time_left)

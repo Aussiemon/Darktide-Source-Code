@@ -496,7 +496,7 @@ function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogt
 
 			result, damage, permanent_damage, tougness_damage, damage_absorbed = DamageTakenCalculation.calculate_attack_result(calculated_damage, damage_profile, attack_type, attack_direction, instakill, is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacked_unit, damage_type, attacking_unit_stat_buffs, shield_template)
 			damage_dealt = damage + permanent_damage
-			one_hit_kill = result == attack_results.died and max_health <= damage_dealt and current_health_damage <= 0
+			one_hit_kill = result == attack_results.died and max_health <= damage_dealt and current_health_damage <= max_health * 0.2
 
 			if is_damage_allowed and is_server then
 				local target_is_player = Breed.is_player(target_breed_or_nil)

@@ -160,6 +160,7 @@ local DEFAULT_HEIGHTS = {
 	human_sized = 1.85,
 	ogryn_sized = 2.8,
 }
+local EXTRA_SIZE_SCALE = 1.3
 
 local function _materialize_max_value(unit, body_size)
 	local pos = Unit.world_position(unit, 1)
@@ -172,10 +173,13 @@ local function _materialize_max_value(unit, body_size)
 	else
 		local breed_name = profile.archetype.breed
 		local breed = Breeds[breed_name]
-		local z_scale = Unit.local_scale(unit, 1).z
 
-		height = Breed.height(unit, breed) * 1.3 * z_scale
+		height = Breed.height(unit, breed)
 	end
+
+	local z_scale = Unit.local_scale(unit, 1).z
+
+	height = height * EXTRA_SIZE_SCALE * z_scale
 
 	return height + pos.z + 0.1
 end

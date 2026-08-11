@@ -71,6 +71,29 @@ weapon_dodge_templates.smiter_plus = {
 		lerp_perfect = 1,
 	},
 }
+weapon_dodge_templates.smiter_plus_eighty_percent_mobility_extra_dodge = {
+	consecutive_dodges_reset = 0,
+	distance_scale = {
+		lerp_basic = 0.85,
+		lerp_perfect = 1.05,
+	},
+	diminishing_return_distance_modifier = {
+		lerp_basic = 0.6,
+		lerp_perfect = 0.3,
+	},
+	diminishing_return_start = {
+		lerp_basic = 2,
+		lerp_perfect = 5,
+	},
+	diminishing_return_limit = {
+		lerp_basic = 2,
+		lerp_perfect = 3,
+	},
+	speed_modifier = {
+		lerp_basic = 1,
+		lerp_perfect = 1,
+	},
+}
 weapon_dodge_templates.psyker = {
 	distance_scale = {
 		lerp_basic = 0.8,

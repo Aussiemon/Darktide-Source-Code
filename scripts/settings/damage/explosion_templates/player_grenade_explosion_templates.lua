@@ -9,6 +9,7 @@ local TARGETED_TEMPLATE_EFFECT_FINAL_TARGETS = Script.new_array(4)
 local TARGETED_TEMPLATE_EFFECT_SECONDARY = Script.new_array(4)
 local TARGETED_TEMPLATE_EFFECT_BACKUP = Script.new_array(4)
 local _arc_grenade_targeted_template_effect_data = {
+	no_player_unit = false,
 	num_backup_targets = 0,
 	num_final_targets = 0,
 	num_secondary_targets = 0,
@@ -481,11 +482,11 @@ local explosion_templates = {
 	arc_grenade = {
 		collision_filter = "filter_player_character_explosion",
 		damage_falloff = true,
-		min_radius = 5,
 		on_hit_buff_template_name = "arc_grenade_spread_target",
-		radius = 8,
 		scalable_radius = true,
 		static_power_level = 500,
+		radius = arc_grenade_talent_settings.radius,
+		min_radius = arc_grenade_talent_settings.radius,
 		damage_profile = DamageProfileTemplates.arc_grenade,
 		damage_type = damage_types.electrocution,
 		broadphase_explosion_filter = {
@@ -505,6 +506,7 @@ local explosion_templates = {
 		targeted_template_effect = {
 			template_effect_name = "arc_grenade_chain_lightning_source",
 			explosion_start_function = function (owner_unit)
+				_arc_grenade_targeted_template_effect_data.no_player_unit = false
 				_arc_grenade_targeted_template_effect_data.stop_sorting = false
 				_arc_grenade_targeted_template_effect_data.num_final_targets = 0
 				_arc_grenade_targeted_template_effect_data.num_secondary_targets = 0
@@ -519,10 +521,22 @@ local explosion_templates = {
 				table.clear(TARGETED_TEMPLATE_EFFECT_FINAL_TARGETS)
 				table.clear(TARGETED_TEMPLATE_EFFECT_SECONDARY)
 				table.clear(TARGETED_TEMPLATE_EFFECT_BACKUP)
+
+				local is_player_unit = Managers.state.player_unit_spawn:is_player_unit(owner_unit)
+
+				if not is_player_unit then
+					_arc_grenade_targeted_template_effect_data.stop_sorting = true
+					_arc_grenade_targeted_template_effect_data.no_player_unit = true
+				end
 			end,
 			on_target_hit_function = function (hit_unit, breed)
 				local targeting_data = _arc_grenade_targeted_template_effect_data
 				local target_results = _arc_grenade_targeted_template_effect_results
+
+				if targeting_data.no_player_unit then
+					return
+				end
+
 				local breed_name = breed.name
 				local breed_tags = breed.breed_tags
 

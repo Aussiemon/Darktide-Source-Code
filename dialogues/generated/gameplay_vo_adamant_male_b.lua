@@ -3049,6 +3049,13 @@ local gameplay_vo_adamant_male_b = {
 			1.579406,
 			1.530313,
 		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+		},
 		randomize_indexes = {},
 	},
 	seen_netgunner = {

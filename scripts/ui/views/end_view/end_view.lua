@@ -48,7 +48,7 @@ EndView.init = function (self, settings, context)
 	self._reference_name = "EndView_" .. tostring(self)
 	self._stay_in_party_voting_id = nil
 	self._stay_in_party_voting_active = false
-	self._stay_in_party = STAY_IN_PARTY.no
+	self._stay_in_party = GameParameters.should_stay_in_party_eor and STAY_IN_PARTY.yes or STAY_IN_PARTY.no
 	self._all_in_same_party = false
 	self._all_voted_yes = false
 	self._num_members_in_my_party = 1
@@ -192,7 +192,7 @@ EndView.update = function (self, dt, t, input_service)
 
 	self._skip_grace_time = grace_time
 
-	local expected_vote = STAY_IN_PARTY.yes
+	local expected_vote = GameParameters.should_stay_in_party_eor and STAY_IN_PARTY.no or STAY_IN_PARTY.yes
 	local is_waiting_for_vote_to_end = self._stay_in_party_voting_active and self._stay_in_party == expected_vote
 	local can_skip = not has_shown_summary_view or not is_waiting_for_vote_to_end
 
@@ -384,7 +384,7 @@ EndView._stay_in_party_voting_started = function (self)
 	if all_is_same_party and voting_id then
 		Managers.voting:cast_vote(voting_id, STAY_IN_PARTY.no)
 
-		local log_message = "everyone is same party, voting NO to merge"
+		local log_message = GameParameters.should_stay_in_party_eor and "everyone is same party, voting against merging into a new party" or "everyone is same party, voting NO to merge"
 
 		Log.info("STAY_IN_PARTY_VOTING", log_message)
 
@@ -707,6 +707,7 @@ EndView._setup_spawn_slots = function (self, players)
 			boxed_position = nil,
 			boxed_rotation = nil,
 			occupied = false,
+			presentation_state = nil,
 			index = player_index,
 			profile_spawner = profile_spawner,
 			ogryn_spawn_point_unit = self._ogryn_spawn_point_units[player_index],
@@ -948,25 +949,54 @@ EndView._set_character_names = function (self)
 			if widget then
 				local widget_content = widget.content
 				local character_name = player_info:character_name()
+				local presentation_state = slot.presentation_state
+				local new_presentation_state
 
-				if not report then
+				new_presentation_state = report and not self._has_shown_summary_view and "report_summary_presentation" or report and self._has_shown_summary_view and "report_end_presentation" or "report_empty"
+
+				if new_presentation_state ~= presentation_state then
+					slot.presentation_state = new_presentation_state
 					widget_content.character_name = character_name
-				elseif not self._has_shown_summary_view then
-					local character_level = report.currentLevel
+					widget_content.account_name = player_info:user_display_name()
 
-					widget_content.character_name = Text.formatted_character_name(character_name, character_level)
-				elseif player_info:is_own_player() then
-					local character_level = player_info:character_level()
+					if new_presentation_state == "report_summary_presentation" then
+						local character_level = report.currentLevel
 
-					widget_content.character_name = Text.formatted_character_name(character_name, character_level)
-				else
-					local xp = report.currentXp
-					local level_after_mission = self:_level_from_xp(experience_settings, xp)
+						widget_content.character_name = Text.formatted_character_name(character_name, character_level)
+					elseif new_presentation_state == "report_end_presentation" then
+						if player_info:is_own_player() then
+							local character_level = player_info:character_level()
 
-					widget_content.character_name = Text.formatted_character_name(character_name, level_after_mission)
+							widget_content.character_name = Text.formatted_character_name(character_name, character_level)
+						else
+							local level_after_mission
+
+							if report.unclaimedRewards and not table.is_empty(report.unclaimedRewards) then
+								local level = report.currentLevel
+
+								for ii = 1, #report.unclaimedRewards do
+									local reward = report.unclaimedRewards[ii]
+
+									if reward.level then
+										level = math.max(level, reward.level)
+									end
+								end
+
+								level_after_mission = level
+							else
+								local xp = report.currentXp
+
+								level_after_mission = self:_level_from_xp(experience_settings, xp)
+
+								if level_after_mission == 0 then
+									level_after_mission = report.currentLevel
+								end
+							end
+
+							widget_content.character_name = Text.formatted_character_name(character_name, level_after_mission)
+						end
+					end
 				end
-
-				widget_content.account_name = player_info:user_display_name()
 			end
 		end
 	end
@@ -1144,7 +1174,7 @@ EndView._sync_votes = function (self)
 	local voting_id = self._stay_in_party_voting_id
 	local num_votes = 0
 	local yes_votes = 0
-	local player_vote = STAY_IN_PARTY.no
+	local player_vote = GameParameters.should_stay_in_party_eor and STAY_IN_PARTY.yes or STAY_IN_PARTY.no
 
 	if voting_id then
 		local votes = Managers.voting:votes(voting_id)
@@ -1157,16 +1187,31 @@ EndView._sync_votes = function (self)
 
 			if peer_id then
 				local vote = votes[peer_id]
+				local checkmark_visible
 
-				if vote == STAY_IN_PARTY.yes then
-					yes_votes = yes_votes + 1
+				if GameParameters.should_stay_in_party_eor then
+					local is_stay = vote ~= STAY_IN_PARTY.no
+
+					if is_stay then
+						yes_votes = yes_votes + 1
+					end
 
 					if peer_id == local_player_peer_id then
-						player_vote = STAY_IN_PARTY.yes
+						player_vote = is_stay and STAY_IN_PARTY.yes or STAY_IN_PARTY.no
 					end
-				end
 
-				local checkmark_visible = vote == STAY_IN_PARTY.yes
+					checkmark_visible = is_stay
+				else
+					if vote == STAY_IN_PARTY.yes then
+						yes_votes = yes_votes + 1
+
+						if peer_id == local_player_peer_id then
+							player_vote = STAY_IN_PARTY.yes
+						end
+					end
+
+					checkmark_visible = vote == STAY_IN_PARTY.yes
+				end
 
 				num_votes = num_votes + 1
 

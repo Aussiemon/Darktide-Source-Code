@@ -133,6 +133,8 @@ PlayerUnitLocomotionExtension.init = function (self, extension_init_context, uni
 	self._base_stamina_template = archetype.stamina
 	self._old_position = Vector3Box(pos)
 	self._latest_simulated_position = Vector3Box(pos)
+	self._old_rotation = QuaternionBox(rot)
+	self._latest_simulated_rotation = QuaternionBox(rot)
 	self._player_unit_linker = PlayerUnitLinker:new(self._world, unit)
 	self._network_max_mover_frames = NetworkConstants.max_mover_frames
 
@@ -876,10 +878,15 @@ end
 PlayerUnitLocomotionExtension._update_rotation = function (self, unit, dt, t, locomotion_component, steering_component, force_rotation_component)
 	local look_rotation = self._first_person_component.rotation
 	local current_rotation = locomotion_component.rotation
+
+	self._old_rotation:store(current_rotation)
+
 	local new_rotation, new_target_rotation = self:_calculate_rotation(unit, dt, t, locomotion_component, steering_component, force_rotation_component, look_rotation, steering_component.velocity_wanted, locomotion_component.velocity_current, current_rotation, steering_component.target_rotation)
 
 	steering_component.target_rotation = new_target_rotation
 	locomotion_component.rotation = new_rotation
+
+	self._latest_simulated_rotation:store(new_rotation)
 end
 
 PlayerUnitLocomotionExtension.update = function (self, unit, dt, t)
@@ -912,13 +919,10 @@ PlayerUnitLocomotionExtension.update = function (self, unit, dt, t)
 		Unit.animation_set_variable(unit, climb_time_anim_var, new_time_in_ladder_animation)
 	end
 
-	local look_rotation = self._first_person_extension:extrapolated_rotation()
-	local current_velocity = self._locomotion_steering_component.velocity_wanted
-	local target_rotation = self._locomotion_steering_component.target_rotation
-	local current_rotation = locomotion_component.rotation
-	local extrapolated_rot, _ = self:_calculate_rotation(unit, remainder_t, t, locomotion_component, self._locomotion_steering_component, self._locomotion_force_rotation_component, look_rotation, current_velocity, locomotion_component.velocity_current, current_rotation, target_rotation)
+	local t_value = math.min(remainder_t / self._fixed_time_step, 1)
+	local interpolated_rot = Quaternion.lerp(self._old_rotation:unbox(), self._latest_simulated_rotation:unbox(), t_value)
 
-	Unit.set_local_rotation(unit, 1, extrapolated_rot)
+	Unit.set_local_rotation(unit, 1, interpolated_rot)
 
 	local locomotion_steering_component = self._locomotion_steering_component
 
@@ -929,6 +933,7 @@ PlayerUnitLocomotionExtension.update = function (self, unit, dt, t)
 		local active_stop = math.clamp(math.lerp(old_anim_var_id, current_active_stop, dt * 5), 0, 1)
 
 		Unit.animation_set_variable(unit, active_stop_anim_var_id, active_stop)
+		self._movement_direction_animation_control:update_direction_variables(dt, t)
 	end
 end
 

@@ -915,57 +915,70 @@ HudElementTacticalOverlay.update = function (self, dt, t, ui_renderer, render_se
 end
 
 HudElementTacticalOverlay._update_left_panel_elements = function (self, ui_renderer)
-	local margin = 20
 	local circumstance_info_widget = self._widgets_by_name.circumstance_info
 
 	if circumstance_info_widget.visible == true then
 		local title_margin = 20
-		local circumstance_info_content = circumstance_info_widget.content
+		local description_margin = 10
+		local total_height = 20
+		local circumstance_name_content = circumstance_info_widget.content.circumstance_name
 		local circumstance_name_style = circumstance_info_widget.style.circumstance_name
-		local _, circumstance_name_height = self:_text_size(ui_renderer, circumstance_info_content.circumstance_name, circumstance_name_style, {
+		local circumstance_icon_style = circumstance_info_widget.style.icon
+		local _, circumstance_name_height = self:_text_size(ui_renderer, circumstance_name_content, circumstance_name_style, {
 			circumstance_name_style.size[1],
 			1000,
 		})
-		local description_margin = 5
 		local min_height = circumstance_info_widget.style.icon.size[2]
 		local title_height = math.max(min_height, circumstance_name_height)
-
-		circumstance_name_style.size[2] = title_height
-
 		local circumstance_description_style = circumstance_info_widget.style.circumstance_description
-		local _, circumstance_description_height = self:_text_size(ui_renderer, circumstance_info_content.circumstance_description, circumstance_description_style, {
+		local circumstance_description_content = circumstance_info_widget.content.circumstance_description
+		local _, circumstance_description_height = self:_text_size(ui_renderer, circumstance_description_content, circumstance_description_style, {
 			circumstance_description_style.size[1],
 			1000,
 		})
 
-		circumstance_description_style.offset[2] = title_height + circumstance_name_style.offset[2] + description_margin
-		circumstance_description_style.size[2] = circumstance_description_height
+		circumstance_name_style.offset[2] = total_height
+		circumstance_icon_style.offset[2] = total_height
+		circumstance_description_style.offset[2] = circumstance_name_style.offset[2] + title_height + description_margin
+		total_height = circumstance_description_style.offset[2] + circumstance_description_height + title_margin
 
-		local circumstance_height = circumstance_description_style.offset[2] + circumstance_description_style.size[2] + circumstance_info_widget.style.icon.offset[2]
-
-		self:_set_scenegraph_size("circumstance_info_panel", nil, circumstance_height)
+		self:_set_scenegraph_size("circumstance_info_panel", nil, total_height)
 	end
 
 	local havoc_circumstance_info = self._widgets_by_name.havoc_circumstance_info
 
 	if havoc_circumstance_info.visible == true then
 		local title_margin = 20
-		local circumstance_info_content = havoc_circumstance_info.content
-		local circumstance_name_style = havoc_circumstance_info.style.circumstance_name_01
-		local _, circumstance_name_height = self:_text_size(ui_renderer, circumstance_info_content.circumstance_name_01, circumstance_name_style, {
-			circumstance_name_style.size[1],
-			1000,
-		})
-		local description_margin = 5
-		local min_height = havoc_circumstance_info.style.icon_01.size[2]
-		local title_height = math.max(min_height, circumstance_name_height)
-
-		circumstance_name_style.size[2] = title_height
-
+		local description_margin = 10
+		local total_height = 0
 		local num_displayed_mutators = havoc_circumstance_info.num_displayed_mutators
-		local mutator_height = num_displayed_mutators * 90 + title_height + title_margin * 2 + description_margin
 
-		self:_set_scenegraph_size("circumstance_info_panel", nil, mutator_height)
+		for i = 1, num_displayed_mutators do
+			total_height = i == 1 and 20 or total_height
+
+			local circumstance_name_content = havoc_circumstance_info.content["circumstance_name_0" .. i]
+			local circumstance_name_style = havoc_circumstance_info.style["circumstance_name_0" .. i]
+			local circumstance_icon = havoc_circumstance_info.style["icon_0" .. i]
+			local _, circumstance_name_height = self:_text_size(ui_renderer, circumstance_name_content, circumstance_name_style, {
+				circumstance_name_style.size[1],
+				1000,
+			})
+			local circumstance_description_content = havoc_circumstance_info.content["circumstance_description_0" .. i]
+			local circumstance_description_style = havoc_circumstance_info.style["circumstance_description_0" .. i]
+			local _, circumstance_description_height = self:_text_size(ui_renderer, circumstance_description_content, circumstance_description_style, {
+				circumstance_description_style.size[1],
+				1000,
+			})
+			local min_height = havoc_circumstance_info.style.icon_01.size[2]
+			local title_height = math.max(min_height, circumstance_name_height)
+
+			circumstance_name_style.offset[2] = total_height
+			circumstance_icon.offset[2] = total_height
+			circumstance_description_style.offset[2] = circumstance_name_style.offset[2] + title_height + description_margin
+			total_height = circumstance_description_style.offset[2] + circumstance_description_height + title_margin
+		end
+
+		self:_set_scenegraph_size("circumstance_info_panel", nil, total_height)
 	end
 
 	local currencies_width = 110

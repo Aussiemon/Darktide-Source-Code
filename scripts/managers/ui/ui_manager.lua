@@ -1645,8 +1645,7 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 		local profile = dummy_profile or player:profile()
 		local gender_name = profile and profile.gender
 		local breed_name = profile and profile.archetype.breed
-		local archetype = profile and profile.archetype
-		local archetype_name = archetype and archetype.name
+		local archetype_name = profile and profile.archetype and profile.archetype.name
 
 		dummy_profile = Items.create_mannequin_profile_by_item(real_item, gender_name, archetype_name, breed_name)
 
@@ -1702,27 +1701,15 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 			end
 		end
 
-		dummy_profile = Items.create_mannequin_profile_by_item(item)
+		local player = Managers.player:local_player(1)
+		local profile = dummy_profile or player:profile()
+		local gender_name = profile and profile.gender
+		local breed_name = profile and profile.archetype.breed
+		local archetype_name = profile and profile.archetype and profile.archetype.name
 
-		local gender_name = dummy_profile.gender
-		local archetype = dummy_profile.archetype
-		local breed_name = archetype.breed
+		dummy_profile = Items.create_mannequin_profile_by_item(items[1], gender_name, archetype_name, breed_name)
+
 		local loadout = dummy_profile.loadout
-		local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed_name]
-		local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
-		local required_items = required_gender_item_names_per_slot and required_gender_item_names_per_slot.default
-
-		if required_items then
-			for slot_name, slot_item_name in pairs(required_items) do
-				local item_definition = MasterItems.get_item(slot_item_name)
-
-				if item_definition then
-					local slot_item = table.clone(item_definition)
-
-					dummy_profile.loadout[slot_name] = slot_item
-				end
-			end
-		end
 
 		for i = 1, #items do
 			local set_item = items[i]

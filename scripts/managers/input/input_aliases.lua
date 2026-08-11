@@ -200,6 +200,14 @@ InputAliases.hide_in_controller_layout = function (self, name)
 	end
 end
 
+InputAliases.controller_layout_extra_descriptions = function (self, name)
+	local alias_row = self._aliases[name]
+
+	if alias_row then
+		return alias_row.controller_layout_extra_descriptions
+	end
+end
+
 InputAliases.description = function (self, name)
 	local alias_row = self._aliases[name]
 

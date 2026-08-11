@@ -1516,6 +1516,9 @@ templates.adamant_forceful_offensive_duration = {
 		[stat_buffs.attack_speed] = talent_settings.forceful.attack_speed,
 		[stat_buffs.max_hit_mass_attack_modifier] = talent_settings.forceful.cleave,
 	},
+	related_talents = {
+		"adamant_forceful_offensive",
+	},
 }
 templates.adamant_forceful_stun_immune = {
 	class_name = "buff",
@@ -1538,6 +1541,7 @@ templates.adamant_forceful_stun_immune = {
 	end,
 }
 templates.adamant_forceful_stun_immune_duration = {
+	always_show_in_hud = true,
 	class_name = "buff",
 	hud_icon = "content/ui/textures/icons/buffs/hud/adamant/adamant_forceful_melee",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
@@ -1560,6 +1564,9 @@ templates.adamant_forceful_stun_immune_duration = {
 	conditional_keywords_func = function (template_data, template_context)
 		return template_data.block_component.is_perfect_blocking
 	end,
+	related_talents = {
+		"adamant_forceful_stun_immune_and_block_all",
+	},
 }
 
 local teminus_warrant_attacked_units = {}

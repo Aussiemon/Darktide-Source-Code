@@ -4875,6 +4875,13 @@ local gameplay_vo_psyker_female_b = {
 			3.544208,
 			2.296688,
 		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+		},
 		randomize_indexes = {},
 	},
 	seen_netgunner = {

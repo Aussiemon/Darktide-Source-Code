@@ -12,7 +12,6 @@ SocialPSN.init = function (self)
 	self._num_blocked = 0
 	self._friends_promise = nil
 	self._blocked_promise = nil
-	self._friends_promise = nil
 	self._update_friendlist = false
 	self._update_blocklist = false
 end
@@ -52,11 +51,9 @@ SocialPSN.fetch_friends_list = function (self)
 		return friends_promise
 	end
 
-	local return_promise = Promise.new()
+	self._friends_promise = Promise.new()
 
-	self._friends_promise = Managers.account:get_friends()
-
-	self._friends_promise:next(function (friends)
+	Managers.account:get_friends():next(function (friends)
 		friends = friends or empty_friend_list
 
 		local playing_friends = {}
@@ -90,13 +87,14 @@ SocialPSN.fetch_friends_list = function (self)
 		end
 
 		self._num_friends = #profiles
-		self._friends_promise = nil
 		self._update_friendlist = false
 
-		return_promise:resolve(profiles)
+		self._friends_promise:resolve(profiles)
+	end):catch(function (error)
+		self._friends_promise:reject(error)
 	end)
 
-	return return_promise
+	return self._friends_promise
 end
 
 SocialPSN.blocked_list_has_changes = function (self)
@@ -127,9 +125,7 @@ SocialPSN.fetch_blocked_list = function (self)
 
 		self._blocked_promise:resolve(blocked_list)
 	end):catch(function (error)
-		self._blocked_promise:reject({
-			error,
-		})
+		self._blocked_promise:reject(error)
 	end)
 
 	return self._blocked_promise

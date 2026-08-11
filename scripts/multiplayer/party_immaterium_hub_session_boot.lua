@@ -131,19 +131,11 @@ end
 PartyImmateriumHubSessionBoot._create_connection = function (self)
 	local event_delegate = Managers.connection:network_event_delegate()
 	local network_hash = Managers.connection.combined_hash
-	local client = self._wan_client
-	local server_ip = self._server_ip
-	local server_port = self._server_port
+	local engine_lobby = self._engine_lobby
+	local destroy_lobby_function = Network.leave_lan_lobby
 
-	local function cleanup(lobby)
-		local browser = LanClient.create_lobby_browser(client)
-
-		browser:disconnect(server_ip, server_port)
-		LanClient.destroy_lobby_browser(client, browser)
-		Network.leave_lan_lobby(lobby)
-	end
-
-	self._connection_client = ConnectionClient:new(event_delegate, self._engine_lobby, cleanup, network_hash, self._host_type, nil, self._jwt_ticket, self._matched_game_session_id, self._accelerated)
+	self._connection_client = ConnectionClient:new(event_delegate, engine_lobby, destroy_lobby_function, network_hash, self._host_type, nil, self._jwt_ticket, self._matched_game_session_id, self._accelerated)
+	self._engine_lobby = nil
 end
 
 PartyImmateriumHubSessionBoot._start_hot_joining_party_hub_server = function (self)
@@ -251,7 +243,6 @@ PartyImmateriumHubSessionBoot.result = function (self)
 	local connection_client = self._connection_client
 
 	self._connection_client = nil
-	self._engine_lobby = nil
 
 	return connection_client
 end
@@ -273,7 +264,6 @@ PartyImmateriumHubSessionBoot._clear = function (self)
 		self._connection_client:delete()
 
 		self._connection_client = nil
-		self._engine_lobby = nil
 	elseif self._engine_lobby then
 		Network.leave_lan_lobby(self._engine_lobby)
 

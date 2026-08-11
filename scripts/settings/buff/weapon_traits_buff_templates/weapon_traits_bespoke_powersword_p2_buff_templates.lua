@@ -306,10 +306,10 @@ templates.weapon_trait_bespoke_powersword_p2_explosion_on_overheat_lockout = {
 }
 templates.weapon_trait_bespoke_powersword_p2_stacking_finesse_on_one_hit_kill_parent = {
 	child_buff_template = "weapon_trait_bespoke_powersword_p2_stacking_finesse_on_one_hit_kill_child",
-	child_duration = 8,
+	child_duration = 5,
 	class_name = "weapon_trait_parent_proc_buff",
 	predicted = false,
-	stacks_to_remove = 5,
+	stacks_to_remove = 1,
 	proc_events = {
 		[proc_events.on_kill] = 1,
 	},

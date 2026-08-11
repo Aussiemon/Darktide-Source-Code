@@ -494,12 +494,6 @@ widget_definitions.mission_board_screen_frame = UIWidget.create_definition({
 		style = Styles.screen_frame,
 	},
 	{
-		pass_type = "texture",
-		style_id = "screen_frame_glow",
-		value = "content/ui/materials/mission_board/mission_board_screen_frame_glow",
-		style = Styles.screen_frame_glow,
-	},
-	{
 		pass_type = "rect",
 		style_id = "frame_right_rect",
 		style = {
@@ -545,7 +539,51 @@ widget_definitions.mission_board_screen_frame = UIWidget.create_definition({
 			},
 		},
 	},
+	{
+		pass_type = "texture",
+		style_id = "frame_top_rect",
+		value = "content/ui/materials/mission_board/mission_board_screen_frame_top",
+		style = {
+			horizontal_alignment = "center",
+			vertical_alignment = "top",
+			size = {
+				1920,
+				2500,
+			},
+			offset = {
+				0,
+				-2500,
+				-1,
+			},
+		},
+	},
+	{
+		pass_type = "texture",
+		style_id = "frame_bottom_rect",
+		value = "content/ui/materials/mission_board/mission_board_screen_frame_bottom",
+		style = {
+			horizontal_alignment = "center",
+			vertical_alignment = "bottom",
+			size = {
+				1920,
+				2500,
+			},
+			offset = {
+				0,
+				2500,
+				-1,
+			},
+		},
+	},
 }, "canvas")
+widget_definitions.mission_board_screen_frame_glow = UIWidget.create_definition({
+	{
+		pass_type = "texture",
+		style_id = "screen_frame_glow",
+		value = "content/ui/materials/mission_board/mission_board_screen_frame_glow",
+		style = Styles.screen_frame_glow,
+	},
+}, "screen")
 
 local function _progress_bar_change_function(content, style, animations, dt)
 	local color = style.color

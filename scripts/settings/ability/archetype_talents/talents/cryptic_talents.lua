@@ -480,7 +480,7 @@ local archetype_talents = {
 			},
 		},
 		cryptic_chordclaw_quick_stab_combo = {
-			description = "loc_talent_cryptic_chordclaw_quick_stab_combo_desc",
+			description = "loc_talent_cryptic_chordclaw_quick_stab_combo_clarified_desc",
 			display_name = "loc_talent_cryptic_chordclaw_quick_stab_combo",
 			name = "cryptic_chordclaw_quick_stab_combo",
 			special_rule = {
@@ -658,7 +658,7 @@ local archetype_talents = {
 			},
 		},
 		cryptic_flamethrower = {
-			description = "loc_talent_cryptic_servo_skull_flamethrower_desc",
+			description = "loc_talent_cryptic_servo_skull_flamethrower_new_desc",
 			display_name = "loc_talent_cryptic_servo_skull_flamethrower",
 			icon = "content/ui/textures/icons/talents/cryptic/cryptic_flamethrower",
 			ignore_same_steps_conflict = true,
@@ -668,6 +668,21 @@ local archetype_talents = {
 			player_ability = {
 				ability_type = "grenade_ability",
 				ability = PlayerAbilities.cryptic_servo_skull_order,
+			},
+			format_values = {
+				flamer_talent = {
+					format_type = "loc_string",
+					value = "loc_talent_cryptic_servo_skull_flamethrower",
+				},
+				medicae_talent = {
+					format_type = "loc_string",
+					value = "loc_talent_cryptic_servo_skull_inject_ally",
+				},
+				bonus_charge = {
+					format_type = "number",
+					prefix = "+",
+					value = talent_settings.servo_skull_extra_charges.extra_grenade_charges,
+				},
 			},
 			special_rule = {
 				identifier = {
@@ -679,9 +694,13 @@ local archetype_talents = {
 					special_rules.hack_to_allow_grenades,
 				},
 			},
+			passive = {
+				buff_template_name = "servo_skull_extra_grenade",
+				identifier = "servo_skull_extra_grenade",
+			},
 		},
 		cryptic_servo_skull_inject_ally = {
-			description = "loc_talent_cryptic_servo_skull_inject_ally_revive_desc",
+			description = "loc_talent_cryptic_servo_skull_inject_ally_revive_new_desc",
 			display_name = "loc_talent_cryptic_servo_skull_inject_ally",
 			icon = "content/ui/textures/icons/talents/cryptic/cryptic_servo_skull_inject_ally",
 			ignore_same_steps_conflict = true,
@@ -730,6 +749,19 @@ local archetype_talents = {
 					format_type = "loc_string",
 					value = "loc_glossary_term_netted",
 				},
+				flamer_talent = {
+					format_type = "loc_string",
+					value = "loc_talent_cryptic_servo_skull_flamethrower",
+				},
+				medicae_talent = {
+					format_type = "loc_string",
+					value = "loc_talent_cryptic_servo_skull_inject_ally",
+				},
+				bonus_charge = {
+					format_type = "number",
+					prefix = "+",
+					value = talent_settings.servo_skull_extra_charges.extra_grenade_charges,
+				},
 			},
 			player_ability = {
 				ability_type = "grenade_ability",
@@ -738,7 +770,7 @@ local archetype_talents = {
 			},
 		},
 		cryptic_grenade_ability_force_field = {
-			description = "loc_talent_cryptic_grenade_ability_force_field_clarified_desc",
+			description = "loc_talent_cryptic_grenade_ability_force_field_cooldown_desc",
 			display_name = "loc_talent_cryptic_grenade_ability_force_field",
 			hud_icon = "content/ui/materials/icons/abilities/throwables/default",
 			icon = "content/ui/textures/icons/talents/cryptic/cryptic_grenade_ability_force_field",
@@ -756,14 +788,36 @@ local archetype_talents = {
 					format_values = "number",
 					value = talent_settings.force_field.range,
 				},
+				capacitance = {
+					format_type = "percentage",
+					value = talent_settings.force_field.capacitance_cost_when_empty,
+				},
+				capacitance_keyword = {
+					format_type = "loc_string",
+					value = "loc_talent_cryptic_power_keyword",
+				},
+				zero_charges = {
+					format_type = "number",
+					value = 0,
+				},
+				max_charges = {
+					format_type = "number",
+					value = talent_settings.force_field.max_charges,
+				},
+				cooldown = {
+					format_type = "number",
+					value = talent_settings.force_field.cooldown,
+				},
+				talent_name = {
+					format_type = "loc_string",
+					value = "loc_talent_cryptic_grenade_ability_force_field",
+				},
 			},
 			special_rule = {
 				identifier = {
-					"no_grenades",
 					"disable_companion",
 				},
 				special_rule_name = {
-					special_rules.hack_to_allow_grenades,
 					special_rules.disable_companion,
 				},
 			},
@@ -829,7 +883,7 @@ local archetype_talents = {
 			},
 		},
 		cryptic_grenade_ability_arc_grenade = {
-			description = "loc_talent_cryptic_arc_grenades_desc",
+			description = "loc_talent_cryptic_arc_grenades_capacitance_gain_desc",
 			display_name = "loc_talent_cryptic_arc_grenades",
 			hud_icon = "content/ui/materials/icons/abilities/throwables/default",
 			icon = "content/ui/textures/icons/talents/cryptic/cryptic_grenade_ability_arc_grenade",
@@ -847,6 +901,14 @@ local archetype_talents = {
 					format_type = "number",
 					value = talent_settings.arc_grenade.base_num_arcs,
 				},
+				capacitance = {
+					format_type = "percentage",
+					value = talent_settings.arc_grenade.capacitance_per_kill,
+				},
+				capacitance_keyword = {
+					format_type = "loc_string",
+					value = "loc_talent_cryptic_power_keyword",
+				},
 			},
 			special_rule = {
 				identifier = {
@@ -857,6 +919,10 @@ local archetype_talents = {
 					special_rules.disable_companion,
 					special_rules.hack_to_allow_grenades,
 				},
+			},
+			passive = {
+				buff_template_name = "cryptic_arc_grenades_capacitance_generation",
+				identifier = "cryptic_arc_grenades_capacitance_generation",
 			},
 		},
 		cryptic_arc_grenades_weapon_malfunction = {

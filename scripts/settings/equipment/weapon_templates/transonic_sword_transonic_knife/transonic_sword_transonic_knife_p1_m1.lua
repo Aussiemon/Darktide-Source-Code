@@ -479,6 +479,32 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
+		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
+			if not condition_func_params then
+				return true
+			end
+
+			local weapon_extension = condition_func_params.weapon_extension
+			local last_sweep_action_t = weapon_extension.last_sweep_action_t
+			local next_allowed_sweep_action_t = last_sweep_action_t + 0.5
+
+			if next_allowed_sweep_action_t <= t then
+				return true
+			end
+
+			return false
+		end,
+		action_finish_func = function (reason, data, condition_func_params, t)
+			if not condition_func_params then
+				return
+			end
+
+			local weapon_extension = condition_func_params.weapon_extension
+			local weapon_action_component = condition_func_params.weapon_action_component
+			local start_t = weapon_action_component.start_t
+
+			weapon_extension.last_sweep_action_t = start_t
+		end,
 	},
 	action_light_wield = {
 		allowed_during_sprint = true,
@@ -538,6 +564,17 @@ weapon_template.actions = {
 		damage_type = damage_types.transonic,
 		damage_type_special_active = damage_types.transonic,
 		time_scale_stat_buffs = TIME_SCALE_STAT_BUFFS,
+		action_finish_func = function (reason, data, condition_func_params, t)
+			if not condition_func_params then
+				return
+			end
+
+			local weapon_extension = condition_func_params.weapon_extension
+			local weapon_action_component = condition_func_params.weapon_action_component
+			local start_t = weapon_action_component.start_t
+
+			weapon_extension.last_sweep_action_t = start_t
+		end,
 	},
 	action_heavy_wield = {
 		allowed_during_sprint = true,
@@ -670,6 +707,32 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
+		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
+			if not condition_func_params then
+				return true
+			end
+
+			local weapon_extension = condition_func_params.weapon_extension
+			local last_sweep_action_t = weapon_extension.last_sweep_action_t
+			local next_allowed_sweep_action_t = last_sweep_action_t + 0.5
+
+			if next_allowed_sweep_action_t <= t then
+				return true
+			end
+
+			return false
+		end,
+		action_finish_func = function (reason, data, condition_func_params, t)
+			if not condition_func_params then
+				return
+			end
+
+			local weapon_extension = condition_func_params.weapon_extension
+			local weapon_action_component = condition_func_params.weapon_action_component
+			local start_t = weapon_action_component.start_t
+
+			weapon_extension.last_sweep_action_t = start_t
+		end,
 	},
 	action_light_1 = {
 		allowed_during_sprint = true,
@@ -729,6 +792,17 @@ weapon_template.actions = {
 		damage_type = damage_types.transonic,
 		damage_type_special_active = damage_types.transonic,
 		time_scale_stat_buffs = TIME_SCALE_STAT_BUFFS,
+		action_finish_func = function (reason, data, condition_func_params, t)
+			if not condition_func_params then
+				return
+			end
+
+			local weapon_extension = condition_func_params.weapon_extension
+			local weapon_action_component = condition_func_params.weapon_action_component
+			local start_t = weapon_action_component.start_t
+
+			weapon_extension.last_sweep_action_t = start_t
+		end,
 	},
 	action_heavy_1 = {
 		allowed_during_sprint = true,
@@ -1084,7 +1158,30 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
-			return condition_func_params.inventory_slot_component.special_active
+			if not condition_func_params then
+				return true
+			end
+
+			local weapon_extension = condition_func_params.weapon_extension
+			local last_sweep_action_t = weapon_extension.last_sweep_action_t
+			local next_allowed_sweep_action_t = last_sweep_action_t + 0.5
+
+			if next_allowed_sweep_action_t <= t and condition_func_params.inventory_slot_component.special_active then
+				return true
+			end
+
+			return false
+		end,
+		action_finish_func = function (reason, data, condition_func_params, t)
+			if not condition_func_params then
+				return
+			end
+
+			local weapon_extension = condition_func_params.weapon_extension
+			local weapon_action_component = condition_func_params.weapon_action_component
+			local start_t = weapon_action_component.start_t
+
+			weapon_extension.last_sweep_action_t = start_t
 		end,
 	},
 	action_light_1_special = {
@@ -1156,6 +1253,17 @@ weapon_template.actions = {
 		time_scale_stat_buffs = TIME_SCALE_STAT_BUFFS,
 		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
 			return condition_func_params.inventory_slot_component.special_active
+		end,
+		action_finish_func = function (reason, data, condition_func_params, t)
+			if not condition_func_params then
+				return
+			end
+
+			local weapon_extension = condition_func_params.weapon_extension
+			local weapon_action_component = condition_func_params.weapon_action_component
+			local start_t = weapon_action_component.start_t
+
+			weapon_extension.last_sweep_action_t = start_t
 		end,
 	},
 	action_heavy_1_special = {
@@ -2718,7 +2826,16 @@ weapon_template.fx_sources = {
 	_wielded_idling_vfx = "vfx_idle",
 }
 weapon_template.crosshair = {
-	crosshair_type = "dot",
+	crosshair_type_func = function (condition_func_params)
+		local inventory_slot_component = condition_func_params and condition_func_params.inventory_slot_component
+		local special_active = inventory_slot_component and inventory_slot_component.special_active
+
+		if special_active then
+			return "dot_special"
+		end
+
+		return "dot"
+	end,
 }
 weapon_template.hit_marker_type = "center"
 weapon_template.buffs = {

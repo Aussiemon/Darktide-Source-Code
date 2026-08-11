@@ -3,48 +3,52 @@
 require("scripts/game_states/boot/state_boot_sub_state_base")
 
 local BootStateStartupTests = class("BootStateStartupTests", "StateBootSubStateBase")
-local StartupTestDefinitions = {
-	check_plugins = function ()
-		if not IS_WINDOWS then
-			return
-		end
 
-		local WANTED_PLUGINS = {
+BootStateStartupTests.test_definitions = {
+	check_plugins = {
+		allowed_plugins = {
 			CrashMonitor = true,
 			cjson = true,
 			gRPC = true,
 			navigation = true,
 			["rule database"] = true,
 			wwise_plugin = true,
-		}
-
-		for _, plugin_name in ipairs(Application.all_plugin_names()) do
-			local is_required = WANTED_PLUGINS[plugin_name]
-
-			if is_required == nil then
-				return string.format("Plugin %q was not registered as a required or optional plugin.", plugin_name)
+		},
+		run = function (config)
+			if not IS_WINDOWS then
+				return
 			end
 
-			WANTED_PLUGINS[plugin_name] = nil
-		end
+			local allowed_plugins = config.allowed_plugins
 
-		for plugin_name, is_required in pairs(WANTED_PLUGINS) do
-			if is_required then
-				local fix_hint = ""
+			for _, plugin_name in ipairs(Application.all_plugin_names()) do
+				local is_required = allowed_plugins[plugin_name]
 
-				if HAS_STEAM then
-					fix_hint = " Make sure that your game files are not corrupt by <VERIFY INTEGRITY OF GAME FILES...> in Steam."
+				if is_required == nil then
+					return string.format("Plugin %q was not registered as a required or optional plugin.", plugin_name)
 				end
 
-				return string.format("Plugin %q is required but was not loaded.%s", plugin_name, fix_hint)
+				allowed_plugins[plugin_name] = nil
 			end
-		end
-	end,
+
+			for plugin_name, is_required in pairs(allowed_plugins) do
+				if is_required then
+					local fix_hint = ""
+
+					if HAS_STEAM then
+						fix_hint = " Make sure that your game files are not corrupt by <VERIFY INTEGRITY OF GAME FILES...> in Steam."
+					end
+
+					return string.format("Plugin %q is required but was not loaded.%s", plugin_name, fix_hint)
+				end
+			end
+		end,
+	},
 }
 
 BootStateStartupTests._run_test = function (self, test_name)
-	local test_function = StartupTestDefinitions[test_name]
-	local error_string = test_function()
+	local test = BootStateStartupTests.test_definitions[test_name]
+	local error_string = test.run(test)
 
 	if error_string then
 		local message = string.format("Startup test %q failed.\n%s", test_name, error_string)

@@ -4486,18 +4486,27 @@ local gameplay_vo_zealot_female_a = {
 	},
 	seen_enemy_tox_flamer = {
 		randomize_indexes_n = 0,
-		sound_events_n = 4,
+		sound_events_n = 5,
 		sound_events = {
 			"loc_zealot_female_a__seen_enemy_tox_flamer_01",
 			"loc_zealot_female_a__seen_enemy_tox_flamer_02",
+			"loc_zealot_female_a__seen_enemy_tox_flamer_03",
 			"loc_zealot_female_a__seen_enemy_tox_flamer_04",
 			"loc_zealot_female_a__seen_enemy_tox_flamer_05",
 		},
 		sound_events_duration = {
 			1.144625,
 			2.037708,
+			1.02175,
 			1.16625,
 			2.464021,
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2,
 		},
 		randomize_indexes = {},
 	},

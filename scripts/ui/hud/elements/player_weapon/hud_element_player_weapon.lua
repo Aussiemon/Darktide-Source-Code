@@ -31,6 +31,12 @@ HudElementPlayerWeapon.init = function (self, parent, draw_layer, start_scale, d
 	self._gamepad_wield_input = slot_settings and slot_settings.gamepad_wield_input or self._wield_input
 	self._hide_input_on_gamepad_wielded = slot_settings and slot_settings.hide_input_on_gamepad_wielded
 
+	local hide_hud_input = self._ability and self._ability.hide_hud_input
+
+	if hide_hud_input then
+		self:set_input_text("", true)
+	end
+
 	local player = data.player
 	local player_unit = player and player.player_unit
 	local talent_extension = ScriptUnit.has_extension(player_unit, "talent_system")
@@ -788,6 +794,10 @@ HudElementPlayerWeapon._update_input = function (self)
 	end
 
 	local faded = self._wielded
+	local hide_hud_input = self._ability and self._ability.hide_hud_input
+
+	input_key = hide_hud_input and "" or input_key
+	faded = hide_hud_input or faded
 
 	self:set_input_text(input_key, faded)
 end

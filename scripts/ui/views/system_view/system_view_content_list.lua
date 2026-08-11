@@ -75,6 +75,10 @@ local function _members_in_party()
 	return num_members
 end
 
+local function _validation_has_news()
+	return true, not Managers.data_service.news:has_news_cached()
+end
+
 local main_menu_list = {
 	{
 		icon = "content/ui/materials/icons/system/escape/achievements",
@@ -129,6 +133,7 @@ local main_menu_list = {
 		icon = "content/ui/materials/icons/system/escape/news",
 		text = "loc_news_view_title",
 		type = "button",
+		validation_function = _validation_has_news,
 		trigger_function = function ()
 			local context = {
 				can_exit = true,
@@ -425,25 +430,55 @@ local default_list = {
 		validation_function = validation_is_in_standard_mission,
 		trigger_function = function ()
 			local context
+			local options = {}
+
+			options[#options + 1] = {
+				close_on_pressed = true,
+				text = "loc_popup_button_leave_mission",
+				callback = function (checkbox_states)
+					if checkbox_states and checkbox_states.leave_as_strike_team then
+						local strike_team_peer_ids = Managers.party_immaterium:in_mission_peer_ids()
+
+						if #strike_team_peer_ids >= 2 then
+							Managers.grpc:create_empty_party(Managers.connection.combined_hash):next(function (response)
+								return Managers.voting:start_voting("leave_mission_as_strike_team", {
+									initiator_peer_id = Network.peer_id(),
+									strike_team_peer_ids = strike_team_peer_ids,
+									new_party_id = response.party_id,
+									new_party_invite_token = response.invite_token,
+								})
+							end):catch(function (err)
+								Log.warning("[SystemView]", "leave_mission_as_strike_team setup failed: %s", tostring(err))
+								Managers.multiplayer_session:leave("leave_mission")
+							end)
+
+							return
+						end
+					end
+
+					Managers.multiplayer_session:leave("leave_mission")
+				end,
+			}
+			options[#options + 1] = {
+				close_on_pressed = true,
+				hotkey = "back",
+				template_type = "terminal_button_small",
+				text = "loc_popup_button_leave_continue_mission",
+			}
+
+			if Managers.party_immaterium and Managers.party_immaterium:num_party_members_in_mission() >= 2 and GameParameters.should_stay_in_party_eor then
+				options[#options + 1] = {
+					id = "leave_as_strike_team",
+					initial_value = false,
+					template_type = "checkbox",
+					text = "loc_popup_checkbox_leave_mission_as_strike_team",
+				}
+			end
 
 			context = {
 				description_text = "loc_popup_description_leave_mission",
 				title_text = "loc_popup_header_leave_mission",
-				options = {
-					{
-						close_on_pressed = true,
-						text = "loc_popup_button_leave_mission",
-						callback = function ()
-							Managers.multiplayer_session:leave("leave_mission")
-						end,
-					},
-					{
-						close_on_pressed = true,
-						hotkey = "back",
-						template_type = "terminal_button_small",
-						text = "loc_popup_button_leave_continue_mission",
-					},
-				},
+				options = options,
 			}
 
 			Managers.event:trigger("event_show_ui_popup", context)

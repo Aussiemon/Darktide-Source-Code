@@ -90,6 +90,7 @@ MinionPerceptionExtension.init = function (self, extension_init_context, unit, e
 	local ignore_detection_los_modifiers = breed.ignore_detection_los_modifiers
 
 	self._ignore_detection_los_modifiers = ignore_detection_los_modifiers
+	self._ignore_smoke_fog_los = breed.ignore_smoke_fog_los
 	self._is_monster = breed.tags.monster
 end
 
@@ -736,9 +737,7 @@ MinionPerceptionExtension.update = function (self, unit, dt, t)
 		self._force_new_target_attempt, self._force_new_target_attempt_config = false
 	end
 
-	if self._is_perception_disabled and perception_component.target_unit then
-		perception_component.target_unit = nil
-
+	if self._is_perception_disabled then
 		return
 	end
 
@@ -783,6 +782,10 @@ local BUFF_KEYWORD_DISTANCE_LOS_REQUIREMENT = {
 }
 
 MinionPerceptionExtension._within_detection_los_range = function (self, unit, unit_position, target_unit, target_position)
+	if self._ignore_smoke_fog_los then
+		return true, false
+	end
+
 	if self._ignore_detection_los_modifiers then
 		local count_standing_in_smoke = true
 		local is_looking_trough_fog = self._smoke_fog_system:check_fog_los(unit_position, target_position, unit, count_standing_in_smoke)

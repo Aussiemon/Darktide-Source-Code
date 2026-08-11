@@ -7,8 +7,7 @@ local Explosion = require("scripts/utilities/attack/explosion")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
 local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
-local MasterItems = require("scripts/backend/master_items")
-local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
+local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local Vo = require("scripts/utilities/vo")
@@ -17,11 +16,36 @@ local attack_types = AttackSettings.attack_types
 local special_rules = SpecialRulesSettings.special_rules
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local PEROSNAL_FORCE_FIELD_UNIT = "content/characters/player/human/attachments_combat/cryptic_force_field/cryptic_force_field_personal_functional"
+local COMBAT_ABILITY_TYPE = "combat_ability"
 
 ActionActivateForceShield.init = function (self, action_context, action_params, action_settings)
 	ActionActivateForceShield.super.init(self, action_context, action_params, action_settings)
 
 	self._talent_extension = ScriptUnit.has_extension(self._player_unit, "talent_system")
+
+	local capacitance_cost_when_empty = action_settings.capacitance_cost_when_empty
+
+	self._capacitance_cost_when_empty = capacitance_cost_when_empty
+
+	local unit_data_extension = ScriptUnit.extension(self._player_unit, "unit_data_system")
+
+	self._player_disabled_character_state_component = unit_data_extension:read_component("disabled_character_state")
+end
+
+ActionActivateForceShield._use_ability_charge = function (self, optional_num_charges)
+	local action_settings = self._action_settings
+	local ability_type = action_settings.ability_type
+	local ability_extension = self._ability_extension
+	local remaining_charges = ability_extension:remaining_ability_charges(ability_type)
+	local capacitance_cost_when_empty = self._capacitance_cost_when_empty
+
+	if remaining_charges <= 0 and capacitance_cost_when_empty then
+		ability_extension:increase_ability_cooldown_percentage(COMBAT_ABILITY_TYPE, capacitance_cost_when_empty)
+
+		return 0
+	end
+
+	return ActionActivateForceShield.super._use_ability_charge(self, optional_num_charges)
 end
 
 ActionActivateForceShield.start = function (self, action_settings, t, ...)
@@ -71,6 +95,11 @@ ActionActivateForceShield.fixed_update = function (self, dt, t, time_in_action)
 
 		Explosion.create_explosion(self._world, self._physics_world, player_position, Quaternion.identity(), player_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
 	end
+
+	local player_disabled_character_state_component = self._player_disabled_character_state_component
+	local should_cancel_ability = PlayerUnitStatus.is_warp_grabbed(player_disabled_character_state_component) or PlayerUnitStatus.is_consumed(player_disabled_character_state_component)
+
+	return should_cancel_ability
 end
 
 ActionActivateForceShield.finish = function (self, reason, data, t, time_in_action, action_settings)

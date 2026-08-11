@@ -15,8 +15,7 @@ MinigameExpeditionMapView.init = function (self, context, ui_renderer)
 	self._exit_widgets = {}
 	self._extraction_widgets = {}
 	self._opportunity_widgets = {}
-	self._heavy_loot_widgets = {}
-	self._pickup_units_loot_widgets = {}
+	self._pickup_loot_widgets = {}
 	self._player_widgets = {}
 	self._background_widgets = {}
 	self._navigation_handler = nil
@@ -87,12 +86,14 @@ MinigameExpeditionMapView.draw_widgets = function (self, dt, t, input_service, u
 		UIWidget.draw(widget, ui_renderer)
 	end
 
-	for _, widget in pairs(self._heavy_loot_widgets) do
-		UIWidget.draw(widget, ui_renderer)
-	end
+	for unit, widget in pairs(self._pickup_loot_widgets) do
+		if not ALIVE[unit] then
+			UIWidget.destroy(self._ui_renderer, widget)
 
-	for _, widget in pairs(self._pickup_units_loot_widgets) do
-		UIWidget.draw(widget, ui_renderer)
+			self._pickup_loot_widgets[unit] = nil
+		else
+			UIWidget.draw(widget, ui_renderer)
+		end
 	end
 
 	for _, widget in pairs(self._player_widgets) do
@@ -230,11 +231,11 @@ MinigameExpeditionMapView._update_target_widgets = function (self, widgets_by_na
 			local color_field_counter = 0
 
 			for player_slot, _ in pairs(player_slots) do
+				color_field_counter = color_field_counter + 1
+
 				if color_field_counter >= 4 then
 					break
 				end
-
-				color_field_counter = color_field_counter + 1
 
 				local color_field_name = "part_" .. color_field_counter .. "_color"
 
@@ -325,44 +326,26 @@ MinigameExpeditionMapView._update_target_widgets = function (self, widgets_by_na
 		_check_marked(level_index, widget)
 	end
 
-	local dropped_heavy_loot_units = self._loot_handler:dropped_heavy_loot_units()
-	local heavy_loot_widgets = self._heavy_loot_widgets
+	local dropped_loot_by_pickup_units = self._loot_handler:marked_loot_by_pickup_units()
+	local pickup_loot_widgets = self._pickup_loot_widgets
+	local dropped_loot_settings = ScannerDisplayViewExpeditionMapSettings.dropped_loot_settings
 
-	for index, unit in ipairs(dropped_heavy_loot_units) do
-		local widget = heavy_loot_widgets[index]
+	for unit, type in pairs(dropped_loot_by_pickup_units) do
+		local type_settings = dropped_loot_settings[type]
+		local widget = pickup_loot_widgets[unit]
 
 		if not widget then
-			widget = self:_create_icon_widget(string.format("heavy_loot_%s", index), "scanner_map_luggable", ScannerDisplayViewExpeditionMapSettings.luggable_widget_size)
-			heavy_loot_widgets[index] = widget
+			local widget_name = Unit.id32(unit)
+
+			widget = self:_create_icon_widget(string.format("pickup_loot_%s", widget_name), type_settings.icon, type_settings.widget_size)
+			pickup_loot_widgets[unit] = widget
 			widget.alpha_multiplier = ScannerDisplayViewExpeditionMapSettings.loot_alpha_multiplier or 1
 		end
 
 		local loot_world_position = Unit.world_position(unit, 1)
 		local offset = widget.offset
 
-		offset[1], offset[2] = self:_world_pos_to_map_pos(loot_world_position.x, loot_world_position.y, ScannerDisplayViewExpeditionMapSettings.luggable_widget_size)
-		offset[3] = 4
-	end
-
-	local dropped_loot_by_pickup_units = self._loot_handler:dropped_loot_by_pickup_units()
-	local pickup_units_loot_widgets = self._pickup_units_loot_widgets
-	local loot_pickup_unit_counter = 0
-
-	for unit, amount in pairs(dropped_loot_by_pickup_units) do
-		loot_pickup_unit_counter = loot_pickup_unit_counter + 1
-
-		local widget = pickup_units_loot_widgets[loot_pickup_unit_counter]
-
-		if not widget then
-			widget = self:_create_icon_widget(string.format("pickup_unit_loot_%s", loot_pickup_unit_counter), "scanner_map_loot_small")
-			pickup_units_loot_widgets[loot_pickup_unit_counter] = widget
-			widget.alpha_multiplier = ScannerDisplayViewExpeditionMapSettings.loot_alpha_multiplier or 1
-		end
-
-		local loot_world_position = Unit.world_position(unit, 1)
-		local offset = widget.offset
-
-		offset[1], offset[2] = self:_world_pos_to_map_pos(loot_world_position.x, loot_world_position.y, ScannerDisplayViewExpeditionMapSettings.target_widget_size)
+		offset[1], offset[2] = self:_world_pos_to_map_pos(loot_world_position.x, loot_world_position.y, type_settings.widget_size)
 		offset[3] = 4
 	end
 end

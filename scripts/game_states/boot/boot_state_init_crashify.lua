@@ -20,6 +20,7 @@ BootStateInitCrashify._state_update = function (self, dt)
 	Crashify.print_property("launcher_verification_passed", launcher_verification_passed)
 	Crashify.print_property("game_version", APPLICATION_SETTINGS.game_version)
 	Crashify.print_property("game_resume_count", 0)
+	Crashify.print_property("auth_platform", AUTH_PLATFORM)
 
 	if Application.machine_id then
 		Crashify.print_property("machine_id", Application.machine_id())

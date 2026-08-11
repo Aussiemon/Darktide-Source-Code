@@ -357,6 +357,11 @@ AccountManagerPSN.get_friends = function (self)
 			self._friend_profiles = result
 			self._next_friend_list_request = t + FRIEND_LIST_REQUEST_DELAY
 			self._friends_promise = nil
+		end):catch(function (error)
+			self._next_friend_list_request = t + FRIEND_LIST_REQUEST_DELAY
+			self._friends_promise = nil
+
+			Log.error("AccountManagerPSN", "could not fetch friends, error=%s", table.tostring(error, 3))
 		end)
 
 		return self._friends_promise
@@ -382,12 +387,6 @@ AccountManagerPSN._fetch_friends = function (self, num_to_fetch, offset, result_
 	self._web_api:send_request(user_id, api_group, path, method, content):next(function (result)
 		self:_change_friend_request_state(FRIEND_REQUEST_STATES.idle)
 
-		if not result then
-			result_promise.reject()
-
-			return result
-		end
-
 		local friends_account_ids = result.friends
 		local total_friends_count = result.totalItemCount or 0
 
@@ -401,7 +400,7 @@ AccountManagerPSN._fetch_friends = function (self, num_to_fetch, offset, result_
 
 			self:_fetch_friends(num_to_fetch, offset, result_promise, target_account_ids_array)
 		else
-			local profiles_result_promise = Promise.all(self:_fetch_public_profiles(table.clone_instance(target_account_ids_array)), self:_fetch_profile_presences(table.clone_instance(target_account_ids_array))):next(function (result)
+			Promise.all(self:_fetch_public_profiles(table.clone_instance(target_account_ids_array)), self:_fetch_profile_presences(table.clone_instance(target_account_ids_array))):next(function (result)
 				local public_profiles_by_account_id, presences_by_account_id = unpack(result)
 				local profiles = {}
 
@@ -417,8 +416,13 @@ AccountManagerPSN._fetch_friends = function (self, num_to_fetch, offset, result_
 				end
 
 				result_promise:resolve(profiles)
+			end):catch(function (error)
+				result_promise:reject(error)
 			end)
 		end
+	end):catch(function (error)
+		self:_change_friend_request_state(FRIEND_REQUEST_STATES.idle)
+		result_promise:reject(error)
 	end)
 
 	return result_promise
@@ -426,7 +430,6 @@ end
 
 AccountManagerPSN._fetch_public_profiles = function (self, account_ids, result_promise, result_data_table)
 	local limit = PUBLIC_PROFILES_REQUEST_LIMIT
-	local account_id = self._account_id
 	local user_id = PS5.initial_user_id()
 	local api_group = "userProfile"
 	local account_ids_string = ""
@@ -451,12 +454,6 @@ AccountManagerPSN._fetch_public_profiles = function (self, account_ids, result_p
 	result_data_table = result_data_table or {}
 
 	self._web_api:send_request(user_id, api_group, path, method, content):next(function (result)
-		if not result then
-			result_promise.reject()
-
-			return result
-		end
-
 		local profiles = result.profiles
 
 		table.append(result_data_table, profiles)
@@ -477,6 +474,8 @@ AccountManagerPSN._fetch_public_profiles = function (self, account_ids, result_p
 
 			result_promise:resolve(result_by_id)
 		end
+	end):catch(function (error)
+		result_promise:reject(error)
 	end)
 
 	return result_promise
@@ -484,7 +483,6 @@ end
 
 AccountManagerPSN._fetch_profile_presences = function (self, account_ids, result_promise, result_data_table)
 	local limit = PORFILE_PRESENCES_REQUEST_LIMIT
-	local account_id = self._account_id
 	local user_id = PS5.initial_user_id()
 	local api_group = "userProfile"
 	local account_ids_string = ""
@@ -509,12 +507,6 @@ AccountManagerPSN._fetch_profile_presences = function (self, account_ids, result
 	result_data_table = result_data_table or {}
 
 	self._web_api:send_request(user_id, api_group, path, method, content):next(function (result)
-		if not result then
-			result_promise.reject()
-
-			return result
-		end
-
 		local presences = result.basicPresences
 
 		table.append(result_data_table, presences)
@@ -535,6 +527,8 @@ AccountManagerPSN._fetch_profile_presences = function (self, account_ids, result
 
 			result_promise:resolve(result_by_id)
 		end
+	end):catch(function (error)
+		result_promise:reject(error)
 	end)
 
 	return result_promise
@@ -654,9 +648,12 @@ AccountManagerPSN.get_blocked_profiles = function (self)
 			self._blocked_profiles_promise = nil
 
 			self:_change_blocked_profiles_request_state(BLOCKED_PROFILES_REQUEST_STATES.idle)
-			Promise.resolved(self._blocked_profiles)
 		end):catch(function (error)
-			self._blocked_profiles_promise:reject(error)
+			self._next_blocked_profiles_request = t + BLOCKED_PROFILES_REQUEST_DELAY
+			self._blocked_profiles_promise = nil
+
+			self:_change_blocked_profiles_request_state(BLOCKED_PROFILES_REQUEST_STATES.idle)
+			Log.error("AccountManagerPSN", "could not fetch blocked profiles, error=%s", table.tostring(error, 3))
 		end)
 
 		return self._blocked_profiles_promise
@@ -668,7 +665,6 @@ AccountManagerPSN._fetch_block_list = function (self, num_to_fetch, offset, resu
 	offset = offset or 0
 
 	local limit = BLOCKED_PROFILES_REQUEST_LIMIT
-	local account_id = self._account_id
 	local user_id = PS5.initial_user_id()
 	local api_group = "userProfile"
 	local path = string.format("/v1/users/me/blocks?offset=%s&limit=%s", offset, limit)
@@ -679,12 +675,6 @@ AccountManagerPSN._fetch_block_list = function (self, num_to_fetch, offset, resu
 	target_blocked_account_ids_array = target_blocked_account_ids_array or {}
 
 	self._web_api:send_request(user_id, api_group, path, method, content):next(function (result)
-		if not result then
-			result_promise:reject()
-
-			return result
-		end
-
 		local blocked_account_ids = result.blocks
 		local total_item_count = result.totalItemCount or 0
 
@@ -698,7 +688,7 @@ AccountManagerPSN._fetch_block_list = function (self, num_to_fetch, offset, resu
 
 			self:_fetch_block_list(num_to_fetch, offset, result_promise, target_blocked_account_ids_array)
 		else
-			local profiles_result_promise = Promise.all(self:_fetch_public_profiles(table.clone_instance(target_blocked_account_ids_array)), self:_fetch_profile_presences(table.clone_instance(target_blocked_account_ids_array))):next(function (result)
+			Promise.all(self:_fetch_public_profiles(table.clone_instance(target_blocked_account_ids_array)), self:_fetch_profile_presences(table.clone_instance(target_blocked_account_ids_array))):next(function (result)
 				local public_profiles_by_account_id, presences_by_account_id = unpack(result)
 				local profiles = {}
 
@@ -717,7 +707,7 @@ AccountManagerPSN._fetch_block_list = function (self, num_to_fetch, offset, resu
 
 				result_promise:resolve(profiles)
 			end):catch(function (error)
-				profiles_result_promise:reject(error)
+				result_promise:reject(error)
 			end)
 		end
 	end):catch(function (error)
@@ -747,8 +737,11 @@ AccountManagerPSN.get_public_profiles = function (self, account_ids)
 			self._public_profiles = result
 			self._next_public_profiles_request = t + PUBLIC_PROFILES_REQUEST_DELAY
 			self._public_profiles_promise = nil
+		end):catch(function (error)
+			self._next_public_profiles_request = t + PUBLIC_PROFILES_REQUEST_DELAY
+			self._public_profiles_promise = nil
 
-			Promise.resolved(self._public_profiles)
+			Log.error("AccountManagerPSN", "could not fetch public profiles, error=%s", table.tostring(error, 3))
 		end)
 
 		return self._public_profiles_promise
@@ -885,16 +878,24 @@ AccountManagerPSN._apply_audio_settings = function (self)
 	local settings = SoundSettings.settings
 
 	for _, setting in ipairs(settings) do
-		local get_function = setting.get_function
+		if not setting.validation_function or setting.validation_function() then
+			local init = setting.init
 
-		if get_function then
-			local value = get_function()
+			if init then
+				init(setting)
+			end
 
-			if value ~= nil then
-				local commit = setting.commit
+			local get_function = setting.get_function
 
-				if commit then
-					commit(value)
+			if get_function then
+				local value = get_function()
+
+				if value ~= nil then
+					local commit = setting.commit
+
+					if commit then
+						commit(value, setting)
+					end
 				end
 			end
 		end

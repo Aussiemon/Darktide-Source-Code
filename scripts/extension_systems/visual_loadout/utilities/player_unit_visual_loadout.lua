@@ -14,6 +14,7 @@ PlayerUnitVisualLoadout.wield_slot = function (slot_to_wield, player_unit, t, sk
 	local weapon_extension = ScriptUnit.extension(player_unit, "weapon_system")
 	local animation_extension = ScriptUnit.extension(player_unit, "animation_system")
 	local action_input_extension = ScriptUnit.extension(player_unit, "action_input_system")
+	local weapon_template = visual_loadout_extension:weapon_template_from_slot(slot_to_wield)
 	local inventory_comp = ScriptUnit.extension(player_unit, "unit_data_system"):read_component("inventory")
 	local wielded_slot = inventory_comp.wielded_slot
 
@@ -21,11 +22,43 @@ PlayerUnitVisualLoadout.wield_slot = function (slot_to_wield, player_unit, t, sk
 		_unwield_slot(wielded_slot, visual_loadout_extension, weapon_extension, t)
 	end
 
+	local buff_extension = ScriptUnit.has_extension(player_unit, "buff_system")
+	local param_table = buff_extension and buff_extension:request_proc_event_param_table()
+
+	if param_table then
+		param_table.weapon_template = weapon_template
+		param_table.new_wielded_slot = slot_to_wield
+		param_table.previously_wielded_slot = wielded_slot
+
+		buff_extension:add_proc_event("on_wield", param_table)
+
+		local keywords = weapon_template.keywords
+
+		if table.array_contains(keywords, "ranged") then
+			local ranged_param_table = buff_extension:request_proc_event_param_table()
+
+			if ranged_param_table then
+				ranged_param_table.weapon_template = weapon_template
+				ranged_param_table.previously_wielded_slot = wielded_slot
+
+				buff_extension:add_proc_event("on_wield_ranged", ranged_param_table)
+			end
+		end
+
+		if table.array_contains(keywords, "melee") then
+			local melee_param_table = buff_extension:request_proc_event_param_table()
+
+			if melee_param_table then
+				melee_param_table.weapon_template = weapon_template
+				melee_param_table.previously_wielded_slot = wielded_slot
+
+				buff_extension:add_proc_event("on_wield_melee", melee_param_table)
+			end
+		end
+	end
+
 	action_input_extension:clear_input_queue_and_sequences("weapon_action")
 	visual_loadout_extension:wield_slot(slot_to_wield)
-
-	local weapon_template = visual_loadout_extension:weapon_template_from_slot(slot_to_wield)
-
 	animation_extension:inventory_slot_wielded(weapon_template, t)
 	weapon_extension:on_slot_wielded(slot_to_wield, t, skip_wield_action)
 end

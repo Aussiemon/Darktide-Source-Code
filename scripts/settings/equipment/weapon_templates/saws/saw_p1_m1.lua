@@ -1677,7 +1677,16 @@ weapon_template.fx_sources = {
 	_sweep = "fx_sweep",
 }
 weapon_template.crosshair = {
-	crosshair_type = "dot",
+	crosshair_type_func = function (condition_func_params)
+		local inventory_slot_component = condition_func_params and condition_func_params.inventory_slot_component
+		local special_active = inventory_slot_component and inventory_slot_component.special_active
+
+		if special_active then
+			return "dot_special"
+		end
+
+		return "dot"
+	end,
 }
 weapon_template.hit_marker_type = "center"
 weapon_template.buffs = {

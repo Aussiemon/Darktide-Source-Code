@@ -1,6 +1,26 @@
 ﻿-- chunkname: @dialogues/generated/mission_vo_dm_forge_broker_male_c.lua
 
 local mission_vo_dm_forge_broker_male_c = {
+	event_demolition_first_corruptor_destroyed_a_enginseer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_broker_male_c__event_demolition_first_corruptor_destroyed_a_01",
+			"loc_broker_male_c__event_demolition_first_corruptor_destroyed_a_02",
+			"loc_broker_male_c__event_demolition_first_corruptor_destroyed_a_03",
+		},
+		sound_events_duration = {
+			2.45701,
+			2.947,
+			2.66201,
+		},
+		sound_event_weights = {
+			0.3333333,
+			0.3333333,
+			0.3333333,
+		},
+		randomize_indexes = {},
+	},
 	mission_forge_first_objective_response = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

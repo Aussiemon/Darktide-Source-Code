@@ -51,10 +51,12 @@ BtDisableAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 		return "done"
 	end
 
-	if not scratchpad.standing_animation_duration and not scratchpad.disable_component.attacker_unit then
+	local animation_extension = scratchpad.animation_extension
+
+	if not scratchpad.standing_animation_duration and not scratchpad.disable_component.attacker_unit and animation_extension then
 		local stand_anim = action_data.stand_anim
 
-		scratchpad.animation_extension:anim_event(stand_anim.name)
+		animation_extension:anim_event(stand_anim.name)
 
 		scratchpad.standing_animation_duration = t + stand_anim.duration
 

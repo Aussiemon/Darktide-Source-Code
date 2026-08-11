@@ -197,7 +197,7 @@ end
 MissionVotingView.update = function (self, dt, t, input_service)
 	self:_update_timer_bar(dt)
 
-	if not self._is_quickplay then
+	if not self._is_quickplay and self._details_list_grid then
 		self._details_list_grid:update(dt, t, input_service)
 	end
 
@@ -258,7 +258,7 @@ end
 MissionVotingView.on_resolution_modified = function (self)
 	MissionVotingView.super.on_resolution_modified(self)
 
-	if not self._is_quickplay then
+	if not self._is_quickplay and self._details_list_grid then
 		self._details_list_grid:on_resolution_modified()
 	end
 end
@@ -348,30 +348,39 @@ MissionVotingView._draw_widgets = function (self, dt, t, input_service, ui_rende
 	MissionVotingView.super._draw_widgets(self, dt, t, input_service, ui_renderer)
 
 	local additional_widgets = self._additional_widgets
-	local num_widgets = #additional_widgets
 
-	for i = 1, num_widgets do
-		local widget = additional_widgets[i]
+	if additional_widgets then
+		local num_widgets = #additional_widgets
 
-		UIWidget.draw(widget, ui_renderer)
+		for i = 1, num_widgets do
+			local widget = additional_widgets[i]
+
+			UIWidget.draw(widget, ui_renderer)
+		end
 	end
 
 	local button_widgets = self._button_widgets
-	local num_buttons = #button_widgets
 
-	for i = 1, num_buttons do
-		local widget = button_widgets[i]
+	if button_widgets then
+		local num_buttons = #button_widgets
 
-		UIWidget.draw(widget, ui_renderer)
+		for i = 1, num_buttons do
+			local widget = button_widgets[i]
+
+			UIWidget.draw(widget, ui_renderer)
+		end
 	end
 
 	local icons_widgets = self._mission_icons_widgets
-	local num_icons = #icons_widgets
 
-	for i = 1, num_icons do
-		local widget = icons_widgets[i]
+	if icons_widgets then
+		local num_icons = #icons_widgets
 
-		UIWidget.draw(widget, ui_renderer)
+		for i = 1, num_icons do
+			local widget = icons_widgets[i]
+
+			UIWidget.draw(widget, ui_renderer)
+		end
 	end
 end
 
@@ -536,7 +545,7 @@ MissionVotingView._handle_gamepad_input = function (self, input_service, dt)
 		return
 	end
 
-	if self._is_showing_details then
+	if self._is_showing_details and self._details_list_grid then
 		local right_stick_value = input_service:get("navigate_controller_right")
 
 		if right_stick_value[2] > 0.01 then
@@ -970,75 +979,40 @@ MissionVotingView._set_difficulty_icons = function (self, style, difficulty_valu
 	difficulty_icon_frame.color = color
 end
 
-MissionVotingView._set_circumstance = function (self, mission_data)
-	local circumstance_id = mission_data.circumstance
-	local circumstance_widget = self._widgets_by_name.mission_info_circumstance
+MissionVotingView._create_spacing_widget = function (self, size, scenegraph_id, name)
+	local templates = MissionDetailsBlueprints.templates
+	local template = templates.dynamic_spacing
+	local config = {
+		size = size,
+	}
+	local size = template.size_function and template.size_function(config) or template.size
+	local widget_definition = UIWidget.create_definition(template.pass_template, scenegraph_id, nil, size)
+	local widget_name = scenegraph_id .. "_" .. name
+	local widget = self:_create_widget(widget_name, widget_definition)
 
-	if circumstance_id == "default" then
-		circumstance_widget.visible = false
-
-		local _, mission_info_height = self:_scenegraph_size("mission_info")
-
-		self:_set_scenegraph_size("mission_info_panel", nil, mission_info_height)
-	else
-		local circumstance_template = CircumstanceTemplates[circumstance_id]
-		local circumstance_template_ui_settings = circumstance_template.ui
-
-		if circumstance_template_ui_settings then
-			local content = circumstance_widget.content
-
-			content.text = self:_localize(circumstance_template_ui_settings.display_name)
-			content.icon = circumstance_template_ui_settings.icon
-
-			local text_width = self:_calc_text_size(circumstance_widget, "text")
-
-			self:_set_scenegraph_size("mission_circumstance", text_width + ViewStyles.mission_info_circumstance.icon.size[1])
-
-			local circumstance_height_addition = ViewStyles.circumstance_height_addition
-			local _, outer_panel_height = self:_scenegraph_size("outer_panel")
-
-			self:_set_scenegraph_size("outer_panel", nil, outer_panel_height + circumstance_height_addition)
-
-			local _, inner_panel_height = self:_scenegraph_size("inner_panel")
-
-			self:_set_scenegraph_size("inner_panel", nil, inner_panel_height + circumstance_height_addition)
-
-			local _, body_panel_height = self:_scenegraph_size("body_panel")
-
-			self:_set_scenegraph_size("body_panel", nil, body_panel_height + circumstance_height_addition)
-		else
-			circumstance_widget.visible = false
-
-			local _, mission_info_height = self:_scenegraph_size("mission_info")
-
-			self:_set_scenegraph_size("mission_info_panel", nil, mission_info_height)
-		end
+	if template.init then
+		template.init(widget, config)
 	end
+
+	return widget
 end
 
 MissionVotingView._create_details_widgets = function (self, content, scenegraph_id)
 	local templates = MissionDetailsBlueprints.templates
-	local widget_definitions = {}
 	local created_widgets = {}
+
+	if not table.is_empty(content) then
+		created_widgets[#created_widgets + 1] = self:_create_spacing_widget(self._definitions.details_panel_end_padding, scenegraph_id, "details_start")
+	end
 
 	for i = 1, #content do
 		local entry = content[i]
 		local template_name = entry.template
 		local template = templates[template_name]
-		local widget_definition = widget_definitions[template_name]
-
-		if not widget_definition then
-			widget_definition = UIWidget.create_definition(template.pass_template, scenegraph_id, nil, template.size, template.style)
-			widget_definitions[template_name] = widget_definition
-		end
-
+		local size = template.size_function and template.size_function(self, entry) or template.size
+		local widget_definition = UIWidget.create_definition(template.pass_template, scenegraph_id, nil, size, template.style)
 		local widget_name = scenegraph_id .. "_widget_" .. i
 		local widget = self:_create_widget(widget_name, widget_definition)
-		local size = template.size_function and template.size_function(self, widget, self._ui_renderer) or template.size
-
-		if size then
-			widget.size = size
-		end
 
 		if template.init then
 			template.init(widget, entry.widget_data, self._ui_renderer)
@@ -1047,29 +1021,20 @@ MissionVotingView._create_details_widgets = function (self, content, scenegraph_
 		created_widgets[#created_widgets + 1] = widget
 	end
 
+	if not table.is_empty(content) then
+		created_widgets[#created_widgets + 1] = self:_create_spacing_widget(self._definitions.details_panel_end_padding, scenegraph_id, "details_end")
+	end
+
 	return created_widgets
 end
 
 MissionVotingView._layout_details_widgets = function (self, widgets, grid_scenegraph_id)
 	local interaction_scenegraph_id = "details_panel"
 	local view_definitions = self._definitions
-	local list_end_margin = {
-		size = view_definitions.details_panel_end_padding,
-	}
-	local alignment_list = {
-		list_end_margin,
-	}
-
-	for i = 1, #widgets do
-		alignment_list[#alignment_list + 1] = widgets[i]
-	end
-
-	alignment_list[#alignment_list + 1] = list_end_margin
-
 	local widget_spacing = view_definitions.details_widget_spacing
 	local grid_direction = "down"
 	local scrollbar_widget = self._widgets_by_name.details_scrollbar
-	local details_list_grid = UIWidgetGrid:new(widgets, alignment_list, self._ui_scenegraph, grid_scenegraph_id, grid_direction, widget_spacing)
+	local details_list_grid = UIWidgetGrid:new(widgets, widgets, self._ui_scenegraph, grid_scenegraph_id, grid_direction, widget_spacing)
 
 	details_list_grid:assign_scrollbar(scrollbar_widget, grid_scenegraph_id, interaction_scenegraph_id)
 
@@ -1162,7 +1127,7 @@ end
 MissionVotingView._calc_text_size = function (self, widget, text_and_style_id)
 	local text = widget.content[text_and_style_id]
 	local text_style = widget.style[text_and_style_id]
-	local size = text_style.size or widget.content.size or {
+	local size = text_style.size or {
 		self:_scenegraph_size(widget.scenegraph_id),
 	}
 

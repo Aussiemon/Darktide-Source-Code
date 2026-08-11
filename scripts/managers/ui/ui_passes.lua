@@ -703,7 +703,7 @@ UIPasses.video = {
 			is_complete = UIRenderer.draw_video(ui_renderer, value, position, size, color, video_player_reference, y_slot_name, uv_slot_name)
 		end
 
-		ui_content.video_completed = is_complete
+		ui_content.video_completed = is_complete == true
 	end,
 }
 

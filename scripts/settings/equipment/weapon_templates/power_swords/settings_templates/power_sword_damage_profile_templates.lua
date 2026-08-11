@@ -2717,6 +2717,10 @@ damage_templates.light_sword_linesman_active_p3 = {
 					10,
 				},
 			},
+			power_level_multiplier = {
+				0.75,
+				1.25,
+			},
 		},
 		{
 			armor_damage_modifier = power_am_p3,
@@ -2918,6 +2922,10 @@ damage_templates.light_sword_smiter_active_p3 = {
 					12,
 				},
 			},
+			power_level_multiplier = {
+				0.75,
+				1.25,
+			},
 		},
 		{
 			armor_damage_modifier = power_am_p3,
@@ -3080,6 +3088,10 @@ damage_templates.light_sword_stab_active_p3 = {
 			boost_curve_multiplier_finesse = {
 				1,
 				2,
+			},
+			power_level_multiplier = {
+				0.75,
+				1.25,
 			},
 		},
 		{

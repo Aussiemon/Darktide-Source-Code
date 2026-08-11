@@ -15,6 +15,10 @@ BlankView.init = function (self, settings, context)
 	self._loading_icon_delay = context and context.loading_icon_delay or 0
 end
 
+BlankView.draw_while_loading = function (self, dt, t)
+	Managers.ui:render_black_background()
+end
+
 BlankView.draw = function (self, dt, t, input_service, layer)
 	BlankView.super.draw(self, dt, t, input_service, layer)
 

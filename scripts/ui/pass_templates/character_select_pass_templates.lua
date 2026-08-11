@@ -3,7 +3,6 @@
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ColorUtilities = require("scripts/utilities/ui/colors")
-local BarPassTemplates = require("scripts/ui/pass_templates/bar_pass_templates")
 local color_lerp = ColorUtilities.color_lerp
 local color_copy = ColorUtilities.color_copy
 local math_lerp = math.lerp
@@ -23,6 +22,10 @@ local badge_size = {
 local icon_size = {
 	120,
 	120,
+}
+local arrow_size = {
+	32,
+	32,
 }
 local CharacterSelectPassTemplates = {}
 
@@ -46,6 +49,14 @@ local function list_button_all_visibility_function(content, style)
 	local hotspot = content.hotspot
 	local is_hovered = hotspot.is_hover or hotspot.is_focused or hotspot.is_selected
 	local was_hovered = hotspot.anim_hover_progress > 0 or hotspot.anim_focus_progress > 0 or hotspot.anim_select_progress > 0
+
+	return is_hovered or was_hovered
+end
+
+local function list_button_hovered_visibility_function(content, style)
+	local hotspot = content.hotspot
+	local is_hovered = hotspot.is_hover or hotspot.is_focused
+	local was_hovered = hotspot.anim_hover_progress > 0 or hotspot.anim_focus_progress > 0
 
 	return is_hovered or was_hovered
 end
@@ -296,7 +307,7 @@ CharacterSelectPassTemplates.character_select = {
 			min_alpha = 64,
 			vertical_alignment = "center",
 			offset = {
-				0,
+				-20,
 				0,
 				1,
 			},
@@ -433,6 +444,137 @@ CharacterSelectPassTemplates.character_select = {
 
 			color_lerp(default_color, hover_color, progress, text_color)
 		end,
+	},
+	{
+		content_id = "hotspot_arrow_up",
+		pass_type = "hotspot",
+		style_id = "hotspot_arrow_up",
+		content = {
+			use_is_focused = false,
+		},
+		style = {
+			anim_focus_speed = 8,
+			anim_hover_speed = 8,
+			anim_input_speed = 8,
+			anim_select_speed = 8,
+			horizontal_alignment = "right",
+			size = {
+				arrow_size[1] + 10,
+				arrow_size[2] + 10,
+			},
+			offset = {
+				0,
+				15,
+				10,
+			},
+			on_hover_sound = UISoundEvents.default_mouse_hover,
+		},
+	},
+	{
+		pass_type = "rotated_texture",
+		style_id = "arrow_up",
+		value = "content/ui/materials/hud/interactions/frames/arrow",
+		value_id = "arrow_up",
+		visibility_function = function (content, style)
+			local other_visibility = list_button_hovered_visibility_function(content, style)
+
+			if content.position_index then
+				return Managers.ui:using_cursor_navigation() and content.position_index > 1 and other_visibility
+			else
+				return false
+			end
+		end,
+		change_function = function (content, style)
+			local hotspot = content.hotspot_arrow_up
+			local default_color = style.default_color
+			local focused_color = style.selected_color
+			local hover_color = style.hover_color
+			local icon_color = style.color
+			local icon_inactive_color = content.hotspot.is_selected and focused_color or default_color
+			local progress = math_max(math_max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math_max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+
+			color_lerp(icon_inactive_color, hover_color, progress, icon_color)
+		end,
+		style = {
+			horizontal_alignment = "right",
+			size = arrow_size,
+			color = Color.terminal_corner_hover(255, true),
+			default_color = Color.terminal_corner_hover(255, true),
+			selected_color = Color.terminal_corner_selected(255, true),
+			hover_color = Color.white(255, true),
+			offset = {
+				-5,
+				20,
+				10,
+			},
+			angle = -math.pi,
+		},
+	},
+	{
+		content_id = "hotspot_arrow_down",
+		pass_type = "hotspot",
+		style_id = "hotspot_arrow_down",
+		content = {
+			use_is_focused = false,
+		},
+		style = {
+			anim_focus_speed = 8,
+			anim_hover_speed = 8,
+			anim_input_speed = 8,
+			anim_select_speed = 8,
+			horizontal_alignment = "right",
+			vertical_alignment = "bottom",
+			size = {
+				arrow_size[1] + 10,
+				arrow_size[2] + 10,
+			},
+			offset = {
+				0,
+				-15,
+				0,
+			},
+			on_hover_sound = UISoundEvents.default_mouse_hover,
+		},
+	},
+	{
+		pass_type = "rotated_texture",
+		style_id = "arrow_down",
+		value = "content/ui/materials/hud/interactions/frames/arrow",
+		value_id = "arrow_down",
+		visibility_function = function (content, style)
+			local other_visibility = list_button_hovered_visibility_function(content, style)
+
+			if content.position_index then
+				return Managers.ui:using_cursor_navigation() and content.position_index < content.max_positions and other_visibility
+			else
+				return false
+			end
+		end,
+		change_function = function (content, style)
+			local hotspot = content.hotspot_arrow_down
+			local default_color = style.default_color
+			local focused_color = style.selected_color
+			local hover_color = style.hover_color
+			local icon_color = style.color
+			local icon_inactive_color = content.hotspot.is_selected and focused_color or default_color
+			local progress = math_max(math_max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math_max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+
+			color_lerp(icon_inactive_color, hover_color, progress, icon_color)
+		end,
+		style = {
+			horizontal_alignment = "right",
+			vertical_alignment = "bottom",
+			size = arrow_size,
+			color = Color.terminal_corner_hover(255, true),
+			default_color = Color.terminal_corner_hover(255, true),
+			selected_color = Color.terminal_corner_selected(255, true),
+			hover_color = Color.white(255, true),
+			offset = {
+				-5,
+				-20,
+				10,
+			},
+		},
 	},
 }
 

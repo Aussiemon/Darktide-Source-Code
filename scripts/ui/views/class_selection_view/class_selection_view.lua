@@ -306,6 +306,12 @@ ClassSelectionView._cb_on_dlc_reconcile_success = function (self, data, show_pop
 
 				Managers.event:trigger("event_create_new_character_continue")
 			end)
+		end, function (error)
+			Log.error("ClassSelectionView", "error showing dlc popup '%s'", error)
+
+			self._is_in_blocked_state = false
+
+			Managers.event:trigger("event_create_new_character_continue")
 		end)
 
 		return
@@ -582,6 +588,10 @@ ClassSelectionView._create_archetype_option_widgets = function (self)
 end
 
 ClassSelectionView._on_archetype_pressed = function (self, selected_archetype)
+	if self._is_in_blocked_state then
+		return
+	end
+
 	if selected_archetype ~= self._selected_archetype then
 		self._selected_archetype = selected_archetype
 

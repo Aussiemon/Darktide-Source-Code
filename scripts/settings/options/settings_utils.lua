@@ -321,7 +321,7 @@ local function verify_and_apply_changes(changed_setting, new_value, startup, aff
 						end
 					end
 
-					if option.apply_values_on_edited then
+					if option.apply_values_on_edited and not startup then
 						for id, value in pairs(option.apply_values_on_edited) do
 							if settings_by_id[id] and (not settings_by_id[id].validation_function or settings_by_id[id].validation_function and settings_by_id[id].validation_function()) then
 								if not settings_by_id[id].disabled then
@@ -343,7 +343,7 @@ local function verify_and_apply_changes(changed_setting, new_value, startup, aff
 			end
 		end
 
-		if changed_setting.apply_values_on_edited then
+		if changed_setting.apply_values_on_edited and not startup then
 			for id, value in pairs(changed_setting.apply_values_on_edited) do
 				if settings_by_id[id] and (not settings_by_id[id].validation_function or settings_by_id[id].validation_function and settings_by_id[id].validation_function()) then
 					if not settings_by_id[id].disabled then

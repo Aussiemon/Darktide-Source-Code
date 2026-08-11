@@ -160,7 +160,13 @@ PlayerCharacterStateMinigame._update_input = function (self, t, fixed_frame, inp
 		self._previous_input = interact_hold
 	elseif jump_held ~= self._previous_jump_held then
 		self._previous_jump_held = jump_held
-		self._previous_input = jump_held
+
+		local base_dodge_template = self._archetype_dodge_template
+		local should_dodge = Dodge.check(t, self._unit_data_extension, base_dodge_template, input_extension)
+
+		if not should_dodge then
+			self._previous_input = jump_held
+		end
 	end
 
 	local primary_input = self._previous_input
@@ -261,7 +267,7 @@ PlayerCharacterStateMinigame._is_looking_away_from_device = function (self)
 	return false
 end
 
-PlayerCharacterStateMinigame._check_transition = function (self, unit, t, next_state_params, cancelled, input_source)
+PlayerCharacterStateMinigame._check_transition = function (self, unit, t, next_state_params, cancelled, input_extension)
 	local unit_data_extension = self._unit_data_extension
 	local health_transition = HealthStateTransitions.poll(unit_data_extension, next_state_params)
 
@@ -290,7 +296,7 @@ PlayerCharacterStateMinigame._check_transition = function (self, unit, t, next_s
 	end
 
 	local base_dodge_template = self._archetype_dodge_template
-	local should_dodge, local_dodge_direction = Dodge.check(t, self._unit_data_extension, base_dodge_template, input_source)
+	local should_dodge, local_dodge_direction = Dodge.check(t, self._unit_data_extension, base_dodge_template, input_extension)
 
 	if should_dodge then
 		next_state_params.dodge_direction = local_dodge_direction
@@ -325,7 +331,7 @@ PlayerCharacterStateMinigame._check_transition = function (self, unit, t, next_s
 
 	if close_on_sprint then
 		local is_sprinting = false
-		local sprint_input = Sprint.sprint_input(input_source, is_sprinting)
+		local sprint_input = Sprint.sprint_input(input_extension, is_sprinting)
 
 		if sprint_input then
 			return "walking"
