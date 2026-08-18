@@ -350,7 +350,7 @@ local views = {
 		path = "scripts/ui/views/loading_view/loading_view",
 		preload_in_hub = "always",
 		preload_in_mission = "always",
-		use_transition_ui = true,
+		use_transition_ui = "outro",
 		backgrounds = {
 			"loading_screen_background",
 		},
@@ -381,7 +381,7 @@ local views = {
 		display_name = "loc_blank_view_display_name",
 		draw_while_loading = true,
 		path = "scripts/ui/views/blank_view/blank_view",
-		use_transition_ui = true,
+		use_transition_ui = "outro",
 	},
 	cutscene_view = {
 		class = "CutsceneView",

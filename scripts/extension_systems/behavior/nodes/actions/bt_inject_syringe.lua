@@ -137,10 +137,11 @@ BtInjectSyringeAction.leave = function (self, unit, breed, blackboard, scratchpa
 		scratchpad.animation_extension:anim_event(inject_stop_animation)
 	end
 
+	local target_ally = scratchpad._target_ally
 	local target_ally_buff_extension = scratchpad._target_ally_buff_extension
 	local invulnerable_buff_index = scratchpad._invulnerable_buff_index
 
-	if target_ally_buff_extension and invulnerable_buff_index then
+	if HEALTH_ALIVE[target_ally] and target_ally_buff_extension and invulnerable_buff_index then
 		target_ally_buff_extension:remove_externally_controlled_buff(invulnerable_buff_index)
 	end
 

@@ -29,6 +29,7 @@ CharacterStateMachineExtension.init = function (self, extension_init_context, un
 end
 
 CharacterStateMachineExtension._init_components = function (self, unit_data, extension_init_data)
+	local unset_t = NetworkConstants.fixed_time_offset_unset
 	local steering = unit_data:write_component("locomotion_steering")
 
 	steering.velocity_wanted = Vector3.zero()
@@ -44,7 +45,7 @@ CharacterStateMachineExtension._init_components = function (self, unit_data, ext
 	move_state.is_dodging = false
 	move_state.is_effective_dodge = false
 	move_state.is_crouching = false
-	move_state.is_crouching_transition_start_t = 0
+	move_state.is_crouching_transition_start_t = unset_t
 	move_state.can_jump = true
 	move_state.method = "idle"
 	move_state.can_crouch = true
@@ -52,9 +53,9 @@ CharacterStateMachineExtension._init_components = function (self, unit_data, ext
 
 	local ladder_character_state_component = unit_data:write_component("ladder_character_state")
 
-	ladder_character_state_component.ladder_cooldown = 0
+	ladder_character_state_component.ladder_cooldown = unset_t
 	ladder_character_state_component.ladder_unit_id = NetworkConstants.invalid_level_unit_id
-	ladder_character_state_component.top_enter_leave_timer = 0
+	ladder_character_state_component.top_enter_leave_timer = unset_t
 	ladder_character_state_component.end_position = Vector3.zero()
 	ladder_character_state_component.start_position = Vector3.zero()
 
@@ -197,7 +198,9 @@ CharacterStateMachineExtension.server_correction_occurred = function (self, unit
 end
 
 CharacterStateMachineExtension.destroy = function (self)
-	self._state_machine:exit_current_state()
+	local extension_destroyed = true
+
+	self._state_machine:exit_current_state(extension_destroyed)
 end
 
 CharacterStateMachineExtension.reset = function (self)

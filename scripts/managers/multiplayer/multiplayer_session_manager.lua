@@ -76,7 +76,7 @@ MultiplayerSessionManager._rpc_ignore_slot_reservation = function (self, leave_r
 	local rpc_sent = false
 	local host_type = self:host_type()
 
-	if host_type == HOST_TYPES.mission_server and (leave_reason == "leave_mission" or leave_reason == "leave_mission_stay_in_party" or leave_reason == "quit_game" or leave_reason == "leave_mission_as_strike_team") then
+	if host_type == HOST_TYPES.mission_server and (leave_reason == "leave_mission" or leave_reason == "leave_mission_stay_in_party" or leave_reason == "quit_game") then
 		local host_channel = Managers.connection:host_channel()
 
 		if host_channel then
@@ -212,12 +212,6 @@ MultiplayerSessionManager.start_singleplayer_session = function (self, mission_n
 end
 
 MultiplayerSessionManager._find_available_immaterium_session = function (self)
-	if Managers.party_immaterium:consume_leaving_mission_as_strike_team() then
-		self:party_immaterium_hot_join_hub_server()
-
-		return StateLoading, {}
-	end
-
 	if Managers.party_immaterium:game_session_in_progress() then
 		Managers.party_immaterium:join_game_session()
 

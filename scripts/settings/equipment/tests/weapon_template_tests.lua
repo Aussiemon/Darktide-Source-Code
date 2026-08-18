@@ -7,9 +7,17 @@ local PlayerCharacterConstants = require("scripts/settings/player_character/play
 local PlayerUnitAnimationStateMachineSettings = require("scripts/settings/animation/player_unit_animation_state_machine_settings")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local hit_zone_names = HitZone.hit_zone_names
-local _template_settings_test, _action_settings_test, _conditional_state_test, _alternate_fire_test, _validate_hit_zone_priority, _validate_chain_actions, _validate_reachable_actions, _validate_conditional_state_to_action_input, _validate_running_action_state_to_action_input, _action_input_sequence_total_time, _state_machine_settings_test, _check_state_machine_settings, _stat_and_perk_verification, _stat_verification, _validate_tweak_template_existence, _check_tweak_template_existence
+local _template_settings_test, _action_settings_test, _conditional_state_test, _alternate_fire_test, _validate_hit_zone_priority, _validate_chain_actions, _validate_reachable_actions, _validate_conditional_state_to_action_input, _validate_running_action_state_to_action_input, _action_input_sequence_total_time, _state_machine_settings_test, _check_state_machine_settings, _stat_and_perk_verification, _stat_verification, _validate_tweak_template_existence, _check_tweak_template_existence, _static_message
+
+local function report(success, message, ...)
+	if not success then
+		_static_message = _static_message .. string.format(message, ...)
+	end
+end
 
 local function weapon_template_tests(weapon_template)
+	_static_message = ""
+
 	_template_settings_test(weapon_template)
 	_action_settings_test(weapon_template)
 	_conditional_state_test(weapon_template)
@@ -17,50 +25,85 @@ local function weapon_template_tests(weapon_template)
 	_state_machine_settings_test(weapon_template)
 	_validate_tweak_template_existence(weapon_template)
 	_stat_and_perk_verification(weapon_template)
+
+	local success = _static_message == ""
+
+	return success, _static_message
 end
 
 local inventory_slot_component_data = PlayerCharacterConstants.inventory_slot_component_data
 local weapon_component_data = inventory_slot_component_data.weapon
 
 function _template_settings_test(weapon_template)
-	local weapon_template_name = weapon_template.name
 	local anim_state_machine_3p, breed_anim_state_machine_3p = weapon_template.anim_state_machine_3p, weapon_template.breed_anim_state_machine_3p
+
+	report(anim_state_machine_3p or breed_anim_state_machine_3p, "missing anim_state_machine_3p or breed_anim_state_machine_3p entry.")
+	report(anim_state_machine_3p == nil or breed_anim_state_machine_3p == nil, "Both anim_state_machine_3p and breed_anim_state_machine_3p are defined, please remove one of them.")
 
 	if breed_anim_state_machine_3p then
 		for breed_name, breed in pairs(Breeds) do
 			if Breed.is_player(breed) then
-				-- Nothing
+				report(breed_anim_state_machine_3p[breed_name] ~= nil, "breed_anim_state_machine_3p is missing entry for %q breed.", breed_name)
 			end
 		end
 	end
 
 	local anim_state_machine_1p, breed_anim_state_machine_1p = weapon_template.anim_state_machine_1p, weapon_template.breed_anim_state_machine_1p
 
+	report(anim_state_machine_1p or breed_anim_state_machine_1p, "missing anim_state_machine_1p or breed_anim_state_machine_1p entry.")
+	report(anim_state_machine_1p == nil or breed_anim_state_machine_1p == nil, "Both anim_state_machine_1p and breed_anim_state_machine_1p are defined, please remove one of them.")
+
 	if breed_anim_state_machine_1p then
 		for breed_name, breed in pairs(Breeds) do
 			if Breed.is_player(breed) then
-				-- Nothing
+				report(breed_anim_state_machine_1p[breed_name] ~= nil, "breed_anim_state_machine_1p is missing entry for %q breed.", breed_name)
 			end
 		end
 	end
 
-	local keywords = weapon_template.keywords
+	report(weapon_template.keywords, "missing keywords table.")
+
 	local overheat_configuration = weapon_template.overheat_configuration
 
 	if overheat_configuration and not weapon_template.use_special_charge_template_for_overheat_decay then
 		local auto_vent_delay = overheat_configuration.auto_vent_delay
+
+		report(auto_vent_delay, "Overheat_configuration requries auto_vent_delay.")
+
+		local fixed_time_step = 1 / GameParameters.tick_rate
+
+		if auto_vent_delay then
+			local network_type = weapon_component_data.overheat_last_charge_at_t.network_type
+			local network_type_info = Network.type_info(network_type)
+			local min = network_type_info.min
+			local time_network_type_can_represent_backwards_in_time = math.abs(min * fixed_time_step)
+
+			report(auto_vent_delay <= time_network_type_can_represent_backwards_in_time, "overheat_configuration. auto_vent_delay is larger than what the current network_type (%q) can represent backwards in time (%.5f). Change what network_type \"overheat_last_charge_at_t\" to something that can represent it.", network_type, time_network_type_can_represent_backwards_in_time)
+		end
+
 		local vent_interval = overheat_configuration.vent_interval
 
 		if not vent_interval then
-			return false, "vent_configuration needs vent_interval."
+			report(false, "Overheat_configuration requries vent_interval.")
 		end
 
 		local vent_duration = overheat_configuration.vent_duration
 
 		if not vent_duration then
-			return false, "vent_configuration needs vent_duration."
+			report(false, "Overheat_configuration requries vent_duration.")
+		end
+
+		local network_type = weapon_component_data.overheat_remove_at_t.network_type
+		local network_type_info = Network.type_info(network_type)
+		local max = network_type_info.max
+		local time_network_type_can_represent_forwards_in_time = math.abs(max * fixed_time_step)
+
+		if time_network_type_can_represent_forwards_in_time < vent_interval then
+			return false, string.format("vent_interval is larger than what the current network_type (%q) can represent forwards in time (%.5f). Change what network_type \"overheat_remove_at_t\" to something that can represent it.", network_type, time_network_type_can_represent_forwards_in_time)
 		end
 	end
+
+	report(weapon_template.smart_targeting_template or weapon_template.smart_targeting_template == false, "No 'smart_targeting_template' is defined.")
 end
 
 local MANDATORY_ACTIONS = {
@@ -74,7 +117,7 @@ function _action_settings_test(weapon_template)
 	local action_kind_tests = require("scripts/settings/equipment/tests/action_kind_tests")
 
 	for action_name, _ in pairs(MANDATORY_ACTIONS) do
-		-- Nothing
+		report(weapon_template.actions[action_name], "Missing mandatory_action %q", action_name)
 	end
 
 	local action_inputs = weapon_template.action_inputs
@@ -90,9 +133,13 @@ function _action_settings_test(weapon_template)
 			local start_input_does_not_have_priority = start_inputs_no_priority[start_input]
 
 			if not action_priority then
-				-- Nothing
+				report(not previus_exist, "Multiple actions are listening to the same start_input. Will cause inconsistent behavior, Actions: %q, %q", start_inputs[start_input], action_name)
 			else
+				report(not start_input_does_not_have_priority, "Multiple actions are listening to the same start_input. One of them have action_priority while the other does not, Actions: %q, %q", start_inputs[start_input], action_name)
+
 				local priority_key = start_input .. "_" .. action_priority
+
+				report(not start_inputs_priority[priority_key], "Multiple actions with the same start_input have same action_priority %f, Actions: %q, %q", action_priority, start_inputs_priority[priority_key], action_name)
 
 				start_inputs_priority[priority_key] = action_name
 			end
@@ -101,21 +148,43 @@ function _action_settings_test(weapon_template)
 			start_inputs_no_priority[start_input] = start_input_does_not_have_priority or not action_priority
 		end
 
+		report(action_settings.total_time, "No total_time specified in action %q", action_name)
+
 		local s, m = _validate_hit_zone_priority(weapon_template, action_settings)
 
+		report(s, "Action %q failed hit_zone_priority validation with the following error:\n\t%s", action_name, m)
+
 		s, m = _validate_chain_actions(weapon_template, action_settings)
+
+		report(s, "Action %q failed chain_action validation with the following error:\n\t%s", action_name, m)
+
 		s, m = _validate_conditional_state_to_action_input(weapon_template, action_settings)
+
+		report(s, "Action %q failed conditional_state_to_action_input validation with the following error:\n\t%s", action_name, m)
+
 		s, m = _validate_running_action_state_to_action_input(weapon_template, action_settings)
+
+		report(s, "Action %q failed running_action_state_to_action_input validation with the following error:\n\t%s", action_name, m)
+
 		s, m = _validate_reachable_actions(weapon_template, action_settings)
+
+		report(s, "Action %q failed reachable actions validation with the following error:\n\t%s", action_name, m)
 
 		local stop_input = action_settings.stop_input
 		local minimum_hold_time = action_settings.minimum_hold_time or 0
 
 		if stop_input then
 			local stop_input_config = action_inputs[stop_input]
+
+			if not report(stop_input_config, "Action %q failed stop_input verification. Action input %q does not exist in action_input configuration.", action_name, stop_input) then
+				return
+			end
+
 			local fixed_time_step = 1 / GameParameters.tick_rate
 			local safe_stop_input_buffer_time = minimum_hold_time + fixed_time_step
 			local action_input_sequence_total_time = _action_input_sequence_total_time(stop_input_config)
+
+			report(minimum_hold_time < action_input_sequence_total_time, "Action %q - stop_input %q has a smaller buffer_time than minimum_hold_time. This can lead to stop_input being removed by buffering before we have a chance to act on it, leading to us being stuck in this action. buffer_time needs to be atleast %f", action_name, stop_input, safe_stop_input_buffer_time)
 		end
 	end
 end
@@ -138,7 +207,12 @@ function _conditional_state_test(weapon_template)
 	for i = 1, #conditional_state_to_action do
 		local conditional_state_config = conditional_state_to_action[i]
 		local conditional_state = conditional_state_config.conditional_state
+
+		report(conditional_state_functions[conditional_state], "Can't find a conditional_state_function for conditional_state %q", conditional_state)
+
 		local input_name = conditional_state_config.input_name
+
+		report(action_inputs[input_name], "conditional_state %q pointing towards non-existant action input %q", conditional_state, input_name)
 	end
 end
 
@@ -233,7 +307,7 @@ function _validate_chain_actions(weapon_template, action_settings)
 			if action_name then
 				if not actions[action_name] then
 					chain_action_success = false
-					chain_action_error_msg = chain_action_error_msg .. "action_name is not an action. "
+					chain_action_error_msg = chain_action_error_msg .. action_name .. " is not an action. "
 				end
 			else
 				chain_action_success = false
@@ -250,7 +324,7 @@ function _validate_chain_actions(weapon_template, action_settings)
 					if action_name then
 						if not actions[action_name] then
 							chain_action_success = false
-							chain_action_error_msg = chain_action_error_msg .. "action_name is not an action. "
+							chain_action_error_msg = chain_action_error_msg .. action_name .. " is not an action. "
 						end
 					else
 						chain_action_success = false
@@ -544,6 +618,8 @@ function _state_machine_settings_test(weapon_template)
 			end
 		end
 	end
+
+	report(success, "Failed state_machine_settings_test!\n%s", error_msg)
 end
 
 function _check_state_machine_settings(state_machine)
@@ -666,7 +742,7 @@ function _validate_tweak_template_existence(weapon_template)
 		success = false
 	end
 
-	return true
+	report(success, "Failed tweak template existence tests!%s\n", error_msg)
 end
 
 function _check_tweak_template_existence(weapon_template, template_type, source_templates)
@@ -758,7 +834,7 @@ function _stat_and_perk_verification(weapon_template)
 	end
 
 	if #error_msgs > 0 then
-		local error_msg = string.format("WeaponTemplate %q failed stat_and_perk_verification test.", weapon_template.name)
+		local error_msg = string.format("Failed stat_and_perk_verification test.")
 
 		for _, error in ipairs(error_msgs) do
 			error_msg = string.format("%s\n%s", error_msg, error)

@@ -72,7 +72,7 @@ local weapon_component_config = {
 	},
 	last_ammunition_usage = {
 		default_value = 0,
-		network_type = "fixed_frame_time",
+		network_type = "fixed_frame_offset_start_t_6bit",
 	},
 	reload_state = {
 		default_value = "none",
@@ -91,11 +91,11 @@ local weapon_component_config = {
 	},
 	overheat_last_charge_at_t = {
 		default_value = 0,
-		network_type = "fixed_frame_time",
+		network_type = "fixed_frame_offset_start_t_6bit",
 	},
 	overheat_remove_at_t = {
 		default_value = 0,
-		network_type = "fixed_frame_time",
+		network_type = "fixed_frame_offset_end_t_6bit",
 	},
 	overheat_current_percentage = {
 		default_value = 0,
@@ -119,11 +119,11 @@ local weapon_component_config = {
 	},
 	special_active_start_t = {
 		default_value = 0,
-		network_type = "fixed_frame_time",
+		network_type = "fixed_frame_offset_start_t_6bit",
 	},
 	special_charge_remove_at_t = {
 		default_value = 0,
-		network_type = "fixed_frame_time",
+		network_type = "fixed_frame_offset_end_t_9bit",
 	},
 	unequip_slot = {
 		default_value = false,

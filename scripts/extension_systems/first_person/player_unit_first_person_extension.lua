@@ -93,10 +93,11 @@ PlayerUnitFirstPersonExtension.init = function (self, extension_init_context, un
 
 	Unit.set_data(first_person_unit, "owner_unit", unit)
 
+	local unset_t = NetworkConstants.fixed_time_offset_unset
 	local first_person_component = unit_data_extension:write_component("first_person")
 
 	first_person_component.height_change_duration = 0
-	first_person_component.height_change_start_time = 0
+	first_person_component.height_change_start_time = unset_t
 	first_person_component.height = character_height
 	first_person_component.wanted_height = character_height
 	first_person_component.old_height = character_height
@@ -110,7 +111,7 @@ PlayerUnitFirstPersonExtension.init = function (self, extension_init_context, un
 	local first_person_mode_component = unit_data_extension:write_component("first_person_mode")
 
 	first_person_mode_component.wants_1p_camera = true
-	first_person_mode_component.show_1p_equipment_at_t = 0
+	first_person_mode_component.show_1p_equipment_at_t = unset_t
 	self._first_person_mode_component = unit_data_extension:read_component("first_person_mode")
 	self._is_camera_follow_target = false
 	self._is_first_person_spectated = false
@@ -129,8 +130,8 @@ PlayerUnitFirstPersonExtension.init = function (self, extension_init_context, un
 	force_look_rotation_component.start_pitch = 0
 	force_look_rotation_component.wanted_pitch = 0
 	force_look_rotation_component.wanted_yaw = 0
-	force_look_rotation_component.start_time = 0
-	force_look_rotation_component.end_time = 0
+	force_look_rotation_component.start_time = unset_t
+	force_look_rotation_component.end_time = unset_t
 	self._force_look_rotation_component = force_look_rotation_component
 
 	local peeking_component = unit_data_extension:write_component("peeking")

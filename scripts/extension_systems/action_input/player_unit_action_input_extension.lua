@@ -60,6 +60,8 @@ PlayerUnitActionInputExtension.extensions_ready = function (self, world, unit)
 
 	self._authoritative_network_data = authoritative_network_data
 
+	local unset_t = NetworkConstants.fixed_time_offset_unset
+
 	if not self._disabled then
 		local debug_index = 1
 
@@ -90,7 +92,7 @@ PlayerUnitActionInputExtension.extensions_ready = function (self, world, unit)
 				if collection_name ~= "input_queue_first_entry_became_first_entry_t" then
 					authoritative_network_data[game_object_field_name] = {}
 				else
-					authoritative_network_data[game_object_field_name] = 0
+					authoritative_network_data[game_object_field_name] = unset_t
 				end
 			end
 
@@ -98,7 +100,7 @@ PlayerUnitActionInputExtension.extensions_ready = function (self, world, unit)
 				if collection_name ~= "input_queue_first_entry_became_first_entry_t" then
 					network_data_cache[game_object_field_name] = {}
 				else
-					network_data_cache[game_object_field_name] = 0
+					network_data_cache[game_object_field_name] = unset_t
 				end
 			end
 

@@ -408,9 +408,10 @@ local templates = {
 		},
 	},
 	{
+		enforce_close_condition = true,
 		name = "Training Ground Objective - Chapel Video",
 		validation_func = function (self)
-			return _is_in_hub() and Managers.state.mission and Managers.narrative:can_complete_event("onboarding_step_chapel_video_viewed")
+			return _is_in_hub() and not is_view_or_popup_active() and Managers.state.mission and Managers.narrative:can_complete_event("onboarding_step_chapel_video_viewed")
 		end,
 		on_activation = function (self)
 			local ui_manager = Managers.ui
@@ -464,6 +465,9 @@ local templates = {
 			end
 		end,
 		sync_on_events = {},
+		close_condition = function (self)
+			return Managers.ui:is_view_closing("cutscene_view") or _is_dlc_archetype()
+		end,
 	},
 	{
 		name = "Mission Terminal Objective - Access MT",

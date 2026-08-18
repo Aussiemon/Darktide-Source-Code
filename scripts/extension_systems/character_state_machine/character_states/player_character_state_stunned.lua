@@ -21,7 +21,7 @@ PlayerCharacterStateStunned.init = function (self, character_state_init_context,
 	local unit_data = character_state_init_context.unit_data
 	local stunned_character_state_component = unit_data:write_component("stunned_character_state")
 
-	stunned_character_state_component.start_time = 0
+	stunned_character_state_component.start_time = NetworkConstants.fixed_time_offset_unset
 	stunned_character_state_component.disorientation_type = "none"
 	stunned_character_state_component.stunned = false
 	stunned_character_state_component.actions_interrupted = false

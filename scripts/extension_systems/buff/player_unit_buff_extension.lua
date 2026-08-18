@@ -48,6 +48,8 @@ PlayerUnitBuffExtension.init = function (self, extension_init_context, unit, ext
 end
 
 PlayerUnitBuffExtension._init_components = function (self, buff_component)
+	local unset_t = NetworkConstants.fixed_time_offset_unset
+
 	for i = 1, MAX_COMPONENT_BUFFS do
 		local key_lookup = COMPONENT_KEY_LOOKUP[i]
 		local template_name_key = key_lookup.template_name_key
@@ -58,8 +60,8 @@ PlayerUnitBuffExtension._init_components = function (self, buff_component)
 		local extra_duration_key = key_lookup.extra_duration_key
 
 		buff_component[template_name_key] = "none"
-		buff_component[start_time_key] = 0
-		buff_component[active_start_time_key] = 0
+		buff_component[start_time_key] = unset_t
+		buff_component[active_start_time_key] = unset_t
 		buff_component[stack_count_key] = 0
 		buff_component[proc_count_key] = 0
 		buff_component[extra_duration_key] = 0

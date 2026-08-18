@@ -309,18 +309,6 @@ ConstantElementPopupHandler._cleanup_presentation = function (self, active_popup
 	end
 end
 
-ConstantElementPopupHandler._cb_on_checkbox_pressed = function (self, widget)
-	local content = widget.content
-
-	content.checked = not content.checked
-
-	local on_changed = content.on_changed
-
-	if on_changed then
-		on_changed(content.checked)
-	end
-end
-
 ConstantElementPopupHandler._cb_on_button_pressed = function (self, widget)
 	local active_popup = self._active_popup
 
@@ -336,7 +324,6 @@ ConstantElementPopupHandler._cb_on_button_pressed = function (self, widget)
 
 	local blackboard_size = 0
 	local content_widgets = self._content_widgets
-	local checkbox_states
 
 	for i = 1, #content_widgets do
 		local type = content_widgets[i].type
@@ -345,18 +332,7 @@ ConstantElementPopupHandler._cb_on_button_pressed = function (self, widget)
 		if TextInputPassTemplates[type] then
 			blackboard_size = blackboard_size + 1
 			blackboard[blackboard_size] = content.input_text
-		elseif type == "checkbox" then
-			checkbox_states = checkbox_states or {}
-
-			if content.checkbox_id then
-				checkbox_states[content.checkbox_id] = content.checked
-			end
 		end
-	end
-
-	if checkbox_states then
-		blackboard_size = blackboard_size + 1
-		blackboard[blackboard_size] = checkbox_states
 	end
 
 	local content = widget.content
@@ -461,27 +437,6 @@ ConstantElementPopupHandler._create_popup_content = function (self, options, ui_
 				content.localize = not option.no_localization
 				content.update = update_function
 			end
-		elseif template_type == "checkbox" then
-			button_size = {
-				Definitions.pass_templates.checkbox_size[1],
-				Definitions.pass_templates.checkbox_size[2],
-			}
-			text_length = button_size[1]
-
-			local widget_definitions = UIWidget.create_definition(Definitions.pass_templates.checkbox, "button_pivot", nil, button_size)
-
-			widget = self:_create_widget(widget_name, widget_definitions)
-			content_widgets[i] = widget
-			content = widget.content
-			content.text = option.no_localization and option.text or Localize(option.text, option.text_params ~= nil, option.text_params)
-			content.checked = option.initial_value or false
-			content.checkbox_id = option.id
-			content.on_changed = option.on_changed
-
-			local hotspot = content.hotspot
-
-			hotspot.pressed_callback = callback(self, "_cb_on_checkbox_pressed", widget)
-			hotspot.disabled = option.disabled or false
 		elseif TextInputPassTemplates[template_type] then
 			local button_width = option.width or ConstantElementPopupHandlerSettings.max_button_row_length
 

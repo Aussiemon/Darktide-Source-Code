@@ -29,14 +29,15 @@ PlayerCharacterStateSprinting.init = function (self, ...)
 
 	local unit = self._unit
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+	local unset_t = NetworkConstants.fixed_time_offset_unset
 	local sprint_character_state_component = unit_data_extension:write_component("sprint_character_state")
 
 	sprint_character_state_component.is_sprinting = false
 	sprint_character_state_component.is_sprint_jumping = false
 	sprint_character_state_component.wants_sprint_camera = false
-	sprint_character_state_component.last_sprint_time = 0
-	sprint_character_state_component.sprint_overtime = 0
-	sprint_character_state_component.cooldown = 0
+	sprint_character_state_component.last_sprint_time = unset_t
+	sprint_character_state_component.sprint_overtime = unset_t
+	sprint_character_state_component.cooldown = unset_t
 	sprint_character_state_component.use_sprint_start_slowdown = false
 	self._sprint_character_state_component = sprint_character_state_component
 	self._stamina_component = unit_data_extension:write_component("stamina")

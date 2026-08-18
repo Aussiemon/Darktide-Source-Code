@@ -59,7 +59,7 @@ end
 IntoxicatedMovement.initialize_component = function (intoxicated_movement_component)
 	intoxicated_movement_component.in_stagger = false
 	intoxicated_movement_component.stagger_cooldown = 0
-	intoxicated_movement_component.stagger_start_t = 0
+	intoxicated_movement_component.stagger_start_t = NetworkConstants.fixed_time_offset_unset
 	intoxicated_movement_component.stagger_end_t = 0
 	intoxicated_movement_component.stagger_direction = Vector3.zero()
 end

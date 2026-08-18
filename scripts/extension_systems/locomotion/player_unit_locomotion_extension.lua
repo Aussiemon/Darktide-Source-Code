@@ -88,16 +88,19 @@ PlayerUnitLocomotionExtension.init = function (self, extension_init_context, uni
 	loc_component.position = pos
 	loc_component.rotation = rot
 	loc_component.parent_unit = nil
+
+	local unset_t = NetworkConstants.fixed_time_offset_unset
+
 	loc_force_rotation_component.use_force_rotation = false
 	loc_force_rotation_component.start_rotation = Quaternion.identity()
-	loc_force_rotation_component.start_time = 0
-	loc_force_rotation_component.end_time = 0
+	loc_force_rotation_component.start_time = unset_t
+	loc_force_rotation_component.end_time = unset_t
 	loc_force_translation_component.use_force_translation = false
 	loc_force_translation_component.start_translation = Vector3.zero()
-	loc_force_translation_component.start_time = 0
-	loc_force_translation_component.end_time = 0
+	loc_force_translation_component.start_time = unset_t
+	loc_force_translation_component.end_time = unset_t
 	inair_state_component.on_ground = false
-	inair_state_component.inair_entered_t = 0
+	inair_state_component.inair_entered_t = unset_t
 	inair_state_component.fell_from_height = 0
 	inair_state_component.flying_frames = 0
 	inair_state_component.standing_frames = 0

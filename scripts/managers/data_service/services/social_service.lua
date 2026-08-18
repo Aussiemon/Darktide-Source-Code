@@ -620,7 +620,7 @@ SocialService.local_player_is_joinable = function (self)
 	local presence_settings = PresenceSettings.settings[activity_id]
 	local can_be_joined = presence_settings.can_be_joined
 
-	return can_be_joined
+	return can_be_joined, activity_id
 end
 
 SocialService._check_split_party = function (self)

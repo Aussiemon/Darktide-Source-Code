@@ -409,6 +409,7 @@ templates.cryptic_precision_stance_one_charge = {
 		template_data.ability_extension = ScriptUnit.extension(unit, "ability_system")
 		template_data.should_restore_toughness_over_time = template_data.talent_extension:has_special_rule(special_rules.cryptic_precision_stance_restores_toughness)
 		template_data.has_damage_on_elite_kills_talent = template_data.talent_extension:has_special_rule(special_rules.cryptic_precision_stance_damage_on_elite_kill)
+		template_data.has_gain_stacks_per_combat_ability_charge_used_talent = template_data.talent_extension:has_special_rule(special_rules.cryptic_overload_keystone_gain_stacks_per_combat_ability_charge_used)
 
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
@@ -428,7 +429,7 @@ templates.cryptic_precision_stance_one_charge = {
 			template_data.target_unit = nil
 		end
 	end,
-	stop_func = function (template_data, template_context)
+	stop_func = function (template_data, template_context, extension_destroyed)
 		for _, buff_id in ipairs(template_data.bonus_buff_ids) do
 			template_context.buff_extension:mark_buff_finished(buff_id)
 		end
@@ -452,7 +453,7 @@ templates.cryptic_precision_stance_one_charge = {
 		local num_charges_used_during_ability = math.floor(template_data.cooldown_percent_used + precision_stance_talent_settings.cooldown_percent_cost_on_activation)
 
 		if template_context.is_server and num_charges_used_during_ability > 0 then
-			if template_data.talent_extension:has_special_rule(special_rules.cryptic_overload_keystone_gain_stacks_per_combat_ability_charge_used) then
+			if not extension_destroyed and template_data.has_gain_stacks_per_combat_ability_charge_used_talent then
 				local num_stacks = num_charges_used_during_ability * overload_keystone_talent_settings.num_stacks_gained_per_combat_ability_charge
 
 				Managers.event:trigger("cryptic_buffs_event_give_overload_keystone_stacks", template_context.player, num_stacks)
@@ -1214,25 +1215,33 @@ templates.servo_skull_extra_grenade = {
 		local has_inject_ally = talent_extension and talent_extension:has_special_rule(special_rules.cryptic_servo_skull_inject_ally)
 
 		template_data.allow_extra_grenade = has_inject_ally
+		template_data.charges_given = false
+	end,
+	update_func = function (template_data, template_context, dt, t)
+		if not template_context.is_server then
+			return
+		end
 
-		if has_inject_ally then
-			local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		if template_data.allow_extra_grenade and not template_data.charges_given then
+			template_data.charges_given = true
+
+			local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
 			local template = template_context.template
 			local extra_grenades = template.conditional_stat_buffs[stat_buffs.extra_max_amount_of_grenades]
 			local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
 
-			template_context.initial_num_charges = grenade_ability_component.num_charges
+			template_data.initial_num_charges = grenade_ability_component.num_charges
 			grenade_ability_component.num_charges = grenade_ability_component.num_charges + extra_grenades
 		end
 	end,
-	stop_func = function (template_data, template_context)
-		if template_data.allow_extra_grenade then
+	stop_func = function (template_data, template_context, extension_destroyed)
+		if not extension_destroyed and template_data.allow_extra_grenade and template_data.charges_given then
 			local unit = template_context.unit
 			local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
 
 			if unit_data_extension then
 				local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-				local initial_num_charges = template_context.initial_num_charges
+				local initial_num_charges = template_data.initial_num_charges
 
 				grenade_ability_component.num_charges = math.min(grenade_ability_component.num_charges, initial_num_charges)
 			end

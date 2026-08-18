@@ -76,7 +76,7 @@ InteractorExtension.reset_interaction = function (self, reset_focus_unit)
 	interaction_component.target_actor_node_index = 0
 	interaction_component.type = "default"
 	interaction_component.state = interaction_states.waiting_to_interact
-	interaction_component.duration = 0
+	interaction_component.duration = NetworkConstants.fixed_time_offset_unset
 	interaction_component.start_time = 0
 	interaction_component.done_time = 0
 

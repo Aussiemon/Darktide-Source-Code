@@ -240,8 +240,8 @@ end
 local temp_hit_units = {}
 local external_properties = {}
 
-PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
-	PlayerCharacterStateLunging.super.on_exit(self, unit, t, next_state)
+PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state, extension_destroyed)
+	PlayerCharacterStateLunging.super.on_exit(self, unit, t, next_state, extension_destroyed)
 
 	local movement_state_component = self._movement_state_component
 
@@ -258,6 +258,10 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 
 	if next_state == "sprinting" then
 		movement_state_component.method = "sprint"
+	end
+
+	if extension_destroyed then
+		return
 	end
 
 	local lunge_template_name = self._lunge_character_state_component.lunge_template
@@ -282,7 +286,8 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 		end
 	end
 
-	local player_position = self._locomotion_component.position
+	local locomotion_component = self._locomotion_component
+	local player_position = locomotion_component.position
 	local rotation = self._first_person_component.rotation
 	local on_exit_vfx = lunge_template.on_exit_vfx
 

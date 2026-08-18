@@ -27,14 +27,10 @@ MechanismLeftSession.init = function (self, ...)
 	elseif reason == "leave_to_hub" then
 		-- Nothing
 	elseif reason == "failed_fetching_session_report" then
-		if not GameParameters.should_stay_in_party_eor then
-			self:_leave_party()
-		end
+		self:_leave_party()
 	elseif reason == "session_completed" then
 		self:_leave_party()
 	elseif reason == "leave_mission_stay_in_party" then
-		-- Nothing
-	elseif reason == "leave_mission_as_strike_team" then
 		-- Nothing
 	elseif reason == "quit_game" then
 		Application.quit()

@@ -56,16 +56,17 @@ PlayerCharacterStateLedgeHanging.init = function (self, character_state_init_con
 	PlayerCharacterStateLedgeHanging.super.init(self, character_state_init_context, ...)
 
 	local unit_data_extension = character_state_init_context.unit_data
+	local unset_t = NetworkConstants.fixed_time_offset_unset
 	local ledge_hanging_character_state_component = unit_data_extension:write_component("ledge_hanging_character_state")
 
 	ledge_hanging_character_state_component.hang_ledge_unit = nil
-	ledge_hanging_character_state_component.start_time_position_transition = 0
-	ledge_hanging_character_state_component.end_time_position_transition = 0
+	ledge_hanging_character_state_component.start_time_position_transition = unset_t
+	ledge_hanging_character_state_component.end_time_position_transition = unset_t
 	ledge_hanging_character_state_component.position_pre_hanging = Vector3.zero()
 	ledge_hanging_character_state_component.position_hanging = Vector3.zero()
 	ledge_hanging_character_state_component.rotation_pre_hanging = Quaternion.identity()
 	ledge_hanging_character_state_component.rotation_hanging = Quaternion.identity()
-	ledge_hanging_character_state_component.time_to_fall_down = 0
+	ledge_hanging_character_state_component.time_to_fall_down = unset_t
 	ledge_hanging_character_state_component.is_interactible = false
 	self._ledge_hanging_character_state_component = ledge_hanging_character_state_component
 

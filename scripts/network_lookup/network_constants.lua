@@ -243,6 +243,17 @@ NetworkConstants.max_template_effect_buffer_index = template_effect_buffer_index
 local fixed_frame_time = Network.type_info("fixed_frame_time")
 
 NetworkConstants.max_fixed_frame_time = fixed_frame_time.max
+NetworkConstants.fixed_frame_offset = Network.type_info("fixed_frame_offset")
+NetworkConstants.fixed_frame_offset_small = Network.type_info("fixed_frame_offset_small")
+NetworkConstants.fixed_frame_offset_start_t_5bit = Network.type_info("fixed_frame_offset_start_t_5bit")
+NetworkConstants.fixed_frame_offset_start_t_6bit = Network.type_info("fixed_frame_offset_start_t_6bit")
+NetworkConstants.fixed_frame_offset_start_t_7bit = Network.type_info("fixed_frame_offset_start_t_7bit")
+NetworkConstants.fixed_frame_offset_start_t_9bit = Network.type_info("fixed_frame_offset_start_t_9bit")
+NetworkConstants.fixed_frame_offset_end_t_4bit = Network.type_info("fixed_frame_offset_end_t_4bit")
+NetworkConstants.fixed_frame_offset_end_t_6bit = Network.type_info("fixed_frame_offset_end_t_6bit")
+NetworkConstants.fixed_frame_offset_end_t_7bit = Network.type_info("fixed_frame_offset_end_t_7bit")
+NetworkConstants.fixed_frame_offset_end_t_9bit = Network.type_info("fixed_frame_offset_end_t_9bit")
+NetworkConstants.fixed_time_offset_unset = -math.huge
 NetworkConstants.move_speed = Network.type_info("move_speed")
 
 local prd_state = Network.type_info("prd_state")

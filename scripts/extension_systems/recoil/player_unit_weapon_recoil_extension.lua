@@ -34,7 +34,7 @@ PlayerUnitWeaponRecoilExtension._reset = function (self)
 
 	local recoil_control_component = self._recoil_control_component
 
-	recoil_control_component.rise_end_time = 0
+	recoil_control_component.rise_end_time = NetworkConstants.fixed_time_offset_unset
 	recoil_control_component.shooting = false
 	recoil_control_component.num_shots = 0
 	recoil_control_component.target_pitch = 0

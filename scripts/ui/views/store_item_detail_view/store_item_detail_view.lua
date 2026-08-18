@@ -3062,7 +3062,7 @@ StoreItemDetailView._make_purchase = function (self, is_bundle, offer, wallet_da
 
 			for i = 1, #purchased_items do
 				local item_not_owned = purchased_items[i]
-				local item = item_not_owned.item
+				local item = item_not_owned.real_item or item_not_owned.item
 
 				Items.mark_item_id_as_new(item, true)
 

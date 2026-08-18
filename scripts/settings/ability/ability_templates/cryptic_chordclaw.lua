@@ -80,8 +80,6 @@ ability_template.actions = {
 		no_interruption_for_sprint = true,
 		sprint_ready_up_time = 0,
 		uninterruptible = true,
-		use_ability_charge = true,
-		use_charge_at_start = true,
 		vo_tag = "cryptic_ability_03_a",
 		total_time = math.huge,
 	},

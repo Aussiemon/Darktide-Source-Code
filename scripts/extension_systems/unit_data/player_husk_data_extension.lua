@@ -51,6 +51,17 @@ _create_network_field_lookup(FORMATTED_HUSK_CONFIG, HUSK_GAME_OBJECT_FIELD_DATA)
 _create_network_field_lookup(FORMATTED_HUSK_HUD_CONFIG, HUSK_HUD_GAME_OBJECT_FIELD_DATA)
 
 local PlayerHuskDataExtension = class("PlayerHuskDataExtension")
+local FIXED_FRAME_OFFSET_NETWORK_TYPES = {
+	fixed_frame_offset = true,
+	fixed_frame_offset_end_t_4bit = true,
+	fixed_frame_offset_end_t_6bit = true,
+	fixed_frame_offset_end_t_7bit = true,
+	fixed_frame_offset_end_t_9bit = true,
+	fixed_frame_offset_small = true,
+	fixed_frame_offset_start_t_6bit = true,
+	fixed_frame_offset_start_t_7bit = true,
+	fixed_frame_offset_start_t_9bit = true,
+}
 local _game_object_field = GameSession.game_object_field
 local _game_object_fields_array = GameSession.game_object_fields_array
 
@@ -71,7 +82,9 @@ local function _update_component_values(components, game_session, game_object_id
 
 			component[field_name] = string_lookup[authoritative_value]
 		elseif type == "number" then
-			if network_type == "fixed_frame_time" then
+			if FIXED_FRAME_OFFSET_NETWORK_TYPES[network_type] then
+				component[field_name] = (authoritative_value + frame_index) * fixed_time_step
+			elseif network_type == "fixed_frame_time" then
 				component[field_name] = authoritative_value * fixed_time_step
 			else
 				component[field_name] = authoritative_value

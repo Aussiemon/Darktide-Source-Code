@@ -77,7 +77,7 @@ ConstantElementOnboardingHandler._sync_onboarding_settings = function (self, on_
 	for i = 1, #tutorial_settings do
 		local settings = tutorial_settings[i]
 
-		if settings.active and not settings.synced then
+		if settings.active and not settings.synced and not settings.enforce_close_condition then
 			local sync_on_events = settings.sync_on_events
 
 			if sync_on_events then

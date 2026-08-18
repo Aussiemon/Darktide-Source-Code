@@ -10,7 +10,6 @@ local HOST_RPCS = {
 	"rpc_voting_client_ready",
 	"rpc_request_voting_no_params",
 	"rpc_request_voting_kick_player",
-	"rpc_request_voting_leave_mission_as_strike_team",
 	"rpc_request_vote",
 }
 local CLIENT_RPCS = {
@@ -19,7 +18,6 @@ local CLIENT_RPCS = {
 	"rpc_start_voting_mission_lobby_ready",
 	"rpc_start_voting_kick_player",
 	"rpc_start_voting_stay_in_party",
-	"rpc_start_voting_leave_mission_as_strike_team",
 	"rpc_start_voting_flow",
 	"rpc_voting_accepted",
 	"rpc_voting_completed",
@@ -416,10 +414,6 @@ VotingByNetworkImpl.rpc_request_voting_kick_player = function (self, channel_id,
 	self:_rpc_request_voting(channel_id, voting_id, template_id, kick_peer_id)
 end
 
-VotingByNetworkImpl.rpc_request_voting_leave_mission_as_strike_team = function (self, channel_id, voting_id, template_id, initiator_peer_id, strike_team_peer_ids, new_party_id, new_party_invite_token)
-	self:_rpc_request_voting(channel_id, voting_id, template_id, initiator_peer_id, strike_team_peer_ids, new_party_id, new_party_invite_token)
-end
-
 VotingByNetworkImpl.rpc_request_vote = function (self, channel_id, voting_id, option_id)
 	local option = NetworkLookup.voting_options[option_id]
 	local voter_peer_id = Network.peer_id(channel_id)
@@ -519,10 +513,6 @@ end
 
 VotingByNetworkImpl.rpc_start_voting_stay_in_party = function (self, channel_id, voting_id, template_id, initiator_peer, member_list, initial_votes_list, time_left, new_party_id, new_party_invite_token)
 	self:_rpc_start_voting(voting_id, template_id, initiator_peer, member_list, initial_votes_list, time_left, new_party_id, new_party_invite_token)
-end
-
-VotingByNetworkImpl.rpc_start_voting_leave_mission_as_strike_team = function (self, channel_id, voting_id, template_id, initiator_peer, member_list, initial_votes_list, time_left, vote_initiator_peer_id, strike_team_peer_ids, new_party_id, new_party_invite_token)
-	self:_rpc_start_voting(voting_id, template_id, initiator_peer, member_list, initial_votes_list, time_left, vote_initiator_peer_id, strike_team_peer_ids, new_party_id, new_party_invite_token)
 end
 
 VotingByNetworkImpl.rpc_start_voting_flow = function (self, channel_id, voting_id, template_id, initiator_peer, member_list, initial_votes_list, time_left, voting_flow_setting_id)

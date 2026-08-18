@@ -19,6 +19,15 @@ local XboxJoinPermission = require("scripts/managers/party_immaterium/join_permi
 local PartyImmateriumManager = class("PartyImmateriumManager")
 local ADVERTISEMENT_STATE = table.enum("SEARCHING", "CANCELED")
 local JOIN_REQUESTS_STATE = table.enum("PENDING", "ACCEPTED", "DECLINED")
+local PRESENCE_TO_JOIN_ERROR = {
+	cinematic = "YOU_ARE_IN_CINEMATIC",
+	loading = "YOU_ARE_IN_LOADING",
+	matchmaking = "YOU_ARE_IN_MATCHMAKING",
+	mission = "YOU_ARE_IN_MISSION",
+	onboarding = "YOU_ARE_IN_ONBOARDING",
+	splash_screen = "YOU_ARE_IN_SPLASH_SCREEN",
+	title_screen = "YOU_ARE_IN_TITLE_SCREEN",
+}
 
 local function _info(...)
 	Log.info("PartyImmateriumManager", ...)
@@ -104,8 +113,19 @@ PartyImmateriumManager.destroy = function (self)
 end
 
 PartyImmateriumManager._resolve_join_permission = function (self, presence_entry, context)
-	if not Managers.data_service.social:local_player_is_joinable() and context == "JOIN_REQUEST" then
+	local is_joinable, presence_activity_id = Managers.data_service.social:local_player_is_joinable()
+
+	if not is_joinable and context == "JOIN_REQUEST" then
 		local context_suffix = context and "_" .. context or ""
+		local error_details = PRESENCE_TO_JOIN_ERROR[presence_activity_id]
+
+		Log.exception("PartyImmateriumManager", "returning NOT_JOINABLE_JOIN_REQUEST because of presence %s", presence_activity_id)
+
+		if error_details then
+			return Promise.rejected({
+				error_details = error_details,
+			})
+		end
 
 		return Promise.rejected({
 			error_details = "NOT_JOINABLE" .. context_suffix,
@@ -490,16 +510,6 @@ PartyImmateriumManager._parse_join_parameter_string = function (self, join_param
 	end
 end
 
-local PRESENCE_TO_JOIN_ERROR = {
-	cinematic = "YOU_ARE_IN_CINEMATIC",
-	loading = "YOU_ARE_IN_LOADING",
-	matchmaking = "YOU_ARE_IN_MATCHMAKING",
-	mission = "YOU_ARE_IN_MISSION",
-	onboarding = "YOU_ARE_IN_ONBOARDING",
-	splash_screen = "YOU_ARE_IN_SPLASH_SCREEN",
-	title_screen = "YOU_ARE_IN_TITLE_SCREEN",
-}
-
 PartyImmateriumManager._can_join_new_party_check = function (self, join_parameter, is_reconnect)
 	local is_new_empty_party = join_parameter.party_id == ""
 
@@ -834,13 +844,6 @@ PartyImmateriumManager._handle_request_to_join = function (self, joiner_account_
 
 	Log.info("###", "_handle_request_to_join")
 
-	if self:_is_party_joiner_from_last_vote(joiner_account_id) then
-		_info("authorising joiner %s from stay_in_party vote to join party %s (merge window)", joiner_account_id, self:party_id())
-		Managers.grpc:answer_request_to_join(self:party_id(), joiner_account_id, "OK")
-
-		return
-	end
-
 	local _, inviteePresencePromise = Managers.presence:get_presence(joiner_account_id)
 	local party_id = self:party_id()
 
@@ -1138,61 +1141,6 @@ PartyImmateriumManager.num_party_members_in_mission = function (self)
 	end
 
 	return num_party_members_in_mission
-end
-
-PartyImmateriumManager.mark_leaving_mission_as_strike_team = function (self, new_party_id, member_account_ids)
-	self._last_stay_in_party_vote_snapshot = {
-		new_party_id = new_party_id,
-		member_account_ids = member_account_ids,
-		expires_at = Managers.time:time("main") + 30,
-	}
-	self._leaving_mission_as_strike_team = true
-end
-
-PartyImmateriumManager.consume_leaving_mission_as_strike_team = function (self)
-	local v = self._leaving_mission_as_strike_team
-
-	self._leaving_mission_as_strike_team = nil
-
-	return v
-end
-
-PartyImmateriumManager.in_mission_peer_ids = function (self)
-	local result = {}
-	local party_account_ids = {}
-	local myself_account_id = self._myself and self._myself:account_id()
-
-	if myself_account_id and myself_account_id ~= "" then
-		party_account_ids[myself_account_id] = true
-	end
-
-	for _, member in ipairs(self._other_members) do
-		local account_id = member:account_id()
-
-		if account_id and account_id ~= "" then
-			party_account_ids[account_id] = true
-		end
-	end
-
-	local mission_peers = Managers.connection and Managers.connection:member_peers() or {}
-
-	for _, peer_id in ipairs(mission_peers) do
-		local players_at_peer = Managers.player:players_at_peer(peer_id)
-
-		if players_at_peer then
-			for _, player in pairs(players_at_peer) do
-				if party_account_ids[player:account_id()] then
-					result[#result + 1] = peer_id
-
-					break
-				end
-			end
-		end
-	end
-
-	result[#result + 1] = Network.peer_id()
-
-	return result
 end
 
 PartyImmateriumManager.hot_join_party_hub_server = function (self)
@@ -1656,36 +1604,6 @@ PartyImmateriumManager._on_join_party_error = function (self, error_code)
 end
 
 PartyImmateriumManager._handle_stay_in_party_voting_started = function (self, voting_id, new_party_id, new_party_invite_token)
-	if GameParameters.should_stay_in_party_eor then
-		self._last_stay_in_party_vote_snapshot = nil
-
-		local member_account_ids = {}
-		local member_list = Managers.voting:member_list(voting_id) or {}
-
-		for _, peer_id in ipairs(member_list) do
-			local players_at_peer = Managers.player:players_at_peer(peer_id)
-
-			if players_at_peer then
-				for _, player in pairs(players_at_peer) do
-					local account_id = player:account_id()
-
-					if account_id and account_id ~= "" then
-						member_account_ids[account_id] = true
-					end
-				end
-			end
-		end
-
-		self._active_party_vote = {
-			voting_id = voting_id,
-			party_id = new_party_id,
-			party_invite_token = new_party_invite_token,
-			member_account_ids = member_account_ids,
-		}
-
-		return
-	end
-
 	self._active_party_vote = {
 		voting_id = voting_id,
 		party_id = new_party_id,
@@ -1697,31 +1615,7 @@ PartyImmateriumManager._handle_stay_in_party_voting_completed = function (self, 
 	local new_party_id = self._active_party_vote.party_id
 	local new_party_invite_token = self._active_party_vote.party_invite_token
 
-	if GameParameters.should_stay_in_party_eor then
-		local local_vote = votes and votes[Network.peer_id()]
-		local should_join_new_party = result == "approved" and local_vote ~= "no"
-
-		if should_join_new_party then
-			self._last_stay_in_party_vote_snapshot = {
-				new_party_id = new_party_id,
-				member_account_ids = self._active_party_vote.member_account_ids or {},
-				expires_at = Managers.time:time("main") + 30,
-			}
-
-			self:join_party({
-				stay_in_party_join = true,
-				party_id = new_party_id,
-				invite_token = new_party_invite_token,
-			}):next(function ()
-				Promise.delay(2):next(function ()
-					self:latched_hub_server_matchmaking()
-				end)
-			end)
-			_info("stay_in_party_voting_completed -> joining new party %s:%s", new_party_id, new_party_invite_token or "")
-		else
-			_info("stay_in_party_voting_completed -> staying in current party (local_vote=%s, result=%s)", tostring(local_vote), tostring(result))
-		end
-	elseif result == "approved" then
+	if result == "approved" then
 		self:join_party({
 			stay_in_party_join = true,
 			party_id = new_party_id,
@@ -1738,62 +1632,11 @@ PartyImmateriumManager._handle_stay_in_party_voting_completed = function (self, 
 end
 
 PartyImmateriumManager._handle_stay_in_party_voting_aborted = function (self, votes)
-	if GameParameters.should_stay_in_party_eor then
-		if not self._active_party_vote then
-			return
-		end
-
-		local new_party_id = self._active_party_vote.party_id
-		local new_party_invite_token = self._active_party_vote.party_invite_token
-		local local_vote = votes and votes[Network.peer_id()]
-
-		if local_vote ~= "no" then
-			self._last_stay_in_party_vote_snapshot = {
-				new_party_id = new_party_id,
-				member_account_ids = self._active_party_vote.member_account_ids or {},
-				expires_at = Managers.time:time("main") + 30,
-			}
-
-			self:join_party({
-				stay_in_party_join = true,
-				party_id = new_party_id,
-				invite_token = new_party_invite_token,
-			}):next(function ()
-				Promise.delay(2):next(function ()
-					self:latched_hub_server_matchmaking()
-				end)
-			end)
-			_info("stay_in_party_voting_aborted -> joining new party %s:%s (local intent: stay)", new_party_id, new_party_invite_token or "")
-		else
-			_info("stay_in_party_voting_aborted -> staying in current party (local intent: leave)")
-		end
-	end
-
 	self._active_party_vote = nil
 end
 
 PartyImmateriumManager.active_stay_in_party_vote = function (self)
 	return self._active_party_vote
-end
-
-PartyImmateriumManager._is_party_joiner_from_last_vote = function (self, joiner_account_id)
-	local snapshot = self._last_stay_in_party_vote_snapshot
-
-	if not snapshot then
-		return false
-	end
-
-	if Managers.time:time("main") > snapshot.expires_at then
-		self._last_stay_in_party_vote_snapshot = nil
-
-		return false
-	end
-
-	if self:party_id() ~= snapshot.new_party_id then
-		return false
-	end
-
-	return snapshot.member_account_ids[joiner_account_id] == true
 end
 
 PartyImmateriumManager._on_invite_party_error = function (self, error_code)

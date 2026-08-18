@@ -31,9 +31,7 @@ _create_voting_template_entry("scripts/settings/voting/voting_templates/new_hub_
 _create_voting_template_entry("scripts/settings/voting/voting_templates/internal_vote_mission_matchmaking_immaterium")
 _create_voting_template_entry("scripts/settings/voting/voting_templates/mission_vote_matchmaking_immaterium")
 _create_voting_template_entry("scripts/settings/voting/voting_templates/kick_from_mission_voting_template")
-_create_voting_template_entry("scripts/settings/voting/voting_templates/leave_mission_as_strike_team_voting_template")
 _create_voting_template_entry("scripts/settings/voting/voting_templates/stay_in_party_voting_template")
-_create_voting_template_entry("scripts/settings/voting/voting_templates/stay_in_party_by_default_voting_template")
 _create_voting_template_entry("scripts/settings/voting/voting_templates/expedition_continue_voting_template")
 _create_voting_template_entry("scripts/settings/voting/voting_templates/flow_voting_template")
 

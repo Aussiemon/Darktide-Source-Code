@@ -44,14 +44,15 @@ end
 
 ActionHandler.add_component = function (self, component_name)
 	local component = self._unit_data_extension:write_component(component_name)
+	local unset_t = NetworkConstants.fixed_time_offset_unset
 
 	component.template_name = "none"
 	component.current_action_name = "none"
 	component.previous_action_name = "none"
-	component.start_t = 0
-	component.end_t = 0
+	component.start_t = unset_t
+	component.end_t = unset_t
 	component.time_scale = 1
-	component.sprint_ready_time = 0
+	component.sprint_ready_time = unset_t
 	component.is_infinite_duration = false
 	component.special_active_at_start = false
 	component.combo_count = 0

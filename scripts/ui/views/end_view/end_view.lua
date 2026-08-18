@@ -48,7 +48,7 @@ EndView.init = function (self, settings, context)
 	self._reference_name = "EndView_" .. tostring(self)
 	self._stay_in_party_voting_id = nil
 	self._stay_in_party_voting_active = false
-	self._stay_in_party = GameParameters.should_stay_in_party_eor and STAY_IN_PARTY.yes or STAY_IN_PARTY.no
+	self._stay_in_party = STAY_IN_PARTY.no
 	self._all_in_same_party = false
 	self._all_voted_yes = false
 	self._num_members_in_my_party = 1
@@ -192,7 +192,7 @@ EndView.update = function (self, dt, t, input_service)
 
 	self._skip_grace_time = grace_time
 
-	local expected_vote = GameParameters.should_stay_in_party_eor and STAY_IN_PARTY.no or STAY_IN_PARTY.yes
+	local expected_vote = STAY_IN_PARTY.yes
 	local is_waiting_for_vote_to_end = self._stay_in_party_voting_active and self._stay_in_party == expected_vote
 	local can_skip = not has_shown_summary_view or not is_waiting_for_vote_to_end
 
@@ -384,7 +384,7 @@ EndView._stay_in_party_voting_started = function (self)
 	if all_is_same_party and voting_id then
 		Managers.voting:cast_vote(voting_id, STAY_IN_PARTY.no)
 
-		local log_message = GameParameters.should_stay_in_party_eor and "everyone is same party, voting against merging into a new party" or "everyone is same party, voting NO to merge"
+		local log_message = "everyone is same party, voting NO to merge"
 
 		Log.info("STAY_IN_PARTY_VOTING", log_message)
 
@@ -1174,7 +1174,7 @@ EndView._sync_votes = function (self)
 	local voting_id = self._stay_in_party_voting_id
 	local num_votes = 0
 	local yes_votes = 0
-	local player_vote = GameParameters.should_stay_in_party_eor and STAY_IN_PARTY.yes or STAY_IN_PARTY.no
+	local player_vote = STAY_IN_PARTY.no
 
 	if voting_id then
 		local votes = Managers.voting:votes(voting_id)
@@ -1187,31 +1187,16 @@ EndView._sync_votes = function (self)
 
 			if peer_id then
 				local vote = votes[peer_id]
-				local checkmark_visible
 
-				if GameParameters.should_stay_in_party_eor then
-					local is_stay = vote ~= STAY_IN_PARTY.no
-
-					if is_stay then
-						yes_votes = yes_votes + 1
-					end
+				if vote == STAY_IN_PARTY.yes then
+					yes_votes = yes_votes + 1
 
 					if peer_id == local_player_peer_id then
-						player_vote = is_stay and STAY_IN_PARTY.yes or STAY_IN_PARTY.no
+						player_vote = STAY_IN_PARTY.yes
 					end
-
-					checkmark_visible = is_stay
-				else
-					if vote == STAY_IN_PARTY.yes then
-						yes_votes = yes_votes + 1
-
-						if peer_id == local_player_peer_id then
-							player_vote = STAY_IN_PARTY.yes
-						end
-					end
-
-					checkmark_visible = vote == STAY_IN_PARTY.yes
 				end
+
+				local checkmark_visible = vote == STAY_IN_PARTY.yes
 
 				num_votes = num_votes + 1
 

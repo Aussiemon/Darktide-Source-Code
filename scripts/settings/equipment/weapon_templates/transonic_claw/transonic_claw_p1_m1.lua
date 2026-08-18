@@ -492,7 +492,7 @@ weapon_template.actions = {
 	},
 	action_lunge_aim_transition_from_instant = {
 		allowed_during_sprint = true,
-		kind = "dummy",
+		kind = "cryptic_chordclaw_activation",
 		skip_ability_chain_action_check = true,
 		start_input = nil,
 		total_time = 0.1,

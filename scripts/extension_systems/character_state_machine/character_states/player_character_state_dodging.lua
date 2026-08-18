@@ -18,15 +18,16 @@ PlayerCharacterStateDodging.init = function (self, character_state_init_context,
 	PlayerCharacterStateDodging.super.init(self, character_state_init_context, ...)
 
 	local unit_data_extension = character_state_init_context.unit_data
+	local unset_t = NetworkConstants.fixed_time_offset_unset
 	local dodge_character_state_component = unit_data_extension:write_component("dodge_character_state")
 
-	dodge_character_state_component.cooldown = 0
+	dodge_character_state_component.cooldown = unset_t
 	dodge_character_state_component.consecutive_dodges = 0
-	dodge_character_state_component.consecutive_dodges_cooldown = 0
+	dodge_character_state_component.consecutive_dodges_cooldown = unset_t
 	dodge_character_state_component.distance_left = 0
 	dodge_character_state_component.dodge_direction = Vector3.zero()
-	dodge_character_state_component.jump_override_time = 0
-	dodge_character_state_component.dodge_time = 0
+	dodge_character_state_component.jump_override_time = unset_t
+	dodge_character_state_component.dodge_time = unset_t
 	dodge_character_state_component.started_from_crouch = false
 	self._dodge_character_state_component = dodge_character_state_component
 	self._sway_control_component = unit_data_extension:write_component("sway_control")

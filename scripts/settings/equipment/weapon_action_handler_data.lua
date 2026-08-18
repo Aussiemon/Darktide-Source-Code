@@ -36,6 +36,7 @@ weapon_action_data.actions = {
 	chain_lightning = _require_weapon_action("action_chain_lightning"),
 	charge = _require_weapon_action("action_charge"),
 	charge_ammo = _require_weapon_action("action_charge_ammo"),
+	cryptic_chordclaw_activation = _require_weapon_action("action_cryptic_chordclaw_activation"),
 	damage_target = _require_weapon_action("action_damage_target"),
 	deploy_mine = _require_weapon_action("action_deploy_mine"),
 	discard = _require_weapon_action("action_discard"),

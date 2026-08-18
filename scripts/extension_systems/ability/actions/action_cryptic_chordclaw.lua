@@ -67,45 +67,6 @@ ActionCrypticChordclaw.start = function (self, action_settings, t, time_scale, a
 	local ability = self._ability
 
 	external_properties.ability_template = ability and ability.ability_template
-
-	local has_chordclaw_gives_chordclaw_damage_on_use = talent_extension:has_special_rule("cryptic_chordclaw_gives_chordclaw_damage_on_use")
-
-	if has_chordclaw_gives_chordclaw_damage_on_use then
-		buff_extension:add_internally_controlled_buff("cryptic_chordclaw_consecutive_bonus", t)
-	end
-
-	local has_three_charge_bonus_talent = talent_extension:has_special_rule("cryptic_chordclaw_gives_melee_attacks_speed_and_toughness")
-
-	if has_three_charge_bonus_talent and charges_used >= chordclaw_ability_talent_settings.three_charge_bonus.num_charges_used_required then
-		buff_extension:add_internally_controlled_buff("cryptic_chordclaw_melee_attack_speed_and_toughness_damage_taken", t)
-	end
-
-	if not self._combat_ability_component.active then
-		buff_extension:add_internally_controlled_buff("cryptic_chordclaw", t)
-
-		local buff_to_add = ability_template_tweak_data.buff_to_add
-		local charge_based_buffs_to_add = ability_template_tweak_data.charge_based_buffs_to_add
-
-		if charge_based_buffs_to_add then
-			buff_to_add = charge_based_buffs_to_add[charges_used]
-		end
-
-		if buff_to_add then
-			buff_extension:add_internally_controlled_buff(buff_to_add, t)
-		end
-
-		local param_table = buff_extension:request_proc_event_param_table()
-
-		if param_table then
-			param_table.unit = player_unit
-			param_table.ability_charges_used = charges_used
-			param_table.remaining_ability_charges_before_use = self._remaining_ability_charges_before_use_at_start
-
-			buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
-		end
-	end
-
-	self._combat_ability_component.active = true
 end
 
 ActionCrypticChordclaw.fixed_update = function (self, dt, t, time_in_action)

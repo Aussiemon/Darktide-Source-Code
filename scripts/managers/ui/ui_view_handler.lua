@@ -142,7 +142,7 @@ UIViewHandler.close_view = function (self, view_name, force_close)
 	end
 
 	local view_settings = self:settings_by_view_name(view_name)
-	local use_transition_ui = view_settings.use_transition_ui
+	local use_transition_ui = view_settings.use_transition_ui == true or view_settings.use_transition_ui == "outro"
 
 	if force_close then
 		self:_force_close(view_name)
@@ -612,12 +612,12 @@ UIViewHandler._can_draw_view = function (self, view_name)
 		return false
 	end
 
-	if view_data.fade_in and view_data.hide_while_fade_in then
-		return false
+	if view_data.draw_while_loading and view_data.instance:loading() then
+		return true
 	end
 
-	if view_data.draw_while_loading then
-		return true
+	if view_data.fade_in and view_data.hide_while_fade_in then
+		return false
 	end
 
 	local parent_transition_view = view_data.parent_transition_view
@@ -772,6 +772,7 @@ UIViewHandler._open = function (self, view_name, opening_duration, context, sett
 		end
 	end
 
+	local use_transition_ui = view_settings.use_transition_ui == true or view_settings.use_transition_ui == "intro"
 	local view_data = {
 		allow_next_draw = true,
 		allow_next_input = true,
@@ -780,16 +781,11 @@ UIViewHandler._open = function (self, view_name, opening_duration, context, sett
 		opening_time = t,
 		disable_game_world = view_settings.disable_game_world,
 		game_world_blur = view_settings.game_world_blur,
-		fade_in = view_settings.use_transition_ui,
-		use_transition_ui = view_settings.use_transition_ui,
+		fade_in = use_transition_ui,
+		use_transition_ui = use_transition_ui,
 		parent_transition_view = view_settings.parent_transition_view,
 		draw_while_loading = view_settings.draw_while_loading,
 	}
-
-	if view_settings.draw_while_loading then
-		view_data.fade_in = false
-		view_data.use_transition_ui = false
-	end
 
 	self._num_active_views = self._num_active_views + 1
 

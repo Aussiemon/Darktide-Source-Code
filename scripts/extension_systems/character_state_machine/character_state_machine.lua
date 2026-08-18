@@ -107,12 +107,12 @@ CharacterStateMachine.update = function (self, unit, dt, t, ...)
 	end
 end
 
-CharacterStateMachine.exit_current_state = function (self)
+CharacterStateMachine.exit_current_state = function (self, extension_destroyed)
 	if self._state_current then
 		local t = Managers.time:time("gameplay")
 		local next_state
 
-		self._state_current:on_exit(self._unit, t, next_state)
+		self._state_current:on_exit(self._unit, t, next_state, extension_destroyed)
 
 		self._state_current = nil
 	end

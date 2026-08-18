@@ -33,7 +33,7 @@ PlayerUnitTalentExtension.init = function (self, extension_init_context, unit, e
 	self._passive_buff_indices = {}
 	self._coherency_external_buff_indices = {}
 	self._buff_template_tiers = {}
-	self._latest_fixed_frame = extension_init_context.fixed_frame
+	self._latest_fixed_frame_t = extension_init_context.fixed_frame_t
 
 	self:_init_components()
 end
@@ -74,13 +74,13 @@ PlayerUnitTalentExtension.buff_template_tier = function (self, buff_template_nam
 end
 
 PlayerUnitTalentExtension.fixed_update = function (self, unit, dt, t, fixed_frame, context, ...)
-	self._latest_fixed_frame = fixed_frame
+	self._latest_fixed_frame_t = t
 
 	WarpCharge.update(dt, t, self._warp_charge_component, self._player, self._unit, self._first_person_unit, self._is_local_unit, self._wwise_world)
 end
 
 PlayerUnitTalentExtension.destroy = function (self)
-	self:_remove_gameplay_features(self._latest_fixed_frame)
+	self:_remove_gameplay_features(self._latest_fixed_frame_t)
 end
 
 PlayerUnitTalentExtension.talents = function (self)

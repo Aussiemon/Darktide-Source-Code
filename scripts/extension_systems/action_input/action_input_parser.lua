@@ -71,6 +71,7 @@ ActionInputParser.init = function (self, unit, action_component_name, action_com
 	self._ring_buffer_index = 1
 	self._debug_index = debug_index
 	self._input_queue_first_entry_became_first_entry_t = 0
+	self._fixed_frame_offset_start_t_min = NetworkConstants.fixed_frame_offset_start_t_5bit.min
 
 	self:_format_and_initialize_action_inputs(action_input_type, templates, sequences_ring_buffer, action_input_queue_ring_buffer, hierarchy_position_ring_buffer)
 
@@ -117,6 +118,7 @@ ActionInputParser._format_and_initialize_action_inputs = function (self, action_
 	local MAX_ACTION_INPUT_SEQUENCES = self._MAX_ACTION_INPUT_SEQUENCES
 	local MAX_ACTION_INPUT_QUEUE = self._MAX_ACTION_INPUT_QUEUE
 	local MAX_HIERARCHY_DEPTH = self._MAX_HIERARCHY_DEPTH
+	local unset_t = NetworkConstants.fixed_time_offset_unset
 
 	for i = 1, RING_BUFFER_SIZE do
 		local sequences = Script.new_array(MAX_ACTION_INPUT_SEQUENCES)
@@ -125,7 +127,7 @@ ActionInputParser._format_and_initialize_action_inputs = function (self, action_
 			sequences[j] = {
 				[IS_RUNNING] = false,
 				[CURRENT_ELEMENT_INDEX] = 1,
-				[ELEMENT_START_T] = 0,
+				[ELEMENT_START_T] = unset_t,
 			}
 		end
 
@@ -363,13 +365,19 @@ ActionInputParser.pack_input_sequences_and_queue = function (self, input_sequenc
 	local ring_buffer_index = self._ring_buffer_index
 	local fixed_time_step = self._fixed_time_step
 	local sequences = self._sequences[ring_buffer_index]
+	local type_info = NetworkConstants.fixed_frame_offset_small
+	local min_value = type_info.min
+	local last_fixed_frame = self._last_fixed_frame
 
 	for i = 1, self._MAX_ACTION_INPUT_SEQUENCES do
 		local sequence = sequences[i]
 
 		input_sequences_is_running_table[i] = sequence[IS_RUNNING]
 		input_sequences_current_element_index_table[i] = sequence[CURRENT_ELEMENT_INDEX]
-		input_sequences_element_start_t_table[i] = math.round(sequence[ELEMENT_START_T] / fixed_time_step)
+
+		local element_start_frame = math.max(math.round(sequence[ELEMENT_START_T] / fixed_time_step - last_fixed_frame), min_value)
+
+		input_sequences_element_start_t_table[i] = element_start_frame
 	end
 
 	local MAX_HIERARCHY_DEPTH = self._MAX_HIERARCHY_DEPTH
@@ -418,7 +426,10 @@ ActionInputParser.pack_input_sequences_and_queue = function (self, input_sequenc
 		end
 	end
 
-	return math.round(self._input_queue_first_entry_became_first_entry_t / self._fixed_time_step)
+	local first_entry_became_first_entry_frame = self._input_queue_first_entry_became_first_entry_t / fixed_time_step
+	local first_entry_became_first_entry_t_offset = math.max(first_entry_became_first_entry_frame - self._last_fixed_frame, self._fixed_frame_offset_start_t_min)
+
+	return first_entry_became_first_entry_t_offset
 end
 
 ActionInputParser._fill_table_with_authoritative_hierarchy_position = function (self, table, input_queue_index, input_queue_produced_by_hierarchy, action_input_network_lookups, input_queue_hierarchy_position, input_queue, base_hierarchy, max_hierarchy_depth, no_action_input)
@@ -487,7 +498,7 @@ ActionInputParser.mispredict_happened = function (self, fixed_frame, input_seque
 		local action_input_name = action_input_network_lookups[i]
 		local is_running = input_sequences_is_running[i]
 		local current_element_index = input_sequences_current_element_index[i]
-		local element_start_t = input_sequences_element_start_t[i] * fixed_time_step
+		local element_start_t = (input_sequences_element_start_t[i] + fixed_frame) * fixed_time_step
 
 		sequence[IS_RUNNING] = is_running
 		sequence[CURRENT_ELEMENT_INDEX] = current_element_index
@@ -520,7 +531,7 @@ ActionInputParser.mispredict_happened = function (self, fixed_frame, input_seque
 		entry[RAW_INPUT] = raw_input
 	end
 
-	self._input_queue_first_entry_became_first_entry_t = input_queue_first_entry_became_first_entry_t * self._fixed_time_step
+	self._input_queue_first_entry_became_first_entry_t = (fixed_frame - 1) * self._fixed_time_step + input_queue_first_entry_became_first_entry_t
 
 	local sim_hierarchy_position = self._hierarchy_position[buffer_index]
 

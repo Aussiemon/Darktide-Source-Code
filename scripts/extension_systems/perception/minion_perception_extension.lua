@@ -109,7 +109,7 @@ MinionPerceptionExtension._init_blackboard_components = function (self, blackboa
 	perception_component.has_line_of_sight = false
 	perception_component.target_distance_z = 0
 	perception_component.target_changed = false
-	perception_component.target_changed_t = 0
+	perception_component.target_changed_t = NetworkConstants.fixed_time_offset_unset
 	perception_component.ignore_alerted_los = false
 	perception_component.has_last_los_position = false
 

@@ -555,6 +555,7 @@ StoreView.cb_on_aquilas_closed = function (self, success)
 
 	self._selected_sub_category_index = nil
 	self._selected_page_index = nil
+	self._selected_category_index = nil
 
 	if self.closing_view then
 		return

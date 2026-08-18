@@ -60,7 +60,7 @@ PlayerSuppressionExtension.init = function (self, extension_init_context, unit, 
 		suppression_component.sway_yaw = 0
 		suppression_component.spread_pitch = 0
 		suppression_component.spread_yaw = 0
-		suppression_component.time = 0
+		suppression_component.time = NetworkConstants.fixed_time_offset_unset
 		suppression_component.decay_time = 0
 		self._suppression_component = suppression_component
 	end

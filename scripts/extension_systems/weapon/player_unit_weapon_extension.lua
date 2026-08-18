@@ -77,10 +77,11 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 	block_component.is_perfect_blocking = false
 	self._block_component = unit_data:read_component("block")
 
+	local unset_t = NetworkConstants.fixed_time_offset_unset
 	local alternate_fire_component = unit_data:write_component("alternate_fire")
 
 	alternate_fire_component.is_active = false
-	alternate_fire_component.start_t = 0
+	alternate_fire_component.start_t = unset_t
 	self._alternate_fire_write_component = alternate_fire_component
 	self._alternate_fire_read_component = unit_data:read_component("alternate_fire")
 	self._character_state_component = unit_data:read_component("character_state")
@@ -100,7 +101,7 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 	local shooting_status_component = unit_data:write_component("shooting_status")
 
 	shooting_status_component.shooting = false
-	shooting_status_component.shooting_end_time = 0
+	shooting_status_component.shooting_end_time = unset_t
 	shooting_status_component.num_shots = 0
 	self._shooting_status_component = shooting_status_component
 
@@ -108,7 +109,7 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 
 	stamina_component.current_fraction = 1
 	stamina_component.regeneration_paused = false
-	stamina_component.last_drain_time = 0
+	stamina_component.last_drain_time = unset_t
 	self._stamina_component = stamina_component
 
 	local weapon_lock_view_component = unit_data:write_component("weapon_lock_view")
@@ -235,12 +236,13 @@ PlayerUnitWeaponExtension._init_action_components = function (self, unit_data_ex
 
 	action_unwield.slot_to_wield = "none"
 
+	local unset_t = NetworkConstants.fixed_time_offset_unset
 	local action_place = unit_data_extension:write_component("action_place")
 
 	action_place.position = Vector3.zero()
 	action_place.rotation = Quaternion.identity()
 	action_place.can_place = false
-	action_place.can_place_time = 0
+	action_place.can_place_time = unset_t
 	action_place.aiming_place = false
 	action_place.placed_on_unit = nil
 	action_place.rotation_step = 0
@@ -261,7 +263,7 @@ PlayerUnitWeaponExtension._init_action_components = function (self, unit_data_ex
 
 	local action_module_charge = unit_data_extension:write_component("action_module_charge")
 
-	action_module_charge.charge_start_time = 0
+	action_module_charge.charge_start_time = unset_t
 	action_module_charge.charge_level = 0
 	action_module_charge.max_charge = 0
 	self._action_module_charge_component = action_module_charge
