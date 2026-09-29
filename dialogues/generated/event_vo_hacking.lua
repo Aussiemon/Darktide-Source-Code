@@ -180,6 +180,7 @@ return function ()
 					"sergeant",
 					"pilot",
 					"tech_priest",
+					"contract_vendor",
 				},
 			},
 			{
@@ -421,6 +422,7 @@ return function ()
 					"pilot",
 					"sergeant",
 					"tech_priest",
+					"contract_vendor",
 				},
 			},
 			{

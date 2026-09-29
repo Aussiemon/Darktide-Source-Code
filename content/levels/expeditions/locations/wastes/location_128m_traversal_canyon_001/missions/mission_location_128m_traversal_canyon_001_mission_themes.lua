@@ -1,0 +1,12 @@
+﻿-- chunkname: @content/levels/expeditions/locations/wastes/location_128m_traversal_canyon_001/missions/mission_location_128m_traversal_canyon_001_mission_themes.lua
+
+local mission_themes = {
+	default = {
+		"content/levels/expeditions/locations/wastes/location_128m_traversal_canyon_001/missions/themes/default/theme_default",
+	},
+	darkness = {
+		"content/levels/expeditions/locations/wastes/location_128m_traversal_canyon_001/missions/themes/darkness/theme_darkness",
+	},
+}
+
+return mission_themes

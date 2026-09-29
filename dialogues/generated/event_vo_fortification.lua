@@ -70,6 +70,7 @@ return function ()
 					"sergeant",
 					"tech_priest",
 					"explicator",
+					"contract_vendor",
 				},
 			},
 			{
@@ -125,6 +126,7 @@ return function ()
 					"pilot",
 					"tech_priest",
 					"boon_vendor",
+					"contract_vendor",
 				},
 			},
 		},
@@ -205,6 +207,7 @@ return function ()
 					"sergeant",
 					"tech_priest",
 					"boon_vendor",
+					"contract_vendor",
 				},
 			},
 			{
@@ -312,6 +315,7 @@ return function ()
 					"tech_priest",
 					"explicator",
 					"boon_vendor",
+					"contract_vendor",
 				},
 			},
 		},

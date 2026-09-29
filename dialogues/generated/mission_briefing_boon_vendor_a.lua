@@ -91,6 +91,50 @@ local mission_briefing_boon_vendor_a = {
 		},
 		randomize_indexes = {},
 	},
+	mission_spillway_briefing_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_boon_vendor_a__mission_spillway_briefing_a_01",
+		},
+		sound_events_duration = {
+			[1] = 9.849447,
+		},
+		randomize_indexes = {},
+	},
+	mission_spillway_briefing_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_boon_vendor_a__mission_spillway_briefing_b_01",
+		},
+		sound_events_duration = {
+			[1] = 7.2,
+		},
+		randomize_indexes = {},
+	},
+	mission_spillway_briefing_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_boon_vendor_a__mission_spillway_briefing_c_01",
+		},
+		sound_events_duration = {
+			[1] = 5.233333,
+		},
+		randomize_indexes = {},
+	},
+	mission_spillway_briefing_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1] = "loc_boon_vendor_a__mission_spillway_briefing_d_01",
+		},
+		sound_events_duration = {
+			[1] = 7.685219,
+		},
+		randomize_indexes = {},
+	},
 	mission_trenches_briefing_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 3,

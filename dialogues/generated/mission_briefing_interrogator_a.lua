@@ -98,7 +98,7 @@ local mission_briefing_interrogator_a = {
 			[1] = "loc_interrogator_a__mission_cargo_briefing_a_01",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
+			[1] = 10.44277,
 		},
 		randomize_indexes = {},
 	},
@@ -109,7 +109,7 @@ local mission_briefing_interrogator_a = {
 			[1] = "loc_interrogator_a__mission_cargo_briefing_b_01",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
+			[1] = 7.385813,
 		},
 		randomize_indexes = {},
 	},
@@ -120,7 +120,7 @@ local mission_briefing_interrogator_a = {
 			[1] = "loc_interrogator_a__mission_cargo_briefing_c_01",
 		},
 		sound_events_duration = {
-			[1] = 3.45678,
+			[1] = 10.99831,
 		},
 		randomize_indexes = {},
 	},

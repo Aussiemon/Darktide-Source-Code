@@ -78,6 +78,7 @@ return function ()
 					"explicator",
 					"sergeant",
 					"tech_priest",
+					"tertium_noble",
 				},
 			},
 			{
@@ -129,6 +130,7 @@ return function ()
 					"explicator",
 					"sergeant",
 					"tech_priest",
+					"contract_vendor",
 				},
 			},
 			{
@@ -180,6 +182,93 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"interrogator",
+					"tertium_noble",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_cargo",
+		name = "mission_cargo_coolant_control_c",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_cargo_coolant_control_c",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_cargo_coolant_control_b",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"contract_vendor",
+				},
+			},
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "mission_givers",
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2,
+			},
+		},
+	})
+	define_rule({
+		category = "vox_prio_0",
+		concurrent_wwise_event = "play_vox_static_loop",
+		database = "mission_vo_fm_cargo",
+		name = "mission_cargo_coolant_control_d",
+		post_wwise_event = "play_radio_static_end",
+		pre_wwise_event = "play_radio_static_start",
+		response = "mission_cargo_coolant_control_d",
+		wwise_route = 1,
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak",
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"mission_cargo_coolant_control_c",
+				},
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"tertium_noble",
 				},
 			},
 		},
@@ -735,6 +824,7 @@ return function ()
 					"explicator",
 					"sergeant",
 					"tech_priest",
+					"contract_vendor",
 				},
 			},
 			{
@@ -786,6 +876,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"interrogator",
+					"tertium_noble",
 				},
 			},
 		},
@@ -829,6 +920,7 @@ return function ()
 					"explicator",
 					"sergeant",
 					"tech_priest",
+					"tertium_noble",
 				},
 			},
 			{
@@ -881,6 +973,7 @@ return function ()
 					"sergeant",
 					"tech_priest",
 					"interrogator",
+					"contract_vendor",
 				},
 			},
 			{
@@ -899,7 +992,7 @@ return function ()
 			},
 		},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_givers",
 		},
 	})
 	define_rule({
@@ -932,6 +1025,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
+					"tertium_noble",
 				},
 			},
 		},
@@ -975,6 +1069,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"interrogator",
+					"contract_vendor",
 				},
 			},
 		},
@@ -1018,6 +1113,7 @@ return function ()
 					"explicator",
 					"sergeant",
 					"tech_priest",
+					"tertium_noble",
 				},
 			},
 			{
@@ -1069,6 +1165,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"interrogator",
+					"contract_vendor",
 				},
 			},
 		},
@@ -1350,6 +1447,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"interrogator",
+					"contract_vendor",
 				},
 			},
 			{
@@ -1401,6 +1499,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
+					"tertium_noble",
 				},
 			},
 		},
@@ -1444,6 +1543,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"interrogator",
+					"contract_vendor",
 				},
 			},
 		},
@@ -1487,6 +1587,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
+					"tertium_noble",
 				},
 			},
 		},
@@ -1531,6 +1632,7 @@ return function ()
 					"sergeant",
 					"tech_priest",
 					"interrogator",
+					"contract_vendor",
 				},
 			},
 			{
@@ -1549,7 +1651,7 @@ return function ()
 			},
 		},
 		heard_speak_routing = {
-			target = "mission_giver_default",
+			target = "mission_givers",
 		},
 	})
 	define_rule({
@@ -1582,6 +1684,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"tech_priest",
+					"tertium_noble",
 				},
 			},
 		},
@@ -1625,6 +1728,7 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"interrogator",
+					"contract_vendor",
 				},
 			},
 		},
